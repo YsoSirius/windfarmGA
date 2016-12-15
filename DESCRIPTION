@@ -1,0 +1,41 @@
+Package: windfarmGA
+Type: Package
+Title: Genetic Algorithm to optimize a Wind Farm Layout Problem
+Version: 0.1
+Date: 2016-12-15
+Author: Sebastian Gatscha
+Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
+Description: The package includes a genetic algorithm, which is designed to optimize
+    small wind farms up to 50 turbines. The algorithm works with a fixed amount of turbines,
+    a fixed rotor radius and a mean wind speed value for every incoming wind direction.
+    If required it can include a terrain effect model, which includes an SRTM elevation model
+    that is downloaded automatically, and a CCL raster, which has to be downloaded and adapted
+    previously. Further information can be found at the following link.
+License: GPL-3
+LazyData: TRUE
+Depends:
+    R (>= 3.2.3)
+Imports:
+    rgdal (>= 1.0-4),
+    raster (>= 2.5-2),
+    sp (>= 1.2-2),
+    dplyr (>= 0.5.0),
+    data.table (>= 1.9.6),
+    gtools (>= 3.5.0),
+    maptools (>= 0.8-36),
+    calibrate (>= 1.7.2),
+    geoR (>= 1.7-5.1),
+    gstat (>= 1.0-26),
+    ggplot2 (>= 2.2.0),
+    RColorBrewer (>= 1.1-2),
+    rgeos (>= 0.3-11),
+    RgoogleMaps (>= 1.2.0.7),
+    googleVis (>= 0.5.9),
+    rgl (>= 0.96.0),
+    grDevices,
+    graphics,
+    stats,
+    utils
+Suggests:
+    magrittr
+RoxygenNote: 5.0.1

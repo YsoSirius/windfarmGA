@@ -1,0 +1,131 @@
+#' @title Evaluate the Individual fFtness values
+#' @name fitness
+#' @description Calculates the fitness values Of the current population after
+#' evaluating the energy outputs of all individuals or windfarms, split
+#' duplicated elements to obtain a single otput per individual.
+#'
+#' @export
+#'
+#' @importFrom raster extent rasterize
+#' @importFrom dplyr select
+#'
+#' @param selection A list containing all individuals of the current
+#' population. (list)
+#' @param referenceHeight The height at which the incoming wind speeds were
+#' measured. Default is 50m. (numeric)
+#' @param RotorHeight The desired height of the turbine. Default is 100m.
+#' (numeric)
+#' @param SurfaceRoughness A surface roughness length of the considered area
+#' in m. Default is 0.14 which is adequate for flat terrain. (numeric)
+#' @param Polygon The considered area as shapefile. (SpatialPolygons)
+#' @param resol1 The resolution of the grid in meter. (numeric)
+#' @param rot The desired rotor radius in meter. (numeric)
+#' @param dirspeed The wind speed and direction data.frame. (data.frame)
+#' @param srtm_crop Boolean value that indicates whether the terrain effect
+#' model is activated ("TRUE") or deactivated ("FALSE"). (character)
+#' @param topograp Boolean value that indicates whether the terrain effect
+#' model is activated ("TRUE") or deactivated ("FALSE"). (character)
+#' @param cclRaster A Corine Land Cover raster, that has to be adapted
+#' previously by hand with the surface roughness lenght for every land cover
+#' type. Is only used, when the terrain effect model is activated. (raster)
+#'
+#' @return Returns a list with every individual, consisting of X & Y
+#' coordinates, rotor radii, the runs and the selected grid cell IDs, and
+#' the resulting energy outputs, efficiency rates and fitness values.
+#' (list)
+#'
+#' @author Sebastian Gatscha
+fitness           <- function(selection, referenceHeight, RotorHeight,SurfaceRoughness, Polygon, resol1,
+                              rot, dirspeed,srtm_crop,topograp,cclRaster){
+  # selection = startsel;Polygon = Polygon1;resol1 = resol2;rot=Rotor; dirspeed=data.in;
+  dirspeed$wd <- round(dirspeed$wd,0)
+  dirspeed$wd <-  round(dirspeed$wd/100,1)*100; duplicated(dirspeed$wd);
+  if (any(names(dirspeed) == "probab") == FALSE) {
+    dirspeed$probab <- 100/nrow(dirspeed)
+  }
+  dirspeed$probab <- round(dirspeed$probab,0)
+  if   (any(duplicated(dirspeed$wd)==TRUE)) {
+    for (i in 1:nrow(dirspeed[duplicated(dirspeed$wd)==TRUE,])){
+      temp <- dirspeed[dirspeed$wd ==  dirspeed[duplicated(dirspeed$wd)==TRUE,][i,2],]; temp
+      temp$ws <- with(temp, sum(ws * (probab/sum(probab)))); temp
+      temp$probab <- with(temp, sum(probab * (probab/sum(probab)))); temp
+      dirspeed[dirspeed$wd ==  dirspeed[duplicated(dirspeed$wd)==TRUE,][i,2],]$ws <- round(temp$ws,2);
+      dirspeed[dirspeed$wd ==  dirspeed[duplicated(dirspeed$wd)==TRUE,][i,2],]$probab <- round(temp$probab,2);
+    }
+  }
+  dirspeed <- dirspeed[!duplicated(dirspeed$wd)==TRUE,]; length(dirspeed[,1]);
+  dirspeed <- dirspeed[with(dirspeed, order(wd)), ]
+  if (sum(dirspeed$probab) != 100) {
+    dirspeed$probab <- dirspeed$probab*(100/sum(dirspeed$probab))
+  }
+  probabDir <- dirspeed$probab;
+  pp <- sum(probabDir)/100;   probabDir <- probabDir/pp; sum(probabDir)
+
+  windraster <-raster::rasterize(Polygon, raster::raster(raster::extent(Polygon), ncol=180, nrow=180),field=1)
+
+  e = vector("list",length(selection));euniqu=vector("list",length(selection)) ;
+  for (i in 1:length(selection)){
+    ## Calculate EnergyOutput for every config i and for every angle j
+    e[[i]] <- calculateEn(selection[[i]], referenceHeight, RotorHeight,SurfaceRoughness,
+                          windraster = windraster, wnkl = 20, distanz=100000, polygon1 = Polygon,
+                          resol=resol1, RotorR = rot, dirSpeed = dirspeed, srtm_crop,topograp,cclRaster)
+
+    # Get a list from unique Grid_ID elements for every park configuration respective to every winddirection considered.
+    ee  <- lapply(e[[i]], function(x){split(x, duplicated(x$Punkt_id))$'FALSE'})
+    # Select only relevant information from list
+    ee  <- lapply(ee, function(x){dplyr::select(x,-Ax,-Ay,-Laenge_B,-Laenge_A,-Windmean,-WakeR,-A_ov, -Punkt_id)})
+    # get Energy Output and Efficiency rate for every wind direction and make a data frame
+    enOut <- lapply(ee, function(x){ x[1,c(3,8,10)]}); enOut <- do.call("rbind", enOut)
+    # Add the Probability of every direction
+    enOut$probabDir <- probabDir
+    # Calculate the relative Energy outputs respective to the probability of the wind direction
+    enOut$Eneralldire <- enOut$Energy_Output_Red * (enOut$probabDir/100);
+    # Calculate the sum of the relative Energy outputs
+    enOut$EnergyOverall <- sum(enOut$Eneralldire);
+    # Calculate the sum of the relative Efficiency rates respective to the probability of the wind direction
+    enOut$Efficalldire <- sum(enOut$Parkwirkungsgrad * (enOut$probabDir/100))
+
+    # Get the total Wake Effect of every Turbine for all Wind directions
+    AbschGesamt <- lapply(ee, function(x){ data.frame(x$TotAbschProz)});
+    AbschGesamt <- do.call("cbind",AbschGesamt)
+    AbschGesamt$RowSum <- rowSums(AbschGesamt);
+    AbschGesamt <- AbschGesamt$RowSum
+
+    # Get the original X / Y - Coordinates of the selected individual
+    xundyOrig <- selection[[i]][,2:3]; xundyOrig
+    # Add the Efficieny and the Energy Output of all wind directions and add the total Wake Effect of every Point Location
+    xundyOrig$EfficAllDir <- enOut$Efficalldire[1];xundyOrig$EnergyOverall <- enOut$EnergyOverall[1];xundyOrig$AbschGesamt <- AbschGesamt
+    # Include the Run of the genertion to the data frame
+    xundyOrig$Run <- i
+
+    # Get the Rotor Radius and the Rect_IDs of the park configuration
+    dt <-  ee[[1]]; dt <- dplyr::select(dt,RotorR, Rect_ID);dt;
+    # Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
+    dt <- cbind(xundyOrig,dt)
+    # Add this information to the the i-th element of the list
+    euniqu[[i]] <- dt
+  }
+
+  # Split one from every run and select only Energy information
+  maxparkeff <- do.call("rbind", (lapply(euniqu, function(x) { x <- dplyr::select(x[1,],EnergyOverall)})))
+
+  # Calculate Parkfitness for every individual.
+  #maxparkeff$Parkfitness <- maxparkeff$EnergyOverall/ (sum(maxparkeff$EnergyOverall))
+  #maxparkeff$Parkfitness <- maxparkeff$EnergyOverall/ (median(maxparkeff$EnergyOverall))
+  #maxparkeff$Parkfitness <- ((maxparkeff$EnergyOverall)*length(maxparkeff$EnergyOverall))/sum(maxparkeff$EnergyOverall);
+  maxparkeff$Parkfitness <- maxparkeff$EnergyOverall
+
+  # And select only the Fitness Value
+  maxparkeff <- dplyr::select(maxparkeff, Parkfitness)
+
+  # Assign every park constellation the Parkfitness Value
+  for (i in 1:length(euniqu)) {
+    euniqu[i][[1]]$Parkfitness <- maxparkeff[i,]
+  }; #euniqu
+
+  return(euniqu)
+}
+
+##importFrom GenAlgo calculateEn
+
+
