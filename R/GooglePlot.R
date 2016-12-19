@@ -22,16 +22,16 @@
 #' (numeric)
 #' @param Projection A desired Projection can be used instead
 #' of the default Lambert Azimuthal Equal Area Projection. (character)
+#' @param ... If the plot is not required, it can be disabled with
+#' the option \code{plT = FALSE}
 #'
 #' @return Returns a data.frame with the coordinates in LON/LAT and plots
 #' the desired best result with a google background map. (data.frame)
 #'
 #' @author Sebastian Gatscha
-GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection){
-  # library(rgeos); library(RgoogleMaps)
-  #result= result;
-  #rm(result); rm(Polygon1);rm(ProjPoly);rm(ProjLAEA);rm(ProjLonLat);
-  #rm(PointSol); rm(PointSol1);
+GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection,...){
+
+  ## Set the graphical parameters
   op <- par(ask=F)
   on.exit(par(op))
   par(mfrow=c(1,1))
@@ -58,10 +58,9 @@ GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection){
   }
 
   ProjLonLat <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +towgs84=0,0,0"
-
   ## If Polygon is not already in Lon/Lan it will be projected
   if (sp::proj4string(Polygon1)!=(ProjLonLat)){
-    cat("Polygon is not projected in LatLon.")
+    # cat("Polygon is not projected in LatLon.")
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLonLat))
   }
 
@@ -72,14 +71,19 @@ GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection){
   PointSol1 <- as.data.frame(PointSol1)
 
   ## Create a Google static map and plot it
-  map <- RgoogleMaps::GetMap(center = c(raster::extent(rgeos::gCentroid(Polygon1))[4],
-                                        raster::extent(rgeos::gCentroid(Polygon1))[1]), zoom = 14, size= c(640,640))
-  RgoogleMaps::PlotOnStaticMap(MyMap = map, lat = PointSol1$lat,
-                               lon = PointSol1$lon, zoom = 14, size= c(640,640),
-                               cex = 1.1, pch = 19, col = "red", FUN = points, add = F)
-  RgoogleMaps::PlotPolysOnStaticMap(MyMap = map,
-                                    polys = sp::SpatialPolygons(Polygon1@polygons,proj4string=Polygon1@proj4string),
-                                    border = NULL, lwd = 0.25, add=T)
+  arguments <- list(...);
+  plT <- (paste(arguments))
+  if (length(plT)==0){plT <- TRUE}
+  if (plT == TRUE){
+    map <- RgoogleMaps::GetMap(center = c(raster::extent(rgeos::gCentroid(Polygon1))[4],
+                                          raster::extent(rgeos::gCentroid(Polygon1))[1]), zoom = 13, size= c(640,640))
+    RgoogleMaps::PlotOnStaticMap(MyMap = map, lat = PointSol1$lat,
+                                 lon = PointSol1$lon, zoom = 13, size= c(640,640),
+                                 cex = 1.1, pch = 19, col = "red", FUN = points, add = F)
+    RgoogleMaps::PlotPolysOnStaticMap(MyMap = map,
+                                      polys = sp::SpatialPolygons(Polygon1@polygons,proj4string=Polygon1@proj4string),
+                                      border = NULL, lwd = 0.25, add=T)
+  }
   invisible(PointSol1)
 }
 

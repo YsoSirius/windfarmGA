@@ -25,17 +25,17 @@
 #' @author Sebastian Gatscha
 GoogleChromePlot <- function(result,Polygon1,best=1,plotEn=1,Projection) {
 
-  a <- GooglePlot(result,Polygon1,best,plotEn,Projection)
+  a <- GooglePlot(result,Polygon1,best,plotEn,Projection,plT=F)
   a$latlon <- paste(a$lat, a$lon, sep=":")
-  map.gb <- googleVis::gvisMap(a, locationvar="latlon",options = list(showTip=T, showLine=T, enableScrollWheel=TRUE,mapType="hybrid",
-                                   useMapTypeControl=T, width=1400,height=800,icons=paste0("{",
-                                                                                           "'default': {'normal': 'http://icons.iconarchive.com/",
-                                                                                           "icons/icons-land/vista-map-markers/48/",
-                                                                                           "Map-Marker-Ball-Azure-icon.png',\n",
-                                                                                           "'selected': 'http://icons.iconarchive.com/",
-                                                                                           "icons/icons-land/vista-map-markers/48/",
-                                                                                           "Map-Marker-Ball-Right-Azure-icon.png'",
-                                                                                           "}}")))
+  map.gb <- googleVis::gvisMap(a, locationvar="latlon",
+                               options = list(showTip=T, showLine=T, enableScrollWheel=TRUE,mapType="hybrid",
+                                   useMapTypeControl=T, width=1400,
+                                   height=800,icons=paste0("{","'default': {'normal': 'http://icons.iconarchive.com/",
+                                                               "icons/icons-land/vista-map-markers/48/",
+                                                               "Map-Marker-Ball-Azure-icon.png',\n",
+                                                               "'selected': 'http://icons.iconarchive.com/",
+                                                               "icons/icons-land/vista-map-markers/48/",
+                                                               "Map-Marker-Ball-Right-Azure-icon.png'","}}")))
   plot(map.gb)
 }
 
