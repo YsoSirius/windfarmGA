@@ -47,10 +47,11 @@
 #'
 #' GridFilter(Polygon1,200,1,"TRUE")
 #' }
-GridFilter <- function(shape, resol = 500, prop = 1,plotGrid="FALSE"){
+GridFilter <- function(shape, resol = 500, prop = 1,plotGrid=FALSE){
   # library(rgeos);  library(sp);  library(raster);
   # require(raster)
-  # shape = Polygon1;resol = 90; prop=1; plotGrid = "TRUE"
+  # shape = Polygon1;resol = 90; prop=1; plotGrid = TRUE
+
   if (prop < 0.01){prop = 0.01}
   if (prop > 1){prop = 1}
   grid <- raster::raster(raster::extent(shape))
