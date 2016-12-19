@@ -1,9 +1,9 @@
-#' @title Calculate Energy Outputs
+#' @title Calculate Energy Outputs of Individuals
 #' @name calculateEn
-#' @description  Calculate the energy output and efficiency rates of all
-#'    individuals in the current population under all given wind directions
+#' @description  Calculate the energy output and efficiency rates of an
+#'    individual in the current population under all given wind directions
 #'    and speeds. If the terrain effect model is activated, the main
-#'    calculations to model the effects will be done in this function.
+#'    calculations to model those effects will be done in this function.
 #'
 #' @export
 #'
@@ -13,46 +13,105 @@
 #' @importFrom data.table data.table
 #' @importFrom calibrate textxy
 #' @importFrom maptools elide
-#' @importFrom graphics mtext plot
+#' @importFrom graphics mtext plot par points
 #'
-#' @param sel A list of the current population.
+#' @param sel A data.frame of an individual of the current population
+#' (data.frame)
 #' @param referenceHeight The height at which the incoming wind speeds
-#' were measured. Default is 50m. (numeric)
-#' @param RotorHeight The desired height of the turbine. Default is 100m.
-#' (numeric)
+#' were measured (numeric)
+#' @param RotorHeight The desired height of the turbines (numeric)
 #' @param SurfaceRoughness A surface roughness length of the
-#' considered area in m. Default is 0.14 which is adequate for flat terrain.
-#' (numeric)
-#' @param windraster Calculated windraster for the considered area.
+#' considered area in m. If the terrain effect model is activated, a
+#' surface roughness will be calculated for every grid cell with the
+#' elevation and land cover information (numeric)
+#' @param windraster Dummy windraster for the considered area with value 1
 #' (raster)
 #' @param wnkl Indicates the angle, at which no wake influences are
-#' considered. Default is 20 degrees. (numeric)
+#' considered (numeric)
 #' @param distanz Indicates the distance, after which the wake effects are
-#' considered to be eliminated. Default is 100km. (numeric)
-#' @param polygon1 The considered area as shapefile. (SpatialPolygons)
-#' @param resol The resolution of the grid in meter. (numeric)
-#' @param RotorR The desired rotor radius in meter. (numeric)
-#' @param dirSpeed The wind speed and direction data.frame. (data.frame)
-#' @param topograp Boolean value that indicates whether the
-#' terrain effect model is activated ("TRUE") or deactivated ("FALSE").
-#' (character)
+#' considered to be eliminated (numeric)
+#' @param polygon1 The considered area as shapefile (SpatialPolygons)
+#' @param resol The resolution of the grid in meter (numeric)
+#' @param RotorR The desired rotor radius in meter (numeric)
+#' @param dirSpeed The wind speed and direction data.frame (data.frame)
+#' @param topograp Logical value that indicates whether the
+#' terrain effect model is activated (TRUE) or deactivated (FALSE)
+#' (logical)
 #' @param srtm_crop An SRTM raster for the considered area. Is only used,
-#' when the terrain effect model is activated. (raster)
-#' @param cclRaster A Corine Land Cover raster, that has to be adapted
-#' previously by hand with the surface roughness lenght for every land cover
-#' type. Is only used, when the terrain effect model is activated.
+#' when the terrain effect model is activated (raster)
+#' @param cclRaster A Corine Land Cover raster, that has to be downloaded
+#' previously. See also the details at \code{\link{windfarmGA}}
+#' The raster will only be used, when the terrain effect model is activated.
 #' (raster)
 #'
-#' @return Returns a list of all individuals of the current generation
-#' with resulting wake effects, energy outputs, efficiency rates.
+#' @return Returns a list of an individual of the current generation
+#' with resulting wake effects, energy outputs, efficiency rates for every
+#' wind direction. The length of the list will be the amount of incoming
+#' wind directions.
 #'
+#' @examples \donttest{
+#' ## Create a random rectangular shapefile
+#' library(sp)
+#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+#' Polygon1 <- Polygons(list(Polygon1),1);
+#' Polygon1 <- SpatialPolygons(list(Polygon1))
+#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' proj4string(Polygon1) <- CRS(Projection)
+#' plot(Polygon1,axes=T)
+#'
+#' ## Initialize a dummy wind speed raster with value 1
+#' windraster <-raster::rasterize(Polygon1, raster::raster(raster::extent(Polygon1),
+#' ncol=180, nrow=180),field=1)
+#'
+#' ## Create a uniform and unidirectional wind data.frame and plot the
+#' ## resulting wind rose
+#' data.in <- as.data.frame(cbind(ws=12,wd=0))
+#' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#'                 dir = data.in$wd, dirres=10, spdmax=20)
+#'
+#' ## Assign the rotor radius and the factor of the raius for grid spacing.
+#' Rotor= 50; fcrR= 5
+#' resGrid <- GridFilter(shape = Polygon1,resol = Rotor*fcrR, prop=1,
+#' plotGrid =TRUE)
+#' ## Assign the indexed data frame to new variable. Element 2 of the list
+#' ## is the grid saved as SpatialPolygon.
+#' resGrid1 <- resGrid[[1]]
+#'
+#' ## Create an initial population, with the indexed Grid, 15 turbines and
+#' ## 100 individuals.
+#' resStartGA <- StartGA(Grid = resGrid1,n = 15,nStart = 100)
+#'
+#' ## Calculate the expected energy output of the first individual of the
+#' ## population.
+#' resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+#'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
+#'                    distanz = 100000, resol = 200,dirSpeed = data.in,
+#'                    RotorR = 50, polygon1 = Polygon1, topograp = "FALSE",
+#'                    windraster,srtm_crop,cclRaster)
+#' length(resCalcEn)
+#'
+#'
+#' ## Create a variable and multidirectional wind data.frame and plot the
+#' ## resulting wind rose
+#' data.in <- as.data.frame(cbind(ws=runif(10,1,25),wd=runif(10,0,360)))
+#' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#'                 dir = data.in$wd, dirres=10, spdmax=20)
+#'
+#' ## Calculate the energy outputs for the first individual with more than one
+#' ## wind direction.
+#' resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+#'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
+#'                    distanz = 100000, resol = 200,dirSpeed = data.in,
+#'                    RotorR = 50, polygon1 = Polygon1, topograp = "FALSE",
+#'                    windraster,srtm_crop,cclRaster)
+#' }
 #' @author Sebastian Gatscha
-calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness,windraster,wnkl,distanz,
-                              polygon1,resol,RotorR,dirSpeed,srtm_crop,topograp,cclRaster){
-  # sel=selection[[i]]; wnkl = 20; distanz=100000; polygon1 = Polygon;resol=resol1; RotorR = rot;
-  # dirSpeed = dirspeed
-  # library(data.table);  library(maptools);     library(calibrate)
-  PlotCalc="FALSE"
+#'
+calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness,
+                              windraster,wnkl,distanz, polygon1,resol,RotorR,dirSpeed,
+                              srtm_crop,topograp,cclRaster){
+  PlotCalc=FALSE
 
   sel1 = sel[,2:3];
   ## Assign constant values
@@ -62,7 +121,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
   windpo <- raster::extract(x= windraster, y = as.matrix((sel1)), buffer=resol*1, small=T,fun= mean,na.rm=T);
 
   ## Terrain Effect Model:
-  if (topograp == "TRUE") {
+  if (topograp == TRUE) {
     ## Calculates Wind multiplier. Hills will get higher values, valleys will get lower values.
     orogr1 <- raster::calc(srtm_crop, function(x) {x/(raster::cellStats(srtm_crop,mean,na.rm=T))})
     orogrnum <- raster::extract(x= orogr1, y = as.matrix((sel1)), buffer=resol*2, small=T,fun= mean,na.rm=T);
@@ -71,7 +130,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
     heightWind <- raster::extract(x= srtm_crop, y = as.matrix((sel1)), small=T,fun= max,na.rm=T);heightWind
     ## Plot the elevation and the wind speed multiplier rasters
-    if (PlotCalc=="TRUE"){
+    if (PlotCalc==TRUE){
       par(mfrow=c(2,1))
       plot(srtm_crop, main="SRTM Elevation Data");points(sel1$X,sel1$Y,pch=20);
       calibrate::textxy(sel1$X,sel1$Y,labs = round(heightWind,0),cex=0.8);plot(polygon1,add=T)
@@ -84,7 +143,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     air_dt <- BaroHoehe(matrix(HeighttoBaro),HeighttoBaro)
     air_rh <- as.numeric(air_dt$rh);
     ## Plot he normal and corrected Air Density Values
-    if (PlotCalc=="TRUE"){
+    if (PlotCalc==TRUE){
       par(mfrow=c(1,1))
       plot(srtm_crop, main="Normal Air Density",col=topo.colors(10));points(sel1$X,sel1$Y,pch=20);
       calibrate::textxy(sel1$X,sel1$Y,labs = rep(1.225,nrow(sel1)),cex=0.8);plot(polygon1,add=T)
@@ -100,10 +159,9 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     SurfaceRoughness <-SurfaceRoughness*(1+(SurfaceRoughness1/max(raster::res(srtm_crop))));
     elrouind <- raster::terrain(srtm_crop,"roughness")
     elrouindn <- raster::resample(elrouind,cclRaster,method="ngb")
-    modSurf <- raster::overlay(x = cclRaster,y = elrouindn, fun=function(x,y){
-      return(x*(1+y/max(raster::res(srtm_crop))))})
+    modSurf <- raster::overlay(x = cclRaster,y = elrouindn, fun=function(x,y){return(x*(1+y/max(raster::res(srtm_crop))))})
     ## Plot the different Surface Roughness Values
-    if (PlotCalc=="TRUE"){
+    if (PlotCalc==TRUE){
       graphics::par(mfrow=c(1,1)); cexa=0.9
       raster::plot(cclRaster, main="Corine Land Cover Roughness");
       graphics::points(sel1$X,sel1$Y,pch=20);
@@ -123,7 +181,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     ## New Wake Decay Constant calculated with new surface roughness values
     k = 0.5/(log(RotorHeight/SurfaceRoughness))
     ## Plot resulting Wake Decay Values
-    if (PlotCalc=="TRUE"){
+    if (PlotCalc==TRUE){
       graphics::par(mfrow=c(1,1)); cexa=0.9
       plot(x= raster::terrain(srtm_crop,"roughness",neighbors = 4),
                      main="Adapted Wake Decay Values - K");
@@ -155,7 +213,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
 
     ## If activated, plots the turbine locations with angle 0 and opens a second frame for rotated
     ## turbine lovations
-    if (PlotCalc == "TRUE"){
+    if (PlotCalc == TRUE){
       par(mfrow=c(1,2))
       plot(polygon1, main="Shape at angle 0");
       graphics::points(xyBgldMa[,1],xyBgldMa[,2],pch=20)
@@ -172,7 +230,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     xyBgldMa <- sp::coordinates(xyBgldMa)
 
     ## If activated, plots the rotated turbines in red.
-    if (PlotCalc == "TRUE"){
+    if (PlotCalc == TRUE){
       graphics::points(xyBgldMa, col="red",pch=20)
     }
 
@@ -204,7 +262,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
       RotD <- as.numeric(windlist[i,]$RotorR)
       if (windlist[i,]$Laenge_B != 0) {
 
-        if (topograp=="TRUE"){
+        if (topograp==TRUE){
           windlist[i,]$WakeR = (((RotD * 2) + (2*k[windlist[i,]$Punkt_id]*
                                                  (as.numeric(windlist[i,]$Laenge_B))))/2)[1]
         } else {
@@ -253,7 +311,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
       RotrR <- windlist[p,]$RotorR
       a <- 1- sqrt(1-cT)
       s <- (windlist[p,]$Laenge_B/RotrR);
-      if (topograp=="TRUE"){
+      if (topograp==TRUE){
         b <- (1 + (k[windlist[p,]$Punkt_id]*s))^2;
       } else {
         b <- (1 + (k*s))^2;b
@@ -297,8 +355,6 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
   ## Return the list with all relevant information
   invisible(alllist)
 }
-
-##importFrom GenAlgo BaroHoehe InfluPoints
 
 
 

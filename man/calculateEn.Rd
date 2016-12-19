@@ -2,63 +2,125 @@
 % Please edit documentation in R/calculateEn.R
 \name{calculateEn}
 \alias{calculateEn}
-\title{Calculate Energy Outputs}
+\title{Calculate Energy Outputs of Individuals}
 \usage{
 calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, windraster,
   wnkl, distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp,
   cclRaster)
 }
 \arguments{
-\item{sel}{A list of the current population.}
+\item{sel}{A data.frame of an individual of the current population
+(data.frame)}
 
 \item{referenceHeight}{The height at which the incoming wind speeds
-were measured. Default is 50m. (numeric)}
+were measured (numeric)}
 
-\item{RotorHeight}{The desired height of the turbine. Default is 100m.
-(numeric)}
+\item{RotorHeight}{The desired height of the turbines (numeric)}
 
 \item{SurfaceRoughness}{A surface roughness length of the
-considered area in m. Default is 0.14 which is adequate for flat terrain.
-(numeric)}
+considered area in m. If the terrain effect model is activated, a
+surface roughness will be calculated for every grid cell with the
+elevation and land cover information (numeric)}
 
-\item{windraster}{Calculated windraster for the considered area.
+\item{windraster}{Dummy windraster for the considered area with value 1
 (raster)}
 
 \item{wnkl}{Indicates the angle, at which no wake influences are
-considered. Default is 20 degrees. (numeric)}
+considered (numeric)}
 
 \item{distanz}{Indicates the distance, after which the wake effects are
-considered to be eliminated. Default is 100km. (numeric)}
+considered to be eliminated (numeric)}
 
-\item{polygon1}{The considered area as shapefile. (SpatialPolygons)}
+\item{polygon1}{The considered area as shapefile (SpatialPolygons)}
 
-\item{resol}{The resolution of the grid in meter. (numeric)}
+\item{resol}{The resolution of the grid in meter (numeric)}
 
-\item{RotorR}{The desired rotor radius in meter. (numeric)}
+\item{RotorR}{The desired rotor radius in meter (numeric)}
 
-\item{dirSpeed}{The wind speed and direction data.frame. (data.frame)}
+\item{dirSpeed}{The wind speed and direction data.frame (data.frame)}
 
 \item{srtm_crop}{An SRTM raster for the considered area. Is only used,
-when the terrain effect model is activated. (raster)}
+when the terrain effect model is activated (raster)}
 
-\item{topograp}{Boolean value that indicates whether the
-terrain effect model is activated ("TRUE") or deactivated ("FALSE").
-(character)}
+\item{topograp}{Logical value that indicates whether the
+terrain effect model is activated (TRUE) or deactivated (FALSE)
+(logical)}
 
-\item{cclRaster}{A Corine Land Cover raster, that has to be adapted
-previously by hand with the surface roughness lenght for every land cover
-type. Is only used, when the terrain effect model is activated.
+\item{cclRaster}{A Corine Land Cover raster, that has to be downloaded
+previously. See also the details at \code{\link{windfarmGA}}
+The raster will only be used, when the terrain effect model is activated.
 (raster)}
 }
 \value{
-Returns a list of all individuals of the current generation
-with resulting wake effects, energy outputs, efficiency rates.
+Returns a list of an individual of the current generation
+with resulting wake effects, energy outputs, efficiency rates for every
+wind direction. The length of the list will be the amount of incoming
+wind directions.
 }
 \description{
-Calculate the energy output and efficiency rates of all
-   individuals in the current population under all given wind directions
+Calculate the energy output and efficiency rates of an
+   individual in the current population under all given wind directions
    and speeds. If the terrain effect model is activated, the main
-   calculations to model the effects will be done in this function.
+   calculations to model those effects will be done in this function.
+}
+\examples{
+\donttest{
+## Create a random rectangular shapefile
+library(sp)
+Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygons(list(Polygon1),1);
+Polygon1 <- SpatialPolygons(list(Polygon1))
+Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+proj4string(Polygon1) <- CRS(Projection)
+plot(Polygon1,axes=T)
+
+## Initialize a dummy wind speed raster with value 1
+windraster <-raster::rasterize(Polygon1, raster::raster(raster::extent(Polygon1),
+ncol=180, nrow=180),field=1)
+
+## Create a uniform and unidirectional wind data.frame and plot the
+## resulting wind rose
+data.in <- as.data.frame(cbind(ws=12,wd=0))
+windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+                dir = data.in$wd, dirres=10, spdmax=20)
+
+## Assign the rotor radius and the factor of the raius for grid spacing.
+Rotor= 50; fcrR= 5
+resGrid <- GridFilter(shape = Polygon1,resol = Rotor*fcrR, prop=1,
+plotGrid =TRUE)
+## Assign the indexed data frame to new variable. Element 2 of the list
+## is the grid saved as SpatialPolygon.
+resGrid1 <- resGrid[[1]]
+
+## Create an initial population, with the indexed Grid, 15 turbines and
+## 100 individuals.
+resStartGA <- StartGA(Grid = resGrid1,n = 15,nStart = 100)
+
+## Calculate the expected energy output of the first individual of the
+## population.
+resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+                   RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
+                   distanz = 100000, resol = 200,dirSpeed = data.in,
+                   RotorR = 50, polygon1 = Polygon1, topograp = "FALSE",
+                   windraster,srtm_crop,cclRaster)
+length(resCalcEn)
+
+
+## Create a variable and multidirectional wind data.frame and plot the
+## resulting wind rose
+data.in <- as.data.frame(cbind(ws=runif(10,1,25),wd=runif(10,0,360)))
+windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+                dir = data.in$wd, dirres=10, spdmax=20)
+
+## Calculate the energy outputs for the first individual with more than one
+## wind direction.
+resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+                   RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
+                   distanz = 100000, resol = 200,dirSpeed = data.in,
+                   RotorR = 50, polygon1 = Polygon1, topograp = "FALSE",
+                   windraster,srtm_crop,cclRaster)
+}
 }
 \author{
 Sebastian Gatscha

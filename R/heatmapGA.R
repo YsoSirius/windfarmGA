@@ -1,5 +1,5 @@
 #' @title Plot heatmap of fit grid cells
-#' @name heatMap
+#' @name heatmapGA
 #' @description  Plot a heatmap of the selected grid cells. Green grid
 #' cells have been selected more often than red grid cells.
 #'
@@ -21,8 +21,8 @@
 #' @return NULL
 #'
 #' @author Sebastian Gatscha
-heatMap <- function(result,si=2, Polygon1){
-  # result=result; Polygon=Polss
+heatmapGA <- function(result,si=2, Polygon1){
+  # result=resultConfGa1; Polygon=Polygon1
   # library(geoR);   library(gstat);   library(ggplot2)
   bpe <- do.call("rbind",result[,'allCoords']);
   bpe <- bpe[c(1,2)]
@@ -53,22 +53,13 @@ heatMap <- function(result,si=2, Polygon1){
 
   idwout <- as.data.frame(gstat::idw(formula = bpenew$Sum~1,locations = polo,newdata=grd))
 
-  rgl::open3d()
-  #  plot surface
-  rgl::rgl.surface(x=idwout[,1],y=idwout[,2] ,z=idwout[,3])
-  #  Export to png
-  rgl::rgl.snapshot( "sample.png" , fmt="png", top=TRUE )
-
 
   plot1<-ggplot2::ggplot(data=idwout,mapping=ggplot2::aes(x=x,y=y))+
     c(ggplot2::geom_tile(data=idwout,ggplot2::aes(fill=var1.pred)))+
     ggplot2::geom_point(data=bpenew,mapping=ggplot2::aes(x=X,y=Y),
                         show.legend = TRUE,size=sqrt(sqrt(bpenew$Sum)),alpha=0.6)
   #geom_contour(bins=2,ggplot2::aes(colour = ..level..))
-
   plot1+ggplot2::scale_fill_gradient(low="red", high="green")+ggplot2::coord_equal()
-
-
 
 
 }

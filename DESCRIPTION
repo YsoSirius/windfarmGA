@@ -5,12 +5,16 @@ Version: 0.1
 Date: 2016-12-15
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
-Description: The package includes a genetic algorithm, which is designed to optimize
-    small wind farms up to 50 turbines. The algorithm works with a fixed amount of turbines,
-    a fixed rotor radius and a mean wind speed value for every incoming wind direction.
-    If required it can include a terrain effect model, which includes an SRTM elevation model
-    that is downloaded automatically, and a CCL raster, which has to be downloaded and adapted
-    previously. Further information can be found at the following link.
+Description: A genetic algorithm is included, which is designed to optimize small wind farms
+    up to 50 turbines. The algorithm works with a fixed amount of turbines, a fixed rotor
+    radius and a mean wind speed value for every incoming wind direction.
+    If required it can include a terrain effect model, which downloads an SRTM elevation model
+    automatically, and loads a Corine Land Cover raster, which has to be downloaded
+    previously. Further information can be found at the description of the function "windfarmGA".
+    To start an optimization run, either the function "windfarmGA" or "genAlgo" can be used.
+    The function "windfarmGA" checks the user inputs interactively and runs then the
+    function "genAlgo". If the input parameters are already known, an optimization can be run
+    directly via the function "genAlgo". Their output is identical.
 License: GPL-3
 LazyData: TRUE
 Depends:

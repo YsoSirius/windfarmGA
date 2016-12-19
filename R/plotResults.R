@@ -24,30 +24,43 @@
 #' @param plotEn A numeric value that indicates if the best energy or
 #' efficiency output should be plotted. If (plotEn==1) plots the best energy
 #' solutions and (plotEn==2) plots the best efficiency solutions. (numeric)
-#' @param topographie A boolean value, indicating whether terrain effects
-#' should be considered and plotted or not. (character)
+#' @param topographie A logical value, indicating whether terrain effects
+#' should be considered and plotted or not. (logical)
 #' @param Grid The grid as SpatialPolygons, which is obtained from
 #' \code{\link{GridFilter}} and used for plotting.
+#' @param Projection A desired Projection can be used instead
+#' of the default Lambert Azimuthal Equal Area Projection. (character)
 #'
 #' @return Returns a data.frame of the best (energy/efficiency) individual
 #' after all generations. (data.frame)
 #'
 #' @author Sebastian Gatscha
 plotResult <- function(result,Polygon1,best=5,plotEn=1,
-                       topographie="FALSE",Grid){
+                       topographie=FALSE,Grid,Projection){
   # library(raster); library(stats); library(sp); library(calibrate)
   # result=result;Polygon1=Polygon;best=5;plotEn=1
   #rm(order2,orderb,orderc,runs,a,ar,by_cycl,b,ProjLAEA,result,i,Polygon1,windraster,windr,best,EnergyBest,EfficiencyBest,Col,Col1,plotEn,op,order1)
+
+  ## Set graphical parameters
   op <- par(ask=FALSE);   on.exit(par(op));   par(mfrow=c(1,1))
-  ProjLAEA = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+
+  ## Check Projections and reference systems
+  if (missing(Projection)) {
+    ProjLAEA = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+              +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  } else {
+    ProjLAEA <- Projection;
+  }
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
 
+
+  ## Creat a color ramp
   rbPal1 <- grDevices::colorRampPalette(c('green','red'))
 
   resultSafe <- result
-  ## Best Energy
+  ## Plot Best Energy
   if (plotEn == 1) {
 
     a <- sapply(result[,2], "[", "EnergyOverall")
@@ -103,7 +116,7 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
     }
 
   }
-  if(topographie=="TRUE" && plotEn == 1){
+  if(topographie==TRUE && plotEn == 1){
 
     resol= as.integer(resultSafe[1,]$inputData['Resolution',])
     polygon1=Polygon1
@@ -193,7 +206,7 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
     }
   }
 
-  ## Best Efficiency
+  ## Plot Best Efficiency
   if (plotEn == 2){
     a <- sapply(result[,3], "[", "EfficAllDir")
     b <- data.frame(sapply(a, function(x) x[1]))
@@ -210,9 +223,7 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
       cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
       best = trunc(ndif/2)
     }
-
     result <- result[(length(result)-best+1):(length(result))]
-    #orderc <- order2[(length(result)-best+1):(length(result))]
 
     for (i in (1:length(result))){
       #EfficiencyBest <- do.call("cbind", result[[i]])
@@ -245,7 +256,7 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
 
     }
   }
-  if(topographie=="TRUE" && plotEn == 2){
+  if(topographie==TRUE && plotEn == 2){
 
     resol= as.integer(resultSafe[1,]$inputData['Resolution',])
     polygon1=Polygon1

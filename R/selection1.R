@@ -16,8 +16,8 @@
 #' @param teil A numeric value, that determines the selection percentage
 #' (numeric)
 #' @param elitism Boolean Value, which indicates whether elitism should be
-#' included or not. (character)
-#' @param nelit If \code{elitism}: is "TRUE", then this input variable
+#' included or not. (logical)
+#' @param nelit If \code{elitism}: is TRUE, then this input variable
 #' determines the amount of individuals in the elite group. (numeric)
 #' @param selstate Determines which selection method is used, "FIX" selects
 #' a constant percentage and "VAR" selects a variable percentage, depending
@@ -29,9 +29,6 @@
 #'
 #' @author Sebastian Gatscha
 
-
-##utils::globalVariables(c("Run","EnergyOverall", "ID", "bin", "Fitness"));
-
 selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
   # library(dplyr);
   # Make a DataFrame of the Fitness Function Output. Representing all x Parks with their fitness value.
@@ -41,8 +38,8 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
   ## arrange descending, to dismiss last 2
   new1 <- dplyr::arrange(new1,dplyr::desc(Parkfitness))
   # Elitarism - A certain amount of individuals will get their fitness values increased
-  if (elitism == "TRUE"){
-    print(paste("Elitarism activated. Best ", nelit, " fitness values are increased"))
+  if (elitism == TRUE){
+    cat(paste("Elitarism activated. Best ", nelit, " fitness values are increased"))
     new1[1:nelit,]$Parkfitness <- new1[1:nelit,]$Parkfitness*10
   }
   # Delete the 4 worst fitness entries.
@@ -53,15 +50,15 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
   if (selstate == "FIX") {
     # Select a fixed amount of indivs. # Teil=2 takes always 50% of population
     if (teil==1){teil=1}else{teil=2}
-    print(paste("teil:", teil))
+    cat(paste("teil:", teil))
     nPar <- ceiling(nrow(new1)/teil);
-    print(paste("FIX: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%"))
+    cat(paste("FIX: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%"))
   }
   # Or the selection percentage is variable, depending on the deveopment of the fitness values.
   if (selstate == "VAR") {
     # Select a variable amount of indivs. Teil comes from the "fuzzy logic" modell
     nPar <- ceiling(nrow(new1)/teil);
-    print(paste("VAR: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%"))
+    cat(paste("VAR: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%"))
   }
   # Upper Limit of selected individuals is 100.
   if (nPar > 100){

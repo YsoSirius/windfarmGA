@@ -4,6 +4,9 @@
 #' resolution and proportionality. The center points of each grid cell
 #' represent possible locations for wind turbines.
 #'
+#' @note The grid of the genetic algorithm will have a resolution of
+#' \code{Rotor * fcrR}. See the arguments of \code{\link{windfarmGA}}
+#'
 #' @export
 #'
 #' @importFrom raster extent res rasterToPolygons plot
@@ -13,19 +16,22 @@
 #' @importFrom graphics text plot
 #'
 #' @param shape Shape file of the considered area (SpatialPolygons)
-#' @param resol The resolution of the grid in meter (numeric)
+#' @param resol The resolution of the grid in meter. Default is 500.
+#' (numeric)
 #' @param prop A factor used for grid calculation.
 #' Determines the percentage a grid has to overlay the considered area
 #' to be represented as grid cell. Default is 1. (numeric)
-#' @param plotGrid Boolean value ("FALSE" or "TRUE") indicating whether
-#' resulting grid should be plotted or not. (character)
+#' @param plotGrid Logical value indicating whether resulting grid
+#' should be plotted or not. Default is FALSE. (logical)
 #'
 #' @return Returns a list with 2 elements. List element 1 will have
 #' the grid cell IDS, and the X and Y coordinates of the centers
 #' of each grid cell. List element 2 is the grid as SpatialPolygons,
 #' which is used for plotting purposes. (list)
 #'
-#' @author Jose Hidasi
+#' @author Jose Hidasi (original) / Sebastian Gatscha (adapted)
+#' @references \url{http://rfunctions.blogspot.co.at/2014/12/
+#' gridfilter-intersect-grid-with-shape.html}
 #'
 #' @examples \donttest{
 #' library(sp)
@@ -63,8 +69,8 @@ GridFilter <- function(shape, resol = 500, prop = 1,plotGrid="FALSE"){
   dry.grid <- sp::spTransform(dry.grid, sp::CRS(sp::proj4string(shape)))
 
   if(!any(dry.grid$layer >= prop)) {
-    print("Maybe the resolution is too high")
-    stop("Try a smaller one.")
+    print("\n################### GA ERROR MESSAGE ###################")
+    stop("A grid cannot be drawn. Reduce the resolution.")
   }
 
   dry.grid.filtered <- dry.grid[dry.grid$layer >= prop,];
@@ -72,7 +78,7 @@ GridFilter <- function(shape, resol = 500, prop = 1,plotGrid="FALSE"){
               sapply(x@Polygons, function(y) y@area)))/1000000,3)
 
   par(mar=c(5,5,5,4))
-  if (plotGrid == "TRUE"){
+  if (plotGrid == TRUE){
     raster::plot(shape, col="orange",main = paste("Resolution:", resol, "m and prop: ",prop,
                                           "\n Total Area:", round(sum(areadrygrid)/1000000,3),
                                           "km^2 \n Number Grids:",length(dry.grid.filtered),

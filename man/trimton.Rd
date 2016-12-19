@@ -19,8 +19,8 @@ current generation (data.frame)}
 (numeric)}
 
 \item{trimForce}{A boolean value which determines which adjustment
-method should be used. "TRUE" uses a probabilistic approach and
-"FALSE" uses a random approach (character)}
+method should be used. TRUE uses a probabilistic approach and
+FALSE uses a random approach (logical)}
 }
 \value{
 Returns a binary matrix with the correct amount of turbines

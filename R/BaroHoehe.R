@@ -1,9 +1,11 @@
-#' @title Barometric Height Formula
+#' @title Calculates Air Density, Air Pressure and Temperature according
+#' to the Barometric Height Formula
 #' @name BaroHoehe
 #' @description Calculates air density, temperature and air pressure
 #'     respective to certain heights according to the International
 #'     standard atmosphere and the barometric height formula.
 #' @export
+#'
 #'
 #' @param data A data.frame containing the height values (data.frame)
 #' @param height Column name of the height values (character)

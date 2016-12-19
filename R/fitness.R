@@ -1,10 +1,12 @@
 #' @title Evaluate the Individual fFtness values
 #' @name fitness
-#' @description Calculates the fitness values Of the current population after
-#' evaluating the energy outputs of all individuals or windfarms, split
-#' duplicated elements to obtain a single otput per individual.
+#' @description The fitness values of the individuals in the
+#' current population are calculated, after having evaluated their energy
+#' outputs in \code{\link{calculateEn}}. This function reduces the resulting
+#' energy outputs to a single fitness value for every individual.
 #'
 #' @export
+#'
 #'
 #' @importFrom raster extent rasterize
 #' @importFrom dplyr select
@@ -12,19 +14,18 @@
 #' @param selection A list containing all individuals of the current
 #' population. (list)
 #' @param referenceHeight The height at which the incoming wind speeds were
-#' measured. Default is 50m. (numeric)
-#' @param RotorHeight The desired height of the turbine. Default is 100m.
-#' (numeric)
+#' measured. (numeric)
+#' @param RotorHeight The desired height of the turbine. (numeric)
 #' @param SurfaceRoughness A surface roughness length of the considered area
-#' in m. Default is 0.14 which is adequate for flat terrain. (numeric)
+#' in m. (numeric)
 #' @param Polygon The considered area as shapefile. (SpatialPolygons)
 #' @param resol1 The resolution of the grid in meter. (numeric)
 #' @param rot The desired rotor radius in meter. (numeric)
 #' @param dirspeed The wind speed and direction data.frame. (data.frame)
-#' @param srtm_crop Boolean value that indicates whether the terrain effect
-#' model is activated ("TRUE") or deactivated ("FALSE"). (character)
-#' @param topograp Boolean value that indicates whether the terrain effect
-#' model is activated ("TRUE") or deactivated ("FALSE"). (character)
+#' @param srtm_crop Logical value that indicates whether the terrain effect
+#' model is activated (TRUE) or deactivated (FALSE). (logical)
+#' @param topograp Logical value that indicates whether the terrain effect
+#' model is activated (TRUE) or deactivated (FALSE). (logical)
 #' @param cclRaster A Corine Land Cover raster, that has to be adapted
 #' previously by hand with the surface roughness lenght for every land cover
 #' type. Is only used, when the terrain effect model is activated. (raster)
@@ -35,7 +36,8 @@
 #' (list)
 #'
 #' @author Sebastian Gatscha
-fitness           <- function(selection, referenceHeight, RotorHeight,SurfaceRoughness, Polygon, resol1,
+fitness           <- function(selection, referenceHeight, RotorHeight,
+                              SurfaceRoughness, Polygon, resol1,
                               rot, dirspeed,srtm_crop,topograp,cclRaster){
   # selection = startsel;Polygon = Polygon1;resol1 = resol2;rot=Rotor; dirspeed=data.in;
   dirspeed$wd <- round(dirspeed$wd,0)

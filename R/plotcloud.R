@@ -6,22 +6,23 @@
 #'
 #' @export
 #'
+
 #' @importFrom dplyr group_by summarise %>%
-#' @importFrom stats smooth.spline
-#' @importFrom graphics lines
+#' @importFrom stats smooth.spline sd
+#' @importFrom graphics lines par plot points
 #'
 #' @param result The output matrix of \code{\link{genAlgo}}, which has
 #' stored all relevant information. (matrix)
 #' @param pl Should the results be plotted? Default is "FALSE" (character)
 #'
-#' @return Returns a data.frame with the valus for fitness, efficiency
-#' and energy for every generation. (data.frame)
+#' @return Returns a data.frame with the values for fitness, efficiency
+#' and energy for all evaluated individuals. (data.frame)
 #'
 #' @author Sebastian Gatscha
 plotCloud <- function(result,pl="FALSE"){
   #result = result2
   # library(dplyr)
-  opar <- par(no.readonly = T)
+  opar <- graphics::par(no.readonly = T)
   clouddata <- result[,7]
   EffCloud <- lapply(clouddata, function(x) x = x[[1]]);
   EneCloud <- lapply(clouddata, function(x) x = x[[2]]);
@@ -51,24 +52,25 @@ plotCloud <- function(result,pl="FALSE"){
 
   if (pl=="TRUE"){
     par(mfrow=c(2,3))
-    plot(FitCldInd, main="Fitness",xlab="Generation",ylab="Fitnessvalue",      pch=20,col="red",cex=1.3);
-    lf <- stats::smooth.spline(x=FitCldInd[,1],y=FitCldInd[,2], spar=0.1); graphics::lines(lf, col='red', lwd=1.2)
-    points(x=FitCldIndmax$X1,y=FitCldIndmax$max,type="l",col="red")
-    points(x=FitCldIndmax$X1,y=FitCldIndmax$min,type="l",col="red")
+    graphics::plot(FitCldInd, main="Fitness",xlab="Generation",ylab="Fitnessvalue",pch=20,col="red",cex=1.3);
+    lf <- stats::smooth.spline(x=FitCldInd[,1],y=FitCldInd[,2], spar=0.1);
+    graphics::lines(lf, col='red', lwd=1.2)
+    graphics::points(x=FitCldIndmax$X1,y=FitCldIndmax$max,type="l",col="red")
+    graphics::points(x=FitCldIndmax$X1,y=FitCldIndmax$min,type="l",col="red")
 
-    plot(EffCldInd, main="Efficiency",xlab="Generation",ylab="Efficiency in %",pch=20,col="orange",cex=1.3);
+    graphics::plot(EffCldInd, main="Efficiency",xlab="Generation",ylab="Efficiency in %",pch=20,col="orange",cex=1.3);
     le <- stats::smooth.spline(x=EffCldInd[,1],y=EffCldInd[,2], spar=0.1); graphics::lines(le, col='orange', lwd=1.2)
-    points(x=EffCldIndmax$X1,y=EffCldIndmax$max,type="l",col="orange")
-    points(x=EffCldIndmax$X1,y=EffCldIndmax$min,type="l",col="orange")
+    graphics::points(x=EffCldIndmax$X1,y=EffCldIndmax$max,type="l",col="orange")
+    graphics:: points(x=EffCldIndmax$X1,y=EffCldIndmax$min,type="l",col="orange")
 
-    plot(EneCldInd, main="Energy",xlab="Generation",ylab="Energy in kW",       pch=20,col="blue",cex=1.3);
+    graphics::plot(EneCldInd, main="Energy",xlab="Generation",ylab="Energy in kW",pch=20,col="blue",cex=1.3);
     len <- stats::smooth.spline(x=EneCldInd[,1],y=EneCldInd[,2], spar=0.1); graphics::lines(len, col='blue', lwd=1.2)
-    points(x=EneCldIndmax$X1,y=EneCldIndmax$max,type="l",col="blue")
-    points(x=EneCldIndmax$X1,y=EneCldIndmax$min,type="l",col="blue")
+    graphics::points(x=EneCldIndmax$X1,y=EneCldIndmax$max,type="l",col="blue")
+    graphics::points(x=EneCldIndmax$X1,y=EneCldIndmax$min,type="l",col="blue")
 
-    plot(x=FitCldIndmax$X1,y=FitCldIndmax$sd, main="Standard Deviation Fitness",xlab="Generation",ylab="Standard Deviation of Population", col="red",type="b")
-    plot(x=EffCldIndmax$X1,y=EffCldIndmax$sd, main="Standard Deviation Efficiency",xlab="Generation",ylab="Standard Deviation of Population", col="orange",type="b")
-    plot(x=EneCldIndmax$X1,y=EneCldIndmax$sd, main="Standard Deviation Energy",xlab="Generation",ylab="Standard Deviation of Population", col="blue",type="b")
+    graphics::plot(x=FitCldIndmax$X1,y=FitCldIndmax$sd, main="Standard Deviation Fitness",xlab="Generation",ylab="Standard Deviation of Population", col="red",type="b")
+    graphics::plot(x=EffCldIndmax$X1,y=EffCldIndmax$sd, main="Standard Deviation Efficiency",xlab="Generation",ylab="Standard Deviation of Population", col="orange",type="b")
+    graphics::plot(x=EneCldIndmax$X1,y=EneCldIndmax$sd, main="Standard Deviation Energy",xlab="Generation",ylab="Standard Deviation of Population", col="blue",type="b")
 
   }
 

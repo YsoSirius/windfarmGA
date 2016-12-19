@@ -3,6 +3,7 @@
 #' @description  Plot the evolution of energy outputs and efficiency rates
 #' over the whole generations. Plots min, mean and max values.
 #' @export
+#'
 #' @importFrom graphics plot lines grid points par
 #'
 #' @param result The output matrix of \code{\link{genAlgo}}, which has

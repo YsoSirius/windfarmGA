@@ -20,12 +20,14 @@
 #' efficiency output should be plotted. (plotEn==1) will plot the best
 #' energy solution and (plotEn==2) will plot the best efficieny solution.
 #' (numeric)
+#' @param Projection A desired Projection can be used instead
+#' of the default Lambert Azimuthal Equal Area Projection. (character)
 #'
 #' @return Returns a data.frame with the coordinates in LON/LAT and plots
 #' the desired best result with a google background map. (data.frame)
 #'
 #' @author Sebastian Gatscha
-GooglePlot <- function(result,Polygon1,best=1,plotEn=1){
+GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection){
   # library(rgeos); library(RgoogleMaps)
   #result= result;
   #rm(result); rm(Polygon1);rm(ProjPoly);rm(ProjLAEA);rm(ProjLonLat);
@@ -34,6 +36,7 @@ GooglePlot <- function(result,Polygon1,best=1,plotEn=1){
   on.exit(par(op))
   par(mfrow=c(1,1))
 
+  ## Set the splitting parameters
   if (plotEn == 1) {
     en = "EnergyOverall"
   }
@@ -41,27 +44,42 @@ GooglePlot <- function(result,Polygon1,best=1,plotEn=1){
     en = "Parkfitness"
   }
 
+  ## Split resulting individuals
   result <- result[,2][order(as.character(sapply(result[,2], "[", en)),decreasing = T)]
   result <- result[best]
   Solution <- do.call("rbind", result)
 
-  ProjLAEA = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  ## Input reference systems
+  if (missing(Projection)) {
+    ProjLAEA = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+    +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  } else {
+    ProjLAEA <- Projection;
+  }
+
   ProjLonLat <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +towgs84=0,0,0"
+
+  ## If Polygon is not already in Lon/Lan it will be projected
   if (sp::proj4string(Polygon1)!=(ProjLonLat)){
-    print("Polygon is not projected in LatLon. Projects it.")
+    cat("Polygon is not projected in LatLon.")
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLonLat))
   }
-  PointSol <- data.frame(dplyr::select(Solution,X,Y)); names(PointSol) <- c("lon","lat")
 
+  ## Take the resulting individual coordinates and project them to Lat/Lon. Used for Google Mapss
+  PointSol <- data.frame(dplyr::select(Solution,X,Y)); names(PointSol) <- c("lon","lat")
   PointSol1 <- sp::SpatialPoints(sp::coordinates(PointSol), proj4string = raster::crs(ProjLAEA))
   PointSol1 <- sp::spTransform(PointSol1, CRSobj = raster::crs(ProjLonLat))
   PointSol1 <- as.data.frame(PointSol1)
 
-  map <- RgoogleMaps::GetMap(center = c(raster::extent(rgeos::gCentroid(Polygon1))[4], raster::extent(rgeos::gCentroid(Polygon1))[1]), zoom = 11, size= c(640,640))
-  RgoogleMaps::PlotOnStaticMap(MyMap = map, lat = PointSol1$lat, lon = PointSol1$lon, zoom = 11, size= c(640,640),
-                  cex = 1.1, pch = 19, col = "red", FUN = points, add = F)
-  RgoogleMaps::PlotPolysOnStaticMap(MyMap = map, polys = sp::SpatialPolygons(Polygon1@polygons,proj4string=Polygon1@proj4string),
-                       border = NULL, lwd = 0.25, add=T)
+  ## Create a Google static map and plot it
+  map <- RgoogleMaps::GetMap(center = c(raster::extent(rgeos::gCentroid(Polygon1))[4],
+                                        raster::extent(rgeos::gCentroid(Polygon1))[1]), zoom = 14, size= c(640,640))
+  RgoogleMaps::PlotOnStaticMap(MyMap = map, lat = PointSol1$lat,
+                               lon = PointSol1$lon, zoom = 14, size= c(640,640),
+                               cex = 1.1, pch = 19, col = "red", FUN = points, add = F)
+  RgoogleMaps::PlotPolysOnStaticMap(MyMap = map,
+                                    polys = sp::SpatialPolygons(Polygon1@polygons,proj4string=Polygon1@proj4string),
+                                    border = NULL, lwd = 0.25, add=T)
   invisible(PointSol1)
 }
 

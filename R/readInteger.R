@@ -10,15 +10,19 @@
 #'
 #' @author Sebastian Gatscha
 readinteger        <- function(){
-  print("Select appropriate Method. Either 'EQU' for equal crossover parts or 'RAN' for random parts.")
+  cat("\nSelect appropriate Method. Either 'EQU' for equal crossover parts or 'RAN' for random parts.")
   crPaInter <- readline(prompt = "Type 'R' for random and 'E' for equal parts.")
+
+  crPaInter <- toupper(crPaInter)
+
   if(crPaInter=="R"){crossPart = "RAN"}
   if(crPaInter=="E"){crossPart = "EQU"}
 
-  if  (crossPart!= "EQU" & crossPart !="RAN") {
-    return(readinteger())
+  if  (crPaInter!= "E" & crPaInter !="R") {
+    crossPart <- readinteger()
   }
 
   return(crossPart)
 }
+
 

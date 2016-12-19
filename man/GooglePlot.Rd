@@ -4,7 +4,7 @@
 \alias{GooglePlot}
 \title{Plot the the \code{best} Results with Google background map}
 \usage{
-GooglePlot(result, Polygon1, best = 1, plotEn = 1)
+GooglePlot(result, Polygon1, best = 1, plotEn = 1, Projection)
 }
 \arguments{
 \item{result}{The output matrix of \code{\link{genAlgo}}, which has
@@ -19,6 +19,9 @@ to be plotted. 1 will indicate the solution with highest value. (numeric)}
 efficiency output should be plotted. (plotEn==1) will plot the best
 energy solution and (plotEn==2) will plot the best efficieny solution.
 (numeric)}
+
+\item{Projection}{A desired Projection can be used instead
+of the default Lambert Azimuthal Equal Area Projection. (character)}
 }
 \value{
 Returns a data.frame with the coordinates in LON/LAT and plots

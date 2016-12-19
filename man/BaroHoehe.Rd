@@ -2,7 +2,8 @@
 % Please edit documentation in R/BaroHoehe.R
 \name{BaroHoehe}
 \alias{BaroHoehe}
-\title{Barometric Height Formula}
+\title{Calculates Air Density, Air Pressure and Temperature according
+to the Barometric Height Formula}
 \usage{
 BaroHoehe(data, height, po = 101325, ro = 1.225)
 }

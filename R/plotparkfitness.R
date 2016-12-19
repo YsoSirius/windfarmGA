@@ -3,6 +3,7 @@
 #' @description Plot the evolution of fitness values with the influences of
 #' selection, crossover and mutation.
 #' @export
+#'
 #' @importFrom graphics par layout lines grid plot points axis legend abline
 #' mtext
 #' @importFrom grDevices colorRampPalette

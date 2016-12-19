@@ -1,16 +1,18 @@
 #' @title Crossover Method
 #' @name crossover1
-#' @description The crossover method, which takes the selected individuals
-#' after the selection method and produces offspring through crossover and
-#' permutations.
+#' @description The crossover method of the genetic algorithm, which takes
+#' the selected individuals after the \code{\link{selection1}} function and
+#' produces new offsprings through permutation.
+#'
 #' @export
 #'
 #' @importFrom gtools permutations
 #'
-#' @param se6 The selected individuals. (list)
+#' @param se6 The selected individuals. The output of \code{\link{selection1}}
+#' (list)
 #' @param u The crossover point rate. (numeric)
-#' @param uplimit The upper limit of allowed permutations. Default is 300.
-#' (numeric)
+#' @param uplimit The upper limit of allowed permutations. The current
+#' algorithm has an upper bound of 300 permutations. (numeric)
 #' @param crossPart The crossover method. Either "EQU" or "RAN". (character)
 
 #' @return Returns a binary coded matrix of all permutations and all grid
@@ -23,18 +25,18 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
   #rm(selOut,se6,numel,i,a1,a2,b1,b2,a3,b3,j,c1,c2,d1,d2,c3,d3)
   #se6 = parents_new; crossPart=crossPart1;
 
-  print(paste("crossover point rate: ",u+1))
+  cat(paste("crossover point rate: ",u+1))
   se6fit <- se6[[2]][1,-1]; se6 <- se6[[1]]
 
   se6 = se6[,-1]; parid <- sample(1:length(se6));
-  z = seq(1, length(parid),2); z; all <- vector("list", length(z));
+  z = seq(1, length(parid),2); all <- vector("list", length(z));
 
   #crossPart = "ran"; crosEquEartN = 5
   crossPart = toupper(crossPart)
 
   sene2fit <- vector(mode = "list",length = length(z))
   for (e in 1:length(z)) {
-    #print(e)
+    #cat(e)
     #e=1
     r = z[[e]];r
     # Sene ist der genCode des 1ten Elternteils, Sene1 der des 2ten Elternteils
@@ -55,7 +57,7 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
       #split the genCode in equal parts, that are t long. a is from parent1 and b for parent2.
       a <- base::split(sene,as.numeric(gl(length(sene),t1,length(sene)))) ;
       b <- base::split(sene1,as.numeric(gl(length(sene1),t1,length(sene1))));
-      #print(paste(crosEquPartN, " equal crossover parts are generated"))
+      #cat(paste(crosEquPartN, " equal crossover parts are generated"))
     }
     if (crossPart == "RAN"){
       ## Random Parts
@@ -64,7 +66,7 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
       u1 <- sort(sample(2:(length(sene)-1), u, replace=F));
       a <- splitAt(sene,u1);
       b <- splitAt(sene1,u1);
-      #print(paste(length(a), " random crossover parts are generated"))
+      #cat(paste(length(a), " random crossover parts are generated"))
     }
 
     x1 <- rbind(a,b);      perm <- gtools::permutations(n=2,r=ncol(x1),v=1:nrow(x1),repeats.allowed=T);
@@ -97,22 +99,22 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
   nI <- do.call("cbind", all);
 
   if (length(fitChi) != ncol(nI)){
-    print(paste("Crossover. Amount of Turbines is wrong. Fix BUG"))
+    cat(paste("Crossover. Amount of Turbines is wrong. Fix BUG"))
     break()
   }
 
-  print(paste("How many parental pairs are at hand: ",length(z)))
-  print(paste("How many permutations are possible: ", length(z)*(2^(trunc(u)+1))))
+  cat(paste("How many parental pairs are at hand: ",length(z)))
+  cat(paste("How many permutations are possible: ", length(z)*(2^(trunc(u)+1))))
 
   partaksur = ncol(nI)
   if (partaksur >= uplimit){
     partaksur = uplimit
-    print(paste("Population max limit reached: ", uplimit ))
+    cat(paste("Population max limit reached: ", uplimit ))
   }
 
   # Select only some of the available permutations. Take fitness value as prop value.
   partak <- sort(sample(1:length(nI[1,]),partaksur,prob = fitChi));
-  print(paste("How many permutations are selected: ", length(partak) ))
+  cat(paste("How many permutations are selected: ", length(partak) ))
   nI <- nI[,partak]
 
   return(nI)

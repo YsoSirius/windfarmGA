@@ -104,20 +104,20 @@
 # # First check if the grid size is convenient
 # Rotor= 30
 # fcrR= 3
-# GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop=1, plotGrid = "TRUE")
+# GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop=1, plotGrid = TRUE)
 # result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=30,fcrR=3,iteration=100,vdirspe = data.in)
 
 
 # ############### PLOTTING OUTPUTS ###################
 # plotEvolution(result,T,0.3)
-# plotResult(resultMa = result, Polygon1 = Polygon1, best = 1 ,plotEn = 2,topographie = "FALSE");
+# plotResult(resultMa = result, Polygon1 = Polygon1, best = 1 ,plotEn = 2,topographie = FALSE);
 # plotparkfitness(result,0.1)
 # plotfitnessevolution(result)
 # plotcloud(result,"TRUE")
 # plotbeorwor(result)
-# GooglePlot(result,Polygon1)
-# GoogleChromePLot(result,Polygon1,1,1)
-# heatMap(result,si=5,Polygon1 = Polygon1)
+# GooglePlot(result,Polygon1,Projection)
+# GoogleChromePlot(result,Polygon1,1,1)
+# heatmapGA(result,si=5,Polygon1 = Polygon1)
 
 
 

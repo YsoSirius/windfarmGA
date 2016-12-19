@@ -1,12 +1,14 @@
-#' @title Start The Genetic Algorithm
+#' @title Start The Genetic Algorithm for a wind Farm Layout
 #' @name genAlgo
-#' @description  The method which coordinates all other elements of the
+#' @description  This function coordinates all other elements of the
 #' genetic algorithm. To initiate an optimization run, this method has to
-#' be called with the desired inputs. To activate the terrain effect
-#' model, the sources of the Corine Land cover raster and the adapted
-#' legend csv file have to be assigned.
+#' be called with the desired inputs. To be able to include the terrain effect
+#' model, the sources of the Corine Land cover raster has  This function will not contoll
+#' user inputs before an optimization process. It is therefore recommended
+#' to start an optimization run with the \code{\link{windfarmGA}} function.
 #'
 #' @export
+#'
 #'
 #' @importFrom raster crs getData crop mask projectRaster reclassify
 #' @importFrom sp spTransform
@@ -26,7 +28,17 @@
 #' @param RotorHeight The desired height of the turbine.
 #' Default is 100m (numeric)
 #' @param SurfaceRoughness A surface roughness length of the
-#' considered area in m. (numeric)
+#' considered area in m.  If the terrain effect model is activated, a
+#' surface roughness will be calculated for every grid cell with the
+#' elevation and land cover information. (numeric)
+#' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
+#' required, when the terrain effect model is activated. (character)
+#' @param sourceCCLRoughness The source to the adapted
+#' Corine Land Cover legend as .csv file. Only required, when terrain
+#' effect model is activated. As default a .csv file within this
+#' package (\file{~/extdata}) is taken that was already adapted
+#' manually. To use your own .csv legend this variable has to be assigned.
+#' See Details. (character)
 #' @param Proportionality A numeric factor used for grid calculation.
 #' Determines the percentage a grid has to overlay (numeric)
 #' @param iteration A numeric value indicating the desired amount
@@ -35,11 +47,11 @@
 #' (numeric)
 #' @param vdirspe A data.frame containing the incoming wind speeds,
 #' wind directions and probabilities (data.frame)
-#' @param topograp Boolean Value, which indicates if the terrain effect model
-#'  should be activated or not. (character)
+#' @param topograp Logical Value, which indicates if the terrain effect model
+#'  should be activated or not. (logical)
 #' @param elitism Boolean Value, which indicates whether elitism should
-#' be included or not. (character)
-#' @param nelit If \code{elitism} is "TRUE", then this input variable
+#' be included or not. (logical)
+#' @param nelit If \code{elitism} is TRUE, then this input variable
 #' determines the amount of individuals in the elite group. (numeric)
 #' @param selstate Determines which selection method is used,
 #' "FIX" selects a constant percentage and "VAR" selects a variable percentage,
@@ -47,10 +59,14 @@
 #' @param crossPart1 Determines which crossover method is used,
 #' "EQU" divides the genetic code at equal intervals and
 #' "RAN" divides the genetic code at random locations. (character)
-#' @param trimForce If activated (\code{trimForce}=="TRUE"),
+#' @param trimForce If activated (\code{trimForce}==TRUE),
 #' the algorithm will take a probabilistic approach to trim the windfarms
-#' to the desired amount of turbines. If \code{trimForce}=="FALSE" the
-#' adjustment will be random. Default is "TRUE". (character)
+#' to the desired amount of turbines. If deactivated
+#' (\code{trimForce}==FALSE) the adjustment will be random.
+#' Default is TRUE. (logical)
+#' @param Projection A desired Projection can be used instead
+#' of the default Lambert Azimuthal Equal Area Projection. (character)
+#'
 #'
 #' @return The result of this run is a matrix of all relevant output
 #' parameters. This output can be used for several plotting functions.
@@ -82,10 +98,11 @@
 #' #          vdirspe = data.in)
 #'}
 #' @author Sebastian Gatscha
-
-genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHeight,SurfaceRoughness,
-                              Proportionality, iteration, mutr, vdirspe, topograp,
-                              elitism, nelit, selstate, crossPart1,trimForce){
+genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHeight,
+                              SurfaceRoughness, Proportionality, iteration, mutr,
+                              vdirspe, topograp, elitism, nelit, selstate,
+                              crossPart1,trimForce, Projection, sourceCCL,
+                              sourceCCLRoughness){
   oldpar <- graphics::par(no.readonly = T)
   #plot.new();
   graphics::par(ask=F);
@@ -93,6 +110,13 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
   resol2 <- fcrR*Rotor
   CrossUpLimit = 300
 
+  ## Check if Input Data is correct and prints it out.
+  if  (crossPart1!= "EQU" & crossPart1 !="RAN") {
+    crossPart1 <- readinteger()
+  }
+  if  (selstate!= "FIX" & selstate !="VAR") {
+    selstate <- readintegerSel()
+  }
   inputData <- list(Input_Data=rbind("Rotorradius"=Rotor,"Number of turbines"=n,"Grid Shape Factor"= fcrR,
                                      "Iterations"=iteration,"Mutation Rate"=mutr,
                                      "Percentage of Polygon"=Proportionality,"Topographie"=topograp,
@@ -101,27 +125,34 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
                                      "Reference Height"= referenceHeight, "Rotor Height"=RotorHeight,
                                      "Resolution" = resol2));
   inputWind <- list(Windspeed_Data=vdirspe)
-
   print(inputData);print(inputWind)
+  readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")
 
-  ProjLAEA = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+
+  ##  Project the Polygon to LAEA if it is not already.
+  if (missing(Projection)) {
+    ProjLAEA = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
               +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  } else {
+    ProjLAEA <- Projection;
+  }
+
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
-  if  (crossPart1!= "EQU" & crossPart1 !="RAN") {
-    crossPart1 <- readinteger()
-  }
 
+  ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   Grid1 <- GridFilter(shape = Polygon1,resol = resol2,prop = Proportionality);
   Grid <- Grid1[[1]]
   dry.grid.filtered <- Grid1[[2]]
   AmountGrids <- nrow(Grid)
 
+  ## Determine the amount of initial individuals and create initial population.
   nStart = (AmountGrids*n)/iteration;   if (nStart < 100) {nStart = 100};   if (nStart > 300) {nStart = 300}
   nStart<- ceiling(nStart);
   startsel <- StartGA(Grid,n,nStart);
 
+  ## Initialize all needed variables as list.
   maxParkwirkungsg = 0; allparkcoeff <- vector("list",iteration);
   bestPaEn <- vector("list",iteration);
   bestPaEf <- vector("list",iteration); fuzzycontr <- vector("list",iteration);
@@ -130,10 +161,12 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
   selcross <- vector("list",iteration);
   beorwor <- vector("list",iteration); mut_rate <- vector("list",iteration);
   allCoords <- vector("list",iteration);
-  if (topograp == "FALSE"){
-    print("Topography and orography are not taken into account.")
-  } else if (topograp == "TRUE"){
-    print("Topography and orography are taken into account.")
+
+  ## Checks if terrain effect model is activated, and makes necessary caluclations.
+  if (topograp == FALSE){
+    cat("Topography and orography are not taken into account.")
+  } else if (topograp == TRUE){
+    cat("Topography and orography are taken into account.")
 
     par(mfrow=c(3,1))
     ## SRTM Daten
@@ -144,21 +177,23 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
     srtm_crop <- raster::crop(srtm, Polygon1);
     srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
-    # Get the estimated mean wind speed value for Austria only
-    #     rassou <- "C:/Users/Bobo/Documents/STUDIUM/_____WS_2015_16/int_SeminarWind/INT_Seminar/windatlas_nachbauen/Erwartungswert.gri"
-    #     windraster <- raster::raster(rassou)
-    #     Polygon12 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(windraster));
-    #     windcrop <- raster::crop(windraster, Polygon12);   windcrop <- raster::mask(windcrop, Polygon12);
-    #     windraster <- raster::projectRaster(windcrop, raster::crs = crs(ProjLAEA));
-    #     plot(windraster, main="Mean Wind Speed in m/s"):
-    #
-
     Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA));
     srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA));
     plot(srtm_crop, main="Elevation from SRTM");
     plot(Polygon1,add=T); plot(dry.grid.filtered,add=T)
 
+
     # INclude Corine Land Cover Raster to get an estimation of Surface Roughness
+    if (missing(sourceCCLRoughness)) {
+      path = paste0(system.file(package = "windfarmGA"), "/extdata/")
+      sourceCCLRoughness <- paste0(path, "clc_legend.csv")
+      # sourceCCL <- paste0(path,"g100_06.tif")
+    } else {
+      print("You are using your own Corine Land Cover legend.")
+      readline(prompt = "\nPress <ENTER> if you want to continue")
+      sourceCCLRoughness <- sourceCCLRoughness
+    }
+
     ccl <- raster::raster(sourceCCL)
     cclPoly <- raster::crop(ccl,Polygon1)
     cclPoly1 <- raster::mask(cclPoly,Polygon1)
@@ -168,7 +203,8 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
 
   }
 
-
+  ## Start the GA
+  print("\n Start Genetic Algorithm ...")
   rbPal <- grDevices::colorRampPalette(c('red','green'))
   i=1
   while (i <= iteration) {
@@ -182,7 +218,6 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
       fit <- fitness(selection = getRectV,referenceHeight, RotorHeight,SurfaceRoughness,
                      Polygon = Polygon1,resol1 = resol2,rot = Rotor, dirspeed = vdirspe,
                      srtm_crop,topograp,cclRaster)
-
     }
 
     allparks <- do.call("rbind",fit);
@@ -200,7 +235,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
     allparkcoeff[[i]] <- cbind(maxparkfitness,meanparkfitness,minparkfitness, MaxEnergyRedu,
                                MeanEnergyRedu,MinEnergyRedu,maxParkwirkungsg,meanParkwirkungsg,minParkwirkungsg)
     clouddata[[i]] <- dplyr::select(allparksUni,EfficAllDir,EnergyOverall,Parkfitness);
-    cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"));
+    print(c("\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"));
 
     ## Highest Energy Output
     xd <- allparks[allparks$EnergyOverall==max(allparks$EnergyOverall),]$EnergyOverall[1];
@@ -210,8 +245,8 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
     ind1 <- allparks$EfficAllDir == xd1;     bestPaEf[[i]] <- allparks[ind1,][1:n,]
     # Print out most relevant information on Generation i
     afvs <- allparks[allparks$EnergyOverall==max(allparks$EnergyOverall),];
-    cat(paste("How many individuals exist: ",  length(fit) ), "\n");
-    cat(paste("How many parks are in local Optimum: ",  (length(afvs[,1])/n) ), "\n")
+    print(paste("How many individuals exist: ",  length(fit) ), "\n");
+    print(paste("How many parks are in local Optimum: ",  (length(afvs[,1])/n) ), "\n")
     nindivfit <- length(fit)
 
     lebre <- length(unique(bestPaEn[[i]]$AbschGesamt))
@@ -262,7 +297,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
 
       last7 <- besPE[i:(i-5)]
       if (!any(last7==maxBisher)){
-        cat(paste("Park with highest Fitness level to date is replaced in the list.", "\n\n"))
+        print(paste("Park with highest Fitness level to date is replaced in the list.", "\n\n"))
         fit <- append(fit, BestForNo)
       }
     }
@@ -356,7 +391,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
       mutrn <- round(mutrn +((i)/(20*iteration)),5);
       mut <- mutation(a = crossOut, p = mutrn);
       mut_rat <- mutrn
-      cat(paste("1. Mutation Rate is", mutrn, "\n\n"))
+      print(paste("1. Mutation Rate is", mutrn, "\n\n"))
     } else {
       mut <- mutation(a = crossOut, p = mutr);
       mut_rat <- mutr
@@ -385,6 +420,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
     }
   }
 
+  ## Reduce the results, if a slution was found prior to the iend of the iterations
   mut_rate <- mut_rate[lapply(mut_rate,length)!=0];
   beorwor <- beorwor[lapply(beorwor,length)!=0] ;
   selcross <- selcross[lapply(selcross,length)!=0] ;
@@ -397,6 +433,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR,referenceHeight, RotorHei
   nindiv <- nindiv[lapply(nindiv,length)!=0]
   allCoords <- allCoords[lapply(allCoords,length)!=0] ;
 
+  ## Bind the results together and Output them.
   alldata <- cbind(allparkcoeff,bestPaEn,bestPaEf,fuzzycontr,fitnessValues,nindiv,
                    clouddata,selcross,beorwor,inputData,inputWind,mut_rate,allCoords)
   graphics::par(oldpar)

@@ -18,6 +18,13 @@ two Points. (numeric)
 \description{
 Calculates the euclidian distance between two points.
 }
+\examples{
+\donttest{
+x=c(200,100)
+y=c(1000,2000)
+euc.dist(x,y)
+}
+}
 \author{
 Sebastian Gatscha
 }

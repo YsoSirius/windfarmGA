@@ -12,13 +12,12 @@ fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
 population. (list)}
 
 \item{referenceHeight}{The height at which the incoming wind speeds were
-measured. Default is 50m. (numeric)}
+measured. (numeric)}
 
-\item{RotorHeight}{The desired height of the turbine. Default is 100m.
-(numeric)}
+\item{RotorHeight}{The desired height of the turbine. (numeric)}
 
 \item{SurfaceRoughness}{A surface roughness length of the considered area
-in m. Default is 0.14 which is adequate for flat terrain. (numeric)}
+in m. (numeric)}
 
 \item{Polygon}{The considered area as shapefile. (SpatialPolygons)}
 
@@ -28,11 +27,11 @@ in m. Default is 0.14 which is adequate for flat terrain. (numeric)}
 
 \item{dirspeed}{The wind speed and direction data.frame. (data.frame)}
 
-\item{srtm_crop}{Boolean value that indicates whether the terrain effect
-model is activated ("TRUE") or deactivated ("FALSE"). (character)}
+\item{srtm_crop}{Logical value that indicates whether the terrain effect
+model is activated (TRUE) or deactivated (FALSE). (logical)}
 
-\item{topograp}{Boolean value that indicates whether the terrain effect
-model is activated ("TRUE") or deactivated ("FALSE"). (character)}
+\item{topograp}{Logical value that indicates whether the terrain effect
+model is activated (TRUE) or deactivated (FALSE). (logical)}
 
 \item{cclRaster}{A Corine Land Cover raster, that has to be adapted
 previously by hand with the surface roughness lenght for every land cover
@@ -45,9 +44,10 @@ the resulting energy outputs, efficiency rates and fitness values.
 (list)
 }
 \description{
-Calculates the fitness values Of the current population after
-evaluating the energy outputs of all individuals or windfarms, split
-duplicated elements to obtain a single otput per individual.
+The fitness values of the individuals in the
+current population are calculated, after having evaluated their energy
+outputs in \code{\link{calculateEn}}. This function reduces the resulting
+energy outputs to a single fitness value for every individual.
 }
 \author{
 Sebastian Gatscha

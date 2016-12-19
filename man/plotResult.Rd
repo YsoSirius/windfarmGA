@@ -4,8 +4,8 @@
 \alias{plotResult}
 \title{Plot the best Results}
 \usage{
-plotResult(result, Polygon1, best = 5, plotEn = 1, topographie = "FALSE",
-  Grid)
+plotResult(result, Polygon1, best = 5, plotEn = 1, topographie = FALSE,
+  Grid, Projection)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{genAlgo}},
@@ -20,11 +20,14 @@ should be plotted. (numeric)}
 efficiency output should be plotted. If (plotEn==1) plots the best energy
 solutions and (plotEn==2) plots the best efficiency solutions. (numeric)}
 
-\item{topographie}{A boolean value, indicating whether terrain effects
-should be considered and plotted or not. (character)}
+\item{topographie}{A logical value, indicating whether terrain effects
+should be considered and plotted or not. (logical)}
 
 \item{Grid}{The grid as SpatialPolygons, which is obtained from
 \code{\link{GridFilter}} and used for plotting.}
+
+\item{Projection}{A desired Projection can be used instead
+of the default Lambert Azimuthal Equal Area Projection. (character)}
 }
 \value{
 Returns a data.frame of the best (energy/efficiency) individual

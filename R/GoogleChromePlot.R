@@ -1,5 +1,5 @@
 #' @title Plot the best Results in Google Chrome
-#' @name GoogleChromePLot
+#' @name GoogleChromePlot
 #' @description  Plot the best energy or efficiency solutions in google Chrome
 #' with a satelitte background image of google maps. Input Polygon is
 #' not plotted
@@ -17,15 +17,15 @@
 #' efficiency output should be plotted. (plotEn==1) will plot the best
 #' energy solution and (plotEn==2) will plot the best efficieny solution.
 #' (numeric)
+#' @param Projection A desired Projection can be used instead
+#' of the default Lambert Azimuthal Equal Area Projection. (character)
 #'
 #' @return NULL
 #'
 #' @author Sebastian Gatscha
-GoogleChromePLot <- function(result,Polygon1,best=1,plotEn=1) {
-  GooglePLot<-NA;
-  rm(GooglePLot)
+GoogleChromePlot <- function(result,Polygon1,best=1,plotEn=1,Projection) {
 
-  a <- GooglePLot(result,Polygon1,best,plotEn)
+  a <- GooglePlot(result,Polygon1,best,plotEn,Projection)
   a$latlon <- paste(a$lat, a$lon, sep=":")
   map.gb <- googleVis::gvisMap(a, locationvar="latlon",options = list(showTip=T, showLine=T, enableScrollWheel=TRUE,mapType="hybrid",
                                    useMapTypeControl=T, width=1400,height=800,icons=paste0("{",

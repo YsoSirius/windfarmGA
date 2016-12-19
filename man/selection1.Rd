@@ -16,9 +16,9 @@ selection1(fit, Grid, teil, elitism, nelit, selstate)
 (numeric)}
 
 \item{elitism}{Boolean Value, which indicates whether elitism should be
-included or not. (character)}
+included or not. (logical)}
 
-\item{nelit}{If \code{elitism}: is "TRUE", then this input variable
+\item{nelit}{If \code{elitism}: is TRUE, then this input variable
 determines the amount of individuals in the elite group. (numeric)}
 
 \item{selstate}{Determines which selection method is used, "FIX" selects

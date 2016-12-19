@@ -14,8 +14,8 @@ stored all relevant information. (matrix)}
 \item{pl}{Should the results be plotted? Default is "FALSE" (character)}
 }
 \value{
-Returns a data.frame with the valus for fitness, efficiency
-and energy for every generation. (data.frame)
+Returns a data.frame with the values for fitness, efficiency
+and energy for all evaluated individuals. (data.frame)
 }
 \description{
 Plot all the fitness, efficiency and energy outputs of

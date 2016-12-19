@@ -4,19 +4,20 @@
 \alias{GridFilter}
 \title{Make a grid from a Polygon}
 \usage{
-GridFilter(shape, resol = 500, prop = 1, plotGrid = "FALSE")
+GridFilter(shape, resol = 500, prop = 1, plotGrid = FALSE)
 }
 \arguments{
 \item{shape}{Shape file of the considered area (SpatialPolygons)}
 
-\item{resol}{The resolution of the grid in meter (numeric)}
+\item{resol}{The resolution of the grid in meter. Default is 500.
+(numeric)}
 
 \item{prop}{A factor used for grid calculation.
 Determines the percentage a grid has to overlay the considered area
 to be represented as grid cell. Default is 1. (numeric)}
 
-\item{plotGrid}{Boolean value ("FALSE" or "TRUE") indicating whether
-resulting grid should be plotted or not. (character)}
+\item{plotGrid}{Logical value indicating whether resulting grid
+should be plotted or not. Default is FALSE. (logical)}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have
@@ -28,6 +29,10 @@ which is used for plotting purposes. (list)
 Create a grid from a given polygon and with a certain
 resolution and proportionality. The center points of each grid cell
 represent possible locations for wind turbines.
+}
+\note{
+The grid of the genetic algorithm will have a resolution of
+\code{Rotor * fcrR}. See the arguments of \code{\link{windfarmGA}}
 }
 \examples{
 \donttest{
@@ -46,6 +51,10 @@ GridFilter(Polygon1,200,1,"TRUE")
 }
 }
 \author{
-Jose Hidasi
+Jose Hidasi (original) / Sebastian Gatscha (adapted)
+}
+\references{
+\url{http://rfunctions.blogspot.co.at/2014/12/
+gridfilter-intersect-grid-with-shape.html}
 }
 

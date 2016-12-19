@@ -2,11 +2,12 @@
 % Please edit documentation in R/genAlgo.R
 \name{genAlgo}
 \alias{genAlgo}
-\title{Start The Genetic Algorithm}
+\title{Start The Genetic Algorithm for a wind Farm Layout}
 \usage{
 genAlgo(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHeight,
   SurfaceRoughness, Proportionality, iteration, mutr, vdirspe, topograp,
-  elitism, nelit, selstate, crossPart1, trimForce)
+  elitism, nelit, selstate, crossPart1, trimForce, Projection, sourceCCL,
+  sourceCCLRoughness)
 }
 \arguments{
 \item{Polygon1}{The considered area as shapefile (SpatialPolygons)}
@@ -26,7 +27,9 @@ wind speeds were measured. Default is 50m (numeric)}
 Default is 100m (numeric)}
 
 \item{SurfaceRoughness}{A surface roughness length of the
-considered area in m. (numeric)}
+considered area in m.  If the terrain effect model is activated, a
+surface roughness will be calculated for every grid cell with the
+elevation and land cover information. (numeric)}
 
 \item{Proportionality}{A numeric factor used for grid calculation.
 Determines the percentage a grid has to overlay (numeric)}
@@ -40,13 +43,13 @@ of iterations of the algorithm (numeric)}
 \item{vdirspe}{A data.frame containing the incoming wind speeds,
 wind directions and probabilities (data.frame)}
 
-\item{topograp}{Boolean Value, which indicates if the terrain effect model
-should be activated or not. (character)}
+\item{topograp}{Logical Value, which indicates if the terrain effect model
+should be activated or not. (logical)}
 
 \item{elitism}{Boolean Value, which indicates whether elitism should
-be included or not. (character)}
+be included or not. (logical)}
 
-\item{nelit}{If \code{elitism} is "TRUE", then this input variable
+\item{nelit}{If \code{elitism} is TRUE, then this input variable
 determines the amount of individuals in the elite group. (numeric)}
 
 \item{selstate}{Determines which selection method is used,
@@ -57,10 +60,24 @@ depending on the development of the fitness values. (character)}
 "EQU" divides the genetic code at equal intervals and
 "RAN" divides the genetic code at random locations. (character)}
 
-\item{trimForce}{If activated (\code{trimForce}=="TRUE"),
+\item{trimForce}{If activated (\code{trimForce}==TRUE),
 the algorithm will take a probabilistic approach to trim the windfarms
-to the desired amount of turbines. If \code{trimForce}=="FALSE" the
-adjustment will be random. Default is "TRUE". (character)}
+to the desired amount of turbines. If deactivated
+(\code{trimForce}==FALSE) the adjustment will be random.
+Default is TRUE. (logical)}
+
+\item{Projection}{A desired Projection can be used instead
+of the default Lambert Azimuthal Equal Area Projection. (character)}
+
+\item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
+required, when the terrain effect model is activated. (character)}
+
+\item{sourceCCLRoughness}{The source to the adapted
+Corine Land Cover legend as .csv file. Only required, when terrain
+effect model is activated. As default a .csv file within this
+package (\file{~/extdata}) is taken that was already adapted
+manually. To use your own .csv legend this variable has to be assigned.
+See Details. (character)}
 }
 \value{
 The result of this run is a matrix of all relevant output
@@ -68,11 +85,12 @@ parameters. This output can be used for several plotting functions.
 (matrix)
 }
 \description{
-The method which coordinates all other elements of the
+This function coordinates all other elements of the
 genetic algorithm. To initiate an optimization run, this method has to
-be called with the desired inputs. To activate the terrain effect
-model, the sources of the Corine Land cover raster and the adapted
-legend csv file have to be assigned.
+be called with the desired inputs. To be able to include the terrain effect
+model, the sources of the Corine Land cover raster has  This function will not contoll
+user inputs before an optimization process. It is therefore recommended
+to start an optimization run with the \code{\link{windfarmGA}} function.
 }
 \examples{
 \donttest{

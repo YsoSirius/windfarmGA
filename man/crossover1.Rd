@@ -7,12 +7,13 @@
 crossover1(se6, u, uplimit, crossPart)
 }
 \arguments{
-\item{se6}{The selected individuals. (list)}
+\item{se6}{The selected individuals. The output of \code{\link{selection1}}
+(list)}
 
 \item{u}{The crossover point rate. (numeric)}
 
-\item{uplimit}{The upper limit of allowed permutations. Default is 300.
-(numeric)}
+\item{uplimit}{The upper limit of allowed permutations. The current
+algorithm has an upper bound of 300 permutations. (numeric)}
 
 \item{crossPart}{The crossover method. Either "EQU" or "RAN". (character)}
 }
@@ -22,9 +23,9 @@ cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 (matrix)
 }
 \description{
-The crossover method, which takes the selected individuals
-after the selection method and produces offspring through crossover and
-permutations.
+The crossover method of the genetic algorithm, which takes
+the selected individuals after the \code{\link{selection1}} function and
+produces new offsprings through permutation.
 }
 \author{
 Sebastian Gatscha

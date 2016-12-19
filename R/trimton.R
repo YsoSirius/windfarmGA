@@ -4,7 +4,6 @@
 #' turbines.
 #'
 #' @export
-#'
 #' @importFrom dplyr select group_by summarise_each %>%
 #' @importFrom utils globalVariables
 #'
@@ -16,8 +15,8 @@
 #' @param nGrids A numeric value indicating the total amount of grid cells
 #' (numeric)
 #' @param trimForce A boolean value which determines which adjustment
-#' method should be used. "TRUE" uses a probabilistic approach and
-#' "FALSE" uses a random approach (character)
+#' method should be used. TRUE uses a probabilistic approach and
+#' FALSE uses a random approach (logical)
 #'
 #' @return Returns a binary matrix with the correct amount of turbines
 #' per individual (matrix)
@@ -83,7 +82,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
 
     if (zviel != 0) {
       if (zviel > 0) {
-        if (trimForce == "TRUE"){
+        if (trimForce == TRUE){
           # Delete turbines with Probability
           smpra <- sort(sample(welche, zviel,replace=F,prob = prob1));
           prob1[which(welche==smpra[1])]
@@ -94,7 +93,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
         # Delete the 1 entry and make no turbine.
         mut1[[i]][smpra] = 0
       } else {
-        if (trimForce == "TRUE"){
+        if (trimForce == TRUE){
           # Add turbines with Probability
           smpra <- sort(sample(propwelcheN$RectID, (-zviel),replace=F, prob = prob2));
         } else {
