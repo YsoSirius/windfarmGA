@@ -76,13 +76,14 @@ GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection,...){
   if (length(plT)==0){plT <- TRUE}
   if (plT == TRUE){
     map <- RgoogleMaps::GetMap(center = c(raster::extent(rgeos::gCentroid(Polygon1))[4],
-                                          raster::extent(rgeos::gCentroid(Polygon1))[1]), zoom = 13, size= c(640,640))
+                                          raster::extent(rgeos::gCentroid(Polygon1))[1]), zoom = 13,
+                               size= c(640,640), maptype="satellite",frame = T)
     RgoogleMaps::PlotOnStaticMap(MyMap = map, lat = PointSol1$lat,
                                  lon = PointSol1$lon, zoom = 13, size= c(640,640),
-                                 cex = 1.1, pch = 19, col = "red", FUN = points, add = F)
+                                 cex = 1.3, pch = 19, col = "red", FUN = points, add = F)
     RgoogleMaps::PlotPolysOnStaticMap(MyMap = map,
                                       polys = sp::SpatialPolygons(Polygon1@polygons,proj4string=Polygon1@proj4string),
-                                      border = NULL, lwd = 0.25, add=T)
+                                      border = NULL, lwd = 1, add=T)
   }
   invisible(PointSol1)
 }
