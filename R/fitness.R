@@ -42,15 +42,24 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   # selection = startsel;Polygon = Polygon1;resol1 = resol2;rot=Rotor; dirspeed=data.in;
   dirspeed$wd <- round(dirspeed$wd,0)
   dirspeed$wd <-  round(dirspeed$wd/100,1)*100; duplicated(dirspeed$wd);
+  ## If no probabilites are given, assign uniform distributed ones.
   if (any(names(dirspeed) == "probab") == FALSE) {
     dirspeed$probab <- 100/nrow(dirspeed)
   }
+  ## Checks if all wind directions/speeds have a possibility greater than 0.
+  if (any(dirspeed$probab==0)){
+    print("Warning: One wind direction has a possibility of 0. The Wind direction will be deleted.")
+    whZero <- which(dirspeed$probab==0)
+    dirspeed <- dirspeed[-whZero,]
+  }
   dirspeed$probab <- round(dirspeed$probab,0)
+  ## Checks if duplicated wind directions are at hand
   if   (any(duplicated(dirspeed$wd)==TRUE)) {
     for (i in 1:nrow(dirspeed[duplicated(dirspeed$wd)==TRUE,])){
       temp <- dirspeed[dirspeed$wd ==  dirspeed[duplicated(dirspeed$wd)==TRUE,][i,2],]; temp
       temp$ws <- with(temp, sum(ws * (probab/sum(probab)))); temp
-      temp$probab <- with(temp, sum(probab * (probab/sum(probab)))); temp
+      # temp$probab <- with(temp, sum(probab * (probab/sum(probab))));
+      temp$probab <- sum(temp$probab)
       dirspeed[dirspeed$wd ==  dirspeed[duplicated(dirspeed$wd)==TRUE,][i,2],]$ws <- round(temp$ws,2);
       dirspeed[dirspeed$wd ==  dirspeed[duplicated(dirspeed$wd)==TRUE,][i,2],]$probab <- round(temp$probab,2);
     }
