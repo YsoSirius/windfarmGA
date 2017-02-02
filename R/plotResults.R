@@ -32,13 +32,13 @@
 #' of the default Lambert Azimuthal Equal Area Projection. (character)
 #'
 #' @return Returns a data.frame of the best (energy/efficiency) individual
-#' after all generations. (data.frame)
+#' during all iterations. (data.frame)
 #'
 #' @author Sebastian Gatscha
 plotResult <- function(result,Polygon1,best=5,plotEn=1,
                        topographie=FALSE,Grid,Projection){
   # library(raster); library(stats); library(sp); library(calibrate)
-  # result=result;Polygon1=Polygon;best=5;plotEn=1
+  # result=Res_Tauern14;Polygon1=Tauern_14;best=5;plotEn=1;topographie = FALSE;Grid = Grid
   #rm(order2,orderb,orderc,runs,a,ar,by_cycl,b,ProjLAEA,result,i,Polygon1,windraster,windr,best,EnergyBest,EfficiencyBest,Col,Col1,plotEn,op,order1)
 
   ## Set graphical parameters
@@ -115,6 +115,8 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
 
     }
 
+
+    ResPlotResult <- EnergyBest
   }
   if(topographie==TRUE && plotEn == 1){
 
@@ -255,6 +257,8 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
       #mtext(paste("max. Distance", round(max(distpo),2)), side = 1,line=2)
 
     }
+
+    ResPlotResult <- EfficiencyBest
   }
   if(topographie==TRUE && plotEn == 2){
 
@@ -344,7 +348,7 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
       raster::plot(polygon1,add=T)
     }
   }
+
+  return(ResPlotResult)
 }
-
-
 

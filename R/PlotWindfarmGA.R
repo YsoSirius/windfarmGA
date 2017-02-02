@@ -86,5 +86,4 @@ PlotWindfarmGA <- function(result,Polygon1,whichPl,best=1,plotEn=1,Projection){
 
 }
 
-# PlotWindfarmGA(result = resultConfGa1,Polygon1 = Polygon1,whichPl = 1,best=3,plotEn=2,Projection)
 

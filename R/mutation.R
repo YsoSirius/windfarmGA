@@ -10,6 +10,20 @@
 #'
 #' @return Returns a binary matrix with mutated genes. (matrix)
 #'
+#' @examples \dontest{
+#' ## Create 4 random individuals with binary values
+#' a <- cbind(bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
+#'         bin.1=sample(c(0,1),20,replace=T,prob = c(30,70)),
+#'         bin.2=sample(c(0,1),20,replace=T,prob = c(30,70)),
+#'         bin.3=sample(c(0,1),20,replace=T,prob = c(30,70)))
+#' a
+#' ## Mutate the individuals with a given percentage
+#' aMut <- mutation(a,0.1)
+#'
+#' ## Check which values are not like the originals
+#' a==aMut
+#' }
+#'
 #' @author Sebastian Gatscha
 mutation          <- function(a,p) {
   ## Probability for every gene to mutate
@@ -24,3 +38,5 @@ mutation          <- function(a,p) {
   }
   return(a)
 }
+
+

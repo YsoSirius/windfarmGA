@@ -1,7 +1,7 @@
 #' @title Controlls the given inputs and starts an Optimization run
 #' @name windfarmGA
 #' @description  The initiating function of an optimization process, which
-#' will interactively check the user inputs first. If all inputs are correct,
+#' will interactively check user-inputs first. If all inputs are correct,
 #' an optimization run will be started. This process can take a long time,
 #' depending on the size of the problem and the number of desired iterations.
 #'
@@ -129,13 +129,17 @@
 #' Rotor= 50; fcrR= 9
 #' GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop=1, plotGrid =TRUE)
 #'
-#' ## Starting an optimization run
+#' ############### STARTING AN OPTIMIZATION RUN
 #' result <- genAlgo(Polygon1=Polygon1, n=12, Rotor=30, fcrR=3, iteration=10,
 #'           vdirspe=data.in)
+#'
+#' ## Use the resulting list with the different plotting methods of this package,
+#' ## to explore the behaviour of the genetic algorithm
 #'
 #'##########
 #' }
 #' @author Sebastian Gatscha
+
 windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughness,
                        data.in,Rotor=30,fcrR=3,n=10,topograp=FALSE,
                        iteration=100,referenceHeight=50,
@@ -143,7 +147,13 @@ windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughnes
                        mutr=0.001, elitism=TRUE, nelit=6,
                        selstate="FIX", crossPart1="EQU",trimForce=TRUE){
 
-
+  utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
+                           "y","EfficAllDir","sourceCCLRoughness","sourceCCL","RotorR",
+                           "Punkt_id","A_ov","WakeR","Windmean","Laenge_A","Laenge_B",
+                           "Ay","Ax","V_i","V_red","Rotorflaeche","AbschatInProz",
+                           "Windrichtung","alpha","Laenge_A","Laenge_B","By","Bx",
+                           "dry.grid.filtered","spd.binned","Run","EnergyOverall",
+                           "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt"));
 
   ##########################################################
   ######## CHECK INPUT POLYGON
@@ -234,11 +244,5 @@ windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughnes
 invisible(result)
 }
 
-utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
-                         "y","EfficAllDir","sourceCCLRoughness","sourceCCL","RotorR",
-                         "Punkt_id","A_ov","WakeR","Windmean","Laenge_A","Laenge_B",
-                         "Ay","Ax","V_i","V_red","Rotorflaeche","AbschatInProz",
-                         "Windrichtung","alpha","Laenge_A","Laenge_B","By","Bx",
-                         "dry.grid.filtered","spd.binned","Run","EnergyOverall",
-                         "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt"));
+
 

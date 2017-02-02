@@ -19,6 +19,30 @@
 #' cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 #' (matrix)
 #'
+#' @examples \dontest{
+#'  ## Create two random parents with an index and random binary values
+#'  Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
+#'                          bin.1=sample(c(0,1),20,replace=T,prob = c(30,70))))
+#'  Parents
+#'
+#'  ## Create random Fitness values for both individuals
+#'  FitParents <- data.frame(cbind(ID=1,Fitness=1000,Fitness.1=20))
+#'  FitParents
+#'
+#'  ## Assign both values to a list
+#'  CrossSampl <- list(Parents,FitParents);
+#'  str(CrossSampl)
+#'
+#'  ## Cross their data at equal locations with 2 crossover parts
+#'  crossover1(CrossSampl, u=1.1, uplimit=300, crossPart = "EQU")
+#'
+#'  ## with 3 crossover parts and equal locations
+#'  crossover1(CrossSampl, u=2.5, uplimit=300, crossPart = "EQU")
+#'
+#'  ## or with random locations and 5 crossover parts
+#'  crossover1(CrossSampl, u=4.9, uplimit=300, crossPart = "RAN")
+#' }
+#'
 #' @author Sebastian Gatscha
 crossover1        <- function(se6,u, uplimit,crossPart) {
   #se6 = selec6best; crossPart=crossPart1;uplimit = CrossUpLimit #selec6best # parentsall
@@ -99,23 +123,27 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
   nI <- do.call("cbind", all);
 
   if (length(fitChi) != ncol(nI)){
-    cat(paste("Crossover. Amount of Turbines is wrong. Fix BUG"))
+    cat(paste("\nCrossover. Amount of Turbines is wrong. Fix BUG"))
     break()
   }
 
-  cat(paste("How many parental pairs are at hand: ",length(z)))
-  cat(paste("How many permutations are possible: ", length(z)*(2^(trunc(u)+1))))
+  cat(paste("\nHow many parental pairs are at hand: ",length(z)))
+  cat(paste("\nHow many permutations are possible: ", length(z)*(2^(trunc(u)+1))))
 
   partaksur = ncol(nI)
   if (partaksur >= uplimit){
     partaksur = uplimit
-    cat(paste("Population max limit reached: ", uplimit ))
+    cat(paste("\nPopulation max limit reached: ", uplimit ))
   }
 
   # Select only some of the available permutations. Take fitness value as prop value.
   partak <- sort(sample(1:length(nI[1,]),partaksur,prob = fitChi));
-  cat(paste("How many permutations are selected: ", length(partak) ))
+  cat(paste("\nHow many permutations are selected: ", length(partak), "\n"))
   nI <- nI[,partak]
 
   return(nI)
 }
+
+
+
+

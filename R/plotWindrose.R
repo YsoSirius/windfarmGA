@@ -114,7 +114,21 @@ plotWindrose <- function(data,spd,dir,spdres = 2,dirres = 10,spdmin = 1,
     ggplot2::scale_fill_manual(name = "Wind Speed (m/s)",
                       values = spd.colors,
                       drop = FALSE) +
-    ggplot2::theme(axis.title.x = ggplot2::element_blank())
+    ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+                   axis.title.y = ggplot2::element_blank(),
+                   
+                   axis.text.y = ggplot2::element_blank(),
+                   axis.ticks.y=element_blank(),
+                   legend.background = element_rect(fill = "gray96", colour = "gray96"),
+                   panel.background = element_rect(fill = "gray96", colour = "gray96"),
+                   panel.grid.minor.y = element_line(size=2),
+                   panel.grid.major = element_line(colour = "gray86"),
+                   panel.border=element_blank(),
+                   plot.background = element_rect(fill = "gray96", colour = "gray96"),
+                   strip.background=element_rect(fill="gray96", colour="gray96"),
+                   plot.margin=unit(c(0, 0, 0, 0), "lines"))
+  
+  
 
   # adjust axes if required
   if (!is.na(countmax)){

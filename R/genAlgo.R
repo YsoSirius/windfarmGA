@@ -93,18 +93,21 @@
 #' ## Runs an optimization run for 10 iterations (iteration) with the
 #' ## given shapefile (Polygon1), the wind data.frame (data.in),
 #' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-#' ## factor of 3 (fcrR)
-#' # result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=30,fcrR=3,iteration=10,
-#' #          vdirspe = data.in)
+#' ## factor of 3 (fcrR) and other required inputs.
+#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+#'              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+#'              elitism=TRUE, nelit = 7, trimForce = TRUE, 
+#'              referenceHeight = 50,RotorHeight = 100)
 #'}
 #' @author Sebastian Gatscha
-genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHeight,
-                              SurfaceRoughness, Proportionality, iteration, mutr,
-                              vdirspe, topograp, elitism, nelit, selstate,
-                              crossPart1,trimForce, Projection, sourceCCL,
-                              sourceCCLRoughness){
+genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, 
+                              RotorHeight,SurfaceRoughness, Proportionality, 
+                              iteration, mutr,vdirspe, topograp, elitism, nelit,
+                              selstate,crossPart1,trimForce, Projection,
+                              sourceCCL,sourceCCLRoughness){
   oldpar <- graphics::par(no.readonly = T)
-  #plot.new();
+  plot.new();
   graphics::par(ask=F);
 
   resol2 <- fcrR*Rotor
@@ -204,7 +207,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
   }
 
   ## Start the GA
-  print("\n Start Genetic Algorithm ...")
+  cat("\nStart Genetic Algorithm ...")
   rbPal <- grDevices::colorRampPalette(c('red','green'))
   i=1
   while (i <= iteration) {
@@ -235,7 +238,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
     allparkcoeff[[i]] <- cbind(maxparkfitness,meanparkfitness,minparkfitness, MaxEnergyRedu,
                                MeanEnergyRedu,MinEnergyRedu,maxParkwirkungsg,meanParkwirkungsg,minParkwirkungsg)
     clouddata[[i]] <- dplyr::select(allparksUni,EfficAllDir,EnergyOverall,Parkfitness);
-    print(c("\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"));
+    cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"));
 
     ## Highest Energy Output
     xd <- allparks[allparks$EnergyOverall==max(allparks$EnergyOverall),]$EnergyOverall[1];
@@ -245,8 +248,8 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
     ind1 <- allparks$EfficAllDir == xd1;     bestPaEf[[i]] <- allparks[ind1,][1:n,]
     # Print out most relevant information on Generation i
     afvs <- allparks[allparks$EnergyOverall==max(allparks$EnergyOverall),];
-    print(paste("How many individuals exist: ",  length(fit) ), "\n");
-    print(paste("How many parks are in local Optimum: ",  (length(afvs[,1])/n) ), "\n")
+    cat(paste("How many individuals exist: ",  length(fit) ), "\n");
+    cat(paste("How many parks are in local Optimum: ",  (length(afvs[,1])/n) ), "\n")
     nindivfit <- length(fit)
 
     lebre <- length(unique(bestPaEn[[i]]$AbschGesamt))
@@ -267,7 +270,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
     allparksNewplot <- allparksNewplot %>% dplyr::group_by(Rect_ID) %>%
                       dplyr::summarise_each(dplyr::funs(mean));
     if(any(allparksNewplot$Rect_ID %in% Grid$ID == F)){
-      print(paste("Index of Grid not correct. Bigger than maximum Grid? Fix BUG"))
+      cat(paste("Index of Grid not correct. Bigger than maximum Grid? Fix BUG"))
       break()
     }
 
@@ -297,7 +300,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
 
       last7 <- besPE[i:(i-5)]
       if (!any(last7==maxBisher)){
-        print(paste("Park with highest Fitness level to date is replaced in the list.", "\n\n"))
+        cat(paste("Park with highest Fitness level to date is replaced in the list.", "\n\n"))
         fit <- append(fit, BestForNo)
       }
     }
@@ -307,7 +310,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
       t0 <- t0$Parkfitness;       fitnessValues[[i]] <- t0
       rangeFitnessVt0 <- range(t0);rangeFitnessVt0
       maxt0 <- max(t0);maxt0;       meant0 <- mean(t0);
-      allcoef0 <- c(rangeFitnessVt0, meant0); cat(c( i, ": Round: ", allcoef0, "\n"));
+      allcoef0 <- c(rangeFitnessVt0, meant0); 
       fuzzycontr[[i]] <- rbind(allcoef0); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
       teil=2
       if (selstate=="VAR"){
@@ -329,26 +332,26 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
       fuzzycontr[[i]] <- rbind(allcoef1,allcoef2); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
 
       if(maxunt<0) {
-        pri="declined";teil=teil-0.02; u=u-0.06} else if (maxunt==0) {
+        pri="deteriorated";teil=teil-0.02; u=u-0.06} else if (maxunt==0) {
           pri="not changed"; teil=teil; u=u} else {
-            pri="enhanced"; teil=teil+0.017; u=u+0.03}
+            pri="improved"; teil=teil+0.017; u=u+0.03}
 
-      if (teil > 5){teil=5; u=u+0.09; print("Min 20% Selected");print(paste("u is increased! u:",u,
-                                                                            "teil: ",teil))}
-      if (trunc(u) < 0){u = 0.5;teil=teil-0.4; print(paste("Min 1 CrossPoints. Selection decreased. u:",
-                                                           u,"teil: ",teil))}
-      if (u >= 4){u=4;teil=4; print(paste("Max 5 CrossPoints. Select fittest 25%. teil: ",teil))}
-      if (teil <= 4/3){teil = 4/3; print(paste("Max 75% selected. teil: ",teil))}
-      if (length(fit) <= 20) {teil=1;u=u+0.07; print(paste("Less than 20 individuals. Select all and
-                                                increase Crossover-point rate. u: ", u,"teil", teil))}
-      if (teil > 5){teil=5; print(paste("Teil is bigger than 5. Set to max 5. teil:",teil))}
-
+      if (teil > 5){teil=5; u=u+0.09; cat("Min 20% Selected");cat(paste("CPR is increased! CPR:",u,
+                                                                            "SP: ",teil,"\n"))}
+      if (trunc(u) < 0){u = 0.5;teil=teil-0.4; 
+      cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",u,"SP: ",teil,"\n"))}
+      if (u >= 4){u=4;teil=4; cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ",teil,"\n"))}
+      if (teil <= 4/3){teil = 4/3; cat(paste("Max 75% selected. SP: ", teil, "\n"))}
+      if (length(fit) <= 20) {teil=1;u=u+0.07; 
+      cat(paste("Less than 20 individuals. Select all and increase Crossover-point rate. CPR: ", 
+                u,"SP: ", teil,"\n"))}
+      if (teil > 5){teil=5; cat(paste("Teil is bigger than 5. Set to max 5. SP:",teil,"\n"))}
 
       u = round(u,2); teil=round(teil,3);
 
-      print(paste("Fitness of this population (", i,") compared to the prior population: ",pri , maxunt))
-      meanunt <- meant0-meant1; if(meanunt<0) {pri="declined"} else if (meanunt==0) {pri="not changed"}
-      else {pri="enhanced"}
+      cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"\n"))
+      meanunt <- meant0-meant1;
+      # if(meanunt<0) {pri="declined"} else if (meanunt==0) {pri="not changed"}else {pri="enhanced"}
       beorwor[[i]] <- cbind(maxunt, meanunt)
     }
 
@@ -366,7 +369,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
     ## print the amount of Individuals selected. Check if the amount of Turbines is as requested.
     selec6best <- selection1(fit, Grid,teil, elitism, nelit, selstate);
     selec6best_bin <- selec6best[[1]]
-    print(paste("Selection. Amount of Individuals: ",length(selec6best_bin[1,-1])))
+    cat(paste("Selection  -  Amount of Individuals: ",length(selec6best_bin[1,-1]),"\n"))
     Trus1 <- colSums(selec6best_bin)[-1] == n
     if (any(Trus1 == FALSE)){
       print("Number of turbines is not as required. Trus1. Fix BUG")
@@ -378,7 +381,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
     ## u determines the amount of crossover points, crossPart det. the method used (Equal/Random),
     ## uplimit is the maximum allowed permutations
     crossOut <- crossover1(selec6best, u, uplimit = CrossUpLimit, crossPart=crossPart1) ;
-    print(paste("Crossover. Amount of Individuals: ",length(crossOut[1,])));
+    cat(paste("Crossover  -  Amount of Individuals: ",length(crossOut[1,])));
     nindivcros<- length(crossOut[1,]);
 
     ## MUTATION
@@ -397,14 +400,14 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, RotorHe
       mut_rat <- mutr
     }
     mut_rate[[i]] <- mut_rat
-    print(paste("Mutation. Amount of Individuals: ",length(mut[1,])));
+    cat(paste("\nMutation   -  Amount of Individuals: ",length(mut[1,])));
     nindivmut <- length(mut[1,]);nindivmut
 
     ## TRIMTON
     ## After Crossover and Mutation, the amount of turbines in a windpark change and have to be
     ## corrected to the required amount of turbines.
     mut1 <- trimton(mut = mut, nturb = n, allparks = allparks, nGrids = AmountGrids,trimForce=trimForce)
-    print(paste("TrimToN. Amount of Individuals: ",length(mut1[1,])))
+    cat(paste("\nTrimToN    -  Amount of Individuals: ",length(mut1[1,])))
     Trus3 <- colSums(mut1) == n
     if (any(Trus3 == FALSE)){
       print(paste("Number of turbines is not as required. Trus3. Fix Bug. Amount:",

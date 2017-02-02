@@ -31,7 +31,7 @@ of the default Lambert Azimuthal Equal Area Projection. (character)}
 }
 \value{
 Returns a data.frame of the best (energy/efficiency) individual
-after all generations. (data.frame)
+during all iterations. (data.frame)
 }
 \description{
 Plot the best resulting solutions of the genetic algorithm.

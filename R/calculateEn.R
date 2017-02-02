@@ -75,7 +75,7 @@
 #' resGrid <- GridFilter(shape = Polygon1,resol = Rotor*fcrR, prop=1,
 #' plotGrid =TRUE)
 #' ## Assign the indexed data frame to new variable. Element 2 of the list
-#' ## is the grid saved as SpatialPolygon.
+#' ## is the grid, saved as SpatialPolygon.
 #' resGrid1 <- resGrid[[1]]
 #'
 #' ## Create an initial population, with the indexed Grid, 15 turbines and
@@ -84,13 +84,15 @@
 #'
 #' ## Calculate the expected energy output of the first individual of the
 #' ## population.
+#' plot(Polygon1); points(resStartGA[[1]]$X,resStartGA[[1]]$Y, pch=20,cex=2)
+#' plot(resGrid[[2]],add=T)
 #' resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
 #'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
 #'                    distanz = 100000, resol = 200,dirSpeed = data.in,
 #'                    RotorR = 50, polygon1 = Polygon1, topograp = "FALSE",
 #'                    windraster,srtm_crop,cclRaster)
 #' length(resCalcEn)
-#'
+#' str(resCalcEn)
 #'
 #' ## Create a variable and multidirectional wind data.frame and plot the
 #' ## resulting wind rose
@@ -111,6 +113,7 @@
 calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness,
                               windraster,wnkl,distanz, polygon1,resol,RotorR,dirSpeed,
                               srtm_crop,topograp,cclRaster){
+
   PlotCalc=FALSE
 
   sel1 = sel[,2:3];

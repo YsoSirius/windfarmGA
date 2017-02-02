@@ -153,9 +153,12 @@ dir = data.in$wd, dirres=10, spdmax=20)
 Rotor= 50; fcrR= 9
 GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop=1, plotGrid =TRUE)
 
-## Starting an optimization run
+############### STARTING AN OPTIMIZATION RUN
 result <- genAlgo(Polygon1=Polygon1, n=12, Rotor=30, fcrR=3, iteration=10,
           vdirspe=data.in)
+
+## Use the resulting list with the different plotting methods of this package,
+## to explore the behaviour of the genetic algorithm
 
 ##########
 }

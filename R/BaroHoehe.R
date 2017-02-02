@@ -20,6 +20,7 @@
 #' @examples \donttest{
 #' data <- matrix(seq(0,5000,500));
 #' BaroHoehe(data)
+#' plot.ts(BaroHoehe(data))
 #'}
 #'
 #' @author Sebastian Gatscha
@@ -44,6 +45,7 @@ BaroHoehe         <- function(data, height, po=101325, ro=1.225) {
   if (class(data)!= "data.frame") {
     data <- as.data.frame(data)
   }
+  colnames(data) <- "Height"
 
   Celsius = Th - 273.15; names(Celsius) <- "tempC"
   data$ph <- ph
@@ -54,4 +56,7 @@ BaroHoehe         <- function(data, height, po=101325, ro=1.225) {
 
   return(data)
 }
+
+
+
 

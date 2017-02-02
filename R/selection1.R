@@ -39,7 +39,7 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
   new1 <- dplyr::arrange(new1,dplyr::desc(Parkfitness))
   # Elitarism - A certain amount of individuals will get their fitness values increased
   if (elitism == TRUE){
-    cat(paste("Elitarism activated. Best ", nelit, " fitness values are increased"))
+    cat(paste("Elitarism activated. Best", nelit, "individuals are increased\n"))
     new1[1:nelit,]$Parkfitness <- new1[1:nelit,]$Parkfitness*10
   }
   # Delete the 4 worst fitness entries.
@@ -50,15 +50,15 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
   if (selstate == "FIX") {
     # Select a fixed amount of indivs. # Teil=2 takes always 50% of population
     if (teil==1){teil=1}else{teil=2}
-    cat(paste("teil:", teil))
+    cat(paste("Selection Percentage:", round(100/teil,3), "\n"))
     nPar <- ceiling(nrow(new1)/teil);
-    cat(paste("FIX: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%"))
+    cat(paste("FIX: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%\n"))
   }
   # Or the selection percentage is variable, depending on the deveopment of the fitness values.
   if (selstate == "VAR") {
     # Select a variable amount of indivs. Teil comes from the "fuzzy logic" modell
     nPar <- ceiling(nrow(new1)/teil);
-    cat(paste("VAR: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%"))
+    cat(paste("VAR: How many parental individuals are selected:",nPar, "from",  nrow(new1),"with", ((1/teil)*100), "%\n"))
   }
   # Upper Limit of selected individuals is 100.
   if (nPar > 100){

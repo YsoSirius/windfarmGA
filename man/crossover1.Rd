@@ -27,6 +27,32 @@ The crossover method of the genetic algorithm, which takes
 the selected individuals after the \code{\link{selection1}} function and
 produces new offsprings through permutation.
 }
+\examples{
+\dontest{
+ ## Create two random parents with an index and random binary values
+ Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
+                         bin.1=sample(c(0,1),20,replace=T,prob = c(30,70))))
+ Parents
+
+ ## Create random Fitness values for both individuals
+ FitParents <- data.frame(cbind(ID=1,Fitness=1000,Fitness.1=20))
+ FitParents
+
+ ## Assign both values to a list
+ CrossSampl <- list(Parents,FitParents);
+ str(CrossSampl)
+
+ ## Cross their data at equal locations with 2 crossover parts
+ crossover1(CrossSampl, u=1.1, uplimit=300, crossPart = "EQU")
+
+ ## with 3 crossover parts and equal locations
+ crossover1(CrossSampl, u=2.5, uplimit=300, crossPart = "EQU")
+
+ ## or with random locations and 5 crossover parts
+ crossover1(CrossSampl, u=4.9, uplimit=300, crossPart = "RAN")
+}
+
+}
 \author{
 Sebastian Gatscha
 }
