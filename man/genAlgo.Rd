@@ -115,11 +115,6 @@ data.in <- as.data.frame(cbind(ws=12,wd=0))
 ## given shapefile (Polygon1), the wind data.frame (data.in),
 ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
 ## factor of 3 (fcrR) and other required inputs.
-result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-             elitism=TRUE, nelit = 7, trimForce = TRUE, 
-             referenceHeight = 50,RotorHeight = 100)
 }
 }
 \author{

@@ -3,14 +3,6 @@
 \name{windfarmGA}
 \alias{windfarmGA}
 \title{Controlls the given inputs and starts an Optimization run}
-\usage{
-windfarmGA(dns, layer, Polygon1, Projection, sourceCCL, sourceCCLRoughness,
-  data.in, Rotor = 30, fcrR = 3, n = 10, topograp = FALSE,
-  iteration = 100, referenceHeight = 50, RotorHeight = 50,
-  SurfaceRoughness = 0.14, Proportionality = 1, mutr = 0.001,
-  elitism = TRUE, nelit = 6, selstate = "FIX", crossPart1 = "EQU",
-  trimForce = TRUE)
-}
 \arguments{
 \item{dns}{The source to the desired Shapefile. Only required, if the
 shapefile is not already loaded. (character)}
@@ -20,9 +12,6 @@ shapefile is not already loaded. (character)}
 
 \item{Polygon1}{The considered area as shapefile. Only required, if the
 shapefile is already loaded.(SpatialPolygons)}
-
-\item{Projection}{A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection. (character)}
 
 \item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
 required, when the terrain effect model is activated. (character)}
@@ -38,6 +27,9 @@ See Details. (character)}
 wind directions and probabilities. To plot a wind rose from this
 data frame, see: \code{\link{plotWindrose}}. (data.frame)}
 
+\item{n}{A numeric value indicating the required amount of turbines.
+(numeric)}
+
 \item{Rotor}{A numeric value that gives the rotor radius in meter.
 (numeric)}
 
@@ -45,14 +37,11 @@ data frame, see: \code{\link{plotWindrose}}. (data.frame)}
 of a grid cell will be the rotor radius \code{Rotor} multiplied with this
 value. (numeric)}
 
-\item{n}{A numeric value indicating the required amount of turbines.
-(numeric)}
+\item{iteration}{A numeric value indicating the desired amount of
+iterations of the algorithm. (numeric)}
 
 \item{topograp}{Logical value that indicates whether the terrain effect
 model is activated (TRUE) or deactivated (FALSE). (logical)}
-
-\item{iteration}{A numeric value indicating the desired amount of
-iterations of the algorithm. (numeric)}
 
 \item{referenceHeight}{The height at which the incoming
 wind speeds were measured. Default is 50m (numeric)}
@@ -90,6 +79,9 @@ depending on the development of the fitness values. (character)}
 the algorithm will take a probabilistic approach to trim the wind farms
 to the desired amount of turbines. If \code{trimForce}==FALSE the
 adjustment will be random. Default is TRUE. (logical)}
+
+\item{Projection}{A desired Projection can be used instead
+of the default Lambert Azimuthal Equal Area Projection. (character)}
 }
 \description{
 The initiating function of an optimization process, which

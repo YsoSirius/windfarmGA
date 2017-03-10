@@ -19,7 +19,7 @@ Mutate the genes of every chromosome or individual with
 low probability.
 }
 \examples{
-\dontest{
+\donttest{
 ## Create 4 random individuals with binary values
 a <- cbind(bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
         bin.1=sample(c(0,1),20,replace=T,prob = c(30,70)),

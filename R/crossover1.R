@@ -19,7 +19,7 @@
 #' cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 #' (matrix)
 #'
-#' @examples \dontest{
+#' @examples \donttest{
 #'  ## Create two random parents with an index and random binary values
 #'  Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
 #'                          bin.1=sample(c(0,1),20,replace=T,prob = c(30,70))))

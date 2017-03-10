@@ -139,6 +139,14 @@
 #'##########
 #' }
 #' @author Sebastian Gatscha
+utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
+                         "y","EfficAllDir","sourceCCLRoughness","sourceCCL","RotorR",
+                         "Punkt_id","A_ov","WakeR","Windmean","Laenge_A","Laenge_B",
+                         "Ay","Ax","V_i","V_red","Rotorflaeche","AbschatInProz",
+                         "Windrichtung","element_rect","element_line","alpha","Laenge_A",
+                         "unit", "Laenge_B","By","Bx",
+                         "dry.grid.filtered","spd.binned","Run","EnergyOverall",
+                         "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt"));
 
 windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughness,
                        data.in,Rotor=30,fcrR=3,n=10,topograp=FALSE,
@@ -147,13 +155,7 @@ windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughnes
                        mutr=0.001, elitism=TRUE, nelit=6,
                        selstate="FIX", crossPart1="EQU",trimForce=TRUE){
 
-  utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
-                           "y","EfficAllDir","sourceCCLRoughness","sourceCCL","RotorR",
-                           "Punkt_id","A_ov","WakeR","Windmean","Laenge_A","Laenge_B",
-                           "Ay","Ax","V_i","V_red","Rotorflaeche","AbschatInProz",
-                           "Windrichtung","alpha","Laenge_A","Laenge_B","By","Bx",
-                           "dry.grid.filtered","spd.binned","Run","EnergyOverall",
-                           "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt"));
+
 
   ##########################################################
   ######## CHECK INPUT POLYGON
