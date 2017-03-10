@@ -57,7 +57,8 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       temp <- dirspeed[dirspeed$wd ==  dirspeed[duplicated(
         dirspeed$wd)==F,][i,'wd'],];
       temp$ws <-with(temp, sum(ws * (probab/sum(probab))));
-      temp$probab <- sum(temp$probab);
+      temp$probab <- with(temp, sum(probab * (probab/sum(probab)))); 
+      
       dirspeed[dirspeed$wd ==  dirspeed[duplicated(
         dirspeed$wd)==F,][i,'wd'],]$ws <- round(temp$ws,2)[1]
       dirspeed[dirspeed$wd ==  dirspeed[duplicated(

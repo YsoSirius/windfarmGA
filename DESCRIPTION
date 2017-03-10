@@ -1,7 +1,7 @@
 Package: windfarmGA
 Type: Package
 Title: Genetic Algorithm to optimize a Wind Farm Layout Problem
-Version: 0.1
+Version: 1.0
 Date: 2016-12-15
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
@@ -15,7 +15,7 @@ Description: A genetic algorithm is included, which is designed to optimize smal
     The function "windfarmGA" checks the user inputs interactively and runs then the
     function "genAlgo". If the input parameters are already known, an optimization can be run
     directly via the function "genAlgo". Their output is identical.
-License: GPL-3
+License: MIT + file LICENSE
 LazyData: TRUE
 Depends:
     R (>= 3.2.3)
