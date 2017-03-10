@@ -94,15 +94,15 @@
 #' ## given shapefile (Polygon1), the wind data.frame (data.in),
 #' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
 #' ## factor of 3 (fcrR) and other required inputs.
-#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-#'              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-#'              elitism=TRUE, nelit = 7, trimForce = TRUE, 
-#'              referenceHeight = 50,RotorHeight = 100)
+# result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+#              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+#              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+#              elitism=TRUE, nelit = 7, trimForce = TRUE,
+#              referenceHeight = 50,RotorHeight = 100)
 #'}
 #' @author Sebastian Gatscha
-genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight, 
-                              RotorHeight,SurfaceRoughness, Proportionality, 
+genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
+                              RotorHeight,SurfaceRoughness, Proportionality,
                               iteration, mutr,vdirspe, topograp, elitism, nelit,
                               selstate,crossPart1,trimForce, Projection,
                               sourceCCL,sourceCCLRoughness){
@@ -310,7 +310,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
       t0 <- t0$Parkfitness;       fitnessValues[[i]] <- t0
       rangeFitnessVt0 <- range(t0);rangeFitnessVt0
       maxt0 <- max(t0);maxt0;       meant0 <- mean(t0);
-      allcoef0 <- c(rangeFitnessVt0, meant0); 
+      allcoef0 <- c(rangeFitnessVt0, meant0);
       fuzzycontr[[i]] <- rbind(allcoef0); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
       teil=2
       if (selstate=="VAR"){
@@ -338,12 +338,12 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
 
       if (teil > 5){teil=5; u=u+0.09; cat("Min 20% Selected");cat(paste("CPR is increased! CPR:",u,
                                                                             "SP: ",teil,"\n"))}
-      if (trunc(u) < 0){u = 0.5;teil=teil-0.4; 
+      if (trunc(u) < 0){u = 0.5;teil=teil-0.4;
       cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",u,"SP: ",teil,"\n"))}
       if (u >= 4){u=4;teil=4; cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ",teil,"\n"))}
       if (teil <= 4/3){teil = 4/3; cat(paste("Max 75% selected. SP: ", teil, "\n"))}
-      if (length(fit) <= 20) {teil=1;u=u+0.07; 
-      cat(paste("Less than 20 individuals. Select all and increase Crossover-point rate. CPR: ", 
+      if (length(fit) <= 20) {teil=1;u=u+0.07;
+      cat(paste("Less than 20 individuals. Select all and increase Crossover-point rate. CPR: ",
                 u,"SP: ", teil,"\n"))}
       if (teil > 5){teil=5; cat(paste("Teil is bigger than 5. Set to max 5. SP:",teil,"\n"))}
 
