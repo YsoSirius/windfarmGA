@@ -93,7 +93,7 @@ adjustment will be random. Default is TRUE. (logical)}
 }
 \description{
 The initiating function of an optimization process, which
-will interactively check the user inputs first. If all inputs are correct,
+will interactively check user-inputs first. If all inputs are correct,
 an optimization run will be started. This process can take a long time,
 depending on the size of the problem and the number of desired iterations.
 }
