@@ -2,6 +2,17 @@
 R package to optimize the layout of a windfarm.
 The package is also hosted on CRAN and can be downloaded here https://CRAN.R-project.org/package=windfarmGA
 
+# Installation
+The package can be downloaded from GitHub with:
+ ```sh
+# install.packages("devtools")
+devtools::install_github("YsoSirius/windfarmGA")
+```
+or via CRAN with:
+ ```sh
+install.packages("windfarmGA")
+```
+
 # Description
 The genetic algorithm is designed to optimize small wind farms up 
     to 50 turbines. The algorithm works with a fixed amount of turbines, a fixed 
