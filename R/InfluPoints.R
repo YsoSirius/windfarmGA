@@ -26,7 +26,7 @@
 #' relevant coordinates, the distances and angles in between and assigns
 #' the Point ID. (list)
 #'
-#' @examples \donttest{
+#' @examples {
 #' library(sp);library(raster)
 #' ## Exemplary input Polygon with 2km x 2km:
 #' polYgon <- Polygon(rbind(c(0, 0), c(0, 2000),
@@ -35,7 +35,7 @@
 #' polYgon <- SpatialPolygons(list(polYgon))
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=T)
+#' proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=TRUE)
 #'
 #' t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
 #'      y=runif(10,0,raster::extent(polYgon)[4])))
@@ -44,6 +44,7 @@
 #' dirct=0
 #'
 #' resInfluPoi <- InfluPoints(t,wnkl,dist,polYgon,dirct,plotAngles=TRUE)
+#' str(resInfluPoi)
 #' }
 #' @author Sebastian Gatscha
 InfluPoints       <- function(t, wnkl, dist,polYgon,dirct,plotAngles=FALSE) {
@@ -64,8 +65,3 @@ InfluPoints       <- function(t, wnkl, dist,polYgon,dirct,plotAngles=FALSE) {
   }
   return(pointList)
 }
-
-
-##importFrom GenAlgo VekWinkelCalc
-
-

@@ -7,13 +7,13 @@
 PlotWindfarmGA(result, Polygon1, whichPl, best = 1, plotEn = 1, Projection)
 }
 \arguments{
-\item{result}{An output matrix of the function \code{\link{windfarmGA}},
-which has stored all relevant information. (matrix)}
+\item{result}{An output matrix of the function \code{\link{windfarmGA}} or
+\code{\link{genAlgo}}, which has stored all relevant information. (matrix)}
 
 \item{Polygon1}{The considered area as shapefile. Only required, if the
 shapefile is already loaded.(SpatialPolygons)}
 
-\item{whichPl}{Which Plots should be shown 1-8 are possible. If "all" is
+\item{whichPl}{Which plots should be shown: 1-8 are possible. If "all" is
 given, then all plots will be shown.}
 
 \item{best}{A numeric value indicating how many of the best individuals
@@ -28,10 +28,42 @@ of the default Lambert Azimuthal Equal Area Projection. (character)}
 }
 \description{
 Plot the results of a genetic algorithm run with given inputs.
-Several plots try to show all relevant influences and behaviours of the
+Several plots try to show all relevant effects and outcomes of the
 algorithm. 8 plot methods are available that can be selected individually.
+}
+\examples{
+\donttest{
+## Create a random rectangular shapefile
+library(sp)
+Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygons(list(Polygon1),1);
+Polygon1 <- SpatialPolygons(list(Polygon1))
+Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+proj4string(Polygon1) <- CRS(Projection)
+plot(Polygon1,axes=TRUE)
+
+## Create a uniform and unidirectional wind data.frame and plots the
+## resulting wind rose
+## Uniform wind speed and single wind direction
+data.in <- as.data.frame(cbind(ws=12,wd=0))
+# windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#                dir = data.in$wd, dirres=10, spdmax=20)
+
+## Runs an optimization run for 10 iterations (iteration) with the
+## given shapefile (Polygon1), the wind data.frame (data.in),
+## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
+## factor of 3 (fcrR) and other required inputs.
+result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+            Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+            elitism=TRUE, nelit = 7, trimForce = TRUE,
+            referenceHeight = 50,RotorHeight = 100)
+
+ PlotWindfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
+
+}
 }
 \author{
 Sebastian Gatscha
 }
-

@@ -2,16 +2,16 @@
 % Please edit documentation in R/plotcloud.R
 \name{plotCloud}
 \alias{plotCloud}
-\title{Plot all outputs of all generations with coresponding
+\title{Plot all outputs of all generations with corresponding
 standard deviation}
 \usage{
-plotCloud(result, pl = "FALSE")
+plotCloud(result, pl = FALSE)
 }
 \arguments{
-\item{result}{The output matrix of \code{\link{genAlgo}}, which has
-stored all relevant information. (matrix)}
+\item{result}{The output matrix of \code{\link{windfarmGA}} or
+\code{\link{genAlgo}}, which has stored all relevant information. (matrix)}
 
-\item{pl}{Should the results be plotted? Default is "FALSE" (character)}
+\item{pl}{Should the results be plotted? Default is FALSE (logical)}
 }
 \value{
 Returns a data.frame with the values for fitness, efficiency
@@ -19,9 +19,40 @@ and energy for all evaluated individuals. (data.frame)
 }
 \description{
 Plot all the fitness, efficiency and energy outputs of
-all generations. Plot the coresponding standard deviation below.
+all generations. Plot the corresponding standard deviation below.
+}
+\examples{
+\donttest{
+## Create a random rectangular shapefile
+library(sp)
+Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygons(list(Polygon1),1);
+Polygon1 <- SpatialPolygons(list(Polygon1))
+Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+proj4string(Polygon1) <- CRS(Projection)
+plot(Polygon1,axes=TRUE)
+
+## Create a uniform and unidirectional wind data.frame and plots the
+## resulting wind rose
+## Uniform wind speed and single wind direction
+data.in <- as.data.frame(cbind(ws=12,wd=0))
+# windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#                dir = data.in$wd, dirres=10, spdmax=20)
+
+## Runs an optimization run for 10 iterations (iteration) with the
+## given shapefile (Polygon1), the wind data.frame (data.in),
+## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
+## factor of 3 (fcrR) and other required inputs.
+result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3, iteration=10,
+             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+            Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+            elitism = TRUE, nelit = 7, trimForce = TRUE,
+            referenceHeight = 50,RotorHeight = 100)
+plcdf <- plotCloud(result, TRUE)
+str(plcdf)
+}
 }
 \author{
 Sebastian Gatscha
 }
-

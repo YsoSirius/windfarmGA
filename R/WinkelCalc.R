@@ -18,7 +18,7 @@
 #'
 #' @return Returns a matrix with the alpha, betha and gamma angles of the
 #' imaginary right triangle (matrix)
-#' @examples \donttest{
+#' @examples {
 #'   Aa= as.numeric(cbind(1,1))
 #'   Bb= as.numeric(cbind(10,3))
 #'   Cc= as.numeric(cbind(10,1))
@@ -48,4 +48,3 @@ WinkelCalc        <- function(Aa,Bb,Cc) {
     invisible(winkel)
   }
 }
-

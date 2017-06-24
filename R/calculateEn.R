@@ -14,6 +14,7 @@
 #' @importFrom calibrate textxy
 #' @importFrom maptools elide
 #' @importFrom graphics mtext plot par points
+#' @importFrom grDevices topo.colors
 #'
 #' @param sel A data.frame of an individual of the current population
 #' (data.frame)
@@ -49,7 +50,7 @@
 #' wind direction. The length of the list will be the amount of incoming
 #' wind directions.
 #'
-#' @examples \donttest{
+#' @examples \dontrun{
 #' ## Create a random rectangular shapefile
 #' library(sp)
 #' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
@@ -58,7 +59,7 @@
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=T)
+#' plot(Polygon1,axes=TRUE)
 #'
 #' ## Initialize a dummy wind speed raster with value 1
 #' windraster <-raster::rasterize(Polygon1, raster::raster(raster::extent(Polygon1),
@@ -70,10 +71,10 @@
 #' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 #'                 dir = data.in$wd, dirres=10, spdmax=20)
 #'
-#' ## Assign the rotor radius and the factor of the raius for grid spacing.
+#' ## Assign the rotor radius and the factor of the radius for grid spacing.
 #' Rotor= 50; fcrR= 5
 #' resGrid <- GridFilter(shape = Polygon1,resol = Rotor*fcrR, prop=1,
-#' plotGrid =TRUE)
+#'                       plotGrid =TRUE)
 #' ## Assign the indexed data frame to new variable. Element 2 of the list
 #' ## is the grid, saved as SpatialPolygon.
 #' resGrid1 <- resGrid[[1]]
@@ -85,11 +86,11 @@
 #' ## Calculate the expected energy output of the first individual of the
 #' ## population.
 #' plot(Polygon1); points(resStartGA[[1]]$X,resStartGA[[1]]$Y, pch=20,cex=2)
-#' plot(resGrid[[2]],add=T)
+#' plot(resGrid[[2]],add=TRUE)
 #' resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
 #'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
 #'                    distanz = 100000, resol = 200,dirSpeed = data.in,
-#'                    RotorR = 50, polygon1 = Polygon1, topograp = "FALSE",
+#'                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
 #'                    windraster,srtm_crop,cclRaster)
 #' length(resCalcEn)
 #' str(resCalcEn)
@@ -105,8 +106,10 @@
 #' resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
 #'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
 #'                    distanz = 100000, resol = 200,dirSpeed = data.in,
-#'                    RotorR = 50, polygon1 = Polygon1, topograp = "FALSE",
+#'                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
 #'                    windraster,srtm_crop,cclRaster)
+#' length(resCalcEn)
+#' str(resCalcEn)
 #' }
 #' @author Sebastian Gatscha
 #'
@@ -358,6 +361,3 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
   ## Return the list with all relevant information
   invisible(alllist)
 }
-
-
-

@@ -19,12 +19,12 @@ Mutate the genes of every chromosome or individual with
 low probability.
 }
 \examples{
-\donttest{
+{
 ## Create 4 random individuals with binary values
-a <- cbind(bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
-        bin.1=sample(c(0,1),20,replace=T,prob = c(30,70)),
-        bin.2=sample(c(0,1),20,replace=T,prob = c(30,70)),
-        bin.3=sample(c(0,1),20,replace=T,prob = c(30,70)))
+a <- cbind(bin=sample(c(0,1),20,replace=TRUE,prob = c(70,30)),
+        bin.1=sample(c(0,1),20,replace=TRUE,prob = c(30,70)),
+        bin.2=sample(c(0,1),20,replace=TRUE,prob = c(30,70)),
+        bin.3=sample(c(0,1),20,replace=TRUE,prob = c(30,70)))
 a
 ## Mutate the individuals with a given percentage
 aMut <- mutation(a,0.1)
@@ -37,4 +37,3 @@ a==aMut
 \author{
 Sebastian Gatscha
 }
-

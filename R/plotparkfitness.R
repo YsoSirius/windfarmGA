@@ -5,20 +5,49 @@
 #' @export
 #'
 #' @importFrom graphics par layout lines grid plot points axis legend abline
-#' mtext
+#' mtext title
 #' @importFrom grDevices colorRampPalette
-#' @importFrom stats smooth.spline
+#' @importFrom stats smooth.spline median
 #' @importFrom calibrate textxy
 #' @importFrom dplyr select
 #'
 #'
-#' @param result An output matrix of \code{\link{genAlgo}}, which has
-#' stored all relevant information. (matrix)
+#' @param result An output matrix of \code{\link{windfarmGA}} or
+#' \code{\link{genAlgo}}, which has stored all relevant information. (matrix)
 #' @param spar A numeric value determining how exact a spline should
 #' be drawn. Default is 0.1 (numeric)
 #'
 #' @return NULL
+#' @examples \donttest{
+#' ## Create a random rectangular shapefile
+#' library(sp)
+#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+#' Polygon1 <- Polygons(list(Polygon1),1);
+#' Polygon1 <- SpatialPolygons(list(Polygon1))
+#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' proj4string(Polygon1) <- CRS(Projection)
+#' plot(Polygon1,axes=TRUE)
 #'
+#' ## Create a uniform and unidirectional wind data.frame and plots the
+#' ## resulting wind rose
+#' ## Uniform wind speed and single wind direction
+#' data.in <- as.data.frame(cbind(ws=12,wd=0))
+#' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#' #                dir = data.in$wd, dirres=10, spdmax=20)
+#'
+#' ## Runs an optimization run for 10 iterations (iteration) with the
+#' ## given shapefile (Polygon1), the wind data.frame (data.in),
+#' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
+#' ## factor of 3 (fcrR) and other required inputs.
+#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+#'             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+#'             elitism=TRUE, nelit = 7, trimForce = TRUE,
+#'             referenceHeight = 50,RotorHeight = 100)
+#' Grid <- GridFilter(shape = Polygon1,resol = 200,prop = 1,plotGrid = FALSE);
+#' plotparkfitness(result, 0.1)
+#'}
 #' @author Sebastian Gatscha
 plotparkfitness <- function(result,spar=0.5){
   # library(calibrate); library(stats); library(graphics); library(grDevices);
@@ -47,10 +76,14 @@ plotparkfitness <- function(result,spar=0.5){
   graphics::points(rslt$meanparkfitness,ylab="MeanParkF", cex=1.2,col="blue", pch=20);
   graphics::points(rslt$maxparkfitness,ylab="maxParkF", cex=1.2,col="green", pch=20)
   x <- 1:length(rslt$maxparkfitness)
-  lmin <- stats::smooth.spline(x,rslt$minparkfitness, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
-  lmea <- stats::smooth.spline(x,rslt$meanparkfitness, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2);
-  lmax <- stats::smooth.spline(x,rslt$maxparkfitness, spar=spar); graphics::lines(lmax, col='green', lwd=1.2)
-  graphics::grid(col = "gray")
+
+  if (nrow(result)>=4){
+    lmin <- stats::smooth.spline(x,rslt$minparkfitness, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
+    lmea <- stats::smooth.spline(x,rslt$meanparkfitness, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2);
+    lmax <- stats::smooth.spline(x,rslt$maxparkfitness, spar=spar); graphics::lines(lmax, col='green', lwd=1.2)
+    graphics::grid(col = "gray")
+  }
+
 
   graphics::par(mar=c(5,5,3,2))
   #par(mfrow=c(1,1))
@@ -121,10 +154,12 @@ plotparkfitness <- function(result,spar=0.5){
   graphics::points(rslt$meanParkwirkungsg,ylab="MeanParkEff", cex=1.2,col="blue", pch=20);
   graphics::points(rslt$maxParkwirkungsg,ylab="maxParkEff", cex=1.2,col="green", pch=20)
   x <- 1:length(rslt$maxparkfitness);
-  lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
-  lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
-  lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
-  graphics::grid(col = "gray")
+  if (nrow(result)>=4){
+    lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
+    lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
+    lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
+    graphics::grid(col = "gray")
+  }
   if (length(timetick)!=0){
     graphics::abline(v = timetick,col="black");
     graphics::mtext(mutrplval,side = 3,at = timetick,cex = 0.8)
@@ -142,10 +177,13 @@ plotparkfitness <- function(result,spar=0.5){
   graphics::points(rslt$meanParkwirkungsg,ylab="MeanParkEff", cex=1.2,col="blue", pch=20);
   graphics::points(rslt$maxParkwirkungsg,ylab="maxParkEff", cex=1.2,col="green", pch=20)
   x <- 1:length(rslt$maxparkfitness);
-  lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
-  lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
-  lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
-  graphics::grid(col = "gray")
+  if (nrow(result)>=4){
+    lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
+    lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
+    lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
+    graphics::grid(col = "gray")
+  }
+
   if (length(timeticksel)!=0){
     graphics::abline(v = timeticksel,col="green");   #abline(v = timetickcro,col="red"); abline(v = timetick,col="black");
     graphics::mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
@@ -162,10 +200,13 @@ plotparkfitness <- function(result,spar=0.5){
   graphics::points(rslt$meanParkwirkungsg,ylab="MeanParkEff", cex=1.2,col="blue", pch=20);
   graphics::points(rslt$maxParkwirkungsg,ylab="maxParkEff", cex=1.2,col="green", pch=20)
   x <- 1:length(rslt$maxparkfitness);
-  lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
-  lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
-  lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
-  graphics::grid(col = "gray")
+  if (nrow(result)>=4){
+    lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
+    lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
+    lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
+    graphics::grid(col = "gray")
+  }
+
   if (length(timetickcro)!=0){
     graphics::abline(v = timetickcro,col="red");
     graphics::mtext(crorplval,side = 3,at = timetickcro,col="red",cex = 0.8)
@@ -189,9 +230,13 @@ plotparkfitness <- function(result,spar=0.5){
   graphics::points(rslt$meanparkfitness,ylab="MeanParkF", cex=1.2,col="blue", pch=20)
   graphics::points(rslt$maxparkfitness,ylab="maxParkF", cex=1.2,col="green", pch=20)
   x <- 1:length(rslt$maxparkfitness)
-  lmin <- smooth.spline(x,rslt$minparkfitness, spar=spar); graphics::lines(lmin, col='red', lwd=1.2)
-  lmea <- smooth.spline(x,rslt$meanparkfitness, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
-  lmax <- smooth.spline(x,rslt$maxparkfitness, spar=spar); graphics::lines(lmax, col='green', lwd=1.2)
+  if (nrow(result)>=4){
+    lmin <- smooth.spline(x,rslt$minparkfitness, spar=spar); graphics::lines(lmin, col='red', lwd=1.2)
+    lmea <- smooth.spline(x,rslt$meanparkfitness, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
+    lmax <- smooth.spline(x,rslt$maxparkfitness, spar=spar); graphics::lines(lmax, col='green', lwd=1.2)
+    graphics::grid(col = "gray")
+  }
+
 
   plot(1*100/selteil,ylim=c(20,110),type="b",lwd=2,col="green",pch=20,main="Selection percentage",
        ylab="Percentage",xlab="Generation");graphics::grid(lty = 2)
@@ -224,8 +269,6 @@ plotparkfitness <- function(result,spar=0.5){
 
 
   graphics::par(opar)
+  return()
 }
-
-
-
 

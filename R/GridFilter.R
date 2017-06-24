@@ -33,7 +33,7 @@
 #' @references \url{http://rfunctions.blogspot.co.at/2014/12/
 #' gridfilter-intersect-grid-with-shape.html}
 #'
-#' @examples \donttest{
+#' @examples
 #' library(sp)
 #' ## Exemplary input Polygon with 2km x 2km:
 #' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000),
@@ -43,11 +43,11 @@
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=T)
+#' plot(Polygon1,axes=TRUE)
 #'
-#' GridFilter(Polygon1,200,1,"TRUE")
-#' }
-GridFilter <- function(shape, resol = 500, prop = 1,plotGrid=FALSE){
+#' GridFilter(Polygon1,200,1,TRUE)
+#'
+GridFilter <- function(shape, resol = 500, prop = 1, plotGrid=FALSE){
   # library(rgeos);  library(sp);  library(raster);
   # require(raster)
   # shape = Polygon1;resol = 90; prop=1; plotGrid = TRUE
@@ -71,7 +71,7 @@ GridFilter <- function(shape, resol = 500, prop = 1,plotGrid=FALSE){
 
   if(!any(dry.grid$layer >= prop)) {
     print("\n################### GA ERROR MESSAGE ###################")
-    stop("A grid cannot be drawn. Reduce the resolution.")
+    stop("A grid cannot be drawn. Reduce the resolution or define a projection in meters.")
   }
 
   dry.grid.filtered <- dry.grid[dry.grid$layer >= prop,];

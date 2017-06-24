@@ -31,7 +31,7 @@ Point C, where the right angle is located will therefore be calculated
 by the algorithm itself. See also \code{\link{PointToLine2}}.
 }
 \examples{
-\donttest{
+{
   Aa= as.numeric(cbind(1,1))
   Bb= as.numeric(cbind(10,3))
   Cc= as.numeric(cbind(10,1))
@@ -47,4 +47,3 @@ by the algorithm itself. See also \code{\link{PointToLine2}}.
 \author{
 Sebastian Gatscha
 }
-

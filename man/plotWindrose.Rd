@@ -32,10 +32,10 @@ plotWindrose(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 \item{spdseq}{A wind speed sequence, that is used for plotting (numeric)}
 }
 \description{
-Plot a wind rose of the the wind data frame.
+Plot a wind rose of the wind data frame.
 }
 \examples{
-\donttest{
+{
 ## Exemplary Input Wind speed and direction data frame
 # Uniform wind speed and single wind direction
 data.in <- as.data.frame(cbind(ws=12,wd=0))
@@ -51,4 +51,3 @@ windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 \author{
 Sebastian Gatscha
 }
-

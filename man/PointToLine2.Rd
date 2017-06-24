@@ -38,7 +38,7 @@ where it will build a right triangle. plot(rbind(P1,P2,C,P1),type="l")
 See Examples.
 }
 \examples{
-\donttest{
+{
 ## For further calculations only the distances between B-C and A-C
 ## and the angle at A will be needed. B represents the current turbine
 ## and A represents a turbine, that could potentially influence turbine B.
@@ -50,4 +50,3 @@ PointToLine2(x,y,TRUE)
 \author{
 Sebastian Gatscha
 }
-

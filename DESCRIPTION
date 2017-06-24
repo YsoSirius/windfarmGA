@@ -1,20 +1,22 @@
 Package: windfarmGA
 Type: Package
-Title: Genetic Algorithm to optimize a Wind Farm Layout Problem
-Version: 1.0
-Date: 2016-12-15
+Title: Genetic Algorithm for Wind Farm Layout Optimization
+Version: 1.1
+Date: 2017-06-20
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
-Description: A genetic algorithm is included, which is designed to optimize small wind farms
-    up to 50 turbines. The algorithm works with a fixed amount of turbines, a fixed rotor
-    radius and a mean wind speed value for every incoming wind direction.
-    If required it can include a terrain effect model, which downloads an SRTM elevation model
-    automatically, and loads a Corine Land Cover raster, which has to be downloaded
-    previously. Further information can be found at the description of the function "windfarmGA".
-    To start an optimization run, either the function "windfarmGA" or "genAlgo" can be used.
-    The function "windfarmGA" checks the user inputs interactively and runs then the
-    function "genAlgo". If the input parameters are already known, an optimization can be run
-    directly via the function "genAlgo". Their output is identical.
+Description: The genetic algorithm is designed to optimize small wind farms up 
+    to 50 turbines. The algorithm works with a fixed amount of turbines, a fixed 
+    rotor radius and a mean wind speed value for every incoming wind direction.
+    If required it can include a terrain effect model, which downloads an 
+    'SRTM' elevation model automatically and loads a Corine Land Cover raster, 
+    which has to be downloaded previously. 
+    Further information can be found at the description of the function 'windfarmGA'. 
+    To start an optimization run, either the function 'windfarmGA' or 'genAlgo' can 
+    be used. The function 'windfarmGA' checks the user inputs interactively and then 
+    runs the function 'genAlgo'. If the input parameters are already known, an 
+    optimization can be run directly via the function 'genAlgo'. 
+    Their output is identical.
 License: MIT + file LICENSE
 LazyData: TRUE
 Depends:
@@ -42,4 +44,4 @@ Imports:
     utils
 Suggests:
     magrittr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

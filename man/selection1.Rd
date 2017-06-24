@@ -38,7 +38,39 @@ algorithm will either take always 50 percent or a variable percentage
 of the current population. The variable percentage depends on the
 evolution of the populations fitness values.
 }
+\examples{
+\dontrun{
+## Create a random rectangular shapefile
+library(sp)
+Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygons(list(Polygon1),1);
+Polygon1 <- SpatialPolygons(list(Polygon1))
+Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+proj4string(Polygon1) <- CRS(Projection)
+plot(Polygon1,axes=TRUE)
+
+## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
+Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+Grid <- Grid1[[1]]
+AmountGrids <- nrow(Grid)
+
+startsel <- StartGA(Grid,10,20);
+wind <- as.data.frame(cbind(ws=12,wd=0))
+fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
+               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20, dirspeed = wind,
+               srtm_crop="",topograp=FALSE,cclRaster="")
+allparks <- do.call("rbind",fit);
+
+## SELECTION
+## print the amount of Individuals selected. Check if the amount of Turbines is as requested.
+selec6best <- selection1(fit, Grid,2, T, 6, "VAR");
+selec6best <- selection1(fit, Grid,2, T, 6, "FIX");
+selec6best <- selection1(fit, Grid,4, F, 6, "FIX");
+str(selec6best)
+
+}
+}
 \author{
 Sebastian Gatscha
 }
-

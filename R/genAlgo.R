@@ -3,9 +3,10 @@
 #' @description  This function coordinates all other elements of the
 #' genetic algorithm. To initiate an optimization run, this method has to
 #' be called with the desired inputs. To be able to include the terrain effect
-#' model, the sources of the Corine Land cover raster has  This function will not contoll
-#' user inputs before an optimization process. It is therefore recommended
-#' to start an optimization run with the \code{\link{windfarmGA}} function.
+#' model, the source of the Corine Land cover raster has to be given.
+#' This function will not control user inputs before an optimization process.
+#' It is therefore recommended to start an optimization run with
+#' the \code{\link{windfarmGA}} function.
 #'
 #' @export
 #'
@@ -15,7 +16,8 @@
 #' @importFrom utils read.csv
 #' @importFrom grDevices colorRampPalette
 #' @importFrom dplyr select group_by summarise_each %>% funs
-#'
+#' @importFrom graphics plot.new
+#' @importFrom stats runif
 #'
 #' @param Polygon1 The considered area as shapefile (SpatialPolygons)
 #' @param Rotor A numeric value that gives the rotor radius in meter
@@ -24,9 +26,9 @@
 #' (numeric)
 #' @param fcrR A numeric value, that is used for grid spacing (numeric)
 #' @param referenceHeight The height at which the incoming
-#' wind speeds were measured. Default is 50m (numeric)
+#' wind speeds were measured. (numeric)
 #' @param RotorHeight The desired height of the turbine.
-#' Default is 100m (numeric)
+#' (numeric)
 #' @param SurfaceRoughness A surface roughness length of the
 #' considered area in m.  If the terrain effect model is activated, a
 #' surface roughness will be calculated for every grid cell with the
@@ -63,7 +65,7 @@
 #' the algorithm will take a probabilistic approach to trim the windfarms
 #' to the desired amount of turbines. If deactivated
 #' (\code{trimForce}==FALSE) the adjustment will be random.
-#' Default is TRUE. (logical)
+#' (logical)
 #' @param Projection A desired Projection can be used instead
 #' of the default Lambert Azimuthal Equal Area Projection. (character)
 #'
@@ -81,7 +83,7 @@
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=T)
+#' plot(Polygon1,axes=TRUE)
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plots the
 #' ## resulting wind rose
@@ -94,11 +96,11 @@
 #' ## given shapefile (Polygon1), the wind data.frame (data.in),
 #' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
 #' ## factor of 3 (fcrR) and other required inputs.
-# result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-#              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-#              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-#              elitism=TRUE, nelit = 7, trimForce = TRUE,
-#              referenceHeight = 50,RotorHeight = 100)
+#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+#'             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+#'             elitism=TRUE, nelit = 7, trimForce = TRUE,
+#'             referenceHeight = 50,RotorHeight = 100)
 #'}
 #' @author Sebastian Gatscha
 genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,

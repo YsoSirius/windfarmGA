@@ -16,7 +16,12 @@ of the 2 available crossover methods. The available inputs are "E" and "R".
 "E" refers to partitioning at equal intervals and "R" refers to random
 partitioning.
 }
+\examples{
+\donttest{
+  readinteger()
+}
+
+}
 \author{
 Sebastian Gatscha
 }
-

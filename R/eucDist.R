@@ -11,7 +11,7 @@
 #' @return Returns a numeric value indicating the euclidian distance between
 #' two Points. (numeric)
 #'
-#' @examples \donttest{
+#' @examples {
 #' x=c(200,100)
 #' y=c(1000,2000)
 #' euc.dist(x,y)

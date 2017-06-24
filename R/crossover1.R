@@ -19,10 +19,11 @@
 #' cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 #' (matrix)
 #'
-#' @examples \donttest{
+#' @examples {
 #'  ## Create two random parents with an index and random binary values
-#'  Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
-#'                          bin.1=sample(c(0,1),20,replace=T,prob = c(30,70))))
+#'  Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=TRUE,
+#'                          prob = c(70,30)),bin.1=sample(c(0,1),20,
+#'                          replace=TRUE,prob = c(30,70))))
 #'  Parents
 #'
 #'  ## Create random Fitness values for both individuals
@@ -75,7 +76,7 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
     if (crossPart == "EQU"){
       ## Equal Parts
       # In how many parts should the genCode be split?
-      #t <- sort(sample(numel,4,replace=F));t
+      #t <- sort(sample(numel,4,replace=FALSE));t
       crosEquPartN <- base::trunc(u+1)
       t1 <- ceiling(length(sene)/crosEquPartN);
       #split the genCode in equal parts, that are t long. a is from parent1 and b for parent2.
@@ -143,7 +144,4 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
 
   return(nI)
 }
-
-
-
 

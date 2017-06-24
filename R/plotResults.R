@@ -10,14 +10,14 @@
 #' @importFrom raster crs getData crop mask projectRaster raster getData
 #' reclassify plot calc extract cellStats terrain resample overlay res
 #' @importFrom sp spTransform
-#' @importFrom grDevices colorRampPalette
+#' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics mtext par plot
 #' @importFrom utils read.csv
 #' @importFrom calibrate textxy
 #' @importFrom stats dist
 #'
-#' @param result An output matrix of the function \code{\link{genAlgo}},
-#' which has stored all relevant information. (matrix)
+#' @param result An output matrix of the function \code{\link{windfarmGA}} or
+#' \code{\link{genAlgo}}, which has stored all relevant information. (matrix)
 #' @param Polygon1 The considered area as shapefile. (SpatialPolygons)
 #' @param best A numeric value indicating how many of the best individuals
 #' should be plotted. (numeric)
@@ -34,6 +34,36 @@
 #' @return Returns a data.frame of the best (energy/efficiency) individual
 #' during all iterations. (data.frame)
 #'
+#' @examples \donttest{
+#' ## Create a random rectangular shapefile
+#' library(sp)
+#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+#' Polygon1 <- Polygons(list(Polygon1),1);
+#' Polygon1 <- SpatialPolygons(list(Polygon1))
+#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' proj4string(Polygon1) <- CRS(Projection)
+#' plot(Polygon1,axes=TRUE)
+#'
+#' ## Create a uniform and unidirectional wind data.frame and plots the
+#' ## resulting wind rose
+#' ## Uniform wind speed and single wind direction
+#' data.in <- as.data.frame(cbind(ws=12,wd=0))
+#' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#' #                dir = data.in$wd, dirres=10, spdmax=20)
+#'
+#' ## Runs an optimization run for 10 iterations (iteration) with the
+#' ## given shapefile (Polygon1), the wind data.frame (data.in),
+#' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
+#' ## factor of 3 (fcrR) and other required inputs.
+#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+#'             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+#'             elitism=TRUE, nelit = 7, trimForce = TRUE,
+#'             referenceHeight = 50,RotorHeight = 100)
+#' Grid <- GridFilter(shape = Polygon1,resol = 200,prop = 1,plotGrid = FALSE);
+#' plotResult(result, Polygon1, 1, 1, FALSE, Grid = Grid[[2]])
+#'}
 #' @author Sebastian Gatscha
 plotResult <- function(result,Polygon1,best=5,plotEn=1,
                        topographie=FALSE,Grid,Projection){
@@ -351,4 +381,3 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
 
   return(ResPlotResult)
 }
-

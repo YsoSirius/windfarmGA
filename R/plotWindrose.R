@@ -1,6 +1,6 @@
 #' @title Plot a Windrose
 #' @name plotWindrose
-#' @description  Plot a wind rose of the the wind data frame.
+#' @description  Plot a wind rose of the wind data frame.
 #'
 #' @export
 #' @importFrom grDevices colorRampPalette
@@ -24,7 +24,7 @@
 #'
 #' @return NULL
 #'
-#' @examples \donttest{
+#' @examples {
 #' ## Exemplary Input Wind speed and direction data frame
 #' # Uniform wind speed and single wind direction
 #' data.in <- as.data.frame(cbind(ws=12,wd=0))
@@ -38,7 +38,6 @@
 #'}
 #' @author Sebastian Gatscha
 
-##utils::globalVariables("spd.binned");
 
 plotWindrose <- function(data,spd,dir,spdres = 2,dirres = 10,spdmin = 1,
                           spdmax = 30, palette = "YlGnBu",  debug = 0,  spdseq = NULL){
@@ -116,19 +115,19 @@ plotWindrose <- function(data,spd,dir,spdres = 2,dirres = 10,spdmin = 1,
                       drop = FALSE) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank(),
                    axis.title.y = ggplot2::element_blank(),
-                   
+
                    axis.text.y = ggplot2::element_blank(),
-                   axis.ticks.y=element_blank(),
-                   legend.background = element_rect(fill = "gray96", colour = "gray96"),
-                   panel.background = element_rect(fill = "gray96", colour = "gray96"),
-                   panel.grid.minor.y = element_line(size=2),
-                   panel.grid.major = element_line(colour = "gray86"),
-                   panel.border=element_blank(),
-                   plot.background = element_rect(fill = "gray96", colour = "gray96"),
-                   strip.background=element_rect(fill="gray96", colour="gray96"),
-                   plot.margin=unit(c(0, 0, 0, 0), "lines"))
-  
-  
+                   axis.ticks.y= ggplot2::element_blank(),
+                   legend.background = ggplot2::element_rect(fill = "gray96", colour = "gray96"),
+                   panel.background = ggplot2::element_rect(fill = "gray96", colour = "gray96"),
+                   panel.grid.minor.y = ggplot2::element_line(size=2),
+                   panel.grid.major = ggplot2::element_line(colour = "gray86"),
+                   panel.border= ggplot2::element_blank(),
+                   plot.background = ggplot2::element_rect(fill = "gray96", colour = "gray96"),
+                   strip.background= ggplot2::element_rect(fill="gray96", colour="gray96"),
+                   plot.margin= ggplot2::unit(c(0, 0, 0, 0), "lines"))
+
+
 
   # adjust axes if required
   if (!is.na(countmax)){
@@ -142,6 +141,5 @@ plotWindrose <- function(data,spd,dir,spdres = 2,dirres = 10,spdmin = 1,
   # return the handle to the wind rose
   return(p.windrose)
 }
-
 
 

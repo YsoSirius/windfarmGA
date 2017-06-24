@@ -23,7 +23,7 @@
 #' distances and angles. Default is FALSE (logical)
 #' @return Returns a data.frame with the distances and angles of
 #' potentially influencing turbines (data.frame)
-#' @examples \donttest{
+#' @examples {
 #' library(sp);library(raster)
 #'
 #' ## Exemplary input Polygon with 2km x 2km:
@@ -32,7 +32,7 @@
 #' polYgon <- SpatialPolygons(list(polYgon))
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #'                +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=T)
+#' proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=TRUE)
 #'
 #' ## Create a random windfarm with 10 turbines
 #' t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
@@ -44,11 +44,10 @@
 #' potInfTur <- list()
 #' for (i in 1:(length(t[,1]))) {
 #'   potInfTur[[i]] <- VekWinkelCalc(t = t, o = i, wkl = wnkl,
-#'                    distanz = dist, polYgon = polYgon, plotAngles=TRUE);
+#'                    distanz = distanz, polYgon = polYgon, plotAngles=TRUE);
 #' }
 #' potInfTur
 #' }
-#'
 #' @author Sebastian Gatscha
 VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
   # library(raster);
@@ -116,6 +115,3 @@ VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
   }
   return(DataLun3);
 }
-
-##importFrom GenAlgo WinkelCalc PointToLine2
-

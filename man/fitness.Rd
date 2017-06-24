@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitness.R
 \name{fitness}
 \alias{fitness}
-\title{Evaluate the Individual fFtness values}
+\title{Evaluate the Individual Ftness values}
 \usage{
 fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
   resol1, rot, dirspeed, srtm_crop, topograp, cclRaster)
@@ -49,7 +49,39 @@ current population are calculated, after having evaluated their energy
 outputs in \code{\link{calculateEn}}. This function reduces the resulting
 energy outputs to a single fitness value for every individual.
 }
+\examples{
+\donttest{
+## Create a random rectangular shapefile
+library(sp)
+Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygons(list(Polygon1),1);
+Polygon1 <- SpatialPolygons(list(Polygon1))
+Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+proj4string(Polygon1) <- CRS(Projection)
+plot(Polygon1,axes=TRUE)
+
+## Create a uniform and unidirectional wind data.frame and plots the
+## resulting wind rose
+## Uniform wind speed and single wind direction
+data.in <- as.data.frame(cbind(ws=12,wd=0))
+# windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#                dir = data.in$wd, dirres=10, spdmax=20)
+
+## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
+Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+Grid <- Grid1[[1]]
+AmountGrids <- nrow(Grid)
+
+startsel <- StartGA(Grid,10,20);
+wind <- as.data.frame(cbind(ws=12,wd=0))
+fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
+               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+               dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
+head(fit)
+}
+
+}
 \author{
 Sebastian Gatscha
 }
-

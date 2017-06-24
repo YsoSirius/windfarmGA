@@ -28,10 +28,11 @@ the selected individuals after the \code{\link{selection1}} function and
 produces new offsprings through permutation.
 }
 \examples{
-\donttest{
+{
  ## Create two random parents with an index and random binary values
- Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=T,prob = c(70,30)),
-                         bin.1=sample(c(0,1),20,replace=T,prob = c(30,70))))
+ Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=TRUE,
+                         prob = c(70,30)),bin.1=sample(c(0,1),20,
+                         replace=TRUE,prob = c(30,70))))
  Parents
 
  ## Create random Fitness values for both individuals
@@ -56,4 +57,3 @@ produces new offsprings through permutation.
 \author{
 Sebastian Gatscha
 }
-

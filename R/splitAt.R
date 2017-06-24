@@ -10,10 +10,9 @@
 #'
 #' @return Returns a list of the splitted genetic code.
 #'
-#' @examples \donttest{
+#' @examples {
 #' splitAt(1:100,20)
 #' splitAt(as.matrix(1:100),20)
 #'}
 #' @author Sebastian Gatscha
 splitAt           <- function(x, pos) unname(split(x, cumsum(seq_along(x) %in% pos)))
-

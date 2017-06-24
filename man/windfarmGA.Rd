@@ -2,7 +2,7 @@
 % Please edit documentation in R/windfarmGA.R
 \name{windfarmGA}
 \alias{windfarmGA}
-\title{Controlls the given inputs and starts an Optimization run}
+\title{Controls the given inputs and initiates an Optimization run}
 \arguments{
 \item{dns}{The source to the desired Shapefile. Only required, if the
 shapefile is not already loaded. (character)}
@@ -91,7 +91,7 @@ depending on the size of the problem and the number of desired iterations.
 }
 \details{
 A terrain effect model can be included in the optimization process.
-Therefore an SRTM elevation model will be downloaded automaticelly via the
+Therefore an SRTM elevation model will be downloaded automatically via the
 \code{raster::getData} function. Another raster (.tif) is
 \strong{required}, which has to be downloaded previously at the following
 page: \url{http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1}.
@@ -102,9 +102,9 @@ The algorithm will use an adapted version of the Raster legend
 ("clc_legend.csv"), which is stored in the package subdirectory
 \file{~/extdata}. To use own values for the land cover roughness
 lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file
-in the Corine Land Cover package, assign a surface roughness lenght
+in the Corine Land Cover package, assign a surface roughness length
 to all land cover types. Be sure that all rows are filled with numeric
-values and save the csv file then with \strong{";"} separation. Assign the
+values and save the .csv file then with \strong{";"} separation. Assign the
 source of the resulting .csv file to the input variable
 \code{sourceCCLRoughness} of this function. For further information, see
 the examples.
@@ -124,7 +124,7 @@ Polygon1 <- sp::SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 proj4string(Polygon1) <- CRS(Projection)
-plot(Polygon1,axes=T)
+plot(Polygon1,axes=TRUE)
 ## Or Polygon is given by source:
 Polygon1 <- rgdal::readOGR(dsn=dsn,layer=layer)
 plot(Polygon1)
@@ -146,16 +146,17 @@ Rotor= 50; fcrR= 9
 GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop=1, plotGrid =TRUE)
 
 ############### STARTING AN OPTIMIZATION RUN
-result <- genAlgo(Polygon1=Polygon1, n=12, Rotor=30, fcrR=3, iteration=10,
-          vdirspe=data.in)
+result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+             data.in = data.in, crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+             elitism=TRUE, nelit = 7, trimForce = TRUE,
+             referenceHeight = 50,RotorHeight = 100)
 
-## Use the resulting list with the different plotting methods of this package,
+## Use the resulting matrix with the different plotting methods of this package,
 ## to explore the behaviour of the genetic algorithm
 
-##########
 }
 }
 \author{
 Sebastian Gatscha
 }
-

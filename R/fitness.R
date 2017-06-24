@@ -1,4 +1,4 @@
-#' @title Evaluate the Individual fFtness values
+#' @title Evaluate the Individual Ftness values
 #' @name fitness
 #' @description The fitness values of the individuals in the
 #' current population are calculated, after having evaluated their energy
@@ -35,13 +35,44 @@
 #' the resulting energy outputs, efficiency rates and fitness values.
 #' (list)
 #'
+#' @examples \donttest{
+#' ## Create a random rectangular shapefile
+#' library(sp)
+#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+#' Polygon1 <- Polygons(list(Polygon1),1);
+#' Polygon1 <- SpatialPolygons(list(Polygon1))
+#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' proj4string(Polygon1) <- CRS(Projection)
+#' plot(Polygon1,axes=TRUE)
+#'
+#' ## Create a uniform and unidirectional wind data.frame and plots the
+#' ## resulting wind rose
+#' ## Uniform wind speed and single wind direction
+#' data.in <- as.data.frame(cbind(ws=12,wd=0))
+#' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#' #                dir = data.in$wd, dirres=10, spdmax=20)
+#'
+#' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
+#' Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+#' Grid <- Grid1[[1]]
+#' AmountGrids <- nrow(Grid)
+#'
+#' startsel <- StartGA(Grid,10,20);
+#' wind <- as.data.frame(cbind(ws=12,wd=0))
+#' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
+#'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+#'                dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
+#' head(fit)
+#' }
+#'
 #' @author Sebastian Gatscha
 fitness           <- function(selection, referenceHeight, RotorHeight,
                               SurfaceRoughness, Polygon, resol1,
                               rot, dirspeed,srtm_crop,topograp,cclRaster){
 
   dirspeed$wd <- round(dirspeed$wd,0)
-  dirspeed$wd <-  round(dirspeed$wd/100,1)*100; 
+  dirspeed$wd <-  round(dirspeed$wd/100,1)*100;
   ## If no probabilites are given, assign uniform distributed ones.
   if (any(names(dirspeed) == "probab") == FALSE) {
     dirspeed$probab <- 100/nrow(dirspeed)
@@ -57,8 +88,8 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       temp <- dirspeed[dirspeed$wd ==  dirspeed[duplicated(
         dirspeed$wd)==F,][i,'wd'],];
       temp$ws <-with(temp, sum(ws * (probab/sum(probab))));
-      temp$probab <- with(temp, sum(probab * (probab/sum(probab)))); 
-      
+      temp$probab <- with(temp, sum(probab * (probab/sum(probab))));
+
       dirspeed[dirspeed$wd ==  dirspeed[duplicated(
         dirspeed$wd)==F,][i,'wd'],]$ws <- round(temp$ws,2)[1]
       dirspeed[dirspeed$wd ==  dirspeed[duplicated(
@@ -137,7 +168,3 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
 
   return(euniqu)
 }
-
-##importFrom GenAlgo calculateEn
-
-

@@ -43,7 +43,7 @@
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=T)
+#' plot(Polygon1,axes=TRUE)
 #'
 #' library(rgdal);
 #' ## Or Polygon is given by source:
@@ -71,8 +71,12 @@
 #' #                dir = data.in$wd, dirres=10, spdmax=20)
 #'
 #' # Starting an optimization run
-#' #result <- genAlgo(Polygon1=Polygon1, n=12, Rotor=30, fcrR=3, iteration=10,
-#' #          vdirspe=data.in)
+#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+#'             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+#'             elitism=TRUE, nelit = 7, trimForce = TRUE,
+#'             referenceHeight = 50,RotorHeight = 100, sourceCCL = sourceCCL,
+#'             sourceCCLRoughness = sourceCCLRoughness)
 #' }
 #' @author Sebastian Gatscha
 

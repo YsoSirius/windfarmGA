@@ -7,6 +7,9 @@
 #' partitioning.
 #' @export
 #' @return Returns the selected crossover method (character)
+#' @examples \donttest{
+#'   readinteger()
+#' }
 #'
 #' @author Sebastian Gatscha
 readinteger        <- function(){

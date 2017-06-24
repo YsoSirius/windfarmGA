@@ -35,7 +35,6 @@ The grid of the genetic algorithm will have a resolution of
 \code{Rotor * fcrR}. See the arguments of \code{\link{windfarmGA}}
 }
 \examples{
-\donttest{
 library(sp)
 ## Exemplary input Polygon with 2km x 2km:
 Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000),
@@ -45,16 +44,15 @@ Polygon1 <- SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 proj4string(Polygon1) <- CRS(Projection)
-plot(Polygon1,axes=T)
+plot(Polygon1,axes=TRUE)
 
-GridFilter(Polygon1,200,1,"TRUE")
-}
-}
-\author{
-Jose Hidasi (original) / Sebastian Gatscha (adapted)
+GridFilter(Polygon1,200,1,TRUE)
+
 }
 \references{
 \url{http://rfunctions.blogspot.co.at/2014/12/
 gridfilter-intersect-grid-with-shape.html}
 }
-
+\author{
+Jose Hidasi (original) / Sebastian Gatscha (adapted)
+}

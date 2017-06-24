@@ -3,14 +3,15 @@
 #' @description  Checks whether the input for \code{\link{selection1}} is
 #' given correctly. If not, a message is prompted which asks to input one
 #' of the 2 available selection methods. The available inputs are "F" and "V".
-#' "EF refers to a fixed percentage of 50% and "V" refers to a variable
-#' percentage, based on the development of the populations fitness values.
-#' partitioning.
+#' "F" refers to a fixed percentage of 50% and "V" refers to a variable
+#' percentage, based on the development of the population fitness values.
 #'
 #' @export
 #'
 #' @return Returns the selected selection method (character)
-#'
+#' @examples \donttest{
+#'   readintegerSel()
+#' }
 #' @author Sebastian Gatscha
 readintegerSel        <- function(){
   cat("\nSelect appropriate Selection Method. Either 'FIX' or 'VAR' are available.")
@@ -25,4 +26,3 @@ readintegerSel        <- function(){
   }
   return(selstate)
 }
-
