@@ -243,5 +243,6 @@ windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughnes
                     topograp = topograp,referenceHeight = referenceHeight,RotorHeight = RotorHeight,
                     SurfaceRoughness = SurfaceRoughness,Proportionality = Proportionality,mutr = mutr,
                     elitism = elitism,nelit = nelit,selstate = selstate,crossPart1 = crossPart1,trimForce = trimForce,
+                    Projection=Projection, sourceCCL = sourceCCL, sourceCCLRoughness = sourceCCLRoughness)
 invisible(result)
 }
