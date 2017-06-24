@@ -1,4 +1,4 @@
-#' @title Plot the best Results in Google Chrome
+#' @title Plot the Best Results in Google Chrome
 #' @name GoogleChromePlot
 #' @description  Plot the best energy or efficiency solutions in Google Chrome
 #' with a satellite background image of Google maps. Input Polygon is
@@ -52,7 +52,7 @@
 #'             referenceHeight = 50,RotorHeight = 100)
 #'
 #' GoogleChromePlot(result, Polygon1, 1,1)
-#'}
+#' }
 #' @author Sebastian Gatscha
 GoogleChromePlot <- function(result,Polygon1,best=1,plotEn=1,Projection) {
 
