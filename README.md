@@ -1,6 +1,6 @@
 # windfarmGA
 R package to optimize the layout of a windfarm.
-The latest version of the package is hosted on CRAN and can be downloaded at https://CRAN.R-project.org/package=windfarmGA
+The package is also hosted on CRAN and can be downloaded here https://CRAN.R-project.org/package=windfarmGA
 
 # Description
 The genetic algorithm is designed to optimize small wind farms up 
