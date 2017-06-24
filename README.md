@@ -69,7 +69,7 @@ Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = 
 ```
 
 ## Terrain Effect Model
-If the input variable **`toporap`** for the functions 'windfarmGA' or 'genAlgo' is TRUE, then the genetic algorithm 
+If the input variable **`topograp`** for the functions 'windfarmGA' or 'genAlgo' is TRUE, then the genetic algorithm 
 will take terrain effects into account. For this purpose an elevation model is downloaded automatically by the 'raster' package
 and a Corine Land Cover raster must be downloaded and given manually. (Download at: http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1).
 Download the .zip package with 100 meter resolution. Unzip the downloaded package and assign the source of the Raster Image
