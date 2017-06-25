@@ -101,21 +101,19 @@ An optimization run can be initiated with the following functions:
 - genAlgo
 - windfarmGA
 
-When using the function 'genAlgo' the wind data frame must be given to the input variable **vdirspe** instead of data.in.
-
 #### Function call for windfarmGA
 - without terrain effects
  ```sh
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             data.in = data.in,crossPart1 = "EQU",selstate = "FIX", mutr = 0.8,
+             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-             elitism=TRUE, nelit = 7, trimForce = TRUE,
+             elitism =TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100)
 ```
 - with terrain effects
  ```sh
-result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor  =20, fcrR = 9, iteration = 10,
-             data.in = data.in,crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
+             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
@@ -133,7 +131,7 @@ result <- genAlgo(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration =
 - with terrain effects
  ```sh
 result <- genAlgo(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = data.in, crossPart1 = "EQU",selstate = "FIX", mutr = 0.8,
+             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
@@ -185,7 +183,7 @@ fcrR <- 9
 Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, iteration = 10,
-                     data.in = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+                     vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
                      Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
                      elitism = TRUE, nelit = 7, trimForce = TRUE,
                      referenceHeight = 50, RotorHeight = 100)
