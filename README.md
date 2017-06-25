@@ -3,12 +3,12 @@ R package to optimize the layout of a windfarm.
 The package is also hosted on CRAN and can be downloaded here https://CRAN.R-project.org/package=windfarmGA
 
 # Installation
-The package can be downloaded from GitHub with:
+The latest version of the package can be downloaded from GitHub with:
  ```sh
 # install.packages("devtools")
 devtools::install_github("YsoSirius/windfarmGA")
 ```
-or via CRAN with:
+and version 1.0 via CRAN with:
  ```sh
 install.packages("windfarmGA")
 ```
