@@ -17,6 +17,8 @@
 #' \code{\link{genAlgo}}, which has stored all relevant information (matrix)
 #' @param si A numeric value that is used for the sizing of the
 #' resolution of the heatmap. Default is 2 (numeric)
+#' @param idistw The inverse distance weighting power. Default is the
+#' rotor radius (numeric)
 #'
 #' @return NULL
 #' @examples \donttest{
@@ -49,10 +51,11 @@
 #' heatmapGA(result)
 #' }
 #' @author Sebastian Gatscha
-heatmapGA <- function(result,si=2){
+heatmapGA <- function(result,si=2,idistw){
   bpe <- do.call("rbind",result[,'allCoords']);
   bpe <- bpe[c(1,2)]
 
+  sizingidw <- as.integer(result[,'inputData'][[1]][,1]['Rotorradius'])
   sizing <- as.integer(result[,'inputData'][[1]][,1]['Resolution'])/si
 
   dupco <- geoR::dup.coords(bpe,simplify = TRUE);   bpe$Ids <- as.integer(rownames(bpe));
@@ -74,7 +77,13 @@ heatmapGA <- function(result,si=2){
   sp::coordinates(grd) <- ~ x+y;   sp::gridded(grd) <- TRUE
 
 
-  idwout <- as.data.frame(gstat::idw(formula = bpenew$Sum~1,locations = polo,newdata=grd))
+  if (missing(idistw)){
+    idistw <- sizingidw
+  } else {
+    idistw <- idistw
+  }
+
+  idwout <- as.data.frame(gstat::idw(formula = bpenew$Sum~1,locations = polo,newdata=grd, idp=idistw))
 
 
   plot1 <- ggplot2::ggplot(data=idwout,mapping=ggplot2::aes(x=x,y=y))+

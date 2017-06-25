@@ -74,39 +74,39 @@ PlotWindfarmGA <- function(result,Polygon1,whichPl,best=1,plotEn=1,Projection){
 
   ############### PLOTTING OUTPUTS
   if (any(whichPl==1)){
-    print("Plots the Best Individual of the GA:")
+    print("Plot the 'best' Individuals of the GA:")
     plotResult(result = result, Polygon1 = Polygon1, best = best ,plotEn = plotEn,topographie = FALSE,Grid= Grid[[2]]);
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==2)){
-    print("Plots the Evolution of the Efficiency and Energy Values:")
+    print("Plot the Evolution of the Efficiency and Energy Values:")
     plotEvolution(result,T,0.3)
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==3)){
-    print("Show the Influences of Population Size, Selection, Crossover, Mutation")
+    print("Plot the Influence of Population Size, Selection, Crossover, Mutation:")
     plotparkfitness(result,0.1)
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==4)){
-    print("Plots the Best Individual of the GA:")
+    print("Plot the Changes in Fitness Values:")
     plotfitnessevolution(result)
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==5)){
-    print("Plot all Individual Values of the whole run:")
+    print("Plot all individual Values of the whole Evolution:")
     plotCloud(result,TRUE)
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==6)){
-    print("Plot the Best Individual with static Google Map Background:")
+    print("Plot the 'best' Individual with static Google Map Background:")
     GooglePlot(result,Polygon1,best,plotEn,Projection)
-    print("Plots the Best Individual in Google Chrome with Satelitte Imagery:")
+    print("Plot the 'best' Individual in Google Chrome with Satelitte Imagery:")
     GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==7)){
-    print("Plots a Heatmap of all Grid Cells:")
+    print("Plot a Heatmap of all Grid Cells:")
     plot(heatmapGA(result = result, si=5))
     readline(prompt="Press [enter] to continue")
   }

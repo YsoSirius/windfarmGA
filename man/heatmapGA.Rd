@@ -4,7 +4,7 @@
 \alias{heatmapGA}
 \title{Plot heatmap of fit grid cells}
 \usage{
-heatmapGA(result, si = 2)
+heatmapGA(result, si = 2, idistw)
 }
 \arguments{
 \item{result}{The output matrix of \code{\link{windfarmGA}} or
@@ -12,6 +12,9 @@ heatmapGA(result, si = 2)
 
 \item{si}{A numeric value that is used for the sizing of the
 resolution of the heatmap. Default is 2 (numeric)}
+
+\item{idistw}{The inverse distance weighting power. Default is the
+rotor radius (numeric)}
 }
 \description{
 Plot a heatmap of the selected grid cells. Green grid
