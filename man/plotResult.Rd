@@ -4,7 +4,7 @@
 \alias{plotResult}
 \title{Plot the best Results}
 \usage{
-plotResult(result, Polygon1, best = 5, plotEn = 1, topographie = FALSE,
+plotResult(result, Polygon1, best = 3, plotEn = 1, topographie = FALSE,
   Grid, Projection, sourceCCLRoughness, sourceCCL)
 }
 \arguments{

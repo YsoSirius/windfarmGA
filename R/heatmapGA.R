@@ -10,7 +10,7 @@
 #' @importFrom gstat idw
 #' @importFrom rgl open3d rgl.surface rgl.snapshot
 #' @importFrom ggplot2 ggplot geom_tile geom_point aes scale_fill_gradient
-#' coord_equal
+#' coord_equal labs
 #'
 #'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
@@ -78,9 +78,12 @@ heatmapGA <- function(result,si=2){
 
 
   plot1 <- ggplot2::ggplot(data=idwout,mapping=ggplot2::aes(x=x,y=y))+
-    c(ggplot2::geom_tile(data=idwout,ggplot2::aes(fill=var1.pred)))+
+    ggplot2::geom_tile(data=idwout,ggplot2::aes(fill=var1.pred), show.legend = T)+
+    ggplot2::labs(title = "Inverse Distance Weighting for Grid Cell Selection")+
     ggplot2::geom_point(data=bpenew,mapping=ggplot2::aes(x=X,y=Y),
                         show.legend = TRUE,size=sqrt(sqrt(bpenew$Sum)),alpha=0.6)
+
   plot1+ggplot2::scale_fill_gradient(low="red", high="green")+ggplot2::coord_equal()
+
 
 }

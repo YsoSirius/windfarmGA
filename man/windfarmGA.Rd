@@ -23,7 +23,7 @@ package (\file{~/extdata}) is taken that was already adapted
 manually. To use your own .csv legend this variable has to be assigned.
 See Details. (character)}
 
-\item{data.in}{A data.frame containing the incoming wind speeds,
+\item{vdirspe}{A data.frame containing the incoming wind speeds,
 wind directions and probabilities. To plot a wind rose from this
 data frame, see: \code{\link{plotWindrose}}. (data.frame)}
 
@@ -137,10 +137,10 @@ sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 ############### REQUIRED INPUT WIND SPEED DATA FRAME
 ## Exemplary Input Wind speed and direction data frame
 ## Uniform wind speed and single wind direction
-data.in <- structure(list(ws =  c(12,12), wd =c(0,0), probab =c(25,25)),
-.Names = c( "ws", "wd","probab"),row.names = c(NA, 2L),class ="data.frame")
-windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-dir = data.in$wd, dirres=10, spdmax=20)
+vdirspe <- structure(list(ws = c(12,12), wd = c(0,0), probab = c(25,25)),
+.Names = c("ws", "wd","probab"), row.names = c(NA, 2L),class ="data.frame")
+windrosePlot <- plotWindrose(data = vdirspe, spd = vdirspe$ws,
+dir = vdirspe$wd, dirres = 10, spdmax = 20)
 ##First check if the grid size is convenient
 Rotor <- 50;
 fcrR <- 9
@@ -148,7 +148,7 @@ GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 ############### STARTING AN OPTIMIZATION RUN
 result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-             data.in = data.in, crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+             vdirspe = vdirspe, crossPart1 = "EQU",selstate="FIX",mutr=0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
              elitism=TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50,RotorHeight = 100)

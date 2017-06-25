@@ -4,7 +4,7 @@
 \alias{plotparkfitness}
 \title{Plot the genetic algorithm results}
 \usage{
-plotparkfitness(result, spar = 0.5)
+plotparkfitness(result, spar = 0.1)
 }
 \arguments{
 \item{result}{An output matrix of \code{\link{windfarmGA}} or
@@ -41,11 +41,10 @@ data.in <- as.data.frame(cbind(ws=12,wd=0))
 ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
 ## factor of 3 (fcrR) and other required inputs.
 result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+            vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
             elitism=TRUE, nelit = 7, trimForce = TRUE,
             referenceHeight = 50,RotorHeight = 100)
-Grid <- GridFilter(shape = Polygon1,resol = 200,prop = 1,plotGrid = FALSE);
 plotparkfitness(result, 0.1)
 }
 }
