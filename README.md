@@ -3,12 +3,12 @@ R package to optimize the layout of a windfarm.
 The package is also hosted on CRAN and can be downloaded here https://CRAN.R-project.org/package=windfarmGA
 
 # Installation
-The package can be downloaded from GitHub with:
+The latest version of the package can be downloaded from GitHub with:
  ```sh
 # install.packages("devtools")
 devtools::install_github("YsoSirius/windfarmGA")
 ```
-or via CRAN with:
+and version 1.0 via CRAN with:
  ```sh
 install.packages("windfarmGA")
 ```
@@ -38,8 +38,8 @@ plot(Polygon1, col = "blue")
 - Or create a random Polygon
  ```sh
 library(rgdal); library(sp);
-Polygon1 <- sp::Polygon(rbind(c(0, 0), c(0, 2000),
-                             c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
+                          c(4654475, 2694746), c(4654475, 2692925)))
 Polygon1 <- sp::Polygons(list(Polygon1), 1)
 Polygon1 <- sp::SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
@@ -101,21 +101,19 @@ An optimization run can be initiated with the following functions:
 - genAlgo
 - windfarmGA
 
-When using the function 'genAlgo' the wind data frame must be given to the input variable **vdirspe** instead of data.in.
-
 #### Function call for windfarmGA
 - without terrain effects
  ```sh
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             data.in = data.in,crossPart1 = "EQU",selstate = "FIX", mutr = 0.8,
+             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-             elitism=TRUE, nelit = 7, trimForce = TRUE,
+             elitism =TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100)
 ```
 - with terrain effects
  ```sh
-result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor  =20, fcrR = 9, iteration = 10,
-             data.in = data.in,crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
+             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
@@ -133,7 +131,7 @@ result <- genAlgo(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration =
 - with terrain effects
  ```sh
 result <- genAlgo(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = data.in, crossPart1 = "EQU",selstate = "FIX", mutr = 0.8,
+             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
@@ -167,8 +165,8 @@ there is only 1 R-worker at hand. So only 1 optimization can be run at a time.
 # Full Optimization example:
  ```sh
 library(rgdal); library(sp); library(windfarmGA)
-Polygon1 <- sp::Polygon(rbind(c(0, 0), c(0, 2000),
-                              c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
+                          c(4654475, 2694746), c(4654475, 2692925)))
 Polygon1 <- sp::Polygons(list(Polygon1), 1);
 Polygon1 <- sp::SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
@@ -182,10 +180,10 @@ windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
                              dir = data.in$wd, dirres = 10, spdmax = 20)
 Rotor <- 20; 
 fcrR <- 9
-Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop=1, plotGrid =TRUE)
+Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, iteration = 10,
-                     data.in = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+                     vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
                      Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
                      elitism = TRUE, nelit = 7, trimForce = TRUE,
                      referenceHeight = 50, RotorHeight = 100)
