@@ -174,11 +174,19 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
     cat("Topography and orography are taken into account.")
 
     par(mfrow=c(3,1))
+
+    if (missing(sourceCCL)){
+      stop("\nNo raster given for the surface roughness. \nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n",call. = F)
+    }
+
     ## SRTM Daten
     Polygon1 <-  sp::spTransform(Polygon1, CRSobj =
                                    raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"));
     extpol <- round(Polygon1@bbox,0)[,2]
-    srtm <- raster::getData('SRTM', lon=extpol[1], lat=extpol[2]);
+    srtm <- raster::getData('SRTM', lon=extpol[1], lat=extpol[2])
+    if (missing(srtm)){
+      stop("\nCould not download SRTM for the given Polygon. Check the Projection of the Polygon.\n",call. = F)
+    }
     srtm_crop <- raster::crop(srtm, Polygon1);
     srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
@@ -192,7 +200,6 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
     if (missing(sourceCCLRoughness)) {
       path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
       sourceCCLRoughness <- paste0(path, "clc_legend.csv")
-      # sourceCCL <- paste0(path,"g100_06.tif")
     } else {
       print("You are using your own Corine Land Cover legend.")
       readline(prompt = "\nPress <ENTER> if you want to continue")
@@ -396,7 +403,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
       mutrn <- round(mutrn +((i)/(20*iteration)),5);
       mut <- mutation(a = crossOut, p = mutrn);
       mut_rat <- mutrn
-      print(paste("1. Mutation Rate is", mutrn, "\n\n"))
+      cat(paste("\nVariable Mutation Rate is", mutrn, "\n"))
     } else {
       mut <- mutation(a = crossOut, p = mutr);
       mut_rat <- mutr

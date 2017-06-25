@@ -47,7 +47,7 @@
 #' package (\file{~/extdata}) is taken that was already adapted
 #' manually. To use your own .csv legend this variable has to be assigned.
 #' See Details. (character)
-#' @param data.in A data.frame containing the incoming wind speeds,
+#' @param vdirspe A data.frame containing the incoming wind speeds,
 #' wind directions and probabilities. To plot a wind rose from this
 #' data frame, see: \code{\link{plotWindrose}}. (data.frame)
 #' @param n A numeric value indicating the required amount of turbines.
@@ -121,10 +121,10 @@
 #' ############### REQUIRED INPUT WIND SPEED DATA FRAME
 #' ## Exemplary Input Wind speed and direction data frame
 #' ## Uniform wind speed and single wind direction
-#' data.in <- structure(list(ws =  c(12,12), wd =c(0,0), probab =c(25,25)),
-#' .Names = c( "ws", "wd","probab"),row.names = c(NA, 2L),class ="data.frame")
-#' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#' dir = data.in$wd, dirres=10, spdmax=20)
+#' vdirspe <- structure(list(ws = c(12,12), wd = c(0,0), probab = c(25,25)),
+#' .Names = c("ws", "wd","probab"), row.names = c(NA, 2L),class ="data.frame")
+#' windrosePlot <- plotWindrose(data = vdirspe, spd = vdirspe$ws,
+#' dir = vdirspe$wd, dirres = 10, spdmax = 20)
 #
 #' ##First check if the grid size is convenient
 #' Rotor <- 50;
@@ -133,7 +133,7 @@
 #'
 #' ############### STARTING AN OPTIMIZATION RUN
 #' result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-#'              data.in = data.in, crossPart1 = "EQU",selstate="FIX",mutr=0.8,
+#'              vdirspe = vdirspe, crossPart1 = "EQU",selstate="FIX",mutr=0.8,
 #'              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
 #'              elitism=TRUE, nelit = 7, trimForce = TRUE,
 #'              referenceHeight = 50,RotorHeight = 100)
@@ -153,7 +153,7 @@ utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
                          "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt"));
 
 windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughness,
-                       data.in, Rotor=30,fcrR=3,n=10,topograp=FALSE,
+                       vdirspe, Rotor=30,fcrR=3,n=10,topograp=FALSE,
                        iteration=100,referenceHeight=50,
                        RotorHeight=50,SurfaceRoughness=0.14, Proportionality=1,
                        mutr=0.001, elitism=TRUE, nelit=6,
@@ -176,8 +176,14 @@ windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughnes
     readline(prompt = "\nPress <ENTER> if this is your Polygon")
   }
   ##  Project the Polygon to LAEA if it is not already.
+  if (is.na(sp::proj4string(Polygon1))){
+    cat("Polygon is not projected. Lambert Azimuthal Equal Area Projection is used.\n")
+    Projection = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+    +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    sp::proj4string(Polygon1) <- CRS(Projection)
+  }
   if (missing(Projection)) {
-    cat("Projection missing. Take Lambert Azimuthal Equal Area Projection.\n")
+    cat("No Projection is given. Take Lambert Azimuthal Equal Area Projection.\n")
     Projection = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
     +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   } else {
@@ -203,10 +209,10 @@ windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughnes
   }
 
   ## Check if Input Wind data is given correctly.
-  if (missing(data.in)) {
+  if (missing(vdirspe)) {
     stop("\n##### No wind data.frame is given. \nThis input is required for an optimization run")
   }
-  plot.new();   plotWindrose(data = data.in, spd = data.in$ws,dir = data.in$wd)
+  plot.new();   plotWindrose(data = vdirspe, spd = vdirspe$ws,dir = vdirspe$wd)
   readline(prompt = "\nPress <ENTER> if the windrose looks correct?")
   ## Check if Rotor,fcrR,n,iteration,RotorHeight,SurfaceRoughness,Proportionality,mutr,nelit are numeric
   ChekNumer <- is.numeric(c(Rotor,n,fcrR,iteration,referenceHeight,RotorHeight,SurfaceRoughness,Proportionality,mutr,nelit))
@@ -240,7 +246,7 @@ windfarmGA <- function(dns,layer,Polygon1,Projection,sourceCCL,sourceCCLRoughnes
 
   ##########################################################
   ############### RUNNING GENETIC ALGORITHM
-  result <- genAlgo(Polygon1 = Polygon1, Rotor = Rotor, n=n, fcrR=fcrR, iteration=iteration, vdirspe = data.in,
+  result <- genAlgo(Polygon1 = Polygon1, Rotor = Rotor, n=n, fcrR=fcrR, iteration=iteration, vdirspe = vdirspe,
                     topograp = topograp,referenceHeight = referenceHeight,RotorHeight = RotorHeight,
                     SurfaceRoughness = SurfaceRoughness,Proportionality = Proportionality,mutr = mutr,
                     elitism = elitism,nelit = nelit,selstate = selstate,crossPart1 = crossPart1,trimForce = trimForce,

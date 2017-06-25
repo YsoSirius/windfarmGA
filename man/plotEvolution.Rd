@@ -4,7 +4,7 @@
 \alias{plotEvolution}
 \title{Plot the evolution of fitness values}
 \usage{
-plotEvolution(result, ask = T, spar = 0.5)
+plotEvolution(result, ask = T, spar = 0.1)
 }
 \arguments{
 \item{result}{The output matrix of \code{\link{windfarmGA}} or
@@ -14,7 +14,7 @@ plotEvolution(result, ask = T, spar = 0.5)
 Default is "T" (character)}
 
 \item{spar}{A numeric value determining how exact a spline should
-be drawn. Default is 0.5 (numeric)}
+be drawn. Default is 0.1 (numeric)}
 }
 \description{
 Plot the evolution of energy outputs and efficiency rates

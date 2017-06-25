@@ -11,7 +11,7 @@
 #' @param ask Should R wait for interaction for subsequent plotting.
 #' Default is "T" (character)
 #' @param spar A numeric value determining how exact a spline should
-#' be drawn. Default is 0.5 (numeric)
+#' be drawn. Default is 0.1 (numeric)
 #'
 #' @return NULL
 #' @examples \donttest{
@@ -44,7 +44,7 @@
 #' plotEvolution(result, TRUE, 0.1)
 #'}
 #' @author Sebastian Gatscha
-plotEvolution <- function(result,ask=T, spar=0.5){
+plotEvolution <- function(result,ask=T, spar=0.1){
   #result=result;ask=T; spar=0.5
   # library(stats);
   par(mfrow=c(1,1))

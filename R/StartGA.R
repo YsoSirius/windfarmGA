@@ -37,18 +37,18 @@
 StartGA           <- function(Grid, n, nStart=100) {
   if (length(Grid$ID) <= n) {
     print("################### GA ERROR MESSAGE ###################")
-    print(paste("##### Amount Grid-cells: ", length(Grid$ID),"\n##### Amount of turbines: ", n))
+    cat(paste("##### Amount Grid-cells: ", length(Grid$ID),"\n##### Amount of turbines: ", n))
     stop("\n The amount of Grid-cells is smaller or equal the number of turbines requested.\n
          Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
-    cat("Press [enter] to continue")
+    cat("Press [enter] to exit")
     readline()
   }
   if (length(Grid$ID) < (2*n)) {
     print("################### GA ERROR MESSAGE ###################")
-    print(paste("##### Amount Grid-cells: ", length(Grid$ID),"\n##### Amount of turbines: ", n))
+    cat(paste("##### Amount Grid-cells: ", length(Grid$ID),"\n##### Amount of turbines: ", n))
     stop("\n The amount of Grid-cells should at least be double the size of turbines requested.\n
           Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
-    print("Press [enter] to continue")
+    print("Press [enter] to exit")
     readline()
   }
   subsetSel <- list(); ids <- list();

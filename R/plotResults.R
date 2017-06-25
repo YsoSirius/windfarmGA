@@ -9,7 +9,7 @@
 #'
 #' @importFrom raster crs getData crop mask projectRaster raster getData
 #' reclassify plot calc extract cellStats terrain resample overlay res
-#' @importFrom sp spTransform
+#' @importFrom sp spTransform proj4string
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics mtext par plot
 #' @importFrom utils read.csv
@@ -72,13 +72,16 @@
 #' plotResult(result, Polygon1, 1, 1, FALSE, Grid = Grid[[2]])
 #'}
 #' @author Sebastian Gatscha
-plotResult <- function(result,Polygon1,best=5,plotEn=1,
+plotResult <- function(result,Polygon1,best=3,plotEn=1,
                        topographie=FALSE,Grid,Projection,sourceCCLRoughness,sourceCCL){
 
   ## Set graphical parameters
   op <- par(ask=FALSE);   on.exit(par(op));   par(mfrow=c(1,1))
 
   ## Check Projections and reference systems
+  if (is.na(sp::proj4string(Polygon1))) {
+    stop("Polygon is not projected.", call. = F )
+  }
   if (missing(Projection)) {
     ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
               +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -148,9 +151,14 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
   if(topographie==TRUE && plotEn == 1){
 
     resol <- as.integer(resultSafe[1,]$inputData['Resolution',])
+
     polygon1 <- Polygon1
     sel1 <- EnergyBest[,1:2]
     windpo <- 1
+
+    if (missing(sourceCCL)){
+      stop("\nNo raster given for the surface roughness. \nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n",call. = F)
+    }
 
     if (1==1){
       Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84
@@ -231,7 +239,8 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
       raster::plot(polygon1,add=T)
 
 
-      RotorHeight <- as.integer(result[1,'inputData']$inputData['Rotor Height',][[1]])
+
+      RotorHeight <- as.integer(resultSafe[1,'inputData']$inputData['Rotor Height',][[1]])
       k_raster <- raster::calc(modSurf, function(x) {x <- 0.5/(log(RotorHeight/x))})
       # New Wake Decay Constant calculated with new surface roughness values, according to CLC
       k <- 0.5/(log(RotorHeight/SurfaceRoughness))
@@ -299,6 +308,10 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
     polygon1 <- Polygon1
     sel1 <- EfficiencyBest[,1:2]
     windpo <- 1
+
+    if (missing(sourceCCL)){
+      stop("\nNo raster given for the surface roughness. \nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n",call. = F)
+    }
 
     if (1==1){
       Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84
@@ -376,7 +389,7 @@ plotResult <- function(result,Polygon1,best=5,plotEn=1,
       calibrate::textxy(sel1$X,sel1$Y,labs = round((SurfaceRoughness),2),cex=cexa);plot(polygon1,add=T)
 
 
-      RotorHeight <- as.integer(result[1,'inputData']$inputData['Rotor Height',][[1]])
+      RotorHeight <- as.integer(resultSafe[1,'inputData']$inputData['Rotor Height',][[1]])
       k_raster <- raster::calc(modSurf, function(x) {x <- 0.5/(log(RotorHeight/x))})
       # New Wake Decay Constant calculated with new surface roughness values, according to CLC
       k <- 0.5/(log(RotorHeight/SurfaceRoughness))
