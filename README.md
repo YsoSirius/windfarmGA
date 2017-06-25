@@ -38,8 +38,8 @@ plot(Polygon1, col = "blue")
 - Or create a random Polygon
  ```sh
 library(rgdal); library(sp);
-Polygon1 <- sp::Polygon(rbind(c(0, 0), c(0, 2000),
-                             c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
+                          c(4654475, 2694746), c(4654475, 2692925)))
 Polygon1 <- sp::Polygons(list(Polygon1), 1)
 Polygon1 <- sp::SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
@@ -167,8 +167,8 @@ there is only 1 R-worker at hand. So only 1 optimization can be run at a time.
 # Full Optimization example:
  ```sh
 library(rgdal); library(sp); library(windfarmGA)
-Polygon1 <- sp::Polygon(rbind(c(0, 0), c(0, 2000),
-                              c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
+                          c(4654475, 2694746), c(4654475, 2692925)))
 Polygon1 <- sp::Polygons(list(Polygon1), 1);
 Polygon1 <- sp::SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
