@@ -42,7 +42,7 @@ See Examples.
 ## For further calculations only the distances between B-C and A-C
 ## and the angle at A will be needed. B represents the current turbine
 ## and A represents a turbine, that could potentially influence turbine B.
-x = c(100,100); y=c(500,500);
+x <- c(100,100); y <- c(500,500);
 plot(rbind(x,y),col=c("red","blue"),cex=2,pch=20);
 PointToLine2(x,y,TRUE)
 }

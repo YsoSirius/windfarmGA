@@ -34,27 +34,17 @@
 #' ## For further calculations only the distances between B-C and A-C
 #' ## and the angle at A will be needed. B represents the current turbine
 #' ## and A represents a turbine, that could potentially influence turbine B.
-#' x = c(100,100); y=c(500,500);
+#' x <- c(100,100); y <- c(500,500);
 #' plot(rbind(x,y),col=c("red","blue"),cex=2,pch=20);
 #' PointToLine2(x,y,TRUE)
 #' }
 #' @author Sebastian Gatscha
 PointToLine2      <- function(x,y,plotAngles) {
-  # x=WKA_akt;y= xynew1[i,]
-  # x=as.matrix(cbind(000,000));y=as.matrix(cbind(100,000)); c=as.matrix(cbind(y[1,1],x[1,2])); plot(rbind(x,y,c,x),type="l")
-#   if (x[1]-y[1] == 0 | x[2]-y[2]==0) {
-#     distc <- euc.dist(x,y)
-#     distIndiv <- rbind(c(y,x,x,distc,distc,0));colnames(distIndiv) <- c("Ax","Ay","Bx","By","Cx","Cy","Laenge_C","Laenge_B", "Laenge_A");
-#     return(distIndiv)
-#   }
-  if (is.matrix(y) == FALSE) {y <- as.matrix(rbind(y))};  if (is.matrix(x) == FALSE) {x<- as.matrix(rbind(x))};
+  if (is.matrix(y) == FALSE) {y <- as.matrix(rbind(y))};  if (is.matrix(x) == FALSE) {x <- as.matrix(rbind(x))};
   C1 <- as.matrix(cbind(y[1,1],x[1,2]));
   c <- euc.dist(x,y);  a<- euc.dist(x,C1); b<- euc.dist(C1,y);  dist1 <- c(c,b,a)
 
   if (plotAngles==TRUE){
-    # require(sp)
-    # ABC <- rbind(as.numeric(x),as.numeric(y),as.numeric(C1))
-    # plot(ABC, xlim=c(min(ABC[,1])-10,max(ABC[,1])+10), ylim=c(min(ABC[,2])-10,max(ABC[,2])+10),main= "Right Triangle", xlab="X",ylab="Y")
     ## Plot the Points of the Triangle
     graphics::points(x, cex=2, col="red", pch=20);
     graphics::points(y, cex=2, col="green", pch=20);
@@ -74,7 +64,8 @@ PointToLine2      <- function(x,y,plotAngles) {
                    labels = c("B","A","C"), pos=4, col=c("red","green","blue"),cex=1);
   }
 
-  distIndiv <- rbind(c(y,x,C1,dist1));     colnames(distIndiv) <- c("Ax","Ay","Bx","By","Cx","Cy","Laenge_C","Laenge_B", "Laenge_A");
+  distIndiv <- rbind(c(y,x,C1,dist1));
+  colnames(distIndiv) <- c("Ax","Ay","Bx","By","Cx","Cy","Laenge_C","Laenge_B", "Laenge_A");
   return(distIndiv)
 }
 

@@ -117,9 +117,9 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
                               windraster,wnkl,distanz, polygon1,resol,RotorR,dirSpeed,
                               srtm_crop,topograp,cclRaster){
 
-  PlotCalc=FALSE
+  PlotCalc <- FALSE
 
-  sel1 = sel[,2:3];
+  sel1 <- sel[,2:3];
   ## Assign constant values
   cT <- 0.88;   air_rh <- 1.225;   k = 0.075;
   ## Extract values from windraster, which will be 1 in this case, as they will get multiplied
@@ -134,7 +134,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     windpo <- windpo * orogrnum
 
     ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-    heightWind <- raster::extract(x= srtm_crop, y = as.matrix((sel1)), small=T,fun= max,na.rm=T);heightWind
+    heightWind <- raster::extract(x= srtm_crop, y = as.matrix((sel1)), small=T,fun= max,na.rm=T);
     ## Plot the elevation and the wind speed multiplier rasters
     if (PlotCalc==TRUE){
       par(mfrow=c(2,1))
@@ -159,9 +159,9 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
 
     ## Corine Land Cover Surface Roughness values and Elevation Roughness
     SurfaceRoughness0 <- raster::extract(x= cclRaster, y = as.matrix((sel1)),buffer=resol*2,
-                                         small=T,fun= mean,na.rm=T);SurfaceRoughness0
+                                         small=T,fun= mean,na.rm=T);
     SurfaceRoughness1 <- raster::extract(x=raster::terrain(srtm_crop,"roughness"), y = as.matrix((sel1)),
-                                         buffer=resol*2, small=T,fun= mean,na.rm=T);SurfaceRoughness1
+                                         buffer=resol*2, small=T,fun= mean,na.rm=T);
     SurfaceRoughness <-SurfaceRoughness*(1+(SurfaceRoughness1/max(raster::res(srtm_crop))));
     elrouind <- raster::terrain(srtm_crop,"roughness")
     elrouindn <- raster::resample(elrouind,cclRaster,method="ngb")
@@ -185,7 +185,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     }
 
     ## New Wake Decay Constant calculated with new surface roughness values
-    k = 0.5/(log(RotorHeight/SurfaceRoughness))
+    k <- 0.5/(log(RotorHeight/SurfaceRoughness))
     ## Plot resulting Wake Decay Values
     if (PlotCalc==TRUE){
       graphics::par(mfrow=c(1,1)); cexa=0.9
@@ -248,7 +248,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     dfAll <- do.call("rbind",BgleInf) ;
 
     ## Create a list for every turbine
-    windlist = vector("list",length(sel1[,1]))
+    windlist <- vector("list",length(sel1[,1]))
 
     ## Assign Windspeed to a filtered list with all turbines and add the desired rotor radius to the
     ## data frame
@@ -263,21 +263,21 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     windlist$RotorR <- as.numeric(RotorR);
 
     ## Calculate the wake Radius and the rotor area for every turbine.
-    lnro = nrow(windlist); windlist$WakeR <- 0; windlist$Rotorflaeche <- 0
+    lnro <- nrow(windlist); windlist$WakeR <- 0; windlist$Rotorflaeche <- 0
     for (i in 1:lnro){
       RotD <- as.numeric(windlist[i,]$RotorR)
       if (windlist[i,]$Laenge_B != 0) {
 
         if (topograp==TRUE){
-          windlist[i,]$WakeR = (((RotD * 2) + (2*k[windlist[i,]$Punkt_id]*
+          windlist[i,]$WakeR <- (((RotD * 2) + (2*k[windlist[i,]$Punkt_id]*
                                                  (as.numeric(windlist[i,]$Laenge_B))))/2)[1]
         } else {
-          windlist[i,]$WakeR = (((RotD * 2) + (2*k*(as.numeric(windlist[i,]$Laenge_B))))/2)[1]
+          windlist[i,]$WakeR <- (((RotD * 2) + (2*k*(as.numeric(windlist[i,]$Laenge_B))))/2)[1]
         }
       } else {
         windlist[i,]$WakeR = 0
       }
-      windlist[i,]$Rotorflaeche = (RotD^2) *pi
+      windlist[i,]$Rotorflaeche <- (RotD^2) *pi
     };
 
     ## Calculate the overlapping area and the overlapping percentage.
@@ -320,7 +320,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
       if (topograp==TRUE){
         b <- (1 + (k[windlist[p,]$Punkt_id]*s))^2;
       } else {
-        b <- (1 + (k*s))^2;b
+        b <- (1 + (k*s))^2;
       }
       aov <- (windlist[p,]$A_ov / windlist[p,]$Rotorflaeche);
       windlist[p,]$V_red <- (aov *(a / b))
@@ -330,7 +330,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
 
     ## Calculate multiple wake effects, total wake influence, the new resulting wind velocity
     ## and add the Grid IDs.
-    maPi = max(windlist$Punkt_id)
+    maPi <- max(windlist$Punkt_id)
     windlist$V_i <- 0; windlist$TotAbschProz <- 0; windlist$V_New <- 0; windlist$Rect_ID <- 0
     for (z in 1:maPi) {
       windlist[windlist$Punkt_id==z,]$V_i <-  sqrt(sum(windlist[windlist$Punkt_id==z,]$V_red^2))

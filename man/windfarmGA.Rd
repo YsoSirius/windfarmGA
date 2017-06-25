@@ -142,8 +142,9 @@ data.in <- structure(list(ws =  c(12,12), wd =c(0,0), probab =c(25,25)),
 windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 dir = data.in$wd, dirres=10, spdmax=20)
 ##First check if the grid size is convenient
-Rotor= 50; fcrR= 9
-GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop=1, plotGrid =TRUE)
+Rotor <- 50;
+fcrR <- 9
+GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 ############### STARTING AN OPTIMIZATION RUN
 result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,

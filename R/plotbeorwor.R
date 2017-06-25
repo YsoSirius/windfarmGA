@@ -42,9 +42,8 @@
 #' }
 #' @author Sebastian Gatscha
 plotbeorwor <- function(result){
-  #result = result5
   opar <- par(no.readonly = T)
-  beorworse = do.call("rbind",result[,9]);
+  beorworse <- do.call("rbind",result[,9]);
 
   par(mfrow=c(2,1))
   maxdif <- as.data.frame(beorworse[,1]);

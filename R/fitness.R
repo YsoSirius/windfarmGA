@@ -87,7 +87,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     for (i in 1:nrow(dirspeed[duplicated(dirspeed$wd)==F,])){
       temp <- dirspeed[dirspeed$wd ==  dirspeed[duplicated(
         dirspeed$wd)==F,][i,'wd'],];
-      temp$ws <-with(temp, sum(ws * (probab/sum(probab))));
+      temp$ws < -with(temp, sum(ws * (probab/sum(probab))));
       temp$probab <- with(temp, sum(probab * (probab/sum(probab))));
 
       dirspeed[dirspeed$wd ==  dirspeed[duplicated(
@@ -102,11 +102,11 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     dirspeed$probab <- dirspeed$probab*(100/sum(dirspeed$probab))
   }
   probabDir <- dirspeed$probab;
-  pp <- sum(probabDir)/100;   probabDir <- probabDir/pp; sum(probabDir)
+  pp <- sum(probabDir)/100;   probabDir <- probabDir/pp;
 
-  windraster <-raster::rasterize(Polygon, raster::raster(raster::extent(Polygon), ncol=180, nrow=180),field=1)
+  windraster <- raster::rasterize(Polygon, raster::raster(raster::extent(Polygon), ncol=180, nrow=180),field=1)
 
-  e = vector("list",length(selection));euniqu=vector("list",length(selection)) ;
+  e <- vector("list",length(selection)); euniqu <- vector("list",length(selection)) ;
   for (i in 1:length(selection)){
     ## Calculate EnergyOutput for every config i and for every angle j
     e[[i]] <- calculateEn(selection[[i]], referenceHeight, RotorHeight,SurfaceRoughness,
@@ -135,14 +135,15 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     AbschGesamt <- AbschGesamt$RowSum
 
     # Get the original X / Y - Coordinates of the selected individual
-    xundyOrig <- selection[[i]][,2:3]; xundyOrig
+    xundyOrig <- selection[[i]][,2:3];
     # Add the Efficieny and the Energy Output of all wind directions and add the total Wake Effect of every Point Location
-    xundyOrig$EfficAllDir <- enOut$Efficalldire[1];xundyOrig$EnergyOverall <- enOut$EnergyOverall[1];xundyOrig$AbschGesamt <- AbschGesamt
+    xundyOrig$EfficAllDir <- enOut$Efficalldire[1];xundyOrig$EnergyOverall <- enOut$EnergyOverall[1];
+    xundyOrig$AbschGesamt <- AbschGesamt
     # Include the Run of the genertion to the data frame
     xundyOrig$Run <- i
 
     # Get the Rotor Radius and the Rect_IDs of the park configuration
-    dt <-  ee[[1]]; dt <- dplyr::select(dt,RotorR, Rect_ID);dt;
+    dt <-  ee[[1]]; dt <- dplyr::select(dt,RotorR, Rect_ID);
     # Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
     dt <- cbind(xundyOrig,dt)
     # Add this information to the the i-th element of the list
@@ -164,7 +165,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   # Assign every park constellation the Parkfitness Value
   for (i in 1:length(euniqu)) {
     euniqu[i][[1]]$Parkfitness <- maxparkeff[i,]
-  }; #euniqu
+  };
 
   return(euniqu)
 }

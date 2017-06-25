@@ -82,7 +82,7 @@
 
 # ############### REQUIRED INPUT POLYGON AND CCL SOURCE ################
 # library(rgdal);library(sp); library(GenAlgo)
-# # Input the Source of the desired Polygon in the Variable dns, as in this example: dns = "C:/User/Documents/Shapefiles"
+# # Input the Source of the desired Polygon in the Variable dns, as in this example: dns <- "C:/User/Documents/Shapefiles"
 # Polygon1 <- rgdal::readOGR(dsn="Source of the Polygon File (SHP)", layer="Name of Polygon"); plot(Polygon1)
 
 

@@ -50,14 +50,10 @@
 #'}
 #' @author Sebastian Gatscha
 plotparkfitness <- function(result,spar=0.5){
-  # library(calibrate); library(stats); library(graphics); library(grDevices);
-  #spar=0.3; result=resultTauern8_17_1;
   rslt <- as.data.frame(do.call("rbind", result[,'allparkcoeff']))
   mutres <- as.data.frame(do.call("rbind", result[,'mut_rate']))
-  #nindiv <- as.data.frame(do.call("rbind", result1[,6]))
   nindiv1 <- as.data.frame(do.call("cbind", result[,'nindiv']))
   nindiv1 <- nindiv1[-seq(4,length(nindiv1),4)]
-  #plot(as.integer(nindiv1), type="b")
 
   opar <- graphics::par(no.readonly = T)
   selcross <- unlist(result[,'selcross'])
@@ -86,11 +82,7 @@ plotparkfitness <- function(result,spar=0.5){
 
 
   graphics::par(mar=c(5,5,3,2))
-  #par(mfrow=c(1,1))
   farbe <- rep(seq(1,3,1),length(nindiv1)/3);farbe;   ndindiplot <- as.integer(nindiv1)
-  #plot(ndindiplot,type="b",col=farbe,cex=2,pch=20, main="N-Individuen", ylab="N",ylim=c(0,max(ndindiplot)+100))
-  #legend("topleft",title="Amount of Individuals in: ",lty = c(1,1,1),cex=0.5,inset = c(0.01,0.01),
-  #       box.lty=0,box.lwd=0,c("Fitness","Selection","Crossover"),col=farbe[1:3],xjust = 0)
   plot(ndindiplot,type="b",col=farbe,cex=2,pch=20, main="N-Individuen",axes = FALSE,
        ylab="N",ylim=c(0,max(ndindiplot)+100))
   graphics::axis(side = 2,tick = TRUE); axis(side = 1,tick = TRUE,at =seq(1,length(ndindiplot),3),
@@ -185,7 +177,7 @@ plotparkfitness <- function(result,spar=0.5){
   }
 
   if (length(timeticksel)!=0){
-    graphics::abline(v = timeticksel,col="green");   #abline(v = timetickcro,col="red"); abline(v = timetick,col="black");
+    graphics::abline(v = timeticksel,col="green");
     graphics::mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
   }
 
@@ -213,8 +205,6 @@ plotparkfitness <- function(result,spar=0.5){
   }
 
 
-  #   op <- par(ask=T)
-  #   on.exit(par(op))
   sddata <- plotCloud(result);
   fitsd <- dplyr::select(sddata,dplyr::contains("fit"));
   effsd <- dplyr::select(sddata,dplyr::contains("eff"));
@@ -225,7 +215,6 @@ plotparkfitness <- function(result,spar=0.5){
   plot(rslt$minparkfitness, xaxt='n', main="Parkfitness per Generation", ylab="Parkfitness in %",
        cex=1.2,col="red", pch=20, ylim= c(min(rslt$minparkfitness),max(rslt$maxparkfitness)))
   graphics::axis(1,at = 1:nrow(rslt),tick=T)
-  #mtext(resultMa[,4],side=1,col=Col, at=1:length(dir1))
   graphics::grid(col = "black")
   graphics::points(rslt$meanparkfitness,ylab="MeanParkF", cex=1.2,col="blue", pch=20)
   graphics::points(rslt$maxparkfitness,ylab="maxParkF", cex=1.2,col="green", pch=20)

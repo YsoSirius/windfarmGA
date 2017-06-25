@@ -52,7 +52,7 @@
 #' ## MUTATION
 #' ## Variable Mutation Rate is activated if more than 2 individuals represent the
 #' ## current best solution.
-#' mut <- mutation(a = crossOut, p = 0.3);mut
+#' mut <- mutation(a = crossOut, p = 0.3);
 #' mut==crossOut
 #'
 #' ## TRIMTON
@@ -72,21 +72,20 @@
 #'}
 #' @author Sebastian Gatscha
 getRects          <- function(trimtonOut, Grid){
-  #trimtonOut = mut1
-  childli = list();
-  len1= dim(trimtonOut)[2]
+
+  childli <- list();
+  len1 <- dim(trimtonOut)[2]
 
   for (i in 1:len1) {
     childli[[i]] <- trimtonOut[,i]
   }
-  #childall <- do.call("cbind",childli)
 
-  rectidli = list();
+  rectidli <- list();
   for (u in 1:len1){
     rectidli[[u]] <- which(childli[[u]]==1, arr.ind = T)
   }
 
-  childnew = list()
+  childnew <- list()
   for (z in 1:len1) {
     childnew[[z]] <- Grid[rectidli[[z]],];
   }

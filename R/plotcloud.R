@@ -49,8 +49,7 @@
 #'}
 #' @author Sebastian Gatscha
 plotCloud <- function(result,pl=FALSE){
-  #result = result2
-  # library(dplyr)
+
   opar <- graphics::par(no.readonly = T)
   clouddata <- result[,7]
   EffCloud <- lapply(clouddata, function(x) x = x[[1]]);

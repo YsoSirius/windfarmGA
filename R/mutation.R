@@ -35,7 +35,7 @@ mutation          <- function(a,p) {
     ## If the random number is smaller than p (0.1), the gene is switched
     ## (from 1 to 0 | from 0 to 1)
     if (rnd < p) {
-      if (a[i] == "0") {a[i] = 1} else {a[i] =1}
+      if (a[i] == "0") {a[i] <- 1} else {a[i] <- 1}
     }
   }
   return(a)

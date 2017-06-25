@@ -18,8 +18,8 @@ readinteger        <- function(){
 
   crPaInter <- toupper(crPaInter)
 
-  if(crPaInter=="R"){crossPart = "RAN"}
-  if(crPaInter=="E"){crossPart = "EQU"}
+  if(crPaInter=="R"){crossPart <- "RAN"}
+  if(crPaInter=="E"){crossPart <- "EQU"}
 
   if  (crPaInter!= "E" & crPaInter !="R") {
     crossPart <- readinteger()
