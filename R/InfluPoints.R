@@ -48,10 +48,8 @@
 #' }
 #' @author Sebastian Gatscha
 InfluPoints       <- function(t, wnkl, dist,polYgon,dirct,plotAngles=FALSE) {
-  # t = xyBgldMa; dist = distanz; polYgon = Polygon; dirct = angle
-
-  # For every turbine in the wind farm, find all other turbines, that stand in front, next
-  # and inside a certain angle of the incoming wind direction and assing to the list
+  ## For every turbine in the wind farm, find all other turbines, that stand in front, next
+  ## and inside a certain angle of the incoming wind direction and assing to the list
   pointList <- list();
   for (i in 1:(length(t[,1]))) {
     ## Calculate the angles and distances of pontentially influencing turbines (data.frame)

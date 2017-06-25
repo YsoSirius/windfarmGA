@@ -50,8 +50,8 @@ proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=TRUE)
 ## Create a random windfarm with 10 turbines
 t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
      y=runif(10,0,raster::extent(polYgon)[4])))
-wnkl=20
-distanz=100000
+wnkl <- 20
+distanz <- 100000
 
 ## Evaluate and plot for every turbine all other potentially influencing turbines
 potInfTur <- list()

@@ -37,8 +37,8 @@
 #' ## Create a random windfarm with 10 turbines
 #' t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
 #'      y=runif(10,0,raster::extent(polYgon)[4])))
-#' wnkl=20
-#' distanz=100000
+#' wnkl <- 20
+#' distanz <- 100000
 #'
 #' ## Evaluate and plot for every turbine all other potentially influencing turbines
 #' potInfTur <- list()
@@ -50,8 +50,6 @@
 #' }
 #' @author Sebastian Gatscha
 VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
-  # library(raster);
-  # o = i; wkl = wnkl; distanz = dist; polYgon = polYgon;plotAngles=TRUE
 
   ## Get coordinates of actual turbine location
   WKA_akt <- c(x = t[o,1], y = t[o,2]);
@@ -71,7 +69,7 @@ VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
   }
 
   ## Are there turbines in front or not? If yes, calculate distances and angles and check if they might have an influence or not
-  len2 = length(xynew1[,1])
+  len2 <- length(xynew1[,1])
   if (len2 != 0) {
     ## If turbines are in front of the current turbine, create a list and save only the ones that could possibly influence others
     datalist = list();

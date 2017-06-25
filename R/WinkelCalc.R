@@ -32,7 +32,6 @@
 #' }
 #' @author Sebastian Gatscha
 WinkelCalc        <- function(Aa,Bb,Cc) {
-  # Aa=xynew1[i,]; Bb=WKA_akt; Cc= P2LFu[5:6]
   AB <- Bb-Aa; AC <- Cc-Aa;  BA <- Aa-Bb;  BC <- Cc-Bb; CA <- Aa-Cc; CB <- Bb-Cc;
   # Calculate all 3 angles
   alpha <- acos(sum(AB*AC) / (sqrt(sum(AB * AB)) * sqrt(sum(AC * AC))))*(180/pi);

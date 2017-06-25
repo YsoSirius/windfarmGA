@@ -62,8 +62,8 @@ PlotWindfarmGA <- function(result,Polygon1,whichPl,best=1,plotEn=1,Projection){
     whichPl <- c(1,2,3,4,5,6,7,8)
   }
 
-  resol = as.numeric(result[,'inputData'][[1]][,1]['Resolution'][[1]])
-  prop = as.numeric(result[,'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
+  resol <- as.numeric(result[,'inputData'][[1]][,1]['Resolution'][[1]])
+  prop <- as.numeric(result[,'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
 
   Grid <- GridFilter(shape = Polygon1,resol = resol, prop = prop ,plotGrid=F)
 

@@ -48,25 +48,22 @@
 #' GridFilter(Polygon1,200,1,TRUE)
 #'
 GridFilter <- function(shape, resol = 500, prop = 1, plotGrid=FALSE){
-  # library(rgeos);  library(sp);  library(raster);
-  # require(raster)
-  # shape = Polygon1;resol = 90; prop=1; plotGrid = TRUE
 
-  if (prop < 0.01){prop = 0.01}
-  if (prop > 1){prop = 1}
+  if (prop < 0.01){prop <- 0.01}
+  if (prop > 1){prop <- 1}
   grid <- raster::raster(raster::extent(shape))
   raster::res(grid) <- c(resol,resol)
   sp::proj4string(grid)<-sp::proj4string(shape)
   gridpolygon <- raster::rasterToPolygons(grid)
 
-  drylandproj<- sp::spTransform(shape, sp::CRS("+proj=laea"))
-  gridpolproj<-sp::spTransform(gridpolygon, sp::CRS("+proj=laea"))
+  drylandproj <- sp::spTransform(shape, sp::CRS("+proj=laea"))
+  gridpolproj <- sp::spTransform(gridpolygon, sp::CRS("+proj=laea"))
   gridpolproj$layer <- c(1:length(gridpolproj$layer))
   areagrid <- rgeos::gArea(gridpolproj, byid=T)
   dry.grid <- rgeos::intersect(drylandproj, gridpolproj)
   areadrygrid <- rgeos::gArea(dry.grid, byid=T)
   info <- cbind(dry.grid$layer, areagrid[dry.grid$layer], areadrygrid)
-  dry.grid$layer<-info[,3]/info[,2]
+  dry.grid$layer<- info[,3]/info[,2]
   dry.grid <- sp::spTransform(dry.grid, sp::CRS(sp::proj4string(shape)))
 
   if(!any(dry.grid$layer >= prop)) {

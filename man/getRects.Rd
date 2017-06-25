@@ -62,7 +62,7 @@ crossOut <- crossover1(selec6best, 3, uplimit = 300, crossPart="EQU");
 ## MUTATION
 ## Variable Mutation Rate is activated if more than 2 individuals represent the
 ## current best solution.
-mut <- mutation(a = crossOut, p = 0.3);mut
+mut <- mutation(a = crossOut, p = 0.3);
 mut==crossOut
 
 ## TRIMTON

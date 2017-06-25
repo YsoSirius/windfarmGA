@@ -113,7 +113,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
   graphics::par(ask=F);
 
   resol2 <- fcrR*Rotor
-  CrossUpLimit = 300
+  CrossUpLimit <- 300
 
   ## Check if Input Data is correct and prints it out.
   if  (crossPart1!= "EQU" & crossPart1 !="RAN") {
@@ -136,7 +136,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
 
   ##  Project the Polygon to LAEA if it is not already.
   if (missing(Projection)) {
-    ProjLAEA = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+    ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
               +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   } else {
     ProjLAEA <- Projection;
@@ -153,12 +153,12 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
   AmountGrids <- nrow(Grid)
 
   ## Determine the amount of initial individuals and create initial population.
-  nStart = (AmountGrids*n)/iteration;   if (nStart < 100) {nStart = 100};   if (nStart > 300) {nStart = 300}
+  nStart <- (AmountGrids*n)/iteration;   if (nStart < 100) {nStart <- 100};   if (nStart > 300) {nStart <- 300}
   nStart<- ceiling(nStart);
   startsel <- StartGA(Grid,n,nStart);
 
   ## Initialize all needed variables as list.
-  maxParkwirkungsg = 0; allparkcoeff <- vector("list",iteration);
+  maxParkwirkungsg <- 0; allparkcoeff <- vector("list",iteration);
   bestPaEn <- vector("list",iteration);
   bestPaEf <- vector("list",iteration); fuzzycontr <- vector("list",iteration);
   fitnessValues <- vector("list",iteration);
@@ -190,7 +190,7 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
 
     # INclude Corine Land Cover Raster to get an estimation of Surface Roughness
     if (missing(sourceCCLRoughness)) {
-      path = paste0(system.file(package = "windfarmGA"), "/extdata/")
+      path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
       sourceCCLRoughness <- paste0(path, "clc_legend.csv")
       # sourceCCL <- paste0(path,"g100_06.tif")
     } else {
@@ -262,10 +262,10 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
       Col1 <- rbPal(lebre)[as.numeric(cut(-bestPaEf[[i]]$AbschGesamt,breaks = lebre))]
     }
 
-    x = round(bestPaEn[[i]]$EnergyOverall[[1]],2);y = round(bestPaEn[[i]]$EfficAllDir[[1]],2);
-    e = bestPaEn[[i]]$EfficAllDir;
-    x1 = round(bestPaEf[[i]]$EnergyOverall[[1]],2);y1 = round(bestPaEf[[i]]$EfficAllDir[[1]],2);
-    e1 = bestPaEf[[i]]$EfficAllDir
+    x <- round(bestPaEn[[i]]$EnergyOverall[[1]],2);y <- round(bestPaEn[[i]]$EfficAllDir[[1]],2);
+    e <- bestPaEn[[i]]$EfficAllDir;
+    x1 <- round(bestPaEf[[i]]$EnergyOverall[[1]],2);y1 <- round(bestPaEf[[i]]$EfficAllDir[[1]],2);
+    e1 <- bestPaEf[[i]]$EfficAllDir
 
     ## ALLPARKS RECT ID NOT CORRECT
     allparksNewplot <- dplyr::select(allparks,AbschGesamt,Rect_ID,Parkfitness);
@@ -310,22 +310,23 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
     if (i==1) {
       t0 <- split(allparks, duplicated(allparks$Run))$'FALSE'
       t0 <- t0$Parkfitness;       fitnessValues[[i]] <- t0
-      rangeFitnessVt0 <- range(t0);rangeFitnessVt0
-      maxt0 <- max(t0);maxt0;       meant0 <- mean(t0);
+      rangeFitnessVt0 <- range(t0);
+      maxt0 <- max(t0);
+      meant0 <- mean(t0);
       allcoef0 <- c(rangeFitnessVt0, meant0);
       fuzzycontr[[i]] <- rbind(allcoef0); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
-      teil=2
+      teil <- 2
       if (selstate=="VAR"){
-        teil=1.35
+        teil <- 1.35
       }
-      u = 1.1
+      u <- 1.1
       beorwor[[i]] <- cbind(0,0)
     }
     if (i>=2 && i <= iteration) {
-      t0 <- split(allparks, duplicated(allparks$Run))$'FALSE';       t0 <- t0$Parkfitness;t0
-      fitnessValues[[i]] <- t0;       rangeFitnessVt0 <- range(t0);rangeFitnessVt0
+      t0 <- split(allparks, duplicated(allparks$Run))$'FALSE';       t0 <- t0$Parkfitness;
+      fitnessValues[[i]] <- t0;       rangeFitnessVt0 <- range(t0);
       maxt0 <- max(t0);      meant0 <- mean(t0); mint0 <- min(t0)
-      t1 <- fitnessValues[[i-1]];t1;       rangeFitnessVt1 <- range(t1);rangeFitnessVt1
+      t1 <- fitnessValues[[i-1]];t1;       rangeFitnessVt1 <- range(t1);
       maxt1 <- max(t1);     meant1 <- mean(t1); mint1 <- min(t1)
       maxDif <- maxt0 - maxt1; meanDif <- meant0 - meant1; minDif = mint0 - mint1
       WeightDif <- c(0.80,0.2,0.0)
@@ -334,34 +335,33 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
       fuzzycontr[[i]] <- rbind(allcoef1,allcoef2); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
 
       if(maxunt<0) {
-        pri="deteriorated";teil=teil-0.02; u=u-0.06} else if (maxunt==0) {
-          pri="not changed"; teil=teil; u=u} else {
-            pri="improved"; teil=teil+0.017; u=u+0.03}
+        pri<-"deteriorated";teil<-teil-0.02; u<-u-0.06} else if (maxunt==0) {
+          pri<-"not changed"; teil<-teil; u<-u} else {
+            pri<-"improved"; teil<-teil+0.017; u<-u+0.03}
 
-      if (teil > 5){teil=5; u=u+0.09; cat("Min 20% Selected");cat(paste("CPR is increased! CPR:",u,
+      if (teil > 5){teil<-5; u<-u+0.09; cat("Min 20% Selected");cat(paste("CPR is increased! CPR:",u,
                                                                             "SP: ",teil,"\n"))}
-      if (trunc(u) < 0){u = 0.5;teil=teil-0.4;
+      if (trunc(u) < 0){u <- 0.5;teil<-teil-0.4;
       cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",u,"SP: ",teil,"\n"))}
-      if (u >= 4){u=4;teil=4; cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ",teil,"\n"))}
-      if (teil <= 4/3){teil = 4/3; cat(paste("Max 75% selected. SP: ", teil, "\n"))}
-      if (length(fit) <= 20) {teil=1;u=u+0.07;
+      if (u >= 4){u<-4;teil<-4; cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ",teil,"\n"))}
+      if (teil <= 4/3){teil <- 4/3; cat(paste("Max 75% selected. SP: ", teil, "\n"))}
+      if (length(fit) <= 20) {teil<-1;u<-u+0.07;
       cat(paste("Less than 20 individuals. Select all and increase Crossover-point rate. CPR: ",
                 u,"SP: ", teil,"\n"))}
-      if (teil > 5){teil=5; cat(paste("Teil is bigger than 5. Set to max 5. SP:",teil,"\n"))}
+      if (teil > 5){teil<-5; cat(paste("Teil is bigger than 5. Set to max 5. SP:",teil,"\n"))}
 
-      u = round(u,2); teil=round(teil,3);
+      u <- round(u,2); teil<-round(teil,3);
 
       cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"\n"))
       meanunt <- meant0-meant1;
-      # if(meanunt<0) {pri="declined"} else if (meanunt==0) {pri="not changed"}else {pri="enhanced"}
       beorwor[[i]] <- cbind(maxunt, meanunt)
     }
 
     if (selstate=="FIX"){
-      if (teil==1){teil=1} else {teil=2}
+      if (teil==1){teil<-1} else {teil<-2}
     }
     if (crossPart1=="EQU"){
-      u=round(u,2)
+      u <- round(u,2)
     }
 
     ## How many are selected and how much crossover points are used?
@@ -377,14 +377,14 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
       print("Number of turbines is not as required. Trus1. Fix BUG")
       break()
     }
-    nindivsel<- length(selec6best_bin[1,-1]);
+    nindivsel <- length(selec6best_bin[1,-1]);
 
     ## CROSSOVER
     ## u determines the amount of crossover points, crossPart det. the method used (Equal/Random),
     ## uplimit is the maximum allowed permutations
     crossOut <- crossover1(selec6best, u, uplimit = CrossUpLimit, crossPart=crossPart1) ;
     cat(paste("Crossover  -  Amount of Individuals: ",length(crossOut[1,])));
-    nindivcros<- length(crossOut[1,]);
+    nindivcros <- length(crossOut[1,]);
 
     ## MUTATION
     ## Variable Mutation Rate is activated if more than 2 individuals represent the current best solution.
@@ -419,9 +419,9 @@ genAlgo           <- function(Polygon1, Rotor, n, fcrR, referenceHeight,
 
     nindiv[[i]] <- cbind(nindivfit,nindivsel,nindivcros,nindivmut)
     if (maxParkwirkungsg == 100) {
-      i = iteration + 1
+      i <- iteration + 1
     } else {
-      i = i+1
+      i <- i+1
     }
   }
 

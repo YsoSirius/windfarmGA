@@ -51,7 +51,7 @@ StartGA           <- function(Grid, n, nStart=100) {
     print("Press [enter] to continue")
     readline()
   }
-  subsetSel = list(); ids=list();
+  subsetSel <- list(); ids <- list();
   ## How many parks for the initial population (10,20, amount of turbines?)
   for (i in 1:nStart){
     ## Assign Binary Variable 0 to all individuals

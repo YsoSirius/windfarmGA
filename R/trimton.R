@@ -66,7 +66,7 @@
 #' ## MUTATION
 #' ## Variable Mutation Rate is activated if more than 2 individuals represent
 #' ## the current best solution.
-#' mut <- mutation(a = crossOut, p = 0.3);mut
+#' mut <- mutation(a = crossOut, p = 0.3);
 #' mut==crossOut
 #'
 #' ## TRIMTON
@@ -79,19 +79,18 @@
 #'}
 #' @author Sebastian Gatscha
 trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
-  # library(dplyr);
-  # mut = mut; nturb = n; allparks = allparks; nGrids = AmountGrids; trimForce =trimForce
+
   nGrids1 <- 1:nGrids
 
   lepa <- length(mut[1,])
-  mut1 = list();
+  mut1 <- list();
   for (i in 1:lepa) {
-    mut1[[i]] = mut[,i]
-    e = mut[,i]==1
+    mut1[[i]] <- mut[,i]
+    e <- mut[,i]==1
     ## How many turbines are in the current park?
-    ele = length(e[e==T]);
+    ele <- length(e[e==T]);
     ## How much turbines are there too many?
-    zviel = ele - nturb;
+    zviel <- ele - nturb;
     ## Which grid cell IDs have a turbine
     welche <- which(e==TRUE);
 
@@ -103,7 +102,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
       # Group mean wake effect and fitness value of a grid cell.
       indivprop <- indivprop %>% dplyr::group_by(Rect_ID) %>% dplyr::summarise_each(dplyr::funs(mean));
 
-      k = 0.5
+      k <- 0.5
 
       propwelche <- data.frame(cbind(RectID=welche,Prop=rep(mean(indivprop$AbschGesamt),length(welche))));
       propexi <- indivprop[indivprop$Rect_ID %in% welche,];
@@ -114,22 +113,22 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
 
       propwelche[welche %in%  indivprop$Rect_ID,]$Prop <- NewProb;
 
-      propwelcheN <-  data.frame(cbind(RectID=nGrids1,Prop=rep(min(indivprop$AbschGesamt),length(nGrids1)))); nrow(propwelcheN)
-      propexiN <- indivprop[indivprop$Rect_ID %in% nGrids1,]; nrow(propexiN)
+      propwelcheN <-  data.frame(cbind(RectID=nGrids1,Prop=rep(min(indivprop$AbschGesamt),length(nGrids1))));
+      propexiN <- indivprop[indivprop$Rect_ID %in% nGrids1,];
       propexiN <- as.data.frame(propexiN)
       npt1 <- (1+((max(propexiN$AbschGesam)-propexiN$AbschGesam)/(1+max(propexiN$AbschGesam))))
       npt2 <- (1+((max(propexiN$Parkfitness)-propexiN$Parkfitness)/(1+max(propexiN$Parkfitness))))^k
       NewProb1 <- (npt1/npt2)
-      propwelcheN[propwelcheN$RectID %in%  indivprop$Rect_ID,]$Prop <- NewProb1; nrow(propwelcheN)
+      propwelcheN[propwelcheN$RectID %in%  indivprop$Rect_ID,]$Prop <- NewProb1;
       if (!all(propwelcheN$RectID %in%  indivprop$Rect_ID==TRUE)){
         qu <- min(NewProb1)
         propwelcheN[!propwelcheN$RectID %in%  indivprop$Rect_ID,]$Prop <- qu
       }
       propwelcheN <- propwelcheN[!propwelcheN$RectID %in% welche,];
       ## P1 - Deleting Turbines
-      prob1 = propwelche$Prop;
+      prob1 <- propwelche$Prop;
       ## P2 - Adding Turbines
-      prob2 = propwelcheN$Prop;
+      prob2 <- propwelcheN$Prop;
     }
 
     if (zviel != 0) {
@@ -143,7 +142,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
           smpra <- sort(sample(welche, zviel,replace=F));
         }
         # Delete the 1 entry and make no turbine.
-        mut1[[i]][smpra] = 0
+        mut1[[i]][smpra] <- 0
       } else {
         if (trimForce == TRUE){
           # Add turbines with Probability
@@ -153,7 +152,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
           smpra <- sort(sample(propwelcheN$RectID, (-zviel),replace=F));
         }
         # Assign 1 to binary code. So Turbine is created here.
-        mut1[[i]][smpra] = 1;
+        mut1[[i]][smpra] <- 1;
       }
     }
   }

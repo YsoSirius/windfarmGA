@@ -18,8 +18,8 @@ readintegerSel        <- function(){
   selstaPr <- readline(prompt = "Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.")
 
   selstaPr <- toupper(selstaPr)
-  if (selstaPr=="F") {selstate = "FIX"}
-  if (selstaPr=="V") {selstate = "VAR"}
+  if (selstaPr=="F") {selstate <- "FIX"}
+  if (selstaPr=="V") {selstate <- "VAR"}
 
   if  (selstaPr!="F" & selstaPr!="V") {
     selstate <- readintegerSel()

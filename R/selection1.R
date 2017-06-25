@@ -59,7 +59,6 @@
 #' }
 #' @author Sebastian Gatscha
 selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
-  # library(dplyr);
   # Make a DataFrame of the Fitness Function Output. Representing all x Parks with their fitness value.
   new <- do.call("rbind", fit)
   # Get the unique Fitness value according to the RunID
@@ -91,12 +90,12 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
   }
   # Upper Limit of selected individuals is 100.
   if (nPar > 100){
-    nPar = 100
+    nPar <- 100
   }
   childsRunID <- sort(sample(new1[[1]], nPar, prob= new1$Parkfitness, replace=F));
 
   # Pick the parks with those list indeces. (park with all config) and return Run and Rect_ID
-  chile = length(childsRunID); child = vector("list",chile);
+  chile <- length(childsRunID); child <- vector("list",chile);
   for (z in 1:chile){
     child[[z]] <- dplyr::select(fit[[childsRunID[z]]], Run, Rect_ID,Parkfitness)
   }
@@ -111,7 +110,7 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate){
     for (e in 1:length(child[[i]][[1]])) {
       ## For every element in a child (turbines) get his Rect_ID and set binaryvariable[i] to 1, where GridId = Rect_ID
       rectid <- child[[i]][e,2][[1]]
-      childbin[[i]][childbin[[i]]$ID==rectid,]$bin = 1
+      childbin[[i]][childbin[[i]]$ID==rectid,]$bin <- 1
     }
   }
   # Create the partens

@@ -46,24 +46,20 @@
 #'
 #' @author Sebastian Gatscha
 crossover1        <- function(se6,u, uplimit,crossPart) {
-  #se6 = selec6best; crossPart=crossPart1;uplimit = CrossUpLimit #selec6best # parentsall
-  #rm(selOut,se6,numel,i,a1,a2,b1,b2,a3,b3,j,c1,c2,d1,d2,c3,d3)
-  #se6 = parents_new; crossPart=crossPart1;
 
   cat(paste("crossover point rate: ",u+1))
   se6fit <- se6[[2]][1,-1]; se6 <- se6[[1]]
 
-  se6 = se6[,-1]; parid <- sample(1:length(se6));
-  z = seq(1, length(parid),2); all <- vector("list", length(z));
+  se6 <- se6[,-1]; parid <- sample(1:length(se6));
+  z <- seq(1, length(parid),2); all <- vector("list", length(z));
 
   #crossPart = "ran"; crosEquEartN = 5
-  crossPart = toupper(crossPart)
+  crossPart <- toupper(crossPart)
 
   sene2fit <- vector(mode = "list",length = length(z))
   for (e in 1:length(z)) {
-    #cat(e)
-    #e=1
-    r = z[[e]];r
+
+    r <- z[[e]];r
     # Sene ist der genCode des 1ten Elternteils, Sene1 der des 2ten Elternteils
     sene <- se6[,parid[r]];
     sene1 <- se6[,parid[r+1]];
@@ -72,26 +68,21 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
     sene2fit[[e]] <- senefit+sene1fit/2;
 
 
-
     if (crossPart == "EQU"){
       ## Equal Parts
       # In how many parts should the genCode be split?
-      #t <- sort(sample(numel,4,replace=FALSE));t
       crosEquPartN <- base::trunc(u+1)
       t1 <- ceiling(length(sene)/crosEquPartN);
       #split the genCode in equal parts, that are t long. a is from parent1 and b for parent2.
       a <- base::split(sene,as.numeric(gl(length(sene),t1,length(sene)))) ;
       b <- base::split(sene1,as.numeric(gl(length(sene1),t1,length(sene1))));
-      #cat(paste(crosEquPartN, " equal crossover parts are generated"))
     }
     if (crossPart == "RAN"){
       ## Random Parts
       # Split the genCode in u parts, that are randomly distributed
-      #u= sample(seq(6,(length(sene)/2),1),1);u
       u1 <- sort(sample(2:(length(sene)-1), u, replace=F));
       a <- splitAt(sene,u1);
       b <- splitAt(sene1,u1);
-      #cat(paste(length(a), " random crossover parts are generated"))
     }
 
     x1 <- rbind(a,b);      perm <- gtools::permutations(n=2,r=ncol(x1),v=1:nrow(x1),repeats.allowed=T);
@@ -131,9 +122,9 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
   cat(paste("\nHow many parental pairs are at hand: ",length(z)))
   cat(paste("\nHow many permutations are possible: ", length(z)*(2^(trunc(u)+1))))
 
-  partaksur = ncol(nI)
+  partaksur <- ncol(nI)
   if (partaksur >= uplimit){
-    partaksur = uplimit
+    partaksur <- uplimit
     cat(paste("\nPopulation max limit reached: ", uplimit ))
   }
 

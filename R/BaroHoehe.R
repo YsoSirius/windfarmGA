@@ -28,18 +28,18 @@
 BaroHoehe         <- function(data, height, po=101325, ro=1.225) {
   if ((ncol(data))==1) {
     ## Luftdruck auf Hoehe h berechnen
-    ph = po * exp(-data * 0.0001252);  names(ph) <- "ph"
+    ph <- po * exp(-data * 0.0001252);  names(ph) <- "ph"
     ## Luftdichte berechnen
-    rh = ro * exp(-data * 0.0001252); names(rh) <- "rh"
+    rh <- ro * exp(-data * 0.0001252); names(rh) <- "rh"
     ## Temperatur auf Hoehe berechnen
     Th <- 288.15 - ((6.5 * data)/1000); names(Th) <- "tempK"
   } else {
     ## Luftdruck auf Hoehe h berechnen
-    ph = po * exp(-data[,height] * 0.0001252);  ph
+    ph <- po * exp(-data[,height] * 0.0001252);
     ## Luftdichte berechnen
-    rh = ro * exp(-data[,height] * 0.0001252); rh
+    rh <- ro * exp(-data[,height] * 0.0001252);
     ## Temperatur auf Hoehe berechnen
-    Th <- 288.15 - ((6.5 * data[,height])/1000); Th
+    Th <- 288.15 - ((6.5 * data[,height])/1000);
   }
 
   if (class(data)!= "data.frame") {
@@ -47,7 +47,7 @@ BaroHoehe         <- function(data, height, po=101325, ro=1.225) {
   }
   colnames(data) <- "Height"
 
-  Celsius = Th - 273.15; names(Celsius) <- "tempC"
+  Celsius <- Th - 273.15; names(Celsius) <- "tempC"
   data$ph <- ph
   data$rh <- rh
   data$tempK <- Th

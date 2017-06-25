@@ -50,13 +50,10 @@
 #' }
 #' @author Sebastian Gatscha
 heatmapGA <- function(result,si=2){
-  # result=resultConfGa1; Polygon=Polygon1
-  # library(geoR);   library(gstat);   library(ggplot2)
   bpe <- do.call("rbind",result[,'allCoords']);
   bpe <- bpe[c(1,2)]
-  #plot(bpe,col="red",pch=20); summary(bpe)
 
-  sizing = as.integer(result[,'inputData'][[1]][,1]['Resolution'])/si
+  sizing <- as.integer(result[,'inputData'][[1]][,1]['Resolution'])/si
 
   dupco <- geoR::dup.coords(bpe,simplify = TRUE);   bpe$Ids <- as.integer(rownames(bpe));
 
@@ -67,8 +64,6 @@ heatmapGA <- function(result,si=2){
   }
   bpenew <- do.call("rbind",bpenew);
   bpenew <- bpenew[-3]
-
-  #points(bpenew$X,bpenew$Y,pch=20, cex=bpenew$Sum/100)
 
   polo <- sp::SpatialPoints(sp::coordinates(cbind(bpenew$X,bpenew$Y)))
 
@@ -82,13 +77,10 @@ heatmapGA <- function(result,si=2){
   idwout <- as.data.frame(gstat::idw(formula = bpenew$Sum~1,locations = polo,newdata=grd))
 
 
-  plot1<-ggplot2::ggplot(data=idwout,mapping=ggplot2::aes(x=x,y=y))+
+  plot1 <- ggplot2::ggplot(data=idwout,mapping=ggplot2::aes(x=x,y=y))+
     c(ggplot2::geom_tile(data=idwout,ggplot2::aes(fill=var1.pred)))+
     ggplot2::geom_point(data=bpenew,mapping=ggplot2::aes(x=X,y=Y),
                         show.legend = TRUE,size=sqrt(sqrt(bpenew$Sum)),alpha=0.6)
-  #geom_contour(bins=2,ggplot2::aes(colour = ..level..))
   plot1+ggplot2::scale_fill_gradient(low="red", high="green")+ggplot2::coord_equal()
-
-  # return()
 
 }

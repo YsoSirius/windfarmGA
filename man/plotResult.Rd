@@ -5,7 +5,7 @@
 \title{Plot the best Results}
 \usage{
 plotResult(result, Polygon1, best = 5, plotEn = 1, topographie = FALSE,
-  Grid, Projection)
+  Grid, Projection, sourceCCLRoughness, sourceCCL)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}} or
@@ -28,6 +28,15 @@ should be considered and plotted or not. (logical)}
 
 \item{Projection}{A desired Projection can be used instead
 of the default Lambert Azimuthal Equal Area Projection. (character)}
+
+\item{sourceCCLRoughness}{The source to the adapted
+Corine Land Cover legend as .csv file. Only required, when terrain
+effect model is activated. As default a .csv file within this
+package (\file{~/extdata}) is taken that was already adapted
+manually. To use your own}
+
+\item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
+required, when the terrain effect model is activated. (character)}
 }
 \value{
 Returns a data.frame of the best (energy/efficiency) individual
