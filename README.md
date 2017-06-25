@@ -182,7 +182,7 @@ windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
                              dir = data.in$wd, dirres = 10, spdmax = 20)
 Rotor <- 20; 
 fcrR <- 9
-Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop=1, plotGrid =TRUE)
+Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, iteration = 10,
                      data.in = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
