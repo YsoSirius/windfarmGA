@@ -31,7 +31,6 @@ Point C, where the right angle is located will therefore be calculated
 by the algorithm itself. See also \code{\link{PointToLine2}}.
 }
 \examples{
-{
   Aa= as.numeric(cbind(1,1))
   Bb= as.numeric(cbind(10,3))
   Cc= as.numeric(cbind(10,1))
@@ -42,7 +41,7 @@ by the algorithm itself. See also \code{\link{PointToLine2}}.
   points(x=Cc[1],y=Cc[2],col="blue",pch=20)
   Angles <- WinkelCalc(Aa,Bb,Cc); Angles
   text(rbind(Aa,Bb,Cc),labels=round(Angles,2),pos=1)
-}
+
 }
 \author{
 Sebastian Gatscha

@@ -11,20 +11,20 @@
 #' @importFrom dplyr select arrange
 #'
 #' @param fit A list of all fitness-evaluated individuals (list)
-#' @param Grid Is the indexed grid output from \code{\link{GridFilter}}:
+#' @param Grid Is the indexed grid output from \code{\link{GridFilter}}
 #' (data.frame)
-#' @param teil A numeric value, that determines the selection percentage
+#' @param teil A numeric value that determines the selection percentage
 #' (numeric)
-#' @param elitism Boolean Value, which indicates whether elitism should be
+#' @param elitism Boolean value which indicates whether elitism should be
 #' included or not. (logical)
-#' @param nelit If \code{elitism}: is TRUE, then this input variable
+#' @param nelit If \code{elitism} is TRUE, then this input variable
 #' determines the amount of individuals in the elite group. (numeric)
 #' @param selstate Determines which selection method is used, "FIX" selects
 #' a constant percentage and "VAR" selects a variable percentage, depending
 #' on the development of the fitness values. (character)
 #'
 #' @return Returns list with 2 elements. Element 1 is the binary encoded
-#' matrix, which shows all selected individuals. Element 2 represent the mean
+#' matrix which shows all selected individuals. Element 2 represent the mean
 #' fitness values of each parental team. (list)
 #' @examples \dontrun{
 #' ## Create a random rectangular shapefile

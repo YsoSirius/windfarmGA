@@ -1,7 +1,7 @@
-#' @title Evaluate the Individual Ftness values
+#' @title Evaluate the Individual Fitness values
 #' @name fitness
 #' @description The fitness values of the individuals in the
-#' current population are calculated, after having evaluated their energy
+#' current population are calculated after having evaluated their energy
 #' outputs in \code{\link{calculateEn}}. This function reduces the resulting
 #' energy outputs to a single fitness value for every individual.
 #'
@@ -29,6 +29,16 @@
 #' @param cclRaster A Corine Land Cover raster, that has to be adapted
 #' previously by hand with the surface roughness lenght for every land cover
 #' type. Is only used, when the terrain effect model is activated. (raster)
+#' @param weibull A logical value that specifies whether to take Weibull
+#' parameters into account. If weibull==TRUE, the wind speed values from the
+#' 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
+#' wind speed for every wind turbine according to the Weibull parameters.
+#' (logical)
+#' @param weibullsrc A list of Weibull parameter rasters, where the first list
+#' item must be the shape parameter raster k and the second item must be the
+#' scale parameter raster a of the Weibull distribution. If no list is given,
+#' then rasters included in the package are used instead, which currently
+#' only cover Austria. This variable is only used if weibull==TRUE. (list)
 #'
 #' @return Returns a list with every individual, consisting of X & Y
 #' coordinates, rotor radii, the runs and the selected grid cell IDs, and
@@ -38,7 +48,8 @@
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)
-#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+#'                     c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
@@ -53,23 +64,44 @@
 #' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 #' #                dir = data.in$wd, dirres=10, spdmax=20)
 #'
-#' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
+#' ## Calculate a Grid and an indexed data.frame with coordinates and
+#' ## grid cell Ids.
 #' Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
 #' startsel <- StartGA(Grid,10,20);
 #' wind <- as.data.frame(cbind(ws=12,wd=0))
+#' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
+#'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+#'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="")
+#' head(fit)
+#'
+#' ## Calculate fitness values with the Weibull parameters included in the
+#' ## package. Only available for Austria.
+#' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
+#'               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+#'               dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="",
+#'               weibull=T)
+#' head(fit)
+#'
+#' ## Calculate fitness values with given Weibull rasters.
+#' araster <-  "...path.to.../scale_param_weibull.tif"
+#' kraster <- "...path.to.../shape_param_weibull.tif"
+#' weibullrasters <- list(raster(kraster), raster(araster))
+#'
 #' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-#'                dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
+#'                dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="",
+#'                weibull=T, weibullsrc = weibullrasters)
 #' head(fit)
 #' }
 #'
 #' @author Sebastian Gatscha
 fitness           <- function(selection, referenceHeight, RotorHeight,
                               SurfaceRoughness, Polygon, resol1,
-                              rot, dirspeed,srtm_crop,topograp,cclRaster){
+                              rot, dirspeed,srtm_crop,topograp,cclRaster,
+                              weibull, weibullsrc){
 
   dirspeed$wd <- round(dirspeed$wd,0)
   dirspeed$wd <-  round(dirspeed$wd/100,1)*100;
@@ -106,12 +138,26 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
 
   windraster <- raster::rasterize(Polygon, raster::raster(raster::extent(Polygon), ncol=180, nrow=180),field=1)
 
+  if (missing(weibull)){
+    weibull=F
+  }
+  if (missing(weibullsrc) & weibull==T){
+    cat("\nWeibull Informations from package will be used.\n")
+    path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
+    k_param = ""
+    a_param = ""
+    load(file = paste0(path, "k_weibull.rda"))
+    load(file = paste0(path, "a_weibull.rda"))
+    weibullsrc = list(k_param, a_param)
+  }
+
   e <- vector("list",length(selection)); euniqu <- vector("list",length(selection)) ;
   for (i in 1:length(selection)){
     ## Calculate EnergyOutput for every config i and for every angle j
-    e[[i]] <- calculateEn(selection[[i]], referenceHeight, RotorHeight,SurfaceRoughness,
-                          windraster = windraster, wnkl = 20, distanz=100000, polygon1 = Polygon,
-                          resol=resol1, RotorR = rot, dirSpeed = dirspeed, srtm_crop,topograp,cclRaster)
+    e[[i]] <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, RotorHeight = RotorHeight,
+                          SurfaceRoughness = SurfaceRoughness, windraster = windraster, wnkl = 20, distanz=100000,
+                          polygon1 = Polygon, resol=resol1, RotorR = rot, dirSpeed = dirspeed, srtm_crop = srtm_crop,
+                          topograp = topograp,cclRaster = cclRaster, weibull = weibull, weibullsrc = weibullsrc)
 
     # Get a list from unique Grid_ID elements for every park configuration respective to every winddirection considered.
     ee  <- lapply(e[[i]], function(x){split(x, duplicated(x$Punkt_id))$'FALSE'})

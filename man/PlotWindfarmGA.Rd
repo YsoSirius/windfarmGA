@@ -4,17 +4,22 @@
 \alias{PlotWindfarmGA}
 \title{Plot the results of an optimization run}
 \usage{
-PlotWindfarmGA(result, Polygon1, whichPl, best = 1, plotEn = 1, Projection)
+PlotWindfarmGA(result, GridMethod = "r", Polygon1, whichPl = "all",
+  best = 1, plotEn = 1, Projection, weibullsrc)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}} or
 \code{\link{genAlgo}}, which has stored all relevant information. (matrix)}
 
-\item{Polygon1}{The considered area as shapefile. Only required, if the
+\item{GridMethod}{Which grid spacing method was used. Default is
+"rectangular". If hexagonal grid cells were used, assign any of the following
+arguments: "h","hexa", "hexagonal". (character)}
+
+\item{Polygon1}{The considered area as shapefile. Only required if the
 shapefile is already loaded.(SpatialPolygons)}
 
-\item{whichPl}{Which plots should be shown: 1-8 are possible. If "all" is
-given, then all plots will be shown.}
+\item{whichPl}{Which plots should be shown: 1-8 are possible. The default
+is "all" which shows all available plots.}
 
 \item{best}{A numeric value indicating how many of the best individuals
 should be plotted. (numeric)}
@@ -25,6 +30,12 @@ solutions and (plotEn==2) plots the best efficiency solutions. (numeric)}
 
 \item{Projection}{A desired Projection can be used instead
 of the default Lambert Azimuthal Equal Area Projection. (character)}
+
+\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
+item must be the shape parameter raster k and the second item must be the
+scale parameter raster a of the Weibull distribution. If no list is given,
+then rasters included in the package are used instead, which currently
+only cover Austria. This variable is only used if weibull==TRUE. (list)}
 }
 \description{
 Plot the results of a genetic algorithm run with given inputs.
@@ -33,35 +44,28 @@ algorithm. 8 plot methods are available that can be selected individually.
 }
 \examples{
 \donttest{
-## Create a random rectangular shapefile
 library(sp)
-Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-Polygon1 <- Polygons(list(Polygon1),1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-proj4string(Polygon1) <- CRS(Projection)
-plot(Polygon1,axes=TRUE)
+## Add some data examples from the package
+load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
+load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
+load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 
-## Create a uniform and unidirectional wind data.frame and plots the
-## resulting wind rose
-## Uniform wind speed and single wind direction
-data.in <- as.data.frame(cbind(ws=12,wd=0))
-# windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#                dir = data.in$wd, dirres=10, spdmax=20)
+## Plot the results of a hexagonal grid optimization
+result <- resulthex
+Polygon1 <- polygon
+PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
-## Runs an optimization run for 10 iterations (iteration) with the
-## given shapefile (Polygon1), the wind data.frame (data.in),
-## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-## factor of 3 (fcrR) and other required inputs.
-result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-            Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-            elitism=TRUE, nelit = 7, trimForce = TRUE,
-            referenceHeight = 50,RotorHeight = 100)
+## Plot the results of a rectangular grid optimization
+result <- resultrect
+Polygon1 <- polygon
+PlotWindfarmGA(result, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
- PlotWindfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
-
+## Plot the results with hexagonal grid cells and a weibull mean background.
+load(file = system.file("extdata/a_weibull.rda", package = "windfarmGA"))
+load(file = system.file("extdata/k_weibull.rda", package = "windfarmGA"))
+weibullsrc <- list(k_param, a_param)
+PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all",
+               best = 1, plotEn = 1, weibullsrc = weibullsrc)
 }
 }
 \author{

@@ -1,11 +1,11 @@
 #' @title Divide matrices or integer at certain locations
 #' @name splitAt
-#' @description  Required function for the crossover method, to
+#' @description  Required function for the crossover method to
 #' split a genetic code at random intervals. See also \code{\link{crossover1}}.
 #' @export
 #' @param x A numeric variable representing the binary genetic code of an
 #' individual (numeric)
-#' @param pos A numeric value, which shows at which position the
+#' @param pos A numeric value which shows at which position the
 #' genetic code is cut (numeric)
 #'
 #' @return Returns a list of the splitted genetic code.

@@ -2,8 +2,7 @@
 % Please edit documentation in R/plotcloud.R
 \name{plotCloud}
 \alias{plotCloud}
-\title{Plot all outputs of all generations with corresponding
-standard deviation}
+\title{Plot outputs of all generations with standard deviations}
 \usage{
 plotCloud(result, pl = FALSE)
 }
@@ -23,32 +22,11 @@ all generations. Plot the corresponding standard deviation below.
 }
 \examples{
 \donttest{
-## Create a random rectangular shapefile
-library(sp)
-Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-Polygon1 <- Polygons(list(Polygon1),1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-proj4string(Polygon1) <- CRS(Projection)
-plot(Polygon1,axes=TRUE)
+## Add some data examples from the package
+load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
 
-## Create a uniform and unidirectional wind data.frame and plots the
-## resulting wind rose
-## Uniform wind speed and single wind direction
-data.in <- as.data.frame(cbind(ws=12,wd=0))
-# windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#                dir = data.in$wd, dirres=10, spdmax=20)
-
-## Runs an optimization run for 10 iterations (iteration) with the
-## given shapefile (Polygon1), the wind data.frame (data.in),
-## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-## factor of 3 (fcrR) and other required inputs.
-result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3, iteration=10,
-             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-            Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-            elitism = TRUE, nelit = 7, trimForce = TRUE,
-            referenceHeight = 50,RotorHeight = 100)
+## Plot the results of a hexagonal grid optimization
+result <- resulthex
 plcdf <- plotCloud(result, TRUE)
 str(plcdf)
 }

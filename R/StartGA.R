@@ -3,7 +3,7 @@
 #' @description  Create \code{nStart} random sub-selections from the
 #' indexed grid and assign binary variable 1 to selected grids.
 #' This function initiates the genetic algorithm with a first random
-#' population, and will only be needed in the first iteration.
+#' population and will only be needed in the first iteration.
 #' @export
 #' @param Grid The data.frame output of "GridFilter" function,
 #' with X and Y coordinates and Grid cell IDs. (data.frame)

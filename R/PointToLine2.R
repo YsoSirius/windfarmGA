@@ -1,12 +1,12 @@
 #' @title Distances between right triangle points
 #' @name PointToLine2
-#' @description  Takes two input coordinates, from the current turbine and
-#' from the potentially influencing turbine, as it stands in front of the
+#' @description  Takes two input coordinates from the current turbine and
+#' from the potentially influencing turbine, which stands in front of the
 #' current turbine. The algorithm draws an imaginary right triangle between
 #' the two input points and a point C, which is calculated by the algorithm
-#' itself. Wind will always seem to come from north, as the input area will
+#' itself. Wind will always seem to come from north as the input area will
 #' be rotated accordingly if the incoming wind direction does not come from
-#' north. For further calculations only the distance perpendicular to the
+#' north. For further calculations, only the distance perpendicular to the
 #' wind direction and the sidewise distance to the potentially influencing
 #' turbine is required.
 #'
@@ -17,7 +17,7 @@
 #' @importFrom graphics text points
 #'
 #' @param x Coordinates of the current turbine. (numeric)
-#' @param y Coordinates of the turbine, that could potentially influence
+#' @param y Coordinates of the turbine that could potentially influence
 #' the current turbine. (numeric)
 #' @param plotAngles A logical variable, which is used to plot the distances
 #' and angles. Default is FALSE. (logical)

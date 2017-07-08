@@ -9,6 +9,7 @@
 #'
 #' @importFrom raster crs getData crop mask projectRaster raster getData
 #' reclassify plot calc extract cellStats terrain resample overlay res
+#' extent
 #' @importFrom sp spTransform proj4string
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics mtext par plot
@@ -33,47 +34,59 @@
 #' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
 #' required, when the terrain effect model is activated. (character)
 #' @param sourceCCLRoughness The source to the adapted
-#' Corine Land Cover legend as .csv file. Only required, when terrain
+#' Corine Land Cover legend as .csv file. Only required when terrain
 #' effect model is activated. As default a .csv file within this
 #' package (\file{~/extdata}) is taken that was already adapted
 #' manually. To use your own
+#' @param weibullsrc A list of Weibull parameter rasters, where the first list
+#' item must be the shape parameter raster k and the second item must be the
+#' scale parameter raster a of the Weibull distribution. If no list is given,
+#' then rasters included in the package are used instead, which currently
+#' only cover Austria. This variable is only used if weibull==TRUE. (list)
 #'
 #' @return Returns a data.frame of the best (energy/efficiency) individual
 #' during all iterations. (data.frame)
 #'
 #' @examples \donttest{
-#' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=TRUE)
+#' ## Add some data examples from the package
+#' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
-#' ## Create a uniform and unidirectional wind data.frame and plots the
-#' ## resulting wind rose
-#' ## Uniform wind speed and single wind direction
-#' data.in <- as.data.frame(cbind(ws=12,wd=0))
-#' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#' #                dir = data.in$wd, dirres=10, spdmax=20)
+#' ## Plot the results of a hexagonal grid optimization
+#' result <- resulthex
+#' Polygon1 <- polygon
+#' Grid <- HexaTex(Polygon1, size = 87.5, FALSE)
+#' plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
+#'            Grid = Grid[[2]])
 #'
-#' ## Runs an optimization run for 10 iterations (iteration) with the
-#' ## given shapefile (Polygon1), the wind data.frame (data.in),
-#' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-#' ## factor of 3 (fcrR) and other required inputs.
-#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-#'             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-#'             elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'             referenceHeight = 50,RotorHeight = 100)
-#' Grid <- GridFilter(shape = Polygon1,resol = 200,prop = 1,plotGrid = FALSE);
-#' plotResult(result, Polygon1, 1, 1, FALSE, Grid = Grid[[2]])
+#' ## Plot the results of a rectangular grid optimization
+#' result <- resultrect
+#' Polygon1 <- polygon
+#' Grid <- GridFilter(Polygon1, resol = 175, 1, FALSE)
+#' plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
+#'            Grid = Grid[[2]])
+#'
+#' ## Plot the results of with a weibull mean background
+#' result <- resultrect
+#' Polygon1 <- polygon
+#' load(file = system.file("extdata/a_weibull.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/k_weibull.rda", package = "windfarmGA"))
+#' weibullsrc <- list(k_param, a_param)
+#' plotResult(result, Polygon1, best = 2, plotEn = 2, topographie = FALSE,
+#'            Grid = Grid[[2]], weibullsrc = weibullsrc)
+#'
+#' ## Plot the hexagonal results ith weibull mean background
+#' result <- resulthex
+#' Grid <- HexaTex(Polygon1, size = 87.5, FALSE)
+#' plotResult(result, Polygon1, best = 2, plotEn = 2, topographie = FALSE,
+#'            Grid = Grid[[2]], weibullsrc = weibullsrc)
 #'}
 #' @author Sebastian Gatscha
 plotResult <- function(result,Polygon1,best=3,plotEn=1,
-                       topographie=FALSE,Grid,Projection,sourceCCLRoughness,sourceCCL){
+                       topographie=FALSE,Grid,Projection,
+                       sourceCCLRoughness,sourceCCL,
+                       weibullsrc){
 
   ## Set graphical parameters
   op <- par(ask=FALSE);   on.exit(par(op));   par(mfrow=c(1,1))
@@ -91,6 +104,36 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
+
+
+  ## Check Weibull Rasters
+  if (missing(weibullsrc)){
+    weibullsrc = NULL
+    col2res <- "lightblue"
+  } else {
+    PolyCrop <- sp::spTransform(Polygon1,
+                                CRSobj = proj4string(weibullsrc[[1]]))
+    if (class(weibullsrc)=="list" & length(weibullsrc)==2) {
+      wblcroped <- lapply(weibullsrc, function(x){
+        raster::crop(x,raster::extent(PolyCrop))})
+      wblcroped <- lapply(wblcroped, function(x){
+        raster::mask(x,PolyCrop)})
+      Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1/wblcroped[[1]])))
+    } else if (class(weibullsrc)=="list" & length(weibullsrc)==1) {
+      wblcroped <- raster::crop(weibullsrc[[1]],raster::extent(PolyCrop))
+      wblcroped <- raster::mask(weibullsrc[[1]],PolyCrop)
+      Erwartungswert <- wblcroped[[1]]
+    } else if (class(weibullsrc)=="RasterLayer") {
+      wblcroped <- raster::crop(weibullsrc,raster::extent(PolyCrop))
+      wblcroped <- raster::mask(weibullsrc,PolyCrop)
+      Erwartungswert <- wblcroped
+    }
+    col2res = "transparent"
+    alpha=0.9
+    Erwartungswert <- raster::projectRaster(Erwartungswert, crs = CRS(ProjLAEA))
+    # plot(Erwartungswert)
+  }
+
 
   ## Creat a color ramp
   rbPal1 <- grDevices::colorRampPalette(c('green','red'))
@@ -131,12 +174,18 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
       EnergyBest$EnergyOverall <- round(EnergyBest$EnergyOverall, 2)
       EnergyBest$EfficAllDir <- round(EnergyBest$EfficAllDir, 2)
 
-      plot(Polygon1, col="lightblue", main=paste("Best Energy:", (best+1)-i, "\n","Energy Output",
+      plot(Polygon1, col=col2res, main=paste("Best Energy:", (best+1)-i, "\n","Energy Output",
                                                  EnergyBest$EnergyOverall[[1]],"kW", "\n", "Efficiency:",
                                                  EnergyBest$EfficAllDir[[1]]));
+      if (!is.null(weibullsrc)) {
+        raster::plot(Erwartungswert, alpha=alpha, legend = T,axes=F,
+                     useRaster=TRUE,add=T,
+                     legend.lab="Mean Wind Speed")
+
+      }
       plot(Grid,add=T)
 
-      graphics::mtext("Total wake effect in %", side = 2)
+      graphics::mtext("Total Wake Effect in %", side = 2)
       graphics::points(EnergyBest$X,EnergyBest$Y,cex=2,pch=20,col=Col)
       graphics::text(EnergyBest$X, EnergyBest$Y, round(EnergyBest$AbschGesamt,0), cex=0.8, pos=1, col="black")
 
@@ -284,12 +333,24 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
 
       EfficiencyBest$EnergyOverall <- round(EfficiencyBest$EnergyOverall, 2)
       EfficiencyBest$EfficAllDir <- round(EfficiencyBest$EfficAllDir, 2)
-      raster::plot(Polygon1, col="lightblue", main=paste("Best Efficiency:", (best+1)-i, "\n","Energy Output",
+
+
+      raster::plot(Polygon1, col=col2res,main=paste("Best Efficiency:", (best+1)-i, "\n","Energy Output",
                                                          EfficiencyBest$EnergyOverall[[1]],"kW", "\n", "Efficiency:",
                                                          EfficiencyBest$EfficAllDir[[1]]));
-      plot(Grid,add=T)
-      graphics::mtext("Gesamtabschattung in %", side = 2)
+      if (!is.null(weibullsrc)) {
+        raster::plot(Erwartungswert, alpha=alpha, legend = T,axes=F,
+                     useRaster=TRUE,add=T,
+                     legend.lab="Mean Wind Speed")
 
+      }
+      plot(Grid,add=T)
+
+
+
+
+
+      graphics::mtext("Total Wake Effect in %", side = 2)
       graphics::points(EfficiencyBest$X,EfficiencyBest$Y,col=Col1,cex=2,pch=20)
       graphics::text(EfficiencyBest$X, EfficiencyBest$Y, round(EfficiencyBest$AbschGesamt,0), cex=0.8, pos=1)
 
@@ -297,6 +358,7 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
       distpo <- stats::dist(x = cbind(EfficiencyBest$X,EfficiencyBest$Y),method = "euclidian")
       graphics::mtext(paste("minimal Distance", round(min(distpo),2)), side = 1,line=0)
       graphics::mtext(paste("mean Distance", round(mean(distpo),2)), side = 1,line=1)
+
 
     }
 

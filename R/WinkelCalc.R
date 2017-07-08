@@ -18,7 +18,7 @@
 #'
 #' @return Returns a matrix with the alpha, betha and gamma angles of the
 #' imaginary right triangle (matrix)
-#' @examples {
+#' @examples
 #'   Aa= as.numeric(cbind(1,1))
 #'   Bb= as.numeric(cbind(10,3))
 #'   Cc= as.numeric(cbind(10,1))
@@ -29,7 +29,7 @@
 #'   points(x=Cc[1],y=Cc[2],col="blue",pch=20)
 #'   Angles <- WinkelCalc(Aa,Bb,Cc); Angles
 #'   text(rbind(Aa,Bb,Cc),labels=round(Angles,2),pos=1)
-#' }
+#'
 #' @author Sebastian Gatscha
 WinkelCalc        <- function(Aa,Bb,Cc) {
   AB <- Bb-Aa; AC <- Cc-Aa;  BA <- Aa-Bb;  BC <- Cc-Bb; CA <- Aa-Cc; CB <- Bb-Cc;

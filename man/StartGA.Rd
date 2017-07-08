@@ -27,7 +27,7 @@ and a binary variable of 1, indicating a turbine in the grid cell.
 Create \code{nStart} random sub-selections from the
 indexed grid and assign binary variable 1 to selected grids.
 This function initiates the genetic algorithm with a first random
-population, and will only be needed in the first iteration.
+population and will only be needed in the first iteration.
 }
 \examples{
 {

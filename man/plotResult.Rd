@@ -5,7 +5,7 @@
 \title{Plot the best Results}
 \usage{
 plotResult(result, Polygon1, best = 3, plotEn = 1, topographie = FALSE,
-  Grid, Projection, sourceCCLRoughness, sourceCCL)
+  Grid, Projection, sourceCCLRoughness, sourceCCL, weibullsrc)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}} or
@@ -30,13 +30,19 @@ should be considered and plotted or not. (logical)}
 of the default Lambert Azimuthal Equal Area Projection. (character)}
 
 \item{sourceCCLRoughness}{The source to the adapted
-Corine Land Cover legend as .csv file. Only required, when terrain
+Corine Land Cover legend as .csv file. Only required when terrain
 effect model is activated. As default a .csv file within this
 package (\file{~/extdata}) is taken that was already adapted
 manually. To use your own}
 
 \item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
 required, when the terrain effect model is activated. (character)}
+
+\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
+item must be the shape parameter raster k and the second item must be the
+scale parameter raster a of the Weibull distribution. If no list is given,
+then rasters included in the package are used instead, which currently
+only cover Austria. This variable is only used if weibull==TRUE. (list)}
 }
 \value{
 Returns a data.frame of the best (energy/efficiency) individual
@@ -50,34 +56,39 @@ should be plotted.
 }
 \examples{
 \donttest{
-## Create a random rectangular shapefile
-library(sp)
-Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-Polygon1 <- Polygons(list(Polygon1),1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-proj4string(Polygon1) <- CRS(Projection)
-plot(Polygon1,axes=TRUE)
+## Add some data examples from the package
+load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
+load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
+load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 
-## Create a uniform and unidirectional wind data.frame and plots the
-## resulting wind rose
-## Uniform wind speed and single wind direction
-data.in <- as.data.frame(cbind(ws=12,wd=0))
-# windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#                dir = data.in$wd, dirres=10, spdmax=20)
+## Plot the results of a hexagonal grid optimization
+result <- resulthex
+Polygon1 <- polygon
+Grid <- HexaTex(Polygon1, size = 87.5, FALSE)
+plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
+           Grid = Grid[[2]])
 
-## Runs an optimization run for 10 iterations (iteration) with the
-## given shapefile (Polygon1), the wind data.frame (data.in),
-## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-## factor of 3 (fcrR) and other required inputs.
-result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-            Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-            elitism=TRUE, nelit = 7, trimForce = TRUE,
-            referenceHeight = 50,RotorHeight = 100)
-Grid <- GridFilter(shape = Polygon1,resol = 200,prop = 1,plotGrid = FALSE);
-plotResult(result, Polygon1, 1, 1, FALSE, Grid = Grid[[2]])
+## Plot the results of a rectangular grid optimization
+result <- resultrect
+Polygon1 <- polygon
+Grid <- GridFilter(Polygon1, resol = 175, 1, FALSE)
+plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
+           Grid = Grid[[2]])
+
+## Plot the results of with a weibull mean background
+result <- resultrect
+Polygon1 <- polygon
+load(file = system.file("extdata/a_weibull.rda", package = "windfarmGA"))
+load(file = system.file("extdata/k_weibull.rda", package = "windfarmGA"))
+weibullsrc <- list(k_param, a_param)
+plotResult(result, Polygon1, best = 2, plotEn = 2, topographie = FALSE,
+           Grid = Grid[[2]], weibullsrc = weibullsrc)
+
+## Plot the hexagonal results ith weibull mean background
+result <- resulthex
+Grid <- HexaTex(Polygon1, size = 87.5, FALSE)
+plotResult(result, Polygon1, best = 2, plotEn = 2, topographie = FALSE,
+           Grid = Grid[[2]], weibullsrc = weibullsrc)
 }
 }
 \author{

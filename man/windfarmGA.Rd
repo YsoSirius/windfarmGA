@@ -4,20 +4,25 @@
 \alias{windfarmGA}
 \title{Controls the given inputs and initiates an Optimization run}
 \arguments{
-\item{dns}{The source to the desired Shapefile. Only required, if the
+\item{dns}{The source to the desired Shapefile. Only required if the
 shapefile is not already loaded. (character)}
 
-\item{layer}{The name of the desired Shapefile. Only required, if the
+\item{layer}{The name of the desired Shapefile. Only required if the
 shapefile is not already loaded. (character)}
 
-\item{Polygon1}{The considered area as shapefile. Only required, if the
+\item{Polygon1}{The considered area as shapefile. Only required if the
 shapefile is already loaded.(SpatialPolygons)}
+
+\item{GridMethod}{Should the polygon be divided into rectangular or
+hexagonal grid cells? The default is rectangular grid cells and hexagonal
+grid cells are computed when assigning "h" or "hexagon" to this input
+variable. (character)}
 
 \item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
 required, when the terrain effect model is activated. (character)}
 
 \item{sourceCCLRoughness}{The source to the adapted
-Corine Land Cover legend as .csv file. Only required, when terrain
+Corine Land Cover legend as .csv file. Only required when terrain
 effect model is activated. As default a .csv file within this
 package (\file{~/extdata}) is taken that was already adapted
 manually. To use your own .csv legend this variable has to be assigned.
@@ -33,7 +38,7 @@ data frame, see: \code{\link{plotWindrose}}. (data.frame)}
 \item{Rotor}{A numeric value that gives the rotor radius in meter.
 (numeric)}
 
-\item{fcrR}{A numeric value, that is used for grid spacing. The resolution
+\item{fcrR}{A numeric value that is used for grid spacing. The resolution
 of a grid cell will be the rotor radius \code{Rotor} multiplied with this
 value. (numeric)}
 
@@ -58,10 +63,10 @@ elevation and land cover information. (numeric)}
 Determines the percentage a grid has to overlay.
 See also: \code{\link{GridFilter}} (numeric)}
 
-\item{mutr}{A numeric mutation rate, with low default value of 0.008
+\item{mutr}{A numeric mutation rate with low default value of 0.008
 (numeric)}
 
-\item{elitism}{Boolean Value, which indicates whether elitism should
+\item{elitism}{Boolean value which indicates whether elitism should
 be included or not. (logical)}
 
 \item{nelit}{If \code{elitism} is TRUE, then this input variable
@@ -82,18 +87,35 @@ adjustment will be random. Default is TRUE. (logical)}
 
 \item{Projection}{A desired Projection can be used instead
 of the default Lambert Azimuthal Equal Area Projection. (character)}
+
+\item{weibull}{A logical value that specifies whether to take Weibull
+parameters into account. If weibull==TRUE, the wind speed values from the
+'dirSpeed' data frame are ignored. The algorithm will calculate the mean
+wind speed for every wind turbine according to the Weibull parameters.
+(logical)}
+
+\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
+item must be the shape parameter raster k and the second item must be the
+scale parameter raster a of the Weibull distribution. If no list is given,
+then rasters included in the package are used instead, which currently
+only cover Austria. This variable is only used if weibull==TRUE. (list)}
+}
+\value{
+Assigns the needed input values and starts an optimization run.
+The result of this run is a matrix of all relevant output parameters.
+This output is used for several plotting functions.
 }
 \description{
-The initiating function of an optimization process, which
+The initiating function of an optimization process which
 will interactively check user-inputs first. If all inputs are correct,
-an optimization run will be started. This process can take a long time,
+an optimization run will be started. This process can take a long time
 depending on the size of the problem and the number of desired iterations.
 }
 \details{
 A terrain effect model can be included in the optimization process.
-Therefore an SRTM elevation model will be downloaded automatically via the
+Therefore, an SRTM elevation model will be downloaded automatically via the
 \code{raster::getData} function. Another raster (.tif) is
-\strong{required}, which has to be downloaded previously at the following
+\strong{required} which has to be downloaded previously at the following
 page: \url{http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1}.
 Download the .zip package with \strong{100 meter} resolution.
 Unzip the downloaded package and assign the source of the Raster Image
@@ -108,17 +130,13 @@ values and save the .csv file then with \strong{";"} separation. Assign the
 source of the resulting .csv file to the input variable
 \code{sourceCCLRoughness} of this function. For further information, see
 the examples.
-
-Assigns the needed input values and starts an optimization run.
-The result of this run is a matrix of all relevant output parameters.
-This output is used for several plotting functions.
 }
 \examples{
 \donttest{
 ############### REQUIRED INPUT POLYGON AND CCL SOURCE
 library(rgdal);library(sp);
-Polygon1 <- sp::Polygon(rbind(c(0, 0), c(0, 2000),
-                             c(2000, 2000), c(2000, 0)))
+Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+                          c(4499991, 2669343), c(4499991, 2668272)))
 Polygon1 <- sp::Polygons(list(Polygon1),1);
 Polygon1 <- sp::SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
@@ -126,10 +144,12 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 proj4string(Polygon1) <- CRS(Projection)
 plot(Polygon1,axes=TRUE)
 ## Or Polygon is given by source:
-Polygon1 <- rgdal::readOGR(dsn=dsn,layer=layer)
-plot(Polygon1)
 dsn="Source of the Polygon File (SHP)"
 layer="Name of Polygon"
+Polygon1 <- rgdal::readOGR(dsn=dsn,layer=layer)
+plot(Polygon1)
+
+
 ## The following two sources are required, if terrain effects should
 ## be considered
 sourceCCL <- "Source of the CCL raster (TIF)"
@@ -138,23 +158,60 @@ sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 ## Exemplary Input Wind speed and direction data frame
 ## Uniform wind speed and single wind direction
 vdirspe <- structure(list(ws = c(12,12), wd = c(0,0), probab = c(25,25)),
-.Names = c("ws", "wd","probab"), row.names = c(NA, 2L),class ="data.frame")
+                    .Names = c("ws", "wd","probab"),
+                    row.names = c(NA, 2L),class ="data.frame")
 windrosePlot <- plotWindrose(data = vdirspe, spd = vdirspe$ws,
-dir = vdirspe$wd, dirres = 10, spdmax = 20)
-##First check if the grid size is convenient
+                             dir = vdirspe$wd, dirres = 10, spdmax = 20)
+## First check if the grid size is convenient
 Rotor <- 50;
-fcrR <- 9
+fcrR <- 3.5
+## with rectangular Grid Cells
 GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
+## or with hexagonal Grid Cells
+HexaTex(Polygon1, (Rotor*fcrR)/2, TRUE)
 
 ############### STARTING AN OPTIMIZATION RUN
-result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
+result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=Rotor,fcrR=fcrR,
              vdirspe = vdirspe, crossPart1 = "EQU",selstate="FIX",mutr=0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-             elitism=TRUE, nelit = 7, trimForce = TRUE,
+             elitism=TRUE, nelit = 7, trimForce = TRUE,iteration=10,
              referenceHeight = 50,RotorHeight = 100)
+PlotWindfarmGA(result = result, Polygon1 = Polygon1)
 
-## Use the resulting matrix with the different plotting methods of this package,
-## to explore the behaviour of the genetic algorithm
+## Start the same optimization run, only with hexagonal grid cells.
+result <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
+             fcrR=fcrR,iteration=10, vdirspe = vdirspe, crossPart1 = "EQU",
+             selstate="FIX",mutr=0.8,Proportionality = 1,
+             SurfaceRoughness = 0.3, topograp = FALSE,elitism=TRUE,
+             nelit = 7, trimForce = TRUE,referenceHeight = 50,
+             RotorHeight = 100)
+PlotWindfarmGA(result = result, GridMethod = "h", Polygon1 = Polygon1)
+
+## Run an optimization with the Weibull parameters included in the package.
+result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
+                 fcrR=fcrR,iteration=10, vdirspe= vdirspe,crossPart1= "EQU",
+                 selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=Rotor,
+                 SurfaceRoughness = 0.3, topograp = FALSE,
+                 elitism=TRUE, nelit = 7, trimForce = TRUE,
+                 referenceHeight = 50,RotorHeight = 100,
+                 weibull = TRUE)
+PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
+
+## Run an optimization with given Weibull parameter rasters.
+araster <- "/..pathto../a_param_raster.tif"
+kraster <- "/..pathto../k_param_raster.tif"
+weibullrasters <- list(raster(kraster), raster(araster))
+result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
+                 fcrR=fcrR, iteration=10, vdirspe=vdirspe,crossPart1= "EQU",
+                 selstate="FIX",mutr=0.8, Proportionality = 1, Rotor= Rotor,
+                 SurfaceRoughness = 0.3, topograp = FALSE,
+                 elitism=TRUE, nelit = 7, trimForce = TRUE,
+                 referenceHeight = 50,RotorHeight = 100,
+                 weibull = TRUE, weibullsrc = weibullrasters)
+PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
+
+## Use the resulting matrix with the different plotting methods of
+## this package, to explore the behaviour of the genetic algorithm.
 
 }
 }

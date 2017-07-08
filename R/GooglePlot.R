@@ -30,35 +30,16 @@
 #' the desired best result with a google background map. (data.frame)
 #'
 #' @examples \donttest{
-#' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=TRUE)
+#' ## Add some data examples from the package
+#' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
-#' ## Create a uniform and unidirectional wind data.frame and plots the
-#' ## resulting wind rose
-#' ## Uniform wind speed and single wind direction
-#' data.in <- as.data.frame(cbind(ws=12,wd=0))
-#' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#' #                dir = data.in$wd, dirres=10, spdmax=20)
+#' ## Plot the results of a wind farm optimization
+#' result <- resultrect
+#' Polygon1 <- polygon
+#' GooglePlot(result, Polygon1, 1, 1)
 #'
-#' ## Runs an optimization run for 10 iterations (iteration) with the
-#' ## given shapefile (Polygon1), the wind data.frame (data.in),
-#' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-#' ## factor of 3 (fcrR) and other required inputs.
-#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-#'             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-#'             elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'             referenceHeight = 50,RotorHeight = 100)
-#'
-#' GooglePlot(result, Polygon1, 1,1)
 #'}
 #' @author Sebastian Gatscha
 GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection,...){

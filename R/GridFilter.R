@@ -13,7 +13,7 @@
 #' @importFrom sp proj4string spTransform CRS coordinates
 #' @importFrom rgeos gArea intersect gCentroid
 #' @importFrom dplyr select
-#' @importFrom graphics text plot
+#' @importFrom graphics text plot par
 #'
 #' @param shape Shape file of the considered area (SpatialPolygons)
 #' @param resol The resolution of the grid in meter. Default is 500.
@@ -75,8 +75,12 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid=FALSE){
   areaquares <- round(sum(sapply(dry.grid.filtered@polygons, function(x)
               sapply(x@Polygons, function(y) y@area)))/1000000,3)
 
-  par(mar=c(5,5,5,4))
+
   if (plotGrid == TRUE){
+    opar = par(no.readonly=T)
+    par(mar=c(5,5,5,4))
+    par(mfrow=c(1,1))
+    plot.new()
     raster::plot(shape, col="orange",main = paste("Resolution:", resol, "m and prop: ",prop,
                                           "\n Total Area:", round(sum(areadrygrid)/1000000,3),
                                           "km^2 \n Number Grids:",length(dry.grid.filtered),
@@ -89,13 +93,19 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid=FALSE){
   y <- lapply(dry.grid.filtered@polygons, function(x) sapply(x@Polygons, function(y) y@coords[,2]))
 
 
-  rect_Nu <- rgeos::gCentroid(dry.grid.filtered,byid = T);  raster::plot(rect_Nu,add=T)
-  centpo <- sp::coordinates(rect_Nu);     centpo <- as.data.frame(centpo)
-  centpo$ID <- 1:nrow(centpo);     names(centpo) <- c("X","Y","ID")
+  rect_Nu <- rgeos::gCentroid(dry.grid.filtered,byid = T);
+  centpo <- sp::coordinates(rect_Nu);
+  centpo <- as.data.frame(centpo)
+  centpo$ID <- 1:nrow(centpo);
+  names(centpo) <- c("X","Y","ID")
   centpo <- dplyr::select(centpo, ID,X,Y)
 
-  graphics::points(centpo$X,centpo$Y, col="blue", pch=20)
-  graphics::text(centpo$X,centpo$Y,labels=centpo$ID, pos=2)
+  if (plotGrid == TRUE){
+    raster::plot(rect_Nu,add=T)
+    graphics::points(centpo$X,centpo$Y, col="blue", pch=20)
+    graphics::text(centpo$X,centpo$Y,labels=centpo$ID, pos=2)
+    par(opar)
+  }
 
   centpo <- list(centpo,dry.grid.filtered)
   invisible(centpo)

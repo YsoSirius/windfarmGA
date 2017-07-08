@@ -8,10 +8,13 @@
 #'
 #' @param result An output matrix of the function \code{\link{windfarmGA}} or
 #' \code{\link{genAlgo}}, which has stored all relevant information. (matrix)
-#' @param Polygon1 The considered area as shapefile. Only required, if the
+#' @param GridMethod Which grid spacing method was used. Default is
+#' "rectangular". If hexagonal grid cells were used, assign any of the following
+#' arguments: "h","hexa", "hexagonal". (character)
+#' @param Polygon1 The considered area as shapefile. Only required if the
 #' shapefile is already loaded.(SpatialPolygons)
-#' @param whichPl Which plots should be shown: 1-8 are possible. If "all" is
-#' given, then all plots will be shown.
+#' @param whichPl Which plots should be shown: 1-8 are possible. The default
+#' is "all" which shows all available plots.
 #' @param best A numeric value indicating how many of the best individuals
 #' should be plotted. (numeric)
 #' @param plotEn A numeric value that indicates if the best energy or
@@ -19,42 +22,42 @@
 #' solutions and (plotEn==2) plots the best efficiency solutions. (numeric)
 #' @param Projection A desired Projection can be used instead
 #' of the default Lambert Azimuthal Equal Area Projection. (character)
+#' @param weibullsrc A list of Weibull parameter rasters, where the first list
+#' item must be the shape parameter raster k and the second item must be the
+#' scale parameter raster a of the Weibull distribution. If no list is given,
+#' then rasters included in the package are used instead, which currently
+#' only cover Austria. This variable is only used if weibull==TRUE. (list)
 #'
 #' @return NULL
 #' @examples \donttest{
-#' ## Create a random rectangular shapefile
 #' library(sp)
-#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=TRUE)
+#' ## Add some data examples from the package
+#' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
-#' ## Create a uniform and unidirectional wind data.frame and plots the
-#' ## resulting wind rose
-#' ## Uniform wind speed and single wind direction
-#' data.in <- as.data.frame(cbind(ws=12,wd=0))
-#' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#' #                dir = data.in$wd, dirres=10, spdmax=20)
+#' ## Plot the results of a hexagonal grid optimization
+#' result <- resulthex
+#' Polygon1 <- polygon
+#' PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 #'
-#' ## Runs an optimization run for 10 iterations (iteration) with the
-#' ## given shapefile (Polygon1), the wind data.frame (data.in),
-#' ## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-#' ## factor of 3 (fcrR) and other required inputs.
-#' result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=20,fcrR=3,iteration=10,
-#'              vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-#'             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-#'             elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'             referenceHeight = 50,RotorHeight = 100)
+#' ## Plot the results of a rectangular grid optimization
+#' result <- resultrect
+#' Polygon1 <- polygon
+#' PlotWindfarmGA(result, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 #'
-#'  PlotWindfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
-#'
+#' ## Plot the results with hexagonal grid cells and a weibull mean background.
+#' load(file = system.file("extdata/a_weibull.rda", package = "windfarmGA"))
+#' load(file = system.file("extdata/k_weibull.rda", package = "windfarmGA"))
+#' weibullsrc <- list(k_param, a_param)
+#' PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all",
+#'                best = 1, plotEn = 1, weibullsrc = weibullsrc)
 #' }
 #' @author Sebastian Gatscha
 
-PlotWindfarmGA <- function(result,Polygon1,whichPl,best=1,plotEn=1,Projection){
+PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
+                           whichPl="all",best=1,plotEn=1,Projection,
+                           weibullsrc){
 
   op <- par(no.readonly = T)
 
@@ -65,7 +68,13 @@ PlotWindfarmGA <- function(result,Polygon1,whichPl,best=1,plotEn=1,Projection){
   resol <- as.numeric(result[,'inputData'][[1]][,1]['Resolution'][[1]])
   prop <- as.numeric(result[,'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
 
-  Grid <- GridFilter(shape = Polygon1,resol = resol, prop = prop ,plotGrid=F)
+
+  GridMethod <- toupper(GridMethod)
+  if (GridMethod=="HEXAGONAL" | GridMethod=="H" | GridMethod=="HEXA") {
+    Grid <- HexaTex(Polygon1 = Polygon1, size = resol/2, plotTrue = F)
+  } else {
+    Grid <- GridFilter(shape = Polygon1,resol = resol, prop = prop ,plotGrid=F)
+  }
 
   if (nrow(result)<4) {
     print("Cannot plot option 2,3,4,5. \n Only option 1,6,7 are available.")
@@ -75,23 +84,21 @@ PlotWindfarmGA <- function(result,Polygon1,whichPl,best=1,plotEn=1,Projection){
   ############### PLOTTING OUTPUTS
   if (any(whichPl==1)){
     print("Plot the 'best' Individuals of the GA:")
-    plotResult(result = result, Polygon1 = Polygon1, best = best ,plotEn = plotEn,topographie = FALSE,Grid= Grid[[2]]);
+    plotResult(result = result, Polygon1 = Polygon1, best = best ,plotEn = plotEn,
+               topographie = FALSE,Grid= Grid[[2]], weibullsrc = weibullsrc);
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==2)){
     print("Plot the Evolution of the Efficiency and Energy Values:")
     plotEvolution(result,T,0.3)
-    readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==3)){
     print("Plot the Influence of Population Size, Selection, Crossover, Mutation:")
     plotparkfitness(result,0.1)
-    readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==4)){
     print("Plot the Changes in Fitness Values:")
     plotfitnessevolution(result)
-    readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==5)){
     print("Plot all individual Values of the whole Evolution:")
@@ -99,17 +106,18 @@ PlotWindfarmGA <- function(result,Polygon1,whichPl,best=1,plotEn=1,Projection){
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==6)){
+    print("Plot a Heatmap of all Grid Cells:")
+    plot(heatmapGA(result = result, si=5))
+    readline(prompt="Press [enter] to continue")
+
+  }
+  if (any(whichPl==7)){
     print("Plot the 'best' Individual with static Google Map Background:")
     GooglePlot(result,Polygon1,best,plotEn,Projection)
     print("Plot the 'best' Individual in Google Chrome with Satelitte Imagery:")
     GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
-    readline(prompt="Press [enter] to continue")
   }
-  if (any(whichPl==7)){
-    print("Plot a Heatmap of all Grid Cells:")
-    plot(heatmapGA(result = result, si=5))
-    readline(prompt="Press [enter] to continue")
-  }
+
   par(op)
   return()
 }
