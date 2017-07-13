@@ -8,11 +8,11 @@
 #'
 #' @export
 #'
-#' @importFrom spatstat hextess hexgrid area
+#' @importFrom spatstat hextess hexgrid
 #' @importFrom maptools as.owin.SpatialPolygons
 #' @importFrom methods as
 #' @importFrom graphics points
-#' @importFrom raster plot
+#' @importFrom raster plot area
 #'
 #' @param Polygon1 The SpatialPolygons object (SpatialPolygons)
 #' @param size The side length of an hexagon (numeric)
@@ -25,6 +25,7 @@
 #' library(spatstat)
 #' library(maptools)
 #' library(sp)
+#' library(raster)
 #' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
@@ -59,7 +60,7 @@ HexaTex <- function(Polygon1, size, plotTrue = FALSE){
   if (plotTrue == TRUE){
     plot.new()
     raster::plot(HexaGrid, col="lightgreen",main=paste("Resolution: ", size, "m",
-                                               "\n Total Area: ", round(sum(spatstat::area(Polygon1)/1000000),2), "km^2",
+                                               "\n Total Area: ", round(sum(raster::area(Polygon1)/1000000),2), "km^2",
                                                "\nAmount of Hexagons: ", length(HexaGrid),
                                                "\nAmount of Points: ", nrow(PointsHexa)))
     graphics::points(cbind(PointsHexa$X,PointsHexa$Y), col="blue", pch=20)
@@ -67,3 +68,5 @@ HexaTex <- function(Polygon1, size, plotTrue = FALSE){
   par(opar)
   invisible(list(PointsHexa,HexaGrid))
 }
+
+
