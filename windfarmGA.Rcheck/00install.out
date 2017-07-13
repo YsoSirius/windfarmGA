@@ -1,0 +1,14 @@
+* installing *source* package 'windfarmGA' ...
+** R
+** inst
+** preparing package for lazy loading
+Creating a generic function for 'toJSON' from package 'jsonlite' in package 'googleVis'
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded
+*** arch - i386
+Creating a generic function for 'toJSON' from package 'jsonlite' in package 'googleVis'
+*** arch - x64
+Creating a generic function for 'toJSON' from package 'jsonlite' in package 'googleVis'
+* DONE (windfarmGA)

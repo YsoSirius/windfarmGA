@@ -1,0 +1,32 @@
+Package: windfarmGA
+Title: Genetic Algorithm for Wind Farm Layout Optimization
+Version: 1.1
+Date: 2017-06-20
+Author: Sebastian Gatscha
+Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
+Description: The genetic algorithm is designed to optimize small wind farms consisting 
+    of up to 50 turbines. The algorithm works with a fixed amount of turbines, a fixed 
+    rotor radius and a mean wind speed value for every incoming wind direction.
+    If required, it can include a terrain effect model which downloads an 
+    'SRTM' elevation model automatically and loads a Corine Land Cover raster, 
+    which has to be downloaded previously. 
+    Further information can be found in the description of the function 'windfarmGA'. 
+    To start an optimization run, either the function 'windfarmGA' or 'genAlgo' can 
+    be used. The function 'windfarmGA' checks the user inputs interactively and then 
+    runs the function 'genAlgo'. If the input parameters are already known, an 
+    optimization can be run directly via the function 'genAlgo'. 
+    Their output is identical.
+Depends: R (>= 3.2.3)
+Imports: rgdal (>= 1.0-4), raster (>= 2.5-2), sp (>= 1.2-2), dplyr (>=
+        0.5.0), data.table (>= 1.9.6), gtools (>= 3.5.0), maptools (>=
+        0.8-36), calibrate (>= 1.7.2), geoR (>= 1.7-5.1), gstat (>=
+        1.0-26), ggplot2 (>= 2.2.0), RColorBrewer (>= 1.1-2), rgeos (>=
+        0.3-11), RgoogleMaps (>= 1.2.0.7), googleVis (>= 0.5.9), rgl
+        (>= 0.96.0), leaflet (>= 1.1.0), methods (>= 3.2.5), spatstat
+        (>= 1.42-2), grDevices, graphics, stats, utils
+Suggests: magrittr
+LazyData: TRUE
+License: MIT + file LICENSE
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2017-07-09 19:46:19 UTC; Bobo

@@ -1,0 +1,41 @@
+BaroHoehe               Calculates Air Density, Air Pressure and
+                        Temperature according to the Barometric Height
+                        Formula
+GoogleChromePlot        Plot the Best Results in Google Chrome
+GooglePlot              Plot the 'best' Results with Google background
+                        map
+GridFilter              Make a grid from a Polygon
+HexaTex                 Polygon to Hexagonal Grid Tessellation
+InfluPoints             Find potentially influencing turbines
+PlotWindfarmGA          Plot the results of an optimization run
+PointToLine2            Distances between right triangle points
+StartGA                 Create a random initial Population
+VekWinkelCalc           Calculate distances and angles of possibly
+                        influencing turbines
+WinkelCalc              Calculates Angles between 3 Points
+calculateEn             Calculate Energy Outputs of Individuals
+crossover1              Crossover Method
+euc.dist                Euclidian Distance between two Points
+fitness                 Evaluate the Individual Fitness values
+genAlgo                 Start The Genetic Algorithm for a wind Farm
+                        Layout
+getRects                Get the Grid-IDs from binary matrix
+heatmapGA               Plot heatmap of fit grid cells
+leafPlot                Leaflet Plot of a Wind Park
+mutation                Mutation Method
+plotCloud               Plot outputs of all generations with standard
+                        deviations
+plotEvolution           Plot the evolution of fitness values
+plotResult              Plot the best Results
+plotWindrose            Plot a Windrose
+plotbeorwor             Plot if previous population was better or worse
+plotfitnessevolution    Plot the changes of min/mean/max fitness values
+plotparkfitness         Plot the genetic algorithm results
+readinteger             Check Input Crossover Method
+readintegerSel          Check Input Selection Method
+selection1              Selection Method
+splitAt                 Divide matrices or integer at certain locations
+tess2SPdf               Create a Tesselation from a Polygon
+trimton                 Adjust the amount of turbines per windfarm
+windfarmGA              Controls the given inputs and initiates an
+                        Optimization run
