@@ -7,9 +7,11 @@
 #' @importFrom leaflet colorFactor iconList makeIcon leaflet addTiles
 #' addProviderTiles popupOptions addMarkers addCircleMarkers hideGroup
 #' addPolygons addLegend labelFormat addLayersControl layersControlOptions
+#' %>%
 #' @importFrom sp proj4string SpatialPoints CRS spTransform coordinates
 #' @importFrom grDevices colorRampPalette
 #' @importFrom dplyr %>%
+#' @importFrom raster extent
 #'
 #' @param result The resulting matrix of the function 'genAlgo' or
 #' 'windfarmGA'. (matrix)
@@ -64,7 +66,7 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE){
 
   # extent(Polygon1)[4]
   # headLo <- c(mean(result[,1]), max(result[,2]))
-  headLo <- c(mean(extent(Polygon1)[1:2]), max(extent(Polygon1)[4]))
+  headLo <- c(mean(raster::extent(Polygon1)[1:2]), max(raster::extent(Polygon1)[4]))
 
   colCir <- grDevices::colorRampPalette(c('green','yellow','red','darkred'));
   br = length(levels(factor(result$AbschGesamt)))
@@ -93,7 +95,6 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE){
   ## Start a Leaflet Map with OSM background and another Tile.
   map <- leaflet::leaflet() %>%
     leaflet::addTiles(group = "OSM (default)") %>%
-
     leaflet::addProviderTiles("Stamen.Toner", group = "Toner") %>%
     ## Write a Popup with the energy output
     leaflet::addPopups(headLo[1], (headLo[2]+0.0002), group = "Title",
@@ -101,10 +102,9 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE){
         round(result$EnergyOverall[[1]],2),"kWh</b>"),
         options = leaflet::popupOptions(closeButton = T,
         closeOnClick = T)) %>%
-
-    ## Add the turbine symbols
-    leaflet::addMarkers(lng=result[,1], lat=result[,2],
-               icon= turbine_icon[1], popup=listPopup, group="Turbines") %>%
+    ## Add the Polygon
+    leaflet::addPolygons(data = Polygon1, group = "Polygon",
+                fill=TRUE,fillOpacity = 0.4) %>%
 
     ## Create Circles in Map
     leaflet::addCircleMarkers(lng=result[,1],
@@ -116,11 +116,9 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE){
                      stroke = T, fillOpacity = 0.8,
                      group="Wake_Circles") %>%
     # hideGroup(group="Wake_Circles") %>%
-
-
-    ## Add the Polygon
-    leaflet::addPolygons(data = Polygon1, group = "Polygon",
-                fill=TRUE,fillOpacity = 0.4) %>%
+    ## Add the turbine symbols
+    leaflet::addMarkers(lng=result[,1], lat=result[,2],
+               icon= turbine_icon[1], popup=listPopup, group="Turbines") %>%
 
     ## Add legend of Wake effects
     # leaflet::addLegend(position = "topleft",
