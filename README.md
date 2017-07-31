@@ -8,7 +8,7 @@ The latest version of the package can be downloaded from GitHub with:
 # install.packages("devtools")
 devtools::install_github("YsoSirius/windfarmGA")
 ```
-and version 1.1 via CRAN with:
+and version 1.1.1 via CRAN with:
  ```sh
 install.packages("windfarmGA")
 ```
