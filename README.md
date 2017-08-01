@@ -38,8 +38,8 @@ The genetic algorithm is designed to optimize small wind farms up
 ## Create an input Polygon
 - Input Polygon by source
  ```sh
-dsn <- "Source of the Polygon File"
-layer <- "Name of Polygon"
+dsn <- "Path to the Shapefile"
+layer <- "Name of the Shapefile"
 Polygon1 <- rgdal::readOGR(dsn = dsn, layer = layer)
 plot(Polygon1, col = "blue")
 ```
