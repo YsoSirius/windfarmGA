@@ -1,5 +1,9 @@
+<p align="center">
+  <img src="windfarmGA.png" width="200"/>
+</p>
+
 # windfarmGA
-R package to optimize the layout of a windfarm.
+This is an R package to optimize the layout of windfarms.
 The package is also hosted on CRAN and can be found at https://CRAN.R-project.org/package=windfarmGA
 
 # Installation
