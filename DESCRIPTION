@@ -1,7 +1,7 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
-Version: 1.1
-Date: 2017-06-20
+Version: 1.1.1
+Date: 2017-07-25
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
 Description: The genetic algorithm is designed to optimize small wind farms consisting 
