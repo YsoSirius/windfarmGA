@@ -229,8 +229,8 @@ A full documentation of the genetic algorithm is given in my master thesis, whic
 https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf
 
 # Shiny Windfarm Optimization
-I developed a Shiny App for the Genetic Algorithm, which can be found here: https://windfarmga.shinyapps.io/windga_shiny/
-Unfortunately, as an optimization run takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time. 
+I also made a Shiny App for the Genetic Algorithm, which can be found here: https://windfarmga.shinyapps.io/windga_shiny/
+Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time. 
 
 # Full Optimization example:
  ```sh
