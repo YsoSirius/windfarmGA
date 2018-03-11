@@ -1,7 +1,8 @@
 .Rproj.user
-windfarmGA.Rproj
+windfarmGAParallel.Rproj
 .Rbuildignore
 .Rprofile
+.RData
 .Rhistory
 srtm*
 readme.txt

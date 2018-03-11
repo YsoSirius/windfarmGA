@@ -99,6 +99,13 @@ item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently
 only cover Austria. This variable is only used if weibull==TRUE. (list)}
+
+\item{Parallel}{Boolean value, indicating whether parallel processing
+should be used. The snow and doSNOW packages are used for parallel 
+processing.}
+
+\item{numCluster}{If Parallel is TRUE, this variable defines the number
+of clusters to be used.}
 }
 \value{
 Assigns the needed input values and starts an optimization run.
@@ -179,14 +186,23 @@ result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=Rotor,fcrR=fcrR,
              referenceHeight = 50,RotorHeight = 100)
 PlotWindfarmGA(result = result, Polygon1 = Polygon1)
 
-## Start the same optimization run, only with hexagonal grid cells.
-result <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
+## Start the same optimization run, with parallel processing.
+result_par <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
+             fcrR=fcrR,iteration=10, vdirspe = vdirspe, crossPart1 = "EQU",
+             selstate="FIX",mutr=0.8,Proportionality = 1,
+             SurfaceRoughness = 0.3, topograp = FALSE,elitism=TRUE,
+             nelit = 7, trimForce = TRUE,referenceHeight = 50,
+             RotorHeight = 100, Parallel = TRUE, numCluster = 3)
+PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
+
+## Start the same optimization run, with hexagonal grid cells.
+result_hex <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
              fcrR=fcrR,iteration=10, vdirspe = vdirspe, crossPart1 = "EQU",
              selstate="FIX",mutr=0.8,Proportionality = 1,
              SurfaceRoughness = 0.3, topograp = FALSE,elitism=TRUE,
              nelit = 7, trimForce = TRUE,referenceHeight = 50,
              RotorHeight = 100)
-PlotWindfarmGA(result = result, GridMethod = "h", Polygon1 = Polygon1)
+PlotWindfarmGA(result = result_hex, GridMethod = "h", Polygon1 = Polygon1)
 
 ## Run an optimization with the Weibull parameters included in the package.
 result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,

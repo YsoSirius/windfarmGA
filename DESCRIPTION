@@ -1,21 +1,20 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
-Version: 1.1.1
-Date: 2017-07-25
+Version: 1.2
+Date: 2018-03-07
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
-Description: The genetic algorithm is designed to optimize small wind farms consisting 
-    of up to 50 turbines. The algorithm works with a fixed amount of turbines, a fixed 
+Description: The genetic algorithm is designed to optimize small wind farms with
+    irregular shapes. The algorithm works with a fixed amount of turbines, a fixed
     rotor radius and a mean wind speed value for every incoming wind direction.
-    If required, it can include a terrain effect model which downloads an 
-    'SRTM' elevation model automatically and loads a Corine Land Cover raster, 
-    which has to be downloaded previously. 
-    Further information can be found in the description of the function 'windfarmGA'. 
-    To start an optimization run, either the function 'windfarmGA' or 'genAlgo' can 
-    be used. The function 'windfarmGA' checks the user inputs interactively and then 
-    runs the function 'genAlgo'. If the input parameters are already known, an 
-    optimization can be run directly via the function 'genAlgo'. 
-    Their output is identical.
+    If required, it can include a terrain effect model which downloads an
+    'SRTM' elevation model automatically and loads a Corine Land Cover raster,
+    which has to be downloaded previously. Further information can be found in the
+    description of the function 'windfarmGA'. To start an optimization run, either the
+    function 'windfarmGA' or 'genAlgo' can be used. The function 'windfarmGA' checks
+    the user inputs interactively and then runs the function 'genAlgo'. If the input
+    parameters are already known, an optimization can be run directly via the function
+    'genAlgo'. Their output is identical.
 Depends:
     R (>= 3.2.3)
 Imports:
@@ -34,17 +33,21 @@ Imports:
     rgeos (>= 0.3-11),
     RgoogleMaps (>= 1.2.0.7),
     googleVis (>= 0.5.9),
+    foreach (>= 1.4.3),
+    parallel (>= 3.4.3),
+    doParallel (>= 1.0.11),
     rgl (>= 0.96.0),
     leaflet (>= 1.1.0),
     methods (>= 3.2.5),
     spatstat (>= 1.42-2),
     RandomFields (>= 3.1.50),
+    magrittr (>= 1.5),
     grDevices,
     graphics,
     stats,
     utils
-Suggests:
-    magrittr
 LazyData: TRUE
 License: MIT + file LICENSE
+URL: https://github.com/YsoSirius/windfarmGA
+BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.0.1

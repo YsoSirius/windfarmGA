@@ -4,7 +4,7 @@
 #' turbines.
 #'
 #' @export
-#' @importFrom dplyr select group_by summarise_each %>%
+#' @importFrom dplyr select group_by summarise_all %>%
 #' @importFrom utils globalVariables
 #'
 #' @param mut A binary matrix with the mutated individuals (matrix)
@@ -95,12 +95,12 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
     welche <- which(e==TRUE);
 
     trimForce <- toupper(trimForce)
-    if (1==1){
+    # if (1==1){
 
       # Calculate probability, that Turbine is selected to be eliminated.
       indivprop <- dplyr::select(allparks, Rect_ID, Parkfitness, AbschGesamt);
       # Group mean wake effect and fitness value of a grid cell.
-      indivprop <- indivprop %>% dplyr::group_by(Rect_ID) %>% dplyr::summarise_each(dplyr::funs(mean));
+      indivprop <- indivprop %>% dplyr::group_by(Rect_ID) %>% dplyr::summarise_all(dplyr::funs(mean));
 
       k <- 0.5
 
@@ -129,7 +129,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
       prob1 <- propwelche$Prop;
       ## P2 - Adding Turbines
       prob2 <- propwelcheN$Prop;
-    }
+    # }
 
     if (zviel != 0) {
       if (zviel > 0) {

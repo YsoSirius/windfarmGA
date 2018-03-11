@@ -14,7 +14,7 @@
 #' @importFrom sp spTransform proj4string
 #' @importFrom utils read.csv
 #' @importFrom grDevices colorRampPalette
-#' @importFrom dplyr select group_by summarise_each %>% funs
+#' @importFrom dplyr select group_by summarise_all %>% funs
 #' @importFrom graphics plot.new
 #' @importFrom stats runif
 #'
@@ -81,7 +81,11 @@
 #' scale parameter raster a of the Weibull distribution. If no list is given,
 #' then rasters included in the package are used instead, which currently
 #' only cover Austria. This variable is only used if weibull==TRUE. (list)
-#'
+#' @param Parallel Boolean value, indicating whether parallel processing
+#' should be used. The snow and doSNOW packages are used for parallel 
+#' processing.
+#' @param numCluster If Parallel is TRUE, this variable defines the number
+#' of clusters to be used.
 #'
 #' @return The result of this run is a matrix of all relevant output
 #' parameters. This output can be used for several plotting functions.
@@ -99,12 +103,11 @@
 #' proj4string(Polygon1) <- CRS(Projection)
 #' plot(Polygon1,axes=TRUE)
 #'
-#' ## Create a uniform and unidirectional wind data.frame and plots the
+#' ## Create a uniform and unidirectional wind data.frame and plot the
 #' ## resulting wind rose
-#' ## Uniform wind speed and single wind direction
 #' data.in <- as.data.frame(cbind(ws=12,wd=0))
-#' # windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#' #                dir = data.in$wd, dirres=10, spdmax=20)
+#' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+#'                 dir = data.in$wd, dirres=10, spdmax=20)
 #'
 #' ## Runs an optimization run for 10 iterations (iteration) with the
 #' ## given shapefile (Polygon1), the wind data.frame (data.in),
@@ -117,7 +120,17 @@
 #'              referenceHeight = 50,RotorHeight = 100)
 #' PlotWindfarmGA(result = result, Polygon1 = Polygon1)
 #'
-#' ## Runs the same optimization run, only this time with hexagonal grids.
+#' ## Runs the same optimization, but with parallel processing and 3 cores.
+#' result_par <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
+#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
+#'                  selstate="FIX",mutr=0.8, Proportionality = 1,
+#'                  SurfaceRoughness = 0.3, topograp = FALSE,
+#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
+#'                  referenceHeight = 50,RotorHeight = 100, 
+#'                  Parallel = TRUE, numCluster = 3)
+#' PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
+#' 
+#' ## Runs the same optimization, this time with hexagonal grids.
 #' result_hex <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
 #'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
 #'                  selstate="FIX",mutr=0.8, Proportionality = 1,
@@ -154,14 +167,67 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                               RotorHeight,SurfaceRoughness, Proportionality,
                               iteration, mutr,vdirspe, topograp, elitism, nelit,
                               selstate,crossPart1,trimForce, Projection,
-                              sourceCCL,sourceCCLRoughness, weibull, weibullsrc){
+                              sourceCCL,sourceCCLRoughness, weibull, weibullsrc,
+                              Parallel, numCluster){
   oldpar <- graphics::par(no.readonly = T)
   plot.new();
   graphics::par(ask=F);
 
+  ## Grid size calculation
   resol2 <- fcrR*Rotor
+  
+  ## Max Amount of individuals in the Crossover-Method
   CrossUpLimit <- 300
-
+  
+  ## Is Elevation missing? - Default FALSE
+  if (missing(topograp)){
+    topograp=F
+  }  
+  
+  ## Is Parallel missing? - Default FALSE
+  if (missing(Parallel)){
+    Parallel=F
+  }
+  ## Is number of Clusters missing? - Default 1
+  if (missing(numCluster)){
+    numCluster=1
+  }
+  ## Is Parallel processing activated? Check the max number of cores and set to max iv value exceeds.
+  if (Parallel == TRUE) {
+    numPossClus <- as.integer(Sys.getenv('NUMBER_OF_PROCESSORS'))
+    if (numCluster > numPossClus) {
+      numCluster <- numPossClus
+    }
+  }
+  
+  ## Is Weibull information missing? - Default FALSE
+  if (missing(weibull)){
+    weibull=F
+  }
+  ## Is Weibull activated? If no source is given, take values from package
+  if (weibull==T){
+    cat("\nWeibull Distribution is used.")
+    if (missing(weibullsrc)){
+      cat("\nWeibull Informations from package will be used.\n")
+      path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
+      k_weibull = ""
+      a_weibull = ""
+      # load(file = paste0(path, "k_weibull.rda"))
+      # load(file = paste0(path, "a_weibull.rda"))
+      # weibullsrc = list(k_param, a_param)
+      k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
+      a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
+      weibullsrc = list(k_weibull, a_weibull)    
+    } else {
+      cat("\nWeibull Informations are given.\n")
+      weibullsrc <- weibullsrc
+    }
+  }
+  if (missing(weibullsrc)){
+    weibullsrc=""
+  }
+  
+  
   ## Check if Input Data is correct and prints it out.
   if  (crossPart1!= "EQU" & crossPart1 !="RAN") {
     crossPart1 <- readinteger()
@@ -175,11 +241,11 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                      "Elitarism"=elitism, "Selection Method"=selstate,
                                      "Trim Force Method Used"=trimForce,"Crossover Method Used"=crossPart1,
                                      "Reference Height"= referenceHeight, "Rotor Height"=RotorHeight,
-                                     "Resolution" = resol2));
+                                     "Resolution" = resol2, "Parallel Processing" = Parallel, 
+                                     "Number Clusters" = numCluster, "Active Weibull" = weibull));
   inputWind <- list(Windspeed_Data=vdirspe)
   print(inputData);print(inputWind)
   readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")
-
 
   ##  Project the Polygon to LAEA if it is not already.
   if (missing(Projection)) {
@@ -234,6 +300,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
   if (topograp == FALSE){
     cat("Topography and orography are not taken into account.")
+    srtm_crop=""
+    cclRaster=""
+    
   } else if (topograp == TRUE){
     cat("Topography and orography are taken into account.")
 
@@ -279,24 +348,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   }
 
-  if (missing(weibull)){
-    weibull=F
-  }
-  if (weibull==T){
-    cat("\nWeibull Distribution is used.")
-    if (missing(weibullsrc)){
-      cat("\nWeibull Informations from package will be used.\n")
-      path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-      k_param = ""
-      a_param = ""
-      load(file = paste0(path, "k_weibull.rda"))
-      load(file = paste0(path, "a_weibull.rda"))
-      weibullsrc = list(k_param, a_param)
-    } else {
-      cat("\nWeibull Informations are given.\n")
-      weibullsrc <- weibullsrc
-    }
-  }
+
 
   ## Start the GA
   cat("\nStart Genetic Algorithm ...")
@@ -308,7 +360,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      RotorHeight = RotorHeight,SurfaceRoughness = SurfaceRoughness,
                      Polygon = Polygon1,resol1 = resol2,rot=Rotor, dirspeed = vdirspe,
                      srtm_crop = srtm_crop,topograp = topograp,cclRaster = cclRaster,
-                     weibull = weibull, weibullsrc = weibullsrc)
+                     weibull = weibull, weibullsrc = weibullsrc, 
+                     Parallel=Parallel, numCluster=numCluster)
 
     } else {
       getRectV <- getRects(mut1, Grid)
@@ -316,7 +369,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      RotorHeight = RotorHeight,SurfaceRoughness = SurfaceRoughness,
                      Polygon = Polygon1,resol1 = resol2,rot = Rotor, dirspeed = vdirspe,
                      srtm_crop = srtm_crop,topograp = topograp,cclRaster = cclRaster,
-                     weibull = weibull, weibullsrc = weibullsrc)
+                     weibull = weibull, weibullsrc = weibullsrc, 
+                     Parallel=Parallel, numCluster=numCluster)
     }
 
     allparks <- do.call("rbind",fit);
@@ -370,18 +424,20 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     ## ALLPARKS RECT ID NOT CORRECT
     allparksNewplot <- dplyr::select(allparks,AbschGesamt,Rect_ID,Parkfitness);
+
     allparksNewplot <- allparksNewplot %>% dplyr::group_by(Rect_ID) %>%
-                      dplyr::summarise_each(dplyr::funs(mean));
+                      dplyr::summarise_all(dplyr::funs(mean));
+
     if(any(allparksNewplot$Rect_ID %in% Grid$ID == F)){
-      cat(paste("Index of Grid not correct. Bigger than maximum Grid? Fix BUG"))
-      break()
+      # cat(paste("Index of Grid not correct. Bigger than maximum Grid? Fix BUG"))
+      stop("Index of Grid not correct. Bigger than maximum Grid? Fix BUG")
     }
 
     graphics::par(mfrow=c(1,2))
-    plot(Polygon1, main=paste(i, "Round \n Best Energy Output: ", x,"\n Efficiency: ", y ),
+    plot(Polygon1, main=paste(i, "Round \n Best Energy Output: ", x,"W/h \n Efficiency: ", y , "%"),
          sub =paste("\n Number of turbines: ", length(e)));    plot(dry.grid.filtered, add=T)
     graphics::points(bestPaEn[[i]]$X,bestPaEn[[i]]$Y,col=Col,pch=20,cex=1.5);
-    plot(Polygon1, main=paste(i, "Round \n Best Efficiency Output: ", x1, "\n Efficiency: ", y1 ),
+    plot(Polygon1, main=paste(i, "Round \n Best Efficiency Output: ", x1, "W/h \n Efficiency: ", y1, "%"),
          sub =paste("\n Number of turbines: ", length(e1)));  plot(dry.grid.filtered, add=T)
     graphics::points(bestPaEf[[i]]$X,bestPaEf[[i]]$Y,col=Col1,pch=20,cex=1.5)
 
@@ -456,7 +512,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
       u <- round(u,2); teil<-round(teil,3);
 
-      cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"\n"))
+      cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"W/h n"))
       meanunt <- meant0-meant1;
       beorwor[[i]] <- cbind(maxunt, meanunt)
     }
@@ -478,8 +534,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     cat(paste("Selection  -  Amount of Individuals: ",length(selec6best_bin[1,-1]),"\n"))
     Trus1 <- colSums(selec6best_bin)[-1] == n
     if (any(Trus1 == FALSE)){
-      print("Number of turbines is not as required. Trus1. Fix BUG")
-      break()
+      # print("Number of turbines is not as required. Trus1. Fix BUG")
+      stop("Number of turbines is not as required. Trus1. Fix BUG")
     }
     nindivsel <- length(selec6best_bin[1,-1]);
 
@@ -516,9 +572,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     cat(paste("\nTrimToN    -  Amount of Individuals: ",length(mut1[1,])))
     Trus3 <- colSums(mut1) == n
     if (any(Trus3 == FALSE)){
-      print(paste("Number of turbines is not as required. Trus3. Fix Bug. Amount:",
-                  length(Trus3[Trus3==FALSE])))
-      break()
+      # print(paste("Number of turbines is not as required. Trus3. Fix Bug. Amount:",
+      #             length(Trus3[Trus3==FALSE])))
+      stop("Number of turbines is not as required. Trus3. Fix Bug.")
     }
 
     nindiv[[i]] <- cbind(nindivfit,nindivsel,nindivcros,nindivmut)

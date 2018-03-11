@@ -5,7 +5,8 @@
 \title{Evaluate the Individual Fitness values}
 \usage{
 fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
-  resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull, weibullsrc)
+  resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull, weibullsrc,
+  Parallel, numCluster)
 }
 \arguments{
 \item{selection}{A list containing all individuals of the current
@@ -48,6 +49,13 @@ item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently
 only cover Austria. This variable is only used if weibull==TRUE. (list)}
+
+\item{Parallel}{Boolean value, indicating whether parallel processing
+should be used. The parallel and doParallel packages are used for parallel 
+processing.}
+
+\item{numCluster}{If Parallel is TRUE, this variable defines the number
+of clusters to be used.}
 }
 \value{
 Returns a list with every individual, consisting of X & Y
@@ -91,15 +99,23 @@ startsel <- StartGA(Grid,10,20);
 wind <- as.data.frame(cbind(ws=12,wd=0))
 fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-               dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="")
+               dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
+               Parallel = FALSE)
+head(fit)
+
+## Calculate the fitness with parallel processing
+fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
+               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+               dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
+               Parallel = TRUE, numCluster = 3)
 head(fit)
 
 ## Calculate fitness values with the Weibull parameters included in the
 ## package. Only available for Austria.
 fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-              dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="",
-              weibull=T)
+              dirspeed = wind, srtm_crop="",topograp=FALSE, cclRaster="",
+              weibull=T, Parallel = FALSE)
 head(fit)
 
 ## Calculate fitness values with given Weibull rasters.
@@ -111,7 +127,7 @@ weibullrasters <- list(raster(kraster), raster(araster))
 fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="",
-               weibull=T, weibullsrc = weibullrasters)
+               weibull=T, weibullsrc = weibullrasters, Parallel = FALSE)
 head(fit)
 }
 

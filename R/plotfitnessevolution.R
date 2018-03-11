@@ -26,6 +26,7 @@
 plotfitnessevolution <- function(result,spar=0.1){
   # library(stats)
   opar <- par(no.readonly = T)
+  
   x <- result[,4];
   x <- x[-c(1)];
   x1 <- do.call("rbind",x);

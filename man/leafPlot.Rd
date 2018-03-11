@@ -4,7 +4,7 @@
 \alias{leafPlot}
 \title{Leaflet Plot of a Wind Park}
 \usage{
-leafPlot(result, Polygon1, which = 1, orderitems = TRUE)
+leafPlot(result, Polygon1, which = 1, orderitems = TRUE, GridPol)
 }
 \arguments{
 \item{result}{The resulting matrix of the function 'genAlgo' or
@@ -17,6 +17,9 @@ The default is 1 (the best resulting wind farm). (numeric)}
 
 \item{orderitems}{A logical value indicating whether the results should
 be ordered by energy values (TRUE) or chronologically (FALSE). (logical)}
+
+\item{GridPol}{The output grid polygon of the \code{\link{GridFilter}} or
+\code{\link{HexaTex}} functions. (SpatialPolygons)}
 }
 \value{
 Returns a leaflet map. (leaflet)
@@ -35,6 +38,17 @@ leafPlot(result = resulthex, Polygon1 = polygon, which = 1)
 ## Plot the last wind farm (ordered by chronology).
 leafPlot(result = resulthex, Polygon1 = polygon, orderitems = F,
          which = 1)
+         
+load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
+## Plot the best wind farm on a leaflet map with the rectangular Grid
+Grid <- GridFilter(polygon, resol = 170, prop = 0.4)
+leafPlot(result = resultrect, Polygon1 = polygon, which = 1, 
+         GridPol = Grid[[2]])
+
+## Plot the last wind farm with hexagonal Grid
+Grid <- HexaTex(polygon, size = 85)
+leafPlot(result = resulthex, Polygon1 = polygon, which = 1, 
+         GridPol = Grid[[2]])
 }
 }
 \author{

@@ -104,6 +104,9 @@ GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection,...){
   ## Take the resulting individual coordinates and project them to Lat/Lon. Used for Google Mapss
   PointSol <- data.frame(dplyr::select(Solution,X,Y)); names(PointSol) <- c("lon","lat")
 
+  Infos <- data.frame(dplyr::select(Solution,EfficAllDir,EnergyOverall,AbschGesamt)); 
+  names(Infos) <- c("Efficiency in %","Energy in kW/h", "Wake Influence in %")
+  
   PointSol1 <- sp::SpatialPoints(sp::coordinates(PointSol), proj4string = raster::crs(ProjLAEA))
   PointSol1 <- sp::spTransform(PointSol1, CRSobj = raster::crs(ProjLonLat))
   PointSol1 <- as.data.frame(PointSol1)
@@ -156,6 +159,10 @@ GooglePlot <- function(result,Polygon1,best=1,plotEn=1, Projection,...){
                                       border = NULL, lwd = 1, add=T)
   }
 
+  par(op)
+  
+  PointSol1 <- cbind(PointSol1,Infos)
+  
   invisible(PointSol1)
 }
 

@@ -119,8 +119,7 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid=FALSE){
 
 
   rect_Nu <- rgeos::gCentroid(dry.grid.filtered,byid = T);
-  centpo <- sp::coordinates(rect_Nu);
-  centpo <- as.data.frame(centpo)
+  centpo <- as.data.frame(sp::coordinates(rect_Nu))
   centpo$ID <- 1:nrow(centpo);
   names(centpo) <- c("X","Y","ID")
   centpo <- dplyr::select(centpo, ID,X,Y)

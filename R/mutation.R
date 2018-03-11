@@ -36,10 +36,10 @@ mutation          <- function(a,p) {
   for (i in 1:length(a)) {
     ## for every element in the 2 children, get a random number between 1 & 0
     rnd <- runif(n = 1,min = 0,max = 1)
-    ## If the random number is smaller than p (0.1), the gene is switched
+    ## If the random number is smaller than p, the gene is switched
     ## (from 1 to 0 | from 0 to 1)
     if (rnd < p) {
-      if (a[i] == "0") {a[i] <- 1} else {a[i] <- 1}
+      if (a[i] == "0") {a[i] <- 1} else {a[i] <- 0}
     }
   }
   return(a)

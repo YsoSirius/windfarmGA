@@ -11,7 +11,6 @@
 #' crop extent mask projectRaster
 #' @importFrom dplyr filter select
 #' @importFrom sp SpatialPoints coordinates spTransform proj4string
-#' @importFrom data.table data.table
 #' @importFrom calibrate textxy
 #' @importFrom maptools elide
 #' @importFrom graphics mtext plot par points
@@ -174,11 +173,9 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
   cT <- 0.88;   air_rh <- 1.225;   k = 0.075;
   ## Extract values from windraster, which will be 1 in this case, as they will get multiplied
   ## by the incoming wind speed.
-  windpo <- raster::extract(x= windraster, y = as.matrix((sel1)), buffer=resol*1, small=T,fun= mean,na.rm=T);
+  windpo <- raster::extract(x= windraster, y = as.matrix((sel1)), 
+                            buffer=resol*1, small=T,fun= mean,na.rm=T);
 
-  if (missing(weibull)==TRUE) {
-    weibull=F
-  }
 
   ## Terrain Effect Model:
   if (topograp == TRUE) {
@@ -252,16 +249,20 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
 
   }
 
+  
+  if (missing(weibull)) {
+    weibull=F
+  }
   if (weibull==T){
-    if (missing(weibullsrc)){
+    if (missing(weibullsrc) | is.null(weibullsrc)) {
       cat("\nWeibull Informations from package will be used.\n")
       path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
       k_param = ""
       a_param = ""
-      load(file = paste0(path, "k_weibull.rda"))
-      load(file = paste0(path, "a_weibull.rda"))
-      weibullsrc = list(k_param, a_param)
-    }
+      k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
+      a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
+      weibullsrc = list(k_weibull, a_weibull)
+      }
   }
 
   ## For every wind direction, calculate the energy output. Do so by rotating Polygon for all angles and
@@ -275,25 +276,16 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     ## Get mean windspeed for every turbine location from windraster
     pointWind <- windpo * dirSpeed$ws[index]
 
-
-    # cat(pointWind)
-
     if (weibull==T){
       k_param <- weibullsrc[[1]]
       a_param <- weibullsrc[[2]]
-
-      PolygonRaster <- sp::spTransform(polygon1, CRSobj = sp::proj4string(a_param))
-      k_par_crop <- raster::crop(x = k_param, y = raster::extent(PolygonRaster))
-      a_par_crop <- raster::crop(x = a_param, y = raster::extent(PolygonRaster))
-      weibl_k <- raster::mask(x = k_par_crop, mask = PolygonRaster)
-      weibl_a <- raster::mask(x = a_par_crop, mask = PolygonRaster)
-      Erwartungswert <- weibl_a * (gamma(1 + (1/weibl_k)))
-
-      weibl_k <- projectRaster(weibl_k, crs = proj4string(polygon1))
-      weibl_a <- projectRaster(weibl_a, crs = proj4string(polygon1))
+    
+      Erwartungswert <- a_param * (gamma(1 + (1/k_param)))
       Erwartungswert <- projectRaster(Erwartungswert, crs = proj4string(polygon1))
 
       if (PlotCalc == TRUE){
+          weibl_k <- projectRaster(k_param, crs = proj4string(polygon1))
+          weibl_a <- projectRaster(a_param, crs = proj4string(polygon1))
           par(mfrow=c(3,1), ask=F)
           plot(Erwartungswert, main="Mean Weibull"); plot(polygon1, add=T)
           plot(weibl_a, main="A Weibull Parameter"); plot(polygon1, add=T)
@@ -339,7 +331,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,SurfaceRoughness
     }
 
     ## If Height is taken into account. 3D Modelling of Wake and Overlapping Areas
-    DatFram <- data.table::data.table(cbind(pointWind,xyBgldMa)); colnames(DatFram)=c("Windmittel","X","Y");
+    DatFram <- as.data.frame(cbind(pointWind,xyBgldMa)); colnames(DatFram)=c("Windmittel","X","Y");
 
     ## Get the influecing points given with incoming wind direction angle and reduce then to data frame
     BgleInf <- InfluPoints(t = xyBgldMa,wnkl =  wnkl, dist = distanz, polYgon = polygon1, dirct = angle)

@@ -29,6 +29,7 @@
 plotCloud <- function(result,pl=FALSE){
 
   opar <- graphics::par(no.readonly = T)
+  
   clouddata <- result[,7]
   EffCloud <- lapply(clouddata, function(x) x = x[[1]]);
   EneCloud <- lapply(clouddata, function(x) x = x[[2]]);

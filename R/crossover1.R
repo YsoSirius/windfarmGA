@@ -115,8 +115,8 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
   nI <- do.call("cbind", all);
 
   if (length(fitChi) != ncol(nI)){
-    cat(paste("\nCrossover. Amount of Turbines is wrong. Fix BUG"))
-    break()
+    # cat(paste("\nCrossover. Amount of Turbines is wrong. Fix BUG"))
+    stop("\nCrossover. Amount of Turbines is wrong. Fix BUG")
   }
 
   cat(paste("\nHow many parental pairs are at hand: ",length(z)))

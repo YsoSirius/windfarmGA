@@ -7,9 +7,11 @@
 #'
 #' @export
 #'
-#'
 #' @importFrom raster extent rasterize
 #' @importFrom dplyr select
+#' @importFrom foreach foreach %dopar% 
+#' @importFrom doParallel registerDoParallel
+#' @importFrom parallel makeCluster stopCluster
 #'
 #' @param selection A list containing all individuals of the current
 #' population. (list)
@@ -39,6 +41,11 @@
 #' scale parameter raster a of the Weibull distribution. If no list is given,
 #' then rasters included in the package are used instead, which currently
 #' only cover Austria. This variable is only used if weibull==TRUE. (list)
+#' @param Parallel Boolean value, indicating whether parallel processing
+#' should be used. The parallel and doParallel packages are used for parallel 
+#' processing.
+#' @param numCluster If Parallel is TRUE, this variable defines the number
+#' of clusters to be used.
 #'
 #' @return Returns a list with every individual, consisting of X & Y
 #' coordinates, rotor radii, the runs and the selected grid cell IDs, and
@@ -74,15 +81,23 @@
 #' wind <- as.data.frame(cbind(ws=12,wd=0))
 #' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-#'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="")
+#'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
+#'                Parallel = FALSE)
+#' head(fit)
+#' 
+#' ## Calculate the fitness with parallel processing
+#' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
+#'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+#'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
+#'                Parallel = TRUE, numCluster = 3)
 #' head(fit)
 #'
 #' ## Calculate fitness values with the Weibull parameters included in the
 #' ## package. Only available for Austria.
 #' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
 #'               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-#'               dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="",
-#'               weibull=T)
+#'               dirspeed = wind, srtm_crop="",topograp=FALSE, cclRaster="",
+#'               weibull=T, Parallel = FALSE)
 #' head(fit)
 #'
 #' ## Calculate fitness values with given Weibull rasters.
@@ -94,7 +109,7 @@
 #' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
 #'                dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="",
-#'                weibull=T, weibullsrc = weibullrasters)
+#'                weibull=T, weibullsrc = weibullrasters, Parallel = FALSE)
 #' head(fit)
 #' }
 #'
@@ -102,8 +117,19 @@
 fitness           <- function(selection, referenceHeight, RotorHeight,
                               SurfaceRoughness, Polygon, resol1,
                               rot, dirspeed,srtm_crop,topograp,cclRaster,
-                              weibull, weibullsrc){
+                              weibull, weibullsrc, Parallel, numCluster){
 
+  ## Missing ARguments ? ToDo: beautify this #############
+  if (missing(srtm_crop)){
+    srtm_crop=NULL
+  }
+  if (missing(cclRaster)){
+    cclRaster=NULL
+  }  
+  #############
+  
+  
+  ## Winddata Formatting ###################
   dirspeed$wd <- round(dirspeed$wd,0)
   dirspeed$wd <-  round(dirspeed$wd/100,1)*100;
   ## If no probabilites are given, assign uniform distributed ones.
@@ -136,32 +162,80 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   }
   probabDir <- dirspeed$probab;
   pp <- sum(probabDir)/100;   probabDir <- probabDir/pp;
-
-  windraster <- raster::rasterize(Polygon, raster::raster(raster::extent(Polygon), ncol=180, nrow=180),field=1)
-
+  windraster <- raster::rasterize(Polygon, raster::raster(raster::extent(Polygon), 
+                                                          ncol=180, nrow=180),field=1)
+  ###################
+  
+  ## Weibull ###################
   if (missing(weibull)){
-    weibull=F
+    weibull=FALSE
   }
   if (missing(weibullsrc) & weibull==T){
     cat("\nWeibull Informations from package will be used.\n")
     path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-    k_param = ""
-    a_param = ""
-    load(file = paste0(path, "k_weibull.rda"))
-    load(file = paste0(path, "a_weibull.rda"))
-    weibullsrc = list(k_param, a_param)
+    k_weibull = ""
+    a_weibull = ""
+    k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
+    a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
+    weibullsrc = list(k_weibull, a_weibull)    
   }
-
-  e <- vector("list",length(selection)); euniqu <- vector("list",length(selection)) ;
+  if (missing(weibullsrc) & weibull==F){
+    weibullsrc = NULL
+  }
+  if (weibull == TRUE) {
+    PolygonRaster <- sp::spTransform(Polygon, CRSobj = sp::proj4string(a_weibull))
+    k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(PolygonRaster))
+    a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(PolygonRaster))
+    weibl_k <- raster::mask(x = k_par_crop, mask = PolygonRaster)
+    weibl_a <- raster::mask(x = a_par_crop, mask = PolygonRaster)
+    weibullsrc = list(weibl_k, weibl_a)
+  }
+  ###################
+  
+  ## Parallel Processing ###################
+  if (missing(Parallel)){
+    Parallel=F
+  }
+  
+  ## Calculate EnergyOutput for every config i and for every angle j - in Parallel
+  if (Parallel == TRUE) {
+    numPossClus <- as.integer(Sys.getenv('NUMBER_OF_PROCESSORS'))
+    if (numCluster > numPossClus) {
+      numCluster <- numPossClus -1
+    }
+    typeCluster = "PSOCK"
+    cl <- parallel::makeCluster(numCluster, type = typeCluster)
+    doParallel::registerDoParallel(cl)
+    # cl <- snow::makeCluster(numCluster, type = typeCluster)
+    # doSNOW::registerDoSNOW(cl)
+    e <- foreach::foreach(i=1:length(selection), .combine='c') %dopar% {
+      windfarmGA::calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, RotorHeight = RotorHeight,
+                  SurfaceRoughness = SurfaceRoughness, windraster = windraster, wnkl = 20, distanz=100000,
+                  polygon1 = Polygon, resol=resol1, RotorR = rot, dirSpeed = dirspeed, srtm_crop = srtm_crop,
+                  topograp = topograp,cclRaster = cclRaster, weibull = weibull, weibullsrc = weibullsrc)
+    }
+    parallel::stopCluster(cl)
+    # snow::stopCluster(cl)
+  } else {
+    e <- vector("list",length(selection));
+  }
+  ###################
+  
+  
+  euniqu <- vector("list",length(selection)) ;
   for (i in 1:length(selection)){
-    ## Calculate EnergyOutput for every config i and for every angle j
-    e[[i]] <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, RotorHeight = RotorHeight,
-                          SurfaceRoughness = SurfaceRoughness, windraster = windraster, wnkl = 20, distanz=100000,
-                          polygon1 = Polygon, resol=resol1, RotorR = rot, dirSpeed = dirspeed, srtm_crop = srtm_crop,
-                          topograp = topograp,cclRaster = cclRaster, weibull = weibull, weibullsrc = weibullsrc)
+    if (Parallel != TRUE) {
+      ## Calculate EnergyOutput for every config i and for every angle j - not Parallel
+      e[[i]] <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, RotorHeight = RotorHeight,
+                            SurfaceRoughness = SurfaceRoughness, windraster = windraster, wnkl = 20, distanz=100000,
+                            polygon1 = Polygon, resol=resol1, RotorR = rot, dirSpeed = dirspeed, srtm_crop = srtm_crop,
+                            topograp = topograp,cclRaster = cclRaster, weibull = weibull, weibullsrc = weibullsrc)
+      ee  <- lapply(e[[i]], function(x){split(x, duplicated(x$Punkt_id))$'FALSE'})
+    } else {
+      # Get a list from unique Grid_ID elements for every park configuration respective to every winddirection considered.
+      ee  <- lapply(e[i], function(x){split(x, duplicated(x$Punkt_id))$'FALSE'})
+    }
 
-    # Get a list from unique Grid_ID elements for every park configuration respective to every winddirection considered.
-    ee  <- lapply(e[[i]], function(x){split(x, duplicated(x$Punkt_id))$'FALSE'})
     # Select only relevant information from list
     ee  <- lapply(ee, function(x){dplyr::select(x,-Ax,-Ay,-Laenge_B,-Laenge_A,-Windmean,-WakeR,-A_ov, -Punkt_id)})
     # get Energy Output and Efficiency rate for every wind direction and make a data frame
@@ -201,18 +275,15 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   maxparkeff <- do.call("rbind", (lapply(euniqu, function(x) { x <- dplyr::select(x[1,],EnergyOverall)})))
 
   # Calculate Parkfitness for every individual.
-  #maxparkeff$Parkfitness <- maxparkeff$EnergyOverall/ (sum(maxparkeff$EnergyOverall))
-  #maxparkeff$Parkfitness <- maxparkeff$EnergyOverall/ (median(maxparkeff$EnergyOverall))
-  #maxparkeff$Parkfitness <- ((maxparkeff$EnergyOverall)*length(maxparkeff$EnergyOverall))/sum(maxparkeff$EnergyOverall);
   maxparkeff$Parkfitness <- maxparkeff$EnergyOverall
 
-  # And select only the Fitness Value
+  # Select only the Fitness Value
   maxparkeff <- dplyr::select(maxparkeff, Parkfitness)
 
   # Assign every park constellation the Parkfitness Value
   for (i in 1:length(euniqu)) {
     euniqu[i][[1]]$Parkfitness <- maxparkeff[i,]
-  };
+  }
 
   return(euniqu)
 }

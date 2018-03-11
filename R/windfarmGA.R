@@ -104,7 +104,12 @@
 #' scale parameter raster a of the Weibull distribution. If no list is given,
 #' then rasters included in the package are used instead, which currently
 #' only cover Austria. This variable is only used if weibull==TRUE. (list)
-#'
+#' @param Parallel Boolean value, indicating whether parallel processing
+#' should be used. The snow and doSNOW packages are used for parallel 
+#' processing.
+#' @param numCluster If Parallel is TRUE, this variable defines the number
+#' of clusters to be used.
+#' 
 #' @return Assigns the needed input values and starts an optimization run.
 #' The result of this run is a matrix of all relevant output parameters.
 #' This output is used for several plotting functions.
@@ -158,14 +163,23 @@
 #'              referenceHeight = 50,RotorHeight = 100)
 #' PlotWindfarmGA(result = result, Polygon1 = Polygon1)
 #'
-#' ## Start the same optimization run, only with hexagonal grid cells.
-#' result <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
+#' ## Start the same optimization run, with parallel processing.
+#' result_par <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
+#'              fcrR=fcrR,iteration=10, vdirspe = vdirspe, crossPart1 = "EQU",
+#'              selstate="FIX",mutr=0.8,Proportionality = 1,
+#'              SurfaceRoughness = 0.3, topograp = FALSE,elitism=TRUE,
+#'              nelit = 7, trimForce = TRUE,referenceHeight = 50,
+#'              RotorHeight = 100, Parallel = TRUE, numCluster = 3)
+#' PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
+#' 
+#' ## Start the same optimization run, with hexagonal grid cells.
+#' result_hex <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
 #'              fcrR=fcrR,iteration=10, vdirspe = vdirspe, crossPart1 = "EQU",
 #'              selstate="FIX",mutr=0.8,Proportionality = 1,
 #'              SurfaceRoughness = 0.3, topograp = FALSE,elitism=TRUE,
 #'              nelit = 7, trimForce = TRUE,referenceHeight = 50,
 #'              RotorHeight = 100)
-#' PlotWindfarmGA(result = result, GridMethod = "h", Polygon1 = Polygon1)
+#' PlotWindfarmGA(result = result_hex, GridMethod = "h", Polygon1 = Polygon1)
 #'
 #' ## Run an optimization with the Weibull parameters included in the package.
 #' result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
@@ -209,7 +223,8 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
                        iteration=100,referenceHeight=50,
                        RotorHeight=50,SurfaceRoughness=0.14, Proportionality=1,
                        mutr=0.001, elitism=TRUE, nelit=6,
-                       selstate="FIX", crossPart1="EQU",trimForce=TRUE, weibull, weibullsrc) {
+                       selstate="FIX", crossPart1="EQU",trimForce=TRUE, weibull, weibullsrc,
+                       Parallel, numCluster) {
   opar = par(no.readonly = T)
   par(mfrow=c(1,2), ask=F)
   ######## CHECK INPUT POLYGON
@@ -251,12 +266,12 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
   ######## CHECK INPUT GENETIC ALGORITHM
   ## Check if Crossover Method is chosen correctly.
   if (missing(crossPart1)) {crossPart1 <- readinteger()}
-  if  (crossPart1!= "EQU" & crossPart1 !="RAN") {
+  if (crossPart1!= "EQU" & crossPart1 !="RAN") {
     crossPart1 <- readinteger()
   }
   ## Check if Selection Method is chosen correctly.
   if (missing(selstate)) {selstate <- readinteger()}
-  if  (selstate!= "FIX" & selstate !="VAR") {
+  if (selstate!= "FIX" & selstate !="VAR") {
     selstate <- readintegerSel()
   }
 
@@ -304,9 +319,12 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
   }
 
 
+  if (missing(topograp)){
+    topograp=F
+  }    
   if (missing(weibull)){
     weibull=F
-  }
+  }  
   if (weibull==T){
     cat("\nWeibull Distribution is used.")
     if (missing(weibullsrc)){
@@ -325,16 +343,38 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
       weibullsrc <- weibullsrc
     }
   }
+  if (missing(weibullsrc)){
+    weibullsrc=""
+  }
 
+  if (missing(Parallel)){
+    Parallel <- F
+  }
+  if (missing(numCluster)){
+    numCluster <- 1
+  }
+  if (Parallel == TRUE) {
+    numPossClus <- as.integer(Sys.getenv('NUMBER_OF_PROCESSORS'))
+    if (numPossClus == 1) {
+      cat("\nOnly 1 core is available. Set Parallel to FALSE")
+      numCluster <- 1
+      Parallel <- FALSE
+    } 
+    if (numCluster > numPossClus) {
+      cat("\nNumber of clusters is bigger than the amount of available cores. Reduce to max.")
+      numCluster <- numPossClus
+    }
+  }
 
   ##########################################################
   ############### RUNNING GENETIC ALGORITHM
-  result <- genAlgo(Polygon1 = Polygon1, GridMethod = GridMethod, Rotor = Rotor, n=n, fcrR=fcrR, iteration=iteration, vdirspe = vdirspe,
+  result <- genAlgo(Polygon1 = Polygon1, GridMethod = GridMethod, Rotor = Rotor, n=n, fcrR=fcrR, 
+                    iteration=iteration, vdirspe = vdirspe,
                     topograp = topograp,referenceHeight = referenceHeight,RotorHeight = RotorHeight,
                     SurfaceRoughness = SurfaceRoughness,Proportionality = Proportionality,mutr = mutr,
                     elitism = elitism,nelit = nelit,selstate = selstate,crossPart1 = crossPart1,trimForce = trimForce,
                     Projection=Projection, sourceCCL = sourceCCL, sourceCCLRoughness = sourceCCLRoughness,
-                    weibull=weibull, weibullsrc=weibullsrc)
+                    weibull=weibull, weibullsrc = weibullsrc, Parallel=Parallel, numCluster=numCluster)
   par(opar)
   invisible(result)
 }

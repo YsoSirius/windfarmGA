@@ -11,6 +11,7 @@
 #' @importFrom spatstat hextess hexgrid
 #' @importFrom maptools as.owin.SpatialPolygons
 #' @importFrom methods as
+#' @importFrom sp proj4string
 #' @importFrom graphics points
 #' @importFrom raster plot area
 #'
@@ -65,6 +66,8 @@ HexaTex <- function(Polygon1, size, plotTrue = FALSE){
                                                "\nAmount of Points: ", nrow(PointsHexa)))
     graphics::points(cbind(PointsHexa$X,PointsHexa$Y), col="blue", pch=20)
   }
+  sp::proj4string(HexaGrid) <- sp::proj4string(Polygon1)
+  
   par(opar)
   invisible(list(PointsHexa,HexaGrid))
 }

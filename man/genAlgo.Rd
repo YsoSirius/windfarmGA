@@ -7,7 +7,7 @@
 genAlgo(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight, RotorHeight,
   SurfaceRoughness, Proportionality, iteration, mutr, vdirspe, topograp,
   elitism, nelit, selstate, crossPart1, trimForce, Projection, sourceCCL,
-  sourceCCLRoughness, weibull, weibullsrc)
+  sourceCCLRoughness, weibull, weibullsrc, Parallel, numCluster)
 }
 \arguments{
 \item{Polygon1}{The considered area as shapefile (SpatialPolygons)}
@@ -95,6 +95,13 @@ item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently
 only cover Austria. This variable is only used if weibull==TRUE. (list)}
+
+\item{Parallel}{Boolean value, indicating whether parallel processing
+should be used. The snow and doSNOW packages are used for parallel 
+processing.}
+
+\item{numCluster}{If Parallel is TRUE, this variable defines the number
+of clusters to be used.}
 }
 \value{
 The result of this run is a matrix of all relevant output
@@ -123,12 +130,11 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 proj4string(Polygon1) <- CRS(Projection)
 plot(Polygon1,axes=TRUE)
 
-## Create a uniform and unidirectional wind data.frame and plots the
+## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
-## Uniform wind speed and single wind direction
 data.in <- as.data.frame(cbind(ws=12,wd=0))
-# windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-#                dir = data.in$wd, dirres=10, spdmax=20)
+windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+                dir = data.in$wd, dirres=10, spdmax=20)
 
 ## Runs an optimization run for 10 iterations (iteration) with the
 ## given shapefile (Polygon1), the wind data.frame (data.in),
@@ -141,7 +147,17 @@ result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=30,fcrR=5,iteration=10,
              referenceHeight = 50,RotorHeight = 100)
 PlotWindfarmGA(result = result, Polygon1 = Polygon1)
 
-## Runs the same optimization run, only this time with hexagonal grids.
+## Runs the same optimization, but with parallel processing and 3 cores.
+result_par <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
+                 fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
+                 selstate="FIX",mutr=0.8, Proportionality = 1,
+                 SurfaceRoughness = 0.3, topograp = FALSE,
+                 elitism=TRUE, nelit = 7, trimForce = TRUE,
+                 referenceHeight = 50,RotorHeight = 100, 
+                 Parallel = TRUE, numCluster = 3)
+PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
+
+## Runs the same optimization, this time with hexagonal grids.
 result_hex <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
                  selstate="FIX",mutr=0.8, Proportionality = 1,

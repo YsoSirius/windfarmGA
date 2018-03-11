@@ -58,10 +58,10 @@
 PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
                            whichPl="all",best=1,plotEn=1,Projection,
                            weibullsrc){
-
+  # plot.new()
   op <- par(no.readonly = T)
 
-  if (any(whichPl=="all")){
+  if (any(whichPl=="all")) {
     whichPl <- c(1,2,3,4,5,6,7,8)
   }
 
@@ -76,48 +76,53 @@ PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
     Grid <- GridFilter(shape = Polygon1,resol = resol, prop = prop ,plotGrid=F)
   }
 
+
   if (nrow(result)<4) {
-    cat("Cannot plot option 2,3,4,5. \n Only option 1,6,7 are available.")
-    whichPl <- c(1,6,7)
+    if (any(c(2,3,4,5) %in% whichPl)) {
+      cat("Cannot plot option 2,3,4,5. \n Only option 1,6,7,8 are available.")
+      whichPl <- c(1,6,7,8)
+    }
   }
 
+  
   ############### PLOTTING OUTPUTS
   if (any(whichPl==1)){
-    print("Plot the 'best' Individuals of the GA:")
+    print("plotResult: Plot the 'best' Individuals of the GA:")
     plotResult(result = result, Polygon1 = Polygon1, best = best ,plotEn = plotEn,
                topographie = FALSE,Grid= Grid[[2]], weibullsrc = weibullsrc);
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==2)){
-    print("Plot the Evolution of the Efficiency and Energy Values:")
+    print("plotEvolution: Plot the Evolution of the Efficiency and Energy Values:")
     plotEvolution(result,T,0.3)
   }
   if (any(whichPl==3)){
-    print("Plot the Influence of Population Size, Selection, Crossover, Mutation:")
+    print("plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
     plotparkfitness(result,0.1)
   }
   if (any(whichPl==4)){
-    print("Plot the Changes in Fitness Values:")
+    print("plotfitnessevolution: Plot the Changes in Fitness Values:")
     plotfitnessevolution(result)
   }
   if (any(whichPl==5)){
-    print("Plot all individual Values of the whole Evolution:")
+    print("plotCloud: Plot all individual Values of the whole Evolution:")
     plotCloud(result,TRUE)
     readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==6)){
-    print("Plot a Heatmap of all Grid Cells:")
+    print("heatmapGA: Plot a Heatmap of all Grid Cells:")
     plot(heatmapGA(result = result, si=5))
     readline(prompt="Press [enter] to continue")
-
   }
   if (any(whichPl==7)){
-    print("Plot the 'best' Individual with static Google Map Background:")
+    print("GooglePlot: Plot the 'best' Individual with static Google Map:")
     GooglePlot(result,Polygon1,best,plotEn,Projection)
-    print("Plot the 'best' Individual in Google Chrome with Satelitte Imagery:")
+    readline(prompt="Press [enter] to continue")
+  }
+  if (any(whichPl==8)){
+    print("GoogleChromePlot: Plot the 'best' Individual with Leaflet with Satelitte Imagery:")
     GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
   }
-
   par(op)
   return()
 }

@@ -39,7 +39,7 @@ all potentially influencing turbines.
 library(sp);library(raster)
 
 ## Exemplary input Polygon with 2km x 2km:
-polYgon <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+ polYgon <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
 polYgon <- Polygons(list(polYgon),1);
 polYgon <- SpatialPolygons(list(polYgon))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000

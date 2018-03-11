@@ -24,7 +24,12 @@
 #'}
 #' @author Sebastian Gatscha
 plotEvolution <- function(result,ask=TRUE, spar=0.1){
+  ## Set the graphical parameters
+  opA <- par()
+  op <- par(ask=F)
+  on.exit(par(op))
   par(mfrow=c(1,1))
+
   result1 <- as.data.frame(do.call("rbind", result[,1]))
 
   plot(result1$minParkwirkungsg, xaxt='n', main="Park Efficiency per Generation", xlab="Generation",
@@ -58,5 +63,6 @@ plotEvolution <- function(result,ask=TRUE, spar=0.1){
     emin <- smooth.spline(x,result1$MinEnergyRedu, spar=spar); lines(emin, col='red', lwd=1.2)
   }
 
+  par(opA)
   return()
 }
