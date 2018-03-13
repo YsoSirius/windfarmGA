@@ -82,7 +82,7 @@
 #' then rasters included in the package are used instead, which currently
 #' only cover Austria. This variable is only used if weibull==TRUE. (list)
 #' @param Parallel Boolean value, indicating whether parallel processing
-#' should be used. The snow and doSNOW packages are used for parallel 
+#' should be used. The parallel and doParallel packages are used for parallel
 #' processing.
 #' @param numCluster If Parallel is TRUE, this variable defines the number
 #' of clusters to be used.
@@ -242,7 +242,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                      "Trim Force Method Used"=trimForce,"Crossover Method Used"=crossPart1,
                                      "Reference Height"= referenceHeight, "Rotor Height"=RotorHeight,
                                      "Resolution" = resol2, "Parallel Processing" = Parallel, 
-                                     "Number Clusters" = numCluster, "Active Weibull" = weibull));
+                                     "Number Clusters" = numCluster, "Active Weibull" = weibull,
   inputWind <- list(Windspeed_Data=vdirspe)
   print(inputData);print(inputWind)
   readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")

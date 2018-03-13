@@ -34,7 +34,7 @@ Imports:
     RgoogleMaps (>= 1.2.0.7),
     googleVis (>= 0.5.9),
     foreach (>= 1.4.3),
-    parallel (>= 3.4.3),
+    parallel (>= 3.4.1),
     doParallel (>= 1.0.11),
     rgl (>= 0.96.0),
     leaflet (>= 1.1.0),
