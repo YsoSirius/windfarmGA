@@ -30,6 +30,7 @@
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 #' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #' 
+#' Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
 #' RandomSearchPlot(resultRS = Res, resultGA = resultrect, Polygon1 = polygon, best =2)
 #'
 #' }
