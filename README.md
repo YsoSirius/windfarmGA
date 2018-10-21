@@ -3,7 +3,7 @@
 </p>
 
 # windfarmGA
-This is an R package to optimize the layout of windfarms.
+An genetic algorithm to optimize the layout of windfarms.
 The package is also hosted on CRAN and can be found at https://CRAN.R-project.org/package=windfarmGA
 
 # Installation
