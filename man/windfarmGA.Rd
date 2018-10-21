@@ -101,7 +101,7 @@ then rasters included in the package are used instead, which currently
 only cover Austria. This variable is only used if weibull==TRUE. (list)}
 
 \item{Parallel}{Boolean value, indicating whether parallel processing
-should be used. The snow and doSNOW packages are used for parallel 
+should be used. The parallel and doParallel packages are used for parallel 
 processing.}
 
 \item{numCluster}{If Parallel is TRUE, this variable defines the number

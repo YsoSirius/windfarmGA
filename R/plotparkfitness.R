@@ -28,12 +28,14 @@
 #'}
 #' @author Sebastian Gatscha
 plotparkfitness <- function(result,spar=0.1){
+  parparfit <- par(ask=F, no.readonly = T)
+  on.exit(par(parparfit))
+  
   rslt <- as.data.frame(do.call("rbind", result[,'allparkcoeff']))
   mutres <- as.data.frame(do.call("rbind", result[,'mut_rate']))
   nindiv1 <- as.data.frame(do.call("cbind", result[,'nindiv']))
   nindiv1 <- nindiv1[-seq(4,length(nindiv1),4)]
 
-  opar <- graphics::par(no.readonly = T)
   selcross <- unlist(result[,'selcross'])
   selteil <- selcross[seq(2,length(selcross),2)]
   crossteil <- selcross[seq(1,length(selcross),2)]
@@ -58,7 +60,7 @@ plotparkfitness <- function(result,spar=0.1){
     graphics::grid(col = "gray")
   }
 
-
+  par(ask=T)
   graphics::par(mar=c(5,5,3,2))
   farbe <- rep(seq(1,3,1),length(nindiv1)/3);   ndindiplot <- as.integer(nindiv1)
   plot(ndindiplot,type="b",col=farbe,cex=2,pch=20, main="N-Individuen",axes = FALSE,
@@ -92,8 +94,7 @@ plotparkfitness <- function(result,spar=0.1){
   graphics::grid(col = "gray")
 
 
-  op1 <- graphics::par(ask=T)
-  on.exit(par(op1))
+
   graphics::par(mfrow=c(1,1))
   plot(ndindiplot,type="b",col=farbe,cex=2,pch=20, main="N-Individuen",axes = FALSE,
        ylab="N",ylim=c(0,max(ndindiplot)+100))
@@ -103,8 +104,6 @@ plotparkfitness <- function(result,spar=0.1){
          box.lty=0,box.lwd=0,c("Fitness","Selection","Crossover"),text.col=farbe[1:3],col=farbe[1:3],xjust = 0)
 
 
-  op2 <- graphics::par(ask=T)
-  on.exit(par(op2))
   graphics::par(mfrow=c(2,1))
   plot(1*100/selteil,ylim=c(20,110),type="b",cex=2,col="green",pch=20,main="Selection percentage",
                  ylab="Percentage",xlab="Generation")
@@ -118,8 +117,6 @@ plotparkfitness <- function(result,spar=0.1){
 
 
   if (length(timetick)!=0) {
-    op3 <- graphics::par(ask=T)
-    on.exit(par(op3))
     graphics::par(mfrow=c(1,1))
     rbPal <- grDevices::colorRampPalette(c('red','green'));
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
@@ -139,8 +136,6 @@ plotparkfitness <- function(result,spar=0.1){
       graphics::mtext(mutrplval,side = 3,at = timetick,cex = 0.8)
   }
   if (length(timeticksel)!=0){
-    op4 <- graphics::par(ask=T)
-    on.exit(par(op4))
     graphics::par(mfrow=c(1,1))
     rbPal <- grDevices::colorRampPalette(c('red','green'));
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
@@ -160,8 +155,6 @@ plotparkfitness <- function(result,spar=0.1){
       graphics::mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
   }
   if (length(timetickcro)!=0){
-    op5 <- graphics::par(ask=T)
-    on.exit(par(op5))
     graphics::par(mfrow=c(1,1))
     rbPal <- colorRampPalette(c('red','green'));
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
@@ -185,8 +178,6 @@ plotparkfitness <- function(result,spar=0.1){
   fitsd <- dplyr::select(sddata,dplyr::contains("fit"));
   effsd <- dplyr::select(sddata,dplyr::contains("eff"));
   enesd <- dplyr::select(sddata,dplyr::contains("ene"));
-  op6 <- graphics::par(ask=T)
-  on.exit(par(op6))
   graphics::par(mfrow=c(4,1))
   plot(rslt$minparkfitness, xaxt='n', main="Parkfitness per Generation", ylab="Parkfitness in %",
        cex=1.2,col="red", pch=20, ylim= c(min(rslt$minparkfitness),max(rslt$maxparkfitness)))
@@ -221,8 +212,6 @@ plotparkfitness <- function(result,spar=0.1){
   }
 
 
-  op7 <- graphics::par(ask=T)
-  on.exit(par(op7))
   graphics::par(mfrow=c(1,1))
   plot(fitsd$Fitn.sd, type="b",col="red",lwd=2,axes = TRUE, bty = "n", xlab = "", ylab = "",
                  pch=20, main="Mutation Rate influence on Standard Deviation")
@@ -232,8 +221,6 @@ plotparkfitness <- function(result,spar=0.1){
     graphics::mtext(mutrplval,side = 3,at = timetick,cex = 0.8)
   }
 
-
-  graphics::par(opar)
   return()
 }
 

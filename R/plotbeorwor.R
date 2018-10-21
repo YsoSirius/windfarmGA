@@ -21,7 +21,9 @@
 #' }
 #' @author Sebastian Gatscha
 plotbeorwor <- function(result){
-  opar <- par(no.readonly = T)
+  parbeorwo <- par(ask=F, no.readonly = T)
+  on.exit(par(parbeorwo))
+  
   beorworse <- do.call("rbind",result[,9]);
 
   par(mfrow=c(2,1))
@@ -42,7 +44,6 @@ plotbeorwor <- function(result){
   plot(meandif$`beorworse[, 2]`, type="b", col=meandif$farbe, pch=20,cex=2); abline(0,0)
   title("Mean Difference to previous generation")
 
-  par(opar)
   return()
 }
 

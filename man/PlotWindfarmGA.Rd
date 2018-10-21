@@ -61,8 +61,8 @@ Polygon1 <- polygon
 PlotWindfarmGA(result, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
 ## Plot the results with hexagonal grid cells and a weibull mean background.
-load(file = system.file("extdata/a_weibull.rda", package = "windfarmGA"))
-load(file = system.file("extdata/k_weibull.rda", package = "windfarmGA"))
+a_param <- readRDS(system.file("extdata/a_weibull.RDS", package = "windfarmGA"))
+k_param <- readRDS(system.file("extdata/k_weibull.RDS", package = "windfarmGA"))
 weibullsrc <- list(k_param, a_param)
 PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all",
                best = 1, plotEn = 1, weibullsrc = weibullsrc)

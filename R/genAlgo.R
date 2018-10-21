@@ -20,7 +20,7 @@
 #'
 #' @param Polygon1 The considered area as shapefile (SpatialPolygons)
 #' @param GridMethod Should the polygon be divided into rectangular or
-#' hexagonal grid cells? The default is rectangular grid cells and hexagonal
+#' hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
 #' grid cells are computed when assigning "h" or "hexagon" to this input
 #' variable. (character)
 #' @param Rotor A numeric value that gives the rotor radius in meter
@@ -182,7 +182,11 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Is Elevation missing? - Default FALSE
   if (missing(topograp)){
     topograp=F
-  }  
+  }    
+  ## Is GridMethod missing? - Default "r"
+  if (missing(GridMethod)){
+    GridMethod <- "Rectangular"
+  }
   
   ## Is Parallel missing? - Default FALSE
   if (missing(Parallel)){
@@ -243,9 +247,10 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                      "Reference Height"= referenceHeight, "Rotor Height"=RotorHeight,
                                      "Resolution" = resol2, "Parallel Processing" = Parallel, 
                                      "Number Clusters" = numCluster, "Active Weibull" = weibull,
+                                     "Grid Method" = GridMethod));
   inputWind <- list(Windspeed_Data=vdirspe)
   print(inputData);print(inputWind)
-  readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")
+  # readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")
 
   ##  Project the Polygon to LAEA if it is not already.
   if (missing(Projection)) {
@@ -260,9 +265,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   }
 
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-  if (missing(GridMethod)){
-    GridMethod <- "Rectangular"
-  }
+
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
@@ -512,7 +515,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
       u <- round(u,2); teil<-round(teil,3);
 
-      cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"W/h n"))
+      cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"W/h \n"))
       meanunt <- meant0-meant1;
       beorwor[[i]] <- cbind(maxunt, meanunt)
     }

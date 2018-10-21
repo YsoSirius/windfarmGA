@@ -36,7 +36,10 @@
 #' }
 #' @author Sebastian Gatscha
 heatmapGA <- function(result,si=2,idistw){
-  opar <- par(no.readonly = T, mfrow=c(1,1))
+  parheat <- par(ask=F, no.readonly = T)
+  on.exit(par(parheat))
+  
+  par(mfrow=c(1,1))
   
   bpe <- do.call("rbind",result[,'allCoords']);
   bpe <- bpe[c(1,2)]
@@ -77,8 +80,6 @@ heatmapGA <- function(result,si=2,idistw){
     ggplot2::labs(title = "Inverse Distance Weighting for Grid Cell Selection")+
     ggplot2::geom_point(data=bpenew,mapping=ggplot2::aes(x=X,y=Y),
                         show.legend = TRUE,size=sqrt(sqrt(bpenew$Sum)),alpha=0.6)
-
-  par(opar)
 
   plot1+ggplot2::scale_fill_gradient(low="red", high="green")+ggplot2::coord_equal()
 }

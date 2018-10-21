@@ -28,7 +28,8 @@
 #' @author Sebastian Gatscha
 plotCloud <- function(result,pl=FALSE){
 
-  opar <- graphics::par(no.readonly = T)
+  parcloud <- par(ask=F, no.readonly = T)
+  on.exit(par(parcloud))
   
   clouddata <- result[,7]
   EffCloud <- lapply(clouddata, function(x) x = x[[1]]);
@@ -91,7 +92,6 @@ plotCloud <- function(result,pl=FALSE){
   }
 
   clouddatafull <- cbind(Fitn=FitCldIndmax,Eff=EffCldIndmax,Ene=EneCldIndmax)
-  par(opar)
   invisible(clouddatafull)
 
 }

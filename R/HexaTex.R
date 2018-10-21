@@ -42,7 +42,8 @@
 #' @author Sebastian Gatscha
 HexaTex <- function(Polygon1, size, plotTrue = FALSE){
   # Polygon1=Polygon1;size=200; plotTrue=T
-  opar = par(no.readonly = T)
+  parHex = par(no.readonly = T)
+  on.exit(par(parHex))
   par(mfrow=c(1,1))
 
   ## Make a Tesselation Object from the Polygon with the size parameter.
@@ -68,7 +69,6 @@ HexaTex <- function(Polygon1, size, plotTrue = FALSE){
   }
   sp::proj4string(HexaGrid) <- sp::proj4string(Polygon1)
   
-  par(opar)
   invisible(list(PointsHexa,HexaGrid))
 }
 

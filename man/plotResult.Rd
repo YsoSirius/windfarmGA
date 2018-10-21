@@ -32,8 +32,8 @@ of the default Lambert Azimuthal Equal Area Projection. (character)}
 \item{sourceCCLRoughness}{The source to the adapted
 Corine Land Cover legend as .csv file. Only required when terrain
 effect model is activated. As default a .csv file within this
-package (\file{~/extdata}) is taken that was already adapted
-manually. To use your own}
+package (\file{~/extdata/clc_legend.csv}) is taken that was already adapted
+manually.}
 
 \item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
 required, when the terrain effect model is activated. (character)}
@@ -78,8 +78,8 @@ plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
 ## Plot the results of with a weibull mean background
 result <- resultrect
 Polygon1 <- polygon
-load(file = system.file("extdata/a_weibull.rda", package = "windfarmGA"))
-load(file = system.file("extdata/k_weibull.rda", package = "windfarmGA"))
+a_param <- readRDS(system.file("extdata/a_weibull.RDS", package = "windfarmGA"))
+k_param <- readRDS(system.file("extdata/k_weibull.RDS", package = "windfarmGA"))
 weibullsrc <- list(k_param, a_param)
 plotResult(result, Polygon1, best = 2, plotEn = 2, topographie = FALSE,
            Grid = Grid[[2]], weibullsrc = weibullsrc)

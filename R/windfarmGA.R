@@ -216,7 +216,8 @@ utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
                          "Windrichtung","element_rect","element_line","alpha","Laenge_A",
                          "unit", "Laenge_B","By","Bx",
                          "dry.grid.filtered","spd.binned","Run","EnergyOverall",
-                         "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt"));
+                         "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt",
+                         "srtm_crop", "cclRaster", "weibullsrc"));
 
 windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,sourceCCLRoughness,
                        vdirspe, Rotor=30,fcrR=3,n=10,topograp=FALSE,

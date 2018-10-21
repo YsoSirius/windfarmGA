@@ -47,8 +47,8 @@
 #' PlotWindfarmGA(result, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 #'
 #' ## Plot the results with hexagonal grid cells and a weibull mean background.
-#' load(file = system.file("extdata/a_weibull.rda", package = "windfarmGA"))
-#' load(file = system.file("extdata/k_weibull.rda", package = "windfarmGA"))
+#' a_param <- readRDS(system.file("extdata/a_weibull.RDS", package = "windfarmGA"))
+#' k_param <- readRDS(system.file("extdata/k_weibull.RDS", package = "windfarmGA"))
 #' weibullsrc <- list(k_param, a_param)
 #' PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all",
 #'                best = 1, plotEn = 1, weibullsrc = weibullsrc)
@@ -58,8 +58,8 @@
 PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
                            whichPl="all",best=1,plotEn=1,Projection,
                            weibullsrc){
-  # plot.new()
-  op <- par(no.readonly = T)
+  parpplotWindGa <- par(ask=F, no.readonly = T)
+  on.exit(par(parpplotWindGa))
 
   if (any(whichPl=="all")) {
     whichPl <- c(1,2,3,4,5,6,7,8)
@@ -99,10 +99,12 @@ PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
   if (any(whichPl==3)){
     print("plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
     plotparkfitness(result,0.1)
+    readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==4)){
     print("plotfitnessevolution: Plot the Changes in Fitness Values:")
     plotfitnessevolution(result)
+    readline(prompt="Press [enter] to continue")
   }
   if (any(whichPl==5)){
     print("plotCloud: Plot all individual Values of the whole Evolution:")
@@ -123,6 +125,5 @@ PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
     print("GoogleChromePlot: Plot the 'best' Individual with Leaflet with Satelitte Imagery:")
     GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
   }
-  par(op)
   return()
 }

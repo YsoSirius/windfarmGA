@@ -34,9 +34,7 @@
 #' }
 #' @author Sebastian Gatscha
 GoogleChromePlot <- function(result,Polygon1,best=1,plotEn=1,Projection) {
-  opar = par(no.readonly = T)
-  par(mfrow=c(1,1))
-  
+
   a <- GooglePlot(result,Polygon1,best,plotEn,Projection,plT=F)
   a$latlon <- paste(a$lat, a$lon, sep=":")
   
@@ -67,5 +65,4 @@ GoogleChromePlot <- function(result,Polygon1,best=1,plotEn=1,Projection) {
                                )
   )
   plot(map.gb)
-  par(opar)
 }

@@ -14,7 +14,7 @@
 #' @param uplimit The upper limit of allowed permutations. The current
 #' algorithm has an upper bound of 300 permutations. (numeric)
 #' @param crossPart The crossover method. Either "EQU" or "RAN". (character)
-
+#' 
 #' @return Returns a binary coded matrix of all permutations and all grid
 #' cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 #' (matrix)

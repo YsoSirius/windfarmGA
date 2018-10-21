@@ -155,6 +155,19 @@ result <- genAlgo(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 
              referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
              sourceCCLRoughness = "C:/...Path_to.../clc_legend.csv")
 ```
+### Updates 1.2.1
+#### Randomization
+The output of **`genAlgo`** or **`windfarmGA`** can be further randomized with the following
+functions:
+- RandomSearch
+- RandomSearchTurb
+
+**`RandomSearch`** can be used to randomize all turbines of the layout whereas
+**`RandomSearchTurb`** can be used to randomize a single turbine only.
+
+**`RandomSearchPlot`** is used to plot the outputs of those functions, compared with the 
+original result.
+
 ### Updates 1.2
 #### Parallel Processing
 ```sh

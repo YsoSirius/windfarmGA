@@ -25,7 +25,9 @@
 #' @author Sebastian Gatscha
 plotfitnessevolution <- function(result,spar=0.1){
   # library(stats)
-  opar <- par(no.readonly = T)
+  oparplotfitness <- par(ask=F,no.readonly = T)
+  on.exit(par(oparplotfitness))
+  par(mfrow=c(1,1))
   
   x <- result[,4];
   x <- x[-c(1)];
@@ -83,7 +85,6 @@ plotfitnessevolution <- function(result,spar=0.1){
     lmax <- smooth.spline(x,result$maxparkfitness, spar=spar); lines(lmax, col='green', lwd=1.6)
   }
 
-  par(opar)
   return()
 }
 

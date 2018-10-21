@@ -25,9 +25,8 @@
 #' @author Sebastian Gatscha
 plotEvolution <- function(result,ask=TRUE, spar=0.1){
   ## Set the graphical parameters
-  opA <- par()
-  op <- par(ask=F)
-  on.exit(par(op))
+  parevol <- par(no.readonly = T)
+  on.exit(par(parevol))
   par(mfrow=c(1,1))
 
   result1 <- as.data.frame(do.call("rbind", result[,1]))
@@ -47,8 +46,7 @@ plotEvolution <- function(result,ask=TRUE, spar=0.1){
     lmax <- smooth.spline(x,result1$maxParkwirkungsg, spar=spar); lines(lmax, col='green', lwd=1.2)
   }
 
-  op <- par(ask=ask)
-  on.exit(par(op))
+  par(ask=ask)
 
   plot(result1$MeanEnergyRedu,xaxt='n',main="Energy Yield per Generation",xlab="Generation",ylab="Energy in kW", cex=1.2,
        col="blue", pch=20, ylim= c(min(result1$MinEnergyRedu),max(result1$MaxEnergyRedu)))
@@ -63,6 +61,5 @@ plotEvolution <- function(result,ask=TRUE, spar=0.1){
     emin <- smooth.spline(x,result1$MinEnergyRedu, spar=spar); lines(emin, col='red', lwd=1.2)
   }
 
-  par(opA)
   return()
 }

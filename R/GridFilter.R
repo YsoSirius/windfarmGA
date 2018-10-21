@@ -102,7 +102,7 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid=FALSE){
 
 
   if (plotGrid == TRUE){
-    opar = par(no.readonly=T)
+    parGrid = par(ask=F, no.readonly=T)
     par(mar=c(5,5,5,4))
     par(mfrow=c(1,1))
     plot.new()
@@ -128,7 +128,7 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid=FALSE){
     raster::plot(rect_Nu,add=T)
     graphics::points(centpo$X,centpo$Y, col="blue", pch=20)
     graphics::text(centpo$X,centpo$Y,labels=centpo$ID, pos=2)
-    par(opar)
+    par(parGrid)
   }
 
   centpo <- list(centpo,dry.grid.filtered)
