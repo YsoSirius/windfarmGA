@@ -23,21 +23,22 @@ install.packages("windfarmGA")
 
 # Description
 The genetic algorithm is designed to optimize small wind farms. 
-    The algorithm works with a fixed amount of turbines, a fixed 
-    rotor radius and a mean wind speed value for every incoming wind direction.
-    If required it can include a terrain effect model, which downloads an 
-    'SRTM' elevation model automatically and loads a Corine Land Cover raster, 
-    which has to be downloaded previously. 
-    Further information can be found at the description of the function 'windfarmGA'. 
-    To start an optimization run, either the function 'windfarmGA' or 'genAlgo' can 
-    be used. The function 'windfarmGA' checks the user inputs interactively and then 
-    runs the function 'genAlgo'. If the input parameters are already known, an 
-    optimization can be run directly via the function 'genAlgo'. 
-    Their output is identical.
-    Since version 1.1, hexagonal grid cells are possible, with 
-    their center points being possible locations for wind turbines. 
-    Furthermore, rasters can be included, which contain information on the Weibull 
-    parameters. For Austria this data is already included in the package. 
+The algorithm works with a fixed amount of turbines, a fixed 
+rotor radius and a mean wind speed value for every incoming wind direction.
+If required it can include a terrain effect model, which downloads an 
+'SRTM' elevation model automatically and loads a Corine Land Cover raster, 
+which has to be downloaded previously. 
+
+To start an optimization, either the function 'windfarmGA' or 'genAlgo' can 
+be used. The function 'windfarmGA' checks the user inputs interactively and then 
+runs the function 'genAlgo'. If the input parameters are already known, an 
+optimization can be run directly via the function 'genAlgo'. 
+Their output is identical.     
+
+Since version 1.1, hexagonal grid cells are possible, with 
+their center points being possible locations for wind turbines. 
+Furthermore, rasters can be included, which contain information on the Weibull 
+parameters. For Austria this data is already included in the package. 
     
 ## Create an input Polygon
 - Input Polygon by source
