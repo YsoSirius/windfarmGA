@@ -7,11 +7,11 @@
 [![](https://www.r-pkg.org/badges/version/windfarmGA)](https://www.r-pkg.org/pkg/windfarmGA)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen)](https://www.r-pkg.org/pkg/windfarmGA)
 
-An genetic algorithm to optimize the layout of windfarms.
-The package is also hosted on CRAN and can be found at https://CRAN.R-project.org/package=windfarmGA
+Genetic algorithm to optimize the layout of windfarms.
+The package is hosted on CRAN and can be found at https://CRAN.R-project.org/package=windfarmGA
 
 # Installation
-The latest version of the package can be downloaded from GitHub with:
+The latest version can be installed from GitHub with:
  ```sh
 # install.packages("devtools")
 devtools::install_github("YsoSirius/windfarmGA")
@@ -34,8 +34,8 @@ The genetic algorithm is designed to optimize small wind farms.
     runs the function 'genAlgo'. If the input parameters are already known, an 
     optimization can be run directly via the function 'genAlgo'. 
     Their output is identical.
-    Since version 1.1, a polygon with hexagonal grid cells can be resolved, with 
-    their center points being possible locations for wind power plants. 
+    Since version 1.1, hexagonal grid cells are possible, with 
+    their center points being possible locations for wind turbines. 
     Furthermore, rasters can be included, which contain information on the Weibull 
     parameters. For Austria this data is already included in the package. 
     
