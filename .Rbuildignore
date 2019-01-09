@@ -1,0 +1,15 @@
+.travis.yml
+^packrat/
+^\.Rprofile$
+^.*\.Rproj$
+^.RData
+^\.Rproj\.user$
+^srtm*.*tif
+^.gitignore
+^srtm*
+^srtm*.*hdr
+^srtm*.*tfw
+^readme.txt
+^README.md
+^README\.Rmd$
+^README-.*\.png$
