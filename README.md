@@ -1,8 +1,12 @@
+# windfarmGA
+
 <p align="center">
-  <img src="windfarmGA.png" width="200"/>
+  <img src="windfarmGA.png" align="right" width="150"/>
 </p>
 
-# windfarmGA
+[![](https://www.r-pkg.org/badges/version/windfarmGA)](https://www.r-pkg.org/pkg/windfarmGA)
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen)](https://www.r-pkg.org/pkg/windfarmGA)
+
 An genetic algorithm to optimize the layout of windfarms.
 The package is also hosted on CRAN and can be found at https://CRAN.R-project.org/package=windfarmGA
 
@@ -12,7 +16,7 @@ The latest version of the package can be downloaded from GitHub with:
 # install.packages("devtools")
 devtools::install_github("YsoSirius/windfarmGA")
 ```
-and version 1.2 via CRAN with:
+and version 1.2.1 via CRAN with:
  ```sh
 install.packages("windfarmGA")
 ```
