@@ -3,6 +3,9 @@
 .Rprofile
 .RData
 .Rhistory
+.DS_Store
+windfarmGA.Rcheck
+windfarmGA_*.tar.gz
 srtm*
 readme.txt
 packrat/*
