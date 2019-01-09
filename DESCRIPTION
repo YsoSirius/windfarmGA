@@ -51,3 +51,4 @@ License: MIT + file LICENSE
 URL: https://github.com/YsoSirius/windfarmGA
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.0.1
+Suggests: testthat
