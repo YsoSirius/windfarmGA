@@ -5,8 +5,8 @@
 \title{Evaluate the Individual Fitness values}
 \usage{
 fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
-  resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull, weibullsrc,
-  Parallel, numCluster)
+  resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull,
+  weibullsrc, Parallel, numCluster)
 }
 \arguments{
 \item{selection}{A list containing all individuals of the current

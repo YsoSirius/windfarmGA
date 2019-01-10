@@ -20,6 +20,7 @@ Depends:
 Imports:
     rgdal (>= 1.0-4),
     raster (>= 2.5-2),
+	desc (>= 1.2.0),
     sp (>= 1.2-2),
     dplyr (>= 0.5.0),
     gtools (>= 3.5.0),
@@ -48,5 +49,6 @@ LazyData: TRUE
 License: MIT + file LICENSE
 URL: https://github.com/YsoSirius/windfarmGA
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: testthat
+Encoding: UTF-8

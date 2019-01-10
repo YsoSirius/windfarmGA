@@ -4,9 +4,9 @@
 \alias{calculateEn}
 \title{Calculate Energy Outputs of Individuals}
 \usage{
-calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, windraster,
-  wnkl, distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp,
-  cclRaster, weibull, weibullsrc)
+calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness,
+  windraster, wnkl, distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop,
+  topograp, cclRaster, weibull, weibullsrc)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population
