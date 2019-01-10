@@ -54,7 +54,7 @@ test_that("All Functions", {
   expect_output(str(selec6best), "List of 2")
   rm(selec6best)
 
-  selec6best1 <- selection1(fit, Grid[[1]],2, TRUE, 6, "FIX");
+  selec6best <- selection1(fit, Grid[[1]],2, TRUE, 6, "FIX");
   expect_is(selec6best, "list")
   expect_true(all(sapply(selec6best, class) == "data.frame"))
   expect_output(str(selec6best), "List of 2")
