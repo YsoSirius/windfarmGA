@@ -40,7 +40,7 @@ only cover Austria. This variable is only used if weibull==TRUE. (list)}
 \description{
 Plot the results of a genetic algorithm run with given inputs.
 Several plots try to show all relevant effects and outcomes of the
-algorithm. 8 plot methods are available that can be selected individually.
+algorithm. 6 plot methods are available that can be selected individually.
 }
 \examples{
 \donttest{

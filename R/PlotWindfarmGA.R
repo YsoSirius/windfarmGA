@@ -2,7 +2,7 @@
 #' @name PlotWindfarmGA
 #' @description  Plot the results of a genetic algorithm run with given inputs.
 #' Several plots try to show all relevant effects and outcomes of the
-#' algorithm. 8 plot methods are available that can be selected individually.
+#' algorithm. 6 plot methods are available that can be selected individually.
 #'
 #' @export
 #'
@@ -62,7 +62,8 @@ PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
   on.exit(par(parpplotWindGa))
 
   if (any(whichPl=="all")) {
-    whichPl <- c(1,2,3,4,5,6,7,8)
+    # whichPl <- c(1,2,3,4,5,6,7,8)
+    whichPl <- c(1,2,3,4,5,6)
   }
 
   resol <- as.numeric(result[,'inputData'][[1]][,1]['Resolution'][[1]])
@@ -80,7 +81,8 @@ PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
   if (nrow(result)<4) {
     if (any(c(2,3,4,5) %in% whichPl)) {
       cat("Cannot plot option 2,3,4,5. \n Only option 1,6,7,8 are available.")
-      whichPl <- c(1,6,7,8)
+      # whichPl <- c(1,6,7,8)
+      whichPl <- c(1,6)
     }
   }
 
@@ -116,14 +118,14 @@ PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
     plot(heatmapGA(result = result, si=5))
     readline(prompt="Press [enter] to continue")
   }
-  if (any(whichPl==7)){
-    print("GooglePlot: Plot the 'best' Individual with static Google Map:")
-    GooglePlot(result,Polygon1,best,plotEn,Projection)
-    readline(prompt="Press [enter] to continue")
-  }
-  if (any(whichPl==8)){
-    print("GoogleChromePlot: Plot the 'best' Individual with Leaflet with Satelitte Imagery:")
-    GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
-  }
+  # if (any(whichPl==7)){
+  #   print("GooglePlot: Plot the 'best' Individual with static Google Map:")
+  #   GooglePlot(result,Polygon1,best,plotEn,Projection)
+  #   readline(prompt="Press [enter] to continue")
+  # }
+  # if (any(whichPl==8)){
+  #   print("GoogleChromePlot: Plot the 'best' Individual with Leaflet with Satelitte Imagery:")
+  #   GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
+  # }
   return()
 }

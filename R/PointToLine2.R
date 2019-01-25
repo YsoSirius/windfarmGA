@@ -40,10 +40,15 @@
 #'
 #' @author Sebastian Gatscha
 PointToLine2      <- function(x,y,plotAngles) {
-  if (is.matrix(y) == FALSE) {y <- as.matrix(rbind(y))};  if (is.matrix(x) == FALSE) {x <- as.matrix(rbind(x))};
-  C1 <- as.matrix(cbind(y[1,1],x[1,2]));
-  c <- euc.dist(x,y);  a<- euc.dist(x,C1); b<- euc.dist(C1,y);  dist1 <- c(c,b,a)
-
+  y<- rbind(y)
+  x<- rbind(x)
+  
+  C1<- cbind(y[1,1],x[1,2])
+  c<- euc.dist(x,y)
+  a<- euc.dist(x,C1)
+  b<- euc.dist(C1,y)
+  dist1 <- c(c,b,a)
+  
   if (plotAngles==TRUE){
     ## Plot the Points of the Triangle
     graphics::points(x, cex=2, col="red", pch=20);
@@ -63,9 +68,8 @@ PointToLine2      <- function(x,y,plotAngles) {
     graphics::text(x = cbind(c(x[1],y[1],C1[1]),c(x[2],y[2],C1[2])),
                    labels = c("B","A","C"), pos=4, col=c("red","green","blue"),cex=1);
   }
-
+  
   distIndiv <- rbind(c(y,x,C1,dist1));
   colnames(distIndiv) <- c("Ax","Ay","Bx","By","Cx","Cy","Laenge_C","Laenge_B", "Laenge_A");
   return(distIndiv)
 }
-

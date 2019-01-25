@@ -151,6 +151,12 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
   rbPal1 <- grDevices::colorRampPalette(c('green','red'))
 
   resultSafe <- result
+  
+  if (!plotEn %in% c(1,2)) {
+    stop("plotEn must be either 1 or 2. \n",
+         "1 - plots the best energy output. \n",
+         "2 - plots the best efficiency output.")
+  }
   ## Plot Best Energy
   if (plotEn == 1) {
 
@@ -192,9 +198,9 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
 
       cat(paste("\nPlot ", (best+1)-i, " Best Energy Solution:\n"))
       par(mfrow=c(1,1), ask=F)
-      plot(Polygon1, col=col2res, main=paste("Best Energy:", (best+1)-i, "\n","Energy Output",
+      plot(Polygon1, col=col2res, main=paste((best+1)-i, "Best Energy Windfarm", "\n","Energy Output",
                                                  EnergyBest$EnergyOverall[[1]],"kW", "\n", "Efficiency:",
-                                                 EnergyBest$EfficAllDir[[1]]));
+                                                 EnergyBest$EfficAllDir[[1]],"%"), cex.main=0.8);
       
       if (best > 1){
         if (i > 1){
@@ -210,13 +216,13 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
       }
       plot(Grid,add=T)
 
-      graphics::mtext("Total Wake Effect in %", side = 2)
+      graphics::mtext("Total Wake Effect in %", side = 2, cex=0.8)
       graphics::points(EnergyBest$X,EnergyBest$Y,cex=2,pch=20,col=Col)
       graphics::text(EnergyBest$X, EnergyBest$Y, round(EnergyBest$AbschGesamt,0), cex=0.8, pos=1, col="black")
 
       distpo <- stats::dist(x = cbind(EnergyBest$X,EnergyBest$Y),method = "euclidian")
-      graphics::mtext(paste("minimal Distance", round(min(distpo),2)), side = 1,line=0)
-      graphics::mtext(paste("mean Distance", round(mean(distpo),2)), side = 1,line=1)
+      graphics::mtext(paste("minimal Distance", round(min(distpo),2)), side = 1,line=0, cex=0.8)
+      graphics::mtext(paste("mean Distance", round(mean(distpo),2)), side = 1,line=1, cex=0.8)
       
       if(topographie==TRUE && plotEn == 1){
         
@@ -327,11 +333,6 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
     ResPlotResult <- EnergyBest
   }
   
-  
-
-
-  
-  
   ## Plot Best Efficiency
   if (plotEn == 2){
     a <- sapply(result[,3], "[", "EfficAllDir")
@@ -369,9 +370,9 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
       cat(paste("\nPlot ", (best+1)-i, " Best Efficiency Solution:\n"))
       
       par(mfrow=c(1,1), ask=F)
-      raster::plot(Polygon1, col=col2res,main=paste("Best Efficiency:", (best+1)-i, "\n","Energy Output",
+      raster::plot(Polygon1, col=col2res,main=paste((best+1)-i, "Best Efficiency Windfarm", "\n","Energy Output",
                                                          EfficiencyBest$EnergyOverall[[1]],"kW", "\n", "Efficiency:",
-                                                         EfficiencyBest$EfficAllDir[[1]]));
+                                                         EfficiencyBest$EfficAllDir[[1]], "%"), cex.main=0.8);
       if (best > 1){
         if (i > 1){
           par(ask=T)
@@ -385,13 +386,13 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
       }
       plot(Grid,add=T)
 
-      graphics::mtext("Total Wake Effect in %", side = 2)
+      graphics::mtext("Total Wake Effect in %", side = 2, cex=0.8)
       graphics::points(EfficiencyBest$X,EfficiencyBest$Y,col=Col1,cex=2,pch=20)
       graphics::text(EfficiencyBest$X, EfficiencyBest$Y, round(EfficiencyBest$AbschGesamt,0), cex=0.8, pos=1)
       
       distpo <- stats::dist(x = cbind(EfficiencyBest$X,EfficiencyBest$Y),method = "euclidian")
-      graphics::mtext(paste("minimal Distance", round(min(distpo),2)), side = 1,line=0)
-      graphics::mtext(paste("mean Distance", round(mean(distpo),2)), side = 1,line=1)
+      graphics::mtext(paste("minimal Distance", round(min(distpo),2)), side = 1,line=0, cex=0.8)
+      graphics::mtext(paste("mean Distance", round(mean(distpo),2)), side = 1,line=1, cex=0.8)
       
       
       if(topographie==TRUE && plotEn == 2){

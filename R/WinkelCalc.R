@@ -28,7 +28,7 @@
 #'   points(x=Bb[1],y=Bb[2],col="red",pch=20);
 #'   points(x=Cc[1],y=Cc[2],col="blue",pch=20)
 #'   Angles <- WinkelCalc(Aa,Bb,Cc); Angles
-#'   text(rbind(Aa,Bb,Cc),labels=round(Angles,2),pos=1)
+#'   text(rbind(Aa,Bb,Cc),labels=paste(rownames(Angles), round(Angles,2)),pos=1)
 #' @author Sebastian Gatscha
 WinkelCalc        <- function(Aa,Bb,Cc) {
   AB <- Bb-Aa; AC <- Cc-Aa;  BA <- Aa-Bb;  BC <- Cc-Bb; CA <- Aa-Cc; CB <- Bb-Cc;

@@ -32,7 +32,7 @@ plotEvolution <- function(result,ask=TRUE, spar=0.1){
   result1 <- as.data.frame(do.call("rbind", result[,1]))
 
   plot(result1$minParkwirkungsg, xaxt='n', main="Park Efficiency per Generation", xlab="Generation",
-       ylab="Park Efficiency in %", cex=1.2,col="red", pch=20,
+       ylab="Park Efficiency in %", cex=0.8, cex.main=0.8, col="red", pch=20,
        ylim= c(min(result1$minParkwirkungsg),max(result1$maxParkwirkungsg)))
   axis(1,at = 1:nrow(result1),tick=T)
   grid(col = "black")
@@ -48,7 +48,8 @@ plotEvolution <- function(result,ask=TRUE, spar=0.1){
 
   par(ask=ask)
 
-  plot(result1$MeanEnergyRedu,xaxt='n',main="Energy Yield per Generation",xlab="Generation",ylab="Energy in kW", cex=1.2,
+  plot(result1$MeanEnergyRedu,xaxt='n',main="Energy Yield per Generation",
+       xlab="Generation",ylab="Energy in kW", cex=0.8,cex.main=0.8,
        col="blue", pch=20, ylim= c(min(result1$MinEnergyRedu),max(result1$MaxEnergyRedu)))
   axis(1,at = 1:nrow(result1),tick=T)
   grid(col = "black")

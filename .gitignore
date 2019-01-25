@@ -10,3 +10,6 @@ readme.txt
 packrat/*
 packrat/lib*/
 packrat/src/
+*.grd
+*.gri
+*.vrt

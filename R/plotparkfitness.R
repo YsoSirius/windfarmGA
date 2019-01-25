@@ -46,7 +46,7 @@ plotparkfitness <- function(result,spar=0.1){
   Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
 
   plot(rslt$minparkfitness, xaxt='n', main="Parkfitness per Generation",
-                 ylab="Parkfitness in %", cex=1.2,col="red", pch=20,
+                 ylab="Parkfitness in %", cex=1, cex.main=1, col="red", pch=20,
                  ylim= c(min(rslt$minparkfitness),max(rslt$maxparkfitness)));
   graphics::axis(1,at = 1:nrow(rslt),tick=T)
   graphics::points(rslt$meanparkfitness,ylab="MeanParkF", cex=1.2,col="blue", pch=20);
@@ -61,16 +61,18 @@ plotparkfitness <- function(result,spar=0.1){
   }
 
   par(ask=T)
-  graphics::par(mar=c(5,5,3,2))
+  par(mar=c(5,5,3,2))
   farbe <- rep(seq(1,3,1),length(nindiv1)/3);   ndindiplot <- as.integer(nindiv1)
-  plot(ndindiplot,type="b",col=farbe,cex=2,pch=20, main="N-Individuen",axes = FALSE,
+  plot(ndindiplot,type="b",col=farbe,cex=1.5, cex.main=1, pch=20, main="N-Individuen",axes = FALSE,
        ylab="N",ylim=c(0,max(ndindiplot)+100))
-  graphics::axis(side = 2,tick = TRUE); axis(side = 1,tick = TRUE,at =seq(1,length(ndindiplot),3),
-                                             labels =(1:(length(ndindiplot)/3)))
-  graphics::legend("topleft",title="Amount of Individuals in: ",lty = c(1,1,1),cex=0.5,inset = c(0.01,0.01),
+  axis(side = 2,tick = TRUE); 
+  axis(side = 1,tick = TRUE,at =seq(1,length(ndindiplot),3),
+       labels =(1:(length(ndindiplot)/3)))
+  legend("topleft",title="Amount of Individuals in: ",lty = c(1,1,1),cex=0.5,inset = c(0.01,0.01),
          box.lty=0,box.lwd=0,c("Fitness","Selection","Crossover"),col=farbe[1:3],xjust = 0)
 
-  plot(1*100/selteil,ylim=c(20,110),type="b",cex=2,col="green",pch=20,main="Selection percentage",
+  plot(1*100/selteil,ylim=c(20,110),type="b",cex=1, cex.main=1, col="green",
+       pch=20,main="Selection percentage",
                  ylab="Percentage",xlab="Generation")
   graphics::grid(col = "gray")
   selrpl <- 1*100/selteil;
@@ -79,29 +81,34 @@ plotparkfitness <- function(result,spar=0.1){
   calibrate::textxy(timeticksel,selrplval,labs = timeticksel,cex = 0.7)
 
 
-  plot(crossteil,col=crossteil,main="n Crossoverparts",xlab="Generation", ylab="Crossover Points",
-                 ylim=c(1,8),cex=1,pch=15); graphics::grid(col = "gray")
+  plot(crossteil,col=crossteil,main="n Crossoverparts",
+       xlab="Generation", ylab="Crossover Points",
+       ylim=c(1,8),cex=1, cex.main=1, pch=15); graphics::grid(col = "gray")
   timetickcro <- which(crossteil>median(crossteil));
   crorplval <- crossteil[crossteil>median(crossteil)]
   calibrate::textxy(timetickcro,crorplval,labs = timetickcro,cex = 0.5)
 
   plot(as.numeric(t(mutres)),type="b",main="Mutation Rate",xlab="Generation",
-                 ylab="Crossover Points",cex=1,pch=15)
+                 ylab="Crossover Points",cex=1, cex.main=1, pch=15)
   mutrpl <- as.numeric(t(mutres));
   timetick <- which(mutrpl>median(mutrpl));
   mutrplval <- mutrpl[mutrpl>median(mutrpl)]
   calibrate::textxy(timetick,mutrplval,labs = timetick,cex = 0.7)
-  graphics::grid(col = "gray")
+  grid(col = "gray")
 
 
 
-  graphics::par(mfrow=c(1,1))
-  plot(ndindiplot,type="b",col=farbe,cex=2,pch=20, main="N-Individuen",axes = FALSE,
+  par(mfrow=c(1,1))
+  plot(ndindiplot,type="b",col=farbe,cex=1.5,cex.main=1,pch=20, main="N-Individuen",axes = FALSE,
        ylab="N",ylim=c(0,max(ndindiplot)+100))
-  graphics::axis(side = 2,tick = TRUE); axis(side = 1,tick = TRUE,at =seq(1,length(ndindiplot),3),
-                                             labels =(1:(length(ndindiplot)/3)))
-  graphics::legend("topleft",title="Amount of Individuals in: ",pch = c(20,20,20),cex=1,inset = c(0.01,0.01),
-         box.lty=0,box.lwd=0,c("Fitness","Selection","Crossover"),text.col=farbe[1:3],col=farbe[1:3],xjust = 0)
+  axis(side = 2,tick = TRUE); 
+  axis(side = 1,tick = TRUE,at =seq(1,length(ndindiplot),3),
+       labels =(1:(length(ndindiplot)/3)))
+  
+  graphics::legend("topleft",title="Amount of Individuals in: ",pch = c(20,20,20),
+                   cex=1,inset = c(0.01,0.01),
+                   box.lty=0,box.lwd=0,c("Fitness","Selection","Crossover"),
+                   text.col=farbe[1:3],col=farbe[1:3],xjust = 0)
 
 
   graphics::par(mfrow=c(2,1))
@@ -120,16 +127,19 @@ plotparkfitness <- function(result,spar=0.1){
     graphics::par(mfrow=c(1,1))
     rbPal <- grDevices::colorRampPalette(c('red','green'));
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
-    plot(rslt$minParkwirkungsg, xaxt='n', main="Mutation Influence", ylab=" in %", cex=1.2,col="red",
-         pch=20, ylim= c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)));
+    plot(rslt$minParkwirkungsg, xaxt='n', main="Mutation Influence", ylab=" in %", cex=1.2, cex.main=1, 
+         col="red", pch=20, ylim= c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)));
     graphics::axis(1,at = 1:nrow(rslt),tick=T)
     graphics::points(rslt$meanParkwirkungsg,ylab="MeanParkEff", cex=1.2,col="blue", pch=20);
     graphics::points(rslt$maxParkwirkungsg,ylab="maxParkEff", cex=1.2,col="green", pch=20)
     x <- 1:length(rslt$maxparkfitness);
     if (nrow(result)>=4){
-      lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
-      lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); graphics::lines(lmea, col='blue', lwd=1.2)
-      lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
+      lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); 
+      graphics::lines(lmin, col='red', lwd=1.2);
+      lmea <- stats::smooth.spline(x,rslt$meanParkwirkungsg, spar=spar); 
+      graphics::lines(lmea, col='blue', lwd=1.2)
+      lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); 
+      graphics::lines(lmax, col='green', lwd=1.2);
       graphics::grid(col = "gray")
     }
       graphics::abline(v = timetick,col="black");
@@ -139,7 +149,8 @@ plotparkfitness <- function(result,spar=0.1){
     graphics::par(mfrow=c(1,1))
     rbPal <- grDevices::colorRampPalette(c('red','green'));
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
-    graphics:: plot(rslt$minParkwirkungsg, xaxt='n', main="Selection Influence", ylab=" in %", cex=1.2,col="red",
+    graphics::plot(rslt$minParkwirkungsg, xaxt='n', 
+                   main="Selection Influence", ylab=" in %", cex=1, cex.main=1, col="red",
          pch=20, ylim= c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)));
     graphics::axis(1,at = 1:nrow(rslt),tick=T)
     graphics::points(rslt$meanParkwirkungsg,ylab="MeanParkEff", cex=1.2,col="blue", pch=20);
@@ -151,17 +162,19 @@ plotparkfitness <- function(result,spar=0.1){
       lmax <- stats::smooth.spline(x,rslt$maxParkwirkungsg, spar=spar); graphics::lines(lmax, col='green', lwd=1.2);
       graphics::grid(col = "gray")
   }
-      graphics::abline(v = timeticksel,col="green");
-      graphics::mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
+      abline(v = timeticksel,col="green");
+      mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
   }
   if (length(timetickcro)!=0){
-    graphics::par(mfrow=c(1,1))
+    par(mfrow=c(1,1))
     rbPal <- colorRampPalette(c('red','green'));
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
-    plot(rslt$minParkwirkungsg, xaxt='n', main="Crossover Influence", ylab=" in %", cex=1.2,col="red",
-         pch=20, ylim= c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)));graphics::axis(1,at = 1:nrow(rslt),tick=T)
-    graphics::points(rslt$meanParkwirkungsg,ylab="MeanParkEff", cex=1.2,col="blue", pch=20);
-    graphics::points(rslt$maxParkwirkungsg,ylab="maxParkEff", cex=1.2,col="green", pch=20)
+    plot(rslt$minParkwirkungsg, xaxt='n', main="Crossover Influence", ylab=" in %", 
+         cex=1,cex.main=1,col="red",
+         pch=20, ylim= c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)));
+    axis(1,at = 1:nrow(rslt),tick=T)
+    points(rslt$meanParkwirkungsg,ylab="MeanParkEff", cex=1.2,col="blue", pch=20);
+    points(rslt$maxParkwirkungsg,ylab="maxParkEff", cex=1.2,col="green", pch=20)
     x <- 1:length(rslt$maxparkfitness);
     if (nrow(result)>=4){
       lmin <- stats::smooth.spline(x,rslt$minParkwirkungsg, spar=spar); graphics::lines(lmin, col='red', lwd=1.2);
@@ -180,7 +193,7 @@ plotparkfitness <- function(result,spar=0.1){
   enesd <- dplyr::select(sddata,dplyr::contains("ene"));
   graphics::par(mfrow=c(4,1))
   plot(rslt$minparkfitness, xaxt='n', main="Parkfitness per Generation", ylab="Parkfitness in %",
-       cex=1.2,col="red", pch=20, ylim= c(min(rslt$minparkfitness),max(rslt$maxparkfitness)))
+       cex=1,cex.main=1,col="red", pch=20, ylim= c(min(rslt$minparkfitness),max(rslt$maxparkfitness)))
   graphics::axis(1,at = 1:nrow(rslt),tick=T)
   graphics::grid(col = "black")
   graphics::points(rslt$meanparkfitness,ylab="MeanParkF", cex=1.2,col="blue", pch=20)
@@ -194,15 +207,21 @@ plotparkfitness <- function(result,spar=0.1){
   }
 
 
-  plot(1*100/selteil,ylim=c(20,110),type="b",lwd=2,col="green",pch=20,main="Selection percentage",
-       ylab="Percentage",xlab="Generation");graphics::grid(lty = 2)
-  plot(crossteil,col=crossteil,pch=20,cex=2,main="n Crossoverparts",xlab="Generation",ylab="Crossover Points",
-       ylim=c(1,6));graphics::grid(lty = 2)
-  plot(enesd$Ene.sd, type="b",col="blue",pch=20,lwd=2,main="Standard Deviation");graphics::grid(lty = 2)
+  plot(1*100/selteil,ylim=c(20,110),type="b",lwd=2,col="green",
+       pch=20,main="Selection percentage",
+       ylab="Percentage",xlab="Generation", cex.main=1);
+  graphics::grid(lty = 2)
+  plot(crossteil,col=crossteil,pch=20,cex.main=1,main="n Crossoverparts",xlab="Generation",ylab="Crossover Points",
+       ylim=c(1,6));
+  graphics::grid(lty = 2)
+  plot(enesd$Ene.sd, type="b",col="blue",pch=20,lwd=2,cex.main=1,main="Standard Deviation");
+  graphics::grid(lty = 2)
   graphics::par(new = TRUE)
-  plot(effsd$Eff.sd, type="b",col="orange",lwd=2,axes = FALSE, bty = "n", xlab = "", ylab = "",pch=20)
+  plot(effsd$Eff.sd, type="b",col="orange",lwd=2,axes = FALSE, 
+       bty = "n", xlab = "", ylab = "",pch=20)
   graphics::par(new = TRUE)
-  plot(fitsd$Fitn.sd, type="b",col="red",lwd=2,axes = FALSE, bty = "n", xlab = "", ylab = "",pch=20)
+  plot(fitsd$Fitn.sd, type="b",col="red",lwd=2,axes = FALSE, 
+       bty = "n", xlab = "", ylab = "",pch=20)
 
   timeticksd <- which(mutrpl>median(mutrpl));   sdrplval <- fitsd$Fitn.sd[timeticksd]
   if (length(timeticksd) != 0){
@@ -213,7 +232,7 @@ plotparkfitness <- function(result,spar=0.1){
 
 
   graphics::par(mfrow=c(1,1))
-  plot(fitsd$Fitn.sd, type="b",col="red",lwd=2,axes = TRUE, bty = "n", xlab = "", ylab = "",
+  plot(fitsd$Fitn.sd, type="b",col="red",lwd=2,cex.main=1,axes = TRUE, bty = "n", xlab = "", ylab = "",
                  pch=20, main="Mutation Rate influence on Standard Deviation")
   if (length(timeticksd) != 0){
     calibrate::textxy(timeticksd,sdrplval,labs = timeticksd,cex = 0.7)
