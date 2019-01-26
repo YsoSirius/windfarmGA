@@ -5,6 +5,7 @@ addons:
     packages:
       - libgdal-dev
       - libproj-dev
+      - libudunits2-dev
 
 before_install:
     - export DISPLAY=:99.0

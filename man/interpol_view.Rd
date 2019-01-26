@@ -12,7 +12,8 @@ interpol_view(res, plot = TRUE, breakseq, breakform = NULL,
 
 \item{plot}{Should the result be plotted? Default is TRUE}
 
-\item{breakseq}{The breaks for value plotting}
+\item{breakseq}{The breaks for value plotting. By default, 5 equal 
+intervals are generated.}
 
 \item{breakform}{If 'breakseq' is missing, a sampling function to 
 calculate the breaks, like \code{\link{quantile}}, fivenum, etc.}
@@ -39,14 +40,18 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 proj4string(Polygon1) <- CRS(Projection)
 DEM_meter <- getDEM(Polygon1)
 
-sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular")
+sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), 
+                       type = "regular")
 sample_xy <- coordinates(sample_POI)
 
 turbloc = spsample(DEM_meter[[2]], 10, type = "random");
-res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
+res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
+                turbine_locs = turbloc,  h1=1.8, h2=50)
 interpol_view(res, plotDEM = T)
 
-interpol_view(res, plotDEM = F, breakseq = seq(0,max(colSums(res$Result)),1))
+interpol_view(res, breakseq = seq(0,max(colSums(res$Result)),1))
+interpol_view(res, plotDEM = F, breakform = quantile)
+interpol_view(res, breakform = factor)
 
 ## ... Arguments are past on to the raster plot method
 interpol_view(res, plotDEM = T, alpha=0.5)

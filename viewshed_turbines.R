@@ -394,6 +394,24 @@ plot_farm_3d(DEM_meter[[1]], turbloc, z_scale= 1000, zoom1=0.4,
              freetype=F, relativez=T, labl = "Turbine",
              texture = "imhof1")
 
+
+library(sp)
+# library(raster)
+# library(plyr)
+# library(sf)
+# library(dplyr)
+library(windfarmGA)
+Polygon1 <- Polygon(rbind(c(4488182, 2663172), c(4488182, 2669343),
+                          c(4499991, 2669343), c(4499991, 2663172)))
+Polygon1 <- Polygons(list(Polygon1), 1);
+Polygon1 <- SpatialPolygons(list(Polygon1))
+Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+proj4string(Polygon1) <- CRS(Projection)
+DEM_meter <- getDEM(Polygon1)
+
+turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+
 library(rgl)
 # rgl::text3d()
 # rgl::par3d()
@@ -453,6 +471,7 @@ turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=5)
 plot_viewshed(res)
 plot_viewshed(res, leg = T)
+
 intviw <- interpol_view(res, plotDEM = T)
 interpol_view(res, plotDEM = T, alpha=0.5)
 interpol_view(res)

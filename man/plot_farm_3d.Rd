@@ -5,7 +5,7 @@
 \title{Visibility Assessment}
 \usage{
 plot_farm_3d(DEM, turbines, zscale_label = 200, zscale_sphere = 200,
-  zscale_3d = 200, txtu = "imhof1", txt = "Turbine", z = 1,
+  zscale_3d = 200, texture = "imhof1", txt = "Turbine", z = 1,
   sunangle = 315, ...)
 }
 \arguments{
@@ -13,6 +13,8 @@ plot_farm_3d(DEM, turbines, zscale_label = 200, zscale_sphere = 200,
 
 \item{turbines}{boolean, indicating if polygon should be cropped.
 Default is TRUE}
+
+\item{texture}{texture for rayshader::sphere_shade.}
 
 \item{z_scale}{A Spatial / SimpleFeature Polygon to crop the DEM}
 
@@ -26,10 +28,24 @@ Default is TRUE}
 
 }
 \description{
-Plot a wind farm with rayshader in 3D
+Plot a wind farm with rayshader in 3D. (Still experimental)
 }
 \examples{
 \dontrun{
+library(sp)
+library(windfarmGA)
+Polygon1 <- Polygon(rbind(c(4488182, 2663172), c(4488182, 2669343),
+                          c(4499991, 2669343), c(4499991, 2663172)))
+Polygon1 <- Polygons(list(Polygon1), 1);
+Polygon1 <- SpatialPolygons(list(Polygon1))
+Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+proj4string(Polygon1) <- CRS(Projection)
+DEM_meter <- getDEM(Polygon1)
+
+turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+
+plot_farm_3d(DEM_meter[[1]], turbloc, texture="imhof4")
 }
 }
 \author{

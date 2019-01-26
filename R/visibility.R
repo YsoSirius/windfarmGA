@@ -556,13 +556,14 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
 
 #' @title Visibility Assessment
 #' @name plot_farm_3d
-#' @description Plot a wind farm with rayshader in 3D
+#' @description Plot a wind farm with rayshader in 3D. (Still experimental)
 #'
 #' @export
 #' 
 #' @importFrom raster cellFromXY colFromX rowFromY ncol nrow crs extract extent
 #' @importFrom sp coordinates
 #' @importFrom rayshader sphere_shade plot_3d render_label
+#' @importFrom magrittr %>%
 #' 
 #' @param DEM The ISO3 code of the country
 #' @param turbines boolean, indicating if polygon should be cropped.
@@ -571,27 +572,34 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
 #' @param zoom1 A Spatial / SimpleFeature Polygon to crop the DEM
 #' @param windowsize A Spatial / SimpleFeature Polygon to crop the DEM
 #' @param labl A Spatial / SimpleFeature Polygon to crop the DEM
+#' @param texture texture for rayshader::sphere_shade. 
 #' 
 #' @return 
 #' 
 #' @examples \dontrun{
+#' library(sp)
+#' library(windfarmGA)
+#' Polygon1 <- Polygon(rbind(c(4488182, 2663172), c(4488182, 2669343),
+#'                           c(4499991, 2669343), c(4499991, 2663172)))
+#' Polygon1 <- Polygons(list(Polygon1), 1);
+#' Polygon1 <- SpatialPolygons(list(Polygon1))
+#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' proj4string(Polygon1) <- CRS(Projection)
+#' DEM_meter <- getDEM(Polygon1)
+#' 
+#' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+#' 
+#' plot_farm_3d(DEM_meter[[1]], turbloc, texture="imhof4")
 #' }
 #' @author Sebastian Gatscha
 plot_farm_3d <- function(DEM, turbines, zscale_label=200, 
-                         zscale_sphere=200, zscale_3d=200, txtu = "imhof1",
+                         zscale_sphere=200, zscale_3d=200, texture = "imhof1",
                          txt = "Turbine", z = 1, sunangle = 315, ...) {
-  # DEM <- DEM_meter[[1]]; turbines = turbloc; sunangle = 315; z=1; txt="Turb"; txtu="imhof1"; 
-  # zscale_sphere=200; zscale_3d=200; zscale_label=200;
-  # z_scale= 1000; zoom1=0.4; windowsize=c(1000,800)
-  # fov=10; theta=-100; phi=10; solid=T
-  # freetype=F; relativez=T; labl = "Turbine"
-  # texture = "imhof1";
-  # argX <- data.frame(do.call("cbind", list(...)), stringsAsFactors = F)
-  # match.arg(argX, c('texture'))
 
   DEM_matrix = matrix(raster::extract(DEM,raster::extent(DEM),buffer=1000),
                       nrow=raster::ncol(DEM),ncol=raster::nrow(DEM))
-  
+  # DEM_matrix = t(as.matrix(DEM))
   turbines_df <- as.data.frame(sp::coordinates(turbines))
   
   # raster_indic <- raster::cellFromXY(DEM, turbines_df)
@@ -603,7 +611,7 @@ plot_farm_3d <- function(DEM, turbines, zscale_label=200,
 
   ## Plot 3D
   DEM_matrix %>%
-    rayshader::sphere_shade(texture = txtu, zscale = zscale_sphere, sunangle=sunangle) %>% 
+    rayshader::sphere_shade(texture = texture, zscale = zscale_sphere, sunangle=sunangle) %>% 
     # rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d, ...)
     rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d)
   
@@ -612,7 +620,7 @@ plot_farm_3d <- function(DEM, turbines, zscale_label=200,
                             y=raster_y[i], z=turbines_df$z[i], freetype=F)
   })
   
-  rgl::arrow3d(turbines_df[7,], turbines_df[1,], type = "extrusion", col = "red")
+  # rgl::arrow3d(turbines_df[7,], turbines_df[1,], type = "extrusion", col = "red")
   
   # rgl::plot3d(turbines_df)
   # rgl::arrow3d(turbines_df[7,], turbines_df[1,], type = "extrusion", col = "red")
@@ -628,5 +636,12 @@ plot_farm_3d <- function(DEM, turbines, zscale_label=200,
 # plot_farm_3d(DEM_meter[[1]], turbloc, zscale_sphere=1, zscale_3d=1000, zscale_label=1500)
 # plot_farm_3d(DEM_meter[[1]], turbloc, zscale_sphere=1, zscale_3d=1, zscale_label=1500)
 
-
+# DEM <- DEM_meter[[1]]; turbines = turbloc; sunangle = 315; z=1; txt="Turb"; txtu="imhof1"; 
+# zscale_sphere=200; zscale_3d=200; zscale_label=200;
+# z_scale= 1000; zoom1=0.4; windowsize=c(1000,800)
+# fov=10; theta=-100; phi=10; solid=T
+# freetype=F; relativez=T; labl = "Turbine"
+# texture = "imhof1";
+# argX <- data.frame(do.call("cbind", list(...)), stringsAsFactors = F)
+# match.arg(argX, c('texture'))
 
