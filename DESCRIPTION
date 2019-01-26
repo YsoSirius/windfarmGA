@@ -22,7 +22,7 @@ Imports:
     raster (>= 2.5-2),
   	desc (>= 1.2.0),
   	sf (>= 0.7.2),
-  	rayshader (>= 0.8.1),
+  	rayshader (>= 0.5.1),
   	plyr (>= 1.8.4),
   	rworldmap (>= 1.3.6),
     sp (>= 1.2-2),

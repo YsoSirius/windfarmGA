@@ -562,7 +562,7 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
 #' 
 #' @importFrom raster cellFromXY colFromX rowFromY ncol nrow crs extract extent
 #' @importFrom sp coordinates
-#' @importFrom rayshader sphere_shade plot_3d render_label
+#' @importFrom rayshader sphere_shade plot_3d
 #' @importFrom magrittr %>%
 #' 
 #' @param DEM The ISO3 code of the country
@@ -615,10 +615,10 @@ plot_farm_3d <- function(DEM, turbines, zscale_label=200,
     # rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d, ...)
     rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d)
   
-  a <- lapply(1:length(raster_x), function(i) {
-    rayshader::render_label(DEM_matrix, x=raster_x[i], text = txt, zscale = zscale_label,
-                            y=raster_y[i], z=turbines_df$z[i], freetype=F)
-  })
+  ## a <- lapply(1:length(raster_x), function(i) {
+  ##  rayshader::render_label(DEM_matrix, x=raster_x[i], text = txt, zscale = zscale_label,
+  ##                          y=raster_y[i], z=turbines_df$z[i], freetype=F)
+  ##})
   
   # rgl::arrow3d(turbines_df[7,], turbines_df[1,], type = "extrusion", col = "red")
   
