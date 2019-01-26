@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{getDEM}
 \alias{getDEM}
-\title{Visibility Assessment}
+\title{getDEM}
 \usage{
 getDEM(polygon, ISO3 = "AUT", clip = TRUE)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{plot_viewshed}
 \alias{plot_viewshed}
-\title{Visibility Assessment}
+\title{plot_viewshed}
 \usage{
 plot_viewshed(res, legend = FALSE)
 }

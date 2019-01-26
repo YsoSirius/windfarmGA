@@ -2,11 +2,10 @@
 % Please edit documentation in R/visibility.R
 \name{plot_farm_3d}
 \alias{plot_farm_3d}
-\title{Visibility Assessment}
+\title{plot_farm_3d}
 \usage{
-plot_farm_3d(DEM, turbines, zscale_label = 200, zscale_sphere = 200,
-  zscale_3d = 200, texture = "imhof1", txt = "Turbine", z = 1,
-  sunangle = 315, ...)
+plot_farm_3d(DEM, turbines, zscale_sphere = 200, zscale_3d = 200,
+  texture = "imhof1", z = 1, sunangle = 315, ...)
 }
 \arguments{
 \item{DEM}{The ISO3 code of the country}
@@ -14,18 +13,18 @@ plot_farm_3d(DEM, turbines, zscale_label = 200, zscale_sphere = 200,
 \item{turbines}{boolean, indicating if polygon should be cropped.
 Default is TRUE}
 
+\item{zscale_sphere}{zscale for rayshader::sphere_shade. Default is 200.}
+
+\item{zscale_3d}{zscale for rayshader::plot_3d Default is 200.}
+
 \item{texture}{texture for rayshader::sphere_shade.}
 
-\item{z_scale}{A Spatial / SimpleFeature Polygon to crop the DEM}
+\item{z}{zoom value. Default is 1}
 
-\item{zoom1}{A Spatial / SimpleFeature Polygon to crop the DEM}
+\item{sunangle}{Default '315' (NW). The direction of the main 
+highlight color.}
 
-\item{windowsize}{A Spatial / SimpleFeature Polygon to crop the DEM}
-
-\item{labl}{A Spatial / SimpleFeature Polygon to crop the DEM}
-}
-\value{
-
+\item{...}{Arguments passed on to rayshader::plot_3d}
 }
 \description{
 Plot a wind farm with rayshader in 3D. (Still experimental)

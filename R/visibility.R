@@ -1,5 +1,5 @@
 ########################################
-#' @title Visibility Assessment
+#' @title cansee
 #' @name cansee
 #' @description Check if point1 (xy1) visible from point2 (xy2) given 
 #' a certain DEM (r)
@@ -35,7 +35,7 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0){
 }
 
 
-#' @title Visibility Assessment
+#' @title viewTo
 #' @name viewTo
 #' @description Check if Point 1 (xy) is visible from multiple points
 #' (xy2)
@@ -73,7 +73,7 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
 }
 
 
-#' @title Visibility Assessment
+#' @title rasterprofile
 #' @name rasterprofile
 #' @description Sample a raster along a straight line between 2 points
 #'
@@ -129,7 +129,7 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
 }
 
 
-#' @title Visibility Assessment
+#' @title viewshed
 #' @name viewshed
 #' @description Calculate visibility for given points in 
 #' a given area.
@@ -207,53 +207,53 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
               "Area" = sf::st_as_sf(shape), "DEM" = r, "Turbines" = turbine_locs))
 }
 ## Geht noch nicht
-viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
-  # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
-  # h1=0; h2=0;
-  
-  if (class(shape)[1] == "sf") {
-    shape <- as(shape, "Spatial")  
-  }
-  if (class(turbine_locs) == "SpatialPoints") {
-    turbine_locs = sp::coordinates(turbine_locs)
-  }
-  
-  sample_POI <- sp::spsample(shape, n = raster::ncell(r), type = "regular")
-  sample_xy <- sp::coordinates(sample_POI)
-  
-  
-  library(parallel)
-  nCore <- parallel::detectCores()
-  cl <- parallel::makeCluster(nCore)
-  parallel::clusterEvalQ(cl, {
-    library(plyr)
-    library(raster)
-  })
-  parallel::clusterExport(cl, varlist = c("turbine_locs", "sample_xy", 
-                                "viewTo", "cansee", "rasterprofile", 
-                                "r", "h1", "h2", "progress"))
-  
-  res <- parallel::parApply(cl = cl, X = turbine_locs, 1, function(d){
-    viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2, progress)
-  })
-  res <- t(res)
-  
-  parallel::stopCluster(cl)
-  
-  if (is.matrix(res)) {
-    res <- res[1:nrow(res),1:nrow(sample_xy)]
-  }
-  if (is.logical(res)) {
-    res[1:nrow(sample_xy)]
-  }
-  
-  return(list("Result"=res, "Raster_POI" = sample_xy, 
-              "Area" = sf::st_as_sf(shape), "DEM" = r, "Turbines" = turbine_locs))
-}
+# viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
+#   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
+#   # h1=0; h2=0;
+#   
+#   if (class(shape)[1] == "sf") {
+#     shape <- as(shape, "Spatial")  
+#   }
+#   if (class(turbine_locs) == "SpatialPoints") {
+#     turbine_locs = sp::coordinates(turbine_locs)
+#   }
+#   
+#   sample_POI <- sp::spsample(shape, n = raster::ncell(r), type = "regular")
+#   sample_xy <- sp::coordinates(sample_POI)
+#   
+#   
+#   library(parallel)
+#   nCore <- parallel::detectCores()
+#   cl <- parallel::makeCluster(nCore)
+#   parallel::clusterEvalQ(cl, {
+#     library(plyr)
+#     library(raster)
+#   })
+#   parallel::clusterExport(cl, varlist = c("turbine_locs", "sample_xy", 
+#                                 "viewTo", "cansee", "rasterprofile", 
+#                                 "r", "h1", "h2", "progress"))
+#   
+#   res <- parallel::parApply(cl = cl, X = turbine_locs, 1, function(d){
+#     viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2, progress)
+#   })
+#   res <- t(res)
+#   
+#   parallel::stopCluster(cl)
+#   
+#   if (is.matrix(res)) {
+#     res <- res[1:nrow(res),1:nrow(sample_xy)]
+#   }
+#   if (is.logical(res)) {
+#     res[1:nrow(sample_xy)]
+#   }
+#   
+#   return(list("Result"=res, "Raster_POI" = sample_xy, 
+#               "Area" = sf::st_as_sf(shape), "DEM" = r, "Turbines" = turbine_locs))
+# }
 # res <- viewshed_par(r = DEM_meter, shape=shape_meter, turbine_locs = turbloc,  h1=1.8, h2=50)
 
 
-#' @title Visibility Assessment
+#' @title plot_viewshed
 #' @name plot_viewshed
 #' @description Plot the result of viewshed
 #'
@@ -308,7 +308,7 @@ plot_viewshed <- function(res, legend=FALSE) {
 
 
 
-#' @title Visibility Assessment
+#' @title interpol_view
 #' @name interpol_view
 #' @description Plot an interpolated view of the viewshed analysis
 #'
@@ -325,6 +325,7 @@ plot_viewshed <- function(res, legend=FALSE) {
 #' calculate the breaks, like \code{\link{quantile}}, fivenum, etc.
 #' @param plotDEM Plot the DEM? Default is FALSE
 #' @param fun Function used for rasterize. Default is mean
+#' @param ... Arguments passed on to \code{\link[raster]{plot}}.
 #' 
 #' @return An interpolated raster
 #' 
@@ -404,7 +405,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 }
 
 
-#' @title Visibility Assessment
+#' @title getISO3
 #' @name getISO3
 #' @description Get point values from the rworldmap package
 #'
@@ -490,7 +491,7 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 # getISO3(points, crs_pp = 3035)
 
 
-#' @title Visibility Assessment
+#' @title getDEM
 #' @name getDEM
 #' @description Get a DEM raster for a country based on ISO3 code
 #'
@@ -554,7 +555,7 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
 
 
 
-#' @title Visibility Assessment
+#' @title plot_farm_3d
 #' @name plot_farm_3d
 #' @description Plot a wind farm with rayshader in 3D. (Still experimental)
 #'
@@ -568,13 +569,15 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
 #' @param DEM The ISO3 code of the country
 #' @param turbines boolean, indicating if polygon should be cropped.
 #' Default is TRUE
-#' @param z_scale A Spatial / SimpleFeature Polygon to crop the DEM
-#' @param zoom1 A Spatial / SimpleFeature Polygon to crop the DEM
-#' @param windowsize A Spatial / SimpleFeature Polygon to crop the DEM
-#' @param labl A Spatial / SimpleFeature Polygon to crop the DEM
+#' @param zscale_sphere zscale for rayshader::sphere_shade. Default is 200.
+#' @param zscale_3d zscale for rayshader::plot_3d Default is 200.
+#' @param z zoom value. Default is 1
 #' @param texture texture for rayshader::sphere_shade. 
+#' @param sunangle Default '315' (NW). The direction of the main 
+#' highlight color. 
+#' @param ... Arguments passed on to rayshader::plot_3d 
 #' 
-#' @return 
+#' @return NULL
 #' 
 #' @examples \dontrun{
 #' library(sp)
@@ -593,9 +596,10 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
 #' plot_farm_3d(DEM_meter[[1]], turbloc, texture="imhof4")
 #' }
 #' @author Sebastian Gatscha
-plot_farm_3d <- function(DEM, turbines, zscale_label=200, 
+plot_farm_3d <- function(DEM, turbines, #zscale_label=200, 
                          zscale_sphere=200, zscale_3d=200, texture = "imhof1",
-                         txt = "Turbine", z = 1, sunangle = 315, ...) {
+                         # txt = "Turbine", 
+                         z = 1, sunangle = 315, ...) {
 
   DEM_matrix = matrix(raster::extract(DEM,raster::extent(DEM),buffer=1000),
                       nrow=raster::ncol(DEM),ncol=raster::nrow(DEM))
@@ -603,17 +607,18 @@ plot_farm_3d <- function(DEM, turbines, zscale_label=200,
   turbines_df <- as.data.frame(sp::coordinates(turbines))
   
   # raster_indic <- raster::cellFromXY(DEM, turbines_df)
-  raster_x <- raster::colFromX(DEM, turbines_df$x)
-  raster_y <- raster::rowFromY(DEM, turbines_df$y)
+  # raster_x <- raster::colFromX(DEM, turbines_df$x)
+  # raster_y <- raster::rowFromY(DEM, turbines_df$y)
   
   ## Merge with DEM_matrix to get z-values
   turbines_df$z <- DEM[raster::cellFromXY(DEM, turbines_df)]
 
   ## Plot 3D
   DEM_matrix %>%
-    rayshader::sphere_shade(texture = texture, zscale = zscale_sphere, sunangle=sunangle) %>% 
-    # rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d, ...)
-    rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d)
+    rayshader::sphere_shade(texture = texture, zscale = zscale_sphere, 
+                            sunangle=sunangle) %>% 
+    rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d, ...)
+    # rayshader::plot_3d(DEM_matrix, zoom = z, zscale = zscale_3d)
   
   ## a <- lapply(1:length(raster_x), function(i) {
   ##  rayshader::render_label(DEM_matrix, x=raster_x[i], text = txt, zscale = zscale_label,

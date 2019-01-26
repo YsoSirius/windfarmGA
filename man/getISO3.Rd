@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{getISO3}
 \alias{getISO3}
-\title{Visibility Assessment}
+\title{getISO3}
 \usage{
 getISO3(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   coords = c("LONG", "LAT"), ask = F)

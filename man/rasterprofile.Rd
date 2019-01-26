@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{rasterprofile}
 \alias{rasterprofile}
-\title{Visibility Assessment}
+\title{rasterprofile}
 \usage{
 rasterprofile(r, xy1, xy2, plot = FALSE)
 }

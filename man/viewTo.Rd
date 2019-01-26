@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{viewTo}
 \alias{viewTo}
-\title{Visibility Assessment}
+\title{viewTo}
 \usage{
 viewTo(r, xy1, xy2, h1 = 0, h2 = 0, progress = "none")
 }

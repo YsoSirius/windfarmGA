@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{viewshed}
 \alias{viewshed}
-\title{Visibility Assessment}
+\title{viewshed}
 \usage{
 viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0, progress = "none")
 }

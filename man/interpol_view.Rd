@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{interpol_view}
 \alias{interpol_view}
-\title{Visibility Assessment}
+\title{interpol_view}
 \usage{
 interpol_view(res, plot = TRUE, breakseq, breakform = NULL,
   plotDEM = FALSE, fun = mean, ...)
@@ -21,6 +21,8 @@ calculate the breaks, like \code{\link{quantile}}, fivenum, etc.}
 \item{plotDEM}{Plot the DEM? Default is FALSE}
 
 \item{fun}{Function used for rasterize. Default is mean}
+
+\item{...}{Arguments passed on to \code{\link[raster]{plot}}.}
 }
 \value{
 An interpolated raster

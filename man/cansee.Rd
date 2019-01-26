@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{cansee}
 \alias{cansee}
-\title{Visibility Assessment}
+\title{cansee}
 \usage{
 cansee(r, xy1, xy2, h1 = 0, h2 = 0)
 }

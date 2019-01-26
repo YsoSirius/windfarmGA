@@ -13,7 +13,4 @@
 ^README.md
 ^README\.Rmd$
 ^README-.*\.png$
-^.grd
-^.gri
-^.vrt
 viewshed_turbines.R
