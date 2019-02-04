@@ -19,3 +19,4 @@ packrat/src/
 *.vrt
 GoogleChromePlot.R
 GooglePlot.R
+windlist_wakeR.RData
