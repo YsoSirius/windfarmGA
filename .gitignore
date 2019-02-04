@@ -1,12 +1,14 @@
 .Rproj.user
 .Rprofile
-.RData
+*.RData
 .Rhistory
 .DS_Store
 windfarmGA.Rcheck
 windfarmGA_*.tar.gz
 optimizeCalcEn.R
 viewshed_turbines.R
+testRandomsearch_plotfunc.R
+rayshader_tests.R
 srtm*
 readme.txt
 packrat/*
