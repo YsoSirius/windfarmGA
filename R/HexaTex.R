@@ -73,6 +73,7 @@ tess2SPdf <- function(x) {
 #' library(maptools)
 #' library(sp)
 #' library(raster)
+#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1),1);

@@ -5,6 +5,8 @@
 .DS_Store
 windfarmGA.Rcheck
 windfarmGA_*.tar.gz
+optimizeCalcEn.R
+viewshed_turbines.R
 srtm*
 readme.txt
 packrat/*
@@ -13,3 +15,5 @@ packrat/src/
 *.grd
 *.gri
 *.vrt
+GoogleChromePlot.R
+GooglePlot.R

@@ -14,6 +14,7 @@
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)
+#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
@@ -72,23 +73,24 @@
 #'}
 #' @author Sebastian Gatscha
 getRects          <- function(trimtonOut, Grid){
-
-  childli <- list();
   len1 <- dim(trimtonOut)[2]
-
+  childli = childnew = rectidli = vector("list", len1);
   for (i in 1:len1) {
     childli[[i]] <- trimtonOut[,i]
   }
-
-  rectidli <- list();
   for (u in 1:len1){
     rectidli[[u]] <- which(childli[[u]]==1, arr.ind = T)
   }
-
-  childnew <- list()
   for (z in 1:len1) {
     childnew[[z]] <- Grid[rectidli[[z]],];
   }
-
   return(childnew)
 }
+
+# getRects1 <- function(trimtonOut, Grid) {
+#   len1 <- dim(trimtonOut)[2]
+#   lapply(1:len1, function(i) {
+#     Grid[which(trimtonOut[,i] == 1, arr.ind = TRUE),];
+#   })
+# }
+

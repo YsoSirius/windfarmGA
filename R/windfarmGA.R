@@ -24,9 +24,11 @@
 #' \code{sourceCCLRoughness} of this function. For further information, see
 #' the examples.
 #'
-#'
-#'
 #' @export
+#'
+#' @useDynLib windfarmGA, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
+#' 
 #' @importFrom rgdal readOGR
 #' @importFrom sp Polygon SpatialPolygons CRS proj4string spTransform
 #' @importFrom raster plot crs
@@ -109,6 +111,10 @@
 #' processing.
 #' @param numCluster If Parallel is TRUE, this variable defines the number
 #' of clusters to be used.
+#' @param verbose If TRUE, will print out information in every iteration. 
+#' Default is FALSE
+#' @param plotit If TRUE, will plot the best windfarm of every generation. 
+#' Default is FALSE 
 #' 
 #' @return Assigns the needed input values and starts an optimization run.
 #' The result of this run is a matrix of all relevant output parameters.
@@ -217,7 +223,8 @@ utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
                          "unit", "Laenge_B","By","Bx",
                          "dry.grid.filtered","spd.binned","Run","EnergyOverall",
                          "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt",
-                         "srtm_crop", "cclRaster", "weibullsrc"));
+                         "srtm_crop", "cclRaster", "weibullsrc","globalparks","<<-"));
+
 
 windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,sourceCCLRoughness,
                        vdirspe, Rotor=30,fcrR=3,n=10,topograp=FALSE,
@@ -225,7 +232,7 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
                        RotorHeight=50,SurfaceRoughness=0.14, Proportionality=1,
                        mutr=0.001, elitism=TRUE, nelit=6,
                        selstate="FIX", crossPart1="EQU",trimForce=TRUE, weibull, weibullsrc,
-                       Parallel, numCluster) {
+                       Parallel, numCluster, verbose=FALSE, plotit = FALSE) {
   opar = par(no.readonly = T)
   par(mfrow=c(1,2), ask=F)
   ######## CHECK INPUT POLYGON
@@ -321,12 +328,12 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
 
 
   if (missing(topograp)){
-    topograp=F
+    topograp = FALSE
   }    
   if (missing(weibull)){
-    weibull=F
+    weibull = FALSE
   }  
-  if (weibull==T){
+  if (weibull){
     cat("\nWeibull Distribution is used.")
     if (missing(weibullsrc)){
       cat("\nWeibull Informations from package will be used.\n")
@@ -345,11 +352,11 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
     }
   }
   if (missing(weibullsrc)){
-    weibullsrc=""
+    weibullsrc = ""
   }
 
   if (missing(Parallel)){
-    Parallel <- F
+    Parallel <- FALSE
   }
   if (missing(numCluster)){
     numCluster <- 1
@@ -375,7 +382,8 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
                     SurfaceRoughness = SurfaceRoughness,Proportionality = Proportionality,mutr = mutr,
                     elitism = elitism,nelit = nelit,selstate = selstate,crossPart1 = crossPart1,trimForce = trimForce,
                     Projection=Projection, sourceCCL = sourceCCL, sourceCCLRoughness = sourceCCLRoughness,
-                    weibull=weibull, weibullsrc = weibullsrc, Parallel=Parallel, numCluster=numCluster)
+                    weibull=weibull, weibullsrc = weibullsrc, Parallel=Parallel, numCluster=numCluster,
+                    verbose=verbose, plotit=plotit)
   par(opar)
   invisible(result)
 }

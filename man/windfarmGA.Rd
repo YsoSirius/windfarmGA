@@ -106,6 +106,12 @@ processing.}
 
 \item{numCluster}{If Parallel is TRUE, this variable defines the number
 of clusters to be used.}
+
+\item{verbose}{If TRUE, will print out information in every iteration. 
+Default is FALSE}
+
+\item{plotit}{If TRUE, will plot the best windfarm of every generation. 
+Default is FALSE}
 }
 \value{
 Assigns the needed input values and starts an optimization run.

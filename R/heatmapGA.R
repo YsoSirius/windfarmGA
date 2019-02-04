@@ -22,6 +22,7 @@
 #'
 #' @return NULL
 #' @examples \donttest{
+#' library(windfarmGA)
 #' ## Add some data examples from the package
 #' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
 #'
@@ -42,12 +43,14 @@ heatmapGA <- function(result,si=2,idistw){
   par(mfrow=c(1,1))
   
   bpe <- do.call("rbind",result[,'allCoords']);
+  rownames(bpe)<-NULL
   bpe <- bpe[c(1,2)]
 
   sizingidw <- as.integer(result[,'inputData'][[1]][,1]['Rotorradius'])
   sizing <- as.integer(result[,'inputData'][[1]][,1]['Resolution'])/si
 
-  dupco <- geoR::dup.coords(bpe,simplify = TRUE);   bpe$Ids <- as.integer(rownames(bpe));
+  dupco <- geoR::dup.coords(bpe,simplify = TRUE);   
+  bpe$Ids <- as.integer(rownames(bpe));
 
   dupco <- lapply(dupco, function(x) as.integer(x));  dupcosum <- lapply(dupco, function(x) length(x));
   bpenew <- vector("list",length(dupco))
@@ -81,5 +84,7 @@ heatmapGA <- function(result,si=2,idistw){
     ggplot2::geom_point(data=bpenew,mapping=ggplot2::aes(x=X,y=Y),
                         show.legend = TRUE,size=sqrt(sqrt(bpenew$Sum)),alpha=0.6)
 
-  plot1+ggplot2::scale_fill_gradient(low="red", high="green")+ggplot2::coord_equal()
+  plot1 + 
+    ggplot2::scale_fill_gradient(low="red", high="green") + 
+    ggplot2::coord_equal()
 }

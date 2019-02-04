@@ -14,3 +14,6 @@
 ^README\.Rmd$
 ^README-.*\.png$
 viewshed_turbines.R
+optimizeCalcEn.R
+GoogleChromePlot.R
+GooglePlot.R

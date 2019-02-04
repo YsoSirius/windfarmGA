@@ -4,9 +4,8 @@
 \alias{plotResult}
 \title{Plot the best Results}
 \usage{
-plotResult(result, Polygon1, best = 3, plotEn = 1,
-  topographie = FALSE, Grid, Projection, sourceCCLRoughness, sourceCCL,
-  weibullsrc)
+plotResult(result, Polygon1, best = 3, plotEn = 1, topographie = FALSE,
+  Grid, Projection, sourceCCLRoughness, sourceCCL, weibullsrc)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}} or

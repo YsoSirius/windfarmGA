@@ -4,8 +4,8 @@
 #' turbines.
 #'
 #' @export
-#' @importFrom dplyr select group_by summarise_all %>%
-#' @importFrom utils globalVariables
+#' @importFrom dplyr select group_by summarise_all funs
+#' @importFrom magrittr %>%
 #'
 #' @param mut A binary matrix with the mutated individuals (matrix)
 #' @param nturb A numeric value indicating the amount of required turbines

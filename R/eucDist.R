@@ -4,7 +4,6 @@
 #'
 #' @export
 #'
-#'
 #' @param x A numeric value with X and Y coordinates for Point 1 (numeric)
 #' @param y A numeric value with X and Y coordinates for Point 2 (numeric)
 #'
@@ -12,11 +11,9 @@
 #' two Points. (numeric)
 #'
 #' @examples
-#' x=c(200,100)
-#' y=c(1000,2000)
-#' euc.dist(x,y)
+#' x = c(200, 100)
+#' y = c(1000, 2000)
+#' euc.dist(x, y)
 #'
 #' @author Sebastian Gatscha
-euc.dist          <- function(x,y) {
-  round(sqrt(sum((x - y) ^ 2)),4)
-}
+euc.dist <- function(x,y){sqrt(sum((x - y) ^ 2))}

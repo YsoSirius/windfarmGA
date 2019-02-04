@@ -37,7 +37,9 @@ Find all turbines that could potentially influence
 another turbine and save them to a list.
 }
 \examples{
-library(sp);library(raster)
+library(sp)
+library(raster)
+library(windfarmGA)
 ## Exemplary input Polygon with 2km x 2km:
 polYgon <- Polygon(rbind(c(0, 0), c(0, 2000),
 c(2000, 2000), c(2000, 0)))
@@ -47,8 +49,8 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=TRUE)
 
-t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
-     y=runif(10,0,raster::extent(polYgon)[4])))
+t <- as.matrix(cbind(x=runif(10,0,extent(polYgon)[2]),
+     y=runif(10,0,extent(polYgon)[4])))
 wnkl=20
 dist=100000
 dirct=0

@@ -28,6 +28,7 @@ Get point values from the rworldmap package
 }
 \examples{
 \dontrun{
+library(windfarmGA)
 points = cbind(c(4488182.26267016, 4488852.91748256), 
 c(2667398.93118627, 2667398.93118627))
 getISO3(pp = points, ask = T)

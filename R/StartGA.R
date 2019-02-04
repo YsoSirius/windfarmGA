@@ -4,7 +4,9 @@
 #' indexed grid and assign binary variable 1 to selected grids.
 #' This function initiates the genetic algorithm with a first random
 #' population and will only be needed in the first iteration.
+#' 
 #' @export
+#' 
 #' @param Grid The data.frame output of "GridFilter" function,
 #' with X and Y coordinates and Grid cell IDs. (data.frame)
 #' @param n A numeric value indicating the amount of required turbines.
@@ -49,20 +51,17 @@ StartGA           <- function(Grid, n, nStart=100) {
     print("################### GA ERROR MESSAGE ###################")
     cat(paste("##### Amount Grid-cells: ", length(Grid$ID),"\n##### Amount of turbines: ", n))
     stop("\n The amount of Grid-cells should at least be double the size of turbines requested.\n
-          Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
+         Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
     print("Press [enter] to exit")
     readline()
   }
-  subsetSel <- list(); ids <- list();
-  ## How many parks for the initial population (10,20, amount of turbines?)
-  for (i in 1:nStart){
-    ## Assign Binary Variable 0 to all individuals
-    Grid$bin <- 0
-    ## Randomly assign n values of 1 in the dataframe
-    ids[i][[1]] <- sort(sample(x = Grid$ID, size = n, replace = F))
-    Grid[Grid$ID %in% ids[i][[1]], ]$bin = 1
-    subsetSel[i][[1]] <- Grid[Grid$bin == 1,]
-  }
-  return(subsetSel)
+  ## Assign Binary Variable 0 to all Grid cells
+  Grid$bin <- 0L
+  ## Randomly sample n grid cells and assign 1 to bin column
+  lapply(seq_len(nStart), function(i) {
+    res <- Grid[Grid$ID %in% sample(x = Grid$ID, size = n, replace = FALSE),]
+    res$bin = 1L
+    res
+  })
 }
 

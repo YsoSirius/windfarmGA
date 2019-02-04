@@ -27,8 +27,8 @@ the wake effects are considered to be eliminated. Default is 100km.
 distances and angles. Default is FALSE (logical)}
 }
 \value{
-Returns a data.frame with the distances and angles of
-potentially influencing turbines (data.frame)
+Returns a matrix with the distances and angles of
+potentially influencing turbines (matrix)
 }
 \description{
 Calculate the relevant distances \code{\link{PointToLine2}}
@@ -36,7 +36,9 @@ and angles \code{\link{WinkelCalc}} for a given turbine location and
 all potentially influencing turbines.
 }
 \examples{
-library(sp);library(raster)
+library(sp)
+library(raster)
+library(windfarmGA)
 
 ## Exemplary input Polygon with 2km x 2km:
 polYgon <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))

@@ -4,9 +4,9 @@
 \alias{calculateEn}
 \title{Calculate Energy Outputs of Individuals}
 \usage{
-calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness,
-  windraster, wnkl, distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop,
-  topograp, cclRaster, weibull, weibullsrc)
+calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl, distanz,
+  polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp, cclRaster, weibull,
+  weibullsrc)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population
@@ -21,9 +21,6 @@ were measured (numeric)}
 considered area in m. If the terrain effect model is activated, a
 surface roughness will be calculated for every grid cell with the
 elevation and land cover information (numeric)}
-
-\item{windraster}{Dummy windraster for the considered area with value 1
-(raster)}
 
 \item{wnkl}{Indicates the angle at which no wake influences are
 considered (numeric)}
@@ -79,6 +76,7 @@ Calculate the energy output and efficiency rates of an
 \dontrun{
 ## Create a random shapefile
 library(sp)
+library(windfarmGA)
 Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                     c(4499991, 2669343), c(4499991, 2668272)))
 Polygon1 <- Polygons(list(Polygon1),1);
@@ -87,11 +85,6 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 proj4string(Polygon1) <- CRS(Projection)
 plot(Polygon1,axes=TRUE)
-
-## Initialize a dummy wind speed raster with value 1
-windraster <-raster::rasterize(Polygon1, raster::raster(
-                               raster::extent(Polygon1),
-                               ncol=180, nrow=180),field=1)
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
@@ -116,11 +109,11 @@ resStartGA <- StartGA(Grid = resGrid1,n = 15,nStart = 100)
 par(mfrow=c(1,2))
 plot(Polygon1); points(resStartGA[[1]]$X,resStartGA[[1]]$Y, pch=20,cex=2)
 plot(resGrid[[2]],add=TRUE)
-resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
                    distanz = 100000, resol = 200,dirSpeed = data.in,
                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-                   windraster = windraster)
+                   weibull = FALSE)
 length(resCalcEn)
 str(resCalcEn)
 resCalcEn <- as.data.frame(resCalcEn)
@@ -136,45 +129,13 @@ windrosePlot <- plotWindrose(data = data.in10, spd = data.in10$ws,
 
 ## Calculate the energy outputs for the first individual with more than one
 ## wind direction.
-resCalcEn <-calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
                    distanz = 100000, resol = 200,dirSpeed = data.in10,
                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-                   windraster = windraster)
+                   weibull = FALSE)
 length(resCalcEn)
 str(resCalcEn)
-
-## Take Weibull Paramter Raster from the package. (Only for Austria)
-plot(Polygon1); points(resStartGA[[1]]$X,resStartGA[[1]]$Y, pch=20,cex=2)
-plot(resGrid[[2]],add=TRUE)
-resCalcEn <-calculateEn(sel=resStartGA[[1]], referenceHeight=50,
-                        RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                        distanz = 100000, resol = 200,dirSpeed = data.in,
-                        RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-                        windraster = windraster, weibull = TRUE)
-length(resCalcEn)
-str(resCalcEn)
-resCalcEn <- as.data.frame(resCalcEn)
-plot(Polygon1, main = resCalcEn$Energy_Output_Red[[1]])
-points(x = resCalcEn$Bx, y = resCalcEn$By, pch = 20)
-
-## Use your own rasters for the Weibull parameters.
-araster <- "/..pathto../a_param_raster.tif"
-kraster <- "/..pathto../k_param_raster.tif"
-weibullrasters <- list(raster(kraster), raster(araster))
-plot(Polygon1); points(resStartGA[[1]]$X,resStartGA[[1]]$Y, pch=20,cex=2)
-plot(resGrid[[2]],add=TRUE)
-resCalcEn1 <-calculateEn(sel=resStartGA[[1]], referenceHeight= 50,
-                         RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                         distanz = 100000, resol = 200,dirSpeed = data.in,
-                         RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-                         windraster = windraster, weibull = TRUE,
-                         weibullsrc = weibullrasters)
-length(resCalcEn1)
-str(resCalcEn1)
-resCalcEn1 <- as.data.frame(resCalcEn1)
-plot(Polygon1, main = resCalcEn1$Energy_Output_Red[[1]])
-points(x = resCalcEn1$Bx, y = resCalcEn1$By, pch = 20)
 }
 }
 \author{

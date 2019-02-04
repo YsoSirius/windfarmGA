@@ -4,7 +4,7 @@
 \alias{selection1}
 \title{Selection Method}
 \usage{
-selection1(fit, Grid, teil, elitism, nelit, selstate)
+selection1(fit, Grid, teil, elitism, nelit, selstate, verbose)
 }
 \arguments{
 \item{fit}{A list of all fitness-evaluated individuals (list)}
@@ -24,6 +24,8 @@ determines the amount of individuals in the elite group. (numeric)}
 \item{selstate}{Determines which selection method is used, "FIX" selects
 a constant percentage and "VAR" selects a variable percentage, depending
 on the development of the fitness values. (character)}
+
+\item{verbose}{If TRUE, will print out further information.}
 }
 \value{
 Returns list with 2 elements. Element 1 is the binary encoded
@@ -42,6 +44,7 @@ evolution of the populations fitness values.
 \dontrun{
 ## Create a random rectangular shapefile
 library(sp)
+library(windfarmGA)
 Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
 Polygon1 <- Polygons(list(Polygon1),1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
@@ -68,7 +71,6 @@ selec6best <- selection1(fit, Grid,2, T, 6, "VAR");
 selec6best <- selection1(fit, Grid,2, T, 6, "FIX");
 selec6best <- selection1(fit, Grid,4, F, 6, "FIX");
 str(selec6best)
-
 }
 }
 \author{

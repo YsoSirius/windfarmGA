@@ -14,40 +14,43 @@
 #' @param uplimit The upper limit of allowed permutations. The current
 #' algorithm has an upper bound of 300 permutations. (numeric)
 #' @param crossPart The crossover method. Either "EQU" or "RAN". (character)
+#' @param verbose If TRUE, will print out further information. 
 #' 
 #' @return Returns a binary coded matrix of all permutations and all grid
 #' cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 #' (matrix)
 #'
 #' @examples
-#'  ## Create two random parents with an index and random binary values
-#'  Parents <- data.frame(cbind(ID=1:20,bin=sample(c(0,1),20,replace=TRUE,
-#'                          prob = c(70,30)),bin.1=sample(c(0,1),20,
-#'                          replace=TRUE,prob = c(30,70))))
-#'  Parents
-#'
-#'  ## Create random Fitness values for both individuals
-#'  FitParents <- data.frame(cbind(ID=1,Fitness=1000,Fitness.1=20))
-#'  FitParents
-#'
-#'  ## Assign both values to a list
-#'  CrossSampl <- list(Parents,FitParents);
-#'  str(CrossSampl)
-#'
-#'  ## Cross their data at equal locations with 2 crossover parts
-#'  crossover1(CrossSampl, u=1.1, uplimit=300, crossPart = "EQU")
-#'
-#'  ## with 3 crossover parts and equal locations
-#'  crossover1(CrossSampl, u=2.5, uplimit=300, crossPart = "EQU")
-#'
-#'  ## or with random locations and 5 crossover parts
-#'  crossover1(CrossSampl, u=4.9, uplimit=300, crossPart = "RAN")
-#'
+#' library(windfarmGA)
+#' ## Create two random parents with an index and random binary values
+#' Parents <- data.frame(
+#'   ID = 1:20,
+#'   bin = sample(c(0,1),20, replace = TRUE, prob = c(70,30)),
+#'   bin.1 = sample(c(0,1),20, replace=TRUE,prob = c(30,70)))
+#' Parents
+#' 
+#' ## Create random Fitness values for both individuals
+#' FitParents <- data.frame(ID = 1, Fitness = 1000, Fitness.1 = 20)
+#' FitParents
+#' 
+#' ## Assign both values to a list
+#' CrossSampl <- list(Parents,FitParents);
+#' str(CrossSampl)
+#' 
+#' ## Cross their data at equal locations with 2 crossover parts
+#' crossover1(CrossSampl, u = 1.1, uplimit = 300, crossPart = "EQU")
+#' 
+#' ## with 3 crossover parts and equal locations
+#' crossover1(CrossSampl, u = 2.5, uplimit = 300, crossPart = "EQU")
+#' 
+#' ## or with random locations and 5 crossover parts
+#' crossover1(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 #'
 #' @author Sebastian Gatscha
-crossover1        <- function(se6,u, uplimit,crossPart) {
-
-  cat(paste("crossover point rate: ",u+1))
+crossover1        <- function(se6,u, uplimit,crossPart, verbose) {
+  if(missing(verbose)){verbose=F}
+  if (verbose) {cat(paste("crossover point rate: ",u+1))}
+  
   se6fit <- se6[[2]][1,-1]; se6 <- se6[[1]]
 
   se6 <- se6[,-1]; parid <- sample(1:length(se6));
@@ -119,18 +122,26 @@ crossover1        <- function(se6,u, uplimit,crossPart) {
     stop("\nCrossover. Amount of Turbines is wrong. Fix BUG")
   }
 
+  if (verbose) {
   cat(paste("\nHow many parental pairs are at hand: ",length(z)))
   cat(paste("\nHow many permutations are possible: ", length(z)*(2^(trunc(u)+1))))
+  }
+  
 
   partaksur <- ncol(nI)
   if (partaksur >= uplimit){
     partaksur <- uplimit
-    cat(paste("\nPopulation max limit reached: ", uplimit ))
+    if (verbose) {
+      cat(paste("\nPopulation max limit reached: ", uplimit ))
+    }
   }
 
   # Select only some of the available permutations. Take fitness value as prop value.
   partak <- sort(sample(1:length(nI[1,]),partaksur,prob = fitChi));
+  if (verbose) {
   cat(paste("\nHow many permutations are selected: ", length(partak), "\n"))
+  }
+  
   nI <- nI[,partak]
 
   return(nI)

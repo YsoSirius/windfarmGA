@@ -19,30 +19,32 @@
 #' @return Returns a matrix with the alpha, betha and gamma angles of the
 #' imaginary right triangle (matrix)
 #' @examples
-#'   Aa= as.numeric(cbind(1,1))
-#'   Bb= as.numeric(cbind(10,3))
-#'   Cc= as.numeric(cbind(10,1))
-#'   plot(rbind(Aa,Bb,Cc,Aa), type="b", xlab="x",
-#'        ylab="y", ylim=c(0,4), xlim=c(0,11));
-#'   points(x=Aa[1],y=Aa[2],col="green",pch=20);
-#'   points(x=Bb[1],y=Bb[2],col="red",pch=20);
-#'   points(x=Cc[1],y=Cc[2],col="blue",pch=20)
-#'   Angles <- WinkelCalc(Aa,Bb,Cc); Angles
-#'   text(rbind(Aa,Bb,Cc),labels=paste(rownames(Angles), round(Angles,2)),pos=1)
+#' Aa = as.numeric(cbind(1,1))
+#' Bb = as.numeric(cbind(10,3))
+#' Cc = as.numeric(cbind(10,1))
+#' plot(rbind(Aa,Bb,Cc,Aa), type="b", xlab="x",
+#'      ylab="y", ylim=c(0,4), xlim=c(0,11));
+#' points(x=Aa[1],y=Aa[2],col="green",pch=20);
+#' points(x=Bb[1],y=Bb[2],col="red",pch=20);
+#' points(x=Cc[1],y=Cc[2],col="blue",pch=20)
+#' Angles <- WinkelCalc(Aa,Bb,Cc); Angles
+#' text(rbind(Aa,Bb,Cc),labels=paste(rownames(Angles), round(Angles,2)),pos=1)
 #' @author Sebastian Gatscha
 WinkelCalc        <- function(Aa,Bb,Cc) {
   AB <- Bb-Aa; AC <- Cc-Aa;  BA <- Aa-Bb;  BC <- Cc-Bb; CA <- Aa-Cc; CB <- Bb-Cc;
-  # Calculate all 3 angles
-  alpha <- acos(sum(AB*AC) / (sqrt(sum(AB * AB)) * sqrt(sum(AC * AC))))*(180/pi);
-  betha <- acos(sum(BA*BC)/(sqrt(sum(BA*BA))*sqrt(sum(BC*BC))))*(180/pi);
-  gamma <- acos(sum(CA*CB) / (sqrt(sum(CA * CA)) * sqrt(sum(CB * CB))))*(180/pi)
-
+  # Calculate all 3 angles /57.29578 is 180/pi
+  alpha <- acos(sum(AB * AC) / (sqrt(sum(AB * AB)) * sqrt(sum(AC * AC)))) * (57.29578)
+  betha <- acos(sum(BA * BC) / (sqrt(sum(BA * BA)) * sqrt(sum(BC * BC)))) * (57.29578)
+  gamma <- acos(sum(CA * CB) / (sqrt(sum(CA * CA)) * sqrt(sum(CB * CB)))) * (57.29578)
   if (any(is.na(alpha),is.na(betha),is.na(gamma))) {
-    alpha=0;betha=0;gamma=0;
+    alpha=betha=gamma=0
   }
-
-  if (trunc(alpha+betha+gamma) >= 179 | ceiling(alpha+betha+gamma) <= 180) {
-    winkel <- rbind(alpha,betha,gamma)
-    invisible(winkel)
-  }
+  invisible(rbind(alpha, betha, gamma))
 }
+
+# Aa = as.numeric(cbind(1,1))
+# Bb = as.numeric(cbind(10,3))
+# Cc = as.numeric(cbind(10,1))
+
+# library(Rcpp)
+# library(RcppArmadillo)

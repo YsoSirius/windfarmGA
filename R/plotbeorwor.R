@@ -28,20 +28,24 @@ plotbeorwor <- function(result){
 
   par(mfrow=c(2,1))
   maxdif <- as.data.frame(beorworse[,1]);
-  maxdif$farbe <- 0
-  maxdif$farbe[maxdif$`beorworse[, 1]` < 0]  <- "red"
-  maxdif$farbe[maxdif$`beorworse[, 1]` > 0] <- "green"
-  maxdif$farbe[maxdif$`beorworse[, 1]` == 0] <- "orange"
-  plot(maxdif$`beorworse[, 1]`, type="b", col=maxdif$farbe, pch=20,cex=2); abline(0,0)
+  maxdif <- data.frame(
+    diff = beorworse[,1], 
+    farbe = 0)
+  
+  maxdif$farbe[maxdif$diff < 0]  <- "red"
+  maxdif$farbe[maxdif$diff > 0] <- "green"
+  maxdif$farbe[maxdif$diff == 0] <- "orange"
+  plot(maxdif$diff, type="b", col=maxdif$farbe, pch=20,cex=2); abline(0,0)
   title("Max Difference to previous generation")
 
 
-  meandif <- as.data.frame(beorworse[,2]);
-  meandif$farbe <- 0
-  meandif$farbe[meandif$`beorworse[, 2]` < 0]  <- "red"
-  meandif$farbe[meandif$`beorworse[, 2]` > 0] <- "green"
-  meandif$farbe[meandif$`beorworse[, 2]` == 0] <- "orange"
-  plot(meandif$`beorworse[, 2]`, type="b", col=meandif$farbe, pch=20,cex=2); abline(0,0)
+  meandif <- data.frame(
+    diff = beorworse[,2], 
+    farbe = 0)
+  meandif$farbe[meandif$diff < 0]  <- "red"
+  meandif$farbe[meandif$diff > 0] <- "green"
+  meandif$farbe[meandif$diff == 0] <- "orange"
+  plot(meandif$diff, type="b", col=meandif$farbe, pch=20,cex=2); abline(0,0)
   title("Mean Difference to previous generation")
 
   return()

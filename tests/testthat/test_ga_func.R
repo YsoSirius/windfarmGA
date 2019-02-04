@@ -58,7 +58,6 @@ test_that("Test Genetic Algorithm Function", {
                  SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                  dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
   expect_output(str(fit), "List of 20")
-  expect_true(all(sapply(fit, class) == "data.frame"))
   expect_true(all(sapply(fit, nrow) == 10))
   expect_false(any(unlist(sapply(fit, is.na))))
   expect_false(any(unlist(do.call("rbind", fit)[,-c(1,2)] < 0)))
@@ -67,7 +66,6 @@ test_that("Test Genetic Algorithm Function", {
                  SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                  dirspeed = wind, topograp=FALSE)
   expect_output(str(fit1), "List of 20")
-  expect_true(all(sapply(fit1, class) == "data.frame"))
   expect_true(all(sapply(fit1, nrow) == 10))
   expect_false(any(unlist(sapply(fit1, is.na))))
   expect_false(any(unlist(do.call("rbind", fit1)[,-c(1,2)] < 0)))
@@ -77,7 +75,6 @@ test_that("Test Genetic Algorithm Function", {
   allparks <- do.call("rbind",fit);
   selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "VAR");
   expect_output(str(selec6best), "List of 2")
-  expect_true(all(sapply(selec6best, class) == "data.frame"))
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
@@ -85,7 +82,6 @@ test_that("Test Genetic Algorithm Function", {
 
   selec6best <- selection1(fit, Grid[[1]],2, TRUE, 6, "FIX");
   expect_output(str(selec6best), "List of 2")
-  expect_true(all(sapply(selec6best, class) == "data.frame"))
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
@@ -93,7 +89,6 @@ test_that("Test Genetic Algorithm Function", {
 
   selec6best <- selection1(fit, Grid[[1]],4, FALSE, 6, "FIX");
   expect_output(str(selec6best), "List of 2")
-  expect_true(all(sapply(selec6best, class) == "data.frame"))
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
@@ -158,7 +153,6 @@ test_that("Test Genetic Algorithm Function", {
   ## GETRECTV #####################
   getRectV <- getRects(mut1, Grid[[1]])
   expect_is(getRectV, "list")
-  expect_true(all(sapply(getRectV, class) == "data.frame"))
   expect_true(all(sapply(getRectV, length) == 3))
   expect_true(all(sapply(getRectV, nrow) == 10))
   expect_false(any(unlist(sapply(getRectV, is.na))))
@@ -170,7 +164,6 @@ test_that("Test Genetic Algorithm Function", {
                  SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                  dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
   expect_is(fit, "list")
-  expect_true(all(sapply(fit, class) == "data.frame"))
   expect_true(all(sapply(fit, nrow) == 10))
   expect_true(length(fit) == length(getRectV))
   expect_false(any(unlist(sapply(fit, is.na))))

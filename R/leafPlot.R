@@ -3,16 +3,17 @@
 #' @description  Plot a resulting wind farm on a leaflet map.
 #'
 #' @export
-#'
+#' 
 #' @importFrom leaflet colorFactor iconList makeIcon leaflet addTiles
 #' addProviderTiles popupOptions addMarkers addCircleMarkers hideGroup
 #' addPolygons addLegend labelFormat addLayersControl layersControlOptions
-#' %>%
+#' addPopups
+#' 
 #' @importFrom sp proj4string SpatialPoints CRS spTransform coordinates
 #' SpatialPolygons Polygon Polygons
 #' @importFrom grDevices colorRampPalette
-#' @importFrom magrittr %>%
 #' @importFrom raster extent
+#' @importFrom magrittr %>%
 #'
 #' @param result The resulting matrix of the function 'genAlgo' or
 #' 'windfarmGA'. (matrix)
@@ -85,7 +86,7 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
   
   result <- result[,'bestPaEn'][[which]]
   projPol <- sp::proj4string(Polygon1)
-  xysp <- sp::SpatialPoints(cbind(result$X,result$Y), proj4string = CRS(projPol))
+  xysp <- sp::SpatialPoints(cbind(result$X,result$Y), proj4string = sp::CRS(projPol))
   resultxy <- sp::spTransform(xysp, CRSobj = ProjectionLonLat)
   ## Transform to matrix after transformation.
   resultxy <- sp::coordinates(resultxy)
@@ -119,51 +120,51 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
   listPopup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
                      "% </dd>")
   ## Start a Leaflet Map with OSM background and another Tile.
-  map <- leaflet::leaflet() %>%
-    leaflet::addTiles(group = "OSM") %>%
-    leaflet::addProviderTiles("Stamen.Terrain", group="Terrain") %>%
-    leaflet::addProviderTiles("Esri.WorldImagery", group="Satellite") %>%
-    leaflet::addProviderTiles("Stamen.Toner", group = "Toner") %>%
+  map <- leaflet() %>%
+    addTiles(group = "OSM") %>%
+    addProviderTiles("Stamen.Terrain", group="Terrain") %>%
+    addProviderTiles("Esri.WorldImagery", group="Satellite") %>%
+    addProviderTiles("Stamen.Toner", group = "Toner") %>%
     ## Write a Popup with the energy output
     leaflet::addPopups(headLo[1], (headLo[2]+0.0002), group = "Title",
                        popup = paste(beste,"<b>Best Wind Farm with: ",
                                      round(result$EnergyOverall[[1]],2),"kWh</b>"),
-                       options = leaflet::popupOptions(closeButton = T,
+                       options = popupOptions(closeButton = T,
                                                        closeOnClick = T)) %>%
     ## Add the Polygon
-    leaflet::addPolygons(data = Polygon1, group = "Polygon",
+    addPolygons(data = Polygon1, group = "Polygon",
                          fill=TRUE,fillOpacity = 0.4) %>%
 
     ## Add the Genetic Algorithm Space
-    leaflet::addPolygons(data = GridPol, group = "Grid", weight = 1,
+    addPolygons(data = GridPol, group = "Grid", weight = 1,
                        # color="#222760",
                        opacity = opaC,
                        fill=TRUE, fillOpacity = opaC) %>%
 
     ## Create Circles in Map
-    leaflet::addCircleMarkers(lng=result[,1],
+    addCircleMarkers(lng=result[,1],
                               lat=result[,2],
                               radius = Rad,
                               color = result$farbe,
                               stroke = T, fillOpacity = 0.8,
                               group="Wake Circles") %>%
     ## Add the turbine symbols
-    leaflet::addMarkers(lng=result[,1], lat=result[,2],
+    addMarkers(lng=result[,1], lat=result[,2],
                         icon= turbine_icon[1], popup=listPopup, group="Turbines") %>%
-    leaflet::addLegend(position = "topleft",
+    addLegend(position = "topleft",
                        # colors = sort(unique(result$farbe)),
                        colors=ColC1,
                        labels = sort(unique(result$AbschGesamt)),
-                       labFormat = leaflet::labelFormat(suffix = "%"),
+                       labFormat = labelFormat(suffix = "%"),
                        opacity = 1, title = "Total Wake Effect", layerId = "Legend")  %>%     
   ## Layers control
-    leaflet::addLayersControl(baseGroups = c(
+    addLayersControl(baseGroups = c(
       "OSM",
       "Terrain",
       "Satellite",
       "Toner"),
       overlayGroups = overGroups,
-      options = leaflet::layersControlOptions(collapsed = T)
+      options = layersControlOptions(collapsed = T)
     )
  
   

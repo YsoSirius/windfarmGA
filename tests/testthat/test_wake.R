@@ -72,11 +72,11 @@ test_that("Test Wake Functions", {
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
   dr <- do.call("rbind", potInfTur)
-  expect_true(all((dr[dr$Ax == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr$Ay == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr$Cx == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr$Cy == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr$Ax != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
+  expect_true(all((dr[dr[,'Ax'] == 0, c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((dr[dr[,'Ay'] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((dr[dr[,'Cx'] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((dr[dr[,'Cy'] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((dr[dr[,'Ax'] != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
   
   ## Same With Lapply
   potInfTurLP <- lapply(1:length(t[,1]), function(i) {
@@ -92,24 +92,22 @@ test_that("Test Wake Functions", {
   ###########################################
   resInfluPoi <- InfluPoints(t,wnkl,dist,polYgon,dirct)
   expect_is(resInfluPoi, "list")
-  expect_true(all(sapply(resInfluPoi, class) == "data.frame"))
   expect_output(str(resInfluPoi), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df <- do.call("rbind", resInfluPoi)
-  expect_true(all((df[df$Ax == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((df[df$Ax != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
+  expect_true(all((df[dr[,'Ax'] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((df[dr[,'Ax'] != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
   
   ## Bigger Angle
   wnkl=50
   t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
                        y=runif(10,0,raster::extent(polYgon)[4])))
   resInfluPoiWin <- InfluPoints(t,wnkl,dist,polYgon,dirct)
-  expect_true(all(sapply(resInfluPoiWin, class) == "data.frame"))
   expect_output(str(resInfluPoiWin), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoiWin, is.na))))
   df1 <- do.call("rbind", resInfluPoiWin)
-  expect_true(all((df1[df1$Ax == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((df1[df1$Ax != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
+  expect_true(all((df1[df1[,'Ax'] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((df1[df1[,'Ax'] != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
   expect_true(nrow(df1) > nrow(df))
   rm(df1, resInfluPoi)
   
@@ -117,23 +115,21 @@ test_that("Test Wake Functions", {
   t <- as.matrix(cbind(x=runif(20,0,raster::extent(polYgon)[2]),
                        y=runif(20,0,raster::extent(polYgon)[4])))
   resInfluPoi <- InfluPoints(t,wnkl,dist,polYgon,dirct)
-  expect_true(all(sapply(resInfluPoi, class) == "data.frame"))
   expect_output(str(resInfluPoi), "List of 20")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df1 <- do.call("rbind", resInfluPoi)
-  expect_true(all((df1[df1$Ax == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((df1[df1$Ax != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
+  expect_true(all((df1[df1[,'Ax'] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((df1[df1[,'Ax'] != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
   rm(resInfluPoi)
   
   ## Same Points & Smaller Angle
   wnkl <- 10
   resInfluPoi <- InfluPoints(t,wnkl,dist,polYgon,dirct)
-  expect_true(all(sapply(resInfluPoi, class) == "data.frame"))
   expect_output(str(resInfluPoi), "List of 20")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df2 <- do.call("rbind", resInfluPoi)
-  expect_true(all((df2[df2$Ax == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((df2[df2$Ax != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
+  expect_true(all((df2[df2[,'Ax'] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
+  expect_true(all((df2[df2[,'Ax'] != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
   expect_true(nrow(df1) > nrow(df2))
   
   
@@ -166,16 +162,15 @@ test_that("Test Wake Functions", {
   resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
                           RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
                           distanz = 100000, resol = 200,dirSpeed = data.in,
-                          RotorR = 50, polygon1 = polYgon, topograp = FALSE,
-                          windraster = windraster)
+                          RotorR = 50, polygon1 = polYgon, topograp = FALSE, weibull = FALSE)
   
   expect_output(str(resCalcEn), "List of 1")
   df <- do.call(rbind, resCalcEn)
-  expect_true(all(df[df$A_ov != 0,"TotAbschProz"] != 0))
-  expect_true(all(df[df$TotAbschProz != 0,"V_New"] < df[df$TotAbschProz != 0,"Windmean"]))
+  expect_true(all(df[df[,'A_ov'] != 0,"TotAbschProz"] != 0))
+  expect_true(all(df[df[,'TotAbschProz'] != 0,"V_New"] < df[df[,'TotAbschProz'] != 0,"Windmean"]))
   
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
-  expect_true(all(df$Rect_ID %in% resGrid[[1]]$ID))
+  expect_true(all(df[,'Rect_ID'] %in% resGrid[[1]]$ID))
   rm(resCalcEn, df)
   
   ## 2 Wind Directions 
@@ -183,21 +178,15 @@ test_that("Test Wake Functions", {
   resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
                           RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
                           distanz = 100000, resol = 200,dirSpeed = data.in,
-                          RotorR = 50, polygon1 = polYgon, topograp = FALSE,
-                          windraster = windraster)
+                          RotorR = 50, polygon1 = polYgon, topograp = FALSE, weibull = FALSE)
   
   expect_output(str(resCalcEn), "List of 2")
   df <- do.call(rbind, resCalcEn)
-  expect_true(all(df[df$A_ov != 0,"TotAbschProz"] != 0))
-  expect_true(all(df[df$TotAbschProz != 0,"V_New"] < df[df$TotAbschProz != 0,"Windmean"]))
+  expect_true(all(df[df[,'A_ov'] != 0,"TotAbschProz"] != 0))
+  expect_true(all(df[df[,'TotAbschProz'] != 0,"V_New"] < df[df[,'TotAbschProz'] != 0,"Windmean"]))
   
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
-  expect_true(all(df$Rect_ID %in% resGrid[[1]]$ID))
-  
-  
-  
-  
-
+  expect_true(all(df[,'Rect_ID'] %in% resGrid[[1]]$ID))
 })
 
 

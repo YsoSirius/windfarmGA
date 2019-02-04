@@ -7,7 +7,8 @@
 genAlgo(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight, RotorHeight,
   SurfaceRoughness, Proportionality, iteration, mutr, vdirspe, topograp,
   elitism, nelit, selstate, crossPart1, trimForce, Projection, sourceCCL,
-  sourceCCLRoughness, weibull, weibullsrc, Parallel, numCluster)
+  sourceCCLRoughness, weibull, weibullsrc, Parallel, numCluster,
+  verbose = FALSE, plotit = FALSE)
 }
 \arguments{
 \item{Polygon1}{The considered area as shapefile (SpatialPolygons)}
@@ -15,80 +16,76 @@ genAlgo(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight, RotorHeight,
 \item{GridMethod}{Should the polygon be divided into rectangular or
 hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
 grid cells are computed when assigning "h" or "hexagon" to this input
-variable. (character)}
+variable.}
 
-\item{Rotor}{A numeric value that gives the rotor radius in meter
-(numeric)}
+\item{Rotor}{A numeric value that gives the rotor radius in meter}
 
-\item{n}{A numeric value indicating the required amount of turbines
-(numeric)}
+\item{n}{A numeric value indicating the required amount of turbines}
 
-\item{fcrR}{A numeric value that is used for grid spacing (numeric)}
+\item{fcrR}{A numeric value that is used for grid spacing. Default is 5}
 
 \item{referenceHeight}{The height at which the incoming
-wind speeds were measured. (numeric)}
+wind speeds were measured. Default is the RotorHeight.}
 
-\item{RotorHeight}{The desired height of the turbine.
-(numeric)}
+\item{RotorHeight}{The desired height of the turbine.}
 
 \item{SurfaceRoughness}{A surface roughness length of the
 considered area in m.  If the terrain effect model is activated, a
 surface roughness will be calculated for every grid cell with the
-elevation and land cover information. (numeric)}
+elevation and land cover information. Default is 0.3}
 
-\item{Proportionality}{A numeric factor used for grid calculation.
-Determines the percentage a grid has to overlay (numeric)}
+\item{Proportionality}{A numeric value used for grid calculation.
+Determines the percentage a grid has to overlay. Default is 1}
 
 \item{iteration}{A numeric value indicating the desired amount
-of iterations of the algorithm (numeric)}
+of iterations of the algorithm. Default is 20}
 
-\item{mutr}{A numeric mutation rate with low default value of 0.008
-(numeric)}
+\item{mutr}{A numeric mutation rate with low default value of 0.008}
 
 \item{vdirspe}{A data.frame containing the incoming wind speeds,
-wind directions and probabilities (data.frame)}
+wind directions and probabilities}
 
 \item{topograp}{Logical value, which indicates if the terrain effect model
-should be activated or not. (logical)}
+should be activated or not. Default is FALSE}
 
 \item{elitism}{Boolean value, which indicates whether elitism should
-be included or not. (logical)}
+be included or not. Default is TRUE}
 
 \item{nelit}{If \code{elitism} is TRUE, then this input variable
-determines the amount of individuals in the elite group. (numeric)}
+determines the amount of individuals in the elite group. Default is 7}
 
 \item{selstate}{Determines which selection method is used,
 "FIX" selects a constant percentage and "VAR" selects a variable percentage,
-depending on the development of the fitness values. (character)}
+depending on the development of the fitness values. Default is "FIX"}
 
 \item{crossPart1}{Determines which crossover method is used,
 "EQU" divides the genetic code at equal intervals and
-"RAN" divides the genetic code at random locations. (character)}
+"RAN" divides the genetic code at random locations. Default is "EQU"}
 
-\item{trimForce}{If activated (\code{trimForce}==TRUE),
+\item{trimForce}{If activated (\code{trimForce == TRUE}),
 the algorithm will take a probabilistic approach to trim the windfarms
 to the desired amount of turbines. If deactivated
-(\code{trimForce}==FALSE) the adjustment will be random.
-(logical)}
+(\code{trimForce == FALSE}) the adjustment will be random.
+Default is FALSE}
 
 \item{Projection}{A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection. (character)}
+of the default Lambert Azimuthal Equal Area Projection.}
 
 \item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated. (character)}
+required when the terrain effect model is activated.}
 
 \item{sourceCCLRoughness}{The source to the adapted
 Corine Land Cover legend as .csv file. Only required when terrain
 effect model is activated. As default a .csv file within this
 package (\file{~/extdata}) is taken that was already adapted
 manually. To use your own .csv legend this variable has to be assigned.
-See Details. (character)}
+See Details.}
 
 \item{weibull}{A logical value that specifies whether to take Weibull
 parameters into account. If weibull==TRUE, the wind speed values from the
 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
-(logical)}
+Default is FALSE}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster k and the second item must be the
@@ -98,10 +95,16 @@ only cover Austria. This variable is only used if weibull==TRUE. (list)}
 
 \item{Parallel}{Boolean value, indicating whether parallel processing
 should be used. The parallel and doParallel packages are used for parallel
-processing.}
+processing. Default is FALSE}
 
 \item{numCluster}{If Parallel is TRUE, this variable defines the number
 of clusters to be used.}
+
+\item{verbose}{If TRUE, will print out information in every iteration. 
+Default is FALSE}
+
+\item{plotit}{If TRUE, will plot the best windfarm of a generation. Default
+is FALSE}
 }
 \value{
 The result of this run is a matrix of all relevant output
@@ -121,6 +124,7 @@ the \code{\link{windfarmGA}} function.
 \donttest{
 ## Create a random rectangular shapefile
 library(sp)
+library(windfarmGA)
 Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                           c(4499991, 2669343), c(4499991, 2668272)))
 Polygon1 <- Polygons(list(Polygon1), 1);
@@ -136,15 +140,14 @@ data.in <- as.data.frame(cbind(ws=12,wd=0))
 windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
                 dir = data.in$wd, dirres=10, spdmax=20)
 
-## Runs an optimization run for 10 iterations (iteration) with the
+## Runs an optimization run for 20 iterations with the
 ## given shapefile (Polygon1), the wind data.frame (data.in),
-## 12 turbines (n) with rotor radii of 30m (Rotor) and a grid spacing
-## factor of 5 (fcrR) and other required inputs.
-result <- genAlgo(Polygon1 = Polygon1, n=12, Rotor=30,fcrR=5,iteration=10,
-             vdirspe = data.in,crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-             elitism=TRUE, nelit = 7, trimForce = TRUE,
-             referenceHeight = 50,RotorHeight = 100)
+## 12 turbines (n) with rotor radii of 30m (Rotor) and rotor height of 100m.
+result <- genAlgo(Polygon1 = Polygon1,
+                  n = 12,
+                  vdirspe = data.in,
+                  Rotor = 30,
+                  RotorHeight = 100)
 PlotWindfarmGA(result = result, Polygon1 = Polygon1)
 
 ## Runs the same optimization, but with parallel processing and 3 cores.
@@ -174,7 +177,7 @@ result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
                  elitism=TRUE, nelit = 7, trimForce = TRUE,
                  referenceHeight = 50,RotorHeight = 100,
                  weibull = TRUE)
-PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1= Polygon1)
+PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 
 ## Run an optimization with given Weibull parameter rasters.
 araster <- "/..pathto../a_param_raster.tif"
@@ -187,7 +190,7 @@ result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
                  elitism=TRUE, nelit = 7, trimForce = TRUE,
                  referenceHeight = 50,RotorHeight = 100,
                  weibull = TRUE, weibullsrc = weibullrasters)
-PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1= Polygon1)
+PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 }
 }
 \author{

@@ -36,10 +36,12 @@ further optimize the output of the wind farm layout.
 }
 \examples{
 \donttest{
+library(windfarmGA)
 load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 
-RandomSearch(resultrect, polygon, n=2, best=4)
+new <- RandomSearch(resultrect, polygon, n = 20, best = 4)
+RandomSearchPlot(resultRS = new, result = resultrect, Polygon1 = polygon, best = 2)
 }
 }
 \author{

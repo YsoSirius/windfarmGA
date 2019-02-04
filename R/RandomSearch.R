@@ -5,14 +5,10 @@
 #' 
 #' @export
 #'
-#' @importFrom leaflet colorFactor iconList makeIcon leaflet addTiles
-#' addProviderTiles popupOptions addMarkers addCircleMarkers hideGroup
-#' addPolygons addLegend labelFormat addLayersControl layersControlOptions
-#' %>%
 #' @importFrom sp proj4string SpatialPoints CRS spTransform coordinates
 #' SpatialPolygons Polygon Polygons
-#' @importFrom dplyr arrange select
-#' @importFrom raster rasterize raster extent
+#' @importFrom raster plot
+#' @importFrom dplyr arrange desc select
 #' 
 #'
 #' @param result The resulting matrix of the function 'genAlgo' or
@@ -33,10 +29,12 @@
 #' @return Returns a list.
 #'
 #' @examples \donttest{
+#' library(windfarmGA)
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 #' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
-#' RandomSearch(resultrect, polygon, n=2, best=4)
+#' new <- RandomSearch(resultrect, polygon, n = 20, best = 4)
+#' RandomSearchPlot(resultRS = new, result = resultrect, Polygon1 = polygon, best = 2)
 #' }
 #' @author Sebastian Gatscha
 RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
@@ -45,7 +43,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
   maxDist <- as.numeric(result[,"inputData"][[1]]['Rotorradius',])*2
   
   if (missing(Plot)) {
-    Plot = T
+    Plot <- TRUE
   }
   if (missing(n)) {
     n <- 20
@@ -60,13 +58,13 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
   GridMethod <- toupper(GridMethod)
 
   
-  if (Plot == T) {
-    opar <- par(no.readonly = T)
-    par(mfrow=c(1,1))
+  if (Plot) {
+    opar <- par(no.readonly = TRUE)
+    par(mfrow = c(1,1))
   }
   
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
-  resldat <- resldat[!duplicated(resldat$Run),]
+  resldat <- data.frame(resldat[!duplicated(resldat[,'Run']),])
   resldat$GARun <- 1:nrow(resldat)
   resldat <- dplyr::arrange(resldat, desc(EnergyOverall))
   
@@ -76,6 +74,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
   ## Optimize with several best layouts
   RandResultAll <- vector(mode = "list", length = best)
   for (o in 1:best) {
+    # o=1
     bestGARun <- bestGARunIn[o]
     resolu <- as.numeric(result[bestGARun,]$inputData["Resolution",][1])
     rotRad <- as.numeric(result[bestGARun,]$inputData["Rotorradius",][1])
@@ -145,9 +144,6 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
               pch=c(15,3,1,20))
     }
     
-    
-    windraster <-raster::rasterize(Polygon1, raster::raster(raster::extent(Polygon1),
-      ncol=180, nrow=180),field=1)
     
     ## Run n random searches on windfarm[o]
     RandResult <- vector(mode = "list", length = n)
@@ -225,38 +221,61 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
                                RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
                                distanz = 100000, resol = 200,dirSpeed = winddata,
                                RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-                               windraster = windraster, 
+                               # windraster = windraster, 
                                srtm_crop, cclRaster, weibull=F, weibullsrc)
-      ee  <- lapply(resCalcen, function(x){split(x, duplicated(x$Punkt_id))$'FALSE'})
-      # Select only relevant information from list
-      ee  <- lapply(ee, function(x){dplyr::select(x,-Ax,-Ay,-Laenge_B,-Laenge_A,-Windmean,-WakeR,-A_ov, -Punkt_id)})
-      # get Energy Output and Efficiency rate for every wind direction and make a data frame
-      enOut <- lapply(ee, function(x){ x[1,c(3,8,10)]}); enOut <- do.call("rbind", enOut)
+      
+      ee  <- lapply(resCalcen, function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
+      
+      ee  <- lapply(ee, function(x){
+        subset.matrix(x, select = c('Bx','By','Windrichtung','RotorR','TotAbschProz','V_New',
+                                    'Rect_ID','Energy_Output_Red', 'Energy_Output_Voll',
+                                    'Parkwirkungsgrad'))})
+      
+      # get Energy Output and Efficiency rate for every wind direction
+      # enOut <- lapply(ee, function(x){ x[1,c(3,8,10)]}); 
+      enOut <- lapply(ee, function(x){
+        subset.matrix(x, 
+                      subset = c(T,rep(F,length(ee[[1]][,1])-1)),
+                      select = c('Windrichtung','Energy_Output_Red','Parkwirkungsgrad'))})
+      enOut <- do.call("rbind", enOut)
+      
       # Add the Probability of every direction
-      enOut$probabDir <- probabDir
       # Calculate the relative Energy outputs respective to the probability of the wind direction
-      enOut$Eneralldire <- enOut$Energy_Output_Red * (enOut$probabDir/100);
+      enOut <- cbind(enOut, 'probabDir' = probabDir)
+      enOut <- cbind(enOut, 'Eneralldire' = enOut[,'Energy_Output_Red'] * (enOut[,'probabDir'] / 100))
+      
       # Calculate the sum of the relative Energy outputs
-      enOut$EnergyOverall <- sum(enOut$Eneralldire);
-      # Calculate the sum of the relative Efficiency rates respective to the probability of the wind direction
-      enOut$Efficalldire <- sum(enOut$Parkwirkungsgrad * (enOut$probabDir/100))
+      enOut <- cbind(enOut, 'EnergyOverall' = sum(enOut[,'Eneralldire']))
+      
+      # Calculate the sum of the relative Efficiency rates respective to the probability of the 
+      # wind direction
+      enOut <- cbind(enOut, 'Efficalldire' = sum(enOut[,'Parkwirkungsgrad'] * (enOut[,'probabDir'] / 100)))
+      
       # Get the total Wake Effect of every Turbine for all Wind directions
-      AbschGesamt <- lapply(ee, function(x){ data.frame(x$TotAbschProz)});
-      AbschGesamt <- do.call("cbind",AbschGesamt)
-      AbschGesamt$RowSum <- rowSums(AbschGesamt);
-      AbschGesamt <- AbschGesamt$RowSum
+      AbschGesamt <- lapply(ee, function(x){ x[,'TotAbschProz']})
+      AbschGesamt <- do.call("cbind", AbschGesamt)
+      AbschGesamt <- rowSums(AbschGesamt)
+      
       # Get the original X / Y - Coordinates of the selected individual
-      xundyOrig <- coordsj[,2:3];
-      # Add the Efficieny and the Energy Output of all wind directions and add the total Wake Effect of every Point Location
-      xundyOrig$EfficAllDir <- enOut$Efficalldire[1];xundyOrig$EnergyOverall <- enOut$EnergyOverall[1];
-      xundyOrig$AbschGesamt <- AbschGesamt
+      xundyOrig <- coordsj[,2:3]
+      
+      # Add the Efficieny and the Energy Output of all wind directions and add the total 
+      # Wake Effect of every Point Location
       # Include the Run of the genertion to the data frame
-      xundyOrig$Run <- i
+      xundyOrig <- cbind(xundyOrig, 
+                         'EfficAllDir' = enOut[1,'Efficalldire'],
+                         'EnergyOverall' = enOut[1,'EnergyOverall'],
+                         'AbschGesamt' = AbschGesamt,
+                         'Run' = i)
+      
       
       # Get the Rotor Radius and the Rect_IDs of the park configuration
-      dt <-  ee[[1]]; dt <- dplyr::select(dt,RotorR, Rect_ID);
+      dt <-  ee[[1]] 
+      dt <- subset.matrix(dt, select = c('RotorR','Rect_ID'))
+      
       # Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
-      dt <- cbind(xundyOrig,dt)
+      dt <- cbind(xundyOrig, dt)
+      
       dt$bestGARun <- bestGARun
       ################
       

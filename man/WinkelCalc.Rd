@@ -31,16 +31,16 @@ Point C, where the right angle is located will therefore be calculated
 by the algorithm itself. See also \code{\link{PointToLine2}}.
 }
 \examples{
-  Aa= as.numeric(cbind(1,1))
-  Bb= as.numeric(cbind(10,3))
-  Cc= as.numeric(cbind(10,1))
-  plot(rbind(Aa,Bb,Cc,Aa), type="b", xlab="x",
-       ylab="y", ylim=c(0,4), xlim=c(0,11));
-  points(x=Aa[1],y=Aa[2],col="green",pch=20);
-  points(x=Bb[1],y=Bb[2],col="red",pch=20);
-  points(x=Cc[1],y=Cc[2],col="blue",pch=20)
-  Angles <- WinkelCalc(Aa,Bb,Cc); Angles
-  text(rbind(Aa,Bb,Cc),labels=paste(rownames(Angles), round(Angles,2)),pos=1)
+Aa = as.numeric(cbind(1,1))
+Bb = as.numeric(cbind(10,3))
+Cc = as.numeric(cbind(10,1))
+plot(rbind(Aa,Bb,Cc,Aa), type="b", xlab="x",
+     ylab="y", ylim=c(0,4), xlim=c(0,11));
+points(x=Aa[1],y=Aa[2],col="green",pch=20);
+points(x=Bb[1],y=Bb[2],col="red",pch=20);
+points(x=Cc[1],y=Cc[2],col="blue",pch=20)
+Angles <- WinkelCalc(Aa,Bb,Cc); Angles
+text(rbind(Aa,Bb,Cc),labels=paste(rownames(Angles), round(Angles,2)),pos=1)
 }
 \author{
 Sebastian Gatscha
