@@ -1,3 +1,11 @@
+### Updates 2.2.1
+#### Performance Tuning / Restructuring
+Switch to matrices instead of data.frames and a lot of performance optimization of the whole algorithm.
+
+**`viewshed`** A new set of functions, to analysze visual impact of a wind farm.    
+The new functions are **`cansee`**, **`viewTo`**, **`rasterprofile`**, **`viewshed`**, **`plot_viewshed`**, **`interpol_view`**, **`getISO3`**, **`getDEM`**
+**`plot_farm_3d`** Experimental rayshader function
+
 ### Updates 1.2.1
 #### Randomization
 The output of **`genAlgo`** or **`windfarmGA`** can be further randomized with the following
@@ -10,6 +18,13 @@ functions:
 
 **`RandomSearchPlot`** is used to plot the outputs of those functions, compared with the 
 original result.
+
+```sh
+load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
+load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
+RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
+```
 
 ### Updates 1.2
 #### Parallel Processing
