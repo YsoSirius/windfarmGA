@@ -18,7 +18,6 @@ Plot the result of viewshed
 \dontrun{
 library(sp)
 library(raster)
-library(windfarmGA)
 Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
                           c(4499991, 2669343), c(4499991, 2667172)))
 Polygon1 <- Polygons(list(Polygon1), 1);

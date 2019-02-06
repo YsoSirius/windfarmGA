@@ -44,7 +44,6 @@ evolution of the populations fitness values.
 \dontrun{
 ## Create a random rectangular shapefile
 library(sp)
-library(windfarmGA)
 Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
 Polygon1 <- Polygons(list(Polygon1),1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
@@ -67,9 +66,9 @@ allparks <- do.call("rbind",fit);
 
 ## SELECTION
 ## print the amount of Individuals selected. Check if the amount of Turbines is as requested.
-selec6best <- selection1(fit, Grid,2, T, 6, "VAR");
-selec6best <- selection1(fit, Grid,2, T, 6, "FIX");
-selec6best <- selection1(fit, Grid,4, F, 6, "FIX");
+selec6best <- selection1(fit, Grid, 2, T, 6, "VAR", NULL)
+selec6best <- selection1(fit, Grid, 2, T, 6, "FIX", NULL)
+selec6best <- selection1(fit, Grid, 4, F, 6, "FIX", NULL)
 str(selec6best)
 }
 }

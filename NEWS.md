@@ -1,20 +1,21 @@
 ### Updates 2.2.1
 #### Performance Tuning / Restructuring
-Switch to matrices instead of data.frames and a lot of performance optimization of the whole algorithm.
+Switch to matrices instead of data.frames and a lot of restructuring and 
+performance optimization of the whole algorithm.
 
-**`viewshed`** A new set of functions, to analysze visual impact of a wind farm.    
-The new functions are **`cansee`**, **`viewTo`**, **`rasterprofile`**, **`viewshed`**, **`plot_viewshed`**, **`interpol_view`**, **`getISO3`**, **`getDEM`**
-**`plot_farm_3d`** Experimental rayshader function
+- **`viewshed`** A new set of functions, to analyze the visual impact of a wind farm.    
+The new functions for visual assessment are **`cansee`**, **`viewTo`**, **`rasterprofile`**, **`viewshed`**, **`plot_viewshed`**, **`interpol_view`**, **`getISO3`**, **`getDEM`**
+- **`plot_farm_3d`** Experimental rayshader function
 
 ### Updates 1.2.1
 #### Randomization
-The output of **`genAlgo`** or **`windfarmGA`** can be further randomized with the following
+The output of **`genAlgo`** or **`windfarmGA`** can be further randomized/optimized with the following
 functions:
 - RandomSearch
 - RandomSearchTurb
 
-**`RandomSearch`** can be used to randomize all turbines of the layout whereas
-**`RandomSearchTurb`** can be used to randomize a single turbine only.
+**`RandomSearch`** is used to randomize all turbines of the layout whereas
+**`RandomSearchTurb`** is used to randomize a single turbine
 
 **`RandomSearchPlot`** is used to plot the outputs of those functions, compared with the 
 original result.

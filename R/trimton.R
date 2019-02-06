@@ -3,9 +3,8 @@
 #' @description  Adjust the mutated individuals to the required amount of
 #' turbines.
 #'
+#' @importFrom stats aggregate
 #' @export
-#' @importFrom dplyr select group_by summarise_all funs
-#' @importFrom magrittr %>%
 #'
 #' @param mut A binary matrix with the mutated individuals (matrix)
 #' @param nturb A numeric value indicating the amount of required turbines
@@ -17,7 +16,8 @@
 #' @param trimForce A boolean value which determines which adjustment
 #' method should be used. TRUE uses a probabilistic approach and
 #' FALSE uses a random approach (logical)
-#'
+#' @param seed Set a seed for comparability. Default is NULL
+#' 
 #' @return Returns a binary matrix with the correct amount of turbines
 #' per individual (matrix)
 #' @examples \donttest{
@@ -78,81 +78,88 @@
 #'
 #'}
 #' @author Sebastian Gatscha
-trimton           <- function(mut, nturb, allparks, nGrids, trimForce){
-
+trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
+  if (missing(seed)) {seed = NULL}
+  k <- 0.5
   nGrids1 <- 1:nGrids
-
   lepa <- length(mut[1,])
-  mut1 <- list();
+  allparks <- as.matrix(allparks)
+  row.names(allparks) <- NULL
+  mut1 <- vector("list", lepa)
   for (i in 1:lepa) {
-    mut1[[i]] <- mut[,i]
-    e <- mut[,i]==1
-    ## How many turbines are in the current park?
-    ele <- length(e[e==T]);
+    tmp <- mut[,i]
+    e <- tmp == 1
     ## How much turbines are there too many?
-    zviel <- ele - nturb;
+    zviel <- length(e[e == TRUE]) - nturb
     ## Which grid cell IDs have a turbine
-    welche <- which(e==TRUE);
-
-    trimForce <- toupper(trimForce)
-    # if (1==1){
-
-      # Calculate probability, that Turbine is selected to be eliminated.
-      indivprop <- dplyr::select(allparks, Rect_ID, Parkfitness, AbschGesamt);
-      # Group mean wake effect and fitness value of a grid cell.
-      indivprop <- indivprop %>% dplyr::group_by(Rect_ID) %>% dplyr::summarise_all(dplyr::funs(mean));
-
-      k <- 0.5
-
-      propwelche <- data.frame(cbind(RectID=welche,Prop=rep(mean(indivprop$AbschGesamt),length(welche))));
-      propexi <- indivprop[indivprop$Rect_ID %in% welche,];
-      propexi <- as.data.frame(propexi)
-      npt <- (1+((max(propexi$AbschGesam)-propexi$AbschGesam)/(1+max(propexi$AbschGesam))))
-      npt0 <- (1+((max(propexi$Parkfitness)-propexi$Parkfitness)/(1+max(propexi$Parkfitness))))
-      NewProb <- 1/(npt/(npt0^k))
-
-      propwelche[welche %in%  indivprop$Rect_ID,]$Prop <- NewProb;
-
-      propwelcheN <-  data.frame(cbind(RectID=nGrids1,Prop=rep(min(indivprop$AbschGesamt),length(nGrids1))));
-      propexiN <- indivprop[indivprop$Rect_ID %in% nGrids1,];
-      propexiN <- as.data.frame(propexiN)
-      npt1 <- (1+((max(propexiN$AbschGesam)-propexiN$AbschGesam)/(1+max(propexiN$AbschGesam))))
-      npt2 <- (1+((max(propexiN$Parkfitness)-propexiN$Parkfitness)/(1+max(propexiN$Parkfitness))))^k
-      NewProb1 <- (npt1/npt2)
-      propwelcheN[propwelcheN$RectID %in%  indivprop$Rect_ID,]$Prop <- NewProb1;
-      if (!all(propwelcheN$RectID %in%  indivprop$Rect_ID==TRUE)){
-        qu <- min(NewProb1)
-        propwelcheN[!propwelcheN$RectID %in%  indivprop$Rect_ID,]$Prop <- qu
+    welche <- which(e == TRUE)
+    
+    # Calculate probability, that Turbine is selected to be eliminated.
+    indivprop <- subset.matrix(allparks, select = c("Rect_ID", "Parkfitness", "AbschGesamt"))
+    
+    # Group mean wake effect and fitness value of a grid cell.
+    indivprop <- aggregate(indivprop[,2:3], by = list(indivprop[,1]), FUN = mean)
+    colnames(indivprop) <- c("Rect_ID","Parkfitness","AbschGesamt")
+    
+    propwelche <- cbind(
+      RectID = welche,
+      Prop = rep(mean(indivprop[,'AbschGesamt']), length(welche)))
+    if (trimForce) {
+      propexi <- indivprop[indivprop[,'Rect_ID'] %in% welche,];
+      npt  <- (1 + ((max(propexi[,'AbschGesamt']) - propexi[,'AbschGesamt']) / (1 + max(propexi[,'AbschGesamt']))))
+      npt0 <- (1 + ((max(propexi[,'Parkfitness']) - propexi[,'Parkfitness']) / (1 + max(propexi[,'Parkfitness'])))) ^ k
+      NewProb <- 1 / (npt / npt0)
+      propwelche[welche %in%  indivprop[,'Rect_ID'], 'Prop'] <- NewProb;
+    }
+    
+    propwelcheN <-  cbind(
+      Rect_ID = nGrids1,
+      Prop = rep(min(indivprop[,'AbschGesamt']), nGrids))
+    if (trimForce) {
+      propexiN <- indivprop[indivprop[,'Rect_ID'] %in% nGrids1,];
+      npt1 <- (1 + ((max(propexiN[,'AbschGesamt']) - propexiN[,'AbschGesamt']) / (1 + max(propexiN[,'AbschGesamt']))))
+      npt2 <- (1 + ((max(propexiN[,'Parkfitness']) - propexiN[,'Parkfitness']) / (1 + max(propexiN[,'Parkfitness'])))) ^ k
+      NewProb1 <- npt1 / npt2
+      propwelcheN[propwelcheN[,'Rect_ID'] %in%  indivprop[,'Rect_ID'], 'Prop'] <- NewProb1
+      if (!all(propwelcheN[,'Rect_ID'] %in%  indivprop[,'Rect_ID'] == TRUE)) {
+        propwelcheN[!propwelcheN[,'Rect_ID'] %in%  indivprop[,'Rect_ID'], 'Prop'] <- min(NewProb1)
       }
-      propwelcheN <- propwelcheN[!propwelcheN$RectID %in% welche,];
-      ## P1 - Deleting Turbines
-      prob1 <- propwelche$Prop;
-      ## P2 - Adding Turbines
-      prob2 <- propwelcheN$Prop;
-    # }
-
+    }
+    
+    propwelcheN <- propwelcheN[!propwelcheN[,'Rect_ID'] %in% welche,]
+    ## P1 - Deleting Turbines
+    prob1 <- propwelche[,'Prop']
+    ## P2 - Adding Turbines
+    prob2 <- propwelcheN[,'Prop']
+    
     if (zviel != 0) {
       if (zviel > 0) {
-        if (trimForce == TRUE){
+        if (trimForce){
           # Delete turbines with Probability
-          smpra <- sort(sample(welche, zviel,replace=F,prob = prob1));
-          prob1[which(welche==smpra[1])]
+          if (!is.null(seed)) {set.seed(as.integer(seed))}
+          smpra <- sample(welche, zviel, replace = FALSE, prob = prob1)
+          # smpra <- sample(welche, zviel, replace = FALSE, prob = prob1)
         } else {
           # Delete them randomly
-          smpra <- sort(sample(welche, zviel,replace=F));
+          if (!is.null(seed)) {set.seed(as.integer(seed))}
+          smpra <- sample(welche, zviel, replace = FALSE)
         }
         # Delete the 1 entry and make no turbine.
-        mut1[[i]][smpra] <- 0
+        tmp[smpra] <- 0
+        mut1[[i]] <- tmp
       } else {
-        if (trimForce == TRUE){
+        if (trimForce){
           # Add turbines with Probability
-          smpra <- sort(sample(propwelcheN$RectID, (-zviel),replace=F, prob = prob2));
+          if (!is.null(seed)) {set.seed(as.integer(seed))}
+          smpra <- sample(propwelcheN[,'Rect_ID'], -zviel, replace = FALSE, prob = prob2)
         } else {
           # Add turbines randomly
-          smpra <- sort(sample(propwelcheN$RectID, (-zviel),replace=F));
+          if (!is.null(seed)) {set.seed(as.integer(seed))}
+          smpra <- sample(propwelcheN[,'Rect_ID'], -zviel, replace = FALSE)
         }
         # Assign 1 to binary code. So Turbine is created here.
-        mut1[[i]][smpra] <- 1;
+        tmp[smpra] <- 1
+        mut1[[i]] <- tmp
       }
     }
   }

@@ -27,7 +27,6 @@
 #' @return Returns a list.
 #'
 #' @examples \donttest{
-#' library(windfarmGA)
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 #' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #' 

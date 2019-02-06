@@ -26,7 +26,6 @@
 #' @examples
 #' library(sp)
 #' library(raster)
-#' library(windfarmGA)
 #' 
 #' ## Exemplary input Polygon with 2km x 2km:
 #' polYgon <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))

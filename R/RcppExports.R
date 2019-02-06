@@ -5,7 +5,15 @@ wake <- function(Rotorf, wakr, leA) {
     .Call(`_windfarmGA_wake`, Rotorf, wakr, leA)
 }
 
-wakeRcpp <- function(lenght_b, topograp, RotD, k) {
-    .Call(`_windfarmGA_wakeRcpp`, lenght_b, topograp, RotD, k)
+aovCPP <- function(lenght_b, wakr, leA, Rotorf, rotor_rad) {
+    .Call(`_windfarmGA_aovCPP`, lenght_b, wakr, leA, Rotorf, rotor_rad)
+}
+
+rotatePP <- function(X1, Y1, Px, Py, angle) {
+    .Call(`_windfarmGA_rotatePP`, X1, Y1, Px, Py, angle)
+}
+
+wakeCPP <- function(lenght_b, topograp, RotD, k) {
+    .Call(`_windfarmGA_wakeCPP`, lenght_b, topograp, RotD, k)
 }
 

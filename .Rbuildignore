@@ -1,5 +1,6 @@
 .travis.yml
 ^packrat/
+^newstuff/
 ^\.Rprofile$
 ^.*\.Rproj$
 ^.RData
@@ -13,6 +14,9 @@
 ^README.md
 ^README\.Rmd$
 ^README-.*\.png$
+AUT_msk_alt.gri
+AUT_msk_alt.grd
+AUT_msk_alt.vrt
 viewshed_turbines.R
 optimizeCalcEn.R
 GoogleChromePlot.R

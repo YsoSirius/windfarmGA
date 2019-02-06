@@ -60,7 +60,6 @@
 #' @examples \dontrun{
 #' ## Create a random shapefile
 #' library(sp)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'                     c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
@@ -138,12 +137,12 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
   sel1 <- sel[,2:3];
   ## Assign constant values
   cT <- 0.88;   air_rh <- 1.225;   k <- 0.075;  plotit <- FALSE
+  pcent = apply(sp::bbox(polygon1), 1, mean)
   ## Create a dummy vector of 1 for the wind speeds.
   windpo = rep(1, length(sel1[,1]))
   
   ## Get the Coordinates of the individual / wind farm. Change dirSpeed to matrix
   xyBgldMa <- as.matrix(sel1)
-  dirSpeed <- as.matrix(dirSpeed)
   
   ## Terrain Effect Model:
   ## TODO - Change all raster::extract to no buffer
@@ -280,10 +279,13 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
     ## Change Coordinates to Spatial Points and rotate them by the incoming wind direction
     ## and rearrange as coordinates again
     ## TODO faster method than maptools::elide (also removes dependency. Make own elide func?)
-    xyBgldMa <- SpatialPoints(coordinates(xyBgldMa))
-    xyBgldMa <- maptools::elide(xyBgldMa, rotate = angle, 
-                                center = apply(sp::bbox(polygon1), 1, mean))
-    xyBgldMa <- coordinates(xyBgldMa)
+    # xyBgldMa <- SpatialPoints(coordinates(xyBgldMa))
+    # xyBgldMa <- maptools::elide(xyBgldMa, rotate = angle, 
+    #                             center = apply(sp::bbox(polygon1), 1, mean))
+    # xyBgldMa <- coordinates(xyBgldMa)
+    xyBgldMa = rotatePP(xyBgldMa[,1], xyBgldMa[,2], pcent[1], pcent[2], angle)
+    colnames(xyBgldMa) <- c("x","y")
+    
     
     ## If activated, plots the rotated turbines in red.
     if (plotit){

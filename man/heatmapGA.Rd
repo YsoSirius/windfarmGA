@@ -22,7 +22,6 @@ cells have been selected more often than red grid cells.
 }
 \examples{
 \donttest{
-library(windfarmGA)
 ## Add some data examples from the package
 load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
 

@@ -86,6 +86,7 @@
 #' Default is FALSE
 #' @param plotit If TRUE, will plot the best windfarm of a generation. Default
 #' is FALSE 
+#' 
 #'
 #' @return The result of this run is a matrix of all relevant output
 #' parameters. This output can be used for several plotting functions.
@@ -94,7 +95,6 @@
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);
@@ -169,39 +169,82 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                               selstate, crossPart1, trimForce, Projection,
                               sourceCCL, sourceCCLRoughness, weibull, weibullsrc,
                               Parallel, numCluster, verbose = FALSE, plotit = FALSE){
-  
+  ## set graphics::par ###############
   if (plotit) {
     oldpar <- graphics::par(no.readonly = T)
     plot.new();
     graphics::par(ask=F);
   }
-  if (missing(fcrR)){
-    fcrR = 5
+  
+  ## MISSING ARGUMENTS ###############
+  if (missing(fcrR)){fcrR = 5}
+  ## Is Elevation missing? - Default FALSE
+  if (missing(topograp)){
+    topograp <- FALSE
+  }    
+  ## Is GridMethod missing? - Default "r"
+  if (missing(GridMethod)){
+    GridMethod <- "Rectangular"
+  }
+  ## Is Parallel missing? - Default FALSE
+  if (missing(Parallel)){
+    Parallel <- FALSE
+  }
+  ## Is number of Clusters missing? - Default 1
+  if (missing(numCluster)){
+    numCluster=1
+  }
+  ## Is Weibull information missing? - Default FALSE
+  if (missing(weibull)){
+    weibull = FALSE
+  }
+  if (missing(selstate)){
+    selstate = "FIX"
+  }  
+  if (missing(crossPart1)){
+    crossPart1 = "EQU"
+  }
+  if (missing(SurfaceRoughness)){
+    SurfaceRoughness = 0.3
+  }
+  if (missing(Proportionality)){
+    Proportionality = 1
+  }
+  if (missing(mutr)){
+    mutr = 0.008
+  }
+  if (missing(elitism)){
+    elitism = TRUE
+    if (missing(nelit)) {
+      nelit = 7
+    }
+  }
+  if (missing(trimForce)){
+    trimForce = FALSE
+  }
+  if (missing(referenceHeight)){
+    referenceHeight = RotorHeight
+  }
+  if (missing(iteration)){
+    iteration = 20
+  }
+  ##  Project the Polygon to LAEA if it is not already.
+  if (missing(Projection)) {
+    ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+    +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  } else {
+    ProjLAEA <- Projection;
   }
   
+  ## INIT VARIABLES 1 #################
   ## Grid size calculation
   resol2 <- fcrR * Rotor
   
   ## Max Amount of individuals in the Crossover-Method
   CrossUpLimit <- 300
   
-  ## Is Elevation missing? - Default FALSE
-  if (missing(topograp)){
-    topograp = FALSE
-  }    
-  ## Is GridMethod missing? - Default "r"
-  if (missing(GridMethod)){
-    GridMethod <- "Rectangular"
-  }
   
-  ## Is Parallel missing? - Default FALSE
-  if (missing(Parallel)){
-    Parallel=F
-  }
-  ## Is number of Clusters missing? - Default 1
-  if (missing(numCluster)){
-    numCluster=1
-  }
+  ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max iv value exceeds.
   if (Parallel) {
     numPossClus <- as.integer(Sys.getenv('NUMBER_OF_PROCESSORS'))
@@ -209,14 +252,12 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       numCluster <- numPossClus - 1
     }
     typeCluster = "PSOCK"
-    cl <<- parallel::makeCluster(numCluster, type = typeCluster)
+    cl <- parallel::makeCluster(numCluster, type = typeCluster)
     doParallel::registerDoParallel(cl)
   }
   
-  ## Is Weibull information missing? - Default FALSE
-  if (missing(weibull)){
-    weibull = FALSE
-  }
+  
+  ## WEIBULL ###############
   ## Is Weibull activated? If no source is given, take values from package
   if (weibull){
     if (verbose) {cat("\nWeibull Distribution is used.")}
@@ -249,39 +290,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   } else {
       weibullsrc <- NULL
   }
-
   
-  if (missing(selstate)){
-    selstate = "FIX"
-  }  
-  if (missing(crossPart1)){
-    crossPart1 = "EQU"
-  }
-  if (missing(SurfaceRoughness)){
-    SurfaceRoughness = 0.3
-  }
-  if (missing(Proportionality)){
-    Proportionality = 1
-  }
-  if (missing(mutr)){
-    mutr = 0.008
-  }
-  if (missing(elitism)){
-    elitism = TRUE
-    if (missing(nelit)) {
-      nelit = 7
-    }
-  }
-  if (missing(trimForce)){
-    trimForce = FALSE
-  }
-  if (missing(referenceHeight)){
-    referenceHeight = RotorHeight
-  }
-  if (missing(iteration)){
-    iteration = 20
-  }
-  
+  ## CHECK INPUTS ###############
   ## Check if Input Data is correct and prints it out.
   if  (crossPart1!= "EQU" & crossPart1 !="RAN") {
     crossPart1 <- readinteger()
@@ -300,21 +310,15 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                      "Grid Method" = GridMethod));
   inputWind <- list(Windspeed_Data = vdirspe)
   if (verbose) {print(inputData);print(inputWind)}
-  
   # readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")
 
-  ##  Project the Polygon to LAEA if it is not already.
-  if (missing(Projection)) {
-    ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-              +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  } else {
-    ProjLAEA <- Projection;
-  }
 
+  ## Project Polygon ###############
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
 
+  ## GRIDFILTER ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
@@ -335,11 +339,12 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   AmountGrids <- nrow(Grid)
 
+
+  ## INIT VARIABLES 2 ###############
   ## Determine the amount of initial individuals and create initial population.
   nStart <- (AmountGrids*n)/iteration;   if (nStart < 100) {nStart <- 100};   if (nStart > 300) {nStart <- 300}
   nStart<- ceiling(nStart);
   startsel <- StartGA(Grid,n,nStart);
-
   ## Initialize all needed variables as list.
   maxParkwirkungsg <- 0; allparkcoeff <- vector("list",iteration);
   bestPaEn <- vector("list",iteration);
@@ -350,8 +355,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   beorwor <- vector("list",iteration); mut_rate <- vector("list",iteration);
   allCoords <- vector("list",iteration);
 
+  ## TERRAIN EFFECT MODEL ###############
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
-  if (!topograp){
+  if (!topograp) {
     if(verbose){cat("Topography and orography are not taken into account.")}
     srtm_crop=""
     cclRaster=""
@@ -405,35 +411,32 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   }
 
 
-
-  ## Start the GA
-  if(verbose){cat("\nStart Genetic Algorithm ...")}
+  ## GENETIC ALGORITHM #################
+  if (verbose){cat("\nStart Genetic Algorithm ...")}
   rbPal <- grDevices::colorRampPalette(c('red','green'))
-  i=1
+  i <- 1
   while (i <= iteration) {
-    if (!verbose){
-      cat(".")
-    }
-    
+    if (!verbose){cat(".")}
+    ## FITNESS (+getRectV) ###############
     if (i==1) {
-      fit <- fitness(selection = startsel,referenceHeight = referenceHeight,
-                     RotorHeight = RotorHeight,SurfaceRoughness = SurfaceRoughness,
-                     Polygon = Polygon1,resol1 = resol2,rot=Rotor, dirspeed = vdirspe,
-                     srtm_crop = srtm_crop,topograp = topograp,cclRaster = cclRaster,
+      fit <- fitness(selection = startsel, referenceHeight = referenceHeight,
+                     RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
+                     Polygon = Polygon1, resol1 = resol2,rot=Rotor, dirspeed = vdirspe,
+                     srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
                      weibull = weibull, weibullsrc = weibullsrc, 
-                     Parallel=Parallel, numCluster=numCluster, verbose=verbose)
+                     Parallel = Parallel, numCluster = numCluster, verbose = verbose)
 
     } else {
       getRectV <- getRects(mut1, Grid)
-      fit <- fitness(selection = getRectV,referenceHeight = referenceHeight,
-                     RotorHeight = RotorHeight,SurfaceRoughness = SurfaceRoughness,
-                     Polygon = Polygon1,resol1 = resol2,rot = Rotor, dirspeed = vdirspe,
-                     srtm_crop = srtm_crop,topograp = topograp,cclRaster = cclRaster,
+      fit <- fitness(selection = getRectV, referenceHeight = referenceHeight,
+                     RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
+                     Polygon = Polygon1, resol1 = resol2,rot = Rotor, dirspeed = vdirspe,
+                     srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
                      weibull = weibull, weibullsrc = weibullsrc, 
-                     Parallel=Parallel, numCluster=numCluster, verbose=verbose)
+                     Parallel = Parallel, numCluster = numCluster, verbose = verbose)
     }
   
-    # browser()
+    ## Fitness Result Processing ###############
     allparks <- do.call("rbind",fit);
     allparksUni <- split(allparks, duplicated(allparks$Run))$'FALSE';
     maxparkfitness <-  round(max(allparksUni$Parkfitness),4);
@@ -448,18 +451,20 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     minParkwirkungsg <- round(min(allparksUni$EfficAllDir),2);
     allparkcoeff[[i]] <- cbind(maxparkfitness,meanparkfitness,minparkfitness, MaxEnergyRedu,
                                MeanEnergyRedu,MinEnergyRedu,maxParkwirkungsg,meanParkwirkungsg,minParkwirkungsg)
-    clouddata[[i]] <- dplyr::select(allparksUni,EfficAllDir,EnergyOverall,Parkfitness);
+    clouddata[[i]] <- dplyr::select(allparksUni, EfficAllDir, EnergyOverall, Parkfitness);
     
     if (verbose) {cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"))}
 
     ## Highest Energy Output
-    xd <- allparks[allparks$EnergyOverall==max(allparks$EnergyOverall),]$EnergyOverall[1];
-    ind <- allparks$EnergyOverall == xd;     bestPaEn[[i]] <- allparks[ind,][1:n,]
+    xd <- allparks[allparks$EnergyOverall == max(allparks$EnergyOverall),]$EnergyOverall[1];
+    ind <- allparks$EnergyOverall == xd;     
+    bestPaEn[[i]] <- allparks[ind,][1:n,]
     ## Highest Efficiency
-    xd1 <- allparks[allparks$EfficAllDir==max(allparks$EfficAllDir),]$EfficAllDir[1];
-    ind1 <- allparks$EfficAllDir == xd1;     bestPaEf[[i]] <- allparks[ind1,][1:n,]
+    xd1 <- allparks[allparks$EfficAllDir == max(allparks$EfficAllDir),]$EfficAllDir[1];
+    ind1 <- allparks$EfficAllDir == xd1;     
+    bestPaEf[[i]] <- allparks[ind1,][1:n,]
     # Print out most relevant information on Generation i
-    afvs <- allparks[allparks$EnergyOverall==max(allparks$EnergyOverall),];
+    afvs <- allparks[allparks$EnergyOverall == max(allparks$EnergyOverall),];
     if (verbose) {
       cat(paste("How many individuals exist: ",  length(fit) ), "\n");
       cat(paste("How many parks are in local Optimum: ",  (length(afvs[,1])/n) ), "\n")
@@ -483,16 +488,18 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       }
     }
 
-    x <- round(bestPaEn[[i]]$EnergyOverall[[1]],2);y <- round(bestPaEn[[i]]$EfficAllDir[[1]],2);
-    e <- bestPaEn[[i]]$EfficAllDir;
-    x1 <- round(bestPaEf[[i]]$EnergyOverall[[1]],2);y1 <- round(bestPaEf[[i]]$EfficAllDir[[1]],2);
+    x <- round(bestPaEn[[i]]$EnergyOverall[[1]],2)
+    y <- round(bestPaEn[[i]]$EfficAllDir[[1]],2)
+    e <- bestPaEn[[i]]$EfficAllDir
+    x1 <- round(bestPaEf[[i]]$EnergyOverall[[1]],2)
+    y1 <- round(bestPaEf[[i]]$EfficAllDir[[1]],2)
     e1 <- bestPaEf[[i]]$EfficAllDir
 
-    ## ALLPARKS RECT ID NOT CORRECT
-    allparksNewplot <- dplyr::select(allparks,AbschGesamt,Rect_ID,Parkfitness);
+    allparksNewplot <- dplyr::select(allparks,AbschGesamt,Rect_ID,Parkfitness)
 
-    allparksNewplot <- allparksNewplot %>% dplyr::group_by(Rect_ID) %>%
-                      dplyr::summarise_all(dplyr::funs(mean));
+    allparksNewplot <- allparksNewplot %>% 
+      dplyr::group_by(Rect_ID) %>%
+      dplyr::summarise_all(dplyr::funs(mean))
 
     if(any(allparksNewplot$Rect_ID %in% Grid$ID == F)){
       # cat(paste("Index of Grid not correct. Bigger than maximum Grid? Fix BUG"))
@@ -509,186 +516,196 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       graphics::points(bestPaEf[[i]]$X,bestPaEf[[i]]$Y,col=Col1,pch=20,cex=1.5)
     }
 
-
+    ## Fuzzy Control ###############
     if (i > 20) {
       besPE <- do.call("rbind",lapply(bestPaEn[1:i], function(x) max(x$EnergyOverall)))
       maxBisher <- max(besPE); WhichMaxBs <- which(besPE==max(besPE))
 
       if (length(WhichMaxBs) >= 2) {
-        BestForNo <- bestPaEn[sample(WhichMaxBs,2)]
-        BestForNo[[1]]$Run <- length(fit)+1
-        BestForNo[[2]]$Run <- length(fit)+2
+        BestForNo <- bestPaEn[sample(WhichMaxBs, 2)]
+        BestForNo[[1]]$Run <- length(fit) + 1
+        BestForNo[[2]]$Run <- length(fit) + 2
       } else {
         BestForNo <- bestPaEn[WhichMaxBs]
         BestForNo <- append(BestForNo, BestForNo)
-        BestForNo[[1]]$Run <- length(fit)+1
-        BestForNo[[2]]$Run <- length(fit)+2
+        BestForNo[[1]]$Run <- length(fit) + 1
+        BestForNo[[2]]$Run <- length(fit) + 2
       }
 
       last7 <- besPE[i:(i-5)]
-      if (!any(last7==maxBisher)){
+      if (!any(last7 == maxBisher)){
         if (verbose){
           cat(paste("Park with highest Fitness level to date is replaced in the list.", "\n\n"))
         }
         fit <- append(fit, BestForNo)
       }
     }
-
-    if (i==1) {
+    if (i == 1) {
       t0 <- split(allparks, duplicated(allparks$Run))$'FALSE'
-      t0 <- t0$Parkfitness;       fitnessValues[[i]] <- t0
-      rangeFitnessVt0 <- range(t0);
-      maxt0 <- max(t0);
-      meant0 <- mean(t0);
-      allcoef0 <- c(rangeFitnessVt0, meant0);
+      t0 <- t0$Parkfitness  
+      fitnessValues[[i]] <- t0
+      rangeFitnessVt0 <- range(t0)
+      maxt0 <- max(t0)
+      meant0 <- mean(t0)
+      allcoef0 <- c(rangeFitnessVt0, meant0)
       fuzzycontr[[i]] <- rbind(allcoef0); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
       teil <- 2
-      if (selstate=="VAR"){
+      if (selstate == "VAR"){
         teil <- 1.35
       }
       u <- 1.1
       beorwor[[i]] <- cbind(0,0)
     }
-    if (i>=2 && i <= iteration) {
-      t0 <- split(allparks, duplicated(allparks$Run))$'FALSE';       t0 <- t0$Parkfitness;
-      fitnessValues[[i]] <- t0;       rangeFitnessVt0 <- range(t0);
-      maxt0 <- max(t0);      meant0 <- mean(t0); mint0 <- min(t0)
-      t1 <- fitnessValues[[i-1]];t1;       rangeFitnessVt1 <- range(t1);
-      maxt1 <- max(t1);     meant1 <- mean(t1); mint1 <- min(t1)
-      maxDif <- maxt0 - maxt1; meanDif <- meant0 - meant1; minDif = mint0 - mint1
-      WeightDif <- c(0.80,0.2,0.0)
-      maxunt <- (maxDif*WeightDif[1])+(meanDif*WeightDif[2])+(minDif*WeightDif[3])
-      allcoef1 <- c(rangeFitnessVt0, meant0); allcoef2 <- c(rangeFitnessVt1, meant1);
-      fuzzycontr[[i]] <- rbind(allcoef1,allcoef2); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
+    if (i >= 2 && i <= iteration) {
+      t0 <- split(allparks, duplicated(allparks$Run))$'FALSE'  
+      t0 <- t0$Parkfitness
+      fitnessValues[[i]] <- t0    
+      rangeFitnessVt0 <- range(t0)
+      maxt0 <- max(t0)
+      meant0 <- mean(t0)
+      mint0 <- min(t0)
+      t1 <- fitnessValues[[i-1]]
+      rangeFitnessVt1 <- range(t1)
+      maxt1 <- max(t1)
+      meant1 <- mean(t1)
+      mint1 <- min(t1)
+      maxDif <- maxt0 - maxt1
+      meanDif <- meant0 - meant1
+      minDif <- mint0 - mint1
+      WeightDif <- c(0.80, 0.2, 0.0)
+      maxunt <- (maxDif * WeightDif[1]) + (meanDif * WeightDif[2]) + (minDif * WeightDif[3])
+      allcoef1 <- c(rangeFitnessVt0, meant0)
+      allcoef2 <- c(rangeFitnessVt1, meant1)
+      fuzzycontr[[i]] <- rbind(allcoef1,allcoef2)
+      colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
 
-      if(maxunt<0) {
-        pri<-"deteriorated";teil<-teil-0.02; u<-u-0.06} else if (maxunt==0) {
-          pri<-"not changed"; teil<-teil; u<-u} else {
-            pri<-"improved"; teil<-teil+0.017; u<-u+0.03}
+      if(maxunt < 0) {
+        pri <- "deteriorated"; teil <- teil - 0.02; u <- u - 0.06} else if (maxunt == 0) {
+          pri <- "not changed"; teil <- teil; u <- u} else {
+            pri <- "improved"; teil <- teil + 0.017; u <- u + 0.03}
 
-      if (teil > 5){teil<-5; u<-u+0.09;  if (verbose) {cat("Min 20% Selected");cat(paste("CPR is increased! CPR:",u,
-                                                                            "SP: ",teil,"\n"))}}
-      if (trunc(u) < 0){u <- 0.5;teil<-teil-0.4;
+      if (teil > 5){teil <- 5; u <- u + 0.09;  if (verbose) {cat("Min 20% Selected");
+        cat(paste("CPR is increased! CPR:", u, "SP: ", teil, "\n"))}}
+      if (trunc(u) < 0){u <- 0.5; teil <- teil - 0.4;
         if (verbose) {cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",u,"SP: ",teil,"\n"))}
       }
-      if (u >= 4){u<-4;teil<-4; if (verbose) {cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ",teil,"\n"))}}
+      if (u >= 4){u <- 4; teil <- 4; if (verbose) {cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ",teil,"\n"))}}
       if (teil <= 4/3){teil <- 4/3; if (verbose) {cat(paste("Max 75% selected. SP: ", teil, "\n"))}}
-      if (length(fit) <= 20) {teil<-1;u<-u+0.07;
+      if (length(fit) <= 20) {teil <- 1; u <- u + 0.07;
         if (verbose) {cat(paste("Less than 20 individuals. Select all and increase Crossover-point rate. CPR: ",
                 u,"SP: ", teil,"\n"))}}
-      if (length(fit) <= 10) {teil<-1;u<-u+0.4;
+      if (length(fit) <= 10) {teil <- 1; u <- u + 0.4;
       if (verbose) {cat(paste("Less than 10 individuals. Select all and increase Crossover-point rate. CPR: ",
                 u,"SP: ", teil,"\n"))}}
-      if (teil > 5){teil<-5; if (verbose) {cat(paste("Teil is bigger than 5. Set to max 5. SP:",teil,"\n"))}}
+      if (teil > 5){teil <- 5; if (verbose) {cat(paste("Teil is bigger than 5. Set to max 5. SP:",teil,"\n"))}}
 
-      u <- round(u,2); teil<-round(teil,3);
+      u <- round(u, 2); teil <- round(teil, 3);
 
       if (verbose) {
         cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"W/h \n"))
       }
-      meanunt <- meant0-meant1;
+      meanunt <- meant0 - meant1;
       beorwor[[i]] <- cbind(maxunt, meanunt)
     }
+    
 
-    if (selstate=="FIX"){
-      if (teil==1){teil<-1} else {teil<-2}
+    ## SELECTION #################
+    if (selstate == "FIX"){
+      if (teil == 1){teil <- 1} else {teil <- 2}
     }
-    if (crossPart1=="EQU"){
-      u <- round(u,2)
+    if (crossPart1 == "EQU"){
+      u <- round(u, 2)
     }
 
     ## How many are selected and how much crossover points are used?
-    selcross[[i]] <- cbind(cross=trunc(u+1),teil)
-
-    ## SELECTION
+    selcross[[i]] <- cbind(cross = trunc(u + 1), teil)
     ## print the amount of Individuals selected. Check if the amount of Turbines is as requested.
-    selec6best <- selection1(fit, Grid,teil, elitism, nelit, selstate, verbose);
+    selec6best <- selection1(fit = fit, Grid = Grid, teil = teil, elitism = elitism, nelit = nelit, 
+                             selstate = selstate, verbose = verbose)
     selec6best_bin <- selec6best[[1]]
     if (verbose) {
-      cat(paste("Selection  -  Amount of Individuals: ",length(selec6best_bin[1,-1]),"\n"))
+      cat(paste("Selection  -  Amount of Individuals: ", length(selec6best_bin[1,-1]),"\n"))
     }
     Trus1 <- colSums(selec6best_bin)[-1] == n
     if (any(Trus1 == FALSE)){
-      # print("Number of turbines is not as required. Trus1. Fix BUG")
       stop("Number of turbines is not as required. Trus1. Fix BUG")
     }
-    nindivsel <- length(selec6best_bin[1,-1]);
+    nindivsel <- length(selec6best_bin[1,-1])
 
-    ## CROSSOVER
+    ## CROSSOVER #################
     ## u determines the amount of crossover points, crossPart det. the method used (Equal/Random),
     ## uplimit is the maximum allowed permutations
-    crossOut <- crossover1(selec6best, u, uplimit = CrossUpLimit, crossPart=crossPart1, verbose);
+    crossOut <- crossover1(se6 = selec6best, u = u, uplimit = CrossUpLimit, crossPart = crossPart1, 
+                           verbose = verbose, seed = NULL)
     if (verbose) {
-      cat(paste("Crossover  -  Amount of Individuals: ",length(crossOut[1,])));
+      cat(paste("Crossover  -  Amount of Individuals: ", length(crossOut[1,])))
     }
-    nindivcros <- length(crossOut[1,]);
+    nindivcros <- length(crossOut[1,])
 
-    ## MUTATION
+    ## MUTATION #################
     ## Variable Mutation Rate is activated if more than 2 individuals represent the current best solution.
-    loOp <- (length(afvs[,1])/n)
+    loOp <- (length(afvs[,1]) / n)
     if (loOp > 2) {
-      mutrn <- round(runif(1, 0.03, 0.1),2);
-      t1 <- (loOp*1.25)/42
-      mutrn <- mutrn * (1+(t1));
-      mutrn <- round(mutrn +((i)/(20*iteration)),5);
-      mut <- mutation(a = crossOut, p = mutrn);
+      mutrn <- round(runif(1, 0.03, 0.1),2)
+      t1 <- (loOp * 1.25)/42
+      mutrn <- mutrn * (1 + t1)
+      mutrn <- round(mutrn + ((i) / (20 * iteration)), 5)
+      mut <- mutation(a = crossOut, p = mutrn, seed = NULL);
       mut_rat <- mutrn
       if (verbose) {
         cat(paste("\nVariable Mutation Rate is", mutrn, "\n"))
       }
     } else {
-      mut <- mutation(a = crossOut, p = mutr);
+      mut <- mutation(a = crossOut, p = mutr, seed = NULL);
       mut_rat <- mutr
     }
     mut_rate[[i]] <- mut_rat
     if (verbose) {
-      cat(paste("\nMutation   -  Amount of Individuals: ",length(mut[1,])));
+      cat(paste("\nMutation   -  Amount of Individuals: ", length(mut[1,])));
     }
-    nindivmut <- length(mut[1,]);nindivmut
+    nindivmut <- length(mut[1,])
 
-    ## TRIMTON
+    ## TRIMTON #################
     ## After Crossover and Mutation, the amount of turbines in a windpark change and have to be
     ## corrected to the required amount of turbines.
-    mut1 <- trimton(mut = mut, nturb = n, allparks = allparks, nGrids = AmountGrids,trimForce=trimForce)
-    if (verbose) {
-      cat(paste("\nTrimToN    -  Amount of Individuals: ",length(mut1[1,])))
-    }
+    mut1 <- trimton(mut = mut, nturb = n, allparks = allparks, nGrids = AmountGrids,
+                    trimForce = trimForce, seed = NULL)
+    if (verbose) {cat(paste("\nTrimToN    -  Amount of Individuals: ", length(mut1[1,])))}
     Trus3 <- colSums(mut1) == n
     if (any(Trus3 == FALSE)){
-      # print(paste("Number of turbines is not as required. Trus3. Fix Bug. Amount:",
-      #             length(Trus3[Trus3==FALSE])))
       stop("Number of turbines is not as required. Trus3. Fix Bug.")
     }
 
-    nindiv[[i]] <- cbind(nindivfit,nindivsel,nindivcros,nindivmut)
+    nindiv[[i]] <- cbind(nindivfit, nindivsel, nindivcros, nindivmut)
     if (maxParkwirkungsg == 100) {
       i <- iteration + 1
     } else {
-      i <- i+1
+      i <- i + 1
     }
   }
 
+  ## Stop Parallel Cluster ###############
   if (Parallel) {
     parallel::stopCluster(cl)
-    try(rm(cl, envir = .GlobalEnv), silent = TRUE)
+    try(rm(cl), silent = TRUE)
   }
   
-  ## Reduce the results, if a solution was found prior to the end of the iterations
-  mut_rate <- mut_rate[lapply(mut_rate,length)!=0];
-  beorwor <- beorwor[lapply(beorwor,length)!=0] ;
-  selcross <- selcross[lapply(selcross,length)!=0] ;
-  clouddata <- clouddata[lapply(clouddata,length)!=0];
-  allparkcoeff <- allparkcoeff[lapply(allparkcoeff,length)!=0]
-  bestPaEn <- bestPaEn[lapply(bestPaEn,length)!=0] ;
-  bestPaEf <- bestPaEf[lapply(bestPaEf,length)!=0] ;
-  fuzzycontr <- fuzzycontr[lapply(fuzzycontr,length)!=0];
-  fitnessValues <- fitnessValues[lapply(fitnessValues,length)!=0];
-  nindiv <- nindiv[lapply(nindiv,length)!=0]
-  allCoords <- allCoords[lapply(allCoords,length)!=0] ;
+  ## Reduce the results, if a solution was found prior to the end of the iterations #################
+  mut_rate <- mut_rate[lapply(mut_rate, length) != 0]
+  beorwor <- beorwor[lapply(beorwor, length) != 0]
+  selcross <- selcross[lapply(selcross, length) != 0]
+  clouddata <- clouddata[lapply(clouddata, length) != 0]
+  allparkcoeff <- allparkcoeff[lapply(allparkcoeff, length) != 0]
+  bestPaEn <- bestPaEn[lapply(bestPaEn, length) != 0]
+  bestPaEf <- bestPaEf[lapply(bestPaEf, length) != 0]
+  fuzzycontr <- fuzzycontr[lapply(fuzzycontr, length) != 0]
+  fitnessValues <- fitnessValues[lapply(fitnessValues, length) != 0]
+  nindiv <- nindiv[lapply(nindiv, length) != 0]
+  allCoords <- allCoords[lapply(allCoords, length) != 0]
 
-  ## Bind the results together and Output them.
-  alldata <- cbind(allparkcoeff,bestPaEn,bestPaEf,fuzzycontr,fitnessValues,nindiv,
-                   clouddata,selcross,beorwor,inputData,inputWind,mut_rate,allCoords)
+  ## Bind the results together and Output them. #################
+  alldata <- cbind(allparkcoeff, bestPaEn, bestPaEf, fuzzycontr, fitnessValues, nindiv,
+                   clouddata, selcross, beorwor, inputData, inputWind, mut_rate, allCoords)
   
   if (plotit){graphics::par(oldpar)}
   return(alldata)

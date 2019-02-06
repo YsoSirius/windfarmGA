@@ -19,7 +19,6 @@
 #' (data.frame)
 #'
 #' @examples
-#' library(windfarmGA)
 #' data <- matrix(seq(0,5000,500));
 #' BaroHoehe(data)
 #' plot.ts(BaroHoehe(data))

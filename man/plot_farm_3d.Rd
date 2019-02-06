@@ -32,7 +32,6 @@ Plot a wind farm with rayshader in 3D. (Still experimental)
 \examples{
 \dontrun{
 library(sp)
-library(windfarmGA)
 Polygon1 <- Polygon(rbind(c(4488182, 2663172), c(4488182, 2669343),
                           c(4499991, 2669343), c(4499991, 2663172)))
 Polygon1 <- Polygons(list(Polygon1), 1);

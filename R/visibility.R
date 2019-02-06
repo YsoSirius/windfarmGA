@@ -155,7 +155,6 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
 #' 
 #' @examples \dontrun{
 #' library(sp)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2667172)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);
@@ -270,7 +269,6 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #' @examples \dontrun{
 #' library(sp)
 #' library(raster)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2667172)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);
@@ -335,7 +333,6 @@ plot_viewshed <- function(res, legend=FALSE) {
 #' @examples \dontrun{
 #' library(sp)
 #' library(raster)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2667172)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);
@@ -430,7 +427,6 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' @return A character vector
 #' 
 #' @examples \dontrun{
-#' library(windfarmGA)
 #' points = cbind(c(4488182.26267016, 4488852.91748256), 
 #' c(2667398.93118627, 2667398.93118627))
 #' getISO3(pp = points, ask = T)
@@ -518,7 +514,6 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 #' @examples \dontrun{
 #' library(sp)
 #' library(raster)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2667172)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);
@@ -589,7 +584,6 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
 #' 
 #' @examples \dontrun{
 #' library(sp)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4488182, 2663172), c(4488182, 2669343),
 #'                           c(4499991, 2669343), c(4499991, 2663172)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);

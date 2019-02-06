@@ -4,7 +4,7 @@
 \alias{trimton}
 \title{Adjust the amount of turbines per windfarm}
 \usage{
-trimton(mut, nturb, allparks, nGrids, trimForce)
+trimton(mut, nturb, allparks, nGrids, trimForce, seed)
 }
 \arguments{
 \item{mut}{A binary matrix with the mutated individuals (matrix)}
@@ -21,6 +21,8 @@ current generation (data.frame)}
 \item{trimForce}{A boolean value which determines which adjustment
 method should be used. TRUE uses a probabilistic approach and
 FALSE uses a random approach (logical)}
+
+\item{seed}{Set a seed for comparability. Default is NULL}
 }
 \value{
 Returns a binary matrix with the correct amount of turbines

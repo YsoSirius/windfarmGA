@@ -4,12 +4,14 @@
 \alias{mutation}
 \title{Mutation Method}
 \usage{
-mutation(a, p)
+mutation(a, p, seed)
 }
 \arguments{
 \item{a}{The binary matrix of all individuals. (matrix)}
 
 \item{p}{The mutation rate. (numeric)}
+
+\item{seed}{Set a seed for comparability. Default is NULL}
 }
 \value{
 Returns a binary matrix with mutated genes. (matrix)

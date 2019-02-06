@@ -4,7 +4,7 @@
 \alias{crossover1}
 \title{Crossover Method}
 \usage{
-crossover1(se6, u, uplimit, crossPart, verbose)
+crossover1(se6, u, uplimit, crossPart, verbose, seed)
 }
 \arguments{
 \item{se6}{The selected individuals. The output of \code{\link{selection1}}
@@ -18,6 +18,8 @@ algorithm has an upper bound of 300 permutations. (numeric)}
 \item{crossPart}{The crossover method. Either "EQU" or "RAN". (character)}
 
 \item{verbose}{If TRUE, will print out further information.}
+
+\item{seed}{Set a seed for comparability. Default is NULL}
 }
 \value{
 Returns a binary coded matrix of all permutations and all grid
@@ -30,7 +32,6 @@ the selected individuals after the \code{\link{selection1}} function and
 produces new offsprings through permutation.
 }
 \examples{
-library(windfarmGA)
 ## Create two random parents with an index and random binary values
 Parents <- data.frame(
   ID = 1:20,

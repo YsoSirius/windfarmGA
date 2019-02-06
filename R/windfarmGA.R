@@ -223,7 +223,7 @@ utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
                          "unit", "Laenge_B","By","Bx",
                          "dry.grid.filtered","spd.binned","Run","EnergyOverall",
                          "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt",
-                         "srtm_crop", "cclRaster", "weibullsrc","globalparks","<<-"));
+                         "srtm_crop", "cclRaster", "weibullsrc","globalparks","<<-", "cl"))
 
 
 windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,sourceCCLRoughness,
@@ -310,9 +310,9 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod == "HEXAGON" | GridMethod == "H") {
-    Grid <- HexaTex(Polygon1 = Polygon1, size = ((Rotor*fcrR)/2), plotTrue = T)
+    Grid <- HexaTex(Polygon1 = Polygon1, size = ((Rotor*fcrR)/2), plotTrue = TRUE)
   } else {
-    Grid <- GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop = Proportionality, plotGrid=TRUE)
+    Grid <- GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop = Proportionality, plotGrid = TRUE)
   }
   cat("\nIs the grid spacing appropriate?")
   InputDaccor <- readline(prompt = "Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
@@ -376,14 +376,14 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
 
   ##########################################################
   ############### RUNNING GENETIC ALGORITHM
-  result <- genAlgo(Polygon1 = Polygon1, GridMethod = GridMethod, Rotor = Rotor, n=n, fcrR=fcrR, 
-                    iteration=iteration, vdirspe = vdirspe,
-                    topograp = topograp,referenceHeight = referenceHeight,RotorHeight = RotorHeight,
-                    SurfaceRoughness = SurfaceRoughness,Proportionality = Proportionality,mutr = mutr,
-                    elitism = elitism,nelit = nelit,selstate = selstate,crossPart1 = crossPart1,trimForce = trimForce,
-                    Projection=Projection, sourceCCL = sourceCCL, sourceCCLRoughness = sourceCCLRoughness,
-                    weibull=weibull, weibullsrc = weibullsrc, Parallel=Parallel, numCluster=numCluster,
-                    verbose=verbose, plotit=plotit)
+  result <- genAlgo(Polygon1 = Polygon1, GridMethod = GridMethod, Rotor = Rotor, n = n, fcrR = fcrR, 
+                    iteration = iteration, vdirspe = vdirspe, topograp = topograp,
+                    referenceHeight = referenceHeight, RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
+                    Proportionality = Proportionality, mutr = mutr, elitism = elitism, nelit = nelit,
+                    selstate = selstate, crossPart1 = crossPart1,trimForce = trimForce,
+                    Projection = Projection, sourceCCL = sourceCCL, sourceCCLRoughness = sourceCCLRoughness,
+                    weibull = weibull, weibullsrc = weibullsrc, Parallel = Parallel, numCluster = numCluster,
+                    verbose = verbose, plotit = plotit)
   par(opar)
   invisible(result)
 }

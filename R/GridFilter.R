@@ -34,7 +34,6 @@
 #'
 #' @examples
 #' library(sp)
-#' library(windfarmGA)
 #'
 #' ## Exemplary input Polygon with 2km x 2km:
 #' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000),

@@ -55,7 +55,6 @@
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)
-#' library(windfarmGA)
 #' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'                     c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
@@ -144,6 +143,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   }
   probabDir <- dirspeed$probab;
   pp <- sum(probabDir)/100;   probabDir <- probabDir/pp;
+  dirspeed <- as.matrix(dirspeed)
   
   ## TODO - Move this to genAlgo (not necesseray here and just inefficient) 
   ## DO i need rasterize anyway? Can i not create vector 1
@@ -212,8 +212,8 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
         e[[i]] <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, 
                               RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness, 
                               # windraster = windraster,
-                              wnkl = 20, distanz=100000,
-                              polygon1 = Polygon, resol=resol1, RotorR = rot, dirSpeed = dirspeed,
+                              wnkl = 20, distanz = 100000,
+                              polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
                               srtm_crop = srtm_crop, topograp = topograp,cclRaster = cclRaster, 
                               weibull = weibull, weibullsrc = weibullsrc)
         # ee  <- lapply(e[[i]], function(x){split(x, duplicated(x[,'Punkt_id']))$'FALSE'})
@@ -244,7 +244,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       # enOut <- lapply(ee, function(x){ x[1,c(3,8,10)]}); 
       enOut <- lapply(ee, function(x){
         subset.matrix(x, 
-                      subset = c(T,rep(F,length(ee[[1]][,1])-1)),
+                      subset = c(TRUE, rep(FALSE, length(ee[[1]][,1]) - 1)),
                       select = c('Windrichtung','Energy_Output_Red','Parkwirkungsgrad'))})
       enOut <- do.call("rbind", enOut)
       
