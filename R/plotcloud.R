@@ -26,7 +26,7 @@
 #' str(plcdf)
 #'}
 #' @author Sebastian Gatscha
-plotCloud <- function(result,pl=FALSE){
+plotCloud <- function(result, pl=FALSE){
 
   parcloud <- par(ask=F, no.readonly = T)
   on.exit(par(parcloud))
@@ -38,7 +38,7 @@ plotCloud <- function(result,pl=FALSE){
 
   EffCldInd <- list();EneCldInd <- list();FitCldInd <- list();
   for (i in 1:length(clouddata)){
-    l <- length(clouddata[[i]]$EfficAllDir); l
+    l <- length(clouddata[[i]][,'EfficAllDir']); l
     EffCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),EffCloud[[i]])));
     EneCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),EneCloud[[i]])));
     FitCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),FitCloud[[i]])));
@@ -91,7 +91,7 @@ plotCloud <- function(result,pl=FALSE){
 
   }
 
-  clouddatafull <- cbind(Fitn=FitCldIndmax,Eff=EffCldIndmax,Ene=EneCldIndmax)
+  clouddatafull <- cbind(Fitn = FitCldIndmax, Eff = EffCldIndmax, Ene = EneCldIndmax)
   invisible(clouddatafull)
 
 }

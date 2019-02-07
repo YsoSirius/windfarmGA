@@ -56,7 +56,11 @@
 #' str(selec6best)
 #' }
 #' @author Sebastian Gatscha
-selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose){
+selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose) {
+  # fit = fit; Grid = Grid; teil = teil; elitism = elitism; nelit = nelit; 
+  # selstate = selstate; verbose = verbose
+  
+  
   if (missing(verbose)){verbose = FALSE}
   
   # Make a DataFrame of the Fitness Function Output. Representing all x Parks with their fitness value.
@@ -71,21 +75,33 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose){
   row.names(new1) <- NULL
   # Elitarism - A certain amount of individuals will get their fitness values increased
   if (elitism){
-    if(verbose){
+    if (verbose){
       cat(paste("Elitarism activated. Best", nelit, "individuals are increased\n"))
     }
+    if (nrow(new1) < nelit) {
+      nelit = nrow(new1)
+    }
+    ## TODO - This or create vector of same length with nelit times 10 and otherwise 1.
     new1[1:nelit,'Parkfitness'] <- new1[1:nelit,'Parkfitness'] * 10
   }
-  # Delete the 4 worst fitness entries.
-  new1 <- new1[-seq(length(new1[[1]]), nrow(new1) - 3 , -1),]
+  
+  if (nrow(new1) > 10) {
+    # Delete the 4 worst fitness entries.
+    new1 <- new1[-seq(length(new1[,1]), nrow(new1) -3 , -1),]
+  }
+  
   selstate <- toupper(selstate)
   ## The next two methods determine how a selection percentage is calculated
   # Either a fixed percentage of 50% is used
   if (selstate == "FIX") {
     # Select a fixed amount of indivs. # Teil=2 takes always 50% of population
-    if (teil == 1){teil = 1} else {teil = 2}
-    nPar <- ceiling(nrow(new1) / teil);
-    if(verbose){
+    if (teil == 1){
+      teil = 1
+    } else {
+      teil = 2
+    }
+    nPar <- ceiling(nrow(new1) / teil)
+    if (verbose){
       cat(paste("Selection Percentage:", round(100/teil,3), "\n"))
       cat(paste("FIX: How many parental individuals are selected:",nPar, "from",  
                 nrow(new1),"with", ((1/teil)*100), "%\n"))
@@ -106,9 +122,9 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose){
   if (nPar > 100) {nPar <- 100}
   if (any(is.na(new1[,'Parkfitness']))) {
     cat("some Values are NA....")
-    browser()
+    # browser()
   }
-  childsRunID <- sort(sample(new1[[1]], nPar, prob = new1[,'Parkfitness'], replace = FALSE));
+  childsRunID <- sort(sample(new1[,1], nPar, prob = new1[,'Parkfitness'], replace = FALSE));
   
   # Pick the parks with those list indeces. (park with all config) and return Run and Rect_ID
   chile <- seq_len(length(childsRunID)) 
@@ -120,13 +136,17 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose){
   childbin <- lapply(chile, function(i) {
     ## For every Child element, assign the total Grid to a binaryvariable[i], and set all binary =0. Assign Run Value as well
     tmp <- Grid
-    tmp$Run <- child[[i]]$Run[[1]]
-    tmp$bin <- 0
-    tmp$Fitness <- child[[i]]$Parkfitness[[1]]
-    for (e in 1:length(child[[i]][[1]])) {
+    tmp <- cbind(tmp, 
+                 "Run" = child[[i]][1, 'Run'],
+                 "bin" = 0,
+                 "Fitness" = child[[i]][1, 'Parkfitness'])
+    # tmp[,'Run'] <- child[[i]][1, 'Run']
+    # tmp$bin <- 0
+    # tmp$Fitness <- child[[i]]$Parkfitness[[1]]
+    for (e in 1:length(child[[i]][,1])) {
       ## For every element in a child (turbines) get his Rect_ID and set binaryvariable[i] to 1, where GridId = Rect_ID
-      rectid <- child[[i]][e,2][[1]]
-      tmp[tmp$ID == rectid,]$bin <- 1
+      rectid <- child[[i]][e, 2]
+      tmp[tmp[,'ID'] == rectid, 'bin'] <- 1
     }
     tmp
   })
@@ -139,18 +159,19 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose){
   #   childsRunID <<- childsRunID[!(childsRunID %in% pare)];
   #   pare
   # }))
-  parents <- vector("list", length(childsRunID)/2);
-  for (i in 1:(length(childsRunID)/2)) {
-    new <- new1[new1$Run %in% childsRunID,]
-    parents[[i]] <- sample(x = sort(childsRunID), 2, replace = F);
-    childsRunID <-  childsRunID[!(childsRunID %in% parents[[i]])];
+  parents <- vector("list", length(childsRunID) / 2)
+  for (i in 1:(length(childsRunID) / 2) ) {
+    ## TODO - do I need next line in for loop??
+    new <- new1[new1[,'Run'] %in% childsRunID,]
+    parents[[i]] <- sample(x = sort(childsRunID), 2, replace = FALSE)
+    childsRunID <-  childsRunID[!(childsRunID %in% parents[[i]])]
   }
   parall <- unlist(parents)
   
   # Create the children
-  childbindf <- do.call("rbind", childbin);
+  childbindf <- do.call("rbind", childbin)
   paralli <- lapply(1:length(parall), function(i) {
-    subset.matrix(childbindf[which(childbindf$Run %in% parall[i]),],
+    subset.matrix(childbindf[which(childbindf[,'Run'] %in% parall[i]),],
                   select = c("ID","Run","bin","Fitness"))
   })
   

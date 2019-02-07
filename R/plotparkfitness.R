@@ -27,7 +27,7 @@
 #' plotparkfitness(result)
 #'}
 #' @author Sebastian Gatscha
-plotparkfitness <- function(result,spar=0.1){
+plotparkfitness <- function(result, spar=0.1){
   parparfit <- par(ask=F, no.readonly = T)
   on.exit(par(parparfit))
   
@@ -165,6 +165,7 @@ plotparkfitness <- function(result,spar=0.1){
       abline(v = timeticksel,col="green");
       mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
   }
+  
   if (length(timetickcro)!=0){
     par(mfrow=c(1,1))
     rbPal <- colorRampPalette(c('red','green'));

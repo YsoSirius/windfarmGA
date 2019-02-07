@@ -83,18 +83,18 @@
 #'            Grid = Grid[[2]], weibullsrc = weibullsrc)
 #'}
 #' @author Sebastian Gatscha
-plotResult <- function(result,Polygon1,best=3,plotEn=1,
-                       topographie=FALSE,Grid,Projection,
-                       sourceCCLRoughness,sourceCCL,
+plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
+                       topographie = FALSE, Grid, Projection,
+                       sourceCCLRoughness, sourceCCL,
                        weibullsrc){
 
   # result = result; Polygon1 = Polygon1; best = 3 ;plotEn = 1;
   # topographie = F;Grid= Grid[[2]]
   
   ## Set graphical parameters
-  parpplotRes <- par(no.readonly = T)
-  par(mfrow=c(1,1))
-  par(mar=c(5,6,4,2)+0.1,mgp=c(5,1,0))
+  parpplotRes <- par(no.readonly = TRUE)
+  par(mfrow = c(1,1))
+  par(mar = c(5,6,4,2)+0.1, mgp = c(5,1,0))
   
   ## Check Projections and reference systems
   if (is.na(sp::proj4string(Polygon1))) {
@@ -125,23 +125,23 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
   } else {
     PolyCrop <- sp::spTransform(Polygon1,
                                 CRSobj = proj4string(weibullsrc[[1]]))
-    if (class(weibullsrc)=="list" & length(weibullsrc)==2) {
+    if (class(weibullsrc) == "list" & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
         raster::crop(x,raster::extent(PolyCrop))})
       wblcroped <- lapply(wblcroped, function(x){
-        raster::mask(x,PolyCrop)})
+        raster::mask(x, PolyCrop)})
       Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1/wblcroped[[1]])))
-    } else if (class(weibullsrc)=="list" & length(weibullsrc)==1) {
-      wblcroped <- raster::crop(weibullsrc[[1]],raster::extent(PolyCrop))
-      wblcroped <- raster::mask(weibullsrc[[1]],PolyCrop)
+    } else if (class(weibullsrc) == "list" & length(weibullsrc) == 1) {
+      wblcroped <- raster::crop(weibullsrc[[1]], raster::extent(PolyCrop))
+      wblcroped <- raster::mask(weibullsrc[[1]], PolyCrop)
       Erwartungswert <- wblcroped[[1]]
-    } else if (class(weibullsrc)=="RasterLayer") {
-      wblcroped <- raster::crop(weibullsrc,raster::extent(PolyCrop))
-      wblcroped <- raster::mask(weibullsrc,PolyCrop)
+    } else if (class(weibullsrc) == "RasterLayer") {
+      wblcroped <- raster::crop(weibullsrc, raster::extent(PolyCrop))
+      wblcroped <- raster::mask(weibullsrc, PolyCrop)
       Erwartungswert <- wblcroped
     }
     col2res = "transparent"
-    alpha=0.9
+    alpha = 0.9
     Erwartungswert <- raster::projectRaster(Erwartungswert, crs = CRS(ProjLAEA))
     # plot(Erwartungswert)
   }
@@ -166,35 +166,34 @@ plotResult <- function(result,Polygon1,best=3,plotEn=1,
     result <- result[,2][order1]
     ledup <- length(result)
 
-    rectid <- (lapply(result, function(x) x$Rect_ID));
+    rectid <- (lapply(result, function(x) x[,'Rect_ID']))
 
     rectidt <- !duplicated(rectid)
     result <- result[rectidt]
     ndif <- length(result)
 
-    cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", (ledup-ndif)))
+    cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", (ledup - ndif)))
     if (ndif < best) {
       cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
       best = trunc(ndif/2)
     }
 
     
-    result <- result[(length(result)-best+1):(length(result))]
+    result <- result[(length(result) - best + 1):(length(result))]
 
     for (i in (1:length(result))){
-
       
       EnergyBest <- data.frame(result[[i]])
       ## Assign the colour depending on the individual wind speed (from windraster and influence)
-      br <- length(levels(factor(EnergyBest$AbschGesamt)))
+      br <- length(levels(factor(EnergyBest[,'AbschGesamt'])))
       if (br > 1) {
-        Col <- rbPal1(br)[as.numeric(cut(as.numeric(EnergyBest$AbschGesamt),breaks = br))]
+        Col <- rbPal1(br)[as.numeric(cut(as.numeric(EnergyBest[,'AbschGesamt']), breaks = br))]
       } else {
         Col <- "green"
       }
 
-      EnergyBest$EnergyOverall <- round(EnergyBest$EnergyOverall, 2)
-      EnergyBest$EfficAllDir <- round(EnergyBest$EfficAllDir, 2)
+      EnergyBest$EnergyOverall <- round(EnergyBest[,'EnergyOverall'], 2)
+      EnergyBest$EfficAllDir <- round(EnergyBest[,'EfficAllDir'], 2)
 
       cat(paste("\nPlot ", (best+1)-i, " Best Energy Solution:\n"))
       par(mfrow=c(1,1), ask=F)

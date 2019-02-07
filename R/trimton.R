@@ -82,24 +82,27 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
   if (missing(seed)) {seed = NULL}
   k <- 0.5
   nGrids1 <- 1:nGrids
+  
+  ## TODO Does it have to be in for-loop????
+  # Calculate probability, that Turbine is selected to be eliminated.
+  indivprop <- subset.matrix(allparks, select = c("Rect_ID", "Parkfitness", "AbschGesamt"))
+  # Group mean wake effect and fitness value of a grid cell.
+  indivprop <- aggregate(indivprop[,2:3], by = list(indivprop[,1]), FUN = mean)
+  colnames(indivprop) <- c("Rect_ID","Parkfitness","AbschGesamt")
+  
+  
   lepa <- length(mut[1,])
-  allparks <- as.matrix(allparks)
-  row.names(allparks) <- NULL
   mut1 <- vector("list", lepa)
   for (i in 1:lepa) {
+    # i=75
     tmp <- mut[,i]
     e <- tmp == 1
     ## How much turbines are there too many?
-    zviel <- length(e[e == TRUE]) - nturb
+    zviel <- sum(e) - nturb
     ## Which grid cell IDs have a turbine
-    welche <- which(e == TRUE)
+    welche <- which(e)
     
-    # Calculate probability, that Turbine is selected to be eliminated.
-    indivprop <- subset.matrix(allparks, select = c("Rect_ID", "Parkfitness", "AbschGesamt"))
-    
-    # Group mean wake effect and fitness value of a grid cell.
-    indivprop <- aggregate(indivprop[,2:3], by = list(indivprop[,1]), FUN = mean)
-    colnames(indivprop) <- c("Rect_ID","Parkfitness","AbschGesamt")
+
     
     propwelche <- cbind(
       RectID = welche,
@@ -137,12 +140,12 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
         if (trimForce){
           # Delete turbines with Probability
           if (!is.null(seed)) {set.seed(as.integer(seed))}
-          smpra <- sample(welche, zviel, replace = FALSE, prob = prob1)
+          smpra <- base::sample(welche, zviel, replace = FALSE, prob = prob1)
           # smpra <- sample(welche, zviel, replace = FALSE, prob = prob1)
         } else {
           # Delete them randomly
           if (!is.null(seed)) {set.seed(as.integer(seed))}
-          smpra <- sample(welche, zviel, replace = FALSE)
+          smpra <- base::sample(welche, zviel, replace = FALSE)
         }
         # Delete the 1 entry and make no turbine.
         tmp[smpra] <- 0
@@ -161,6 +164,8 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
         tmp[smpra] <- 1
         mut1[[i]] <- tmp
       }
+    } else {
+      mut1[[i]] <- tmp
     }
   }
   mut1 <- do.call("cbind", mut1)

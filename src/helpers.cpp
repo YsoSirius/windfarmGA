@@ -3,7 +3,7 @@ using namespace Rcpp;
 
 // Calculate the overlapping area of wake and rotor area
 // [[Rcpp::export]]
-double wake(double Rotorf, double wakr, double leA) {
+double wake_CPP(double Rotorf, double wakr, double leA) {
   double aov = pow(Rotorf,2) * acos((pow(Rotorf,2) - pow(wakr,2) + (pow(leA,2))) / (2 * leA * Rotorf)) + 
        (pow(wakr,2) * acos((pow(wakr,2) - pow(Rotorf,2) + pow(leA,2)) / (2 * leA * wakr))) -
        0.5 * sqrt((Rotorf + wakr + leA) * (-Rotorf + wakr + leA ) * 
@@ -11,29 +11,29 @@ double wake(double Rotorf, double wakr, double leA) {
   return aov;
 }
 
-// Calculate the overlapping area of wake and rotor area (FULL)
+// Calculate the overlapping area of wake and rotor area (FULL) ////// Not used yet... testing
 // [[Rcpp::export]]
-NumericVector aovCPP(double lenght_b, double wakr, double leA, double Rotorf, double rotor_rad) {
+NumericVector aov_CPP(double lenght_b, double wakr, double leA, double Rotorf, double rotor_rad) {
   NumericVector aov; 
   if (lenght_b == 0) {
 	aov = 0;
   } else {
-	if ((wakr - Rotorf) >= leA && leA >= 0) {
-	  aov = pow(rotor_rad, 2) * 3.14159265;
-	}
-	if ((wakr + Rotorf) <= leA) {
-	  aov = 0;
-	}
-	if ((wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
-	  aov = wake(Rotorf = 50,  wakr = 106.25, leA = 150);
-	}
+	  if ((wakr - Rotorf) >= leA && leA >= 0) {
+	    aov = pow(rotor_rad, 2) * 3.14159265;
+	  }
+	  if ((wakr + Rotorf) <= leA) {
+	    aov = 0;
+	  }
+	  if ((wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
+	    aov = wake_CPP(Rotorf = 50,  wakr = 106.25, leA = 150);
+	  }
   }
   return aov;
 }
 
 // Rotate a set of coordinates around a given center point (P)
 // [[Rcpp::export]]
-NumericMatrix rotatePP(NumericVector X1, NumericVector Y1, double Px, double Py, float angle) {
+NumericMatrix rotate_CPP(NumericVector X1, NumericVector Y1, double Px, double Py, float angle) {
   double d1 = -angle * 0.01745329;  // PI / 180
   int n = X1.size();
   NumericVector x(n);
@@ -45,9 +45,26 @@ NumericMatrix rotatePP(NumericVector X1, NumericVector Y1, double Px, double Py,
   return cbind(x, y);
 }
 
-// Calculate the wake radius. /Not used, less performant
+// Calculates all 3 angles (instead of WinkelCalc.R
 // [[Rcpp::export]]
-double wakeCPP(double lenght_b, bool topograp, double RotD, double k) {
+NumericVector angles_CPP(NumericVector Aa, NumericVector Bb, NumericVector Cc) {
+  NumericVector AB = Bb - Aa;
+  NumericVector AC = Cc - Aa;  
+  NumericVector BA = Aa - Bb;  
+  NumericVector BC = Cc - Bb; 
+  NumericVector CA = Aa - Cc; 
+  NumericVector CB = Bb - Cc;
+  double alpha = acos(sum(AB * AC) / (sqrt(sum(AB * AB)) * sqrt(sum(AC * AC)))) * 57.29578;
+  double betha = acos(sum(BA * BC) / (sqrt(sum(BA * BA)) * sqrt(sum(BC * BC)))) * 57.29578;
+  double gamma = acos(sum(CA * CB) / (sqrt(sum(CA * CA)) * sqrt(sum(CB * CB)))) * 57.29578;
+  return NumericVector::create(alpha, betha, gamma);
+}
+
+
+
+// Calculate the wake radius. /Not used, less performant --------------------------
+// [[Rcpp::export]]
+double wakeradius_CPP(double lenght_b, bool topograp, double RotD, double k) {
   double wakR; 
   if (lenght_b) {
     if (topograp){
@@ -60,10 +77,10 @@ double wakeCPP(double lenght_b, bool topograp, double RotD, double k) {
   }
   return wakR;
 }
-	
-// Calculate euclidian distance between two coordinates. /Not used, less performant
-// 
-//double eucdist(double x1, double x2, double y1, double y2) {
-//	double dist = sqrt(pow(x1 - y1, 2) + pow(x2 - y2, 2));
-//	return dist;
-// }
+
+// Calculate euclidean distance between two coordinates. /Not used, less performant --------------------------
+// [[Rcpp::export]]
+double eucdist_CPP(double x1, double x2, double y1, double y2) {
+	double dist = sqrt(pow(x1 - y1, 2) + pow(x2 - y2, 2));
+	return dist;
+}

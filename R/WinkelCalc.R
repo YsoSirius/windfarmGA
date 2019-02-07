@@ -30,7 +30,7 @@
 #' Angles <- WinkelCalc(Aa,Bb,Cc); Angles
 #' text(rbind(Aa,Bb,Cc),labels=paste(rownames(Angles), round(Angles,2)),pos=1)
 #' @author Sebastian Gatscha
-WinkelCalc        <- function(Aa,Bb,Cc) {
+WinkelCalc        <- function(Aa, Bb, Cc) {
   AB <- Bb-Aa; AC <- Cc-Aa;  BA <- Aa-Bb;  BC <- Cc-Bb; CA <- Aa-Cc; CB <- Bb-Cc;
   # Calculate all 3 angles /57.29578 is 180/pi
   alpha <- acos(sum(AB * AC) / (sqrt(sum(AB * AB)) * sqrt(sum(AC * AC)))) * (57.29578)

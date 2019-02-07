@@ -39,28 +39,28 @@
 #'
 #' @author Sebastian Gatscha
 StartGA           <- function(Grid, n, nStart=100) {
-  if (length(Grid$ID) <= n) {
+  if (length(Grid[,'ID']) <= n) {
     print("################### GA ERROR MESSAGE ###################")
-    cat(paste("##### Amount Grid-cells: ", length(Grid$ID),"\n##### Amount of turbines: ", n))
+    cat(paste("##### Amount Grid-cells: ", length(Grid[,'ID']),"\n##### Amount of turbines: ", n))
     stop("\n The amount of Grid-cells is smaller or equal the number of turbines requested.\n
          Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
     cat("Press [enter] to exit")
     readline()
   }
-  if (length(Grid$ID) < (2*n)) {
+  if (length(Grid[,'ID']) < (2*n)) {
     print("################### GA ERROR MESSAGE ###################")
-    cat(paste("##### Amount Grid-cells: ", length(Grid$ID),"\n##### Amount of turbines: ", n))
+    cat(paste("##### Amount Grid-cells: ", length(Grid[,'ID']),"\n##### Amount of turbines: ", n))
     stop("\n The amount of Grid-cells should at least be double the size of turbines requested.\n
          Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
     print("Press [enter] to exit")
     readline()
   }
   ## Assign Binary Variable 0 to all Grid cells
-  Grid$bin <- 0L
+  Grid <- cbind(Grid, 'bin' = 0)
   ## Randomly sample n grid cells and assign 1 to bin column
   lapply(seq_len(nStart), function(i) {
-    res <- Grid[Grid$ID %in% sample(x = Grid$ID, size = n, replace = FALSE),]
-    res$bin = 1L
+    res <- Grid[Grid[,'ID'] %in% sample(x = Grid[,'ID'], size = n, replace = FALSE),]
+    res[,'bin'] = 1L
     res
   })
 }

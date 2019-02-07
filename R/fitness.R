@@ -91,25 +91,34 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
                               SurfaceRoughness, Polygon, resol1,
                               rot, dirspeed,srtm_crop,topograp,cclRaster,
                               weibull, weibullsrc, Parallel, numCluster, verbose){
-  verbose = F
+  
+  # selection = startsel; referenceHeight = referenceHeight;
+  # RotorHeight = RotorHeight; SurfaceRoughness = SurfaceRoughness;
+  # Polygon = Polygon1; resol1 = resol2;rot=Rotor; dirspeed = vdirspe;
+  # srtm_crop = srtm_crop; topograp = topograp; cclRaster = cclRaster;
+  # weibull = weibull; weibullsrc = weibullsrc;
+  # Parallel = Parallel; numCluster = numCluster; verbose = verbose
+   
+  
+  verbose = FALSE
 
   ## Missing Arguments ? ToDo: beautify this #############
   if (missing(srtm_crop)){
-    srtm_crop=NULL
+    srtm_crop <- NULL
   }
   if (missing(cclRaster)){
-    cclRaster=NULL
+    cclRaster <- NULL
   }  
   if (missing(Parallel)){
-    Parallel = FALSE
+    Parallel <- FALSE
   }
   if (missing(weibull)){
-    weibull = FALSE
-    weibullsrc = NULL
+    weibull <- FALSE
+    weibullsrc <- NULL
   }
   #############
   
-  
+  ## TODO make in genAlgo??
   ## Winddata Formatting ###################
   dirspeed$wd <- round(dirspeed$wd,0)
   dirspeed$wd <-  round(dirspeed$wd/100,1)*100;
@@ -177,7 +186,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   # }
   ###################
   
-  known=TRUE
+  known = TRUE
   if (known) {
     # Calculate EnergyOutput for every config i and for every angle j - in Parallel
     if (Parallel == TRUE) {
@@ -272,8 +281,8 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       # Wake Effect of every Point Location
       # Include the Run of the genertion to the data frame
       xundyOrig <- cbind(xundyOrig, 
-                         'EfficAllDir' = enOut[1,'Efficalldire'],
-                         'EnergyOverall' = enOut[1,'EnergyOverall'],
+                         'EfficAllDir' = enOut[1, 'Efficalldire'],
+                         'EnergyOverall' = enOut[1, 'EnergyOverall'],
                          'AbschGesamt' = AbschGesamt,
                          'Run' = i)
 
@@ -294,7 +303,9 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     # maxparkeff <- do.call("rbind", (lapply(euniqu, function(x) {
       # x <- dplyr::select(x[1,],EnergyOverall)})))
     maxparkeff <- do.call(rbind, lapply(euniqu, function(x) {
-      subset.matrix(x[1,],select = 'EnergyOverall')}))
+      # subset.matrix(x[1,], select = 'EnergyOverall')
+      x[1, 'EnergyOverall']
+      }))
     
     # Calculate Parkfitness for every individual.
     # maxparkeff <- cbind(maxparkeff, 'Parkfitness' = maxparkeff$EnergyOverall)
@@ -307,11 +318,9 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     euniqu <- lapply(1:length(euniqu), function(i) {
       cbind(euniqu[[i]], 'Parkfitness' = maxparkeff[i,])
     })
-    
-    euniqu
   }
-  names(euniqu) <- unlist(lapply(euniqu, function(i) {paste0(i[,'Rect_ID'], collapse = ",")}))
 
+  names(euniqu) <- unlist(lapply(euniqu, function(i) {paste0(i[,'Rect_ID'], collapse = ",")}))
   ## Layout Saving 2   ###################
   # if (exists("globalparks")) {
   #   if (any(selconfig %in% names(globalparks)) | any(duplicated(selconfig))) {

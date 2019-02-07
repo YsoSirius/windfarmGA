@@ -14,7 +14,6 @@
 #' @importFrom sp spTransform proj4string
 #' @importFrom utils read.csv
 #' @importFrom grDevices colorRampPalette
-#' @importFrom dplyr select group_by summarise_all %>% funs
 #' @importFrom graphics plot.new
 #' @importFrom stats runif
 #'
@@ -169,15 +168,20 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                               selstate, crossPart1, trimForce, Projection,
                               sourceCCL, sourceCCLRoughness, weibull, weibullsrc,
                               Parallel, numCluster, verbose = FALSE, plotit = FALSE){
+  
+  # Polygon1 = Polygon1;n = 12;vdirspe = data.in;Rotor = 30;RotorHeight = 100; topograp=F;Parallel=F; verbose=F; plotit=T
+  
   ## set graphics::par ###############
   if (plotit) {
-    oldpar <- graphics::par(no.readonly = T)
-    plot.new();
-    graphics::par(ask=F);
+    oldpar <- graphics::par(no.readonly = TRUE)
+    plot.new()
+    graphics::par(ask = FALSE)
   }
   
   ## MISSING ARGUMENTS ###############
-  if (missing(fcrR)){fcrR = 5}
+  if (missing(fcrR)){
+    fcrR <- 5
+  }
   ## Is Elevation missing? - Default FALSE
   if (missing(topograp)){
     topograp <- FALSE
@@ -192,48 +196,48 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   }
   ## Is number of Clusters missing? - Default 1
   if (missing(numCluster)){
-    numCluster=1
+    numCluster <- 1
   }
   ## Is Weibull information missing? - Default FALSE
   if (missing(weibull)){
-    weibull = FALSE
+    weibull <- FALSE
   }
   if (missing(selstate)){
-    selstate = "FIX"
+    selstate <- "FIX"
   }  
   if (missing(crossPart1)){
-    crossPart1 = "EQU"
+    crossPart1 <- "EQU"
   }
   if (missing(SurfaceRoughness)){
-    SurfaceRoughness = 0.3
+    SurfaceRoughness <- 0.3
   }
   if (missing(Proportionality)){
-    Proportionality = 1
+    Proportionality <- 1
   }
   if (missing(mutr)){
-    mutr = 0.008
+    mutr <- 0.008
   }
   if (missing(elitism)){
-    elitism = TRUE
+    elitism <- TRUE
     if (missing(nelit)) {
-      nelit = 7
+      nelit <- 7
     }
   }
   if (missing(trimForce)){
-    trimForce = FALSE
+    trimForce <- FALSE
   }
   if (missing(referenceHeight)){
-    referenceHeight = RotorHeight
+    referenceHeight <- RotorHeight
   }
   if (missing(iteration)){
-    iteration = 20
+    iteration <- 20
   }
   ##  Project the Polygon to LAEA if it is not already.
   if (missing(Projection)) {
     ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
     +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   } else {
-    ProjLAEA <- Projection;
+    ProjLAEA <- Projection
   }
   
   ## INIT VARIABLES 1 #################
@@ -307,9 +311,12 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                      "Reference Height"= referenceHeight, "Rotor Height"=RotorHeight,
                                      "Resolution" = resol2, "Parallel Processing" = Parallel, 
                                      "Number Clusters" = numCluster, "Active Weibull" = weibull,
-                                     "Grid Method" = GridMethod));
+                                     "Grid Method" = GridMethod))
   inputWind <- list(Windspeed_Data = vdirspe)
-  if (verbose) {print(inputData);print(inputWind)}
+  if (verbose) {
+    print(inputData)
+    print(inputWind)
+  }
   # readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")
 
 
@@ -324,7 +331,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid1 <- GridFilter(shape = Polygon1,resol = resol2, prop = Proportionality);
+    Grid1 <- GridFilter(shape = Polygon1,resol = resol2, prop = Proportionality)
     Grid <- Grid1[[1]]
     dry.grid.filtered <- Grid1[[2]]
   } else {
@@ -342,18 +349,24 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   ## INIT VARIABLES 2 ###############
   ## Determine the amount of initial individuals and create initial population.
-  nStart <- (AmountGrids*n)/iteration;   if (nStart < 100) {nStart <- 100};   if (nStart > 300) {nStart <- 300}
-  nStart<- ceiling(nStart);
-  startsel <- StartGA(Grid,n,nStart);
+  nStart <- (AmountGrids * n)/iteration
+  if (nStart < 100) {nStart <- 100} 
+  if (nStart > 300) {nStart <- 300}
+  nStart<- ceiling(nStart)
+  startsel <- StartGA(Grid, n, nStart)
   ## Initialize all needed variables as list.
-  maxParkwirkungsg <- 0; allparkcoeff <- vector("list",iteration);
-  bestPaEn <- vector("list",iteration);
-  bestPaEf <- vector("list",iteration); fuzzycontr <- vector("list",iteration);
-  fitnessValues <- vector("list",iteration);
-  nindiv <- vector("list",iteration); clouddata <- vector("list",iteration);
-  selcross <- vector("list",iteration);
-  beorwor <- vector("list",iteration); mut_rate <- vector("list",iteration);
-  allCoords <- vector("list",iteration);
+  maxParkwirkungsg <- 0; 
+  allparkcoeff <- vector("list", iteration)
+  bestPaEn <- vector("list", iteration)
+  bestPaEf <- vector("list", iteration)
+  fuzzycontr <- vector("list", iteration)
+  fitnessValues <- vector("list", iteration)
+  nindiv <- vector("list", iteration)
+  clouddata <- vector("list", iteration)
+  selcross <- vector("list", iteration)
+  beorwor <- vector("list", iteration)
+  mut_rate <- vector("list", iteration)
+  allCoords <- vector("list", iteration)
 
   ## TERRAIN EFFECT MODEL ###############
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
@@ -367,25 +380,26 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     if (plotit) {par(mfrow=c(3,1))}
 
     if (missing(sourceCCL)){
-      stop("\nNo raster given for the surface roughness. \nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n",call. = F)
+      stop("\nNo raster given for the surface roughness. \nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n", call. = F)
     }
 
     ## SRTM Daten
     Polygon1 <-  sp::spTransform(Polygon1, CRSobj =
-                                   raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"));
+                                   raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
     extpol <- round(Polygon1@bbox,0)[,2]
     srtm <- raster::getData('SRTM', lon=extpol[1], lat=extpol[2])
     if (missing(srtm)){
-      stop("\nCould not download SRTM for the given Polygon. Check the Projection of the Polygon.\n",call. = F)
+      stop("\nCould not download SRTM for the given Polygon. Check the Projection of the Polygon.\n", call. = F)
     }
-    srtm_crop <- raster::crop(srtm, Polygon1);
+    srtm_crop <- raster::crop(srtm, Polygon1)
     srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
-    Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA));
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA));
+    Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA))
+    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
     if (plotit) {
-      plot(srtm_crop, main="Elevation from SRTM");
-      plot(Polygon1,add=T); plot(dry.grid.filtered,add=T)
+      plot(srtm_crop, main = "Elevation from SRTM")
+      plot(Polygon1, add = TRUE)
+      plot(dry.grid.filtered, add = TRUE)
     }
 
     # Include Corine Land Cover Raster to get an estimation of Surface Roughness
@@ -403,7 +417,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ccl <- raster::raster(sourceCCL)
     cclPoly <- raster::crop(ccl, Polygon1)
     cclPoly1 <- raster::mask(cclPoly, Polygon1)
-    rauhigkeitz <- utils::read.csv(sourceCCLRoughness, header = T, sep = ";");
+    rauhigkeitz <- utils::read.csv(sourceCCLRoughness, header = TRUE, sep = ";");
     cclRaster <- raster::reclassify(cclPoly1, matrix(c(rauhigkeitz$GRID_CODE, rauhigkeitz$Rauhigkeit_z), ncol = 2))
     if(plotit){
       plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
@@ -437,34 +451,42 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
   
     ## Fitness Result Processing ###############
-    allparks <- do.call("rbind",fit);
-    allparksUni <- split(allparks, duplicated(allparks$Run))$'FALSE';
-    maxparkfitness <-  round(max(allparksUni$Parkfitness),4);
-    meanparkfitness <- round(mean(allparksUni$Parkfitness),3);
-    minparkfitness <- round(min(allparksUni$Parkfitness),3);
-    MaxEnergyRedu <-  round(max(allparksUni$EnergyOverall),2);
-    MeanEnergyRedu <- round(mean(allparksUni$EnergyOverall),2);
-    MinEnergyRedu <- round(min(allparksUni$EnergyOverall),2);
+    allparks <- do.call("rbind", fit)
+    # allparksUni <- split(allparks, duplicated(allparks$Run))$'FALSE'
+    allparksUni <- subset.matrix(allparks, subset = !duplicated(allparks[,'Run']))
+    
+    
     allCoords[[i]] <- allparks
-    maxParkwirkungsg <- round(max(allparksUni$EfficAllDir),2);
-    meanParkwirkungsg <- round(mean(allparksUni$EfficAllDir),2);
-    minParkwirkungsg <- round(min(allparksUni$EfficAllDir),2);
-    allparkcoeff[[i]] <- cbind(maxparkfitness,meanparkfitness,minparkfitness, MaxEnergyRedu,
-                               MeanEnergyRedu,MinEnergyRedu,maxParkwirkungsg,meanParkwirkungsg,minParkwirkungsg)
-    clouddata[[i]] <- dplyr::select(allparksUni, EfficAllDir, EnergyOverall, Parkfitness);
+    maxparkfitness <-  round(max(allparksUni[,'Parkfitness']), 4)
+    meanparkfitness <- round(mean(allparksUni[,'Parkfitness']), 3)
+    minparkfitness <- round(min(allparksUni[,'Parkfitness']), 3)
+    MaxEnergyRedu <-  round(max(allparksUni[,'EnergyOverall']), 2)
+    MeanEnergyRedu <- round(mean(allparksUni[,'EnergyOverall']), 2)
+    MinEnergyRedu <- round(min(allparksUni[,'EnergyOverall']), 2)
+    maxParkwirkungsg <- round(max(allparksUni[,'EfficAllDir']), 2)
+    meanParkwirkungsg <- round(mean(allparksUni[,'EfficAllDir']), 2)
+    minParkwirkungsg <- round(min(allparksUni[,'EfficAllDir']), 2)
+    allparkcoeff[[i]] <- cbind(maxparkfitness, meanparkfitness, minparkfitness, 
+                               MaxEnergyRedu, MeanEnergyRedu, MinEnergyRedu, 
+                               maxParkwirkungsg, meanParkwirkungsg, minParkwirkungsg)
+    
+    clouddata[[i]] <- subset.matrix(allparksUni, select = c("EfficAllDir", "EnergyOverall", "Parkfitness"))
     
     if (verbose) {cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"))}
 
     ## Highest Energy Output
-    xd <- allparks[allparks$EnergyOverall == max(allparks$EnergyOverall),]$EnergyOverall[1];
-    ind <- allparks$EnergyOverall == xd;     
+    # xd <- allparks[allparks[,'EnergyOverall'] == max(allparks[,'EnergyOverall']),'EnergyOverall'][1]
+    xd <- max(allparks[,'EnergyOverall'])
+    ind <- allparks[,'EnergyOverall'] == xd
     bestPaEn[[i]] <- allparks[ind,][1:n,]
     ## Highest Efficiency
-    xd1 <- allparks[allparks$EfficAllDir == max(allparks$EfficAllDir),]$EfficAllDir[1];
-    ind1 <- allparks$EfficAllDir == xd1;     
+    # xd1 <- allparks[allparks[,'EfficAllDir'] == max(allparks[,'EfficAllDir']),'EfficAllDir'][1];
+    xd1 <- max(allparks[,'EfficAllDir'])
+    ind1 <- allparks[,'EfficAllDir'] == xd1     
     bestPaEf[[i]] <- allparks[ind1,][1:n,]
+    
     # Print out most relevant information on Generation i
-    afvs <- allparks[allparks$EnergyOverall == max(allparks$EnergyOverall),];
+    afvs <- allparks[allparks[,'EnergyOverall'] == max(allparks[,'EnergyOverall']),]
     if (verbose) {
       cat(paste("How many individuals exist: ",  length(fit) ), "\n");
       cat(paste("How many parks are in local Optimum: ",  (length(afvs[,1])/n) ), "\n")
@@ -473,63 +495,69 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
 
     if (plotit) {
-      lebre <- length(unique(bestPaEn[[i]]$AbschGesamt))
+      lebre <- length(unique(bestPaEn[[i]][,'AbschGesamt']))
       if (lebre < 2){
-        Col <- "green";
+        Col <- "green"
       } else {
-        Col <- rbPal(lebre)[as.numeric(cut(-bestPaEn[[i]]$AbschGesamt,breaks = lebre))];
+        Col <- rbPal(lebre)[as.numeric(cut(-bestPaEn[[i]][,'AbschGesamt'], breaks = lebre))]
         # Col1 <- rbPal(lebre)[as.numeric(cut(-bestPaEf[[i]]$AbschGesamt,breaks = lebre))]
       }
-      lebre2 <- length(unique(bestPaEf[[i]]$AbschGesamt))
+      lebre2 <- length(unique(bestPaEf[[i]][,'AbschGesamt']))
       if (lebre2 < 2){
         Col1 <- "green"
       } else {
-        Col1 <- rbPal(lebre2)[as.numeric(cut(-bestPaEf[[i]]$AbschGesamt,breaks = lebre2))]
+        Col1 <- rbPal(lebre2)[as.numeric(cut(-bestPaEf[[i]][,'AbschGesamt'], breaks = lebre2))]
       }
     }
 
-    x <- round(bestPaEn[[i]]$EnergyOverall[[1]],2)
-    y <- round(bestPaEn[[i]]$EfficAllDir[[1]],2)
-    e <- bestPaEn[[i]]$EfficAllDir
-    x1 <- round(bestPaEf[[i]]$EnergyOverall[[1]],2)
-    y1 <- round(bestPaEf[[i]]$EfficAllDir[[1]],2)
-    e1 <- bestPaEf[[i]]$EfficAllDir
+    x <- round(bestPaEn[[i]][,'EnergyOverall'][[1]], 2)
+    y <- round(bestPaEn[[i]][,'EfficAllDir'][[1]], 2)
+    e <- bestPaEn[[i]][,'EfficAllDir']
+    x1 <- round(bestPaEf[[i]][,'EnergyOverall'][[1]], 2)
+    y1 <- round(bestPaEf[[i]][,'EfficAllDir'][[1]], 2)
+    e1 <- bestPaEf[[i]][,'EfficAllDir']
 
-    allparksNewplot <- dplyr::select(allparks,AbschGesamt,Rect_ID,Parkfitness)
+    allparksNewplot <- subset.matrix(allparks, select = c("Rect_ID", "AbschGesamt", "Parkfitness"))
+    # allparksNewplot <- dplyr::select(allparks, AbschGesamt, Rect_ID, Parkfitness)
 
-    allparksNewplot <- allparksNewplot %>% 
-      dplyr::group_by(Rect_ID) %>%
-      dplyr::summarise_all(dplyr::funs(mean))
+    allparksNewplot <- aggregate(allparksNewplot, list(allparksNewplot[,'Rect_ID']), mean)
+    allparksNewplot <- allparksNewplot[,-1]
+    # allparksNewplot <- allparksNewplot %>% 
+    #   dplyr::group_by(Rect_ID) %>%
+    #   dplyr::summarise_all(dplyr::funs(mean))
 
-    if(any(allparksNewplot$Rect_ID %in% Grid$ID == F)){
+    if (any(allparksNewplot[,'Rect_ID'] %in% Grid[,'ID'] == FALSE)) {
       # cat(paste("Index of Grid not correct. Bigger than maximum Grid? Fix BUG"))
       stop("Index of Grid not correct. Bigger than maximum Grid? Fix BUG")
     }
 
     if (plotit){
-      graphics::par(mfrow=c(1,2))
-      plot(Polygon1, main=paste(i, "Round \n Best Energy Output: ", x,"W/h \n Efficiency: ", y , "%"),
-           sub =paste("\n Number of turbines: ", length(e)));    plot(dry.grid.filtered, add=T)
-      graphics::points(bestPaEn[[i]]$X,bestPaEn[[i]]$Y,col=Col,pch=20,cex=1.5);
-      plot(Polygon1, main=paste(i, "Round \n Best Efficiency Output: ", x1, "W/h \n Efficiency: ", y1, "%"),
-           sub =paste("\n Number of turbines: ", length(e1)));  plot(dry.grid.filtered, add=T)
-      graphics::points(bestPaEf[[i]]$X,bestPaEf[[i]]$Y,col=Col1,pch=20,cex=1.5)
+      graphics::par(mfrow = c(1,2))
+      plot(Polygon1, main = paste(i, "Round \n Best Energy Output: ", x,"W/h \n Efficiency: ", y , "%"),
+           sub = paste("\n Number of turbines: ", length(e)))
+      plot(dry.grid.filtered, add = TRUE)
+      graphics::points(bestPaEn[[i]][,'X'], bestPaEn[[i]][,'Y'], col = Col, pch = 20, cex = 1.5)
+      plot(Polygon1, main = paste(i, "Round \n Best Efficiency Output: ", x1, "W/h \n Efficiency: ", y1, "%"),
+           sub = paste("\n Number of turbines: ", length(e1)))
+      plot(dry.grid.filtered, add = TRUE)
+      graphics::points(bestPaEf[[i]][,'X'], bestPaEf[[i]][,'Y'], col = Col1, pch = 20, cex = 1.5)
     }
 
     ## Fuzzy Control ###############
     if (i > 20) {
-      besPE <- do.call("rbind",lapply(bestPaEn[1:i], function(x) max(x$EnergyOverall)))
-      maxBisher <- max(besPE); WhichMaxBs <- which(besPE==max(besPE))
+      besPE <- do.call("rbind", lapply(bestPaEn[1:i], function(x) max(x[,'EnergyOverall'])))
+      maxBisher <- max(besPE)
+      WhichMaxBs <- which(besPE == max(besPE))
 
       if (length(WhichMaxBs) >= 2) {
         BestForNo <- bestPaEn[sample(WhichMaxBs, 2)]
-        BestForNo[[1]]$Run <- length(fit) + 1
-        BestForNo[[2]]$Run <- length(fit) + 2
+        BestForNo[[1]][,'Run'] <- length(fit) + 1
+        BestForNo[[2]][,'Run'] <- length(fit) + 2
       } else {
         BestForNo <- bestPaEn[WhichMaxBs]
         BestForNo <- append(BestForNo, BestForNo)
-        BestForNo[[1]]$Run <- length(fit) + 1
-        BestForNo[[2]]$Run <- length(fit) + 2
+        BestForNo[[1]][,'Run'] <- length(fit) + 1
+        BestForNo[[2]][,'Run'] <- length(fit) + 2
       }
 
       last7 <- besPE[i:(i-5)]
@@ -541,14 +569,18 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       }
     }
     if (i == 1) {
-      t0 <- split(allparks, duplicated(allparks$Run))$'FALSE'
-      t0 <- t0$Parkfitness  
+      
+      ## TODO I do have such a matrix already with that info or??
+      # t0 <- split(allparks, duplicated(allparks[,'Run']))$'FALSE'
+      t0 <- subset.matrix(allparks, !duplicated(allparks[,'Run']))
+      t0 <- t0[,'Parkfitness']  
       fitnessValues[[i]] <- t0
       rangeFitnessVt0 <- range(t0)
       maxt0 <- max(t0)
       meant0 <- mean(t0)
       allcoef0 <- c(rangeFitnessVt0, meant0)
-      fuzzycontr[[i]] <- rbind(allcoef0); colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
+      fuzzycontr[[i]] <- rbind(allcoef0)
+      colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
       teil <- 2
       if (selstate == "VAR"){
         teil <- 1.35
@@ -557,8 +589,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       beorwor[[i]] <- cbind(0,0)
     }
     if (i >= 2 && i <= iteration) {
-      t0 <- split(allparks, duplicated(allparks$Run))$'FALSE'  
-      t0 <- t0$Parkfitness
+      # t0 <- split(allparks, duplicated(allparks$Run))$'FALSE'
+      t0 <- subset.matrix(allparks, !duplicated(allparks[,'Run']))
+      t0 <- t0[,'Parkfitness']  
       fitnessValues[[i]] <- t0    
       rangeFitnessVt0 <- range(t0)
       maxt0 <- max(t0)
@@ -579,7 +612,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       fuzzycontr[[i]] <- rbind(allcoef1,allcoef2)
       colnames(fuzzycontr[[i]]) <- c("Min","Max","Mean")
 
-      if(maxunt < 0) {
+      if (maxunt < 0) {
         pri <- "deteriorated"; teil <- teil - 0.02; u <- u - 0.06} else if (maxunt == 0) {
           pri <- "not changed"; teil <- teil; u <- u} else {
             pri <- "improved"; teil <- teil + 0.017; u <- u + 0.03}
@@ -604,7 +637,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       if (verbose) {
         cat(paste("Fitness of this population (",i,"), compared to the prior,",pri,"by", round(maxunt,2),"W/h \n"))
       }
-      meanunt <- meant0 - meant1;
+      meanunt <- meant0 - meant1
       beorwor[[i]] <- cbind(maxunt, meanunt)
     }
     
@@ -622,6 +655,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ## print the amount of Individuals selected. Check if the amount of Turbines is as requested.
     selec6best <- selection1(fit = fit, Grid = Grid, teil = teil, elitism = elitism, nelit = nelit, 
                              selstate = selstate, verbose = verbose)
+    
     selec6best_bin <- selec6best[[1]]
     if (verbose) {
       cat(paste("Selection  -  Amount of Individuals: ", length(selec6best_bin[1,-1]),"\n"))
@@ -650,18 +684,18 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       t1 <- (loOp * 1.25)/42
       mutrn <- mutrn * (1 + t1)
       mutrn <- round(mutrn + ((i) / (20 * iteration)), 5)
-      mut <- mutation(a = crossOut, p = mutrn, seed = NULL);
+      mut <- mutation(a = crossOut, p = mutrn, seed = NULL)
       mut_rat <- mutrn
       if (verbose) {
         cat(paste("\nVariable Mutation Rate is", mutrn, "\n"))
       }
     } else {
-      mut <- mutation(a = crossOut, p = mutr, seed = NULL);
+      mut <- mutation(a = crossOut, p = mutr, seed = NULL)
       mut_rat <- mutr
     }
     mut_rate[[i]] <- mut_rat
     if (verbose) {
-      cat(paste("\nMutation   -  Amount of Individuals: ", length(mut[1,])));
+      cat(paste("\nMutation   -  Amount of Individuals: ", length(mut[1,])))
     }
     nindivmut <- length(mut[1,])
 
@@ -670,6 +704,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ## corrected to the required amount of turbines.
     mut1 <- trimton(mut = mut, nturb = n, allparks = allparks, nGrids = AmountGrids,
                     trimForce = trimForce, seed = NULL)
+    
+    # browser()
     if (verbose) {cat(paste("\nTrimToN    -  Amount of Individuals: ", length(mut1[1,])))}
     Trus3 <- colSums(mut1) == n
     if (any(Trus3 == FALSE)){

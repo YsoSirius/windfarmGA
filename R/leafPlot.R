@@ -51,16 +51,26 @@
 #' }
 #' @author Sebastian Gatscha
 leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
+  
+  # resultSAFE = result
+  # result = resultSAFE
+  
+  
+  
   opar = par(no.readonly = T)
   par(mfrow=c(1,1))
   if (which > nrow(result)){
     cat(paste("Maximum possible number for 'which': ",nrow(result)))
     which <- nrow(result)
   }
+  # result <- as.data.frame(result)
   
-  if (orderitems==TRUE){
-    a <- sapply(result[,2], "[", "EnergyOverall")
-    b <- data.frame(sapply(a, function(x) x[1]))
+  if (orderitems){
+    # a <- sapply(result[,2], "[", "EnergyOverall")
+    a <- sapply(result[,2], FUN = function(i) subset.matrix(i, subset = c(T, rep(F, nrow(i)-1)),
+                                                            select = "EnergyOverall"))
+    # b <- data.frame(sapply(a, function(x) x[1]))
+    b <- data.frame(cbind(a), stringsAsFactors = FALSE)
     order1 <- order(b, decreasing = T)
     result <- result[order1,]
     beste <- which
@@ -86,29 +96,36 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
   
   result <- result[,'bestPaEn'][[which]]
   projPol <- sp::proj4string(Polygon1)
-  xysp <- sp::SpatialPoints(cbind(result$X,result$Y), proj4string = sp::CRS(projPol))
+  xysp <- sp::SpatialPoints(cbind(result[,'X'], result[,'Y']), proj4string = sp::CRS(projPol))
   resultxy <- sp::spTransform(xysp, CRSobj = ProjectionLonLat)
   ## Transform to matrix after transformation.
   resultxy <- sp::coordinates(resultxy)
-  result$X <- resultxy[,1]; result$Y <- resultxy[,2]
+  # result <- cbind(result,
+  #       "X" = resultxy[,1],
+  #       "Y" = resultxy[,2])
+  
   Polygon1 <- sp::spTransform(Polygon1,CRSobj = ProjectionLonLat)
   
   headLo <- c(mean(raster::extent(Polygon1)[1:2]), max(raster::extent(Polygon1)[4]))
   
   colCir <- grDevices::colorRampPalette(c('green','yellow','red','darkred'));
-  br = length(levels(factor(result$AbschGesamt)))
+  br = length(levels(factor(result[,'AbschGesamt'])))
   if (br > 1) {
     ColC1 <- colCir(br)
   } else {
     ColC1 <- "green"
   }
   
-  Rad =  round(result$AbschGesamt,2)/10;
+  Rad =  round(result[,'AbschGesamt'],2)/10;
+  names(Rad) <- NULL
   ## Assign sorted color palette for legend
-  pal <- leaflet::colorFactor(ColC1, domain = result$AbschGesamt,
+  pal <- leaflet::colorFactor(ColC1, domain = result[,'AbschGesamt'],
                               reverse = F)
-  result$Rad = Rad
-  result$farbe = pal(result$AbschGesamt)
+  
+  result <- data.frame(result, stringsAsFactors = FALSE)
+  result <- cbind(result,
+                  "Rad" = Rad,
+                  "farbe" = pal(result[,'AbschGesamt']))
   
   ## Assign turbine Icons
   turbine_icon <- leaflet::iconList(
@@ -117,7 +134,7 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
       iconUrl = paste0(system.file(package = "windfarmGA"), "/extdata/windturdk.png"),
       # iconUrl = paste0(getwd(),"/inst/extdata/windturdk.png"),
       iconWidth = 30, iconHeight = 50))
-  listPopup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
+  listPopup <- paste("Total Wake Effect: ", as.character(result[,'AbschGesamt']),
                      "% </dd>")
   ## Start a Leaflet Map with OSM background and another Tile.
   map <- leaflet() %>%
@@ -128,22 +145,21 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
     ## Write a Popup with the energy output
     leaflet::addPopups(headLo[1], (headLo[2]+0.0002), group = "Title",
                        popup = paste(beste,"<b>Best Wind Farm with: ",
-                                     round(result$EnergyOverall[[1]],2),"kWh</b>"),
+                                     round(as.numeric(result[,'EnergyOverall'][[1]]),2),"kWh</b>"),
                        options = popupOptions(closeButton = T,
                                                        closeOnClick = T)) %>%
     ## Add the Polygon
     addPolygons(data = Polygon1, group = "Polygon",
-                         fill=TRUE,fillOpacity = 0.4) %>%
+                fill = TRUE,fillOpacity = 0.4) %>%
 
     ## Add the Genetic Algorithm Space
     addPolygons(data = GridPol, group = "Grid", weight = 1,
-                       # color="#222760",
-                       opacity = opaC,
-                       fill=TRUE, fillOpacity = opaC) %>%
+                # color="#222760",
+                opacity = opaC,
+                fill = TRUE, fillOpacity = opaC) %>%
 
     ## Create Circles in Map
-    addCircleMarkers(lng=result[,1],
-                              lat=result[,2],
+    addCircleMarkers(lng = result$X, lat = result$Y,
                               radius = Rad,
                               color = result$farbe,
                               stroke = T, fillOpacity = 0.8,

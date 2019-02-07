@@ -35,7 +35,7 @@
 #' heatmapGA(result, si = 20, idistw = 10)
 #' }
 #' @author Sebastian Gatscha
-heatmapGA <- function(result,si=2,idistw){
+heatmapGA <- function(result, si = 2, idistw){
   parheat <- par(ask=F, no.readonly = T)
   on.exit(par(parheat))
   
@@ -43,13 +43,14 @@ heatmapGA <- function(result,si=2,idistw){
   
   bpe <- do.call("rbind",result[,'allCoords']);
   rownames(bpe)<-NULL
-  bpe <- bpe[c(1,2)]
+  bpe <- data.frame(bpe[,1:2])
 
   sizingidw <- as.integer(result[,'inputData'][[1]][,1]['Rotorradius'])
   sizing <- as.integer(result[,'inputData'][[1]][,1]['Resolution'])/si
 
-  dupco <- geoR::dup.coords(bpe,simplify = TRUE);   
-  bpe$Ids <- as.integer(rownames(bpe));
+  dupco <- geoR::dup.coords(bpe, simplify = TRUE);   
+  
+  bpe$Ids <- as.integer(rownames(bpe))
 
   dupco <- lapply(dupco, function(x) as.integer(x));  dupcosum <- lapply(dupco, function(x) length(x));
   bpenew <- vector("list",length(dupco))
