@@ -51,9 +51,7 @@ plot(Polygon1,axes=TRUE)
 
 ## Create a Grid
 GridFilter(Polygon1,200,1,TRUE)
-GridFilter(Polygon1,200,0.5,TRUE)
 GridFilter(Polygon1,400,1,TRUE)
-GridFilter(Polygon1,400,0.5,TRUE)
 
 
 ## Examplary irregular input Polygon

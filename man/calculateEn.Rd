@@ -87,27 +87,27 @@ plot(Polygon1,axes=TRUE)
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
-data.in <- as.data.frame(cbind(ws=12,wd=0))
+data.in <- data.frame(ws = 12, wd = 0)
 windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
                 dir = data.in$wd, dirres=10, spdmax=20)
 
 ## Assign the rotor radius and a factor of the radius for grid spacing.
 Rotor= 50; fcrR= 3
-resGrid <- GridFilter(shape = Polygon1,resol = Rotor*fcrR, prop=1,
-                      plotGrid =TRUE)
+resGrid <- GridFilter(shape = Polygon1, resol = Rotor*fcrR, prop=1,
+                      plotGrid = TRUE)
 ## Assign the indexed data frame to new variable. Element 2 of the list
 ## is the grid, saved as SpatialPolygon.
 resGrid1 <- resGrid[[1]]
 
 ## Create an initial population with the indexed Grid, 15 turbines and
 ## 100 individuals.
-resStartGA <- StartGA(Grid = resGrid1,n = 15,nStart = 100)
+resStartGA <- StartGA(Grid = resGrid1, n = 15, nStart = 100)
 
 ## Calculate the expected energy output of the first individual of the
 ## population.
-par(mfrow=c(1,2))
-plot(Polygon1); points(resStartGA[[1]]$X,resStartGA[[1]]$Y, pch=20,cex=2)
-plot(resGrid[[2]],add=TRUE)
+par(mfrow = c(1,2))
+plot(Polygon1); points(resStartGA[[1]][,'X'],resStartGA[[1]][,'Y'], pch=20,cex=2)
+plot(resGrid[[2]], add = TRUE)
 resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
                    distanz = 100000, resol = 200,dirSpeed = data.in,
@@ -122,7 +122,7 @@ points(x = resCalcEn$Bx, y = resCalcEn$By, pch = 20)
 
 ## Create a variable and multidirectional wind data.frame and plot the
 ## resulting wind rose
-data.in10 <- as.data.frame(cbind(ws=runif(10,1,25),wd=runif(10,0,360)))
+data.in10 <- data.frame(ws = runif(10,1,25), wd = runif(10,0,360))
 windrosePlot <- plotWindrose(data = data.in10, spd = data.in10$ws,
                 dir = data.in10$wd, dirres=10, spdmax=20)
 

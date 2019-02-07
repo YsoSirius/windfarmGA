@@ -113,7 +113,7 @@ HexaTex <- function(Polygon1, size, plotTrue = FALSE){
                               "\n Total Area: ", round(sum(raster::area(Polygon1)/1000000),2), "km^2",
                               "\nAmount of Hexagons: ", length(HexaGrid),
                               "\nAmount of Points: ", nrow(PointsHexa)))
-    graphics::points(cbind(PointsHexa$X, PointsHexa$Y), col = "blue", pch = 20)
+    graphics::points(cbind(PointsHexa[,'X'], PointsHexa[,'Y']), col = "blue", pch = 20)
   }
   
   ## Assign same Projection as Polygon
