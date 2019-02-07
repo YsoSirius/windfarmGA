@@ -61,9 +61,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// energy_calc_CPP
+double energy_calc_CPP(NumericVector wind_speed, NumericVector rotor_radius, double air_rh);
+RcppExport SEXP _windfarmGA_energy_calc_CPP(SEXP wind_speedSEXP, SEXP rotor_radiusSEXP, SEXP air_rhSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type wind_speed(wind_speedSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rotor_radius(rotor_radiusSEXP);
+    Rcpp::traits::input_parameter< double >::type air_rh(air_rhSEXP);
+    rcpp_result_gen = Rcpp::wrap(energy_calc_CPP(wind_speed, rotor_radius, air_rh));
+    return rcpp_result_gen;
+END_RCPP
+}
+// point_2_line_CPP
+NumericMatrix point_2_line_CPP(NumericVector x, NumericVector y);
+RcppExport SEXP _windfarmGA_point_2_line_CPP(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(point_2_line_CPP(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -101,6 +120,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_windfarmGA_aov_CPP", (DL_FUNC) &_windfarmGA_aov_CPP, 5},
     {"_windfarmGA_rotate_CPP", (DL_FUNC) &_windfarmGA_rotate_CPP, 5},
     {"_windfarmGA_angles_CPP", (DL_FUNC) &_windfarmGA_angles_CPP, 3},
+    {"_windfarmGA_energy_calc_CPP", (DL_FUNC) &_windfarmGA_energy_calc_CPP, 3},
+    {"_windfarmGA_point_2_line_CPP", (DL_FUNC) &_windfarmGA_point_2_line_CPP, 2},
     {"_windfarmGA_wakeradius_CPP", (DL_FUNC) &_windfarmGA_wakeradius_CPP, 4},
     {"_windfarmGA_eucdist_CPP", (DL_FUNC) &_windfarmGA_eucdist_CPP, 4},
     {NULL, NULL, 0}

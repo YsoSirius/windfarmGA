@@ -60,7 +60,29 @@ NumericVector angles_CPP(NumericVector Aa, NumericVector Bb, NumericVector Cc) {
   return NumericVector::create(alpha, betha, gamma);
 }
 
+// Calculates the energy output. (This is used for the reduced energy output with wake effects and for the full output)
+// NOTE: 0.2965 = 0.593 * 0.5
+// [[Rcpp::export]]
+double energy_calc_CPP(NumericVector wind_speed, NumericVector rotor_radius, double air_rh) {
+  return sum(0.2965 * air_rh * pow(wind_speed, 3) * (pow(rotor_radius, 2) * 3.141593)) / 1000;
+}
 
+
+
+// Replacement of PointToLine.R /Not used, less performant --------------------------
+// [[Rcpp::export]]
+NumericMatrix point_2_line_CPP(NumericVector x, NumericVector y) {
+  NumericMatrix C1 = cbind(y[0], x[1]);
+
+  Rcpp::Environment windfarmGA("package:windfarmGA"); 
+  Function f = windfarmGA["euc.dist"]; 
+
+  NumericVector l_c = f(x, y);
+  NumericVector l_b = f(C1, y);
+  NumericVector l_a = f(x, C1);
+
+  return cbind(y[0], y[1], x[0], x[1], C1[0], C1[1], l_c, l_b, l_a);
+}
 
 // Calculate the wake radius. /Not used, less performant --------------------------
 // [[Rcpp::export]]

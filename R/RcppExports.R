@@ -17,8 +17,12 @@ angles_CPP <- function(Aa, Bb, Cc) {
     .Call(`_windfarmGA_angles_CPP`, Aa, Bb, Cc)
 }
 
+energy_calc_CPP <- function(wind_speed, rotor_radius, air_rh) {
+    .Call(`_windfarmGA_energy_calc_CPP`, wind_speed, rotor_radius, air_rh)
 }
 
+point_2_line_CPP <- function(x, y) {
+    .Call(`_windfarmGA_point_2_line_CPP`, x, y)
 }
 
 wakeradius_CPP <- function(lenght_b, topograp, RotD, k) {

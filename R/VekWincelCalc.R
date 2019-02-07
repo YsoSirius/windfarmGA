@@ -78,6 +78,8 @@ VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
     datalist = vector("list", len2)
     for (indx in 1:len2) {
       ## Calcuate the distances and angles of the imaginary right triangle
+      P2LFu <- PointToLine2(WKA_akt, xynew1[indx,], plotAngles)
+      # P2LFu <- point_2_line_CPP(WKA_akt, xynew1[indx,])
       # winkel <- t(WinkelCalc(xynew1[indx,], WKA_akt, P2LFu[5:6]))
       winkel <- angles_CPP(xynew1[indx,], WKA_akt, P2LFu[5:6])
       data <- c(P2LFu, winkel) 

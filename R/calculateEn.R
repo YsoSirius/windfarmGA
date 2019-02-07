@@ -141,6 +141,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
   ## Create a dummy vector of 1 for the wind speeds.
   windpo = rep(1, length(sel1[,1]))
   
+  ## TODO   change to matrix in genAlgo/fitness
   ## Get the Coordinates of the individual / wind farm. Change dirSpeed to matrix
   xyBgldMa <- as.matrix(sel1)
   
@@ -283,7 +284,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
     # xyBgldMa <- maptools::elide(xyBgldMa, rotate = angle, 
     #                             center = apply(sp::bbox(polygon1), 1, mean))
     # xyBgldMa <- coordinates(xyBgldMa)
-    xyBgldMa = rotatePP(xyBgldMa[,1], xyBgldMa[,2], pcent[1], pcent[2], angle)
+    xyBgldMa = rotate_CPP(xyBgldMa[,1], xyBgldMa[,2], pcent[1], pcent[2], angle)
     colnames(xyBgldMa) <- c("x","y")
     
     
@@ -353,7 +354,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
           aov <- 0
         }
         if ((wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
-          aov <- wake(Rotorf = 50,  wakr = 106.25, leA = 150)
+          aov <- wake_CPP(Rotorf = 50,  wakr = 106.25, leA = 150)
         }
       }
       if (aov != 0) {
@@ -394,8 +395,13 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
                       "V_New" = 0, 
                       "Rect_ID" = 0)
     
-    windlist[,'V_i'] <- unsplit(lapply(split(windlist[,'V_red'], factor(whichh)), function(i) {
-      sqrt(sum(i^2))}), factor(whichh))
+    # windlist[,'V_i'] <- unsplit(lapply(split(windlist[,'V_red'], factor(whichh)), function(i) {
+      # sqrt(sum(i^2))}), factor(whichh))    
+    windlist[,'V_i'] <- unlist(lapply(unique(whichh), function(i) {
+      sums = sqrt(sum(windlist[windlist[,'Punkt_id'] == i, 'V_red'] ^ 2))
+      rep(sums, length(windlist[windlist[,'Punkt_id'] == i, 'V_red']))
+    }))
+    
     windlist[,'TotAbschProz'] <- unlist(lapply(unique(whichh), function(i) {
       absch <- windlist[whichh == i,'AbschatInProz']
       rep(sum(absch), length(absch))
@@ -419,10 +425,13 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
     
     ## Calculate Full and reduced Energy Outputs in kW and Park Efficienca in %. Assign the values to
     ## the list. NOTE (0.2965 = 0.593 * 0.5)
-    EneOutRed <- round(sum(0.2965 * air_rh * (windlist1[,'V_New']^3) *
-                             ((windlist1[,'RotorR']^2) * pi), na.rm = TRUE) / 1000, 4)
-    EneOutFul <- round(sum(0.2965 * air_rh * (windlist1[,'Windmean']^3) *
-                             ((windlist1[,'RotorR']^2) * pi), na.rm = TRUE) / 1000, 4)
+    # EneOutRed <- round(sum(0.2965 * air_rh * (windlist1[,'V_New']^3) *
+    #                          ((windlist1[,'RotorR']^2) * pi), na.rm = TRUE) / 1000, 4)
+    # EneOutFul <- round(sum(0.2965 * air_rh * (windlist1[,'Windmean']^3) *
+    #                          ((windlist1[,'RotorR']^2) * pi), na.rm = TRUE) / 1000, 4)
+    EneOutRed <- energy_calc_CPP(windlist1[,'V_New'], windlist1[,'RotorR'], air_rh)
+    EneOutFul <- energy_calc_CPP(windlist1[,'Windmean'], windlist1[,'RotorR'], air_rh)
+    
     Effic <- (EneOutRed * 100) / EneOutFul
     
     windlist2 <- cbind(windlist2, 
