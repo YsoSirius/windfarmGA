@@ -32,7 +32,9 @@
 #'
 #' @examples
 #' library(sp)
-#'
+#' library(raster) 
+#' library(rgeos)
+#' 
 #' ## Exemplary input Polygon with 2km x 2km:
 #' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000),
 #' c(2000, 2000), c(2000, 0)))
@@ -96,7 +98,8 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
     stop("A grid cannot be drawn. Reduce the resolution or define a projection in meters.")
   }
   
-  dry.grid.filtered <- dry.grid[dry.grid$layer >= prop,];
+  dry.grid.filtered <- dry.grid[dry.grid$layer >= prop,]
+  
   areaquares <- round(sum(sapply(dry.grid.filtered@polygons, function(x)
     sapply(x@Polygons, function(y) y@area))) / 1000000, 3)
   
@@ -131,8 +134,8 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   # centpo <- dplyr::select(centpo, ID,X,Y)
   
   ## Nochmal um Faktor 1.5 schneller und braucht nur sp::coordinates
-  centpo = sp::coordinates(dry.grid.filtered)
-  centpo = cbind(ID = 1:nrow(centpo), "X" = centpo[,1], "Y" = centpo[,2])
+  centpo <- sp::coordinates(dry.grid.filtered)
+  centpo <- cbind(ID = 1:nrow(centpo), "X" = centpo[,1], "Y" = centpo[,2])
   
   ## TODO
   ## Teste mit unregelmäßigen Polygonen

@@ -1,10 +1,7 @@
-context("Wake Calculation")
-
 library(testthat)
 library(windfarmGA)
 library(sp)
 library(raster)
-
 test_that("Test Wake Functions", {
   ## Input Data ---------------------
   ###########################################
@@ -17,8 +14,8 @@ test_that("Test Wake Functions", {
   proj4string(polYgon) <- CRS(Projection);
   wnkl=20; dist=100000; dirct=0
   t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
-       y=runif(10,0,raster::extent(polYgon)[4])))
-
+                       y=runif(10,0,raster::extent(polYgon)[4])))
+  
   ## Test WinkelCalc Function --------------
   ###########################################
   Aa= as.numeric(cbind(1,1))
@@ -53,13 +50,8 @@ test_that("Test Wake Functions", {
   expect_true(round(colSums(Angles)) == 180)
   rm(Angles)
   
-  # plot(rbind(Aa,Bb,Cc,Aa), type="b", xlab="x",ylab="y");
-  # points(x=Aa[1],y=Aa[2],col="green",pch=20);
-  # points(x=Bb[1],y=Bb[2],col="red",pch=20);
-  # points(x=Cc[1],y=Cc[2],col="blue",pch=20)
-  # Angles <- WinkelCalc(Aa,Bb,Cc);
-  # text(rbind(Aa,Bb,Cc),labels=paste(LETTERS[1:3], round(Angles,2)),pos=1)
-  
+  ## TODO
+  ## Compare with cpp functions
   
   ## Test VekWinkelCalc Function --------------
   ###########################################
@@ -68,7 +60,7 @@ test_that("Test Wake Functions", {
   potInfTur <- list()
   for (i in 1:(length(t[,1]))) {
     potInfTur[[i]] <- VekWinkelCalc(t = t, o = i, wkl = wnkl,
-                     distanz = distanz, polYgon = polYgon, plotAngles=FALSE);
+                                    distanz = distanz, polYgon = polYgon, plotAngles=FALSE);
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
   dr <- do.call("rbind", potInfTur)
@@ -143,16 +135,17 @@ test_that("Test Wake Functions", {
   ## Create a uniform and unidirectional wind data.frame and plot the
   ## resulting wind rose
   data.in <- as.data.frame(cbind(ws=12,wd=0))
-
+  
   ## Assign the rotor radius and a factor of the radius for grid spacing.
   Rotor= 50; fcrR= 3
   resGrid <- GridFilter(shape = polYgon, resol = Rotor*fcrR, prop=1,
                         plotGrid = F)
-
+  
   ## Create an initial population with the indexed Grid, 15 turbines and
   ## 100 individuals.
   resStartGA <- StartGA(Grid = resGrid[[1]],n = 15,nStart = 100)
-  expect_true(all(sapply(resStartGA, length) == 4))
+  expect_true(all(sapply(resStartGA, class) == "matrix"))
+  expect_true(all(sapply(resStartGA, ncol) == 4))
   expect_true(all(sapply(resStartGA, nrow) == 15 ))
   expect_true(length(resStartGA) == 100)
   expect_false(any(sapply(resStartGA, is.na)))
@@ -160,39 +153,33 @@ test_that("Test Wake Functions", {
   ## Calculate the expected energy output of the first individual of the
   ## population.
   resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
-                          RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                          distanz = 100000, resol = 200,dirSpeed = data.in,
-                          RotorR = 50, polygon1 = polYgon, topograp = FALSE, weibull = FALSE)
+                           RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
+                           distanz = 100000, resol = 200,dirSpeed = data.in,
+                           RotorR = 50, polygon1 = polYgon, topograp = FALSE, weibull = FALSE)
   
   expect_output(str(resCalcEn), "List of 1")
+  expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[,'A_ov'] != 0,"TotAbschProz"] != 0))
   expect_true(all(df[df[,'TotAbschProz'] != 0,"V_New"] < df[df[,'TotAbschProz'] != 0,"Windmean"]))
   
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
-  expect_true(all(df[,'Rect_ID'] %in% resGrid[[1]]$ID))
+  expect_true(all(df[,'Rect_ID'] %in% resGrid[[1]][,'ID']))
   rm(resCalcEn, df)
   
   ## 2 Wind Directions 
   data.in <- as.data.frame(cbind(ws=c(12,12),wd=c(0,30)))
   resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
-                          RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                          distanz = 100000, resol = 200,dirSpeed = data.in,
-                          RotorR = 50, polygon1 = polYgon, topograp = FALSE, weibull = FALSE)
+                           RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
+                           distanz = 100000, resol = 200,dirSpeed = data.in,
+                           RotorR = 50, polygon1 = polYgon, topograp = FALSE, weibull = FALSE)
   
   expect_output(str(resCalcEn), "List of 2")
+  expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[,'A_ov'] != 0,"TotAbschProz"] != 0))
   expect_true(all(df[df[,'TotAbschProz'] != 0,"V_New"] < df[df[,'TotAbschProz'] != 0,"Windmean"]))
   
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
-  expect_true(all(df[,'Rect_ID'] %in% resGrid[[1]]$ID))
+  expect_true(all(df[,'Rect_ID'] %in% resGrid[[1]][,'ID']))
 })
-
-
-
-
-
-
-
-

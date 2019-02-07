@@ -135,7 +135,7 @@ plot(Polygon1,axes=TRUE)
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
-data.in <- as.data.frame(cbind(ws=12,wd=0))
+data.in <- data.frame(ws = 12, wd = 0)
 windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
                 dir = data.in$wd, dirres=10, spdmax=20)
 

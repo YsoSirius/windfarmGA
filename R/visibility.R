@@ -499,9 +499,10 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 #'
 #' @export
 #' 
-#' @importFrom raster getData projection crop
+#' @importFrom raster getData projection crop extent crs projectRaster
 #' @importFrom sp over
 #' @importFrom sf st_coordinates st_as_sf st_transform
+#' @importFrom methods as
 #' 
 #' @param ISO3 The ISO3 code of the country
 #' @param clip boolean, indicating if polygon should be cropped.
@@ -542,7 +543,7 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
     shape <- sf::st_transform(polygon, crs = raster::projection(DEM))
     shape_SP <- as(shape, "Spatial")
     
-    DEM <- raster::crop(x = DEM, extent(shape_SP))
+    DEM <- raster::crop(x = DEM, raster::extent(shape_SP))
     # shape_meter <- sf::st_transform(shape, PROJ)
     shape_SP <- sp::spTransform(shape_SP, CRSobj = crs(PROJ))
   }

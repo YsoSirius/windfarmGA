@@ -56,7 +56,6 @@ tess2SPdf <- function(x) {
 #'
 #' @importFrom spatstat hextess hexgrid
 #' @importFrom maptools as.owin.SpatialPolygons
-#' @importFrom methods as
 #' @importFrom sp proj4string
 #' @importFrom graphics points
 #' @importFrom raster plot area
@@ -87,32 +86,37 @@ tess2SPdf <- function(x) {
 #'
 #' @author Sebastian Gatscha
 HexaTex <- function(Polygon1, size, plotTrue = FALSE){
-  # Polygon1=Polygon1;size=200; plotTrue=T
-  parHex = par(no.readonly = T)
-  on.exit(par(parHex))
-  par(mfrow=c(1,1))
+
+  if (plotTrue) {
+    parHex = par(no.readonly = TRUE)
+    on.exit(par(parHex))
+    par(mfrow = c(1,1))
+  }
 
   ## Make a Tesselation Object from the Polygon with the size parameter.
-  HexaGrid <- spatstat::hextess(maptools::as.owin.SpatialPolygons(Polygon1), s = size)
+  owinSP = maptools::as.owin.SpatialPolygons(Polygon1)
+  HexaGrid <- spatstat::hextess(owinSP, s = size)
   ## Convert it to a SpatialPolygons object.
   HexaGrid <- tess2SPdf(HexaGrid)
   ## Make Points inside every hexagonal grid cell
-  points <- spatstat::hexgrid(maptools::as.owin.SpatialPolygons(Polygon1),s = size)
+  points <- spatstat::hexgrid(owinSP, s = size)
   ## Convert the planar point pattern to a data frame
-  PointsHexa <- data.frame(X=points$x, Y=points$y);
+  PointsHexa <- cbind(X = points$x, Y = points$y)
   ## Add an ID Column and reorder and rename the data frame
-  IDs <- 1: nrow(PointsHexa)
-  PointsHexa <- data.frame(IDs,PointsHexa$X, PointsHexa$Y)
-  colnames(PointsHexa) <- c("ID","X","Y")
+  PointsHexa <- cbind("ID" =  1:nrow(PointsHexa), PointsHexa)
+  
   ## Plot the Tesselation with the points if desired
-  if (plotTrue == TRUE){
+  if (plotTrue){
     plot.new()
-    raster::plot(HexaGrid, col="lightgreen",main=paste("Resolution: ", size, "m",
-                                               "\n Total Area: ", round(sum(raster::area(Polygon1)/1000000),2), "km^2",
-                                               "\nAmount of Hexagons: ", length(HexaGrid),
-                                               "\nAmount of Points: ", nrow(PointsHexa)))
-    graphics::points(cbind(PointsHexa$X,PointsHexa$Y), col="blue", pch=20)
+    raster::plot(HexaGrid, col="lightgreen", 
+                 main = paste("Resolution: ", size, "m",
+                              "\n Total Area: ", round(sum(raster::area(Polygon1)/1000000),2), "km^2",
+                              "\nAmount of Hexagons: ", length(HexaGrid),
+                              "\nAmount of Points: ", nrow(PointsHexa)))
+    graphics::points(cbind(PointsHexa$X, PointsHexa$Y), col = "blue", pch = 20)
   }
+  
+  ## Assign same Projection as Polygon
   sp::proj4string(HexaGrid) <- sp::proj4string(Polygon1)
   
   invisible(list(PointsHexa,HexaGrid))

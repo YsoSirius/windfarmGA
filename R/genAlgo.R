@@ -105,7 +105,7 @@
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plot the
 #' ## resulting wind rose
-#' data.in <- as.data.frame(cbind(ws=12,wd=0))
+#' data.in <- data.frame(ws = 12, wd = 0)
 #' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 #'                 dir = data.in$wd, dirres=10, spdmax=20)
 #'
@@ -204,7 +204,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   }
   if (missing(selstate)){
     selstate <- "FIX"
-  }  
+  }
+  selstate <- toupper(selstate)
   if (missing(crossPart1)){
     crossPart1 <- "EQU"
   }
@@ -239,7 +240,15 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   } else {
     ProjLAEA <- Projection
   }
+  ## Check if Polygon is Spatial / SF - 
+  ## TODO - add as matrix, as coordinates etc.. check if missing?
+  if (class(Polygon1)[1] == "sf") {
+    Polygon1 <- as(Polygon1, "Spatial")
+  }
+  ## TODO - check if winddata 'vdirspe' is given and acceptable?
+  ## TODO - check if 'n', 'Rotor', 'RotorHeight' are given.
   
+
   ## INIT VARIABLES 1 #################
   ## Grid size calculation
   resol2 <- fcrR * Rotor
@@ -249,7 +258,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   
   
   ## Start Parallel Cluster ###############
-  ## Is Parallel processing activated? Check the max number of cores and set to max iv value exceeds.
+  ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
     numPossClus <- as.integer(Sys.getenv('NUMBER_OF_PROCESSORS'))
     if (numCluster > numPossClus) {
@@ -303,21 +312,22 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   if  (selstate!= "FIX" & selstate !="VAR") {
     selstate <- readintegerSel()
   }
-  inputData <- list(Input_Data=rbind("Rotorradius"=Rotor,"Number of turbines"=n,"Grid Shape Factor"= fcrR,
-                                     "Iterations"=iteration,"Mutation Rate"=mutr,
-                                     "Percentage of Polygon"=Proportionality,"Topographie"=topograp,
-                                     "Elitarism"=elitism, "Selection Method"=selstate,
-                                     "Trim Force Method Used"=trimForce,"Crossover Method Used"=crossPart1,
-                                     "Reference Height"= referenceHeight, "Rotor Height"=RotorHeight,
-                                     "Resolution" = resol2, "Parallel Processing" = Parallel, 
-                                     "Number Clusters" = numCluster, "Active Weibull" = weibull,
-                                     "Grid Method" = GridMethod))
+  inputData <- list(
+    Input_Data = rbind("Rotorradius" = Rotor, "Number of turbines" = n, "Grid Shape Factor" = fcrR,
+                     "Iterations" = iteration, "Mutation Rate" = mutr,
+                     "Percentage of Polygon" = Proportionality, "Topographie" = topograp,
+                     "Elitarism" = elitism, "Selection Method" = selstate,
+                     "Trim Force Method Used" = trimForce, "Crossover Method Used" = crossPart1,
+                     "Reference Height" = referenceHeight, "Rotor Height" = RotorHeight,
+                     "Resolution" = resol2, "Parallel Processing" = Parallel, 
+                     "Number Clusters" = numCluster, "Active Weibull" = weibull,
+                     "Grid Method" = GridMethod))
+  
   inputWind <- list(Windspeed_Data = vdirspe)
   if (verbose) {
     print(inputData)
     print(inputWind)
   }
-  # readline(prompt = "Check Inputs one last time. Press <ENTER> and lets go!")
 
 
   ## Project Polygon ###############
@@ -338,8 +348,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     # Calculate a Grid with hexagonal grid cells
     Grid1 <- HexaTex(Polygon1, resol2/2)
     Grid <- Grid1[[1]]
-    Grid <- as.data.frame(cbind(Grid$ID,Grid$X, Grid$Y))
-    colnames(Grid) <- c("ID","X","Y")
     sp::proj4string(Grid1[[2]]) <- sp::proj4string(Polygon1)
     dry.grid.filtered <- Grid1[[2]]
   }
@@ -726,7 +734,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     try(rm(cl), silent = TRUE)
   }
   
-  ## Reduce the results, if a solution was found prior to the end of the iterations #################
+  ## Reduce list, if algorithm didnt run all iterations. (Found Optimum) #################
   mut_rate <- mut_rate[lapply(mut_rate, length) != 0]
   beorwor <- beorwor[lapply(beorwor, length) != 0]
   selcross <- selcross[lapply(selcross, length) != 0]
