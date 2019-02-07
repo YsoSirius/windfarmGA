@@ -50,12 +50,7 @@
 #'          GridPol = Grid[[2]])
 #' }
 #' @author Sebastian Gatscha
-leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
-  
-  # resultSAFE = result
-  # result = resultSAFE
-  
-  
+leafPlot <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
   
   opar = par(no.readonly = T)
   par(mfrow=c(1,1))
@@ -63,13 +58,10 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
     cat(paste("Maximum possible number for 'which': ",nrow(result)))
     which <- nrow(result)
   }
-  # result <- as.data.frame(result)
   
   if (orderitems){
-    # a <- sapply(result[,2], "[", "EnergyOverall")
     a <- sapply(result[,2], FUN = function(i) subset.matrix(i, subset = c(T, rep(F, nrow(i)-1)),
                                                             select = "EnergyOverall"))
-    # b <- data.frame(sapply(a, function(x) x[1]))
     b <- data.frame(cbind(a), stringsAsFactors = FALSE)
     order1 <- order(b, decreasing = T)
     result <- result[order1,]
@@ -88,7 +80,7 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
     xses <- rep(Polygon1@bbox[1],4); yses <- rep(Polygon1@bbox[4],4)
     Sr1 <- sp::SpatialPolygons(list(sp::Polygons(list(
       sp::Polygon(cbind(xses,yses))), ID = "a")), pO = 1:1)
-    GridPol <- Sr1; rm(Sr1)
+    GridPol <- Sr1
     sp::proj4string(GridPol) <- sp::proj4string(Polygon1)
     GridPol <- sp::spTransform(GridPol, CRSobj = ProjectionLonLat)
     opaC <- 0
@@ -98,13 +90,9 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
   projPol <- sp::proj4string(Polygon1)
   xysp <- sp::SpatialPoints(cbind(result[,'X'], result[,'Y']), proj4string = sp::CRS(projPol))
   resultxy <- sp::spTransform(xysp, CRSobj = ProjectionLonLat)
-  ## Transform to matrix after transformation.
   resultxy <- sp::coordinates(resultxy)
-  # result <- cbind(result,
-  #       "X" = resultxy[,1],
-  #       "Y" = resultxy[,2])
   
-  Polygon1 <- sp::spTransform(Polygon1,CRSobj = ProjectionLonLat)
+  Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjectionLonLat)
   
   headLo <- c(mean(raster::extent(Polygon1)[1:2]), max(raster::extent(Polygon1)[4]))
   
@@ -118,14 +106,15 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
   
   Rad =  round(result[,'AbschGesamt'],2)/10;
   names(Rad) <- NULL
+  result <- data.frame(result, stringsAsFactors = FALSE)
+  result$X <- resultxy[,1]
+  result$Y <- resultxy[,2]
   ## Assign sorted color palette for legend
-  pal <- leaflet::colorFactor(ColC1, domain = result[,'AbschGesamt'],
+  pal <- leaflet::colorFactor(ColC1, domain = result$AbschGesamt,
                               reverse = F)
   
-  result <- data.frame(result, stringsAsFactors = FALSE)
-  result <- cbind(result,
-                  "Rad" = Rad,
-                  "farbe" = pal(result[,'AbschGesamt']))
+  result$Rad = Rad
+  result$farbe = pal(result$AbschGesamt)
   
   ## Assign turbine Icons
   turbine_icon <- leaflet::iconList(
@@ -134,7 +123,7 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
       iconUrl = paste0(system.file(package = "windfarmGA"), "/extdata/windturdk.png"),
       # iconUrl = paste0(getwd(),"/inst/extdata/windturdk.png"),
       iconWidth = 30, iconHeight = 50))
-  listPopup <- paste("Total Wake Effect: ", as.character(result[,'AbschGesamt']),
+  listPopup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
                      "% </dd>")
   ## Start a Leaflet Map with OSM background and another Tile.
   map <- leaflet() %>%
@@ -168,11 +157,12 @@ leafPlot <- function(result,Polygon1,which=1,orderitems=TRUE, GridPol){
     addMarkers(lng=result[,1], lat=result[,2],
                         icon= turbine_icon[1], popup=listPopup, group="Turbines") %>%
     addLegend(position = "topleft",
-                       # colors = sort(unique(result$farbe)),
-                       colors=ColC1,
-                       labels = sort(unique(result$AbschGesamt)),
-                       labFormat = labelFormat(suffix = "%"),
-                       opacity = 1, title = "Total Wake Effect", layerId = "Legend")  %>%     
+              colors = sort(unique(result$farbe)),
+              values = as.character(result$AbschGesamt), 
+              # colors=ColC1,
+              labels = sort(unique(result$AbschGesamt)),
+              labFormat = labelFormat(suffix = "%"),
+              opacity = 1, title = "Total Wake Effect", layerId = "Legend")  %>%     
   ## Layers control
     addLayersControl(baseGroups = c(
       "OSM",
