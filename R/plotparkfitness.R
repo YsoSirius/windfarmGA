@@ -28,9 +28,9 @@
 #'}
 #' @author Sebastian Gatscha
 plotparkfitness <- function(result, spar=0.1){
-  parparfit <- par(ask=F, no.readonly = T)
-  on.exit(par(parparfit))
+  # result=resultrect
   
+  ## Data #####################
   rslt <- as.data.frame(do.call("rbind", result[,'allparkcoeff']))
   mutres <- as.data.frame(do.call("rbind", result[,'mut_rate']))
   nindiv1 <- as.data.frame(do.call("cbind", result[,'nindiv']))
@@ -39,12 +39,17 @@ plotparkfitness <- function(result, spar=0.1){
   selcross <- unlist(result[,'selcross'])
   selteil <- selcross[seq(2,length(selcross),2)]
   crossteil <- selcross[seq(1,length(selcross),2)]
+  #######################
 
-
+  ## Set graphics param #####################
+  parparfit <- par(ask=F, no.readonly = T)
+  on.exit(par(parparfit))
   graphics::layout(matrix(c(1,1,1,1,2,3,4,5),2,4, byrow = TRUE));
   rbPal <- grDevices::colorRampPalette(c('red','green'));
   Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),breaks = 4))]
-
+  #######################
+  
+  ## Plot All together (5 Plots) #####################
   plot(rslt$minparkfitness, xaxt='n', main="Parkfitness per Generation",
                  ylab="Parkfitness in %", cex=1, cex.main=1, col="red", pch=20,
                  ylim= c(min(rslt$minparkfitness),max(rslt$maxparkfitness)));
@@ -95,9 +100,9 @@ plotparkfitness <- function(result, spar=0.1){
   mutrplval <- mutrpl[mutrpl>median(mutrpl)]
   calibrate::textxy(timetick,mutrplval,labs = timetick,cex = 0.7)
   grid(col = "gray")
+  #######################
 
-
-
+  ## Plot Count Individuals #####################
   par(mfrow=c(1,1))
   plot(ndindiplot,type="b",col=farbe,cex=1.5,cex.main=1,pch=20, main="N-Individuen",axes = FALSE,
        ylab="N",ylim=c(0,max(ndindiplot)+100))
@@ -109,8 +114,9 @@ plotparkfitness <- function(result, spar=0.1){
                    cex=1,inset = c(0.01,0.01),
                    box.lty=0,box.lwd=0,c("Fitness","Selection","Crossover"),
                    text.col=farbe[1:3],col=farbe[1:3],xjust = 0)
+  #######################
 
-
+  ## Plot Selection / Crossover Params #####################
   graphics::par(mfrow=c(2,1))
   plot(1*100/selteil,ylim=c(20,110),type="b",cex=2,col="green",pch=20,main="Selection percentage",
                  ylab="Percentage",xlab="Generation")
@@ -121,8 +127,8 @@ plotparkfitness <- function(result, spar=0.1){
                  ylab="Crossover Points",ylim=c(1,8),cex=1,pch=15); grid(col = "gray")
   timetickcro <- which(crossteil>median(crossteil));   crorplval <- crossteil[crossteil>median(crossteil)]
   calibrate::textxy(timetickcro,crorplval,labs = timetickcro,cex = 0.5)
-
-
+  #######################
+  ## Add Special Events #######################
   if (length(timetick)!=0) {
     graphics::par(mfrow=c(1,1))
     rbPal <- grDevices::colorRampPalette(c('red','green'));
@@ -165,7 +171,6 @@ plotparkfitness <- function(result, spar=0.1){
       abline(v = timeticksel,col="green");
       mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
   }
-  
   if (length(timetickcro)!=0){
     par(mfrow=c(1,1))
     rbPal <- colorRampPalette(c('red','green'));
@@ -186,8 +191,9 @@ plotparkfitness <- function(result, spar=0.1){
       graphics::abline(v = timetickcro,col="red");
       graphics::mtext(crorplval,side = 3,at = timetickcro,col="red",cex = 0.8)
   }
+  #######################
 
-
+  ## Plot Fitness, Selection, Crossover and Fitness Deviation #####################
   sddata <- plotCloud(result);
   fitsd <- dplyr::select(sddata,dplyr::contains("fit"));
   effsd <- dplyr::select(sddata,dplyr::contains("eff"));
@@ -206,7 +212,6 @@ plotparkfitness <- function(result, spar=0.1){
     lmax <- smooth.spline(x,rslt$maxparkfitness, spar=spar); graphics::lines(lmax, col='green', lwd=1.2)
     graphics::grid(col = "gray")
   }
-
 
   plot(1*100/selteil,ylim=c(20,110),type="b",lwd=2,col="green",
        pch=20,main="Selection percentage",
@@ -230,8 +235,9 @@ plotparkfitness <- function(result, spar=0.1){
     graphics::abline(v = timeticksd)
     graphics::mtext(mutrplval,side = 3,at = timetick,cex = 0.8)
   }
+  #######################
 
-
+  ## Plot Mutation Rate influence #####################
   graphics::par(mfrow=c(1,1))
   plot(fitsd$Fitn.sd, type="b",col="red",lwd=2,cex.main=1,axes = TRUE, bty = "n", xlab = "", ylab = "",
                  pch=20, main="Mutation Rate influence on Standard Deviation")

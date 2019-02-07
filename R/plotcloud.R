@@ -27,21 +27,22 @@
 #'}
 #' @author Sebastian Gatscha
 plotCloud <- function(result, pl=FALSE){
+  # result = resulthex; pl=T
 
   parcloud <- par(ask=F, no.readonly = T)
   on.exit(par(parcloud))
   
   clouddata <- result[,7]
-  EffCloud <- lapply(clouddata, function(x) x = x[[1]]);
-  EneCloud <- lapply(clouddata, function(x) x = x[[2]]);
-  FitCloud <- lapply(clouddata, function(x) x = x[[3]]);
+  EffCloud <- lapply(clouddata, function(x) x = x[,1])
+  EneCloud <- lapply(clouddata, function(x) x = x[,2])
+  FitCloud <- lapply(clouddata, function(x) x = x[,3])
 
-  EffCldInd <- list();EneCldInd <- list();FitCldInd <- list();
+  EffCldInd <- list();EneCldInd <- list();FitCldInd <- list()
   for (i in 1:length(clouddata)){
     l <- length(clouddata[[i]][,'EfficAllDir']); l
-    EffCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),EffCloud[[i]])));
-    EneCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),EneCloud[[i]])));
-    FitCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),FitCloud[[i]])));
+    EffCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),EffCloud[[i]])))
+    EneCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),EneCloud[[i]])))
+    FitCldInd[[i]] <- t(as.matrix(rbind(rep(i,l),FitCloud[[i]])))
   }
   EffCldInd <- do.call("rbind",EffCldInd)
   EffCldIndmax <- data.frame(EffCldInd)
