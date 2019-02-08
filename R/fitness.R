@@ -45,7 +45,6 @@
 #' processing.
 #' @param numCluster If Parallel is TRUE, this variable defines the number
 #' of clusters to be used.
-#' @param verbose If TRUE, will print out further information. 
 #'
 #' @return Returns a list with every individual, consisting of X & Y
 #' coordinates, rotor radii, the runs and the selected grid cell IDs, and
@@ -88,8 +87,8 @@
 #' @author Sebastian Gatscha
 fitness           <- function(selection, referenceHeight, RotorHeight,
                               SurfaceRoughness, Polygon, resol1,
-                              rot, dirspeed,srtm_crop,topograp,cclRaster,
-                              weibull, weibullsrc, Parallel, numCluster, verbose){
+                              rot, dirspeed, srtm_crop, topograp, cclRaster,
+                              weibull, weibullsrc, Parallel, numCluster) {
   
   # selection = startsel; referenceHeight = referenceHeight;
   # RotorHeight = RotorHeight; SurfaceRoughness = SurfaceRoughness;
@@ -99,9 +98,9 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   # Parallel = Parallel; numCluster = numCluster; verbose = verbose
    
   
-  verbose = FALSE
+  # verbose = FALSE
 
-  ## Missing Arguments ? ToDo: beautify this #############
+  ## TODO Missing Arguments?  Better approach.. #############
   if (missing(srtm_crop)){
     srtm_crop <- NULL
   }
@@ -117,50 +116,9 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   }
   #############
   
-  ## TODO make in genAlgo??
-  ## Winddata Formatting ###################
-  dirspeed$wd <- round(dirspeed$wd,0)
-  dirspeed$wd <-  round(dirspeed$wd/100,1)*100;
-  ## If no probabilites are given, assign uniform distributed ones.
-  if (any(names(dirspeed) == "probab") == FALSE) {
-    dirspeed$probab <- 100/nrow(dirspeed)
-  }
-  ## Checks if all wind directions/speeds have a possibility greater than 0.
-  dirspeed$probab <- round(dirspeed$probab,0)
-  if (sum(dirspeed$probab) != 100) {
-    dirspeed$probab <- dirspeed$probab*(100/sum(dirspeed$probab))
-  }
-  ## Checks if duplicated wind directions are at hand
-  if   (any(duplicated(dirspeed$wd) == TRUE)) {
-    for (i in 1:nrow(dirspeed[duplicated(dirspeed$wd) == FALSE,])){
-      temp <- dirspeed[dirspeed$wd ==  dirspeed[duplicated(
-        dirspeed$wd) == FALSE,][i,'wd'],];
-      temp$ws < -with(temp, sum(ws * (probab / sum(probab))));
-      temp$probab <- with(temp, sum(probab * (probab/sum(probab))));
+  probabDir <- dirspeed[[2]]
+  dirspeed <- dirspeed[[1]]
 
-      dirspeed[dirspeed$wd ==  dirspeed[duplicated(
-        dirspeed$wd) == FALSE,][i,'wd'],]$ws <- round(temp$ws,2)[1]
-      dirspeed[dirspeed$wd ==  dirspeed[duplicated(
-        dirspeed$wd) == FALSE,][i,'wd'],]$probab <- round(temp$probab,2)[1]
-    }
-  }
-  dirspeed <- dirspeed[!duplicated(dirspeed$wd) == TRUE,];
-  dirspeed <- dirspeed[with(dirspeed, order(wd)),]
-  if (sum(dirspeed$probab) != 100) {
-    dirspeed$probab <- dirspeed$probab * (100 / sum(dirspeed$probab))
-  }
-  probabDir <- dirspeed$probab;
-  pp <- sum(probabDir)/100;   probabDir <- probabDir/pp;
-  dirspeed <- as.matrix(dirspeed)
-  
-  ## TODO - Move this to genAlgo (not necesseray here and just inefficient) 
-  ## DO i need rasterize anyway? Can i not create vector 1
-  ## Can a windraster be included? last method in calculateEn doesnt need windraster
-  
-  # windraster <- raster::rasterize(Polygon, 
-  #                                 raster::raster(raster::extent(Polygon),
-  #                                                ncol = 180, nrow = 180),
-  #                                 field = 1)
   ###################
   
   ## Layout Saving 1   ###################
@@ -224,7 +182,6 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
                               polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
                               srtm_crop = srtm_crop, topograp = topograp,cclRaster = cclRaster, 
                               weibull = weibull, weibullsrc = weibullsrc)
-        # ee  <- lapply(e[[i]], function(x){split(x, duplicated(x[,'Punkt_id']))$'FALSE'})
         ee  <- lapply(e[[i]], function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
 
       } else {
@@ -232,14 +189,11 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
         
         # Get a list from unique Grid_ID elements for every park configuration respective 
         # to every winddirection considered.
-        # ee  <- lapply(e[i], function(x){split(x, duplicated(x$Punkt_id))$'FALSE'})
         ee  <- lapply(e[i], function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
       }
   
       if (TRUE) {
       # Select only relevant information from list
-      # ee  <- lapply(ee, function(x){
-      #   dplyr::select(x,-Ax,-Ay,-Laenge_B,-Laenge_A,-Windmean,-WakeR,-A_ov, -Punkt_id)})
       ee  <- lapply(ee, function(x){
         subset.matrix(x, select = c('Bx','By','Windrichtung','RotorR','TotAbschProz','V_New',
                                     'Rect_ID','Energy_Output_Red', 'Energy_Output_Voll',
@@ -247,9 +201,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       
       
       
-      # TODO   
       # get Energy Output and Efficiency rate for every wind direction
-      # enOut <- lapply(ee, function(x){ x[1,c(3,8,10)]}); 
       enOut <- lapply(ee, function(x){
         subset.matrix(x, 
                       subset = c(TRUE, rep(FALSE, length(ee[[1]][,1]) - 1)),
@@ -299,20 +251,15 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     }
   
     # Split one from every run and select only Energy information
-    # maxparkeff <- do.call("rbind", (lapply(euniqu, function(x) {
-      # x <- dplyr::select(x[1,],EnergyOverall)})))
     maxparkeff <- do.call(rbind, lapply(euniqu, function(x) {
       # subset.matrix(x[1,], select = 'EnergyOverall')
       x[1, 'EnergyOverall']
       }))
     
-    # Calculate Parkfitness for every individual.
-    # maxparkeff <- cbind(maxparkeff, 'Parkfitness' = maxparkeff$EnergyOverall)
+    ## TODO - Get a better Fitness Function!!!!!
+    # Save as Fitness (Its just a copy of overall Energy Output right now).
     colnames(maxparkeff) <- 'Parkfitness'
     
-    # Select only the Fitness Value
-    # maxparkeff <- maxparkeff[,2]
-  
     # Assign every park constellation the Parkfitness Value
     euniqu <- lapply(1:length(euniqu), function(i) {
       cbind(euniqu[[i]], 'Parkfitness' = maxparkeff[i,])

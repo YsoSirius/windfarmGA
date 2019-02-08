@@ -41,12 +41,12 @@ leafPlot(result = resulthex, Polygon1 = polygon, orderitems = F,
          
 load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 ## Plot the best wind farm on a leaflet map with the rectangular Grid
-Grid <- GridFilter(polygon, resol = 170, prop = 0.4)
+Grid <- GridFilter(polygon, resol = 150, prop = 0.4)
 leafPlot(result = resultrect, Polygon1 = polygon, which = 1, 
          GridPol = Grid[[2]])
 
 ## Plot the last wind farm with hexagonal Grid
-Grid <- HexaTex(polygon, size = 85)
+Grid <- HexaTex(polygon, size = 75)
 leafPlot(result = resulthex, Polygon1 = polygon, which = 1, 
          GridPol = Grid[[2]])
 }

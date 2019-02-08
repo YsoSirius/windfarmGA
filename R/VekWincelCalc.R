@@ -29,15 +29,15 @@
 #' 
 #' ## Exemplary input Polygon with 2km x 2km:
 #' polYgon <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-#' polYgon <- Polygons(list(polYgon),1);
+#' polYgon <- Polygons(list(polYgon),1)
 #' polYgon <- SpatialPolygons(list(polYgon))
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #'                +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=TRUE)
+#' proj4string(polYgon) <- CRS(Projection); plot(polYgon, axes = TRUE)
 #' 
 #' ## Create a random windfarm with 10 turbines
-#' t <- as.matrix(cbind(x=runif(10,0,raster::extent(polYgon)[2]),
-#'      y=runif(10,0,raster::extent(polYgon)[4])))
+#' t <- as.matrix(cbind(x = runif(10, 0, raster::extent(polYgon)[2]),
+#'      y = runif(10, 0, raster::extent(polYgon)[4])))
 #' wnkl <- 20
 #' distanz <- 100000
 #' 
@@ -45,13 +45,13 @@
 #' potInfTur <- list()
 #' for (i in 1:(length(t[,1]))) {
 #'   potInfTur[[i]] <- VekWinkelCalc(t = t, o = i, wkl = wnkl,
-#'                    distanz = distanz, polYgon = polYgon, plotAngles=TRUE);
+#'                    distanz = distanz, polYgon = polYgon, plotAngles = TRUE)
 #' }
 #' potInfTur
 #'
 #' @author Sebastian Gatscha
 VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
-  # t = t; o = 1; wkl = wnkl;
+  # t = t; o = 2; wkl = wnkl;
   # distanz = distanz; polYgon = polYgon; plotAngles=TRUE
   
   ## Get coordinates of actual turbine location
@@ -71,22 +71,21 @@ VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
     points(xynew1[,1], y = xynew1[,2], col = "red", pch = 20)
   }
   
-  ## Are there turbines in front or not? If yes, calculate distances and angles and check if they might have an influence or not
+  ## Are there turbines in front or not? If yes, calculate distances and angles and check 
+  ## if they might have an influence or not
   len2 <- length(xynew1[,1L])
   if (len2 != 0L) {
-    ## If turbines are in front of the current turbine, create a list and save only the ones that could possibly influence others
-    datalist = vector("list", len2)
-    for (indx in 1:len2) {
-      ## Calcuate the distances and angles of the imaginary right triangle
-      P2LFu <- PointToLine2(WKA_akt, xynew1[indx,], plotAngles)
-      # P2LFu <- point_2_line_CPP(WKA_akt, xynew1[indx,])
-      # winkel <- t(WinkelCalc(xynew1[indx,], WKA_akt, P2LFu[5:6]))
-      winkel <- angles_CPP(xynew1[indx,], WKA_akt, P2LFu[5:6])
-      data <- c(P2LFu, winkel) 
-      datalist[[indx]] <- data
-    }
-    res <- do.call(rbind, datalist)
-    colnames(res) <- c("Ax", "Ay", "Bx", "By", "Cx", "Cy", "Laenge_C", "Laenge_B", "Laenge_A", "alpha", "betha", "gamma")
+    ## If turbines are in front of the current turbine, create a list and save only the
+    ## ones that could possibly influence others
+    datalist <- lapply(1:len2, function(i) {
+      P2LFu <- PointToLine2(WKA_akt, xynew1[i,], plotAngles)
+      winkel <- angles_CPP(xynew1[i,], WKA_akt, P2LFu[5:6])
+      c(P2LFu, winkel) 
+    })
+    res <- matrix(unlist(datalist), ncol = 12, byrow = TRUE)
+    colnames(res) <- c("Ax", "Ay", "Bx", "By", "Cx", "Cy", 
+                        "Laenge_C", "Laenge_B", "Laenge_A", 
+                        "alpha", "betha", "gamma")
     
     ## Dismiss the ones with too high distances or big angles.
     dl <- subset.matrix(res, subset = res[,'alpha'] < wkl & res[,'Laenge_B'] < distanz) 
@@ -95,14 +94,12 @@ VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
       points(dl[,'Ax'], dl[,'Ay'], col = "orange", pch = 20, cex = 2)
     }
     
-    ## If no turbines exist, the variable "dl" will be deleted.
-    if (nrow(dl) == 0){rm(dl)}
-    
-    if (exists("dl")) {
+    ## Are turbines left after subsetting?
+    if (nrow(dl) != 0) {
       ## If possible influencing turbines exist, save them in the variable "DataLun3"
       DataLun3 <- dl
     } else {
-      ## If no possible influencing turbines remain and the variable "dl" therefoe doesnt exist,
+      ## If no possible influencing turbines remain and the variable "dl" therefoe is empty,
       ## the variable "DataLun3" is fulled with default Values of 0 for distances and angles
       DataLun3 <- matrix(data = c(0, 0, t[o,1], t[o,2], (rep(0, 8))), nrow = 1, ncol = 12);
       colnames(DataLun3) <- c("Ax","Ay","Bx","By","Cx","Cy","Laenge_C","Laenge_B","Laenge_A",
@@ -116,5 +113,5 @@ VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
                             "alpha","betha","gamma")
   }
   
-  return(DataLun3);
+  return(DataLun3)
 }

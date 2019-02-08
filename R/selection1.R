@@ -139,8 +139,7 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose) {
   childbin <- lapply(chile, function(i) {
     ## For every Child element, assign the total Grid to a binaryvariable[i], 
     ## and set all binary =0. Assign Run Value as well
-    tmp <- Grid
-    tmp <- cbind(tmp, 
+    tmp <- cbind(Grid, 
                  "Run" = child[[i]][1, 'Run'],
                  "bin" = 0,
                  "Fitness" = child[[i]][1, 'Parkfitness'])

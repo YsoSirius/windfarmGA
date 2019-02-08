@@ -328,7 +328,49 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     print(inputData)
     print(inputWind)
   }
-
+  
+  ## Winddata Formatting #######################
+  vdirspe <- as.data.frame(vdirspe)
+  if (!all(colnames(vdirspe) %in% c("ws","wd"))) {
+    vdirspe <- vdirspe[,1:2]
+    colnames(vdirspe) <- c("ws","wd")
+  }
+  vdirspe$wd <- round(vdirspe$wd, 0)
+  vdirspe$wd <-  round(vdirspe$wd / 100, 1) * 100
+  ## If no probabilites are given, assign uniform distributed ones.
+  if (any(names(vdirspe) == "probab") == FALSE) {
+    vdirspe$probab <- 100 / nrow(vdirspe)
+  }
+  ## Checks if all wind directions/speeds have a possibility greater than 0.
+  vdirspe$probab <- round(vdirspe$probab, 0)
+  if (sum(vdirspe$probab) != 100) {
+    vdirspe$probab <- vdirspe$probab * (100 / sum(vdirspe$probab))
+  }
+  ## Checks if duplicated wind directions are at hand
+  if   (any(duplicated(vdirspe$wd) == TRUE)) {
+    for (i in 1:nrow(vdirspe[duplicated(vdirspe$wd) == FALSE,])){
+      temp <- vdirspe[vdirspe$wd ==  vdirspe[duplicated(
+        vdirspe$wd) == FALSE,][i,'wd'],]
+      temp$ws < -with(temp, sum(ws * (probab / sum(probab))))
+      temp$probab <- with(temp, sum(probab * (probab / sum(probab))))
+      
+      vdirspe[vdirspe$wd ==  vdirspe[duplicated(
+        vdirspe$wd) == FALSE,][i,'wd'],]$ws <- round(temp$ws,2)[1]
+      vdirspe[vdirspe$wd ==  vdirspe[duplicated(
+        vdirspe$wd) == FALSE,][i, 'wd'],]$probab <- round(temp$probab, 2)[1]
+    }
+  }
+  vdirspe <- vdirspe[!duplicated(vdirspe$wd) == TRUE,];
+  vdirspe <- vdirspe[with(vdirspe, order(wd)),]
+  if (sum(vdirspe$probab) != 100) {
+    vdirspe$probab <- vdirspe$probab * (100 / sum(vdirspe$probab))
+  }
+  probabDir <- vdirspe$probab
+  pp <- sum(probabDir) / 100 
+  probabDir <- probabDir/pp;
+  vdirspe <- as.matrix(vdirspe)
+  winddata = list(vdirspe, probabDir) 
+  #######################
 
   ## Project Polygon ###############
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
@@ -440,22 +482,22 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   while (i <= iteration) {
     if (!verbose){cat(".")}
     ## FITNESS (+getRectV) ###############
-    if (i==1) {
+    if (i == 1) {
       fit <- fitness(selection = startsel, referenceHeight = referenceHeight,
                      RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-                     Polygon = Polygon1, resol1 = resol2,rot=Rotor, dirspeed = vdirspe,
+                     Polygon = Polygon1, resol1 = resol2,rot=Rotor, dirspeed = winddata,
                      srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
                      weibull = weibull, weibullsrc = weibullsrc, 
-                     Parallel = Parallel, numCluster = numCluster, verbose = verbose)
+                     Parallel = Parallel, numCluster = numCluster)
 
     } else {
       getRectV <- getRects(mut1, Grid)
       fit <- fitness(selection = getRectV, referenceHeight = referenceHeight,
                      RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-                     Polygon = Polygon1, resol1 = resol2,rot = Rotor, dirspeed = vdirspe,
+                     Polygon = Polygon1, resol1 = resol2,rot = Rotor, dirspeed = winddata,
                      srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
                      weibull = weibull, weibullsrc = weibullsrc, 
-                     Parallel = Parallel, numCluster = numCluster, verbose = verbose)
+                     Parallel = Parallel, numCluster = numCluster)
     }
   
     ## Fitness Result Processing ###############

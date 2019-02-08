@@ -13,22 +13,38 @@ double wake_CPP(double Rotorf, double wakr, double leA) {
 
 // Calculate the overlapping area of wake and rotor area (FULL) ////// Not used yet... testing
 // [[Rcpp::export]]
-NumericVector aov_CPP(double lenght_b, double wakr, double leA, double Rotorf, double rotor_rad) {
-  NumericVector aov; 
+NumericMatrix aov_CPP(double lenght_b, double wakr, double leA, double Rotorf, double rotor_rad) {  
+  double aov = 0.1;
+  double absch = 0.1;
   if (lenght_b == 0) {
-	aov = 0;
+    aov = 0;
+    absch = 0;
   } else {
-	  if ((wakr - Rotorf) >= leA && leA >= 0) {
-	    aov = pow(rotor_rad, 2) * 3.14159265;
-	  }
-	  if ((wakr + Rotorf) <= leA) {
-	    aov = 0;
-	  }
-	  if ((wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
-	    aov = wake_CPP(Rotorf = 50,  wakr = 106.25, leA = 150);
-	  }
+
+	Rcout << "wakr" << std::endl << wakr << std::endl;
+	Rcout << "leA" << std::endl << leA << std::endl;
+	Rcout << "Rotorf" << std::endl << Rotorf << std::endl;
+	
+	if ((wakr - Rotorf) >= leA && leA >= 0) {
+	  aov = pow(rotor_rad, 2) * 3.14159265;
+      absch = ((aov / Rotorf) * 100);
+	}
+	if ((wakr + Rotorf) <= leA) {
+	  aov = 0;
+      absch = 0;
+	}
+	if ((wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
+	  aov = wake_CPP(Rotorf, wakr, leA); // some problem still
+      absch = ((aov / Rotorf) * 100);
+	}
+	Rcout << "wakr" << std::endl << wakr << std::endl;
+	Rcout << "leA" << std::endl << leA << std::endl;
+	Rcout << "Rotorf" << std::endl << Rotorf << std::endl;
+	Rcout << "aov" << std::endl << aov << std::endl;
+	Rcout << "absch" << std::endl << absch << std::endl;
+
   }
-  return aov;
+  return cbind(aov, absch);
 }
 
 // Rotate a set of coordinates around a given center point (P)
@@ -86,7 +102,7 @@ NumericMatrix point_2_line_CPP(NumericVector x, NumericVector y) {
 
 // Calculate the wake radius. /Not used, less performant --------------------------
 // [[Rcpp::export]]
-double wakeradius_CPP(double lenght_b, bool topograp, double RotD, double k) {
+NumericMatrix wakeradius_CPP(double lenght_b, bool topograp, double RotD, double k) {
   double wakR; 
   if (lenght_b) {
     if (topograp){
@@ -97,7 +113,8 @@ double wakeradius_CPP(double lenght_b, bool topograp, double RotD, double k) {
   } else {
     wakR = 0;
   }
-  return wakR;
+  double rotar = pow(RotD,2) * 3.141593;
+  return cbind(wakR, rotar);
 }
 
 // Calculate euclidean distance between two coordinates. /Not used, less performant --------------------------

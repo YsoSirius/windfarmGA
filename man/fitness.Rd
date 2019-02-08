@@ -6,7 +6,7 @@
 \usage{
 fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
   resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull, weibullsrc,
-  Parallel, numCluster, verbose)
+  Parallel, numCluster)
 }
 \arguments{
 \item{selection}{A list containing all individuals of the current
@@ -56,8 +56,6 @@ processing.}
 
 \item{numCluster}{If Parallel is TRUE, this variable defines the number
 of clusters to be used.}
-
-\item{verbose}{If TRUE, will print out further information.}
 }
 \value{
 Returns a list with every individual, consisting of X & Y

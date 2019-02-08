@@ -19,7 +19,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // aov_CPP
-NumericVector aov_CPP(double lenght_b, double wakr, double leA, double Rotorf, double rotor_rad);
+NumericMatrix aov_CPP(double lenght_b, double wakr, double leA, double Rotorf, double rotor_rad);
 RcppExport SEXP _windfarmGA_aov_CPP(SEXP lenght_bSEXP, SEXP wakrSEXP, SEXP leASEXP, SEXP RotorfSEXP, SEXP rotor_radSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -87,7 +87,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // wakeradius_CPP
-double wakeradius_CPP(double lenght_b, bool topograp, double RotD, double k);
+NumericMatrix wakeradius_CPP(double lenght_b, bool topograp, double RotD, double k);
 RcppExport SEXP _windfarmGA_wakeradius_CPP(SEXP lenght_bSEXP, SEXP topograpSEXP, SEXP RotDSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

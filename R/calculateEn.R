@@ -137,13 +137,15 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
   sel1 <- sel[,2:3];
   ## Assign constant values
   cT <- 0.88;   air_rh <- 1.225;   k <- 0.075;  plotit <- FALSE
+  
+  ## TODO - this can go in some upper level
   pcent = apply(sp::bbox(polygon1), 1, mean)
+  
   ## Create a dummy vector of 1 for the wind speeds.
   windpo = rep(1, length(sel1[,1]))
   
-  ## TODO   change to matrix in genAlgo/fitness
   ## Get the Coordinates of the individual / wind farm. Change dirSpeed to matrix
-  xyBgldMa <- as.matrix(sel1)
+  xyBgldMa <- sel1
   
   ## Terrain Effect Model:
   ## TODO - Change all raster::extract to no buffer
@@ -277,13 +279,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
       mtext(paste("Direction: ", index, "\nfrom total: ", nrow(dirSpeed)), side = 1)
     }
     
-    ## Change Coordinates to Spatial Points and rotate them by the incoming wind direction
-    ## and rearrange as coordinates again
-    ## TODO faster method than maptools::elide (also removes dependency. Make own elide func?)
-    # xyBgldMa <- SpatialPoints(coordinates(xyBgldMa))
-    # xyBgldMa <- maptools::elide(xyBgldMa, rotate = angle, 
-    #                             center = apply(sp::bbox(polygon1), 1, mean))
-    # xyBgldMa <- coordinates(xyBgldMa)
+    ## Rotate Coordinates by the incoming wind direction
     xyBgldMa = rotate_CPP(xyBgldMa[,1], xyBgldMa[,2], pcent[1], pcent[2], angle)
     colnames(xyBgldMa) <- c("x","y")
     
@@ -318,22 +314,14 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
     windlist <- cbind(windlist, 
                       "RotorR" = as.numeric(RotorR))
     
+    
     ## Calculate the wake Radius and the rotor area for every turbine.
     lnro <- length(windlist[,1])
     tmp <- sapply(1:lnro, function(i) {
-      RotD <- as.numeric(windlist[i,'RotorR'])
-      if (windlist[i,'Laenge_B'] != 0) {
-        if (topograp){
-          wakR = (((RotD * 2) + (2 * k[windlist[i,'Punkt_id']] *
-                                   windlist[i,'Laenge_B'])) / 2)[1]
-        } else {
-          wakR = (((RotD * 2) + (2 * k * windlist[i,'Laenge_B'])) / 2)[1]
-        }
-      } else {
-        wakR = 0
+      if (topograp) {
+        k <- k[windlist[i,'Punkt_id']]
       }
-      rotar = (RotD^2) * pi
-      rbind(wakR, rotar)
+      wakeradius_CPP(windlist[i,'Laenge_B'], FALSE, as.numeric(windlist[i,'RotorR']), k)
     })
     windlist <- cbind(windlist, 
                       "WakeR" = tmp[1,], 
@@ -354,7 +342,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
           aov <- 0
         }
         if ((wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
-          aov <- wake_CPP(Rotorf = 50,  wakr = 106.25, leA = 150)
+          aov <- wake_CPP(Rotorf = Rotorf,  wakr = wakr, leA = leA)
         }
       }
       if (aov != 0) {
