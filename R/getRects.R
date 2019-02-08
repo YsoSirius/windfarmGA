@@ -28,6 +28,7 @@
 #'
 #' startsel <- StartGA(Grid,10,20);
 #' wind <- data.frame(ws = 12, wd = 0)
+#' wind <- list(wind, probab = 100)
 #' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
 #'                dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")

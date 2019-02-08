@@ -22,7 +22,7 @@
 #' @param Polygon The considered area as shapefile. (SpatialPolygons)
 #' @param resol1 The resolution of the grid in meter. (numeric)
 #' @param rot The desired rotor radius in meter. (numeric)
-#' @param dirspeed The wind speed and direction data.frame. (data.frame)
+#' @param dirspeed The wind data as list.
 #' @param srtm_crop Logical value that indicates whether the terrain effect
 #' model is activated (TRUE) or deactivated (FALSE). (logical)
 #' @param topograp Logical value that indicates whether the terrain effect
@@ -76,6 +76,7 @@
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
+#' wind <- list(wind, probab = 100)
 #' startsel <- StartGA(Grid,10,20);
 #' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
@@ -116,6 +117,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   }
   #############
   
+  ## TODO -- test that..?? not correct i guess
   probabDir <- dirspeed[[2]]
   dirspeed <- dirspeed[[1]]
 

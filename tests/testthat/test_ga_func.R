@@ -55,6 +55,8 @@ test_that("Test Genetic Algorithm Function", {
   
   ## FITNESS ################################
   wind <- as.data.frame(cbind(ws=12,wd=0))
+  ## TODO - fitness now takes a list of windata. winddata and probability?
+  wind <- list(wind, probab = 100)
   fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
                  SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                  dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")

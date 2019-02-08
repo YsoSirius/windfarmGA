@@ -26,7 +26,7 @@ in m. (numeric)}
 
 \item{rot}{The desired rotor radius in meter. (numeric)}
 
-\item{dirspeed}{The wind speed and direction data.frame. (data.frame)}
+\item{dirspeed}{The wind data as list.}
 
 \item{srtm_crop}{Logical value that indicates whether the terrain effect
 model is activated (TRUE) or deactivated (FALSE). (logical)}
@@ -95,6 +95,7 @@ Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
+wind <- list(wind, probab = 100)
 startsel <- StartGA(Grid,10,20);
 fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
