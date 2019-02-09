@@ -36,76 +36,72 @@
 #' @importFrom graphics plot.new title
 #'
 #' @param dns The source to the desired Shapefile. Only required if the
-#' shapefile is not already loaded. (character)
+#' shapefile is not already loaded.
 #' @param layer The name of the desired Shapefile. Only required if the
-#' shapefile is not already loaded. (character)
-#' @param Polygon1 The considered area as shapefile. Only required if the
-#' shapefile is already loaded.(SpatialPolygons)
+#' shapefile is not already loaded.
+#' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
+#' or coordinates as matrix/data.frame
 #' @param GridMethod Should the polygon be divided into rectangular or
 #' hexagonal grid cells? The default is rectangular grid cells and hexagonal
 #' grid cells are computed when assigning "h" or "hexagon" to this input
-#' variable. (character)
+#' variable.
 #' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
-#' required, when the terrain effect model is activated. (character)
+#' required, when the terrain effect model is activated.
 #' @param sourceCCLRoughness The source to the adapted
 #' Corine Land Cover legend as .csv file. Only required when terrain
 #' effect model is activated. As default a .csv file within this
 #' package (\file{~/extdata}) is taken that was already adapted
 #' manually. To use your own .csv legend this variable has to be assigned.
-#' See Details. (character)
+#' See Details.
 #' @param vdirspe A data.frame containing the incoming wind speeds,
 #' wind directions and probabilities. To plot a wind rose from this
-#' data frame, see: \code{\link{plotWindrose}}. (data.frame)
+#' data frame, see: \code{\link{plotWindrose}}.
 #' @param n A numeric value indicating the required amount of turbines.
-#' (numeric)
 #' @param Rotor A numeric value that gives the rotor radius in meter.
-#' (numeric)
 #' @param fcrR A numeric value that is used for grid spacing. The resolution
 #' of a grid cell will be the rotor radius \code{Rotor} multiplied with this
-#' value. (numeric)
+#' value.
 #' @param iteration A numeric value indicating the desired amount of
-#' iterations of the algorithm. (numeric)
+#' iterations of the algorithm.
 #' @param topograp Logical value that indicates whether the terrain effect
-#' model is activated (TRUE) or deactivated (FALSE). (logical)
+#' model is activated (TRUE) or deactivated (FALSE).
 #' @param referenceHeight The height at which the incoming
-#' wind speeds were measured. Default is 50m (numeric)
+#' wind speeds were measured. Default is 50m
 #' @param RotorHeight The desired height of the turbine.
-#' Default is 100m (numeric)
+#' Default is 100m
 #' @param SurfaceRoughness A surface roughness length of the
 #' considered area in m. If the terrain effect model is activated, a
 #' surface roughness will be calculated for every grid cell with the
-#' elevation and land cover information. (numeric)
+#' elevation and land cover information.
 #' @param Proportionality A numeric factor used for grid calculation.
 #' Determines the percentage a grid has to overlay.
-#' See also: \code{\link{GridFilter}} (numeric)
+#' See also: \code{\link{GridFilter}}
 #' @param mutr A numeric mutation rate with low default value of 0.008
-#' (numeric)
 #' @param elitism Boolean value which indicates whether elitism should
-#' be included or not. (logical)
+#' be included or not.
 #' @param nelit If \code{elitism} is TRUE, then this input variable
-#' determines the amount of individuals in the elite group. (numeric)
+#' determines the amount of individuals in the elite group.
 #' @param selstate Determines which selection method is used,
 #' "FIX" selects a constant percentage and "VAR" selects a variable percentage,
-#' depending on the development of the fitness values. (character)
+#' depending on the development of the fitness values.
 #' @param crossPart1 Determines which crossover method is used,
 #' "EQU" divides the genetic code at equal intervals and
-#' "RAN" divides the genetic code at random locations. (character)
+#' "RAN" divides the genetic code at random locations.
 #' @param trimForce If activated (\code{trimForce}==TRUE),
 #' the algorithm will take a probabilistic approach to trim the wind farms
 #' to the desired amount of turbines. If \code{trimForce}==FALSE the
-#' adjustment will be random. Default is TRUE. (logical)
+#' adjustment will be random. Default is TRUE.
 #' @param Projection A desired Projection can be used instead
-#' of the default Lambert Azimuthal Equal Area Projection. (character)
+#' of the default Lambert Azimuthal Equal Area Projection.
 #' @param weibull A logical value that specifies whether to take Weibull
 #' parameters into account. If weibull==TRUE, the wind speed values from the
 #' 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
 #' wind speed for every wind turbine according to the Weibull parameters.
-#' (logical)
 #' @param weibullsrc A list of Weibull parameter rasters, where the first list
 #' item must be the shape parameter raster k and the second item must be the
 #' scale parameter raster a of the Weibull distribution. If no list is given,
 #' then rasters included in the package are used instead, which currently
-#' only cover Austria. This variable is only used if weibull==TRUE. (list)
+#' only cover Austria. This variable is only used if weibull==TRUE.
 #' @param Parallel Boolean value, indicating whether parallel processing
 #' should be used. The parallel and doParallel packages are used for parallel 
 #' processing.
@@ -227,28 +223,32 @@ utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
                          "k"))
 
 
-windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,sourceCCLRoughness,
-                       vdirspe, Rotor=30,fcrR=3,n=10,topograp=FALSE,
-                       iteration=100,referenceHeight=50,
-                       RotorHeight=50,SurfaceRoughness=0.14, Proportionality=1,
-                       mutr=0.001, elitism=TRUE, nelit=6,
-                       selstate="FIX", crossPart1="EQU",trimForce=TRUE, weibull, weibullsrc,
-                       Parallel, numCluster, verbose=FALSE, plotit = FALSE) {
-  opar = par(no.readonly = T)
-  par(mfrow=c(1,2), ask=F)
+windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection, 
+                       sourceCCL, sourceCCLRoughness,
+                       vdirspe, Rotor = 30, fcrR = 3, n = 10, topograp = FALSE,
+                       iteration = 100, referenceHeight = 50,
+                       RotorHeight = 50, SurfaceRoughness = 0.14, 
+                       Proportionality = 1, mutr = 0.001, 
+                       elitism = TRUE, nelit = 6,
+                       selstate = "FIX", crossPart1 = "EQU", trimForce = TRUE, 
+                       weibull, weibullsrc,
+                       Parallel, numCluster, verbose = FALSE, plotit = FALSE) {
+
+  opar = par(no.readonly = TRUE)
+  par(mfrow = c(1,2), ask = FALSE)
   ######## CHECK INPUT POLYGON
   ## Check if Polygon given is correctly
   if (!missing(Polygon1)){
-    plot(Polygon1, col="red",main ="Original Input Shapefile");
-    title(sub=Polygon1@proj4string,line = 1)
+    plot(Polygon1, col = "red", main = "Original Input Shapefile");
+    title(sub = Polygon1@proj4string, line = 1)
     readline(prompt = "\nPress <ENTER> if this is your Polygon")
   }
   ## Load Polygon from a Source File. Just if dns and layer are not missing.
   if (!missing(dns) & !missing(layer)){
     # Input the Source of the desired Polygon
-    Polygon1 <- rgdal::readOGR(dsn=dns, layer=layer);
-    plot(Polygon1,col="red",main ="Original Input Shapefile");
-    title(sub=Polygon1@proj4string,line = 1)
+    Polygon1 <- rgdal::readOGR(dsn = dns, layer = layer)
+    plot(Polygon1, col = "red", main = "Original Input Shapefile")
+    title(sub = Polygon1@proj4string, line = 1)
     readline(prompt = "\nPress <ENTER> if this is your Polygon")
   }
   ##  Project the Polygon to LAEA if it is not already.
@@ -263,24 +263,24 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
     Projection = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
     +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   } else {
-    Projection <- Projection;
+    Projection <- Projection
   }
   if (as.character(raster::crs(Polygon1)) != Projection) {
-    Polygon1 <- sp::spTransform(Polygon1, CRSobj = Projection);
-    plot(Polygon1, col="red",main ="Projected Input Shapefile");
-    title(sub=Polygon1@proj4string,line = 1)
+    Polygon1 <- sp::spTransform(Polygon1, CRSobj = Projection)
+    plot(Polygon1, col = "red",main = "Projected Input Shapefile")
+    title(sub = Polygon1@proj4string, line = 1)
     readline(prompt = "\nPress <ENTER> if this is your Polygon")
   }
 
   ######## CHECK INPUT GENETIC ALGORITHM
   ## Check if Crossover Method is chosen correctly.
   if (missing(crossPart1)) {crossPart1 <- readinteger()}
-  if (crossPart1!= "EQU" & crossPart1 !="RAN") {
+  if (crossPart1 != "EQU" & crossPart1 !="RAN") {
     crossPart1 <- readinteger()
   }
   ## Check if Selection Method is chosen correctly.
   if (missing(selstate)) {selstate <- readinteger()}
-  if (selstate!= "FIX" & selstate !="VAR") {
+  if (selstate != "FIX" & selstate !="VAR") {
     selstate <- readintegerSel()
   }
 
@@ -288,18 +288,20 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
   if (missing(vdirspe)) {
     stop("\n##### No wind data.frame is given. \nThis input is required for an optimization run")
   }
-  plot.new();   plotWindrose(data = vdirspe, spd = vdirspe$ws,dir = vdirspe$wd)
+  plot.new();   
+  plotWindrose(data = vdirspe, spd = vdirspe[,'ws'], dir = vdirspe[,'wd'])
   readline(prompt = "\nPress <ENTER> if the windrose looks correct?")
   ## Check if Rotor,fcrR,n,iteration,RotorHeight,SurfaceRoughness,Proportionality,mutr,nelit are numeric
-  ChekNumer <- is.numeric(c(Rotor,n,fcrR,iteration,referenceHeight,RotorHeight,SurfaceRoughness,Proportionality,mutr,nelit))
-  if (ChekNumer==F) {
+  ChekNumer <- is.numeric(c(Rotor, n, fcrR, iteration, referenceHeight, 
+                            RotorHeight, SurfaceRoughness, Proportionality, mutr, nelit))
+  if (ChekNumer == F) {
     cat("################### GA WARNING MESSAGE ###################")
     stop("\n##### A required numeric input is not numeric.\n
          See documentation.")
   }
   ## Check if topograp,elitism,trimForce are logical
-  ChekLogic <- is.logical(c(topograp,elitism,trimForce))
-  if (ChekLogic==F) {
+  ChekLogic <- is.logical(c(topograp, elitism, trimForce))
+  if (ChekLogic == F) {
     cat("################### GA WARNING MESSAGE ###################")
     stop("\n##### A required logical input is not logical.\n
          See documentation.")
@@ -311,14 +313,14 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod == "HEXAGON" | GridMethod == "H") {
-    Grid <- HexaTex(Polygon1 = Polygon1, size = ((Rotor*fcrR)/2), plotTrue = TRUE)
+    Grid <- HexaTex(Polygon1 = Polygon1, size = (Rotor * fcrR) / 2, plotTrue = TRUE)
   } else {
-    Grid <- GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop = Proportionality, plotGrid = TRUE)
+    Grid <- GridFilter(shape = Polygon1,resol = (Rotor * fcrR), prop = Proportionality, plotGrid = TRUE)
   }
   cat("\nIs the grid spacing appropriate?")
   InputDaccor <- readline(prompt = "Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
   InputDaccor <- tolower(InputDaccor)
-  if  (InputDaccor== "n") {
+  if  (InputDaccor == "n") {
     cat("################### GA WARNING MESSAGE ###################")
     stop("\n##### The grid spacing is not as required. \n
              Adjust radius (Rotor) or fraction of the radius (fcrR) or the reference system.\n
@@ -329,10 +331,10 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
 
 
   if (missing(topograp)){
-    topograp = FALSE
+    topograp <- FALSE
   }    
   if (missing(weibull)){
-    weibull = FALSE
+    weibull <- FALSE
   }  
   if (weibull){
     cat("\nWeibull Distribution is used.")
@@ -340,12 +342,12 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
       cat("\nWeibull Informations from package will be used.\n")
     } else {
       cat("\nWeibull Informations are given.\n")
-      if (!class(weibullsrc)=="list") {
+      if (!class(weibullsrc) == "list") {
         cat(paste("weibullsrc class: \n1 - ", class(weibullsrc)))
         stop("\n'weibullsrc' must be a list with two rasters. List item 1 should be the shape parameter (k) raster
             and list item 2 should be the scale parameter (a) raster of a weibull distribution.")
       }
-      if (!class(weibullsrc[[1]])[1]=="RasterLayer" | !class(weibullsrc[[2]])[1]=="RasterLayer" ) {
+      if (!class(weibullsrc[[1]])[1] == "RasterLayer" | !class(weibullsrc[[2]])[1] == "RasterLayer" ) {
         cat(paste("list item classes: \n1 - ", class(weibullsrc[[1]]), "\n2 - ", class(weibullsrc[[2]])))
         stop("\nOne of the given list items is not a raster.")
       }
@@ -353,9 +355,8 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
     }
   }
   if (missing(weibullsrc)){
-    weibullsrc = ""
+    weibullsrc <- ""
   }
-
   if (missing(Parallel)){
     Parallel <- FALSE
   }
@@ -377,13 +378,19 @@ windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,source
 
   ##########################################################
   ############### RUNNING GENETIC ALGORITHM
-  result <- genAlgo(Polygon1 = Polygon1, GridMethod = GridMethod, Rotor = Rotor, n = n, fcrR = fcrR, 
-                    iteration = iteration, vdirspe = vdirspe, topograp = topograp,
-                    referenceHeight = referenceHeight, RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-                    Proportionality = Proportionality, mutr = mutr, elitism = elitism, nelit = nelit,
-                    selstate = selstate, crossPart1 = crossPart1,trimForce = trimForce,
-                    Projection = Projection, sourceCCL = sourceCCL, sourceCCLRoughness = sourceCCLRoughness,
-                    weibull = weibull, weibullsrc = weibullsrc, Parallel = Parallel, numCluster = numCluster,
+  result <- genAlgo(Polygon1 = Polygon1, GridMethod = GridMethod, 
+                    Rotor = Rotor, n = n, fcrR = fcrR, iteration = iteration,
+                    vdirspe = vdirspe, topograp = topograp,
+                    referenceHeight = referenceHeight, RotorHeight = RotorHeight, 
+                    SurfaceRoughness = SurfaceRoughness, 
+                    Proportionality = Proportionality,
+                    mutr = mutr, elitism = elitism, nelit = nelit,
+                    selstate = selstate, crossPart1 = crossPart1, 
+                    trimForce = trimForce,
+                    Projection = Projection, sourceCCL = sourceCCL, 
+                    sourceCCLRoughness = sourceCCLRoughness,
+                    weibull = weibull, weibullsrc = weibullsrc, 
+                    Parallel = Parallel, numCluster = numCluster,
                     verbose = verbose, plotit = plotit)
   par(opar)
   invisible(result)

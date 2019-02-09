@@ -11,7 +11,8 @@ genAlgo(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight, RotorHeight,
   verbose = FALSE, plotit = FALSE)
 }
 \arguments{
-\item{Polygon1}{The considered area as shapefile}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or
 hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
@@ -109,7 +110,6 @@ is FALSE}
 \value{
 The result of this run is a matrix of all relevant output
 parameters. This output can be used for several plotting functions.
-(matrix)
 }
 \description{
 This function coordinates all other elements of the

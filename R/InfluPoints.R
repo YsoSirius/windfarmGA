@@ -28,31 +28,32 @@
 #' ## Exemplary input Polygon with 2km x 2km:
 #' polYgon <- Polygon(rbind(c(0, 0), c(0, 2000),
 #' c(2000, 2000), c(2000, 0)))
-#' polYgon <- Polygons(list(polYgon),1);
+#' polYgon <- Polygons(list(polYgon), 1)
 #' polYgon <- SpatialPolygons(list(polYgon))
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(polYgon) <- CRS(Projection); plot(polYgon,axes=TRUE)
+#' proj4string(polYgon) <- CRS(Projection)
+#' plot(polYgon, axes = TRUE)
 #'
-#' t <- as.matrix(cbind(x=runif(10,0,extent(polYgon)[2]),
-#'      y=runif(10,0,extent(polYgon)[4])))
-#' wnkl=20
-#' dist=100000
-#' dirct=0
+#' t <- as.matrix(cbind(x = runif(10, 0, extent(polYgon)[2]),
+#'      y = runif(10, 0, extent(polYgon)[4])))
+#' wnkl <- 20
+#' dist <- 100000
+#' dirct <- 0
 #'
-#' resInfluPoi <- InfluPoints(t,wnkl,dist,polYgon,dirct,plotAngles=TRUE)
+#' resInfluPoi <- InfluPoints(t, wnkl, dist, polYgon, dirct, plotAngles = TRUE)
 #' str(resInfluPoi)
 #'
 #' @author Sebastian Gatscha
 InfluPoints       <- function(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE) {
   ## For every turbine in the wind farm, find all other turbines, that stand in front, next
   ## and inside a certain angle of the incoming wind direction and assing to the list
-  lapply(seq_along(t[,1]), function(i) {
-    ## Calculate the angles and distances of pontentially influencing turbines (data.frame)
+  lapply(seq_along(t[, 1]), function(i) {
+    ## Calculate the angles and distances of potentially influencing turbines
     ee11 <- VekWinkelCalc(t = t, o = i, wkl = wnkl, distanz = dist, 
-                          polYgon = polYgon, plotAngles = plotAngles);
+                          polYgon = polYgon, plotAngles = plotAngles)
     ## Add the wind direction to the data.frame
-    ## Assign the iteration as point ID of the current turbine to the data.frame. 
+    ## Assign the iteration as point ID of the current turbine 
     ## Necessary for multiple wake effects
     cbind(ee11, "Windrichtung" = dirct, "Punkt_id" = i)
   })

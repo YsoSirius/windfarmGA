@@ -7,28 +7,24 @@
 VekWinkelCalc(t, o, wkl, distanz, polYgon, plotAngles)
 }
 \arguments{
-\item{t}{A matrix of the current individual with x and y coordinates
-(matrix)}
+\item{t}{A matrix of the current individual with x and y coordinates}
 
-\item{o}{A numeric value indicating the index of the current turbine
-(numeric)}
+\item{o}{A numeric value indicating the index of the current turbine}
 
 \item{wkl}{A numeric value indicating the angle, at which no wake
-influences are considered. Default is 20 degrees. (numeric)}
+influences are considered. Default is 20 degrees.}
 
 \item{distanz}{A numeric value indicating the distance, after which
-the wake effects are considered to be eliminated. Default is 100km.
-(numeric)}
+the wake effects are considered to be eliminated. Default is 100km.}
 
-\item{polYgon}{A shapefile representing the considered area
-(SpatialPolygons)}
+\item{polYgon}{A shapefile representing the considered area}
 
 \item{plotAngles}{A logical variable, which is used to plot the
-distances and angles. Default is FALSE (logical)}
+distances and angles. Default is FALSE}
 }
 \value{
 Returns a matrix with the distances and angles of
-potentially influencing turbines (matrix)
+potentially influencing turbines
 }
 \description{
 Calculate the relevant distances \code{\link{PointToLine2}}

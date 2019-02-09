@@ -11,14 +11,15 @@
 #' @export
 #'
 #' @importFrom raster crs getData crop mask projectRaster reclassify
-#' @importFrom sp spTransform proj4string
+#' @importFrom sp spTransform proj4string Polygon Polygons SpatialPolygons
 #' @importFrom utils read.csv
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics plot.new
 #' @importFrom stats runif
 #' @importFrom utils download.file unzip
 #'
-#' @param Polygon1 The considered area as shapefile
+#' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
+#' or coordinates as matrix/data.frame
 #' @param GridMethod Should the polygon be divided into rectangular or
 #' hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
 #' grid cells are computed when assigning "h" or "hexagon" to this input
@@ -87,10 +88,8 @@
 #' @param plotit If TRUE, will plot the best windfarm of a generation. Default
 #' is FALSE 
 #' 
-#'
 #' @return The result of this run is a matrix of all relevant output
 #' parameters. This output can be used for several plotting functions.
-#' (matrix)
 #'
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
@@ -164,68 +163,60 @@
 #'}
 #' @author Sebastian Gatscha
 genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
-                              RotorHeight,SurfaceRoughness, Proportionality,
+                              RotorHeight, SurfaceRoughness, Proportionality,
                               iteration, mutr, vdirspe, topograp, elitism, nelit,
                               selstate, crossPart1, trimForce, Projection,
                               sourceCCL, sourceCCLRoughness, weibull, weibullsrc,
                               Parallel, numCluster, verbose = FALSE, plotit = FALSE){
-  
-  # Polygon1 = Polygon1;n = 12;vdirspe = data.in;Rotor = 30;RotorHeight = 100; topograp=F;Parallel=F; verbose=F; plotit=T
-  
-  ## set graphics::par ###############
+
+  ## set Graphic Params ###############
   if (plotit) {
     oldpar <- graphics::par(no.readonly = TRUE)
     plot.new()
     graphics::par(ask = FALSE)
   }
-  
+
   ## MISSING ARGUMENTS ###############
-  if (missing(fcrR)){
+  if (missing(fcrR)) {
     fcrR <- 5
   }
-  ## Is Elevation missing? - Default FALSE
-  if (missing(topograp)){
+  if (missing(topograp)) {
     topograp <- FALSE
   }    
-  ## Is GridMethod missing? - Default "r"
-  if (missing(GridMethod)){
+  if (missing(GridMethod)) {
     GridMethod <- "Rectangular"
   }
-  ## Is Parallel missing? - Default FALSE
-  if (missing(Parallel)){
+  if (missing(Parallel)) {
     Parallel <- FALSE
   }
-  ## Is number of Clusters missing? - Default 1
-  if (missing(numCluster)){
+  if (missing(numCluster)) {
     numCluster <- 1
   }
-  ## Is Weibull information missing? - Default FALSE
-  if (missing(weibull)){
+  if (missing(weibull)) {
     weibull <- FALSE
   }
-  if (missing(selstate)){
+  if (missing(selstate)) {
     selstate <- "FIX"
   }
-  selstate <- toupper(selstate)
-  if (missing(crossPart1)){
+  if (missing(crossPart1)) {
     crossPart1 <- "EQU"
   }
-  if (missing(SurfaceRoughness)){
+  if (missing(SurfaceRoughness)) {
     SurfaceRoughness <- 0.3
   }
-  if (missing(Proportionality)){
+  if (missing(Proportionality)) {
     Proportionality <- 1
   }
-  if (missing(mutr)){
+  if (missing(mutr)) {
     mutr <- 0.008
   }
-  if (missing(elitism)){
+  if (missing(elitism)) {
     elitism <- TRUE
     if (missing(nelit)) {
       nelit <- 7
     }
   }
-  if (missing(trimForce)){
+  if (missing(trimForce)) {
     trimForce <- FALSE
   }
   if (missing(referenceHeight)){
@@ -234,30 +225,38 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   if (missing(iteration)){
     iteration <- 20
   }
-  ##  Project the Polygon to LAEA if it is not already.
   if (missing(Projection)) {
     ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
     +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   } else {
     ProjLAEA <- Projection
   }
-  ## Check if Polygon is Spatial / SF - 
-  ## TODO - add as matrix, as coordinates etc.. check if missing?
-  if (class(Polygon1)[1] == "sf") {
-    Polygon1 <- as(Polygon1, "Spatial")
+  if (missing(vdirspe)) {
+    stop("No Winddata is given.")
   }
-  ## TODO - check if winddata 'vdirspe' is given and acceptable?
-  ## TODO - check if 'n', 'Rotor', 'RotorHeight' are given.
-  
+  if (missing(n)) {
+    stop("The varieble 'n' is not defined. Assign the number of turbines to 'n'.")
+  }
+  if (missing(Rotor)) {
+    stop("The varieble 'Rotor' is not defined. Assign the rotor radius to 'Rotor'.")
+  }
+  if (missing(RotorHeight)) {
+    stop("The varieble 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
+  }
+
 
   ## INIT VARIABLES 1 #################
+  selstate <- toupper(selstate)
+  
+  ## Is the Polygon Spatial / SF / coordinates - It will transform to SpatialPolygon
+  Polygon1 <- isSpatial(Polygon1, ProjLAEA)
+
   ## Grid size calculation
   resol2 <- fcrR * Rotor
-  
+
   ## Max Amount of individuals in the Crossover-Method
   CrossUpLimit <- 300
-  
-  
+
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
@@ -269,18 +268,16 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     cl <- parallel::makeCluster(numCluster, type = typeCluster)
     doParallel::registerDoParallel(cl)
   }
-  
-  
+
   ## WEIBULL ###############
   ## Is Weibull activated? If no source is given, take values from package
-  # browser()
   if (weibull){
     if (verbose) {cat("\nWeibull Distribution is used.")}
     if (missing(weibullsrc)){
       if (verbose){cat("\nWeibull Informations from package will be used.\n")}
       path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-      k_weibull = ""
-      a_weibull = ""
+      k_weibull <- ""
+      a_weibull <- ""
       # load(file = paste0(path, "k_weibull.rda"))
       # load(file = paste0(path, "a_weibull.rda"))
       # weibullsrc = list(k_param, a_param)
@@ -309,7 +306,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   } else {
     Erwartungswert <- FALSE
   }
-  
+
   ## CHECK INPUTS ###############
   ## Check if Input Data is correct and prints it out.
   if  (crossPart1!= "EQU" & crossPart1 !="RAN") {
@@ -327,14 +324,15 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      "Reference Height" = referenceHeight, "Rotor Height" = RotorHeight,
                      "Resolution" = resol2, "Parallel Processing" = Parallel, 
                      "Number Clusters" = numCluster, "Active Weibull" = weibull,
-                     "Grid Method" = GridMethod))
-  
+                     "Grid Method" = GridMethod,
+                     "Projection" = ProjLAEA))
+
   inputWind <- list(Windspeed_Data = vdirspe)
   if (verbose) {
     print(inputData)
     print(inputWind)
   }
-  
+
   ## Winddata Formatting #######################
   vdirspe <- as.data.frame(vdirspe)
   if (!all(colnames(vdirspe) %in% c("ws","wd"))) {
@@ -366,7 +364,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         vdirspe$wd) == FALSE,][i, 'wd'],]$probab <- round(temp$probab, 2)[1]
     }
   }
-  vdirspe <- vdirspe[!duplicated(vdirspe$wd) == TRUE,];
+  vdirspe <- vdirspe[!duplicated(vdirspe$wd) == TRUE,]
   vdirspe <- vdirspe[with(vdirspe, order(wd)),]
   if (sum(vdirspe$probab) != 100) {
     vdirspe$probab <- vdirspe$probab * (100 / sum(vdirspe$probab))
@@ -377,27 +375,23 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   vdirspe <- as.matrix(vdirspe)
   winddata = list(vdirspe, probabDir) 
   #######################
-
   ## Project Polygon ###############
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
-  
-  
 
-  
   ## GRIDFILTER ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid1 <- GridFilter(shape = Polygon1,resol = resol2, prop = Proportionality)
+    Grid1 <- GridFilter(shape = Polygon1, resol = resol2, prop = Proportionality)
     Grid <- Grid1[[1]]
     dry.grid.filtered <- Grid1[[2]]
   } else {
     # Calculate a Grid with hexagonal grid cells
-    Grid1 <- HexaTex(Polygon1, resol2/2)
+    Grid1 <- HexaTex(Polygon1, resol2 / 2)
     Grid <- Grid1[[1]]
     sp::proj4string(Grid1[[2]]) <- sp::proj4string(Polygon1)
     dry.grid.filtered <- Grid1[[2]]
@@ -408,13 +402,13 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   ## INIT VARIABLES 2 ###############
   ## Determine the amount of initial individuals and create initial population.
-  nStart <- (AmountGrids * n)/iteration
+  nStart <- (AmountGrids * n) / iteration
   if (nStart < 100) {nStart <- 100} 
   if (nStart > 300) {nStart <- 300}
   nStart<- ceiling(nStart)
   startsel <- StartGA(Grid, n, nStart)
   ## Initialize all needed variables as list.
-  maxParkwirkungsg <- 0; 
+  maxParkwirkungsg <- 0
   allparkcoeff <- vector("list", iteration)
   bestPaEn <- vector("list", iteration)
   bestPaEf <- vector("list", iteration)
@@ -430,13 +424,13 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## TERRAIN EFFECT MODEL ###############
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
   if (!topograp) {
-    if(verbose){cat("Topography and orography are not taken into account.")}
-    srtm_crop=""
-    cclRaster=""
+    if (verbose) {cat("Topography and orography are not taken into account.")}
+    srtm_crop = ""
+    cclRaster = ""
   } else {
     if (verbose){cat("Topography and orography are taken into account.")}
 
-    if (plotit) {par(mfrow = c(3,1))}
+    if (plotit) {par(mfrow = c(3, 1))}
 
     if (missing(sourceCCL)){
       message("No raster was given. Should it be downloaded?")
@@ -504,7 +498,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
 
   ## GENETIC ALGORITHM #################
-  if (verbose){cat("\nStart Genetic Algorithm ...")}
+  if (verbose) {cat("\nStart Genetic Algorithm ...")}
   rbPal <- grDevices::colorRampPalette(c('red','green'))
   i <- 1
   while (i <= iteration) {
@@ -517,7 +511,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
                      weibull = Erwartungswert, 
                      Parallel = Parallel, numCluster = numCluster)
-
     } else {
       getRectV <- getRects(mut1, Grid)
       fit <- fitness(selection = getRectV, referenceHeight = referenceHeight,
@@ -527,13 +520,12 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      weibull = Erwartungswert, 
                      Parallel = Parallel, numCluster = numCluster)
     }
-    
-    
+
     ## Fitness Result Processing ###############
     allparks <- do.call("rbind", fit)
     # allparksUni <- split(allparks, duplicated(allparks$Run))$'FALSE'
     allparksUni <- subset.matrix(allparks, subset = !duplicated(allparks[,'Run']))
-    
+
     allCoords[[i]] <- allparks
     maxparkfitness <-  round(max(allparksUni[,'Parkfitness']), 4)
     meanparkfitness <- round(mean(allparksUni[,'Parkfitness']), 3)
@@ -547,9 +539,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     allparkcoeff[[i]] <- cbind(maxparkfitness, meanparkfitness, minparkfitness, 
                                MaxEnergyRedu, MeanEnergyRedu, MinEnergyRedu, 
                                maxParkwirkungsg, meanParkwirkungsg, minParkwirkungsg)
-    
+
     clouddata[[i]] <- subset.matrix(allparksUni, select = c("EfficAllDir", "EnergyOverall", "Parkfitness"))
-    
+
     if (verbose) {cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"))}
 
     ## Highest Energy Output
@@ -560,7 +552,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     xd1 <- max(allparks[,'EfficAllDir'])
     ind1 <- allparks[,'EfficAllDir'] == xd1     
     bestPaEf[[i]] <- allparks[ind1,][1:n,]
-    
+
     # Print out most relevant information on Generation i
     afvs <- allparks[allparks[,'EnergyOverall'] == max(allparks[,'EnergyOverall']),]
     if (verbose) {
@@ -568,7 +560,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       cat(paste("How many parks are in local Optimum: ",  (length(afvs[,1])/n) ), "\n")
     }
     nindivfit <- length(fit)
-
 
     if (plotit) {
       lebre <- length(unique(bestPaEn[[i]][,'AbschGesamt']))
@@ -601,8 +592,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       stop("Index of Grid not correct. Bigger than maximum Grid? Fix BUG")
     }
     ##################
-    
-    
+
+
     if (plotit){
       graphics::par(mfrow = c(1,2))
       plot(Polygon1, main = paste(i, "Round \n Best Energy Output: ", x,"W/h \n Efficiency: ", y , "%"),
@@ -641,7 +632,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       }
     }
     if (i == 1) {
-      
       ## TODO I do have such a matrix already with that info or??
       t0 <- subset.matrix(allparks, !duplicated(allparks[,'Run']))
       t0 <- t0[,'Parkfitness']  
@@ -657,7 +647,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         teil <- 1.35
       }
       u <- 1.1
-      beorwor[[i]] <- cbind(0,0)
+      beorwor[[i]] <- cbind(0, 0)
     }
     if (i >= 2 && i <= iteration) {
       t0 <- subset.matrix(allparks, !duplicated(allparks[,'Run']))
@@ -710,7 +700,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       meanunt <- meant0 - meant1
       beorwor[[i]] <- cbind(maxunt, meanunt)
     }
-    
 
     ## SELECTION #################
     if (selstate == "FIX"){
@@ -725,7 +714,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ## print the amount of Individuals selected. Check if the amount of Turbines is as requested.
     selec6best <- selection1(fit = fit, Grid = Grid, teil = teil, elitism = elitism, nelit = nelit, 
                              selstate = selstate, verbose = verbose)
-    
+
     selec6best_bin <- selec6best[[1]]
     if (verbose) {
       cat(paste("Selection  -  Amount of Individuals: ", length(selec6best_bin[1,-1]),"\n"))
@@ -794,7 +783,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     parallel::stopCluster(cl)
     try(rm(cl), silent = TRUE)
   }
-  
+
   ## Reduce list, if algorithm didnt run all iterations. (Found Optimum) #################
   mut_rate <- mut_rate[lapply(mut_rate, length) != 0]
   beorwor <- beorwor[lapply(beorwor, length) != 0]
@@ -811,7 +800,50 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Bind the results together and Output them. #################
   alldata <- cbind(allparkcoeff, bestPaEn, bestPaEf, fuzzycontr, fitnessValues, nindiv,
                    clouddata, selcross, beorwor, inputData, inputWind, mut_rate, allCoords)
-  
-  if (plotit){graphics::par(oldpar)}
+
+  if (plotit) {graphics::par(oldpar)}
   return(alldata)
+}
+
+#' @title Transform to SpatialPolygons
+#' @name isSpatial
+#' @description Helper Function, which transforms SimpleFeatures or
+#' coordinates as matrix/data.frame/data.table into a SpatialPolygon
+#'
+#' @export
+#'
+#' @importFrom sp proj4string Polygon Polygons SpatialPolygons
+#' @importFrom methods as
+#'
+#' @param Polygon1 An area as SpatialPolygon, SimpleFeature Polygon
+#' or coordinates as matrix/data.frame
+#' @param Projection Which Projection should be assigned to matrix / 
+#' data.frame coordinates
+#'
+#' @return A SpatialPolygons object
+#'
+#' @examples \donttest{
+#'}
+#' @author Sebastian Gatscha
+isSpatial <- function(Polygon1, Projection) {
+  if (class(Polygon1)[1] == "sf") {
+    Polygon1 <- as(Polygon1, "Spatial")
+    ## This is needed for GridFilter. Attribute names must have same length
+    Polygon1$names <- "layer"
+  } else if (class(Polygon1)[1] == "data.frame" | class(Polygon1)[1] == "matrix") {
+    ## If coordinate names are found, take those columns, otherwise take the first 2
+    if (sum(toupper(colnames(Polygon1)) %in% c("LONG", "LON", "LAT", "LONGITUDE", "LATITUDE")) == 2) {
+      colind <- which(toupper(colnames(Polygon1)) %in% c("LONG", "LON", "LAT", "LONGITUDE", "LATITUDE"))
+      pltm <- Polygon1[,colind]
+    } else {
+      pltm <- Polygon1[, 1:2]
+    }
+    pltm <- Polygon(pltm)
+    pltm <- Polygons(list(pltm), 1)
+    Polygon1 <- SpatialPolygons(list(pltm))
+    if (!missing(Projection)) {
+      proj4string(Polygon1) <- Projection
+    }
+  }
+  return(Polygon1)
 }

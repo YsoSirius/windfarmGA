@@ -8,20 +8,18 @@ StartGA(Grid, n, nStart = 100)
 }
 \arguments{
 \item{Grid}{The data.frame output of "GridFilter" function,
-with X and Y coordinates and Grid cell IDs. (data.frame)}
+with X and Y coordinates and Grid cell IDs.}
 
-\item{n}{A numeric value indicating the amount of required turbines.
-(numeric)}
+\item{n}{A numeric value indicating the amount of required turbines.}
 
 \item{nStart}{A numeric indicating the amount of randomly generated
-initial individuals. Default is 100. (numeric)}
+initial individuals. Default is 100.}
 }
 \value{
 Returns a list of \code{nStart} initial individuals,
 each consisting of \code{n} turbines.
 Resulting list has the x and y coordinates, the grid cell ID
 and a binary variable of 1, indicating a turbine in the grid cell.
-(list)
 }
 \description{
 Create \code{nStart} random sub-selections from the

@@ -8,28 +8,25 @@ plotWindrose(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
   spdmax = 30, palette = "YlGnBu", debug = 0, spdseq = NULL)
 }
 \arguments{
-\item{data}{A data.frame containing the wind information (data.frame)}
+\item{data}{A data.frame containing the wind information}
 
-\item{spd}{The column of the wind speeds in the "data"-data.frame
-(numeric)}
+\item{spd}{The column of the wind speeds in the "data"-data.frame}
 
-\item{dir}{The column of the wind directions in the "data"-data.frame
-(numeric)}
+\item{dir}{The column of the wind directions in the "data"-data.frame}
 
-\item{spdres}{The increment of the wind speed legend. Default is 2
-(numeric)}
+\item{spdres}{The increment of the wind speed legend. Default is 2}
 
-\item{dirres}{The size of the wind sectors. Default is 10  (numeric)}
+\item{dirres}{The size of the wind sectors. Default is 10}
 
-\item{spdmin}{Minimum wind speed. Default is 1 (numeric)}
+\item{spdmin}{Minimum wind speed. Default is 1}
 
-\item{spdmax}{Maximal wind speed. Default is 30 (numeric)}
+\item{spdmax}{Maximal wind speed. Default is 30}
 
-\item{palette}{A color palette used for drawing the wind rose (character)}
+\item{palette}{A color palette used for drawing the wind rose}
 
-\item{debug}{For running a debug. Default is 0 (numeric)}
+\item{debug}{For running a debug. Default is 0}
 
-\item{spdseq}{A wind speed sequence, that is used for plotting (numeric)}
+\item{spdseq}{A wind speed sequence, that is used for plotting}
 }
 \description{
 Plot a wind rose of the wind data frame.

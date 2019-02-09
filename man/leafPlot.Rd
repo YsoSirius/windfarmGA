@@ -8,21 +8,21 @@ leafPlot(result, Polygon1, which = 1, orderitems = TRUE, GridPol)
 }
 \arguments{
 \item{result}{The resulting matrix of the function 'genAlgo' or
-'windfarmGA'. (matrix)}
+'windfarmGA'.}
 
-\item{Polygon1}{The Polygon for the wind farm area. (SpatialPolygons)}
+\item{Polygon1}{The Polygon for the wind farm area.}
 
 \item{which}{A numeric value, indicating which best indidvual to plot.
-The default is 1 (the best resulting wind farm). (numeric)}
+The default is 1 (the best resulting wind farm).}
 
 \item{orderitems}{A logical value indicating whether the results should
-be ordered by energy values (TRUE) or chronologically (FALSE). (logical)}
+be ordered by energy values (TRUE) or chronologically (FALSE).}
 
 \item{GridPol}{The output grid polygon of the \code{\link{GridFilter}} or
-\code{\link{HexaTex}} functions. (SpatialPolygons)}
+\code{\link{HexaTex}} functions.}
 }
 \value{
-Returns a leaflet map. (leaflet)
+Returns a leaflet map.
 }
 \description{
 Plot a resulting wind farm on a leaflet map.

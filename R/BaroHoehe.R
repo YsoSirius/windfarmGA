@@ -21,33 +21,33 @@
 #' plot.ts(BaroHoehe(data))
 #'
 #' @author Sebastian Gatscha
-BaroHoehe         <- function(data, height, po=101325, ro=1.225) {
-  if ((ncol(data))==1) {
+BaroHoehe         <- function(data, height, po = 101325, ro = 1.225) {
+  if ( (ncol(data)) == 1) {
     ## Luftdruck auf Hoehe h berechnen
     ph <- po * exp(-data * 0.0001252);  names(ph) <- "ph"
     ## Luftdichte berechnen
     rh <- ro * exp(-data * 0.0001252); names(rh) <- "rh"
     ## Temperatur auf Hoehe berechnen
-    Th <- 288.15 - ((6.5 * data)/1000); names(Th) <- "tempK"
+    Th <- 288.15 - ( (6.5 * data) / 1000); names(Th) <- "tempK"
   } else {
     ## Luftdruck auf Hoehe h berechnen
-    ph <- po * exp(-data[,height] * 0.0001252);
+    ph <- po * exp(-data[, height] * 0.0001252);
     ## Luftdichte berechnen
-    rh <- ro * exp(-data[,height] * 0.0001252);
+    rh <- ro * exp(-data[, height] * 0.0001252);
     ## Temperatur auf Hoehe berechnen
-    Th <- 288.15 - ((6.5 * data[,height])/1000);
+    Th <- 288.15 - ( (6.5 * data[, height]) / 1000);
   }
 
-  if (class(data)!= "data.frame") {
+  if (class(data) != "data.frame") {
     data <- as.data.frame(data)
   }
   colnames(data) <- "Height"
 
-  Celsius <- Th - 273.15; names(Celsius) <- "tempC"
+  celsius <- Th - 273.15; names(celsius) <- "tempC"
   data$ph <- ph
   data$rh <- rh
   data$tempK <- Th
-  data$tempC <- Celsius
+  data$tempC <- celsius
   colnames(data) <- names(data)
 
   return(data)

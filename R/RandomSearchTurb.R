@@ -33,7 +33,7 @@
 #' @author Sebastian Gatscha
 RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod){
   # resultrect = result
-  # result = resultrect
+  # result = resultSP
   
   ## TODO - Performance and structure ---
   
@@ -54,7 +54,7 @@ RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod){
   GridMethod <- toupper(GridMethod)
   if (Plot) {
     opar <- par(no.readonly = T)
-    par(mfrow=c(1,1))
+    par(mfrow = c(1, 1))
   }
 
   ## Remove duplicated "Runs", assign do resldat and sort by Energy

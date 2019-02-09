@@ -7,14 +7,14 @@
 mutation(a, p, seed)
 }
 \arguments{
-\item{a}{The binary matrix of all individuals. (matrix)}
+\item{a}{The binary matrix of all individuals.}
 
-\item{p}{The mutation rate. (numeric)}
+\item{p}{The mutation rate.}
 
 \item{seed}{Set a seed for comparability. Default is NULL}
 }
 \value{
-Returns a binary matrix with mutated genes. (matrix)
+Returns a binary matrix with mutated genes.
 }
 \description{
 Mutate the genes of every chromosome or individual with

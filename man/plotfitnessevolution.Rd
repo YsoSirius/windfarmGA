@@ -8,11 +8,10 @@ plotfitnessevolution(result, spar = 0.1)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}}
-or \code{\link{genAlgo}} which has stored all relevant information.
-(matrix)}
+or \code{\link{genAlgo}} which has stored all relevant information.}
 
 \item{spar}{A numeric value determining how exact a spline should
-be drawn. Default is 0.1 (numeric)}
+be drawn. Default is 0.1}
 }
 \description{
 Plot the evolution of fitness values and the change in the

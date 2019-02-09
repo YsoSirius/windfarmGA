@@ -55,68 +55,64 @@
 #' }
 #' @author Sebastian Gatscha
 
-PlotWindfarmGA <- function(result,GridMethod="r",Polygon1,
-                           whichPl="all",best=1,plotEn=1,Projection,
-                           weibullsrc){
-  parpplotWindGa <- par(ask=F, no.readonly = T)
+PlotWindfarmGA <- function(result, GridMethod = "r", Polygon1,
+                           whichPl = "all", best = 1, plotEn = 1, 
+                           Projection, weibullsrc){
+
+  parpplotWindGa <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parpplotWindGa))
 
-  if (any(whichPl=="all")) {
-    # whichPl <- c(1,2,3,4,5,6,7,8)
-    whichPl <- c(1,2,3,4,5,6)
+  ## DATA #################
+  if (any(whichPl == "all")) {
+    whichPl <- 1:6
   }
-
-  resol <- as.numeric(result[,'inputData'][[1]][,1]['Resolution'][[1]])
-  prop <- as.numeric(result[,'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
-
-
+  resol <- as.numeric(result[, 'inputData'][[1]][,1]['Resolution'][[1]])
+  prop <- as.numeric(result[, 'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
+  Polygon1 <- isSpatial(Polygon1, Projection)
   GridMethod <- toupper(GridMethod)
-  if (GridMethod=="HEXAGONAL" | GridMethod=="H" | GridMethod=="HEXA") {
-    Grid <- HexaTex(Polygon1 = Polygon1, size = resol/2, plotTrue = F)
+  if (GridMethod == "HEXAGONAL" | GridMethod == "H" | GridMethod == "HEXA") {
+    Grid <- HexaTex(Polygon1 = Polygon1, size = resol / 2, plotTrue = FALSE)
   } else {
-    Grid <- GridFilter(shape = Polygon1,resol = resol, prop = prop ,plotGrid=F)
+    Grid <- GridFilter(shape = Polygon1,resol = resol, prop = prop, plotGrid = FALSE)
   }
-
-
-  if (nrow(result)<4) {
-    if (any(c(2,3,4,5) %in% whichPl)) {
+  if (nrow(result) < 4) {
+    if (any(2:5 %in% whichPl)) {
       cat("Cannot plot option 2,3,4,5. \n Only option 1,6,7,8 are available.")
-      # whichPl <- c(1,6,7,8)
-      whichPl <- c(1,6)
+      whichPl <- c(1, 6)
     }
   }
+  #################
 
-  
-  ############### PLOTTING OUTPUTS
-  if (any(whichPl==1)){
+  ## PLOTTING OUTPUTS ####################
+  if (any(whichPl == 1)){
     print("plotResult: Plot the 'best' Individuals of the GA:")
-    plotResult(result = result, Polygon1 = Polygon1, best = best ,plotEn = plotEn,
-               topographie = FALSE,Grid= Grid[[2]], weibullsrc = weibullsrc);
-    readline(prompt="Press [enter] to continue")
+    plotResult(result = result, Polygon1 = Polygon1, best = best , plotEn = plotEn,
+               topographie = FALSE, Grid= Grid[[2]], weibullsrc = weibullsrc)
+    readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl==2)){
+  if (any(whichPl == 2)){
     print("plotEvolution: Plot the Evolution of the Efficiency and Energy Values:")
-    plotEvolution(result,T,0.3)
+    plotEvolution(result, TRUE, 0.3)
   }
-  if (any(whichPl==3)){
+  if (any(whichPl == 3)){
     print("plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
-    plotparkfitness(result,0.1)
-    readline(prompt="Press [enter] to continue")
+    plotparkfitness(result, 0.1)
+    readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl==4)){
+  if (any(whichPl == 4)){
     print("plotfitnessevolution: Plot the Changes in Fitness Values:")
     plotfitnessevolution(result)
-    readline(prompt="Press [enter] to continue")
+    readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl==5)){
+  if (any(whichPl == 5)){
     print("plotCloud: Plot all individual Values of the whole Evolution:")
-    plotCloud(result,TRUE)
-    readline(prompt="Press [enter] to continue")
+    plotCloud(result, TRUE)
+    readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl==6)){
+  if (any(whichPl == 6)){
     print("heatmapGA: Plot a Heatmap of all Grid Cells:")
-    plot(heatmapGA(result = result, si=5))
-    readline(prompt="Press [enter] to continue")
+    plot(heatmapGA(result = result, si = 5))
+    # readline(prompt = "Press [enter] to continue")
   }
   # if (any(whichPl==7)){
   #   print("GooglePlot: Plot the 'best' Individual with static Google Map:")

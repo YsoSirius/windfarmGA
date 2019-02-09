@@ -7,13 +7,13 @@
 euc.dist(x, y)
 }
 \arguments{
-\item{x}{A numeric value with X and Y coordinates for Point 1 (numeric)}
+\item{x}{A numeric value with X and Y coordinates for Point 1}
 
-\item{y}{A numeric value with X and Y coordinates for Point 2 (numeric)}
+\item{y}{A numeric value with X and Y coordinates for Point 2}
 }
 \value{
 Returns a numeric value indicating the euclidian distance between
-two Points. (numeric)
+two Points.
 }
 \description{
 Calculates the euclidian distance between two points.

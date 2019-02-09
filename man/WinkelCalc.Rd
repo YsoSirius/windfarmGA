@@ -8,17 +8,17 @@ WinkelCalc(Aa, Bb, Cc)
 }
 \arguments{
 \item{Aa}{A numeric value with the x and y coordinates of a
-potentially influencing turbine (numeric)}
+potentially influencing turbine}
 
 \item{Bb}{A numeric value with the x and y coordinates of the
-current turbine (numeric)}
+current turbine}
 
 \item{Cc}{A numeric value with the x and y coordinates of the
-imaginary right angle (numeric)}
+imaginary right angle}
 }
 \value{
 Returns a matrix with the alpha, betha and gamma angles of the
-imaginary right triangle (matrix)
+imaginary right triangle
 }
 \description{
 Calculates all three angles for an imaginary right triangle

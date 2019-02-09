@@ -7,23 +7,23 @@
 GridFilter(shape, resol = 500, prop = 1, plotGrid = FALSE)
 }
 \arguments{
-\item{shape}{Shape file of the considered area (SpatialPolygons)}
+\item{shape}{Shape file of the considered area}
 
 \item{resol}{The resolution of the grid in meter. Default is 500.
 (numeric)}
 
 \item{prop}{A factor used for grid calculation.
 Determines the percentage a grid has to overlay the considered area
-to be represented as grid cell. Default is 1. (numeric)}
+to be represented as grid cell. Default is 1.}
 
 \item{plotGrid}{Logical value indicating whether resulting grid
-should be plotted or not. Default is FALSE. (logical)}
+should be plotted or not. Default is FALSE.}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have
 the grid cell IDS, and the X and Y coordinates of the centers
 of each grid cell. List element 2 is the grid as SpatialPolygons,
-which is used for plotting purposes. (list)
+which is used for plotting purposes.
 }
 \description{
 Create a grid from a given polygon and with a certain

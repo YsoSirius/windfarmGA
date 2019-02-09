@@ -16,4 +16,5 @@
 #' euc.dist(x, y)
 #'
 #' @author Sebastian Gatscha
-euc.dist <- function(x,y){sqrt(sum((x - y) ^ 2))}
+euc.dist <- function(x, y) {
+}

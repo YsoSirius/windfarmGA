@@ -8,21 +8,19 @@ RandomSearchTurb(result, Polygon1, n, Plot, GridMethod)
 }
 \arguments{
 \item{result}{The resulting matrix of the function 'genAlgo' or
-'windfarmGA'. (matrix)}
+'windfarmGA'.}
 
-\item{Polygon1}{The Polygon for the wind farm area. (SpatialPolygons)}
+\item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{n}{The number of random searches to be perfomed. Default is 20.
-(numeric)}
+\item{n}{The number of random searches to be perfomed. Default is 20.}
 
-\item{Plot}{Should the random serach be plotted? Default is TRUE
-(boolean)}
+\item{Plot}{Should the random serach be plotted? Default is TRUE}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or
 hexagonal grid cells? The default is rectangular grid cells and hexagonal
 grid cells are computed when assigning "h" or "hexagon" to this input
 variable. The randomly generated points may also be paced outside of 
-their hexagon. (character)}
+their hexagon.}
 }
 \value{
 Returns a list.

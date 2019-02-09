@@ -8,7 +8,7 @@ plotbeorwor(result)
 }
 \arguments{
 \item{result}{The output matrix of \code{\link{windfarmGA}} or
-\code{\link{genAlgo}}, which has stored all relevant information. (matrix)}
+\code{\link{genAlgo}}, which has stored all relevant information.}
 }
 \description{
 Plot the changes in mean and max fitness values to previous

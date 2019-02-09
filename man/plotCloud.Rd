@@ -8,13 +8,13 @@ plotCloud(result, pl = FALSE)
 }
 \arguments{
 \item{result}{The output matrix of \code{\link{windfarmGA}} or
-\code{\link{genAlgo}}, which has stored all relevant information. (matrix)}
+\code{\link{genAlgo}}, which has stored all relevant information.}
 
-\item{pl}{Should the results be plotted? Default is FALSE (logical)}
+\item{pl}{Should the results be plotted? Default is FALSE}
 }
 \value{
 Returns a data.frame with the values for fitness, efficiency
-and energy for all evaluated individuals. (data.frame)
+and energy for all evaluated individuals.
 }
 \description{
 Plot all the fitness, efficiency and energy outputs of

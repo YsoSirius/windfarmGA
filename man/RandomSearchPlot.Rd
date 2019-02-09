@@ -8,14 +8,14 @@ RandomSearchPlot(resultRS, result, Polygon1, best)
 }
 \arguments{
 \item{resultRS}{The result of the random functions \code{\link{RandomSearchTurb}}
-and \code{\link{RandomSearch}}. (matrix)}
+and \code{\link{RandomSearch}}.}
 
 \item{result}{The result of the function \code{\link{genAlgo}} or
-\code{\link{windfarmGA}}. (matrix)}
+\code{\link{windfarmGA}}.}
 
-\item{Polygon1}{The Polygon for the wind farm area. (SpatialPolygons)}
+\item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{best}{How many best candidates to plot. (numeric)}
+\item{best}{How many best candidates to plot.}
 }
 \description{
 Plotting method for the functions \code{\link{RandomSearchTurb}}

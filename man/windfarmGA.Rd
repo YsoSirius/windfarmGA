@@ -5,100 +5,96 @@
 \title{Controls the given inputs and initiates an Optimization run}
 \arguments{
 \item{dns}{The source to the desired Shapefile. Only required if the
-shapefile is not already loaded. (character)}
+shapefile is not already loaded.}
 
 \item{layer}{The name of the desired Shapefile. Only required if the
-shapefile is not already loaded. (character)}
+shapefile is not already loaded.}
 
-\item{Polygon1}{The considered area as shapefile. Only required if the
-shapefile is already loaded.(SpatialPolygons)}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or
 hexagonal grid cells? The default is rectangular grid cells and hexagonal
 grid cells are computed when assigning "h" or "hexagon" to this input
-variable. (character)}
+variable.}
 
 \item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
-required, when the terrain effect model is activated. (character)}
+required, when the terrain effect model is activated.}
 
 \item{sourceCCLRoughness}{The source to the adapted
 Corine Land Cover legend as .csv file. Only required when terrain
 effect model is activated. As default a .csv file within this
 package (\file{~/extdata}) is taken that was already adapted
 manually. To use your own .csv legend this variable has to be assigned.
-See Details. (character)}
+See Details.}
 
 \item{vdirspe}{A data.frame containing the incoming wind speeds,
 wind directions and probabilities. To plot a wind rose from this
-data frame, see: \code{\link{plotWindrose}}. (data.frame)}
+data frame, see: \code{\link{plotWindrose}}.}
 
-\item{n}{A numeric value indicating the required amount of turbines.
-(numeric)}
+\item{n}{A numeric value indicating the required amount of turbines.}
 
-\item{Rotor}{A numeric value that gives the rotor radius in meter.
-(numeric)}
+\item{Rotor}{A numeric value that gives the rotor radius in meter.}
 
 \item{fcrR}{A numeric value that is used for grid spacing. The resolution
 of a grid cell will be the rotor radius \code{Rotor} multiplied with this
-value. (numeric)}
+value.}
 
 \item{iteration}{A numeric value indicating the desired amount of
-iterations of the algorithm. (numeric)}
+iterations of the algorithm.}
 
 \item{topograp}{Logical value that indicates whether the terrain effect
-model is activated (TRUE) or deactivated (FALSE). (logical)}
+model is activated (TRUE) or deactivated (FALSE).}
 
 \item{referenceHeight}{The height at which the incoming
-wind speeds were measured. Default is 50m (numeric)}
+wind speeds were measured. Default is 50m}
 
 \item{RotorHeight}{The desired height of the turbine.
-Default is 100m (numeric)}
+Default is 100m}
 
 \item{SurfaceRoughness}{A surface roughness length of the
 considered area in m. If the terrain effect model is activated, a
 surface roughness will be calculated for every grid cell with the
-elevation and land cover information. (numeric)}
+elevation and land cover information.}
 
 \item{Proportionality}{A numeric factor used for grid calculation.
 Determines the percentage a grid has to overlay.
-See also: \code{\link{GridFilter}} (numeric)}
+See also: \code{\link{GridFilter}}}
 
-\item{mutr}{A numeric mutation rate with low default value of 0.008
-(numeric)}
+\item{mutr}{A numeric mutation rate with low default value of 0.008}
 
 \item{elitism}{Boolean value which indicates whether elitism should
-be included or not. (logical)}
+be included or not.}
 
 \item{nelit}{If \code{elitism} is TRUE, then this input variable
-determines the amount of individuals in the elite group. (numeric)}
+determines the amount of individuals in the elite group.}
 
 \item{selstate}{Determines which selection method is used,
 "FIX" selects a constant percentage and "VAR" selects a variable percentage,
-depending on the development of the fitness values. (character)}
+depending on the development of the fitness values.}
 
 \item{crossPart1}{Determines which crossover method is used,
 "EQU" divides the genetic code at equal intervals and
-"RAN" divides the genetic code at random locations. (character)}
+"RAN" divides the genetic code at random locations.}
 
 \item{trimForce}{If activated (\code{trimForce}==TRUE),
 the algorithm will take a probabilistic approach to trim the wind farms
 to the desired amount of turbines. If \code{trimForce}==FALSE the
-adjustment will be random. Default is TRUE. (logical)}
+adjustment will be random. Default is TRUE.}
 
 \item{Projection}{A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection. (character)}
+of the default Lambert Azimuthal Equal Area Projection.}
 
 \item{weibull}{A logical value that specifies whether to take Weibull
 parameters into account. If weibull==TRUE, the wind speed values from the
 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
-wind speed for every wind turbine according to the Weibull parameters.
-(logical)}
+wind speed for every wind turbine according to the Weibull parameters.}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE. (list)}
+only cover Austria. This variable is only used if weibull==TRUE.}
 
 \item{Parallel}{Boolean value, indicating whether parallel processing
 should be used. The parallel and doParallel packages are used for parallel 

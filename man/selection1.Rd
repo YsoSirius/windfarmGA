@@ -7,30 +7,28 @@
 selection1(fit, Grid, teil, elitism, nelit, selstate, verbose)
 }
 \arguments{
-\item{fit}{A list of all fitness-evaluated individuals (list)}
+\item{fit}{A list of all fitness-evaluated individuals}
 
-\item{Grid}{Is the indexed grid output from \code{\link{GridFilter}}
-(data.frame)}
+\item{Grid}{Is the indexed grid output from \code{\link{GridFilter}}}
 
-\item{teil}{A numeric value that determines the selection percentage
-(numeric)}
+\item{teil}{A numeric value that determines the selection percentage}
 
 \item{elitism}{Boolean value which indicates whether elitism should be
-included or not. (logical)}
+included or not.}
 
 \item{nelit}{If \code{elitism} is TRUE, then this input variable
-determines the amount of individuals in the elite group. (numeric)}
+determines the amount of individuals in the elite group.}
 
 \item{selstate}{Determines which selection method is used, "FIX" selects
 a constant percentage and "VAR" selects a variable percentage, depending
-on the development of the fitness values. (character)}
+on the development of the fitness values.}
 
 \item{verbose}{If TRUE, will print out further information.}
 }
 \value{
 Returns list with 2 elements. Element 1 is the binary encoded
 matrix which shows all selected individuals. Element 2 represent the mean
-fitness values of each parental team. (list)
+fitness values of each parental team.
 }
 \description{
 Select a certain amount of individuals and recombine them

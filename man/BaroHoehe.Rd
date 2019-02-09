@@ -8,19 +8,17 @@ to the Barometric Height Formula}
 BaroHoehe(data, height, po = 101325, ro = 1.225)
 }
 \arguments{
-\item{data}{A data.frame containing the height values (data.frame)}
+\item{data}{A data.frame containing the height values}
 
-\item{height}{Column name of the height values (character)}
+\item{height}{Column name of the height values}
 
-\item{po}{Standardized air pressure at sea level (101325 Pa) (numeric)}
+\item{po}{Standardized air pressure at sea level (101325 Pa)}
 
-\item{ro}{Standardized air density at sea level (1,225 kg per m3)
-(numeric)}
+\item{ro}{Standardized air density at sea level (1,225 kg per m3)}
 }
 \value{
 Returns a data.frame with height values and corresponding
 air pressures, air densities and temperatures in Kelvin and Celsius.
-(data.frame)
 }
 \description{
 Calculates air density, temperature and air pressure

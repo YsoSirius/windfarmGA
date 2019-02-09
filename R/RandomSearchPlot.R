@@ -57,6 +57,8 @@ RandomSearchPlot <- function(resultRS, result, Polygon1, best) {
   
   resolR <- as.numeric(result[,"inputData"][[1]][,1]['Resolution'])
   PropG <- as.numeric(result[,"inputData"][[1]][,1]['Percentage of Polygon'])
+  
+  Polygon1 <- isSpatial(Polygon1)
   Grid <- GridFilter(Polygon1, resol = resolR, prop = PropG)[[2]];
   rbPal1 <- grDevices::colorRampPalette(c('green','red'))
   col2res <- "lightblue"

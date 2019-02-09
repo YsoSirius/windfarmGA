@@ -7,17 +7,17 @@
 PointToLine2(x, y, plotAngles)
 }
 \arguments{
-\item{x}{Coordinates of the current turbine. (numeric)}
+\item{x}{Coordinates of the current turbine.}
 
 \item{y}{Coordinates of the turbine that could potentially influence
-the current turbine. (numeric)}
+the current turbine.}
 
 \item{plotAngles}{A logical variable, which is used to plot the distances
-and angles. Default is FALSE. (logical)}
+and angles. Default is FALSE.}
 }
 \value{
 Returns a matrix with the resulting distances and the coordinates
-of 3 points. (matrix)
+of 3 points.
 }
 \description{
 Takes two input coordinates from the current turbine and

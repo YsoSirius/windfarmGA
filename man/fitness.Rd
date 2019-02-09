@@ -10,21 +10,21 @@ fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
 }
 \arguments{
 \item{selection}{A list containing all individuals of the current
-population. (list)}
+population.}
 
 \item{referenceHeight}{The height at which the incoming wind speeds were
-measured. (numeric)}
+measured.}
 
-\item{RotorHeight}{The desired height of the turbine. (numeric)}
+\item{RotorHeight}{The desired height of the turbine.}
 
 \item{SurfaceRoughness}{A surface roughness length of the considered area
-in m. (numeric)}
+in m.}
 
-\item{Polygon}{The considered area as shapefile. (SpatialPolygons)}
+\item{Polygon}{The considered area as shapefile.}
 
-\item{resol1}{The resolution of the grid in meter. (numeric)}
+\item{resol1}{The resolution of the grid in meter.}
 
-\item{rot}{The desired rotor radius in meter. (numeric)}
+\item{rot}{The desired rotor radius in meter.}
 
 \item{dirspeed}{The wind data as list.}
 
@@ -32,11 +32,11 @@ in m. (numeric)}
 and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
 
 \item{topograp}{Logical value that indicates whether the terrain effect
-model is activated (TRUE) or deactivated (FALSE). (logical)}
+model is activated (TRUE) or deactivated (FALSE).}
 
 \item{cclRaster}{A Corine Land Cover raster, that has to be adapted
 previously by hand with the surface roughness lenght for every land cover
-type. Is only used, when the terrain effect model is activated. (raster)}
+type. Is only used, when the terrain effect model is activated.}
 
 \item{weibull}{A raster representing the estimated wind speeds}
 
@@ -51,7 +51,6 @@ of clusters to be used.}
 Returns a list with every individual, consisting of X & Y
 coordinates, rotor radii, the runs and the selected grid cell IDs, and
 the resulting energy outputs, efficiency rates and fitness values.
-(list)
 }
 \description{
 The fitness values of the individuals in the

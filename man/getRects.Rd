@@ -7,13 +7,13 @@
 getRects(trimtonOut, Grid)
 }
 \arguments{
-\item{trimtonOut}{Input matrix with binary values. (matrix)}
+\item{trimtonOut}{Input matrix with binary values.}
 
-\item{Grid}{Grid of the considered area (data.frame)}
+\item{Grid}{Grid of the considered area}
 }
 \value{
 Returns a list of all individuals with X and Y coordinates
-and the grid cell ID. (list)
+and the grid cell ID.
 }
 \description{
 Get the grid IDs from the trimmed binary matrix, where the

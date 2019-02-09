@@ -7,15 +7,15 @@
 HexaTex(Polygon1, size, plotTrue = FALSE)
 }
 \arguments{
-\item{Polygon1}{The SpatialPolygons object (SpatialPolygons)}
+\item{Polygon1}{The SpatialPolygons object}
 
-\item{size}{The side length of an hexagon (numeric)}
+\item{size}{The side length of an hexagon}
 
-\item{plotTrue}{Should the object be plotted (logical)}
+\item{plotTrue}{Should the object be plotted}
 }
 \value{
 Returns a list with an indexed data frame of the point coordinates
-and a SpatialPolygons object of the hexagons (list)
+and a SpatialPolygons object of the hexagons
 }
 \description{
 The function takes a Polygon and a sizing argument and

@@ -87,7 +87,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   }
   if (missing(cclRaster)){
     cclRaster <- NULL
-  }  
+  }
   if (missing(Parallel)){
     Parallel <- FALSE
   }
@@ -95,8 +95,8 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     weibull <- FALSE
   }
   #############
-  
-  probabDir <- dirspeed[[2]]
+
+  probability_direction <- dirspeed[[2]]
   dirspeed <- dirspeed[[1]]
 
   ## Layout Saving 1   ###################
@@ -115,122 +115,133 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   #     alr_known = globalparks[gP_ind]
   #     selection = selection[-alr_known_ind]
   #     cat("\n")
-  #     cat("Some Layouts are already known. Get values from cached results instead of recalculating")
+      # cat("Some Layouts are already known. Get values from cached results
+      #     instead of recalculating")
   #     # browser()
   #   }
   # }
   ###################
-  
-  known = TRUE
+
+  known <- TRUE
   if (known) {
     # Calculate EnergyOutput for every config i and for every angle j - in Parallel
     if (Parallel == TRUE) {
       e <- foreach::foreach(k = 1:length(selection)) %dopar% {
-        windfarmGA::calculateEn(sel = selection[[k]], referenceHeight = referenceHeight, 
-                                RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness, 
-                                wnkl = 20, distanz = 100000, 
+        windfarmGA::calculateEn(sel = selection[[k]], referenceHeight = referenceHeight,
+                                RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
+                                wnkl = 20, distanz = 100000,
                                 polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
-                                srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster, 
+                                srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
                                 weibull = weibull)
       }
     }
-    
+
     euniqu <- vector("list", length(selection))
     for (i in 1:length(selection)){
       if (!Parallel) {
         # Calculate EnergyOutput for every config i and for every angle j - not Parallel
-        e <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, 
-                              RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness, 
+        e <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight,
+                              RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
                               wnkl = 20, distanz = 100000,
                               polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
-                              srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster, 
+                              srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
                               weibull = weibull)
-        
-        ee  <- lapply(e, function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
-        
+
+        ee  <- lapply(e, function(x) {
+          subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))
+        })
+
       } else {
         ## Get a list from unique Grid_ID elements for every park configuration respective 
         ## to every winddirection considered. Since caluclateEn was run over all selections already
         ## we just need to process the result stored in the list e. 
-        ee  <- lapply(e[[i]], function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
+        ee  <- lapply(e[[i]], function(x) {
+          subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))
+        })
       }
-  
+
       ## Select only relevant information from list
       ee  <- lapply(ee, function(x){
         subset.matrix(x, select = c('Bx','By','Windrichtung','RotorR','TotAbschProz','V_New',
                                     'Rect_ID','Energy_Output_Red', 'Energy_Output_Voll',
                                     'Parkwirkungsgrad'))})
-      
+
       ## get Energy Output and Efficiency rate for every wind direction
       enOut <- lapply(ee, function(x){
-        subset.matrix(x, 
+        subset.matrix(x,
                       subset = c(TRUE, rep(FALSE, length(ee[[1]][,1]) - 1)),
-                      select = c('Windrichtung','Energy_Output_Red','Parkwirkungsgrad'))})
-      
-      
+                      select = c('Windrichtung','Energy_Output_Red','Parkwirkungsgrad'))
+      })
+
+
       ## TODO - Make this lot easier, vectorize it all
       #######################
       enOut <- do.call("rbind", enOut)
-      
+
       # Add the Probability of every direction
-      # Calculate the relative Energy outputs respective to the probability of the wind direction
-      # browser()
-      enOut <- cbind(enOut, 'probabDir' = probabDir)
-      enOut <- cbind(enOut, 'Eneralldire' = enOut[,'Energy_Output_Red'] * (enOut[,'probabDir'] / 100))
-      
+      # Calculate the relative Energy outputs respective to the 
+      # probability of the wind direction
+      enOut <- cbind(enOut, 'probability_direction' = probability_direction)
+      enOut <- cbind(enOut, 'Eneralldire' = enOut[,'Energy_Output_Red'] * 
+                       (enOut[,'probability_direction'] / 100))
+
       # Calculate the sum of the relative Energy outputs
       enOut <- cbind(enOut, 'EnergyOverall' = sum(enOut[,'Eneralldire']))
-      
-      # Calculate the sum of the relative Efficiency rates respective to the probability of the 
-      # wind direction
-      enOut <- cbind(enOut, 'Efficalldire' = sum(enOut[,'Parkwirkungsgrad'] * (enOut[,'probabDir'] / 100)))
-  
+
+      # Calculate the sum of the relative Efficiency rates respective to 
+      # the probability of the wind direction
+      enOut <- cbind(enOut, 'Efficalldire' = sum(enOut[,'Parkwirkungsgrad'] * 
+                                                   (enOut[,'probability_direction'] / 100)))
+
       # Get the total Wake Effect of every Turbine for all Wind directions
-      AbschGesamt <- lapply(ee, function(x){ x[,'TotAbschProz']})
+      AbschGesamt <- lapply(ee, function(x){ 
+        x[,'TotAbschProz']
+      })
       AbschGesamt <- do.call("cbind", AbschGesamt)
       AbschGesamt <- rowSums(AbschGesamt)
 
       # Get the original X / Y - Coordinates of the selected individual
       xundyOrig <- selection[[i]][,2:3]
-      
+
       # Add the Efficieny and the Energy Output of all wind directions and add the total 
       # Wake Effect of every Point Location
       # Include the Run of the genertion to the data frame
-      xundyOrig <- cbind(xundyOrig, 
+      xundyOrig <- cbind(xundyOrig,
                          'EfficAllDir' = enOut[1, 'Efficalldire'],
                          'EnergyOverall' = enOut[1, 'EnergyOverall'],
                          'AbschGesamt' = AbschGesamt,
                          'Run' = i)
       #######################
-  
-      
-      ## Get the Rotor Radius and the Rect_IDs of the park configuration
-      dt <- subset.matrix(ee[[1]] , select = c('RotorR','Rect_ID'))
 
+
+      ## Get the Rotor Radius and the Rect_IDs of the park configuration
+      dt <- subset.matrix(ee[[1]] , select = c('RotorR', 'Rect_ID'))
       ## Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
       dt <- cbind(xundyOrig, dt)
-      
+
       ## Add this information to the the i-th element of the list
       euniqu[[i]] <- dt
     }
-  
+
     ## Split one from every run and select only Energy information
     maxparkeff <- do.call(rbind, lapply(euniqu, function(x) {
       # subset.matrix(x[1,], select = 'EnergyOverall')
       x[1, 'EnergyOverall']
-      }))
-    
+    }))
+
     ## TODO - Get a better Fitness Function!!!!!
     ## Save as Fitness (Its just a copy of overall Energy Output right now).
     colnames(maxparkeff) <- 'Parkfitness'
-    
+
     ## Assign every park constellation the Parkfitness Value
     euniqu <- lapply(1:length(euniqu), function(i) {
       cbind(euniqu[[i]], 'Parkfitness' = maxparkeff[i,])
     })
   }
 
-  names(euniqu) <- unlist(lapply(euniqu, function(i) {paste0(i[,'Rect_ID'], collapse = ",")}))
+  names(euniqu) <- unlist(lapply(euniqu, function(i) {
+    paste0(i[,'Rect_ID'], collapse = ",")
+  }))
   ## Layout Saving 2   ###################
   # if (exists("globalparks")) {
   #   if (any(selconfig %in% names(globalparks)) | any(duplicated(selconfig))) {
@@ -245,6 +256,6 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   #   globalparks <<- euniqu
   # }
   ###################
-  
+
   return(euniqu)
 }

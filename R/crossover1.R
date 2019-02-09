@@ -47,16 +47,22 @@
 #' crossover1(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 #'
 #' @author Sebastian Gatscha
-crossover1        <- function(se6,u, uplimit,crossPart, verbose, seed) {
-  if (missing(verbose)){verbose = FALSE}
-  if (missing(seed)) {seed = NULL}
-  if (verbose) {cat(paste("crossover point rate: ", u + 1))}
-  
+crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
+  if (missing(verbose)) {
+    verbose <- FALSE
+  }
+  if (missing(seed)) {
+    seed <- NULL
+  }
+  if (verbose) {
+    cat(paste("crossover point rate: ", u + 1))
+  }
+
   se6fit <- se6[[2]][1,-1]
   se6 <- se6[[1]]
   se6 <- se6[,-1]
   parid <- sample(1:length(se6))
-  z <- seq(1, length(parid),2)
+  z <- seq(1, length(parid), 2)
   all <- vector("list", length(z))
 
   #crossPart = "ran"; crosEquEartN = 5
@@ -64,14 +70,13 @@ crossover1        <- function(se6,u, uplimit,crossPart, verbose, seed) {
 
   sene2fit <- vector(mode = "list", length = length(z))
   for (e in 1:length(z)) {
-
     r <- z[[e]]
     # Sene ist der genCode des 1ten Elternteils, Sene1 der des 2ten Elternteils
-    sene <- se6[,parid[r]]
-    sene1 <- se6[,parid[r + 1]]
+    sene <- se6[, parid[r]]
+    sene1 <- se6[, parid[r + 1]]
 
-    senefit <- se6fit[,parid[r]]   
-    sene1fit <- se6fit[,parid[r + 1]]
+    senefit <- se6fit[, parid[r]]   
+    sene1fit <- se6fit[, parid[r + 1]]
     sene2fit[[e]] <- senefit + sene1fit / 2
 
 
@@ -87,14 +92,16 @@ crossover1        <- function(se6,u, uplimit,crossPart, verbose, seed) {
     if (crossPart == "RAN"){
       ## Random Parts
       # Split the genCode in u parts, that are randomly distributed
-      if (!is.null(seed)) {set.seed(as.integer(seed))}
+      if (!is.null(seed)) {
+        set.seed(as.integer(seed))
+      }
       u1 <- sort(sample(2:(length(sene) - 1), u, replace = FALSE))
-      a <- splitAt(sene,u1)
-      b <- splitAt(sene1,u1)
+      a <- splitAt(sene, u1)
+      b <- splitAt(sene1, u1)
     }
 
     x1 <- rbind(a, b)
-    perm <- gtools::permutations(n = 2, r = ncol(x1), v = 1:nrow(x1), repeats.allowed = TRUE);
+    perm <- gtools::permutations(n = 2, r = ncol(x1), v = 1:nrow(x1), repeats.allowed = TRUE)
     # for every possible permutation
     permut <- list()
     for (pp in 1:nrow(perm)){

@@ -9,33 +9,33 @@ PlotWindfarmGA(result, GridMethod = "r", Polygon1, whichPl = "all",
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}} or
-\code{\link{genAlgo}}, which has stored all relevant information. (matrix)}
+\code{\link{genAlgo}}, which has stored all relevant information.}
 
 \item{GridMethod}{Which grid spacing method was used. Default is
 "rectangular". If hexagonal grid cells were used, assign any of the following
-arguments: "h","hexa", "hexagonal". (character)}
+arguments: "h","hexa", "hexagonal".}
 
 \item{Polygon1}{The considered area as shapefile. Only required if the
-shapefile is already loaded.(SpatialPolygons)}
+shapefile is already loaded.}
 
 \item{whichPl}{Which plots should be shown: 1-8 are possible. The default
 is "all" which shows all available plots.}
 
 \item{best}{A numeric value indicating how many of the best individuals
-should be plotted. (numeric)}
+should be plotted.}
 
 \item{plotEn}{A numeric value that indicates if the best energy or
 efficiency output should be plotted. If (plotEn==1) plots the best energy
-solutions and (plotEn==2) plots the best efficiency solutions. (numeric)}
+solutions and (plotEn==2) plots the best efficiency solutions.}
 
 \item{Projection}{A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection. (character)}
+of the default Lambert Azimuthal Equal Area Projection.}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE. (list)}
+only cover Austria. This variable is only used if weibull==TRUE.}
 }
 \description{
 Plot the results of a genetic algorithm run with given inputs.
