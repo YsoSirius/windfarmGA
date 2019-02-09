@@ -176,7 +176,7 @@ result <- genAlgo(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 
              referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
              sourceCCLRoughness = "C:/...Path_to.../clc_legend.csv")
 ```
-
+```
 ## Run an optimization with your own Weibull parameter rasters. The shape and scale 
 ## parameter rasters of the weibull distributions must be added to a list, with the first
 ## list item being the shape parameter (k) and the second list item being the scale
