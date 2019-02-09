@@ -16,16 +16,16 @@
 #' @importFrom magrittr %>%
 #'
 #' @param result The resulting matrix of the function 'genAlgo' or
-#' 'windfarmGA'. (matrix)
-#' @param Polygon1 The Polygon for the wind farm area. (SpatialPolygons)
+#' 'windfarmGA'.
+#' @param Polygon1 The Polygon for the wind farm area.
 #' @param which A numeric value, indicating which best indidvual to plot.
-#' The default is 1 (the best resulting wind farm). (numeric)
+#' The default is 1 (the best resulting wind farm). 
 #' @param orderitems A logical value indicating whether the results should
-#' be ordered by energy values (TRUE) or chronologically (FALSE). (logical)
+#' be ordered by energy values (TRUE) or chronologically (FALSE).
 #' @param GridPol The output grid polygon of the \code{\link{GridFilter}} or
-#' \code{\link{HexaTex}} functions. (SpatialPolygons)
+#' \code{\link{HexaTex}} functions.
 #'
-#' @return Returns a leaflet map. (leaflet)
+#' @return Returns a leaflet map. 
 #'
 #' @examples \donttest{
 #' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))

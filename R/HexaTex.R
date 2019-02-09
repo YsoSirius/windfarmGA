@@ -60,12 +60,12 @@ tess2SPdf <- function(x) {
 #' @importFrom graphics points
 #' @importFrom raster plot area
 #'
-#' @param Polygon1 The SpatialPolygons object (SpatialPolygons)
-#' @param size The side length of an hexagon (numeric)
-#' @param plotTrue Should the object be plotted (logical)
+#' @param Polygon1 The SpatialPolygons object 
+#' @param size The side length of an hexagon 
+#' @param plotTrue Should the object be plotted
 #'
 #' @return Returns a list with an indexed data frame of the point coordinates
-#' and a SpatialPolygons object of the hexagons (list)
+#' and a SpatialPolygons object of the hexagons 
 #'
 #' @examples
 #' library(spatstat)

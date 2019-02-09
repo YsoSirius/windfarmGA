@@ -10,14 +10,14 @@
 #' by the algorithm itself. See also \code{\link{PointToLine2}}.
 #' @export
 #' @param Aa A numeric value with the x and y coordinates of a
-#' potentially influencing turbine (numeric)
+#' potentially influencing turbine
 #' @param Bb A numeric value with the x and y coordinates of the
-#' current turbine (numeric)
+#' current turbine
 #' @param Cc A numeric value with the x and y coordinates of the
-#' imaginary right angle (numeric)
+#' imaginary right angle 
 #'
 #' @return Returns a matrix with the alpha, betha and gamma angles of the
-#' imaginary right triangle (matrix)
+#' imaginary right triangle 
 #' @examples
 #' Aa = as.numeric(cbind(1,1))
 #' Bb = as.numeric(cbind(10,3))

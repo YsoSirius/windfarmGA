@@ -19,22 +19,21 @@
 #' (data.frame)
 #' @param referenceHeight The height at which the incoming wind speeds
 #' were measured (numeric)
-#' @param RotorHeight The desired height of the turbines (numeric)
+#' @param RotorHeight The desired height of the turbines
 #' @param SurfaceRoughness A surface roughness length of the
 #' considered area in m. If the terrain effect model is activated, a
 #' surface roughness will be calculated for every grid cell with the
-#' elevation and land cover information (numeric)
+#' elevation and land cover information 
 #' @param wnkl Indicates the angle at which no wake influences are
 #' considered (numeric)
 #' @param distanz Indicates the distance after which the wake effects are
-#' considered to be eliminated (numeric)
-#' @param polygon1 The considered area as shapefile (SpatialPolygons)
-#' @param resol The resolution of the grid in meter (numeric)
-#' @param RotorR The desired rotor radius in meter (numeric)
-#' @param dirSpeed The wind speed and direction data.frame (data.frame)
+#' considered to be eliminated
+#' @param polygon1 The considered area as shapefile 
+#' @param resol The resolution of the grid in meter 
+#' @param RotorR The desired rotor radius in meter
+#' @param dirSpeed The wind speed and direction data.frame
 #' @param topograp Logical value that indicates whether the
 #' terrain effect model is activated (TRUE) or deactivated (FALSE)
-#' (logical)
 #' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
 #' and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
 #' @param cclRaster A Corine Land Cover raster that has to be downloaded

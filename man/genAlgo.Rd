@@ -11,7 +11,7 @@ genAlgo(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight, RotorHeight,
   verbose = FALSE, plotit = FALSE)
 }
 \arguments{
-\item{Polygon1}{The considered area as shapefile (SpatialPolygons)}
+\item{Polygon1}{The considered area as shapefile}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or
 hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
@@ -91,7 +91,7 @@ Default is FALSE}
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE. (list)}
+only cover Austria. This variable is only used if weibull==TRUE.}
 
 \item{Parallel}{Boolean value, indicating whether parallel processing
 should be used. The parallel and doParallel packages are used for parallel

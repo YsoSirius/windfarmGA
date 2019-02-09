@@ -6,23 +6,21 @@
 #' @export
 #'
 #' @param t A data.frame of the current individual with X and Y
-#' coordinates (data.frame)
+#' coordinates
 #' @param wnkl A numeric value indicating the angle, at which no wake
-#' influences are considered. Default is 20 degrees. (numeric)
+#' influences are considered. Default is 20 degrees.
 #' @param dist A numeric value indicating the distance, after which
 #' the wake effects are considered to be eliminated.
-#' Default is 100km. (numeric)
+#' Default is 100km. 
 #' @param polYgon A shapefile representing the considered area
-#' (SpatialPolygons)
 #' @param dirct A numeric value indicating the current wind direction
-#' (numeric)
 #' @param plotAngles A logical variable, which is used to plot the
-#' distances and angles. Default is FALSE. (logical)
+#' distances and angles. Default is FALSE. 
 #'
 #' @return Returns a list of all individuals of the current generation
 #' which could potentially influence other turbines. List includes the
 #' relevant coordinates, the distances and angles in between and assigns
-#' the Point ID. (list)
+#' the Point ID.
 #'
 #' @examples
 #' library(sp)

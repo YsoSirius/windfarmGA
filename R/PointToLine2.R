@@ -16,13 +16,13 @@
 #' @importFrom raster plot
 #' @importFrom graphics text points
 #'
-#' @param x Coordinates of the current turbine. (numeric)
+#' @param x Coordinates of the current turbine.
 #' @param y Coordinates of the turbine that could potentially influence
-#' the current turbine. (numeric)
+#' the current turbine. 
 #' @param plotAngles A logical variable, which is used to plot the distances
-#' and angles. Default is FALSE. (logical)
+#' and angles. Default is FALSE.
 #' @return Returns a matrix with the resulting distances and the coordinates
-#' of 3 points. (matrix)
+#' of 3 points.
 #'
 #' @details Assume two points located at P1=c(x=1,y=1) and P2=c(x=10,y=15)
 #' and wind coming from north. If P1 is the current turbine and P2 the

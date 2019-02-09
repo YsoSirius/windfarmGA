@@ -7,11 +7,11 @@
 #' @importFrom graphics plot lines grid points par
 #'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information. (matrix)
+#' \code{\link{genAlgo}}, which has stored all relevant information. 
 #' @param ask Should R wait for interaction for subsequent plotting.
-#' Default is TRUE (logical)
+#' Default is TRUE
 #' @param spar A numeric value determining how exact a spline should
-#' be drawn. Default is 0.1 (numeric)
+#' be drawn. Default is 0.1 
 #'
 #' @return NULL
 #' @examples \donttest{

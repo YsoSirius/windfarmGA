@@ -6,20 +6,18 @@
 #' @importFrom stats aggregate
 #' @export
 #'
-#' @param mut A binary matrix with the mutated individuals (matrix)
+#' @param mut A binary matrix with the mutated individuals 
 #' @param nturb A numeric value indicating the amount of required turbines
-#' (numeric)
 #' @param allparks A data.frame consisting of all individuals of the
-#' current generation (data.frame)
+#' current generation
 #' @param nGrids A numeric value indicating the total amount of grid cells
-#' (numeric)
 #' @param trimForce A boolean value which determines which adjustment
 #' method should be used. TRUE uses a probabilistic approach and
-#' FALSE uses a random approach (logical)
+#' FALSE uses a random approach 
 #' @param seed Set a seed for comparability. Default is NULL
 #' 
 #' @return Returns a binary matrix with the correct amount of turbines
-#' per individual (matrix)
+#' per individual 
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)

@@ -7,16 +7,13 @@
 #'
 #' @export
 #'
-#'
-#' @param data A data.frame containing the height values (data.frame)
-#' @param height Column name of the height values (character)
-#' @param po Standardized air pressure at sea level (101325 Pa) (numeric)
+#' @param data A data.frame containing the height values
+#' @param height Column name of the height values 
+#' @param po Standardized air pressure at sea level (101325 Pa)
 #' @param ro Standardized air density at sea level (1,225 kg per m3)
-#' (numeric)
 #'
 #' @return Returns a data.frame with height values and corresponding
 #' air pressures, air densities and temperatures in Kelvin and Celsius.
-#' (data.frame)
 #'
 #' @examples
 #' data <- matrix(seq(0,5000,500));

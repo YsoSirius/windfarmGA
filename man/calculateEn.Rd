@@ -14,33 +14,32 @@ calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl, distanz,
 \item{referenceHeight}{The height at which the incoming wind speeds
 were measured (numeric)}
 
-\item{RotorHeight}{The desired height of the turbines (numeric)}
+\item{RotorHeight}{The desired height of the turbines}
 
 \item{SurfaceRoughness}{A surface roughness length of the
 considered area in m. If the terrain effect model is activated, a
 surface roughness will be calculated for every grid cell with the
-elevation and land cover information (numeric)}
+elevation and land cover information}
 
 \item{wnkl}{Indicates the angle at which no wake influences are
 considered (numeric)}
 
 \item{distanz}{Indicates the distance after which the wake effects are
-considered to be eliminated (numeric)}
+considered to be eliminated}
 
-\item{polygon1}{The considered area as shapefile (SpatialPolygons)}
+\item{polygon1}{The considered area as shapefile}
 
-\item{resol}{The resolution of the grid in meter (numeric)}
+\item{resol}{The resolution of the grid in meter}
 
-\item{RotorR}{The desired rotor radius in meter (numeric)}
+\item{RotorR}{The desired rotor radius in meter}
 
-\item{dirSpeed}{The wind speed and direction data.frame (data.frame)}
+\item{dirSpeed}{The wind speed and direction data.frame}
 
 \item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
 and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
 
 \item{topograp}{Logical value that indicates whether the
-terrain effect model is activated (TRUE) or deactivated (FALSE)
-(logical)}
+terrain effect model is activated (TRUE) or deactivated (FALSE)}
 
 \item{cclRaster}{A Corine Land Cover raster that has to be downloaded
 previously. See also the details at \code{\link{windfarmGA}}

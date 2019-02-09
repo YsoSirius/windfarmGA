@@ -8,19 +8,16 @@
 #' @importFrom ggplot2 ggplot aes geom_bar scale_x_discrete waiver
 #'  coord_polar scale_fill_manual theme element_blank ylim
 #'
-#' @param data A data.frame containing the wind information (data.frame)
+#' @param data A data.frame containing the wind information 
 #' @param spd The column of the wind speeds in the "data"-data.frame
-#' (numeric)
 #' @param dir The column of the wind directions in the "data"-data.frame
-#' (numeric)
 #' @param spdres The increment of the wind speed legend. Default is 2
-#' (numeric)
-#' @param dirres The size of the wind sectors. Default is 10  (numeric)
-#' @param spdmin Minimum wind speed. Default is 1 (numeric)
-#' @param spdmax Maximal wind speed. Default is 30 (numeric)
-#' @param palette A color palette used for drawing the wind rose (character)
-#' @param debug For running a debug. Default is 0 (numeric)
-#' @param spdseq A wind speed sequence, that is used for plotting (numeric)
+#' @param dirres The size of the wind sectors. Default is 10  
+#' @param spdmin Minimum wind speed. Default is 1 
+#' @param spdmax Maximal wind speed. Default is 30 
+#' @param palette A color palette used for drawing the wind rose
+#' @param debug For running a debug. Default is 0 
+#' @param spdseq A wind speed sequence, that is used for plotting 
 #'
 #' @return NULL
 #'

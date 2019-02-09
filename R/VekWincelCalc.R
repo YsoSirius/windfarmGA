@@ -9,20 +9,16 @@
 #' @importFrom graphics title plot points
 #'
 #' @param t A matrix of the current individual with x and y coordinates
-#' (matrix)
 #' @param o A numeric value indicating the index of the current turbine
-#' (numeric)
 #' @param wkl A numeric value indicating the angle, at which no wake
-#' influences are considered. Default is 20 degrees. (numeric)
+#' influences are considered. Default is 20 degrees.
 #' @param distanz A numeric value indicating the distance, after which
 #' the wake effects are considered to be eliminated. Default is 100km.
-#' (numeric)
 #' @param polYgon A shapefile representing the considered area
-#' (SpatialPolygons)
 #' @param plotAngles A logical variable, which is used to plot the
-#' distances and angles. Default is FALSE (logical)
+#' distances and angles. Default is FALSE 
 #' @return Returns a matrix with the distances and angles of
-#' potentially influencing turbines (matrix)
+#' potentially influencing turbines
 #' @examples
 #' library(sp)
 #' library(raster)

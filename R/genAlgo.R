@@ -18,7 +18,7 @@
 #' @importFrom stats runif
 #' @importFrom utils download.file unzip
 #'
-#' @param Polygon1 The considered area as shapefile (SpatialPolygons)
+#' @param Polygon1 The considered area as shapefile
 #' @param GridMethod Should the polygon be divided into rectangular or
 #' hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
 #' grid cells are computed when assigning "h" or "hexagon" to this input
@@ -76,7 +76,7 @@
 #' item must be the shape parameter raster k and the second item must be the
 #' scale parameter raster a of the Weibull distribution. If no list is given,
 #' then rasters included in the package are used instead, which currently
-#' only cover Austria. This variable is only used if weibull==TRUE. (list)
+#' only cover Austria. This variable is only used if weibull==TRUE.
 #' @param Parallel Boolean value, indicating whether parallel processing
 #' should be used. The parallel and doParallel packages are used for parallel
 #' processing. Default is FALSE

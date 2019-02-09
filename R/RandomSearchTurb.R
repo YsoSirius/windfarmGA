@@ -11,17 +11,15 @@
 #' 
 #'
 #' @param result The resulting matrix of the function 'genAlgo' or
-#' 'windfarmGA'. (matrix)
-#' @param Polygon1 The Polygon for the wind farm area. (SpatialPolygons)
+#' 'windfarmGA'.
+#' @param Polygon1 The Polygon for the wind farm area. 
 #' @param n The number of random searches to be perfomed. Default is 20.
-#' (numeric)
 #' @param Plot Should the random serach be plotted? Default is TRUE
-#' (boolean)
 #' @param GridMethod Should the polygon be divided into rectangular or
 #' hexagonal grid cells? The default is rectangular grid cells and hexagonal
 #' grid cells are computed when assigning "h" or "hexagon" to this input
 #' variable. The randomly generated points may also be paced outside of 
-#' their hexagon. (character)
+#' their hexagon. 
 #'
 #' @return Returns a list.
 #'

@@ -14,11 +14,11 @@
 #'
 #'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information (matrix)
+#' \code{\link{genAlgo}}, which has stored all relevant information
 #' @param si A numeric value that is used for the sizing of the
-#' resolution of the heatmap. Default is 2 (numeric)
+#' resolution of the heatmap. Default is 2 
 #' @param idistw The inverse distance weighting power. Default is the
-#' rotor radius from the 'result' values (numeric)
+#' rotor radius from the 'result' values 
 #'
 #' @return NULL
 #' @examples \donttest{

@@ -6,11 +6,11 @@
 #'
 #' @export
 #'
-#' @param trimtonOut Input matrix with binary values. (matrix)
-#' @param Grid Grid of the considered area (data.frame)
+#' @param trimtonOut Input matrix with binary values. 
+#' @param Grid Grid of the considered area
 #'
 #' @return Returns a list of all individuals with X and Y coordinates
-#' and the grid cell ID. (list)
+#' and the grid cell ID.
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)

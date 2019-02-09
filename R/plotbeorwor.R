@@ -8,7 +8,7 @@
 #' @importFrom graphics plot par abline title
 #'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information. (matrix)
+#' \code{\link{genAlgo}}, which has stored all relevant information.
 #'
 #' @return NULL
 #' @examples \donttest{

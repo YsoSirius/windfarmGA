@@ -8,11 +8,11 @@
 #' @importFrom raster plot 
 #'
 #' @param resultRS The result of the random functions \code{\link{RandomSearchTurb}}
-#' and \code{\link{RandomSearch}}. (matrix)
+#' and \code{\link{RandomSearch}}.
 #' @param result The result of the function \code{\link{genAlgo}} or
-#' \code{\link{windfarmGA}}. (matrix)
-#' @param Polygon1 The Polygon for the wind farm area. (SpatialPolygons)
-#' @param best How many best candidates to plot. (numeric)
+#' \code{\link{windfarmGA}}.
+#' @param Polygon1 The Polygon for the wind farm area.
+#' @param best How many best candidates to plot.
 #' 
 #' 
 #' @return NULL

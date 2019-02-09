@@ -7,11 +7,11 @@
 #'
 #' @importFrom stats runif
 #'
-#' @param a The binary matrix of all individuals. (matrix)
-#' @param p The mutation rate. (numeric)
+#' @param a The binary matrix of all individuals.
+#' @param p The mutation rate. 
 #' @param seed Set a seed for comparability. Default is NULL
 #' 
-#' @return Returns a binary matrix with mutated genes. (matrix)
+#' @return Returns a binary matrix with mutated genes. 
 #'
 #' @examples
 #' ## Create 4 random individuals with binary values

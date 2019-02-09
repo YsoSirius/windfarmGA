@@ -9,11 +9,11 @@
 #' @importFrom graphics lines par plot points
 #'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information. (matrix)
-#' @param pl Should the results be plotted? Default is FALSE (logical)
+#' \code{\link{genAlgo}}, which has stored all relevant information.
+#' @param pl Should the results be plotted? Default is FALSE 
 #'
 #' @return Returns a data.frame with the values for fitness, efficiency
-#' and energy for all evaluated individuals. (data.frame)
+#' and energy for all evaluated individuals. 
 #'
 #' @examples \donttest{
 #' ## Add some data examples from the package
