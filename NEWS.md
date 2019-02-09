@@ -3,6 +3,9 @@
 Switch to matrices instead of data.frames and a lot of restructuring and 
 performance optimization of the whole algorithm.
 
+The function **`genAlgo`**/**`windfarmGA`** and the plotting functions now accept SimpleFeature Polygons or coordinates in table format
+with long, lat or x, y column names.
+
 - **`viewshed`** A new set of functions, to analyze the visual impact of a wind farm.    
 The new functions for visual assessment are **`cansee`**, **`viewTo`**, **`rasterprofile`**, **`viewshed`**, **`plot_viewshed`**, **`interpol_view`**, **`getISO3`**, **`getDEM`**
 - **`plot_farm_3d`** Experimental rayshader function
