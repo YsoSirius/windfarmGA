@@ -213,7 +213,9 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
                      legend.lab="Mean Wind Speed")
 
       }
-      plot(Grid,add=T)
+      if (!missing(Grid)) {
+        plot(Grid, add = TRUE)
+      }
 
       graphics::mtext("Total Wake Effect in %", side = 2, cex=0.8)
       graphics::points(EnergyBest$X,EnergyBest$Y,cex=2,pch=20,col=Col)
@@ -239,14 +241,14 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
         
         if (1==1){
           Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84
-                                                                      +towgs84=0,0,0"));
+                                                                      +towgs84=0,0,0"))
           extpol <- round(Polygon1@bbox,0)[,2]
-          srtm <- raster::getData('SRTM', lon=extpol[1], lat=extpol[2]);
-          srtm_crop <- raster::crop(srtm, Polygon1);
+          srtm <- raster::getData('SRTM', lon=extpol[1], lat=extpol[2])
+          srtm_crop <- raster::crop(srtm, Polygon1)
           srtm_crop <- raster::mask(srtm_crop, Polygon1)
           
-          Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA));
-          srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA));
+          Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA))
+          srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
           
           
           # Include Corine Land Cover Raster to get an estimation of Surface Roughness
@@ -262,18 +264,19 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
             # readline(prompt = "\nPress <ENTER> if you want to continue")
             sourceCCLRoughness <- sourceCCLRoughness
           }
-          rauhigkeitz <- utils::read.csv(sourceCCLRoughness,header = T,sep = ";");
+          rauhigkeitz <- utils::read.csv(sourceCCLRoughness, header = TRUE, sep = ";")
           
           cclRaster <- raster::reclassify(cclPoly1,
                                           matrix(c(rauhigkeitz$GRID_CODE,rauhigkeitz$Rauhigkeit_z),ncol = 2))
           
           
           # Calculates Wind multiplier. Hills will get higher values, valleys will get lower values.
-          orogr1 <- raster::calc(srtm_crop, function(x) {x/(raster::cellStats(srtm_crop,mean,na.rm=T))})
-          orogrnum <- raster::extract(x = orogr1, y = as.matrix((sel1)), buffer=resol*2, small=T,fun= mean,na.rm=T);
+          orogr1 <- raster::calc(srtm_crop, function(x) {x/(raster::cellStats(srtm_crop, mean, na.rm = T))})
+          orogrnum <- raster::extract(x = orogr1, y = as.matrix((sel1)), #buffer = resol * 2, 
+                                      small = TRUE, fun = mean, na.rm = TRUE)
           windpo <- windpo * orogrnum
           ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-          heightWind <- raster::extract(x= srtm_crop, y = as.matrix((sel1)), small=T,fun= max,na.rm=T);
+          heightWind <- raster::extract(x= srtm_crop, y = as.matrix((sel1)), small = TRUE, fun = max, na.rm = T)
           
           par(mfrow=c(1,2))
           plot(srtm_crop, main="SRTM Elevation Data");graphics::points(sel1$X,sel1$Y,pch=20);
@@ -383,7 +386,9 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
                      legend.lab="Mean Wind Speed")
 
       }
-      plot(Grid,add=T)
+      if (!missing(Grid)) {
+        plot(Grid, add = TRUE)
+      }
 
       graphics::mtext("Total Wake Effect in %", side = 2, cex=0.8)
       graphics::points(EfficiencyBest$X,EfficiencyBest$Y,col=Col1,cex=2,pch=20)

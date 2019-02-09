@@ -122,6 +122,7 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose) {
   
   ## Check if some fitness values are NA. STOP
   if (any(is.na(new1[,'Parkfitness']))) {
+    # browser()
     cat("some Fitness-values are NA.")
     stop("Please report a github issue")
   }

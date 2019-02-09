@@ -25,8 +25,8 @@ point_2_line_CPP <- function(x, y) {
     .Call(`_windfarmGA_point_2_line_CPP`, x, y)
 }
 
-wakeradius_CPP <- function(lenght_b, topograp, RotD, k) {
-    .Call(`_windfarmGA_wakeradius_CPP`, lenght_b, topograp, RotD, k)
+wakeradius_CPP <- function(lenght_b, RotD, k) {
+    .Call(`_windfarmGA_wakeradius_CPP`, lenght_b, RotD, k)
 }
 
 eucdist_CPP <- function(x1, x2, y1, y2) {

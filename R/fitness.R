@@ -23,23 +23,14 @@
 #' @param resol1 The resolution of the grid in meter. (numeric)
 #' @param rot The desired rotor radius in meter. (numeric)
 #' @param dirspeed The wind data as list.
-#' @param srtm_crop Logical value that indicates whether the terrain effect
-#' model is activated (TRUE) or deactivated (FALSE). (logical)
+#' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
+#' and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
 #' @param topograp Logical value that indicates whether the terrain effect
 #' model is activated (TRUE) or deactivated (FALSE). (logical)
 #' @param cclRaster A Corine Land Cover raster, that has to be adapted
 #' previously by hand with the surface roughness lenght for every land cover
 #' type. Is only used, when the terrain effect model is activated. (raster)
-#' @param weibull A logical value that specifies whether to take Weibull
-#' parameters into account. If weibull==TRUE, the wind speed values from the
-#' 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
-#' wind speed for every wind turbine according to the Weibull parameters.
-#' (logical)
-#' @param weibullsrc A list of Weibull parameter rasters, where the first list
-#' item must be the shape parameter raster k and the second item must be the
-#' scale parameter raster a of the Weibull distribution. If no list is given,
-#' then rasters included in the package are used instead, which currently
-#' only cover Austria. This variable is only used if weibull==TRUE. (list)
+#' @param weibull A raster representing the estimated wind speeds
 #' @param Parallel Boolean value, indicating whether parallel processing
 #' should be used. The parallel and doParallel packages are used for parallel 
 #' processing.
@@ -89,19 +80,9 @@
 fitness           <- function(selection, referenceHeight, RotorHeight,
                               SurfaceRoughness, Polygon, resol1,
                               rot, dirspeed, srtm_crop, topograp, cclRaster,
-                              weibull, weibullsrc, Parallel, numCluster) {
-  
-  # selection = startsel; referenceHeight = referenceHeight;
-  # RotorHeight = RotorHeight; SurfaceRoughness = SurfaceRoughness;
-  # Polygon = Polygon1; resol1 = resol2;rot=Rotor; dirspeed = vdirspe;
-  # srtm_crop = srtm_crop; topograp = topograp; cclRaster = cclRaster;
-  # weibull = weibull; weibullsrc = weibullsrc;
-  # Parallel = Parallel; numCluster = numCluster; verbose = verbose
-   
-  
-  # verbose = FALSE
+                              weibull, Parallel, numCluster) {
 
-  ## TODO Missing Arguments?  Better approach.. #############
+  ## Missing Arguments? #############
   if (missing(srtm_crop)){
     srtm_crop <- NULL
   }
@@ -113,16 +94,12 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   }
   if (missing(weibull)){
     weibull <- FALSE
-    weibullsrc <- NULL
   }
   #############
   
-  ## TODO -- test that..?? not correct i guess
   probabDir <- dirspeed[[2]]
   dirspeed <- dirspeed[[1]]
 
-  ###################
-  
   ## Layout Saving 1   ###################
   # selconfig <- sapply(selection, function(i) {paste0(i$ID, collapse = ",")})
   # if (exists("globalparks")) {
@@ -149,69 +126,56 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   if (known) {
     # Calculate EnergyOutput for every config i and for every angle j - in Parallel
     if (Parallel == TRUE) {
-      e <- foreach::foreach(i = 1:length(selection), .combine = 'c') %dopar% {
-        windfarmGA::calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, 
+      e <- foreach::foreach(k = 1:length(selection)) %dopar% {
+        windfarmGA::calculateEn(sel = selection[[k]], referenceHeight = referenceHeight, 
                                 RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness, 
-                                # windraster = windraster, 
-                                wnkl = 20, distanz=100000, 
+                                wnkl = 20, distanz = 100000, 
                                 polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
                                 srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster, 
-                                weibull = weibull, weibullsrc = weibullsrc)
+                                weibull = weibull)
       }
-    } else {
-      e <- vector("list", length(selection));
     }
-    ###################
     
-    euniqu <- vector("list",length(selection)) ;
+    euniqu <- vector("list", length(selection))
     for (i in 1:length(selection)){
       if (!Parallel) {
-        
-        ## TODO
-        ########################################################
-        ########################################################
-        # browser()
-        ## Do i need e? Just euniue is givn back. What about in parallel?
-        ## Mehrere Windrichtungen?
-        ########################################################
-        ########################################################
-        
         # Calculate EnergyOutput for every config i and for every angle j - not Parallel
-        e[[i]] <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, 
+        e <- calculateEn(sel = selection[[i]], referenceHeight = referenceHeight, 
                               RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness, 
-                              # windraster = windraster,
                               wnkl = 20, distanz = 100000,
                               polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
-                              srtm_crop = srtm_crop, topograp = topograp,cclRaster = cclRaster, 
-                              weibull = weibull, weibullsrc = weibullsrc)
-        ee  <- lapply(e[[i]], function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
-
-      } else {
-        ## TODO Test parallel --- 
+                              srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster, 
+                              weibull = weibull)
         
-        # Get a list from unique Grid_ID elements for every park configuration respective 
-        # to every winddirection considered.
-        ee  <- lapply(e[i], function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
+        ee  <- lapply(e, function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
+        
+      } else {
+        ## Get a list from unique Grid_ID elements for every park configuration respective 
+        ## to every winddirection considered. Since caluclateEn was run over all selections already
+        ## we just need to process the result stored in the list e. 
+        ee  <- lapply(e[[i]], function(x){subset.matrix(x, subset = !duplicated(x[,'Punkt_id']))})
       }
   
-      if (TRUE) {
-      # Select only relevant information from list
+      ## Select only relevant information from list
       ee  <- lapply(ee, function(x){
         subset.matrix(x, select = c('Bx','By','Windrichtung','RotorR','TotAbschProz','V_New',
                                     'Rect_ID','Energy_Output_Red', 'Energy_Output_Voll',
                                     'Parkwirkungsgrad'))})
       
-      
-      
-      # get Energy Output and Efficiency rate for every wind direction
+      ## get Energy Output and Efficiency rate for every wind direction
       enOut <- lapply(ee, function(x){
         subset.matrix(x, 
                       subset = c(TRUE, rep(FALSE, length(ee[[1]][,1]) - 1)),
                       select = c('Windrichtung','Energy_Output_Red','Parkwirkungsgrad'))})
+      
+      
+      ## TODO - Make this lot easier, vectorize it all
+      #######################
       enOut <- do.call("rbind", enOut)
       
       # Add the Probability of every direction
       # Calculate the relative Energy outputs respective to the probability of the wind direction
+      # browser()
       enOut <- cbind(enOut, 'probabDir' = probabDir)
       enOut <- cbind(enOut, 'Eneralldire' = enOut[,'Energy_Output_Red'] * (enOut[,'probabDir'] / 100))
       
@@ -238,31 +202,30 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
                          'EnergyOverall' = enOut[1, 'EnergyOverall'],
                          'AbschGesamt' = AbschGesamt,
                          'Run' = i)
-
+      #######################
   
-      # Get the Rotor Radius and the Rect_IDs of the park configuration
-      dt <-  ee[[1]] 
-      dt <- subset.matrix(dt, select = c('RotorR','Rect_ID'))
+      
+      ## Get the Rotor Radius and the Rect_IDs of the park configuration
+      dt <- subset.matrix(ee[[1]] , select = c('RotorR','Rect_ID'))
 
-      # Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
+      ## Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
       dt <- cbind(xundyOrig, dt)
       
-      # Add this information to the the i-th element of the list
+      ## Add this information to the the i-th element of the list
       euniqu[[i]] <- dt
-      }
     }
   
-    # Split one from every run and select only Energy information
+    ## Split one from every run and select only Energy information
     maxparkeff <- do.call(rbind, lapply(euniqu, function(x) {
       # subset.matrix(x[1,], select = 'EnergyOverall')
       x[1, 'EnergyOverall']
       }))
     
     ## TODO - Get a better Fitness Function!!!!!
-    # Save as Fitness (Its just a copy of overall Energy Output right now).
+    ## Save as Fitness (Its just a copy of overall Energy Output right now).
     colnames(maxparkeff) <- 'Parkfitness'
     
-    # Assign every park constellation the Parkfitness Value
+    ## Assign every park constellation the Parkfitness Value
     euniqu <- lapply(1:length(euniqu), function(i) {
       cbind(euniqu[[i]], 'Parkfitness' = maxparkeff[i,])
     })

@@ -223,7 +223,8 @@ utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
                          "unit", "Laenge_B","By","Bx",
                          "dry.grid.filtered","spd.binned","Run","EnergyOverall",
                          "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt",
-                         "srtm_crop", "cclRaster", "weibullsrc","globalparks","<<-", "cl"))
+                         "srtm_crop", "cclRaster", "weibullsrc","globalparks","<<-", "cl",
+                         "k"))
 
 
 windfarmGA <- function(dns,layer,Polygon1,GridMethod,Projection,sourceCCL,sourceCCLRoughness,

@@ -5,8 +5,7 @@
 \title{Calculate Energy Outputs of Individuals}
 \usage{
 calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl, distanz,
-  polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp, cclRaster, weibull,
-  weibullsrc)
+  polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp, cclRaster, weibull)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population
@@ -36,8 +35,8 @@ considered to be eliminated (numeric)}
 
 \item{dirSpeed}{The wind speed and direction data.frame (data.frame)}
 
-\item{srtm_crop}{An SRTM raster for the considered area. It is only used
-when the terrain effect model is activated (raster)}
+\item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
+and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
 
 \item{topograp}{Logical value that indicates whether the
 terrain effect model is activated (TRUE) or deactivated (FALSE)
@@ -48,17 +47,7 @@ previously. See also the details at \code{\link{windfarmGA}}
 The raster will only be used when the terrain effect model is activated.
 (raster)}
 
-\item{weibull}{A logical value that specifies whether to take Weibull
-parameters into account. If weibull==TRUE, the wind speed values from the
-'dirSpeed' data frame are ignored. The algorithm will calculate the mean
-wind speed for every wind turbine according to the Weibull parameters.
-Default is FALSE. (logical)}
-
-\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster k and the second item must be the
-scale parameter raster a of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE. (list)}
+\item{weibull}{A raster representing the estimated wind speeds}
 }
 \value{
 Returns a list of an individual of the current generation
@@ -116,8 +105,8 @@ resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
 length(resCalcEn)
 str(resCalcEn)
 resCalcEn <- as.data.frame(resCalcEn)
-plot(Polygon1, main = resCalcEn$Energy_Output_Red[[1]])
-points(x = resCalcEn$Bx, y = resCalcEn$By, pch = 20)
+plot(Polygon1, main = resCalcEn[,'Energy_Output_Red'][[1]])
+points(x = resCalcEn[,'Bx'], y = resCalcEn[,'By'], pch = 20)
 
 
 ## Create a variable and multidirectional wind data.frame and plot the

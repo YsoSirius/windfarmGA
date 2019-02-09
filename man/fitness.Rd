@@ -5,8 +5,8 @@
 \title{Evaluate the Individual Fitness values}
 \usage{
 fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
-  resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull, weibullsrc,
-  Parallel, numCluster)
+  resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull, Parallel,
+  numCluster)
 }
 \arguments{
 \item{selection}{A list containing all individuals of the current
@@ -28,8 +28,8 @@ in m. (numeric)}
 
 \item{dirspeed}{The wind data as list.}
 
-\item{srtm_crop}{Logical value that indicates whether the terrain effect
-model is activated (TRUE) or deactivated (FALSE). (logical)}
+\item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
+and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
 
 \item{topograp}{Logical value that indicates whether the terrain effect
 model is activated (TRUE) or deactivated (FALSE). (logical)}
@@ -38,17 +38,7 @@ model is activated (TRUE) or deactivated (FALSE). (logical)}
 previously by hand with the surface roughness lenght for every land cover
 type. Is only used, when the terrain effect model is activated. (raster)}
 
-\item{weibull}{A logical value that specifies whether to take Weibull
-parameters into account. If weibull==TRUE, the wind speed values from the
-'dirSpeed' data frame are ignored. The algorithm will calculate the mean
-wind speed for every wind turbine according to the Weibull parameters.
-(logical)}
-
-\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster k and the second item must be the
-scale parameter raster a of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE. (list)}
+\item{weibull}{A raster representing the estimated wind speeds}
 
 \item{Parallel}{Boolean value, indicating whether parallel processing
 should be used. The parallel and doParallel packages are used for parallel 

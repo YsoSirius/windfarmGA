@@ -35,22 +35,13 @@
 #' @param topograp Logical value that indicates whether the
 #' terrain effect model is activated (TRUE) or deactivated (FALSE)
 #' (logical)
-#' @param srtm_crop An SRTM raster for the considered area. It is only used
-#' when the terrain effect model is activated (raster)
+#' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
+#' and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
 #' @param cclRaster A Corine Land Cover raster that has to be downloaded
 #' previously. See also the details at \code{\link{windfarmGA}}
 #' The raster will only be used when the terrain effect model is activated.
 #' (raster)
-#' @param weibull A logical value that specifies whether to take Weibull
-#' parameters into account. If weibull==TRUE, the wind speed values from the
-#' 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
-#' wind speed for every wind turbine according to the Weibull parameters.
-#' Default is FALSE. (logical)
-#' @param weibullsrc A list of Weibull parameter rasters, where the first list
-#' item must be the shape parameter raster k and the second item must be the
-#' scale parameter raster a of the Weibull distribution. If no list is given,
-#' then rasters included in the package are used instead, which currently
-#' only cover Austria. This variable is only used if weibull==TRUE. (list)
+#' @param weibull A raster representing the estimated wind speeds
 #'
 #' @return Returns a list of an individual of the current generation
 #' with resulting wake effects, energy outputs, efficiency rates for every
@@ -100,8 +91,8 @@
 #' length(resCalcEn)
 #' str(resCalcEn)
 #' resCalcEn <- as.data.frame(resCalcEn)
-#' plot(Polygon1, main = resCalcEn$Energy_Output_Red[[1]])
-#' points(x = resCalcEn$Bx, y = resCalcEn$By, pch = 20)
+#' plot(Polygon1, main = resCalcEn[,'Energy_Output_Red'][[1]])
+#' points(x = resCalcEn[,'Bx'], y = resCalcEn[,'By'], pch = 20)
 #'
 #'
 #' ## Create a variable and multidirectional wind data.frame and plot the
@@ -122,145 +113,152 @@
 #' }
 #' @author Sebastian Gatscha
 #'
-calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughness,
-                              wnkl,distanz, polygon1, resol, RotorR, dirSpeed,
-                              srtm_crop, topograp, cclRaster, weibull, weibullsrc){
-  
-  # sel=resStartGA[[1]];referenceHeight= 50;
-  # RotorHeight= 50; SurfaceRoughness = 0.14;wnkl = 20;
-  # distanz = 100000; resol = 200;dirSpeed = data.in;
-  # RotorR = 50; polygon1 = Polygon1; topograp = FALSE;
-  # weibull = TRUE
-  
-  
+calculateEn       <- function(sel, referenceHeight, RotorHeight, 
+                              SurfaceRoughness, wnkl, distanz, 
+                              polygon1, resol, RotorR, dirSpeed,
+                              srtm_crop, topograp, cclRaster, weibull){
   
   sel1 <- sel[,2:3];
-  ## Assign constant values
+  ## Assign constant/default values
   cT <- 0.88;   air_rh <- 1.225;   k <- 0.075;  plotit <- FALSE
   
   ## TODO - this can go in some upper level
   pcent = apply(sp::bbox(polygon1), 1, mean)
   
-  ## Create a dummy vector of 1 for the wind speeds.
-  windpo = rep(1, length(sel1[,1]))
+  ## Amount of turbines
+  nTurbines <- length(sel1[,1])
   
-  ## Get the Coordinates of the individual / wind farm. Change dirSpeed to matrix
+  ## Create a dummy vector of 1 for the wind speeds
+  windpo = rep(1, nTurbines)
+  
+  ## TODO - Do I need both sel1 and xyBgl-
+  ## Get the Coordinates of the individual / wind farm.
   xyBgldMa <- sel1
   
   ## Terrain Effect Model:
-  ## TODO - Change all raster::extract to no buffer
+  ## TODO - Change all raster::extract to no buffer, can be matrix and all raster-methods to genAlgo?
+  ## Maybe change to matrix instead of raster? 
   if (topograp) {
     ## Calculates Wind multiplier. Hills will get higher values, valleys will get lower values.
-    orogr1 <- raster::calc(srtm_crop, function(x) {x/(raster::cellStats(srtm_crop, mean, na.rm = TRUE))})
+    orogr1 <- srtm_crop[[2]]
     orogrnum <- raster::extract(x = orogr1, y = xyBgldMa, small = TRUE, fun = mean, na.rm = FALSE);
     orogrnum[is.na(orogrnum)] <- mean(orogrnum, na.rm = TRUE)
     windpo <- windpo * orogrnum
     
-    
     ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-    heightWind <- raster::extract(x = srtm_crop, y = xyBgldMa, small = TRUE, fun = max, na.rm = FALSE);
+    heightWind <- raster::extract(x = srtm_crop[[1]], y = xyBgldMa, small = TRUE, fun = max, na.rm = FALSE);
+    # heightWind <- raster::extract(x = srtm_crop, y = xyBgldMa, small = TRUE, fun = max, na.rm = FALSE);
     heightWind[is.na(heightWind)] <- mean(heightWind, na.rm = TRUE)
     
     ## Plot the elevation and the wind speed multiplier rasters
     if (plotit){
-      par(mfrow=c(2,1))
-      plot(srtm_crop, main="SRTM Elevation Data");points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = round(heightWind,0),cex=0.8);plot(polygon1,add=T)
-      plot(orogr1, main="Wind Speed Multipliers");points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = round(windpo,3),cex=0.8);plot(polygon1,add=T)
+      par(mfrow = c(2,1))
+      # plot(srtm_crop, main = "SRTM Elevation Data"); points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      plot(srtm_crop[[1]], main = "SRTM Elevation Data"); points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'], labs = round(heightWind,0), cex = 0.8)
+      plot(polygon1, add = TRUE)
+      plot(orogr1, main = "Wind Speed Multipliers"); points(sel1[,'X'],sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'], labs = round(windpo,3), cex = 0.8)
+      plot(polygon1, add = TRUE)
     }
     
     ## Get Air Density and Pressure from Height Values from the function "BaroHoehe"
-    HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
-    air_dt <- BaroHoehe(matrix(HeighttoBaro),HeighttoBaro)
-    air_rh <- as.numeric(air_dt$rh);
-    ## Plot he normal and corrected Air Density Values
+    air_dt <- BaroHoehe(matrix(heightWind), heightWind)
+    air_rh <- as.numeric(air_dt[,'rh'])
+    ## Plot the normal and corrected Air Density Values
     if (plotit){
-      par(mfrow=c(1,1))
-      plot(srtm_crop, main="Normal Air Density",col=topo.colors(10));points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = rep(1.225,nrow(sel1)),cex=0.8);plot(polygon1,add=T)
-      raster::plot(srtm_crop, main="Corrected Air Density",col=topo.colors(10));points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = round(air_dt$rh,2),cex=0.8);plot(polygon1,add=T)
+      par(mfrow = c(1,1))
+      # plot(srtm_crop, main = "Normal Air Density", col = topo.colors(10))
+      plot(srtm_crop[[1]], main = "Normal Air Density", col = topo.colors(10))
+      points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'],labs = rep(1.225,nrow(sel1)), cex = 0.8)
+      plot(polygon1,add = TRUE)
+      raster::plot(srtm_crop, main = "Corrected Air Density", col = topo.colors(10))
+      # raster::plot(srtm_crop[[1]], main = "Corrected Air Density", col = topo.colors(10))
+      points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'], labs = round(air_dt[,'rh'],2), cex = 0.8)
+      plot(polygon1, add = TRUE)
     }
     
     ## Corine Land Cover Surface Roughness values and Elevation Roughness
-    SurfaceRoughness0 <- raster::extract(x = cclRaster, y = xyBgldMa, small = TRUE, fun = mean, na.rm = FALSE);
+    SurfaceRoughness0 <- raster::extract(x = cclRaster, y = xyBgldMa, small = TRUE, fun = mean, na.rm = FALSE)
     SurfaceRoughness0[is.na(SurfaceRoughness0)] <- mean(SurfaceRoughness0, na.rm = TRUE)
     
-    elrouind <- raster::terrain(srtm_crop,"roughness")
-    SurfaceRoughness1 <- raster::extract(x = elrouind, y = xyBgldMa, small = T, fun =  mean, na.rm = FALSE);
+    ## terrain raster
+    elrouind <- srtm_crop[[3]]
+    
+    SurfaceRoughness1 <- raster::extract(x = elrouind, y = xyBgldMa, small = T, fun =  mean, na.rm = FALSE)
     SurfaceRoughness1[is.na(SurfaceRoughness1)] <- mean(SurfaceRoughness1, na.rm = TRUE)
-    SurfaceRoughness <- SurfaceRoughness * (1 + (SurfaceRoughness1 / max(raster::res(srtm_crop))));
+    # maxrasres <- max(raster::res(srtm_crop))
+    maxrasres <- max(raster::res(srtm_crop[[1]]))
+    SurfaceRoughness <- SurfaceRoughness * (1 + (SurfaceRoughness1 / maxrasres))
     elrouindn <- raster::resample(elrouind, cclRaster, method="ngb")
-    modSurf <- raster::overlay(x = cclRaster,y = elrouindn, fun = function(x,y){return(x*(1+y/max(raster::res(srtm_crop))))})
+    modSurf <- raster::overlay(x = cclRaster, y = elrouindn, 
+                               fun = function(x, y){
+                                 return(x * (1 + y / maxrasres))
+                                 }
+                               )
     ## Plot the different Surface Roughness Values
     if (plotit){
-      graphics::par(mfrow=c(1,1)); cexa=0.9
-      raster::plot(cclRaster, main="Corine Land Cover Roughness");
-      graphics::points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = round(SurfaceRoughness0,2),cex=cexa);
-      plot(polygon1,add=T)
-      raster::plot(x= raster::terrain(srtm_crop,"roughness",neighbors = 4),
-                   main="Elevation Roughness Indicator");
-      graphics::points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = round((SurfaceRoughness1),2),cex=cexa);
-      plot(polygon1,add=T)
-      plot(modSurf, main="Modified Surface Roughness");
-      graphics::points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = round((SurfaceRoughness),2),cex=cexa);
-      plot(polygon1,add=T)
+      graphics::par(mfrow = c(1,1)); cexa = 0.9
+      raster::plot(cclRaster, main = "Corine Land Cover Roughness")
+      graphics::points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'], labs = round(SurfaceRoughness0, 2), cex = cexa)
+      plot(polygon1, add = TRUE)
+      raster::plot(x = elrouind, main = "Elevation Roughness Indicator")
+      graphics::points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'],labs = round(SurfaceRoughness1, 2), cex = cexa)
+      plot(polygon1, add = TRUE)
+      plot(modSurf, main="Modified Surface Roughness")
+      graphics::points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'], labs = round(SurfaceRoughness, 2), cex = cexa)
+      plot(polygon1, add = TRUE)
     }
     
     ## New Wake Decay Constant calculated with new surface roughness values
-    k <- 0.5/(log(RotorHeight/SurfaceRoughness))
+    k <- 0.5/(log(RotorHeight / SurfaceRoughness))
     ## Plot resulting Wake Decay Values
     if (plotit){
-      graphics::par(mfrow=c(1,1)); cexa=0.9
-      plot(x= raster::terrain(srtm_crop,"roughness",neighbors = 4),
-           main="Adapted Wake Decay Values - K");
-      graphics::points(sel1$X,sel1$Y,pch=20);
-      calibrate::textxy(sel1$X,sel1$Y,labs = round((k),3),cex=cexa);
-      plot(polygon1,add=T)
+      graphics::par(mfrow = c(1,1))
+      plot(x = elrouind, main = "Adapted Wake Decay Values - K")
+      graphics::points(sel1[,'X'], sel1[,'Y'], pch = 20)
+      calibrate::textxy(sel1[,'X'], sel1[,'Y'], labs = round((k),3), cex = cexa)
+      plot(polygon1, add = TRUE)
     }
   }
-  
+
 
   ## For every wind direction, calculate the energy output. Do so by rotating Polygon for all angles and
   ## analyze, which turbine is affected by another one to calculate total energy output.
   ## Save Output in a list.
   alllist <- vector("list", length(dirSpeed[,1]))
   for (index in 1:length(dirSpeed[,2])) {
-    # index=1
     
     ## Get mean windspeed for every turbine location from windraster
     pointWind <- windpo * dirSpeed[index,'ws']
     
-    if (weibull){
-      k_param <- weibullsrc[[1]]
-      a_param <- weibullsrc[[2]]
-      
-      ## TODO This can actually go out in genAlgo or fitness. Doesnt need to be evaluated over and over again
-      ## Just Erwartungswert must be given as raster or even matrix.
-      Erwartungswert <- a_param * (gamma(1 + (1/k_param)))
-      Erwartungswert <- raster::projectRaster(Erwartungswert, crs = proj4string(polygon1))
-      
+    ## If Weibull is active/raster, get windspeed fopr turbine locations
+    if (class(weibull)[1] == "RasterLayer"){
       if (plotit){
-        weibl_k <- projectRaster(k_param, crs = proj4string(polygon1))
-        weibl_a <- projectRaster(a_param, crs = proj4string(polygon1))
-        par(mfrow=c(3,1), ask=F)
-        plot(Erwartungswert, main="Mean Weibull"); plot(polygon1, add=T)
-        plot(weibl_a, main="A Weibull Parameter"); plot(polygon1, add=T)
-        plot(weibl_k, main="K Weibull Parameter"); plot(polygon1, add=T)
+        par(mfrow = c(1,1), ask = FALSE)
+        plot(weibull, main = "Mean Weibull")
+        plot(polygon1, add = TRUE)
       }
       
-      xys <- raster::cellFromXY(Erwartungswert, xy = xyBgldMa)
-      Erwartungswertxy <- Erwartungswert[xys]
+      ## TODO Extract via raster::extract or can we do by matrix?
+      Erwartungswertxy = raster::extract(weibull, xyBgldMa)
       
+      ## Check for NA Values..
+      if (anyNA(Erwartungswertxy)) {
+        Erwartungswertxy[which(is.na(Erwartungswertxy))] <- mean(Erwartungswertxy, na.rm = TRUE)
+      }
+      
+      ## Multiply dummy vector `windpo` with expected wind speeds
       pointWind <- windpo * Erwartungswertxy
     }
     
-    ## Calculate Windspeed according to Rotor Height using wind profile law. 
-    ## TODO MISSING: Other law possible with log
+    ## Calculate Windspeed according to Rotor Height using wind profile law
+    ## TODO MISSING: Include other laws: -log
     pointWind <- pointWind * ((RotorHeight / referenceHeight)^SurfaceRoughness)
     pointWind[is.na(pointWind)] <- 0
     
@@ -268,31 +266,30 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
     angle <- -dirSpeed[index, 'wd']
     
     ## If activated, plots the turbine locations with angle 0 and opens a 
-    ## second frame for rotated turbine lovations
+    ## second frame for rotated turbine locations
     if (plotit){
-      par(mfrow=c(1,2))
-      plot(polygon1, main="Shape at angle 0");
-      points(xyBgldMa[,1],xyBgldMa[,2],pch=20)
-      textxy(xyBgldMa[,1],xyBgldMa[,2], labs = dimnames(xyBgldMa)[[1]],cex=0.8)
-      Polygon3 = maptools::elide(polygon1, rotate=angle, center=apply(bbox(polygon1), 1, mean));
-      plot(Polygon3, main=c("Shape at angle:", (-1*angle)))
+      par(mfrow = c(1,2))
+      plot(polygon1, main = "Shape at angle 0");
+      points(xyBgldMa[,1], xyBgldMa[,2], pch = 20)
+      textxy(xyBgldMa[,1], xyBgldMa[,2], labs = dimnames(xyBgldMa)[[1]], cex = 0.8)
+      ## TODO Get rid of elide and store polygon-cetroids already before
+      Polygon3 = maptools::elide(polygon1, rotate = angle, 
+                                 center = apply(bbox(polygon1), 1, mean))
+      plot(Polygon3, main = c("Shape at angle:", (-1*angle)))
       mtext(paste("Direction: ", index, "\nfrom total: ", nrow(dirSpeed)), side = 1)
     }
     
     ## Rotate Coordinates by the incoming wind direction
     xyBgldMa = rotate_CPP(xyBgldMa[,1], xyBgldMa[,2], pcent[1], pcent[2], angle)
-    colnames(xyBgldMa) <- c("x","y")
     
-    
-    ## If activated, plots the rotated turbines in red.
+    ## If activated, plots the rotated turbines in red
     if (plotit){
       points(xyBgldMa, col="red",pch=20)
     }
     
-    ## If Height is taken into account. 3D Modelling of Wake and Overlapping Areas
+    ## TODO - If Height is taken into account. 3D Modelling of Wake and Overlapping Areas
     DatFram <- cbind(pointWind, xyBgldMa)
-    colnames(DatFram) = c("Windmittel","X","Y")
-    row.names(DatFram) = NULL
+    colnames(DatFram) = c("Windmittel", "X", "Y")
     
     ## Get the influecing points given with incoming wind direction angle
     ## and reduce then to data frame
@@ -300,9 +297,15 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
                        polYgon = polygon1, dirct = angle)
     dfAll <- do.call("rbind", tmp)
     
+    ## Sometimes betha / gamma are NA - Set to 0.. Why is that hapenning?
+    if (any(is.na(dfAll))) {
+      dfAll[which(is.na(dfAll))] <- 0
+    }
+    
     ## Create a list for every turbine
     ## Assign Windspeed to a filtered list with all turbines and add the desired 
     ## rotor radius to the data frame
+    ## TODO - Performance 
     tmp <- lapply(seq_len(max(dfAll[,'Punkt_id'])), function(i) {
       cbind(subset.matrix(dfAll, dfAll[,'Punkt_id'] == i, 
                           select = c('Punkt_id','Ax','Ay','Bx','By','Laenge_B',
@@ -314,18 +317,22 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
     windlist <- cbind(windlist, 
                       "RotorR" = as.numeric(RotorR))
     
+    ## Change k to lenght of windlist. Repeat or Inflate vector k
+    if (!topograp) {
+      ## Repeat the vector k
+      k1 <- rep(k, length(windlist[,1]))
+    } else {
+      ## Inflate the vector k
+      k1 <- rep(k, table(windlist[,'Punkt_id']))
+    }
     
-    ## Calculate the wake Radius and the rotor area for every turbine.
+    ## Calculate the wake Radius and the rotor area for every turbine
     lnro <- length(windlist[,1])
-    tmp <- sapply(1:lnro, function(i) {
-      if (topograp) {
-        k <- k[windlist[i,'Punkt_id']]
-      }
-      wakeradius_CPP(windlist[i,'Laenge_B'], FALSE, as.numeric(windlist[i,'RotorR']), k)
-    })
     windlist <- cbind(windlist, 
-                      "WakeR" = tmp[1,], 
-                      "Rotorflaeche" = tmp[2,])
+                      "WakeR" = as.numeric(windlist[,'Laenge_B']>0) * 
+                        (windlist[,'RotorR'] * 2 + 2 * k1 * windlist[,'Laenge_B']) / 2, 
+                      "Rotorflaeche" = (windlist[,'RotorR'] ^ 2) * pi )
+    
     
     ## Calculate the overlapping area and the overlapping percentage.
     tmp <- sapply(1:lnro, function(o) {
@@ -350,13 +357,13 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
       } else {
         absch <- 0;
       }
-      rbind(aov, absch)
+      c(aov, absch)
     })
     windlist <- cbind(windlist, 
                       "A_ov" = round(tmp[1,], 4),
                       "AbschatInProz" = round(tmp[2,], 4))
-    
-    ## Calculate the wind velocity reduction.
+
+    ## Calculate the wind velocity reduction. Names -> NULL otherwise all rows are called Windmean
     tmp <- unlist(lapply(1:lnro, function(p) {
       RotrR <- windlist[p, 'RotorR']
       a <- {1 - sqrt(1 - cT)}
@@ -382,56 +389,65 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight, SurfaceRoughnes
                       "TotAbschProz" = 0, 
                       "V_New" = 0, 
                       "Rect_ID" = 0)
-    
-    # windlist[,'V_i'] <- unsplit(lapply(split(windlist[,'V_red'], factor(whichh)), function(i) {
-      # sqrt(sum(i^2))}), factor(whichh))    
+  
+    ## Sum up the wind speed reduction from all possible influental turbines
     windlist[,'V_i'] <- unlist(lapply(unique(whichh), function(i) {
-      sums = sqrt(sum(windlist[windlist[,'Punkt_id'] == i, 'V_red'] ^ 2))
-      rep(sums, length(windlist[windlist[,'Punkt_id'] == i, 'V_red']))
+      sums = sqrt(sum(windlist[whichh == i, 'V_red'] ^ 2))
+      rep(sums, length(windlist[whichh == i, 'V_red']))
     }))
-    
+    ## Sum up the wake effects from all possible influental turbines
     windlist[,'TotAbschProz'] <- unlist(lapply(unique(whichh), function(i) {
-      absch <- windlist[whichh == i,'AbschatInProz']
+      absch <- windlist[whichh == i, 'AbschatInProz']
       rep(sum(absch), length(absch))
     }))
+    ## Caluclate new wins speed, after reduction
     windlist[,'V_New'] <- unlist(lapply(unique(whichh), function(i) {
       windlist[whichh == i,'Windmean'] - windlist[whichh == i,'V_i']
     }))
+    ## Assign the Grid-ID to all influential turbines
     windlist[,'Rect_ID'] <-  unlist(lapply(unique(whichh), function(i) {
-      rep(sel[i,'ID'], length(windlist[whichh == i,1]))
+      rep(sel[i,'ID'], length(windlist[whichh == i, 1]))
     }))
-    
     
     ## Get a reduced dataframe and split duplicated Point_id, since a turbine with fixed Point_id,
     ## can have several influencing turbines and therefore several data frame elements
-    windlist2 <- subset.matrix(windlist, select = c("Punkt_id","Ax","Ay","Bx","By","Laenge_B","Laenge_A",
-                                                    "Windrichtung","Windmean","RotorR","WakeR","A_ov","TotAbschProz",
-                                                    "V_New","Rect_ID"))
-    # windlist2 <- windlist
-    windlist1 <- subset.matrix(windlist2, subset = !duplicated(windlist2[,'Punkt_id']))
+    windlist2 <- subset.matrix(windlist, 
+                               select = c("Punkt_id", "Ax", "Ay", "Bx", "By", "Laenge_B", 
+                                          "Laenge_A", "Windrichtung", "Windmean", "RotorR", 
+                                          "WakeR", "A_ov", "TotAbschProz", "V_New", "Rect_ID"))
+    
+    ## Get unique turbine locations, to calculate correct energy outputs
+    windlist1 <- subset.matrix(windlist2, subset = !duplicated(windlist2[, 'Punkt_id']))
     
     
-    ## Calculate Full and reduced Energy Outputs in kW and Park Efficienca in %. Assign the values to
-    ## the list. NOTE (0.2965 = 0.593 * 0.5)
-    # EneOutRed <- round(sum(0.2965 * air_rh * (windlist1[,'V_New']^3) *
-    #                          ((windlist1[,'RotorR']^2) * pi), na.rm = TRUE) / 1000, 4)
-    # EneOutFul <- round(sum(0.2965 * air_rh * (windlist1[,'Windmean']^3) *
-    #                          ((windlist1[,'RotorR']^2) * pi), na.rm = TRUE) / 1000, 4)
-    EneOutRed <- energy_calc_CPP(windlist1[,'V_New'], windlist1[,'RotorR'], air_rh)
-    EneOutFul <- energy_calc_CPP(windlist1[,'Windmean'], windlist1[,'RotorR'], air_rh)
+    ## Change air-density to length of windlist1. Repeat or inflate
+    if (!topograp) {
+      airrh <- rep(air_rh, length(windlist1[,1]))
+    } else {
+      airrh <- air_rh
+    }
     
+    ## Calculate Full and Reduced Energy Outputs in kW and Park Efficienca in %.
+    EneOutRed <- energy_calc_CPP(windlist1[,'V_New'], windlist1[,'RotorR'], airrh)
+    EneOutFul <- energy_calc_CPP(windlist1[,'Windmean'], windlist1[,'RotorR'], airrh)
     Effic <- (EneOutRed * 100) / EneOutFul
     
+    if (is.na(EneOutFul) | is.na(EneOutRed)) {
+      stop("EneOutFul / EneOutRed are NA in calculateEn. Fix Bug")
+    }
+
+    
+    ## Assign values back to complete matrix
     windlist2 <- cbind(windlist2, 
                        "Energy_Output_Red" = EneOutRed, 
                        "Energy_Output_Voll" = EneOutFul,
                        "Parkwirkungsgrad" = Effic)
     
+    ## TODO Why do I need that again? Or the -angle in the beginning (Line ~286)
     windlist2[,'Windrichtung'] = windlist2[,'Windrichtung'] * (-1)
     
     alllist[[index]] <- windlist2
   }
   
-  ## Return the list with all relevant information
   invisible(alllist)
 }

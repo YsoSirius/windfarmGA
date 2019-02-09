@@ -72,14 +72,14 @@ Default is FALSE}
 of the default Lambert Azimuthal Equal Area Projection.}
 
 \item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated.}
+required when the terrain effect model is activated. If nothing is assign, it 
+will try to download a version from the EEA-website.}
 
 \item{sourceCCLRoughness}{The source to the adapted
 Corine Land Cover legend as .csv file. Only required when terrain
 effect model is activated. As default a .csv file within this
 package (\file{~/extdata}) is taken that was already adapted
-manually. To use your own .csv legend this variable has to be assigned.
-See Details.}
+manually. To use your own .csv legend this variable has to be assigned.}
 
 \item{weibull}{A logical value that specifies whether to take Weibull
 parameters into account. If weibull==TRUE, the wind speed values from the

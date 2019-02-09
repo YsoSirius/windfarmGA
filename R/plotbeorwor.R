@@ -35,7 +35,7 @@ plotbeorwor <- function(result){
   maxdif$farbe[maxdif$diff < 0]  <- "red"
   maxdif$farbe[maxdif$diff > 0] <- "green"
   maxdif$farbe[maxdif$diff == 0] <- "orange"
-  plot(maxdif$diff, type="b", col=maxdif$farbe, pch=20,cex=2); abline(0,0)
+  plot(maxdif$diff, type="b", col = maxdif$farbe, pch = 20, cex = 2); abline(0,0)
   title("Max Difference to previous generation")
 
 
@@ -45,7 +45,7 @@ plotbeorwor <- function(result){
   meandif$farbe[meandif$diff < 0]  <- "red"
   meandif$farbe[meandif$diff > 0] <- "green"
   meandif$farbe[meandif$diff == 0] <- "orange"
-  plot(meandif$diff, type="b", col=meandif$farbe, pch=20,cex=2); abline(0,0)
+  plot(meandif$diff, type="b", col = meandif$farbe, pch = 20, cex = 2); abline(0,0)
   title("Mean Difference to previous generation")
 
   return()

@@ -62,14 +62,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // energy_calc_CPP
-double energy_calc_CPP(NumericVector wind_speed, NumericVector rotor_radius, double air_rh);
+double energy_calc_CPP(NumericVector wind_speed, NumericVector rotor_radius, NumericVector air_rh);
 RcppExport SEXP _windfarmGA_energy_calc_CPP(SEXP wind_speedSEXP, SEXP rotor_radiusSEXP, SEXP air_rhSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type wind_speed(wind_speedSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type rotor_radius(rotor_radiusSEXP);
-    Rcpp::traits::input_parameter< double >::type air_rh(air_rhSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type air_rh(air_rhSEXP);
     rcpp_result_gen = Rcpp::wrap(energy_calc_CPP(wind_speed, rotor_radius, air_rh));
     return rcpp_result_gen;
 END_RCPP
@@ -87,16 +87,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // wakeradius_CPP
-NumericMatrix wakeradius_CPP(double lenght_b, bool topograp, double RotD, double k);
-RcppExport SEXP _windfarmGA_wakeradius_CPP(SEXP lenght_bSEXP, SEXP topograpSEXP, SEXP RotDSEXP, SEXP kSEXP) {
+NumericVector wakeradius_CPP(double lenght_b, double RotD, double k);
+RcppExport SEXP _windfarmGA_wakeradius_CPP(SEXP lenght_bSEXP, SEXP RotDSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type lenght_b(lenght_bSEXP);
-    Rcpp::traits::input_parameter< bool >::type topograp(topograpSEXP);
     Rcpp::traits::input_parameter< double >::type RotD(RotDSEXP);
     Rcpp::traits::input_parameter< double >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(wakeradius_CPP(lenght_b, topograp, RotD, k));
+    rcpp_result_gen = Rcpp::wrap(wakeradius_CPP(lenght_b, RotD, k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -122,7 +121,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_windfarmGA_angles_CPP", (DL_FUNC) &_windfarmGA_angles_CPP, 3},
     {"_windfarmGA_energy_calc_CPP", (DL_FUNC) &_windfarmGA_energy_calc_CPP, 3},
     {"_windfarmGA_point_2_line_CPP", (DL_FUNC) &_windfarmGA_point_2_line_CPP, 2},
-    {"_windfarmGA_wakeradius_CPP", (DL_FUNC) &_windfarmGA_wakeradius_CPP, 4},
+    {"_windfarmGA_wakeradius_CPP", (DL_FUNC) &_windfarmGA_wakeradius_CPP, 3},
     {"_windfarmGA_eucdist_CPP", (DL_FUNC) &_windfarmGA_eucdist_CPP, 4},
     {NULL, NULL, 0}
 };

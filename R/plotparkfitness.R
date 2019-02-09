@@ -9,7 +9,6 @@
 #' @importFrom grDevices colorRampPalette
 #' @importFrom stats smooth.spline median
 #' @importFrom calibrate textxy
-#' @importFrom dplyr select contains
 #'
 #'
 #' @param result An output matrix of \code{\link{windfarmGA}} or
@@ -45,16 +44,16 @@ plotparkfitness <- function(result, spar = 0.1){
   parparfit <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parparfit))
   graphics::layout(matrix(c(1,1,1,1,2,3,4,5),2,4, byrow = TRUE))
-  rbPal <- grDevices::colorRampPalette(c('red', 'green'));
+  rbPal <- grDevices::colorRampPalette(c('red', 'green'))
   Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
   #######################
   
   ## Plot All together (5 Plots) #####################
   plot(rslt$minparkfitness, xaxt = 'n', main = "Parkfitness per Generation", pch = 20,
                  ylab = "Parkfitness in %", cex = 1, cex.main = 1, col = "red", 
-                 ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness)));
+                 ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness)))
   graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
-  graphics::points(rslt$meanparkfitness, ylab = "MeanParkF", cex = 1.2, col = "blue", pch = 20);
+  graphics::points(rslt$meanparkfitness, ylab = "MeanParkF", cex = 1.2, col = "blue", pch = 20)
   graphics::points(rslt$maxparkfitness, ylab = "maxParkF", cex = 1.2, col = "green", pch = 20)
   x <- 1:length(rslt$maxparkfitness)
 
@@ -88,7 +87,7 @@ plotparkfitness <- function(result, spar = 0.1){
        ylab = "Percentage", xlab = "Generation")
   graphics::grid(col = "gray")
   selrpl <- 1*100/selteil
-  timeticksel <- which(selrpl > 75);
+  timeticksel <- which(selrpl > 75)
   selrplval <- selrpl[selrpl > 75]
   calibrate::textxy(timeticksel, selrplval, labs = timeticksel, cex = 0.7)
 
@@ -114,9 +113,9 @@ plotparkfitness <- function(result, spar = 0.1){
   par(mfrow = c(1,1))
   plot(ndindiplot, type = "b", col = farbe, cex = 1.5, cex.main = 1, pch = 20, 
        main = "N-Individuen", axes = FALSE,
-       ylab = "N", ylim = c(0, max(ndindiplot)+100))
+       ylab = "N", ylim = c(0, max(ndindiplot) + 100))
   axis(side = 2, tick = TRUE) 
-  axis(side = 1, tick = TRUE, at = seq(1, length(ndindiplot),3),
+  axis(side = 1, tick = TRUE, at = seq(1, length(ndindiplot), 3),
        labels = (1:(length(ndindiplot)/3)))
   
   graphics::legend("topleft", title = "Amount of Individuals in: ", pch = c(20,20,20),
@@ -131,9 +130,9 @@ plotparkfitness <- function(result, spar = 0.1){
        pch = 20, main = "Selection percentage",
        ylab = "Percentage", xlab = "Generation")
   graphics::grid(col = "gray")
-  selrpl <- 1*100/selteil;
-  timeticksel <- which(selrpl>75);
-  selrplval <- selrpl[selrpl>75]
+  selrpl <- 1*100/selteil
+  timeticksel <- which(selrpl > 75)
+  selrplval <- selrpl[selrpl > 75]
   calibrate::textxy(timeticksel, selrplval, labs = timeticksel, cex = 0.5)
   plot(crossteil, col = crossteil, main = "n Crossoverparts", xlab = "Generation",
                  ylab = "Crossover Points", ylim = c(1,8), cex = 1, pch = 15)
@@ -145,7 +144,7 @@ plotparkfitness <- function(result, spar = 0.1){
   ## Add Special Events #######################
   if (length(timetick) != 0) {
     graphics::par(mfrow = c(1, 1))
-    rbPal <- grDevices::colorRampPalette(c('red','green'));
+    rbPal <- grDevices::colorRampPalette(c('red','green'))
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
     plot(rslt$minParkwirkungsg, xaxt = 'n', main = "Mutation Influence", 
          ylab = " in %", cex = 1.2, cex.main = 1, 
@@ -153,7 +152,7 @@ plotparkfitness <- function(result, spar = 0.1){
          ylim = c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)))
     graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
     graphics::points(rslt$meanParkwirkungsg, ylab = "MeanParkEff", cex = 1.2, 
-                     col = "blue", pch = 20);
+                     col = "blue", pch = 20)
     graphics::points(rslt$maxParkwirkungsg, ylab = "maxParkEff", cex = 1.2, 
                      col = "green", pch = 20)
     x <- 1:length(rslt$maxparkfitness)
@@ -171,7 +170,7 @@ plotparkfitness <- function(result, spar = 0.1){
   }
   if (length(timeticksel) != 0){
     graphics::par(mfrow = c(1,1))
-    rbPal <- grDevices::colorRampPalette(c('red','green'));
+    rbPal <- grDevices::colorRampPalette(c('red','green'))
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
     graphics::plot(rslt$minParkwirkungsg, xaxt = 'n', 
                    main = "Selection Influence", ylab = " in %", cex = 1, 
@@ -201,7 +200,7 @@ plotparkfitness <- function(result, spar = 0.1){
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
     plot(rslt$minParkwirkungsg, xaxt = 'n', main = "Crossover Influence", ylab = " in %", 
          cex = 1, cex.main = 1, col = "red",
-         pch = 20, ylim = c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)));
+         pch = 20, ylim = c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)))
     axis(1, at = 1:nrow(rslt), tick = TRUE)
     points(rslt$meanParkwirkungsg, ylab = "MeanParkEff", cex = 1.2, col = "blue", pch = 20)
     points(rslt$maxParkwirkungsg, ylab = "maxParkEff", cex = 1.2, col = "green", pch = 20)
@@ -222,9 +221,9 @@ plotparkfitness <- function(result, spar = 0.1){
 
   ## Plot Fitness, Selection, Crossover and Fitness Deviation #####################
   sddata <- plotCloud(result)
-  fitsd <- dplyr::select(sddata, dplyr::contains("fit"))
-  effsd <- dplyr::select(sddata, dplyr::contains("eff"))
-  enesd <- dplyr::select(sddata, dplyr::contains("ene"))
+  fitsd <- sddata[, grep(pattern = "Fit", colnames(sddata))]
+  effsd <- sddata[, grep(pattern = "Eff", colnames(sddata))]
+  enesd <- sddata[, grep(pattern = "Ene", colnames(sddata))]
   graphics::par(mfrow = c(4,1))
   plot(rslt$minparkfitness, xaxt = 'n', main = "Parkfitness per Generation", 
        ylab = "Parkfitness in %", xlab = "Generation",
@@ -247,7 +246,7 @@ plotparkfitness <- function(result, spar = 0.1){
 
   plot(1*100/selteil, ylim = c(20,110), type = "b", lwd = 2,col = "green",
        pch = 20, main = "Selection percentage",
-       ylab = "Percentage", xlab = "Generation", cex.main = 1);
+       ylab = "Percentage", xlab = "Generation", cex.main = 1)
   graphics::grid(lty = 2)
   
   plot(crossteil, col = crossteil, pch = 20, cex.main = 1, cex = 2,
@@ -257,7 +256,7 @@ plotparkfitness <- function(result, spar = 0.1){
   
   plot(enesd$Ene.sd, type = "b", col = "blue", pch = 20, lwd = 2,
        ylab = "Energy/Efficiency/Fitness Deviation", xlab = "Generation",
-       cex.main = 1, main = "Standard Deviation");
+       cex.main = 1, main = "Standard Deviation")
   graphics::grid(lty = 2)
   graphics::par(new = TRUE)
   plot(effsd$Eff.sd, type = "b", col = "orange", lwd = 2, axes = FALSE, 

@@ -16,6 +16,7 @@
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics plot.new
 #' @importFrom stats runif
+#' @importFrom utils download.file unzip
 #'
 #' @param Polygon1 The considered area as shapefile (SpatialPolygons)
 #' @param GridMethod Should the polygon be divided into rectangular or
@@ -33,13 +34,13 @@
 #' surface roughness will be calculated for every grid cell with the
 #' elevation and land cover information. Default is 0.3
 #' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
-#' required when the terrain effect model is activated.
+#' required when the terrain effect model is activated. If nothing is assign, it 
+#' will try to download a version from the EEA-website.
 #' @param sourceCCLRoughness The source to the adapted
 #' Corine Land Cover legend as .csv file. Only required when terrain
 #' effect model is activated. As default a .csv file within this
 #' package (\file{~/extdata}) is taken that was already adapted
 #' manually. To use your own .csv legend this variable has to be assigned.
-#' See Details.
 #' @param Proportionality A numeric value used for grid calculation.
 #' Determines the percentage a grid has to overlay. Default is 1
 #' @param iteration A numeric value indicating the desired amount
@@ -272,6 +273,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   
   ## WEIBULL ###############
   ## Is Weibull activated? If no source is given, take values from package
+  # browser()
   if (weibull){
     if (verbose) {cat("\nWeibull Distribution is used.")}
     if (missing(weibullsrc)){
@@ -284,24 +286,28 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       # weibullsrc = list(k_param, a_param)
       k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
       a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
+      ## Project Shapefile to raster, Crop/Mask and project raster back to Polygon
       PolygonRaster <- sp::spTransform(Polygon1, CRSobj = sp::proj4string(a_weibull))
       k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(PolygonRaster))
       a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(PolygonRaster))
       weibl_k <- raster::mask(x = k_par_crop, mask = PolygonRaster)
       weibl_a <- raster::mask(x = a_par_crop, mask = PolygonRaster)
-      weibullsrc = list(weibl_k, weibl_a)   
+      Erwartungswert <- weibl_a * (gamma(1 + (1/weibl_k)))
+      Erwartungswert <- raster::projectRaster(Erwartungswert, crs = proj4string(Polygon1))
     } else {
       if (verbose){cat("\nWeibull Informations are given.\n")}
       weibullsrc <- weibullsrc
+      ## Project Shapefile to raster, Crop/Mask and project raster back to Polygon
       PolygonRaster <- sp::spTransform(Polygon1, CRSobj = sp::proj4string(weibullsrc[[1]]))
       k_par_crop <- raster::crop(x = weibullsrc[[1]], y = raster::extent(PolygonRaster))
       a_par_crop <- raster::crop(x = weibullsrc[[2]], y = raster::extent(PolygonRaster))
       weibl_k <- raster::mask(x = k_par_crop, mask = PolygonRaster)
       weibl_a <- raster::mask(x = a_par_crop, mask = PolygonRaster)
-      weibullsrc = list(weibl_k, weibl_a)  
+      Erwartungswert <- weibl_a * (gamma(1 + (1 / weibl_k)))
+      Erwartungswert <- raster::projectRaster(Erwartungswert, crs = proj4string(Polygon1))
     }
   } else {
-      weibullsrc <- NULL
+    Erwartungswert <- FALSE
   }
   
   ## CHECK INPUTS ###############
@@ -376,7 +382,10 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
+  
+  
 
+  
   ## GRIDFILTER ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
@@ -427,10 +436,23 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   } else {
     if (verbose){cat("Topography and orography are taken into account.")}
 
-    if (plotit) {par(mfrow=c(3,1))}
+    if (plotit) {par(mfrow = c(3,1))}
 
     if (missing(sourceCCL)){
-      stop("\nNo raster given for the surface roughness. \nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n", call. = F)
+      message("No raster was given. Should it be downloaded?")
+      readline(prompt="Press [enter] to continue or Escpae to exit.")
+      if (!file.exists("g100_06.tif")) {
+        ## download an zip CCL-tif
+        ccl_raster_url <- "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+        temp <- tempfile()
+        download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+        unzip(temp, "g100_06.tif")
+        unlink(temp)
+      }
+      ccl <- raster::raster("g100_06.tif")
+      
+    } else {
+      ccl <- raster::raster(sourceCCL)
     }
 
     ## SRTM Daten
@@ -451,6 +473,12 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       plot(Polygon1, add = TRUE)
       plot(dry.grid.filtered, add = TRUE)
     }
+    
+    srtm_crop <- list(
+      strm_crop = srtm_crop,
+      orogr1 = raster::calc(srtm_crop, function(x) {x/(raster::cellStats(srtm_crop, mean, na.rm = TRUE))}),
+      raster::terrain(srtm_crop,"roughness")
+    )
 
     # Include Corine Land Cover Raster to get an estimation of Surface Roughness
     if (missing(sourceCCLRoughness)) {
@@ -464,7 +492,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       sourceCCLRoughness <- sourceCCLRoughness
     }
 
-    ccl <- raster::raster(sourceCCL)
+    
     cclPoly <- raster::crop(ccl, Polygon1)
     cclPoly1 <- raster::mask(cclPoly, Polygon1)
     rauhigkeitz <- utils::read.csv(sourceCCLRoughness, header = TRUE, sep = ";");
@@ -487,7 +515,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
                      Polygon = Polygon1, resol1 = resol2,rot=Rotor, dirspeed = winddata,
                      srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
-                     weibull = weibull, weibullsrc = weibullsrc, 
+                     weibull = Erwartungswert, 
                      Parallel = Parallel, numCluster = numCluster)
 
     } else {
@@ -496,15 +524,15 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
                      Polygon = Polygon1, resol1 = resol2,rot = Rotor, dirspeed = winddata,
                      srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
-                     weibull = weibull, weibullsrc = weibullsrc, 
+                     weibull = Erwartungswert, 
                      Parallel = Parallel, numCluster = numCluster)
     }
-  
+    
+    
     ## Fitness Result Processing ###############
     allparks <- do.call("rbind", fit)
     # allparksUni <- split(allparks, duplicated(allparks$Run))$'FALSE'
     allparksUni <- subset.matrix(allparks, subset = !duplicated(allparks[,'Run']))
-    
     
     allCoords[[i]] <- allparks
     maxparkfitness <-  round(max(allparksUni[,'Parkfitness']), 4)
@@ -525,12 +553,10 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     if (verbose) {cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"))}
 
     ## Highest Energy Output
-    # xd <- allparks[allparks[,'EnergyOverall'] == max(allparks[,'EnergyOverall']),'EnergyOverall'][1]
     xd <- max(allparks[,'EnergyOverall'])
     ind <- allparks[,'EnergyOverall'] == xd
     bestPaEn[[i]] <- allparks[ind,][1:n,]
     ## Highest Efficiency
-    # xd1 <- allparks[allparks[,'EfficAllDir'] == max(allparks[,'EfficAllDir']),'EfficAllDir'][1];
     xd1 <- max(allparks[,'EfficAllDir'])
     ind1 <- allparks[,'EfficAllDir'] == xd1     
     bestPaEf[[i]] <- allparks[ind1,][1:n,]
@@ -550,7 +576,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         Col <- "green"
       } else {
         Col <- rbPal(lebre)[as.numeric(cut(-bestPaEn[[i]][,'AbschGesamt'], breaks = lebre))]
-        # Col1 <- rbPal(lebre)[as.numeric(cut(-bestPaEf[[i]]$AbschGesamt,breaks = lebre))]
       }
       lebre2 <- length(unique(bestPaEf[[i]][,'AbschGesamt']))
       if (lebre2 < 2){
@@ -568,19 +593,16 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     e1 <- bestPaEf[[i]][,'EfficAllDir']
 
     allparksNewplot <- subset.matrix(allparks, select = c("Rect_ID", "AbschGesamt", "Parkfitness"))
-    # allparksNewplot <- dplyr::select(allparks, AbschGesamt, Rect_ID, Parkfitness)
 
     allparksNewplot <- aggregate(allparksNewplot, list(allparksNewplot[,'Rect_ID']), mean)
     allparksNewplot <- allparksNewplot[,-1]
-    # allparksNewplot <- allparksNewplot %>% 
-    #   dplyr::group_by(Rect_ID) %>%
-    #   dplyr::summarise_all(dplyr::funs(mean))
 
     if (any(allparksNewplot[,'Rect_ID'] %in% Grid[,'ID'] == FALSE)) {
-      # cat(paste("Index of Grid not correct. Bigger than maximum Grid? Fix BUG"))
       stop("Index of Grid not correct. Bigger than maximum Grid? Fix BUG")
     }
-
+    ##################
+    
+    
     if (plotit){
       graphics::par(mfrow = c(1,2))
       plot(Polygon1, main = paste(i, "Round \n Best Energy Output: ", x,"W/h \n Efficiency: ", y , "%"),
@@ -621,7 +643,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     if (i == 1) {
       
       ## TODO I do have such a matrix already with that info or??
-      # t0 <- split(allparks, duplicated(allparks[,'Run']))$'FALSE'
       t0 <- subset.matrix(allparks, !duplicated(allparks[,'Run']))
       t0 <- t0[,'Parkfitness']  
       fitnessValues[[i]] <- t0
@@ -639,7 +660,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       beorwor[[i]] <- cbind(0,0)
     }
     if (i >= 2 && i <= iteration) {
-      # t0 <- split(allparks, duplicated(allparks$Run))$'FALSE'
       t0 <- subset.matrix(allparks, !duplicated(allparks[,'Run']))
       t0 <- t0[,'Parkfitness']  
       fitnessValues[[i]] <- t0    
@@ -755,7 +775,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     mut1 <- trimton(mut = mut, nturb = n, allparks = allparks, nGrids = AmountGrids,
                     trimForce = trimForce, seed = NULL)
     
-    # browser()
     if (verbose) {cat(paste("\nTrimToN    -  Amount of Individuals: ", length(mut1[1,])))}
     Trus3 <- colSums(mut1) == n
     if (any(Trus3 == FALSE)){

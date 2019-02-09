@@ -40,10 +40,10 @@
 #'
 #' @author Sebastian Gatscha
 PointToLine2      <- function(x, y, plotAngles) {
-  C1 <- c(y[1],x[2])
-  dist1 <- c(euc.dist(x,y),
-             euc.dist(C1,y),
-             euc.dist(x,C1))
+  C1 <- c(y[1], x[2])
+  dist1 <- c(euc.dist(x, y),
+             euc.dist(C1, y),
+             euc.dist(x, C1))
   
   if (plotAngles){
     ## Plot the Points of the Triangle
@@ -63,7 +63,7 @@ PointToLine2      <- function(x, y, plotAngles) {
                    labels = c("B","A","C"), pos=4, col=c("red","green","blue"),cex=1);
   }
   
-  distIndiv <- c(y,x,C1,dist1)
+  distIndiv <- c(y, x, C1, dist1)
   return(distIndiv)
 }
 

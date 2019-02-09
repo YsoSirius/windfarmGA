@@ -6,7 +6,6 @@
 #'
 #' @importFrom graphics par layout plot title grid abline axis points lines
 #'
-#'
 #' @param result An output matrix of the function \code{\link{windfarmGA}}
 #' or \code{\link{genAlgo}} which has stored all relevant information.
 #' (matrix)
