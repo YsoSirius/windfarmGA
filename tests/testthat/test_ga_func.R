@@ -304,7 +304,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_is(getRectV, "list")
   expect_true(all(sapply(getRectV, class) == "matrix"))
   expect_true(all(sapply(getRectV, ncol) == 3))
-  expect_true(all(sapply(getRectV, nrow) == 10))
+  expect_true(all(sapply(getRectV, nrow) == 20))
   expect_false(any(unlist(sapply(getRectV, is.na))))
   expect_true(all(sapply(getRectV, colnames) %in% c("ID","X","Y")))
 
@@ -314,7 +314,7 @@ test_that("Test Genetic Algorithm Function", {
                  SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                  dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
   expect_is(fit, "list")
-  expect_true(all(sapply(fit, nrow) == 10))
+  expect_true(all(sapply(fit, nrow) == 20))
   expect_true(length(fit) == length(getRectV))
   expect_false(any(unlist(sapply(fit, is.na))))
   expect_false(any(unlist(do.call("rbind", fit)[,-c(1,2)] < 0)))
