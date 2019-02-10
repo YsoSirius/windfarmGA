@@ -65,7 +65,6 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
   z <- seq(1, length(parid), 2)
   all <- vector("list", length(z))
 
-  #crossPart = "ran"; crosEquEartN = 5
   crossPart <- toupper(crossPart)
 
   sene2fit <- vector(mode = "list", length = length(z))
@@ -79,7 +78,7 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
     sene1fit <- se6fit[, parid[r + 1]]
     sene2fit[[e]] <- senefit + sene1fit / 2
 
-    if (crossPart == "EQU"){
+    if (crossPart == "EQU") {
       ## Equal Parts
       # In how many parts should the genCode be split?
       crosEquPartN <- base::trunc(u + 1)
@@ -89,7 +88,7 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
       a <- base::split(sene, as.numeric(gl(length(sene), t1, length(sene))))
       b <- base::split(sene1, as.numeric(gl(length(sene1), t1, length(sene1))))
     }
-    if (crossPart == "RAN"){
+    if (crossPart == "RAN") {
       ## Random Parts
       # Split the genCode in u parts, that are randomly distributed
       if (!is.null(seed)) {
@@ -105,13 +104,13 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
                                  repeats.allowed = TRUE)
     # for every possible permutation
     permut <- list()
-    for (pp in 1:nrow(perm)){
+    for (pp in 1:nrow(perm)) {
       # for every col/genetic code pieces take either from
       # parent 1(a) or parent 2(b)
       gclist <- list()
-      for (gnp in 1:length(perm[pp, ])){
+      for (gnp in 1:length(perm[pp, ])) {
         parent01 <- perm[pp, gnp]
-        if (parent01 == 1){
+        if (parent01 == 1) {
           gc <- a[[gnp]]
         } else {
           gc <- b[[gnp]]
@@ -132,7 +131,7 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
 
   nI <- do.call("cbind", all)
 
-  if (length(fitChi) != ncol(nI)){
+  if (length(fitChi) != ncol(nI)) {
     stop("\nCrossover. Amount of Turbines is wrong. Fix BUG")
   }
 
@@ -143,14 +142,14 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
   }
 
   partaksur <- ncol(nI)
-  if (partaksur >= uplimit){
+  if (partaksur >= uplimit) {
     partaksur <- uplimit
     if (verbose) {
       cat(paste("\nPopulation max limit reached: ", uplimit))
     }
   }
 
-  # Select only some of the available permutations. 
+  # Select only some of the available permutations.
   # Take fitness value as prop value.
   if (!is.null(seed)) {
     set.seed(as.integer(seed))

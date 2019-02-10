@@ -27,22 +27,22 @@
 #'}
 #' @author Sebastian Gatscha
 plotparkfitness <- function(result, spar = 0.1){
-  
-  ## Data #####################
-  rslt <- as.data.frame(do.call("rbind", result[,"allparkcoeff"]))
-  mutres <- as.data.frame(do.call("rbind", result[,"mut_rate"]))
-  nindiv1 <- as.data.frame(do.call("cbind", result[,"nindiv"]))
-  nindiv1 <- nindiv1[-seq(4,length(nindiv1),4)]
 
-  selcross <- unlist(result[,"selcross"])
-  selteil <- selcross[seq(2,length(selcross),2)]
-  crossteil <- selcross[seq(1,length(selcross),2)]
+  ## Data #####################
+  rslt <- as.data.frame(do.call("rbind", result[, "allparkcoeff"]))
+  mutres <- as.data.frame(do.call("rbind", result[, "mut_rate"]))
+  nindiv1 <- as.data.frame(do.call("cbind", result[, "nindiv"]))
+  nindiv1 <- nindiv1[-seq(4, length(nindiv1), 4)]
+
+  selcross <- unlist(result[, "selcross"])
+  selteil <- selcross[seq(2, length(selcross), 2)]
+  crossteil <- selcross[seq(1, length(selcross), 2)]
   #######################
 
   ## Set graphics param #####################
   parparfit <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parparfit))
-  graphics::layout(matrix(c(1,1,1,1,2,3,4,5),2,4, byrow = TRUE))
+  graphics::layout(matrix(c(1, 1, 1, 1, 2, 3, 4, 5), 2, 4, byrow = TRUE))
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
   #######################
@@ -56,7 +56,7 @@ plotparkfitness <- function(result, spar = 0.1){
   graphics::points(rslt$maxparkfitness, ylab = "maxParkF", cex = 1.2, col = "green", pch = 20)
   x <- 1:length(rslt$maxparkfitness)
 
-  if (nrow(result) >= 4){
+  if (nrow(result) >= 4) {
     lmin <- stats::smooth.spline(x, rslt$minparkfitness, spar = spar)
     graphics::lines(lmin, col = "red", lwd = 1.2)
     lmea <- stats::smooth.spline(x, rslt$meanparkfitness, spar = spar)
@@ -72,10 +72,10 @@ plotparkfitness <- function(result, spar = 0.1){
   ndindiplot <- as.integer(nindiv1)
   plot(ndindiplot, type = "b", col = farbe, cex = 1.5, cex.main = 1, pch = 20, 
        main = "N-Individuen", axes = FALSE,
-       ylab = "N", ylim = c(0, max(ndindiplot)+100))
+       ylab = "N", ylim = c(0, max(ndindiplot) + 100))
   axis(side = 2, tick = TRUE) 
   axis(side = 1, tick = TRUE, at = seq(1, length(ndindiplot),3),
-       labels =(1:(length(ndindiplot)/3)))
+       labels = (1:(length(ndindiplot)/3)))
   legend("topleft", title = "Amount of Individuals in: ", lty = c(1,1,1),
          cex = 0.5, inset = c(0.01, 0.01),
          box.lty = 0, box.lwd = 0, c("Fitness","Selection","Crossover"), 
@@ -155,7 +155,7 @@ plotparkfitness <- function(result, spar = 0.1){
     graphics::points(rslt$maxParkwirkungsg, ylab = "maxParkEff", cex = 1.2, 
                      col = "green", pch = 20)
     x <- 1:length(rslt$maxparkfitness)
-    if (nrow(result) >= 4){
+    if (nrow(result) >= 4) {
       lmin <- stats::smooth.spline(x, rslt$minParkwirkungsg, spar = spar) 
       graphics::lines(lmin, col = "red", lwd = 1.2)
       lmea <- stats::smooth.spline(x, rslt$meanParkwirkungsg, spar = spar) 
@@ -167,7 +167,7 @@ plotparkfitness <- function(result, spar = 0.1){
       graphics::abline(v = timetick, col = "black")
       graphics::mtext(mutrplval, side = 3, at = timetick, cex = 0.8)
   }
-  if (length(timeticksel) != 0){
+  if (length(timeticksel) != 0) {
     graphics::par(mfrow = c(1,1))
     rbPal <- grDevices::colorRampPalette(c("red","green"))
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
@@ -181,7 +181,7 @@ plotparkfitness <- function(result, spar = 0.1){
     graphics::points(rslt$maxParkwirkungsg, ylab = "maxParkEff", 
                      cex = 1.2, col = "green", pch = 20)
     x <- 1:length(rslt$maxparkfitness)
-    if (nrow(result) >= 4){
+    if (nrow(result) >= 4) {
       lmin <- stats::smooth.spline(x, rslt$minParkwirkungsg, spar = spar)
       graphics::lines(lmin, col = "red", lwd = 1.2)
       lmea <- stats::smooth.spline(x, rslt$meanParkwirkungsg, spar = spar)
@@ -191,20 +191,23 @@ plotparkfitness <- function(result, spar = 0.1){
       graphics::grid(col = "gray")
   }
       abline(v = timeticksel,col = "green")
-      mtext(selrplval,side = 3,at = timeticksel,col="green",cex = 0.8)
+      mtext(selrplval, side = 3,at = timeticksel, col = "green", cex = 0.8)
   }
-  if (length(timetickcro) !=0 ){
+  if (length(timetickcro) != 0 ) {
     par(mfrow = c(1,1))
     rbPal <- colorRampPalette(c("red","green"))
-    Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
-    plot(rslt$minParkwirkungsg, xaxt = "n", main = "Crossover Influence", ylab = " in %", 
-         cex = 1, cex.main = 1, col = "red",
+    Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),
+                                   breaks = 4))]
+    plot(rslt$minParkwirkungsg, xaxt = "n", main = "Crossover Influence",
+         ylab = " in %", cex = 1, cex.main = 1, col = "red",
          pch = 20, ylim = c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)))
     axis(1, at = 1:nrow(rslt), tick = TRUE)
-    points(rslt$meanParkwirkungsg, ylab = "MeanParkEff", cex = 1.2, col = "blue", pch = 20)
-    points(rslt$maxParkwirkungsg, ylab = "maxParkEff", cex = 1.2, col = "green", pch = 20)
+    points(rslt$meanParkwirkungsg, ylab = "MeanParkEff", cex = 1.2,
+           col = "blue", pch = 20)
+    points(rslt$maxParkwirkungsg, ylab = "maxParkEff", cex = 1.2,
+           col = "green", pch = 20)
     x <- 1:length(rslt$maxparkfitness)
-    if (nrow(result) >= 4){
+    if (nrow(result) >= 4) {
       lmin <- stats::smooth.spline(x, rslt$minParkwirkungsg, spar = spar)
       graphics::lines(lmin, col = "red", lwd = 1.2)
       lmea <- stats::smooth.spline(x, rslt$meanParkwirkungsg, spar = spar)
@@ -223,17 +226,19 @@ plotparkfitness <- function(result, spar = 0.1){
   fitsd <- sddata[, grep(pattern = "Fit", colnames(sddata))]
   effsd <- sddata[, grep(pattern = "Eff", colnames(sddata))]
   enesd <- sddata[, grep(pattern = "Ene", colnames(sddata))]
-  graphics::par(mfrow = c(4,1))
+  graphics::par(mfrow = c(4, 1))
   plot(rslt$minparkfitness, xaxt = "n", main = "Parkfitness per Generation", 
        ylab = "Parkfitness in %", xlab = "Generation",
        cex = 1, cex.main = 1, col = "red", pch = 20,
        ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness)))
   graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
   graphics::grid(col = "black")
-  graphics::points(rslt$meanparkfitness, ylab = "MeanParkF", cex = 1.2, col = "blue", pch = 20)
-  graphics::points(rslt$maxparkfitness, ylab = "maxParkF", cex = 1.2, col = "green", pch = 20)
+  graphics::points(rslt$meanparkfitness, ylab = "MeanParkF",
+                   cex = 1.2, col = "blue", pch = 20)
+  graphics::points(rslt$maxparkfitness, ylab = "maxParkF",
+                   cex = 1.2, col = "green", pch = 20)
   x <- 1:length(rslt$maxparkfitness)
-  if (nrow(result) >= 4){
+  if (nrow(result) >= 4) {
     lmin <- smooth.spline(x, rslt$minparkfitness, spar = spar) 
     graphics::lines(lmin, col = "red", lwd = 1.2)
     lmea <- smooth.spline(x, rslt$meanparkfitness, spar = spar)
@@ -266,7 +271,7 @@ plotparkfitness <- function(result, spar = 0.1){
 
   timeticksd <- which(mutrpl > median(mutrpl))
   sdrplval <- fitsd[,'FitSD'][timeticksd]
-  if (length(timeticksd) != 0){
+  if (length(timeticksd) != 0) {
     calibrate::textxy(timeticksd, sdrplval, labs = timeticksd, cex = 0.5)
     graphics::abline(v = timeticksd)
     graphics::mtext(mutrplval, side = 3, at = timetick, cex = 0.8)
@@ -278,7 +283,7 @@ plotparkfitness <- function(result, spar = 0.1){
   plot(fitsd[,'FitSD'], type = "b", col = "red", lwd = 2, cex.main = 1, axes = TRUE,
        bty = "n", xlab = "", ylab = "",
        pch = 20, main = "Mutation Rate influence on Standard Deviation")
-  if (length(timeticksd) != 0){
+  if (length(timeticksd) != 0) {
     calibrate::textxy(timeticksd, sdrplval, labs = timeticksd, cex = 0.7)
     graphics::abline(v = timeticksd)
     graphics::mtext(mutrplval, side = 3,at = timetick,cex = 0.8)

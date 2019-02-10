@@ -29,14 +29,14 @@ plotCloud <- function(result, pl = FALSE){
   parcloud <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parcloud))
 
-  clouddata <- result[,7]
+  clouddata <- result[, 7]
   efficiency_cloud <- lapply(clouddata, function(x) x = x[, 1])
   energy_cloud <- lapply(clouddata, function(x) x = x[, 2])
   fitness_cloud <- lapply(clouddata, function(x) x = x[, 3])
 
   efficiency_per_gen <- energy_per_gen <- fitness_per_gen <- list()
   for (i in 1:length(clouddata)) {
-    l <- length(clouddata[[i]][, 'EfficAllDir'])
+    l <- length(clouddata[[i]][, "EfficAllDir"])
     efficiency_per_gen[[i]] <- t(as.matrix(rbind(rep(i, l),
                                                  efficiency_cloud[[i]])))
     energy_per_gen[[i]] <- t(as.matrix(rbind(rep(i, l),
@@ -55,11 +55,11 @@ plotCloud <- function(result, pl = FALSE){
   sd_effic_per_gen <- aggregate(efficiency_per_genmax,
                                 list(efficiency_per_genmax$X1), sd)
   efficiency_per_genmax <- cbind(
-    "X1" = max_effic_per_gen[,2],
-    "max" = max_effic_per_gen[,3],
-    "mean" = mean_effic_per_gen[,3],
-    "min" = min_effic_per_gen[,3],
-    "sd" = sd_effic_per_gen[,3])
+    "X1" = max_effic_per_gen[, 2],
+    "max" = max_effic_per_gen[, 3],
+    "mean" = mean_effic_per_gen[, 3],
+    "min" = min_effic_per_gen[, 3],
+    "sd" = sd_effic_per_gen[, 3])
 
   energy_per_gen <- do.call("rbind", energy_per_gen)
   energy_per_genmax <- data.frame(energy_per_gen)
@@ -103,13 +103,13 @@ plotCloud <- function(result, pl = FALSE){
       lf <- stats::smooth.spline(x = fitness_per_gen[, 1],
                                  y = fitness_per_gen[, 2],
                                  spar = 0.1)
-      graphics::lines(lf, col = 'red', lwd = 1.2)
+      graphics::lines(lf, col = "red", lwd = 1.2)
     }
-    graphics::points(x = fitness_per_genmax[, 'X1'],
-                     y = fitness_per_genmax[, 'max'],
+    graphics::points(x = fitness_per_genmax[, "X1"],
+                     y = fitness_per_genmax[, "max"],
                      type = "l", col = "red")
-    graphics::points(x = fitness_per_genmax[, 'X1'],
-                     y = fitness_per_genmax[, 'min'],
+    graphics::points(x = fitness_per_genmax[, "X1"],
+                     y = fitness_per_genmax[, "min"],
                      type = "l", col = "red")
     graphics::plot(efficiency_per_gen, main = "Efficiency",
                    xlab = "Generation",
@@ -119,13 +119,13 @@ plotCloud <- function(result, pl = FALSE){
       le <- stats::smooth.spline(x = efficiency_per_gen[, 1],
                                  y = efficiency_per_gen[, 2],
                                  spar = 0.1)
-      graphics::lines(le, col = 'orange', lwd = 1.2)
+      graphics::lines(le, col = "orange", lwd = 1.2)
     }
-    graphics::points(x = efficiency_per_genmax[, 'X1'],
-                     y = efficiency_per_genmax[, 'max'],
+    graphics::points(x = efficiency_per_genmax[, "X1"],
+                     y = efficiency_per_genmax[, "max"],
                      type = "l", col = "orange")
-    graphics::points(x = efficiency_per_genmax[, 'X1'],
-                     y = efficiency_per_genmax[, 'min'],
+    graphics::points(x = efficiency_per_genmax[, "X1"],
+                     y = efficiency_per_genmax[, "min"],
                      type = "l", col = "orange")
     graphics::plot(energy_per_gen, main = "Energy", xlab = "Generation",
                    ylab = "Energy in kW", pch = 20, col = "blue", cex = 1.3)
@@ -133,39 +133,39 @@ plotCloud <- function(result, pl = FALSE){
       len <- stats::smooth.spline(x = energy_per_gen[, 1],
                                   y = energy_per_gen[, 2],
                                   spar = 0.1)
-      graphics::lines(len, col = 'blue', lwd = 1.2)
+      graphics::lines(len, col = "blue", lwd = 1.2)
     }
-    graphics::points(x = energy_per_genmax[, 'X1'],
-                     y = energy_per_genmax[, 'max'],
+    graphics::points(x = energy_per_genmax[, "X1"],
+                     y = energy_per_genmax[, "max"],
                      type = "l", col = "blue")
-    graphics::points(x = energy_per_genmax[, 'X1'],
-                     y = energy_per_genmax[, 'min'],
+    graphics::points(x = energy_per_genmax[, "X1"],
+                     y = energy_per_genmax[, "min"],
                      type = "l", col = "blue")
 
-    graphics::plot(x = fitness_per_genmax[, 'X1'],
-                   y = fitness_per_genmax[, 'sd'],
+    graphics::plot(x = fitness_per_genmax[, "X1"],
+                   y = fitness_per_genmax[, "sd"],
                    main = "Standard Deviation Fitness",
-                   xlab = "Generation", 
+                   xlab = "Generation",
                    ylab = "Standard Deviation of Population", col = "red",
                    type = "b")
-    graphics::plot(x = efficiency_per_genmax[, 'X1'],
-                   y = efficiency_per_genmax[, 'sd'],
+    graphics::plot(x = efficiency_per_genmax[, "X1"],
+                   y = efficiency_per_genmax[, "sd"],
                    main = "Standard Deviation Efficiency",
-                   xlab = "Generation", 
+                   xlab = "Generation",
                    ylab = "Standard Deviation of Population", col = "orange",
                    type = "b")
-    graphics::plot(x = energy_per_genmax[, 'X1'],
-                   y = energy_per_genmax[, 'sd'],
+    graphics::plot(x = energy_per_genmax[, "X1"],
+                   y = energy_per_genmax[, "sd"],
                    main = "Standard Deviation Energy",
-                   xlab = "Generation", 
+                   xlab = "Generation",
                    ylab = "Standard Deviation of Population", col = "blue",
                    type = "b")
   }
 
-  clouddatafull <- cbind(Fitn = fitness_per_genmax, 
-                         Eff = efficiency_per_genmax, 
+  clouddatafull <- cbind(Fitn = fitness_per_genmax,
+                         Eff = efficiency_per_genmax,
                          Ene = energy_per_genmax)
-  
+
   colnames(clouddatafull) <- c("FitX1", "FitMax", "FitMean", "FitMin", "FitSD",
                                "EffX1", "EffMax", "EffMean", "EffMin", "EffSD",
                                "EneX1", "EneMax", "EneMean", "EneMin", "EneSD")

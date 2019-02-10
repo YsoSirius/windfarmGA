@@ -100,7 +100,7 @@ leafPlot <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
   }
   result <- result[, "bestPaEn"][[which]]
   proj_pol <- sp::proj4string(poly1)
-  xysp <- sp::SpatialPoints(cbind(result[, "X"], 
+  xysp <- sp::SpatialPoints(cbind(result[, "X"],
                                   result[, "Y"]), proj4string = sp::CRS(proj_pol))
   resultxy <- sp::spTransform(xysp, CRSobj = proj_longlat)
   resultxy <- sp::coordinates(resultxy)

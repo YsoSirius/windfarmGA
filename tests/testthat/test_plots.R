@@ -35,8 +35,8 @@ test_that("Test Plotting Functions", {
   beor_res <- plotbeorwor(resultrect)
   expect_true(is.null(beor_res))
 
-  fitev_res <- plotfitnessevolution(resultrect)
-  expect_true(is.null(fitev_res))
+  fitnes_res <- plotfitnessevolution(resultrect)
+  expect_true(is.null(fitnes_res))
 
   expect_true(is.null(fitnes_res))
   

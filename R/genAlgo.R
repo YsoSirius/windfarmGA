@@ -296,7 +296,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                  y = raster::extent(PolygonRaster))
       weibl_k <- raster::mask(x = k_par_crop, mask = PolygonRaster)
       weibl_a <- raster::mask(x = a_par_crop, mask = PolygonRaster)
-      estim_speed_raster <- weibl_a * (gamma(1 + (1/weibl_k)))
+      estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
       estim_speed_raster <- raster::projectRaster(estim_speed_raster,
                                               crs = sp::proj4string(Polygon1))
     } else {
@@ -381,7 +381,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       temp$ws < -with(temp, sum(ws * (probab / sum(probab))))
       temp$probab <- with(temp, sum(probab * (probab / sum(probab))))
       vdirspe[vdirspe$wd ==  vdirspe[duplicated(
-        vdirspe$wd) == FALSE,][i,"wd"],]$ws <- round(temp$ws,2)[1]
+        vdirspe$wd) == FALSE, ][i, "wd"], ]$ws <- round(temp$ws, 2)[1]
       vdirspe[vdirspe$wd ==  vdirspe[duplicated(
         vdirspe$wd) == FALSE, ][i, "wd"], ]$probab <- round(temp$probab, 2)[1]
     }
@@ -392,7 +392,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     vdirspe$probab <- vdirspe$probab * (100 / sum(vdirspe$probab))
   }
   probabDir <- vdirspe$probab
-  pp <- sum(probabDir) / 100 
+  pp <- sum(probabDir) / 100
   probabDir <- probabDir / pp
   vdirspe <- as.matrix(vdirspe)
   winddata <- list(vdirspe, probabDir)
@@ -427,7 +427,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   nStart <- (AmountGrids * n) / iteration
   if (nStart < 100) {
     nStart <- 100
-  } 
+  }
   if (nStart > 300) {
     nStart <- 300
   }
@@ -477,7 +477,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         unlink(temp)
       }
       ccl <- raster::raster("g100_06.tif")
-      
     } else {
       ccl <- raster::raster(sourceCCL)
     }
@@ -501,13 +500,13 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       plot(Polygon1, add = TRUE)
       plot(grid_filtered, add = TRUE)
     }
-    
+
     srtm_crop <- list(
       strm_crop = srtm_crop,
       orogr1 = raster::calc(srtm_crop, function(x) {
         x / (raster::cellStats(srtm_crop, mean, na.rm = TRUE))
       }),
-      raster::terrain(srtm_crop,"roughness")
+      raster::terrain(srtm_crop, "roughness")
     )
 
     # Include Corine Land Cover Raster to get an estimation of Surface Roughness
@@ -527,7 +526,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
                                    header = TRUE, sep = ";")
     cclRaster <- raster::reclassify(cclPoly1,
-                                    matrix(c(rauhigkeitz$GRID_CODE, 
+                                    matrix(c(rauhigkeitz$GRID_CODE,
                                              rauhigkeitz$Rauhigkeit_z),
                                            ncol = 2))
     if (plotit){
@@ -541,7 +540,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   i <- 1
   while (i <= iteration) {
-    if (!verbose){cat(".")}
+    if (!verbose) {
+      cat(".")
+    }
     ## FITNESS (+getRectV) ###############
     if (i == 1) {
       fit <- fitness(selection = startsel, referenceHeight = referenceHeight,
@@ -566,7 +567,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     ## Fitness Result Processing ###############
     allparks <- do.call("rbind", fit)
-    allparksUni <- subset.matrix(allparks, 
+    allparksUni <- subset.matrix(allparks,
                                  subset = !duplicated(allparks[, "Run"]))
 
     allCoords[[i]] <- allparks
@@ -580,13 +581,13 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     meanParkwirkungsg <- round(mean(allparksUni[, "EfficAllDir"]), 2)
     minParkwirkungsg <- round(min(allparksUni[, "EfficAllDir"]), 2)
     allparkcoeff[[i]] <- cbind(
-      maxparkfitness, meanparkfitness, minparkfitness, 
-      MaxEnergyRedu, MeanEnergyRedu, MinEnergyRedu, 
+      maxparkfitness, meanparkfitness, minparkfitness,
+      MaxEnergyRedu, MeanEnergyRedu, MinEnergyRedu,
       maxParkwirkungsg, meanParkwirkungsg, minParkwirkungsg)
 
-    clouddata[[i]] <- subset.matrix(allparksUni, 
-                                    select = c("EfficAllDir", 
-                                               "EnergyOverall", 
+    clouddata[[i]] <- subset.matrix(allparksUni,
+                                    select = c("EfficAllDir",
+                                               "EnergyOverall",
                                                "Parkfitness"))
 
     if (verbose) {
@@ -596,25 +597,25 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ## Highest Energy Output
     xd <- max(allparks[, "EnergyOverall"])
     ind <- allparks[, "EnergyOverall"] == xd
-    bestPaEn[[i]] <- allparks[ind,][1:n, ]
+    bestPaEn[[i]] <- allparks[ind, ][1:n, ]
     ## Highest Efficiency
     xd1 <- max(allparks[, "EfficAllDir"])
-    ind1 <- allparks[, "EfficAllDir"] == xd1     
+    ind1 <- allparks[, "EfficAllDir"] == xd1
     bestPaEf[[i]] <- allparks[ind1, ][1:n, ]
 
     # Print out most relevant information on Generation i
     afvs <- allparks[allparks[, "EnergyOverall"] == max(
-      allparks[, "EnergyOverall"]),]
+      allparks[, "EnergyOverall"]), ]
     if (verbose) {
-      cat(paste("How many individuals exist: ",  length(fit) ), "\n");
-      cat(paste("How many parks are in local Optimum: ",  
-                (length(afvs[,1])/n) ), "\n")
+      cat(paste("How many individuals exist: ",  length(fit) ), "\n")
+      cat(paste("How many parks are in local Optimum: ",
+                (length(afvs[, 1]) / n) ), "\n")
     }
     nindivfit <- length(fit)
 
     if (plotit) {
       lebre <- length(unique(bestPaEn[[i]][, "AbschGesamt"]))
-      if (lebre < 2){
+      if (lebre < 2) {
         Col <- "green"
       } else {
         Col <- rbPal(lebre)[as.numeric(cut(-bestPaEn[[i]][, "AbschGesamt"],
@@ -636,12 +637,12 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     y1 <- round(bestPaEf[[i]][, "EfficAllDir"][[1]], 2)
     e1 <- bestPaEf[[i]][, "EfficAllDir"]
 
-    allparksNewplot <- subset.matrix(allparks, 
-                                     select = c("Rect_ID", 
-                                                "AbschGesamt", 
+    allparksNewplot <- subset.matrix(allparks,
+                                     select = c("Rect_ID",
+                                                "AbschGesamt",
                                                 "Parkfitness"))
 
-    allparksNewplot <- aggregate(allparksNewplot, 
+    allparksNewplot <- aggregate(allparksNewplot,
                                  list(allparksNewplot[, "Rect_ID"]), mean)
     allparksNewplot <- allparksNewplot[, -1]
 
@@ -663,7 +664,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                   x1, "W/h \n Efficiency: ", y1, "%"),
            sub = paste("\n Number of turbines: ", length(e1)))
       plot(grid_filtered, add = TRUE)
-      graphics::points(bestPaEf[[i]][, "X"], bestPaEf[[i]][, "Y"], 
+      graphics::points(bestPaEf[[i]][, "X"], bestPaEf[[i]][, "Y"],
                        col = Col1, pch = 20, cex = 1.5)
     }
 
@@ -686,7 +687,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         BestForNo[[2]][, "Run"] <- length(fit) + 2
       }
 
-      last7 <- besPE[i:(i-5)]
+      last7 <- besPE[i:(i - 5)]
       if (!any(last7 == maxBisher)){
         if (verbose) {
           cat(paste("Park with highest Fitness level to date ",
@@ -715,13 +716,13 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
     if (i >= 2 && i <= iteration) {
       t0 <- subset.matrix(allparks, !duplicated(allparks[, "Run"]))
-      t0 <- t0[, "Parkfitness"]  
-      fitnessValues[[i]] <- t0    
+      t0 <- t0[, "Parkfitness"]
+      fitnessValues[[i]] <- t0
       rangeFitnessVt0 <- range(t0)
       maxt0 <- max(t0)
       meant0 <- mean(t0)
       mint0 <- min(t0)
-      t1 <- fitnessValues[[i-1]]
+      t1 <- fitnessValues[[i - 1]]
       rangeFitnessVt1 <- range(t1)
       maxt1 <- max(t1)
       meant1 <- mean(t1)
@@ -730,7 +731,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       meanDif <- meant0 - meant1
       minDif <- mint0 - mint1
       WeightDif <- c(0.80, 0.2, 0.0)
-      maxunt <- (maxDif * WeightDif[1]) + 
+      maxunt <- (maxDif * WeightDif[1]) +
         (meanDif * WeightDif[2]) + (minDif * WeightDif[3])
       allcoef1 <- c(rangeFitnessVt0, meant0)
       allcoef2 <- c(rangeFitnessVt1, meant1)
@@ -770,11 +771,11 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         u <- 4
         teil <- 4
         if (verbose) {
-          cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ",teil,"\n"))
+          cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil, "\n"))
         }
       }
       if (teil <= 4 / 3) {
-        teil <- 4 / 3 
+        teil <- 4 / 3
         if (verbose) {
           cat(paste("Max 75% selected. SP: ", teil, "\n"))
         }
@@ -783,7 +784,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         teil <- 1
         u <- u + 0.07
         if (verbose) {
-          cat(paste("Less than 20 individuals. Select all and increase ", 
+          cat(paste("Less than 20 individuals. Select all and increase ",
                     "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
         }
       }
@@ -808,7 +809,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       if (verbose) {
         cat(paste("Fitness of this population (", i,
                   "), compared to the prior,", pri,
-                  "by", round(maxunt, 2),"W/h \n"))
+                  "by", round(maxunt, 2), "W/h \n"))
       }
       meanunt <- meant0 - meant1
       beorwor[[i]] <- cbind(maxunt, meanunt)
@@ -834,30 +835,30 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     selec6best_bin <- selec6best[[1]]
     if (verbose) {
-      cat(paste("Selection  -  Amount of Individuals: ", 
+      cat(paste("Selection  -  Amount of Individuals: ",
                 length(selec6best_bin[1, -1]), "\n"))
     }
     Trus1 <- colSums(selec6best_bin)[-1] == n
-    if (any(Trus1 == FALSE)){
+    if (any(Trus1 == FALSE)) {
       stop("Number of turbines is not as required. Trus1. Fix BUG")
     }
     nindivsel <- length(selec6best_bin[1, -1])
 
     ## CROSSOVER #################
-    ## u determines the amount of crossover points, 
+    ## u determines the amount of crossover points,
     ## crossPart determines the method used (Equal/Random),
     ## uplimit is the maximum allowed permutations
     crossOut <- crossover1(se6 = selec6best, u = u, uplimit = CrossUpLimit,
                            crossPart = crossPart1,
                            verbose = verbose, seed = NULL)
     if (verbose) {
-      cat(paste("Crossover  -  Amount of Individuals: ", 
+      cat(paste("Crossover  -  Amount of Individuals: ",
                 length(crossOut[1, ])))
     }
     nindivcros <- length(crossOut[1, ])
 
     ## MUTATION #################
-    ## Variable Mutation Rate is activated if more than 2 individuals 
+    ## Variable Mutation Rate is activated if more than 2 individuals
     ## represent the current best solution.
     loOp <- (length(afvs[, 1]) / n)
     if (loOp > 2) {
@@ -878,7 +879,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     if (verbose) {
       cat(paste("\nMutation   -  Amount of Individuals: ", length(mut[1, ])))
     }
-    nindivmut <- length(mut[1,])
+    nindivmut <- length(mut[1, ])
 
     ## TRIMTON #################
     ## After Crossover and Mutation, the amount of turbines in a windpark
@@ -924,9 +925,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   allCoords <- allCoords[lapply(allCoords, length) != 0]
 
   ## Bind the results together and Output them. #################
-  alldata <- cbind(allparkcoeff, bestPaEn, bestPaEf, 
+  alldata <- cbind(allparkcoeff, bestPaEn, bestPaEf,
                    fuzzycontr, fitnessValues, nindiv,
-                   clouddata, selcross, beorwor, 
+                   clouddata, selcross, beorwor,
                    inputData, inputWind, mut_rate, allCoords)
 
   if (plotit) {
@@ -978,14 +979,14 @@ isSpatial <- function(Polygon1, Projection) {
     Polygon1 <- as(Polygon1, "Spatial")
     ## This is needed for GridFilter. Attribute names must have same length
     Polygon1$names <- "layer"
-  } else if (class(Polygon1)[1] == "data.frame" | 
+  } else if (class(Polygon1)[1] == "data.frame" |
              class(Polygon1)[1] == "matrix") {
     ## If coordinate names are found, take those columns, 
     ## otherwise take the first 2
     if (length(colnames(Polygon1))) {
       accep_cols_x <- c("L*N", "X")
       accep_cols_y <- c("L*T", "Y", "BREITE")
-      sum_col_match = sum(sapply(c(accep_cols_x, accep_cols_y), grepl,
+      sum_col_match <- sum(sapply(c(accep_cols_x, accep_cols_y), grepl,
                                  toupper(colnames(Polygon1)) ))
       if (sum_col_match >= 2) {
         x_col_match <- which(sapply(
@@ -994,7 +995,7 @@ isSpatial <- function(Polygon1, Projection) {
         y_col_match <- which(sapply(
           lapply(accep_cols_y, grepl, toupper(colnames(Polygon1))),
           any))
-  
+
         x_col_index <- which(grepl(accep_cols_x[x_col_match],
                                    toupper(colnames(Polygon1))))
         y_col_index <- which(grepl(accep_cols_y[y_col_match],
@@ -1002,11 +1003,11 @@ isSpatial <- function(Polygon1, Projection) {
 
         pltm <- Polygon1[, c(x_col_index[1], y_col_index[1])]
       } else {
-        col_numeric <- which(sapply(Polygon1[1,], is.numeric))
+        col_numeric <- which(sapply(Polygon1[1, ], is.numeric))
         pltm <- Polygon1[, col_numeric]
       }
     } else {
-      col_numeric <- which(sapply(Polygon1[1,], is.numeric))
+      col_numeric <- which(sapply(Polygon1[1, ], is.numeric))
       pltm <- Polygon1[, col_numeric]
     }
 

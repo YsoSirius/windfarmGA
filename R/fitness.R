@@ -156,9 +156,10 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
         })
 
       } else {
-        ## Get a list from unique Grid_ID elements for every park configuration respective 
-        ## to every winddirection considered. Since caluclateEn was run over all selections already
-        ## we just need to process the result stored in the list e. 
+        ## Get a list from unique Grid_ID elements for every park
+        ## configuration respective to every winddirection considered.
+        ## Since caluclateEn was run over all selections already
+        ## we just need to process the result stored in the list e.
         ee  <- lapply(e[[i]], function(x) {
           subset.matrix(x, subset = !duplicated(x[, "Punkt_id"]))
         })
@@ -213,7 +214,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       # Get the original X / Y - Coordinates of the selected individual
       xundyOrig <- selection[[i]][, 2:3]
 
-      # Add the Efficieny and the Energy Output of all wind directions and 
+      # Add the Efficieny and the Energy Output of all wind directions and
       # add the total Wake Effect of every Point Location
       # Include the Run of the genertion to the data frame
       xundyOrig <- cbind(xundyOrig,
@@ -225,7 +226,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
 
 
       ## Get the Rotor Radius and the Rect_IDs of the park configuration
-      dt <- subset.matrix(ee[[1]] , select = c("RotorR", "Rect_ID"))
+      dt <- subset.matrix(ee[[1]], select = c("RotorR", "Rect_ID"))
       ## Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
       dt <- cbind(xundyOrig, dt)
 

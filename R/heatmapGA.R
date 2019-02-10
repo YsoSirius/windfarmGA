@@ -40,7 +40,7 @@ heatmapGA <- function(result, si = 2, idistw){
   on.exit(par(parheat))
   par(mfrow = c(1, 1))
 
-  bpe <- do.call("rbind", result[,"allCoords"]);
+  bpe <- do.call("rbind", result[, "allCoords"]);
   rownames(bpe) <- NULL
   bpe <- data.frame(bpe[, 1:2])
 

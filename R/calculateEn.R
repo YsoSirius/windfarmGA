@@ -118,7 +118,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
                               srtm_crop, topograp, cclRaster, weibull) {
 
   sel1 <- sel[, 2:3];
-  ## Assign constant/default values
+  ## Assign constant / default values
   cT <- 0.88;   air_rh <- 1.225;   k <- 0.075;  plotit <- FALSE
 
   ## TODO - this can go in some upper level
@@ -257,11 +257,11 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
         estim_speed, na.rm = TRUE)
     }
 
-    weibull_bool = TRUE
+    weibull_bool <- TRUE
     ## Multiply dummy vector `windpo` with expected wind speeds
     point_wind <- windpo * estim_speed
   } else {
-    weibull_bool = FALSE
+    weibull_bool <- FALSE
   }
 
   ## For every wind direction, calculate the energy output.

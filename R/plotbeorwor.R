@@ -27,7 +27,7 @@ plotbeorwor <- function(result){
 
   beorworse <- do.call("rbind", result[, 9])
   maxdif <- data.frame(
-    diff = beorworse[,1],
+    diff = beorworse[, 1],
     farbe = 0)
 
   maxdif$farbe[maxdif$diff < 0]  <- "red"

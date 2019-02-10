@@ -27,9 +27,9 @@ plotEvolution <- function(result, ask = TRUE, spar = 0.1){
   ## Set the graphical parameters
   parevol <- par(no.readonly = TRUE)
   on.exit(par(parevol))
-  par(mfrow = c(1,1))
+  par(mfrow = c(1, 1))
 
-  result1 <- as.data.frame(do.call("rbind", result[,1]))
+  result1 <- as.data.frame(do.call("rbind", result[, 1]))
 
   plot(result1$minParkwirkungsg, xaxt = "n",
        main = "Park Efficiency per Generation", xlab = "Generation",
@@ -57,7 +57,7 @@ plotEvolution <- function(result, ask = TRUE, spar = 0.1){
 
   plot(result1$MeanEnergyRedu, xaxt = "n", main = "Energy Yield per Generation",
        xlab = "Generation", ylab = "Energy in kW", cex = 0.8, cex.main = 0.8,
-       col = "blue", pch = 20, 
+       col = "blue", pch = 20,
        ylim = c(min(result1$MinEnergyRedu), max(result1$MaxEnergyRedu)))
   axis(1, at = 1:nrow(result1), tick = TRUE)
   grid(col = "black")
