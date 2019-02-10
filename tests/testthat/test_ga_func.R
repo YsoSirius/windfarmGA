@@ -5,6 +5,13 @@ library(sp)
 library(spatstat)
 library(maptools)
 
+## Function to suppress print/cat outputs
+quiet <- function(x) { 
+  sink(tempfile()) 
+  on.exit(sink()) 
+  invisible(force(x)) 
+}
+
 test_that("Test Genetic Algorithm Function", {
   ## Data ##############
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
@@ -37,7 +44,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(anyNA(res2))
   expect_true(all.equal(res2, res1))
   expect_error(BaroHoehe(data = data))
-  
+  rm(data, res, res1, res2)
   
   ## GRIDFILTER ################################
   Grid <- GridFilter(shape = Polygon1,resol = 200, prop = 1)
@@ -66,7 +73,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(anyNA(Grid[[1]]))
   
   ## too high resolution - error
-  expect_error(GridFilter(shape = Polygon1, resol = 1e+06, prop = -1))
+  quiet(expect_error(GridFilter(shape = Polygon1, resol = 1e+06, prop = -1)))
   ## TODO - no check for too small resol
   # expect_error(GridFilter(shape = Polygon1, resol = 0.5, prop = -1))
   
@@ -94,7 +101,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(anyNA(Grid1[[1]]))
   expect_true(nrow(Grid1[[1]]) > nrow(Grid[[1]]))
   expect_false(identical(Grid[[2]]@bbox, Grid1[[2]]@bbox))
-  
+  rm(Grid1, Polygon2)
   
   ## HEXATEX #################
   HexGrid <- HexaTex(Polygon1, 100, FALSE)
@@ -121,6 +128,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_is(HexGrid[[1]], "matrix")
   expect_is(HexGrid[[2]], "SpatialPolygons")
   expect_false(anyNA(HexGrid[[1]]))
+  rm(HexGrid)
     
   ## TESS2SPDF #############
   HexaGrid <- spatstat::hextess(maptools::as.owin.SpatialPolygons(Polygon1),s = 100)
@@ -129,7 +137,7 @@ test_that("Test Genetic Algorithm Function", {
   ## Convert the Tesselation to SpatialPolygons
   Hex2spdf <- tess2SPdf(HexaGrid)
   expect_is(Hex2spdf, "SpatialPolygons")
-  
+  rm(Hex2spdf, HexaGrid)
   
   ## STARTGA ################################
   startsel <- StartGA(Grid[[1]], n = 10, nStart = 20);
@@ -139,7 +147,11 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 20")
   expect_false(any(unlist(sapply(startsel, is.na))))
-  
+
+  # Produce Errors (quietly)
+  quiet(expect_error(StartGA(Grid[[1]][1:10,], n = 10, nStart = 20)))
+  quiet(expect_error(StartGA(Grid[[1]][1:10,], n = 7, nStart = 20)))
+
   startsel <- StartGA(Grid[[1]], n = 20, nStart = 25);
   expect_is(startsel, "list")
   expect_true(all(sapply(startsel, class) == "matrix"))
@@ -191,10 +203,10 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(sapply(fit1, nrow) == 10))
   expect_false(any(unlist(sapply(fit1, is.na))))
   expect_false(any(unlist(do.call("rbind", fit1)[,-c(1,2)] < 0)))
-
+  rm(fit1)
   
   ## SELECTION ################################
-  allparks <- do.call("rbind",fit);
+  allparks <- do.call("rbind", fit)
   selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "VAR")
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
@@ -202,6 +214,16 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
   
+  ## Produce error
+  fitNA <- fit
+  fitNA[[1]][, "Parkfitness"] <- NA
+  a = lapply(1:length(fitNA), function(i) {
+    fitNA[[i]][, "Parkfitness"] <<- NA
+  })
+  rm(a)
+  quiet(expect_error(selection1(fitNA, Grid[[1]], 2, TRUE, 6, "VAR")))
+
+
   selec6best <- selection1(fit, Grid[[1]], teil = 1, TRUE, 6, "FIX")
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
@@ -223,8 +245,8 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
   
-  selec6best <- selection1(fit, Grid[[1]],4, FALSE, 6, selstate = "VAR",
-                           verbose = TRUE)
+  selec6best <- quiet(selection1(fit, Grid[[1]],4, FALSE, 6, selstate = "VAR",
+                           verbose = TRUE))
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
@@ -232,8 +254,8 @@ test_that("Test Genetic Algorithm Function", {
   rm(selec6best)
   
   
-  selec6best <- selection1(fit, Grid[[1]],4, FALSE, 6, "FIX",
-                           verbose = TRUE)
+  selec6best <- quiet(selection1(fit, Grid[[1]],4, FALSE, 6, "FIX",
+                           verbose = TRUE))
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
@@ -241,14 +263,14 @@ test_that("Test Genetic Algorithm Function", {
   
   
   ## CROSSOVER #####################
-  crossOut <- crossover1(selec6best, 2, uplimit = 300, crossPart = "RAN",
-                         verbose = TRUE)
+  crossOut <- quiet(crossover1(selec6best, 2, uplimit = 300, crossPart = "RAN",
+                         verbose = TRUE))
   expect_output(str(crossOut), "num")
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
   rm(crossOut)
   
-  crossOut <- crossover1(selec6best, 7, uplimit = 500, crossPart = "RAN");
+  crossOut <- crossover1(selec6best, 7, uplimit = 500, crossPart = "RAN")
   expect_output(str(crossOut), "num")
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
@@ -264,6 +286,17 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
   rm(crossOut)
+  
+  crossOut <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
+                         crossPart = "RAN", seed = 105)
+  expect_output(str(crossOut), "num")
+  expect_false(any(is.na(crossOut)))
+  expect_true(all(crossOut %in% c(0, 1)))
+  rm(crossOut)
+  
+  ## Produce error
+  expect_error(crossover1(se6 = selec6best, u = 7, uplimit = 500,
+                         crossPart = "something"))
   
   crossOut <- crossover1(selec6best, 3, uplimit = 300, crossPart = "EQU");
   expect_output(str(crossOut), "num")
