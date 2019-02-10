@@ -97,7 +97,13 @@ test_that("Test Plotting Functions", {
   
   heat_res <- heatmapGA(resultrect)
   expect_true(class(heat_res)[1] == "gg")
+  
+  heat_res <- heatmapGA(resultrect, idistw = 2)
+  expect_true(class(heat_res)[1] == "gg")
 
+  heat_res <- heatmapGA(resultrect, idistw = 50, si = 5)
+  expect_true(class(heat_res)[1] == "gg")
+  
   evo_res <- plotEvolution(resultrect, ask = FALSE)
   expect_true(is.null(evo_res))
   

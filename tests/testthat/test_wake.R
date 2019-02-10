@@ -16,6 +16,31 @@ test_that("Test Wake Functions", {
   t <- as.matrix(cbind(x = runif(10,0,raster::extent(polYgon)[2]),
                        y = runif(10,0,raster::extent(polYgon)[4])))
   
+  # PointToLine2.R -------------------------
+  x <- c(100,100)
+  y <- c(500,500)
+  res <- PointToLine2(x, y, TRUE)
+  expect_false(anyNA(res))
+  
+  x <- c(100,100)
+  y <- c(500,500)
+  res1 <- PointToLine2(x, y, FALSE)
+  expect_false(anyNA(res))
+  expect_true(identical(res1, res))
+  
+  x <- runif(n = 2, 0, 1000)
+  y <- runif(n = 2, 0, 1000)
+  res1 <- PointToLine2(x, y, FALSE)
+  expect_false(anyNA(res1))
+  
+  x <- c(0,0)
+  y <- c(0,0)
+  res1 <- PointToLine2(x, y, FALSE)
+  expect_false(anyNA(res))
+  expect_true(all(res1 == 0))
+  
+  
+  ###########################################
   ## Test WinkelCalc Function --------------
   ###########################################
   Aa <- as.numeric(cbind(1, 1))
@@ -42,6 +67,13 @@ test_that("Test Wake Functions", {
   expect_true(round(colSums(Angles)) == 180)
   rm(Angles)
   
+  ## If NA -> doe it correct to 0?
+  Aa <- c(0, 0)
+  Angles <- WinkelCalc(Aa, Aa, Aa)
+  expect_false(any(is.na(Angles)))
+  expect_true(colSums(Angles) == 0)
+  rm(Angles)
+  
   Aa <- data.frame(cbind(0, 0))
   Bb <- data.frame(cbind(-50, 30.4))
   Cc <- data.frame(cbind(10, 44))
@@ -52,10 +84,12 @@ test_that("Test Wake Functions", {
   
   ## TODO
   ## Compare with cpp functions
+
   
   ## Test VekWinkelCalc Function --------------
   ###########################################
   distanz <- 100000
+  colnms = c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")
   ## Evaluate and plot for every turbine all other potentially influencing turbines
   potInfTur <- list()
   for (i in 1:(length(t[,1]))) {
@@ -64,20 +98,28 @@ test_that("Test Wake Functions", {
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
   dr <- do.call("rbind", potInfTur)
-  expect_true(all((dr[dr[,"Ax"] == 0, c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr[,"Ay"] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr[,"Cx"] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr[,"Cy"] == 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((dr[dr[,"Ax"] != 0,c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
+  expect_true(all((dr[dr[,"Ax"] == 0, colnms]) == 0))
+  expect_true(all((dr[dr[,"Ay"] == 0,colnms]) == 0))
+  expect_true(all((dr[dr[,"Cx"] == 0,colnms]) == 0))
+  expect_true(all((dr[dr[,"Cy"] == 0,colnms]) == 0))
+  expect_true(all((dr[dr[,"Ax"] != 0,colnms]) != 0))
   
-  ## Same With Lapply
-  potInfTurLP <- lapply(1:length(t[,1]), function(i) {
-    VekWinkelCalc(t = t, o = i, wkl = wnkl,
-                  distanz = distanz, polYgon = polYgon, plotAngles = FALSE)
-  })
-  expect_true(identical(potInfTurLP, potInfTur))
-  expect_true(all.equal(potInfTurLP, potInfTur))
-  expect_false(all(unlist(sapply(potInfTurLP, is.na))))
+  ## With Plotting
+  potInfTur_pl <- list()
+  for (i in 1:(length(t[,1]))) {
+    potInfTur_pl[[i]] <- VekWinkelCalc(t = t, o = i, wkl = wnkl,
+                                    distanz = distanz, polYgon = polYgon, 
+                                    plotAngles = TRUE)
+  }
+  expect_false(all(unlist(sapply(potInfTur, is.na))))
+  expect_true(identical(potInfTur, potInfTur_pl))
+  dr <- do.call("rbind", potInfTur)
+  expect_true(all((dr[dr[,"Ax"] == 0, colnms]) == 0))
+  expect_true(all((dr[dr[,"Ay"] == 0, colnms]) == 0))
+  expect_true(all((dr[dr[,"Cx"] == 0, colnms]) == 0))
+  expect_true(all((dr[dr[,"Cy"] == 0, colnms]) == 0))
+  expect_true(all((dr[dr[,"Ax"] != 0, colnms]) != 0))
+
   
   
   ## Test InfluPoints Function --------------
@@ -87,8 +129,8 @@ test_that("Test Wake Functions", {
   expect_output(str(resInfluPoi), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df <- do.call("rbind", resInfluPoi)
-  expect_true(all((df[dr[, "Ax"] == 0, c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) == 0))
-  expect_true(all((df[dr[, "Ax"] != 0, c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")]) != 0))
+  expect_true(all((df[dr[, "Ax"] == 0, colnms]) == 0))
+  expect_true(all((df[dr[, "Ax"] != 0, colnms]) != 0))
   
   ## Bigger Angle
   wnkl <- 50
@@ -98,12 +140,8 @@ test_that("Test Wake Functions", {
   expect_output(str(resInfluPoiWin), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoiWin, is.na))))
   df1 <- do.call("rbind", resInfluPoiWin)
-  expect_true(all((df1[df1[, "Ax"] == 0, 
-                       c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A",
-                         "alpha","betha","gamma")]) == 0))
-  expect_true(all((df1[df1[, "Ax"] != 0, 
-                       c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A",
-                         "alpha","betha","gamma")]) != 0))
+  expect_true(all((df1[df1[, "Ax"] == 0, colnms]) == 0))
+  expect_true(all((df1[df1[, "Ax"] != 0, colnms]) != 0))
   expect_true(nrow(df1) > nrow(df))
   rm(df1, resInfluPoi)
   
@@ -114,12 +152,8 @@ test_that("Test Wake Functions", {
   expect_output(str(resInfluPoi), "List of 20")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df1 <- do.call("rbind", resInfluPoi)
-  expect_true(all((df1[df1[, "Ax"] == 0, 
-                       c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A",
-                         "alpha","betha","gamma")]) == 0))
-  expect_true(all((df1[df1[, "Ax"] != 0, 
-                       c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A",
-                         "alpha","betha","gamma")]) != 0))
+  expect_true(all((df1[df1[, "Ax"] == 0, colnms]) == 0))
+  expect_true(all((df1[df1[, "Ax"] != 0, colnms]) != 0))
   rm(resInfluPoi)
   
   ## Same Points & Smaller Angle

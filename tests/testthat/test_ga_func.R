@@ -65,6 +65,11 @@ test_that("Test Genetic Algorithm Function", {
   expect_is(Grid[[2]], "SpatialPolygonsDataFrame")
   expect_false(anyNA(Grid[[1]]))
   
+  ## too high resolution - error
+  expect_error(GridFilter(shape = Polygon1, resol = 1e+06, prop = -1))
+  ## TODO - no check for too small resol
+  # expect_error(GridFilter(shape = Polygon1, resol = 0.5, prop = -1))
+  
   Grid <- GridFilter(shape = Polygon2, resol = 300, prop = 100)
   expect_is(Grid[[1]], "matrix")
   expect_is(Grid[[2]], "SpatialPolygonsDataFrame")
@@ -197,7 +202,14 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
   
-  selec6best <- selection1(fit, Grid[[1]],2, TRUE, 6, "FIX");
+  selec6best <- selection1(fit, Grid[[1]], teil = 1, TRUE, 6, "FIX")
+  expect_output(str(selec6best), "List of 2")
+  expect_false(any(unlist(sapply(selec6best, is.na))))
+  expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
+  expect_true(all(selec6best[[2]][,-1] > 0))
+  rm(selec6best)
+  
+  selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "FIX");
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
@@ -220,7 +232,8 @@ test_that("Test Genetic Algorithm Function", {
   rm(selec6best)
   
   
-  selec6best <- selection1(fit, Grid[[1]],4, FALSE, 6, "FIX");
+  selec6best <- selection1(fit, Grid[[1]],4, FALSE, 6, "FIX",
+                           verbose = TRUE)
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
@@ -241,16 +254,16 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(crossOut %in% c(0, 1)))
   rm(crossOut)
   
-  # crossOut <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
-  #                        crossPart = "EQU", seed = 105)
+  crossOut <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
+                         crossPart = "EQU", seed = 105)
   # crossOut1 <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
   #                        crossPart = "EQU", seed = 105)
   # expect_true(identical(crossOut, crossOut1))
   # expect_true(all.equal(crossOut, crossOut1))
-  # expect_output(str(crossOut), "num")
-  # expect_false(any(is.na(crossOut)))
-  # expect_true(all(crossOut %in% c(0, 1)))
-  # rm(crossOut, crossOut1)
+  expect_output(str(crossOut), "num")
+  expect_false(any(is.na(crossOut)))
+  expect_true(all(crossOut %in% c(0, 1)))
+  rm(crossOut)
   
   crossOut <- crossover1(selec6best, 3, uplimit = 300, crossPart = "EQU");
   expect_output(str(crossOut), "num")
@@ -363,6 +376,12 @@ test_that("Test Genetic Algorithm Function", {
                   nGrids = nrow(Grid[[1]]), trimForce = TRUE, seed = 104)
   mut2 <- trimton(mut = mut, nturb = 20, allparks = allparks,
                   nGrids = nrow(Grid[[1]]), trimForce = TRUE, seed = 104)
+  expect_true(identical(mut1, mut2))
+
+  mut1 <- trimton(mut = mut, nturb = 20, allparks = allparks,
+                  nGrids = nrow(Grid[[1]]), trimForce = FALSE, seed = 234)
+  mut2 <- trimton(mut = mut, nturb = 20, allparks = allparks,
+                  nGrids = nrow(Grid[[1]]), trimForce = FALSE, seed = 234)
   expect_true(identical(mut1, mut2))
 
 
