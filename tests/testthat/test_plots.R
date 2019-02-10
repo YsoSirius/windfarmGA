@@ -4,6 +4,13 @@ library(testthat)
 library(windfarmGA)
 library(sp)
 
+## Function to suppress print/cat outputs
+quiet <- function(x) { 
+  sink(tempfile()) 
+  on.exit(sink()) 
+  invisible(force(x)) 
+}
+
 test_that("Test Plotting Functions", {
   ## Windrose Plotting #############
   
@@ -74,13 +81,7 @@ test_that("Test Plotting Functions", {
                         vdirspe = winddat,
                         Rotor = 30, 
                         RotorHeight = 100)
-  
-  ## Function to suppress print/cat outputs
-  quiet <- function(x) { 
-    sink(tempfile()) 
-    on.exit(sink()) 
-    invisible(force(x)) 
-  }
+
   plot_res <- quiet(plotResult(resultrect, Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
 
