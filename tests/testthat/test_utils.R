@@ -29,7 +29,21 @@ test_that("Test Basic Functions", {
   
   ## PointToLine2 ################
   x <- c(100,100); y <- c(500,500);
-  res <- PointToLine2(x,y,FALSE)
+  res <- PointToLine2(x, y, F)
+  expect_true(all(res[3:4] == x))
+  expect_true(all(res[1:2] == y))
+  expect_false(any(is.na(res)))
+  rm(x, res)
+  
+  x <- c(100,1300); y <- c(5400,500);
+  res <- PointToLine2(x, y, FALSE)
+  expect_true(all(res[3:4] == x))
+  expect_true(all(res[1:2] == y))
+  expect_false(any(is.na(res)))
+  rm(x, res)
+  
+  x <- c(-100,1300); y <- c(5400,500);
+  res <- PointToLine2(x, y, FALSE)
   expect_true(all(res[3:4] == x))
   expect_true(all(res[1:2] == y))
   expect_false(any(is.na(res)))

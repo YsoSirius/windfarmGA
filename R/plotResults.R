@@ -104,7 +104,7 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
   }
   if (is.na(sp::proj4string(Polygon1))) {
     ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
-    proj4string(Polygon1) <- ProjLAEA
+    sp::proj4string(Polygon1) <- ProjLAEA
     # stop("Polygon is not projected.", call. = FALSE )
     message("Polygon is not projected. Same projection from result will be assumed.")
   }
@@ -112,21 +112,21 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
 
-  if (missing(sourceCCL)){
+  if (missing(sourceCCL)) {
     sourceCCL <- NULL
   }
-  if (missing(sourceCCLRoughness)){
+  if (missing(sourceCCLRoughness)) {
     sourceCCLRoughness <- NULL
   }
   
 
   ## Check Weibull Rasters
-  if (missing(weibullsrc)){
+  if (missing(weibullsrc)) {
     weibullsrc <- NULL
     col2res <- "lightblue"
   } else {
     PolyCrop <- sp::spTransform(Polygon1,
-                                CRSobj = proj4string(weibullsrc[[1]]))
+                                CRSobj = sp::proj4string(weibullsrc[[1]]))
     if (class(weibullsrc) == "list" & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
         raster::crop(x, raster::extent(PolyCrop))})

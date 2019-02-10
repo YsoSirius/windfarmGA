@@ -220,7 +220,7 @@ utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
                          "dry.grid.filtered","spd.binned","Run","EnergyOverall",
                          "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt",
                          "srtm_crop", "cclRaster", "weibullsrc","globalparks","<<-", "cl",
-                         "k", "proj4string"))
+                         "k", "proj4string", "`proj4string<-`"))
 
 
 windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection, 
