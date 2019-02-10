@@ -5,7 +5,7 @@
 #' of the 2 available crossover methods. The available inputs are "E" and "R".
 #' "E" refers to partitioning at equal intervals and "R" refers to random
 #' partitioning.
-#' @export
+#' 
 #' @return Returns the selected crossover method (character)
 #' @examples \donttest{
 #'   readinteger()
@@ -18,10 +18,10 @@ readinteger        <- function(){
 
   crPaInter <- toupper(crPaInter)
 
-  if(crPaInter=="R"){crossPart <- "RAN"}
-  if(crPaInter=="E"){crossPart <- "EQU"}
+  if (crPaInter == "R") {crossPart <- "RAN"}
+  if (crPaInter == "E") {crossPart <- "EQU"}
 
-  if  (crPaInter!= "E" & crPaInter !="R") {
+  if  (crPaInter != "E" & crPaInter != "R") {
     crossPart <- readinteger()
   }
 
@@ -36,8 +36,6 @@ readinteger        <- function(){
 #' "F" refers to a fixed percentage of 50% and "V" refers to a variable
 #' percentage, based on the development of the population fitness values.
 #' 
-#' @export
-#' 
 #' @return Returns the selected selection method (character)
 #' @examples \donttest{
 #'   readintegerSel()
@@ -48,10 +46,10 @@ readintegerSel        <- function(){
   selstaPr <- readline(prompt = "Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.")
   
   selstaPr <- toupper(selstaPr)
-  if (selstaPr=="F") {selstate <- "FIX"}
-  if (selstaPr=="V") {selstate <- "VAR"}
+  if (selstaPr == "F") {selstate <- "FIX"}
+  if (selstaPr == "V") {selstate <- "VAR"}
   
-  if  (selstaPr!="F" & selstaPr!="V") {
+  if  (selstaPr != "F" & selstaPr != "V") {
     selstate <- readintegerSel()
   }
   return(selstate)
