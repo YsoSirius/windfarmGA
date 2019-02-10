@@ -22,9 +22,21 @@ test_that("Test Genetic Algorithm Function", {
   proj4string(Polygon2) <- CRS(Projection)
   
   ## BAROHOEHE ################################
-  data <- matrix(seq(0,5000,500));
-  # expect_s3_class(BaroHoehe(data), "data.frame")
-  expect_false(any(is.na(BaroHoehe(data))))
+  data <- matrix(seq(0,5000,500))
+  res <- BaroHoehe(data)
+  expect_false(anyNA(res))
+  res1 <- BaroHoehe(data[,1])
+  expect_false(anyNA(res1))
+  expect_true(all.equal(res, res1))
+  
+  data <- data.frame(
+    id = sample(1:10, length(seq(0,5000,500)), replace = TRUE),
+    elev = seq(0,5000,500)
+  )
+  res2 <- BaroHoehe(data = data, "elev")
+  expect_false(anyNA(res2))
+  expect_true(all.equal(res2, res1))
+  expect_error(BaroHoehe(data = data))
   
   
   ## GRIDFILTER ################################
@@ -44,6 +56,11 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(anyNA(Grid[[1]]))
   
   Grid <- GridFilter(shape = Polygon1,resol = 500, prop = 0)
+  expect_is(Grid[[1]], "matrix")
+  expect_is(Grid[[2]], "SpatialPolygonsDataFrame")
+  expect_false(anyNA(Grid[[1]]))
+  
+  Grid <- GridFilter(shape = Polygon1,resol = 300, prop = 0, plotGrid = TRUE)
   expect_is(Grid[[1]], "matrix")
   expect_is(Grid[[2]], "SpatialPolygonsDataFrame")
   expect_false(anyNA(Grid[[1]]))
@@ -76,6 +93,11 @@ test_that("Test Genetic Algorithm Function", {
   
   ## HEXATEX #################
   HexGrid <- HexaTex(Polygon1, 100, FALSE)
+  expect_is(HexGrid[[1]], "matrix")
+  expect_is(HexGrid[[2]], "SpatialPolygons")
+  expect_false(anyNA(HexGrid[[1]]))
+  
+  HexGrid <- HexaTex(Polygon1, 100, TRUE)
   expect_is(HexGrid[[1]], "matrix")
   expect_is(HexGrid[[2]], "SpatialPolygons")
   expect_false(anyNA(HexGrid[[1]]))
@@ -164,11 +186,11 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(sapply(fit1, nrow) == 10))
   expect_false(any(unlist(sapply(fit1, is.na))))
   expect_false(any(unlist(do.call("rbind", fit1)[,-c(1,2)] < 0)))
-  
+
   
   ## SELECTION ################################
   allparks <- do.call("rbind",fit);
-  selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "VAR");
+  selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "VAR")
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
@@ -182,6 +204,22 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
   
+  selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "FIX")
+  expect_output(str(selec6best), "List of 2")
+  expect_false(any(unlist(sapply(selec6best, is.na))))
+  expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
+  expect_true(all(selec6best[[2]][,-1] > 0))
+  rm(selec6best)
+  
+  selec6best <- selection1(fit, Grid[[1]],4, FALSE, 6, selstate = "VAR",
+                           verbose = TRUE)
+  expect_output(str(selec6best), "List of 2")
+  expect_false(any(unlist(sapply(selec6best, is.na))))
+  expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
+  expect_true(all(selec6best[[2]][,-1] > 0))
+  rm(selec6best)
+  
+  
   selec6best <- selection1(fit, Grid[[1]],4, FALSE, 6, "FIX");
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
@@ -189,9 +227,9 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(selec6best[[2]][,-1] > 0))
   
   
-  
   ## CROSSOVER #####################
-  crossOut <- crossover1(selec6best, 2, uplimit = 300, crossPart = "RAN");
+  crossOut <- crossover1(selec6best, 2, uplimit = 300, crossPart = "RAN",
+                         verbose = TRUE)
   expect_output(str(crossOut), "num")
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
@@ -202,6 +240,17 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
   rm(crossOut)
+  
+  # crossOut <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
+  #                        crossPart = "EQU", seed = 105)
+  # crossOut1 <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
+  #                        crossPart = "EQU", seed = 105)
+  # expect_true(identical(crossOut, crossOut1))
+  # expect_true(all.equal(crossOut, crossOut1))
+  # expect_output(str(crossOut), "num")
+  # expect_false(any(is.na(crossOut)))
+  # expect_true(all(crossOut %in% c(0, 1)))
+  # rm(crossOut, crossOut1)
   
   crossOut <- crossover1(selec6best, 3, uplimit = 300, crossPart = "EQU");
   expect_output(str(crossOut), "num")
@@ -237,6 +286,10 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(any(is.na(mut)))
   expect_true(all(mut %in% c(0, 1)))
   
+  mut <- mutation(a = crossOut, p = -1, seed = 104)
+  mut1 <- mutation(a = crossOut, p = -1, seed = 104)
+  expect_true(identical(mut, mut1))
+  
   mut <- mutation(a = crossOut, p = 0.0005)
   expect_output(str(mut), "num")
   expect_false(any(is.na(mut)))
@@ -253,7 +306,6 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(colSums(mut1) == 1))
   expect_true(all(dim(mut) == dim(mut1)))
   rm(mut1)
-
 
   mut1 <- trimton(mut = mut, nturb = min(colSums(mut)), allparks = allparks,
                   nGrids = nrow(Grid[[1]]), trimForce = FALSE)
@@ -280,6 +332,15 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(colSums(mut1) == 5))
   expect_true(all(dim(mut) == dim(mut1)))
   rm(mut1)
+  
+  mut1 <- trimton(mut = mut, nturb = 1, allparks = allparks,
+                  nGrids = nrow(Grid[[1]]), trimForce = TRUE)
+  expect_output(str(mut1), "num")
+  expect_false(any(is.na(mut1)))
+  expect_true(all(mut1 %in% c(0, 1)))
+  expect_true(all(colSums(mut1) == 1))
+  expect_true(all(dim(mut) == dim(mut1)))
+  rm(mut1)
 
   mut1 <- trimton(mut = mut, nturb = min(colSums(mut)), allparks = allparks,
                   nGrids = nrow(Grid[[1]]), trimForce = TRUE)
@@ -297,6 +358,12 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(mut1 %in% c(0, 1)))
   expect_true(all(colSums(mut1) == 20))  
   expect_true(all(dim(mut) == dim(mut1)))
+  
+  mut1 <- trimton(mut = mut, nturb = 20, allparks = allparks,
+                  nGrids = nrow(Grid[[1]]), trimForce = TRUE, seed = 104)
+  mut2 <- trimton(mut = mut, nturb = 20, allparks = allparks,
+                  nGrids = nrow(Grid[[1]]), trimForce = TRUE, seed = 104)
+  expect_true(identical(mut1, mut2))
 
 
   ## GETRECTV #####################

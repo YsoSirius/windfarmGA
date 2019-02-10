@@ -81,15 +81,14 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
   if (missing(seed)) {seed = NULL}
   k <- 0.5
   nGrids1 <- 1:nGrids
-  
+
   ## TODO Does it have to be in for-loop????
   # Calculate probability, that Turbine is selected to be eliminated.
   indivprop <- subset.matrix(allparks, select = c("Rect_ID", "Parkfitness", "AbschGesamt"))
   # Group mean wake effect and fitness value of a grid cell.
   indivprop <- aggregate(indivprop[,2:3], by = list(indivprop[,1]), FUN = mean)
   colnames(indivprop) <- c("Rect_ID","Parkfitness","AbschGesamt")
-  
-  
+
   lepa <- length(mut[1,])
   mut1 <- vector("list", lepa)
   for (i in 1:lepa) {
@@ -100,9 +99,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
     zviel <- sum(e) - nturb
     ## Which grid cell IDs have a turbine
     welche <- which(e)
-    
 
-    
     propwelche <- cbind(
       RectID = welche,
       Prop = rep(mean(indivprop[,'AbschGesamt']), length(welche)))
@@ -113,7 +110,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
       NewProb <- 1 / (npt / npt0)
       propwelche[welche %in%  indivprop[,'Rect_ID'], 'Prop'] <- NewProb;
     }
-    
+
     propwelcheN <-  cbind(
       Rect_ID = nGrids1,
       Prop = rep(min(indivprop[,'AbschGesamt']), nGrids))
@@ -127,16 +124,16 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
         propwelcheN[!propwelcheN[,'Rect_ID'] %in%  indivprop[,'Rect_ID'], 'Prop'] <- min(NewProb1)
       }
     }
-    
+
     propwelcheN <- propwelcheN[!propwelcheN[,'Rect_ID'] %in% welche,]
     ## P1 - Deleting Turbines
     prob1 <- propwelche[,'Prop']
     ## P2 - Adding Turbines
     prob2 <- propwelcheN[,'Prop']
-    
+
     if (zviel != 0) {
       if (zviel > 0) {
-        if (trimForce){
+        if (trimForce) {
           # Delete turbines with Probability
           if (!is.null(seed)) {set.seed(as.integer(seed))}
           smpra <- base::sample(welche, zviel, replace = FALSE, prob = prob1)
@@ -150,7 +147,7 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
         tmp[smpra] <- 0
         mut1[[i]] <- tmp
       } else {
-        if (trimForce){
+        if (trimForce) {
           # Add turbines with Probability
           if (!is.null(seed)) {set.seed(as.integer(seed))}
           smpra <- sample(propwelcheN[,'Rect_ID'], -zviel, replace = FALSE, prob = prob2)
