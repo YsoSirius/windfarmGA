@@ -1110,6 +1110,3 @@ windata_format <- function(df) {
   winddata <- list(wind_df, probabDir)
   return(winddata)
 }
-
-
-
