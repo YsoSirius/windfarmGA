@@ -20,7 +20,6 @@ test_that("Test Genetic Algorithm Function", {
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
   +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   proj4string(Polygon2) <- CRS(Projection)
-  plot(Polygon2)
   
   ## BAROHOEHE ################################
   data <- matrix(seq(0,5000,500));
@@ -136,6 +135,14 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(sapply(startsel, nrow) == 20))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 300")
+  expect_false(any(unlist(sapply(startsel, is.na))))
+  
+  startsel <- StartGA(Grid[[1]], n = 10, nStart = 20)
+  expect_is(startsel, "list")
+  expect_true(all(sapply(startsel, class) == "matrix"))
+  expect_true(all(sapply(startsel, nrow) == 10))
+  expect_true(all(sapply(startsel, ncol) == 4))
+  expect_output(str(startsel), "List of 20")
   expect_false(any(unlist(sapply(startsel, is.na))))
   
   ## FITNESS ################################
