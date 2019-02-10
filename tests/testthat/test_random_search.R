@@ -19,7 +19,7 @@ test_that("Test Random Search Functions", {
                         Rotor = 35, Proportionality = 1,
                         RotorHeight = 100)
 
-  new <- RandomSearch(resultSP, Polygon1, n = 20, best = 4)
+  new <- RandomSearch(resultSP, Polygon1, n = 20, best = 4, Plot = FALSE)
   expect_is(new, "list")
   expect_false(any(sapply(new, is.na)))
   # RandomSearchPlot(resultRS = new, result = resultSP, 

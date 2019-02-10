@@ -71,8 +71,12 @@
 #' @author Jose Hidasi (original) / Sebastian Gatscha (adapted)
 GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
 
-  if (prop < 0.01) {prop <- 0.01}
-  if (prop > 1) {prop <- 1}
+  if (prop < 0.01) {
+    prop <- 0.01
+  }
+  if (prop > 1) {
+    prop <- 1
+  }
 
   ## Polygon to Raster, assign Resolution and Project
   grid <- raster::raster(raster::extent(shape))
@@ -85,48 +89,53 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   areagrid <- raster::area(gridpolygon)
 
   ## Intersect Polygon with Grid and get new areas
-  dry.grid <- raster::intersect(shape, gridpolygon)
-  areadrygrid <- raster::area(dry.grid)
+  grid_intersect <- raster::intersect(shape, gridpolygon)
+  areadrygrid <- raster::area(grid_intersect)
 
   ## Bind Information together and calulcate coverages
-  info <- cbind(dry.grid$layer, areagrid[dry.grid$layer], areadrygrid)
-  dry.grid$layer <- info[, 3] / info[, 2]
-  if (!any(dry.grid$layer >= prop)) {
+  info <- cbind(grid_intersect$layer,
+                areagrid[grid_intersect$layer],
+                areadrygrid)
+
+  grid_intersect$layer <- info[, 3] / info[, 2]
+  if (!any(grid_intersect$layer >= prop)) {
     print("\n################### GA ERROR MESSAGE ###################")
-    stop("A grid cannot be drawn. Reduce the resolution or define a projection in meters.")
+    stop("A grid cannot be drawn. Reduce the resolution ",
+         "or define a projection in meters.")
   }
 
   ## Subtract Grid cells with too small coverage
-  dry.grid.filtered <- dry.grid[dry.grid$layer >= prop,]
+  grid_filtered <- grid_intersect[grid_intersect$layer >= prop, ]
 
   if (plotGrid) {
     ## Calculate total area
-    areaquares <- round(sum(sapply(dry.grid.filtered@polygons, function(x)
+    areaquares <- round(sum(sapply(grid_filtered@polygons, function(x)
       sapply(x@Polygons, function(y) y@area))) / 1000000, 3)
-    
-    parGrid = par(ask = FALSE, no.readonly = TRUE)
-    par(mar = c(5,5,5,4))
-    par(mfrow = c(1,1))
+
+    par_grid <- par(ask = FALSE, no.readonly = TRUE)
+    par(mar = c(5, 5, 5, 4))
+    par(mfrow = c(1, 1))
     plot.new()
-    raster::plot(shape, col = "orange", 
-                 main = paste("Resolution:", resol, "m and prop: ", prop,
-                              "\n Total Area:", round(sum(areadrygrid) / 1000000, 3),
-                              "km^2 \n Number Grids:", length(dry.grid.filtered),
-                              "\n Sum Grid size:", areaquares, "km^2"))
-    raster::plot(dry.grid.filtered, col = "lightgreen", add = TRUE)
+    raster::plot(shape, col = "orange",
+           main = paste("Resolution:", resol, "m and prop: ", prop,
+                        "\n Total Area:", round(sum(areadrygrid) / 1000000, 3),
+                        "km^2 \n Number Grids:", length(grid_filtered),
+                        "\n Sum Grid size:", areaquares, "km^2"))
+    raster::plot(grid_filtered, col = "lightgreen", add = TRUE)
   }
 
   ## Get Grid Centers and add ID Field
-  centpo <- sp::coordinates(dry.grid.filtered)
+  centpo <- sp::coordinates(grid_filtered)
   centpo <- cbind(ID = 1:nrow(centpo), "X" = centpo[, 1], "Y" = centpo[, 2])
 
   if (plotGrid){
-    graphics::points(centpo[,'X'], centpo[,'Y'], col = "blue", pch = 20)
-    graphics::text(centpo[,'X'], centpo[,'Y'], labels = centpo[,'ID'], pos = 2)
-    par(parGrid)
+    graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
+    graphics::text(centpo[, "X"], centpo[, "Y"],
+                   labels = centpo[, "ID"], pos = 2)
+    par(par_grid)
   }
 
   ## Return Grid Cell Matrix and Grid as SpatialObject
-  centpo <- list(centpo, dry.grid.filtered)
+  centpo <- list(centpo, grid_filtered)
   invisible(centpo)
 }

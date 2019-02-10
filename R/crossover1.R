@@ -58,9 +58,9 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
     cat(paste("crossover point rate: ", u + 1))
   }
 
-  se6fit <- se6[[2]][1,-1]
+  se6fit <- se6[[2]][1, -1]
   se6 <- se6[[1]]
-  se6 <- se6[,-1]
+  se6 <- se6[, -1]
   parid <- sample(1:length(se6))
   z <- seq(1, length(parid), 2)
   all <- vector("list", length(z))
@@ -75,18 +75,18 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
     sene <- se6[, parid[r]]
     sene1 <- se6[, parid[r + 1]]
 
-    senefit <- se6fit[, parid[r]]   
+    senefit <- se6fit[, parid[r]]
     sene1fit <- se6fit[, parid[r + 1]]
     sene2fit[[e]] <- senefit + sene1fit / 2
-
 
     if (crossPart == "EQU"){
       ## Equal Parts
       # In how many parts should the genCode be split?
       crosEquPartN <- base::trunc(u + 1)
       t1 <- ceiling(length(sene) / crosEquPartN)
-      #split the genCode in equal parts, that are t long. a is from parent1 and b for parent2.
-      a <- base::split(sene, as.numeric(gl(length(sene), t1, length(sene)))) 
+      # split the genCode in equal parts, that are t long.
+      # a is from parent1 and b for parent2.
+      a <- base::split(sene, as.numeric(gl(length(sene), t1, length(sene))))
       b <- base::split(sene1, as.numeric(gl(length(sene1), t1, length(sene1))))
     }
     if (crossPart == "RAN"){
@@ -101,13 +101,15 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
     }
 
     x1 <- rbind(a, b)
-    perm <- gtools::permutations(n = 2, r = ncol(x1), v = 1:nrow(x1), repeats.allowed = TRUE)
+    perm <- gtools::permutations(n = 2, r = ncol(x1), v = 1:nrow(x1),
+                                 repeats.allowed = TRUE)
     # for every possible permutation
     permut <- list()
     for (pp in 1:nrow(perm)){
-      # for every col/genetic code pieces take either from parent 1(a) or parent 2(b)
+      # for every col/genetic code pieces take either from
+      # parent 1(a) or parent 2(b)
       gclist <- list()
-      for (gnp in 1:length(perm[pp,])){
+      for (gnp in 1:length(perm[pp, ])){
         parent01 <- perm[pp, gnp]
         if (parent01 == 1){
           gc <- a[[gnp]]
@@ -131,33 +133,34 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
   nI <- do.call("cbind", all)
 
   if (length(fitChi) != ncol(nI)){
-    # cat(paste("\nCrossover. Amount of Turbines is wrong. Fix BUG"))
     stop("\nCrossover. Amount of Turbines is wrong. Fix BUG")
   }
 
   if (verbose) {
-  cat(paste("\nHow many parental pairs are at hand: ", length(z)))
-  cat(paste("\nHow many permutations are possible: ", length(z) * (2^(trunc(u) + 1))))
+    cat(paste("\nHow many parental pairs are at hand: ", length(z)))
+    cat(paste("\nHow many permutations are possible: ", length(z) *
+                (2 ^ (trunc(u) + 1))))
   }
-  
 
   partaksur <- ncol(nI)
   if (partaksur >= uplimit){
     partaksur <- uplimit
     if (verbose) {
-      cat(paste("\nPopulation max limit reached: ", uplimit ))
+      cat(paste("\nPopulation max limit reached: ", uplimit))
     }
   }
 
-  # Select only some of the available permutations. Take fitness value as prop value.
-  if (!is.null(seed)) {set.seed(as.integer(seed))}
-  partak <- sort(sample(1:length(nI[1,]), partaksur, prob = fitChi))
-  if (verbose) {
-  cat(paste("\nHow many permutations are selected: ", length(partak), "\n"))
+  # Select only some of the available permutations. 
+  # Take fitness value as prop value.
+  if (!is.null(seed)) {
+    set.seed(as.integer(seed))
   }
-  
-  nI <- nI[,partak]
+  partak <- sort(sample(1:length(nI[1, ]), partaksur, prob = fitChi))
+  if (verbose) {
+    cat(paste("\nHow many permutations are selected: ", length(partak), "\n"))
+  }
 
+  nI <- nI[, partak]
   return(nI)
 }
 
@@ -178,6 +181,6 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
 #' splitAt(as.matrix(1:100),20)
 #'
 #' @author Sebastian Gatscha
-splitAt           <- function(x, pos) unname(split(x, cumsum(seq_along(x) %in% pos)))
-
-
+splitAt           <- function(x, pos) {
+  unname(split(x, cumsum(seq_along(x) %in% pos)))
+}

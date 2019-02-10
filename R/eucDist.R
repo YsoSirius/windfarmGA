@@ -17,4 +17,5 @@
 #'
 #' @author Sebastian Gatscha
 euc.dist <- function(x, y) {
+  sqrt(sum( (x - y) ^ 2))
 }

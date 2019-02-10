@@ -21,33 +21,32 @@
 #' }
 #' @author Sebastian Gatscha
 plotbeorwor <- function(result){
-  parbeorwo <- par(ask=F, no.readonly = T)
+  parbeorwo <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parbeorwo))
-  
-  beorworse <- do.call("rbind",result[,9]);
+  par(mfrow = c(2, 1))
 
-  par(mfrow=c(2,1))
-  maxdif <- as.data.frame(beorworse[,1]);
+  beorworse <- do.call("rbind", result[, 9])
   maxdif <- data.frame(
-    diff = beorworse[,1], 
+    diff = beorworse[,1],
     farbe = 0)
-  
+
   maxdif$farbe[maxdif$diff < 0]  <- "red"
   maxdif$farbe[maxdif$diff > 0] <- "green"
   maxdif$farbe[maxdif$diff == 0] <- "orange"
-  plot(maxdif$diff, type="b", col = maxdif$farbe, pch = 20, cex = 2); abline(0,0)
+  plot(maxdif$diff, type = "b", col = maxdif$farbe, pch = 20, cex = 2)
+  abline(0, 0)
   title("Max Difference to previous generation")
 
 
   meandif <- data.frame(
-    diff = beorworse[,2], 
+    diff = beorworse[, 2],
     farbe = 0)
   meandif$farbe[meandif$diff < 0]  <- "red"
   meandif$farbe[meandif$diff > 0] <- "green"
   meandif$farbe[meandif$diff == 0] <- "orange"
-  plot(meandif$diff, type="b", col = meandif$farbe, pch = 20, cex = 2); abline(0,0)
+  plot(meandif$diff, type = "b", col = meandif$farbe, pch = 20, cex = 2)
+  abline(0, 0)
   title("Mean Difference to previous generation")
 
   return()
 }
-

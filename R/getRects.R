@@ -67,23 +67,15 @@
 #' @author Sebastian Gatscha
 getRects          <- function(trimtonOut, Grid){
   len1 <- dim(trimtonOut)[2]
-  childli = childnew = rectidli = vector("list", len1);
+  childli <- childnew <- rectidli <- vector("list", len1)
   for (i in 1:len1) {
-    childli[[i]] <- trimtonOut[,i]
+    childli[[i]] <- trimtonOut[, i]
   }
   for (u in 1:len1){
-    rectidli[[u]] <- which(childli[[u]]==1, arr.ind = T)
+    rectidli[[u]] <- which(childli[[u]] == 1, arr.ind = TRUE)
   }
   for (z in 1:len1) {
-    childnew[[z]] <- Grid[rectidli[[z]],];
+    childnew[[z]] <- Grid[rectidli[[z]], ]
   }
   return(childnew)
 }
-
-# getRects1 <- function(trimtonOut, Grid) {
-#   len1 <- dim(trimtonOut)[2]
-#   lapply(1:len1, function(i) {
-#     Grid[which(trimtonOut[,i] == 1, arr.ind = TRUE),];
-#   })
-# }
-

@@ -45,15 +45,17 @@
 #' str(resInfluPoi)
 #'
 #' @author Sebastian Gatscha
-InfluPoints       <- function(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE) {
-  ## For every turbine in the wind farm, find all other turbines, that stand in front, next
-  ## and inside a certain angle of the incoming wind direction and assing to the list
+InfluPoints       <- function(t, wnkl, dist, polYgon, dirct,
+                              plotAngles = FALSE) {
+  ## For every turbine in the wind farm, find all other turbines,
+  ## that stand in front, next and inside a certain angle of the
+  ## incoming wind direction and assing to the list
   lapply(seq_along(t[, 1]), function(i) {
     ## Calculate the angles and distances of potentially influencing turbines
-    ee11 <- VekWinkelCalc(t = t, o = i, wkl = wnkl, distanz = dist, 
+    ee11 <- VekWinkelCalc(t = t, o = i, wkl = wnkl, distanz = dist,
                           polYgon = polYgon, plotAngles = plotAngles)
     ## Add the wind direction to the data.frame
-    ## Assign the iteration as point ID of the current turbine 
+    ## Assign the iteration as point ID of the current turbine
     ## Necessary for multiple wake effects
     cbind(ee11, "Windrichtung" = dirct, "Punkt_id" = i)
   })

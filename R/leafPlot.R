@@ -51,141 +51,145 @@
 #' }
 #' @author Sebastian Gatscha
 leafPlot <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
-  Polygon1 <- isSpatial(Polygon1 = Polygon1)
+  poly1 <- isSpatial(Polygon1 = Polygon1)
 
-  if (which > nrow(result)){
-    cat(paste("Maximum possible number for 'which': ",nrow(result)))
+  if (which > nrow(result)) {
+    cat(paste("Maximum possible number for 'which': ", nrow(result)))
     which <- nrow(result)
   }
 
-  if (orderitems){
-    a <- sapply(result[,2], FUN = function(i) {
+  if (orderitems) {
+    a <- sapply(result[, 2], FUN = function(i) {
       subset.matrix(i, subset = c(T, rep(F, nrow(i) - 1)),
                     select = "EnergyOverall")
-      })
+    })
     b <- data.frame(cbind(a), stringsAsFactors = FALSE)
     order1 <- order(b, decreasing = TRUE)
-    result <- result[order1,]
+    result <- result[order1, ]
     beste <- which
   } else {
     beste <- ""
   }
-  ProjectionLonLat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+  proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 
-  # browser()
   if (!missing(GridPol)) {
-    if (is.na(proj4string(GridPol))) {
-      sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection",][[1]]
+    if (is.na(sp::proj4string(GridPol))) {
+      sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
     }
-    GridPol <- sp::spTransform(GridPol, CRSobj = ProjectionLonLat)
-    overGroups <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
-    opaC <- 0.4
+    GridPol <- sp::spTransform(GridPol, CRSobj = proj_longlat)
+    overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
+    opaycity <- 0.4
   } else {
-    overGroups <- c("Wake Circles", "Title", "Polygon", "Turbines",  "Grid")
-    xses <- rep(Polygon1@bbox[1], 4); yses <- rep(Polygon1@bbox[4], 4)
+    overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines",  "Grid")
+    xses <- rep(poly1@bbox[1], 4); yses <- rep(poly1@bbox[4], 4)
     Sr1 <- sp::SpatialPolygons(list(sp::Polygons(list(
       sp::Polygon(cbind(xses, yses))), ID = "a")), pO = 1:1)
     GridPol <- Sr1
 
-    if (!is.na(sp::proj4string(Polygon1))) {
-      sp::proj4string(GridPol) <- sp::proj4string(Polygon1)
+    if (!is.na(sp::proj4string(poly1))) {
+      sp::proj4string(GridPol) <- sp::proj4string(poly1)
     } else {
-      sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection",][[1]]
+      sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
     }
-    GridPol <- sp::spTransform(GridPol, CRSobj = ProjectionLonLat)
-    opaC <- 0
+    GridPol <- sp::spTransform(GridPol, CRSobj = proj_longlat)
+    opaycity <- 0
   }
 
-  if (is.na(proj4string(Polygon1))) {
-    proj4string(Polygon1) <- result[, "inputData"][[1]]["Projection",][[1]]
+  if (is.na(sp::proj4string(poly1))) {
+    sp::proj4string(poly1) <- result[, "inputData"][[1]]["Projection", ][[1]]
   }
   result <- result[, "bestPaEn"][[which]]
-  projPol <- sp::proj4string(Polygon1)
-  xysp <- sp::SpatialPoints(cbind(result[, "X"], result[, "Y"]), proj4string = sp::CRS(projPol))
-  resultxy <- sp::spTransform(xysp, CRSobj = ProjectionLonLat)
+  proj_pol <- sp::proj4string(poly1)
+  xysp <- sp::SpatialPoints(cbind(result[, "X"], 
+                                  result[, "Y"]), proj4string = sp::CRS(proj_pol))
+  resultxy <- sp::spTransform(xysp, CRSobj = proj_longlat)
   resultxy <- sp::coordinates(resultxy)
-  
-  Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjectionLonLat)
-  
-  headLo <- c(mean(raster::extent(Polygon1)[1:2]), max(raster::extent(Polygon1)[4]))
-  
-  colCir <- grDevices::colorRampPalette(c("green", "yellow", "red", "darkred"));
-  br = length(levels(factor(result[, "AbschGesamt"])))
+
+  poly1 <- sp::spTransform(poly1, CRSobj = proj_longlat)
+
+  title_locat <- c(mean(raster::extent(poly1)[1:2]),
+                   max(raster::extent(poly1)[4]))
+
+  col_cir <- grDevices::colorRampPalette(c("green", "yellow",
+                                           "red", "darkred"))
+  br <- length(levels(factor(result[, "AbschGesamt"])))
   if (br > 1) {
-    ColC1 <- colCir(br)
+    color_pal <- col_cir(br)
   } else {
-    ColC1 <- "green"
+    color_pal <- "green"
   }
 
-  Rad =  round(result[, "AbschGesamt"],2)/10;
-  names(Rad) <- NULL
+  wake_radius <- round(result[, "AbschGesamt"], 2) / 10
+  names(wake_radius) <- NULL
   result <- data.frame(result, stringsAsFactors = FALSE)
   result$X <- resultxy[, 1]
   result$Y <- resultxy[, 2]
   ## Assign sorted color palette for legend
-  pal <- leaflet::colorFactor(ColC1, domain = result$AbschGesamt,
+  pal <- leaflet::colorFactor(color_pal, domain = result$AbschGesamt,
                               reverse = FALSE)
 
-  result$Rad = Rad
-  result$farbe = pal(result$AbschGesamt)
+  result$wake_radius <- wake_radius
+  result$farbe <- pal(result$AbschGesamt)
 
   ## Assign turbine Icons
   turbine_icon <- leaflet::iconList(
     turbine_icon = leaflet::makeIcon(
-      # iconUrl = paste0(system.file(package = "windfarmGA"), "/extdata/windtur.png"),
-      iconUrl = paste0(system.file(package = "windfarmGA"), "/extdata/windturdk.png"),
+      iconUrl = paste0(system.file(package = "windfarmGA"),
+                       "/extdata/windturdk.png"),
       # iconUrl = paste0(getwd(),"/inst/extdata/windturdk.png"),
       iconWidth = 30, iconHeight = 50))
-  listPopup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
+  list_popup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
                      "% </dd>")
   ## Start a Leaflet Map with OSM background and another Tile.
   map <- leaflet() %>%
     addTiles(group = "OSM") %>%
-    addProviderTiles("Stamen.Terrain", group="Terrain") %>%
-    addProviderTiles("Esri.WorldImagery", group="Satellite") %>%
+    addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
+    addProviderTiles("Esri.WorldImagery", group = "Satellite") %>%
     addProviderTiles("Stamen.Toner", group = "Toner") %>%
     ## Write a Popup with the energy output
-    leaflet::addPopups(headLo[1], (headLo[2]+0.0002), group = "Title",
-                       popup = paste(beste,"<b>Best Wind Farm with: ",
-                                     round(as.numeric(result[,'EnergyOverall'][[1]]),2),"kWh</b>"),
-                       options = popupOptions(closeButton = TRUE,
-                                                       closeOnClick = FALSE)) %>%
+    leaflet::addPopups(title_locat[1], (title_locat[2] + 0.0002),
+                       group = "Title",
+                       popup = paste(beste, "<b>Best Wind Farm with: ",
+                                     round(as.numeric(
+                                       result[, "EnergyOverall"][[1]]), 2),
+                                     "kWh</b>"),
+                       options = popupOptions(
+                         closeButton = TRUE, closeOnClick = FALSE)) %>%
     ## Add the Polygon
-    addPolygons(data = Polygon1, group = "Polygon",
+    addPolygons(data = poly1, group = "Polygon",
                 fill = TRUE, fillOpacity = 0.4) %>%
 
     ## Add the Genetic Algorithm Space
     addPolygons(data = GridPol, group = "Grid", weight = 1,
-                # color="#222760",
-                opacity = opaC,
-                fill = TRUE, fillOpacity = opaC) %>%
+                opacity = opaycity,
+                fill = TRUE, fillOpacity = opaycity) %>%
 
     ## Create Circles in Map
     addCircleMarkers(lng = result$X, lat = result$Y,
-                              radius = Rad,
+                              radius = wake_radius,
                               color = result$farbe,
                               stroke = TRUE, fillOpacity = 0.8,
-                              group="Wake Circles") %>%
+                              group = "Wake Circles") %>%
     ## Add the turbine symbols
-    addMarkers(lng=result[,1], lat=result[,2],
-                        icon= turbine_icon[1], popup = listPopup, group = "Turbines") %>%
+    addMarkers(lng = result[, 1], lat = result[, 2],
+               icon = turbine_icon[1], popup = list_popup,
+               group = "Turbines") %>%
     addLegend(position = "topleft",
               colors = sort(unique(result$farbe)),
               values = as.character(result$AbschGesamt),
-              # colors=ColC1,
               labels = sort(unique(result$AbschGesamt)),
               labFormat = labelFormat(suffix = "%"),
-              opacity = 1, title = "Total Wake Effect", layerId = "Legend")  %>%     
+              opacity = 1, title = "Total Wake Effect",
+              layerId = "Legend") %>%
   ## Layers control
     addLayersControl(baseGroups = c(
       "OSM",
       "Terrain",
       "Satellite",
       "Toner"),
-      overlayGroups = overGroups,
+      overlayGroups = overlay_group,
       options = layersControlOptions(collapsed = TRUE)
     )
-
 
   # Plot the map
   map

@@ -36,37 +36,43 @@
 #' }
 #' @author Sebastian Gatscha
 heatmapGA <- function(result, si = 2, idistw){
-  parheat <- par(ask=F, no.readonly = T)
+  parheat <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parheat))
-  
-  par(mfrow=c(1,1))
-  
-  bpe <- do.call("rbind",result[,'allCoords']);
-  rownames(bpe)<-NULL
-  bpe <- data.frame(bpe[,1:2])
+  par(mfrow = c(1, 1))
 
-  sizingidw <- as.integer(result[,'inputData'][[1]][,1]['Rotorradius'])
-  sizing <- as.integer(result[,'inputData'][[1]][,1]['Resolution'])/si
+  bpe <- do.call("rbind", result[,"allCoords"]);
+  rownames(bpe) <- NULL
+  bpe <- data.frame(bpe[, 1:2])
 
-  dupco <- geoR::dup.coords(bpe, simplify = TRUE);   
-  
+  sizingidw <- as.integer(result[, "inputData"][[1]][, 1]["Rotorradius"])
+  sizing <- as.integer(result[, "inputData"][[1]][, 1]["Resolution"]) / si
+
+  dupco <- geoR::dup.coords(bpe, simplify = TRUE)
+
   bpe$Ids <- as.integer(rownames(bpe))
 
-  dupco <- lapply(dupco, function(x) as.integer(x));  dupcosum <- lapply(dupco, function(x) length(x));
-  bpenew <- vector("list",length(dupco))
+  dupco <- lapply(dupco, function(x) as.integer(x))
+  dupcosum <- lapply(dupco, function(x) length(x))
+  bpenew <- vector("list", length(dupco))
   for (i in 1:length(dupco)){
-    bpenew[[i]] <- bpe[bpe$Ids==dupco[[i]][1],];     bpenew[[i]]$Sum <- dupcosum[[i]][1]
+    bpenew[[i]] <- bpe[bpe$Ids == dupco[[i]][1], ]
+    bpenew[[i]]$Sum <- dupcosum[[i]][1]
   }
-  bpenew <- do.call("rbind",bpenew);
+  bpenew <- do.call("rbind", bpenew)
   bpenew <- bpenew[-3]
 
-  polo <- sp::SpatialPoints(sp::coordinates(cbind(bpenew$X,bpenew$Y)))
+  polo <- sp::SpatialPoints(sp::coordinates(cbind(bpenew$X, bpenew$Y)))
 
-  exMar <- 50
-  x.range <-   range(bpenew$X); y.range <-   range(bpenew$Y)
-  grd <- expand.grid(x=seq(from=x.range[1]-exMar, to=x.range[2]+exMar, by=sizing), y=seq(from=y.range[1]-exMar, to=y.range[2]+exMar, by=sizing))
+  extra_margin <- 50
+  x_range <-   range(bpenew$X)
+  y_range <-   range(bpenew$Y)
+  grd <- expand.grid(x = seq(from = x_range[1] - extra_margin,
+                             to = x_range[2] + extra_margin, by = sizing),
+                     y = seq(from = y_range[1] - extra_margin,
+                             to = y_range[2] + extra_margin, by = sizing))
   ## convert grid to SpatialPixel class
-  sp::coordinates(grd) <- ~ x+y;   sp::gridded(grd) <- TRUE
+  sp::coordinates(grd) <- ~ x + y
+  sp::gridded(grd) <- TRUE
 
 
   if (missing(idistw)){
@@ -75,16 +81,22 @@ heatmapGA <- function(result, si = 2, idistw){
     idistw <- idistw
   }
 
-  idwout <- as.data.frame(gstat::idw(formula = bpenew$Sum~1,locations = polo,newdata=grd, idp=idistw))
+  idwout <- as.data.frame(gstat::idw(formula = bpenew$Sum ~ 1,
+                                     locations = polo, newdata = grd,
+                                     idp = idistw))
 
 
-  plot1 <- ggplot2::ggplot(data=idwout,mapping=ggplot2::aes(x=x,y=y))+
-    ggplot2::geom_tile(data=idwout,ggplot2::aes(fill=var1.pred), show.legend = T)+
-    ggplot2::labs(title = "Inverse Distance Weighting for Grid Cell Selection")+
-    ggplot2::geom_point(data=bpenew,mapping=ggplot2::aes(x=X,y=Y),
-                        show.legend = TRUE,size=sqrt(sqrt(bpenew$Sum)),alpha=0.6)
+  plot1 <- ggplot2::ggplot(data = idwout,
+                           mapping = ggplot2::aes(x = x, y = y)) +
+    ggplot2::geom_tile(data = idwout, ggplot2::aes(fill = var1.pred),
+                       show.legend = TRUE) +
+    ggplot2::labs(
+      title = "Inverse Distance Weighting for Grid Cell Selection") +
+    ggplot2::geom_point(data = bpenew, mapping = ggplot2::aes(x = X, y = Y),
+                        show.legend = TRUE, size = sqrt(sqrt(bpenew$Sum)),
+                        alpha = 0.6)
 
-  plot1 + 
-    ggplot2::scale_fill_gradient(low="red", high="green") + 
+  plot1 +
+    ggplot2::scale_fill_gradient(low = "red", high = "green") +
     ggplot2::coord_equal()
 }

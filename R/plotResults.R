@@ -87,15 +87,13 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
                        topographie = FALSE, Grid, Projection,
                        sourceCCLRoughness, sourceCCL,
                        weibullsrc){
-  # result=resultrect; Polygon1=PolygonDF
-  ## Set graphical parameters
   parpplotRes <- par(no.readonly = TRUE)
   par(mfrow = c(1, 1))
   par(mar = c(5, 6, 4, 2) + 0.1, mgp = c(5, 1, 0))
 
 
   ## Check Projections and reference systems
-  Polygon1 <- isSpatial(Polygon1)
+  Polygon1 <- windfarmGA::isSpatial(Polygon1)
 
 
   if (missing(Projection)) {

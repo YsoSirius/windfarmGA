@@ -185,8 +185,8 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
 
     ## Corine Land Cover Surface Roughness values and Elevation Roughness
     surf_rough0 <- raster::extract(x = cclRaster,
-                                         y = xy_individual,
-                                         small = TRUE, fun = mean, na.rm = FALSE)
+                                   y = xy_individual,
+                                   small = TRUE, fun = mean, na.rm = FALSE)
     surf_rough0[is.na(surf_rough0)] <- mean(surf_rough0,
                                                         na.rm = TRUE)
 
@@ -194,9 +194,9 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     elrouind <- srtm_crop[[3]]
 
     surf_rough1 <- raster::extract(x = elrouind, y = xy_individual,
-                                         small = T, fun =  mean, na.rm = FALSE)
+                                   small = T, fun =  mean, na.rm = FALSE)
     surf_rough1[is.na(surf_rough1)] <- mean(surf_rough1,
-                                                        na.rm = TRUE)
+                                            na.rm = TRUE)
     # maxrasres <- max(raster::res(srtm_crop))
     maxrasres <- max(raster::res(srtm_crop[[1]]))
     SurfaceRoughness <- SurfaceRoughness * (1 + (surf_rough1 / maxrasres))
@@ -208,7 +208,8 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
                                )
     ## Plot the different Surface Roughness Values
     if (plotit) {
-      graphics::par(mfrow = c(1, 1)); cexa = 0.9
+      graphics::par(mfrow = c(1, 1))
+      cexa <- 0.9
       raster::plot(cclRaster, main = "Corine Land Cover Roughness")
       graphics::points(sel1[, "X"], sel1[, "Y"], pch = 20)
       calibrate::textxy(sel1[, "X"], sel1[, "Y"],
@@ -227,21 +228,45 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     }
 
     ## New Wake Decay Constant calculated with new surface roughness values
-    k <- 0.5/(log(RotorHeight / SurfaceRoughness))
+    k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
     ## Plot resulting Wake Decay Values
     if (plotit) {
       graphics::par(mfrow = c(1, 1))
       plot(x = elrouind, main = "Adapted Wake Decay Values - K")
       graphics::points(sel1[, "X"], sel1[, "Y"], pch = 20)
       calibrate::textxy(sel1[, "X"], sel1[, "Y"],
-                        labs = round((k), 3), cex = cexa)
+                        labs = round(k, 3), cex = cexa)
       plot(polygon1, add = TRUE)
     }
   }
 
-  ## For every wind direction, calculate the energy output. 
+  ## Weibull Wind Speed Estimator
+  if (class(weibull)[1] == "RasterLayer") {
+    if (plotit) {
+      par(mfrow = c(1, 1), ask = FALSE)
+      plot(weibull, main = "Mean Weibull")
+      plot(polygon1, add = TRUE)
+    }
+
+    ## TODO Extract via raster::extract or can we do by matrix?
+    estim_speed <- raster::extract(weibull, xy_individual)
+    
+    ## Check for NA Values..
+    if (anyNA(estim_speed)) {
+      estim_speed[which(is.na(estim_speed))] <- mean(
+        estim_speed, na.rm = TRUE)
+    }
+
+    weibull_bool = TRUE
+    ## Multiply dummy vector `windpo` with expected wind speeds
+    point_wind <- windpo * estim_speed
+  } else {
+    weibull_bool = FALSE
+  }
+
+  ## For every wind direction, calculate the energy output.
   ## Do so by rotating Polygon for all angles and
-  ## analyze, which turbine is affected by another one to calculate 
+  ## analyze, which turbine is affected by another one to calculate
   ## total energy output.
   alllist <- vector("list", length(dirSpeed[, 1]))
   for (index in 1:length(dirSpeed[, 2])) {
@@ -249,53 +274,38 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     ## Get mean windspeed for every turbine location from windraster
     point_wind <- windpo * dirSpeed[index, "ws"]
 
-    ## If Weibull is active/raster, get windspeed fopr turbine locations
-    if (class(weibull)[1] == "RasterLayer"){
-      if (plotit){
-        par(mfrow = c(1, 1), ask = FALSE)
-        plot(weibull, main = "Mean Weibull")
-        plot(polygon1, add = TRUE)
-      }
-
-      ## TODO Extract via raster::extract or can we do by matrix?
-      Erwartungswertxy = raster::extract(weibull, xy_individual)
-
-      ## Check for NA Values..
-      if (anyNA(Erwartungswertxy)) {
-        Erwartungswertxy[which(is.na(Erwartungswertxy))] <- mean(
-          Erwartungswertxy, na.rm = TRUE)
-      }
-
+    ## If Weibull is active/raster, multiply wind speeds with dummy vector
+    if (weibull_bool) {
       ## Multiply dummy vector `windpo` with expected wind speeds
-      point_wind <- windpo * Erwartungswertxy
+      point_wind <- windpo * estim_speed
     }
 
     ## Calculate Windspeed according to Rotor Height using wind profile law
     ## TODO MISSING: Include other laws: -log
-    point_wind <- point_wind * ((RotorHeight / referenceHeight)^SurfaceRoughness)
+    point_wind <- point_wind * ((RotorHeight / referenceHeight) ^ SurfaceRoughness)
     point_wind[is.na(point_wind)] <- 0
 
     ## Get the current incoming wind direction and assign to "angle"
     angle <- -dirSpeed[index, "wd"]
 
-    ## If activated, plots the turbine locations with angle 0 and opens a 
+    ## If activated, plots the turbine locations with angle 0 and opens a
     ## second frame for rotated turbine locations
-    if (plotit){
+    if (plotit) {
       par(mfrow = c(1, 2))
       plot(polygon1, main = "Shape at angle 0")
       points(xy_individual[, 1], xy_individual[, 2], pch = 20)
       textxy(xy_individual[, 1], xy_individual[, 2],
              labs = dimnames(xy_individual)[[1]], cex = 0.8)
       ## TODO Get rid of elide and store polygon-cetroids already before
-      poly3 = maptools::elide(polygon1, rotate = angle,
-                                 center = apply(bbox(polygon1), 1, mean))
+      poly3 <- maptools::elide(polygon1, rotate = angle,
+                               center = apply(bbox(polygon1), 1, mean))
       plot(poly3, main = c("Shape at angle:", (-1 * angle)))
       mtext(paste("Direction: ", index, "\nfrom total: ",
                   nrow(dirSpeed)), side = 1)
     }
 
     ## Rotate Coordinates by the incoming wind direction
-    xy_individual = rotate_CPP(xy_individual[, 1], xy_individual[, 2],
+    xy_individual <- rotate_CPP(xy_individual[, 1], xy_individual[, 2],
                           pcent[1], pcent[2], angle)
 
     ## If activated, plots the rotated turbines in red
@@ -319,9 +329,9 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     }
 
     ## Create a list for every turbine
-    ## Assign Windspeed to a filtered list with all turbines and add the desired 
-    ## rotor radius to the data frame
-    ## TODO - Performance 
+    ## Assign Windspeed to a filtered list with all turbines and add
+    ## the desired rotor radius to the data frame
+    ## TODO - Performance
     tmp <- lapply(seq_len(max(df_all[, "Punkt_id"])), function(i) {
       cbind(subset.matrix(df_all, df_all[, "Punkt_id"] == i,
                           select = c("Punkt_id", "Ax", "Ay", "Bx", "By",
@@ -347,9 +357,9 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     lnro <- length(windlist[, 1])
     windlist <- cbind(windlist,
                       "WakeR" = as.numeric(windlist[, "Laenge_B"] > 0) *
-                        (windlist[,"RotorR"] * 2 + 2 * k1 *
-                           windlist[,"Laenge_B"]) / 2,
-                      "Rotorflaeche" = (windlist[,"RotorR"] ^ 2) * pi )
+                        (windlist[, "RotorR"] * 2 + 2 * k1 *
+                           windlist[, "Laenge_B"]) / 2,
+                      "Rotorflaeche" = (windlist[, "RotorR"] ^ 2) * pi )
 
     ## Calculate the overlapping area and the overlapping percentage.
     tmp <- sapply(1:lnro, function(o) {
@@ -359,13 +369,13 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
       if (windlist[o, "Laenge_B"] == 0) {
         aov <- 0
       } else {
-        if ((wakr - Rotorf) >= leA && leA >= 0) {
-          aov <- (windlist[o, "RotorR"]^2) * pi
+        if ( (wakr - Rotorf) >= leA && leA >= 0) {
+          aov <- (windlist[o, "RotorR"] ^ 2) * pi
         }
-        if ((wakr + Rotorf) <= leA) {
+        if ( (wakr + Rotorf) <= leA) {
           aov <- 0
         }
-        if ((wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
+        if ( (wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
           aov <- wake_CPP(Rotorf = Rotorf,  wakr = wakr, leA = leA)
         }
       }
@@ -380,25 +390,26 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
                       "A_ov" = round(tmp[1, ], 4),
                       "AbschatInProz" = round(tmp[2, ], 4))
 
-    ## Calculate the wind velocity reduction. 
+    ## Calculate the wind velocity reduction.
     ## Names -> NULL otherwise all rows are called Windmean
     tmp <- unlist(lapply(1:lnro, function(p) {
       RotrR <- windlist[p, "RotorR"]
-      a <- {1 - sqrt(1 - cT)}
+      a <- 1 - sqrt(1 - cT)
       s <- windlist[p, "Laenge_B"] / RotrR
-      if (topograp){
-        b <- (1 + (k[windlist[p, "Punkt_id"]] * s))^2
+      if (topograp) {
+        b <- (1 + (k[windlist[p, "Punkt_id"]] * s)) ^ 2
       } else {
-        b <- (1 + (k * s))^2
+        b <- (1 + (k * s)) ^ 2
       }
       aov <- windlist[p, "A_ov"] / windlist[p, "Rotorflaeche"]
       windlist[p, "Windmean"] * (aov * (a / b))
-    }))
-    names(tmp) = NULL
+      }
+    ))
+    names(tmp) <- NULL
     windlist <- cbind(windlist,
                       "V_red" = tmp)
 
-    ## Calculate multiple wake effects, total wake influence, 
+    ## Calculate multiple wake effects, total wake influence,
     ## the new resulting wind velocity and add the Grid IDs.
     whichh <- windlist[, "Punkt_id"]
     windlist <- cbind(windlist,
@@ -409,24 +420,24 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
 
     ## Sum up the wind speed reduction from all possible influental turbines
     windlist[, "V_i"] <- unlist(lapply(unique(whichh), function(i) {
-      sums = sqrt(sum(windlist[whichh == i, "V_red"] ^ 2))
+      sums <- sqrt(sum(windlist[whichh == i, "V_red"] ^ 2))
       rep(sums, length(windlist[whichh == i, "V_red"]))
     }))
     ## Sum up the wake effects from all possible influental turbines
-    windlist[,"TotAbschProz"] <- unlist(lapply(unique(whichh), function(i) {
+    windlist[, "TotAbschProz"] <- unlist(lapply(unique(whichh), function(i) {
       absch <- windlist[whichh == i, "AbschatInProz"]
       rep(sum(absch), length(absch))
     }))
     ## Caluclate new wins speed, after reduction
-    windlist[,"V_New"] <- unlist(lapply(unique(whichh), function(i) {
-      windlist[whichh == i,"Windmean"] - windlist[whichh == i,"V_i"]
+    windlist[, "V_New"] <- unlist(lapply(unique(whichh), function(i) {
+      windlist[whichh == i, "Windmean"] - windlist[whichh == i, "V_i"]
     }))
     ## Assign the Grid-ID to all influential turbines
-    windlist[,"Rect_ID"] <-  unlist(lapply(unique(whichh), function(i) {
-      rep(sel[i,"ID"], length(windlist[whichh == i, 1]))
+    windlist[, "Rect_ID"] <-  unlist(lapply(unique(whichh), function(i) {
+      rep(sel[i, "ID"], length(windlist[whichh == i, 1]))
     }))
 
-    ## Get a reduced dataframe and split duplicated Point_id, since a 
+    ## Get a reduced dataframe and split duplicated Point_id, since a
     ## turbine with fixed Point_id, can have several influencing turbines
     ## and therefore several data frame elements
     windlist2 <- subset.matrix(
@@ -447,7 +458,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
       airrh <- air_rh
     }
 
-    ## Calculate Full and Reduced Energy Outputs in kW and 
+    ## Calculate Full and Reduced Energy Outputs in kW and
     ## Park Efficienca in %.
     energy_reduced <- energy_calc_CPP(windlist1[, "V_New"],
                                  windlist1[, "RotorR"], airrh)
@@ -466,12 +477,11 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
                        "Energy_Output_Voll" = energy_full,
                        "Parkwirkungsgrad" = efficiency)
 
-    ## TODO Why do I need that again? Or the -angle in the beginning 
+    ## TODO Why do I need that again? Or the -angle in the beginning
     # (Line ~286)
-    windlist2[, "Windrichtung"] = windlist2[, "Windrichtung"] * (-1)
+    windlist2[, "Windrichtung"] <- windlist2[, "Windrichtung"] * (-1)
 
     alllist[[index]] <- windlist2
   }
   invisible(alllist)
 }
-
