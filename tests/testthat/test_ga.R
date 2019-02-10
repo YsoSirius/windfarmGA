@@ -62,4 +62,37 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_is(resultMA, "matrix")
   expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
   
+  ## Test with non default arguments ####################
+  PolygonMat <- ggplot2::fortify(Polygon1)
+  PolygonMat <- as.matrix(PolygonMat[,1:2])
+  resultMA <- genAlgo(Polygon1 = PolygonMat,
+                      n = 20, iteration = 1, GridMethod = "h",
+                      vdirspe = data.in, elitism = F, 
+                      selstate = "var", crossPart1 = "ran", 
+                      trimForce = TRUE,
+                      Rotor = 30,
+                      RotorHeight = 100)
+  expect_true(nrow(resultMA) == 1)
+  expect_is(resultMA, "matrix")
+  expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
+  
+  PolygonMat <- ggplot2::fortify(Polygon1)
+  PolygonMat <- as.matrix(PolygonMat[,1:2])
+  resultMA <- genAlgo(Polygon1 = PolygonMat,
+                      n = 20, iteration = 1, GridMethod = "h",
+                      vdirspe = data.in, elitism = T, nelit = 10000, 
+                      selstate = "var", crossPart1 = "ran", 
+                      trimForce = TRUE, mutr = 15,
+                      Rotor = 50, 
+                      sourceCCL = NULL, sourceCCLRoughness = NULL,
+                      # Projection = "+proj=tmerc +lat_0=0 +lon_0=31 +k=1 +x_0=0 +y_0=-5000000 +ellps=bessel +pm=ferro +units=m +no_defs",
+                      Projection = "+proj=lcc +lat_1=49 +lat_2=46 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=bessel +towgs84=577.326,90.129,463.919,5.137,1.474,5.297,2.4232 +units=m +no_defs",
+                      # Projection = "+proj=tmerc +lat_0=0 +lon_0=28 +k=1 +x_0=0 +y_0=0 +ellps=bessel +pm=ferro +units=m +no_defs",
+                      # Projection = "+proj=lcc +lat_1=49 +lat_2=46 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=GRS80 +units=m +no_defs",
+                      # Projection = "+proj=tmerc +lat_0=0 +lon_0=15 +k=1 +x_0=6500000 +y_0=0 +ellps=bessel +units=m +no_defs",
+                      RotorHeight = 100, plotit = F)
+  expect_true(nrow(resultMA) == 1)
+  expect_is(resultMA, "matrix")
+  expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
+  
 })

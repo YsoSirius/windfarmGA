@@ -238,13 +238,18 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   par(mfrow = c(1,2), ask = FALSE)
   ######## CHECK INPUT POLYGON
   ## Check if Polygon given is correctly
-  if (!missing(Polygon1)){
+  if (!missing(Polygon1)) {
+    if (!missing(Projection)) {
+      Polygon1 <- isSpatial(Polygon1, Projection)
+    } else {
+      Polygon1 <- isSpatial(Polygon1)
+    }
     plot(Polygon1, col = "red", main = "Original Input Shapefile");
     title(sub = Polygon1@proj4string, line = 1)
     readline(prompt = "\nPress <ENTER> if this is your Polygon")
   }
   ## Load Polygon from a Source File. Just if dns and layer are not missing.
-  if (!missing(dns) & !missing(layer)){
+  if (!missing(dns) & !missing(layer)) {
     # Input the Source of the desired Polygon
     Polygon1 <- rgdal::readOGR(dsn = dns, layer = layer)
     plot(Polygon1, col = "red", main = "Original Input Shapefile")
@@ -252,7 +257,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     readline(prompt = "\nPress <ENTER> if this is your Polygon")
   }
   ##  Project the Polygon to LAEA if it is not already.
-  if (is.na(sp::proj4string(Polygon1))){
+  if (is.na(sp::proj4string(Polygon1))) {
     cat("Polygon is not projected. Lambert Azimuthal Equal Area Projection is used.\n")
     Projection = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
     +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -267,15 +272,15 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   }
   if (as.character(raster::crs(Polygon1)) != Projection) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = Projection)
-    plot(Polygon1, col = "red",main = "Projected Input Shapefile")
-    title(sub = Polygon1@proj4string, line = 1)
-    readline(prompt = "\nPress <ENTER> if this is your Polygon")
   }
+  plot(Polygon1, col = "red", main = "Projected Input Shapefile")
+  title(sub = Polygon1@proj4string, line = 1)
+  readline(prompt = "\nPress <ENTER> if this is your Polygon")
 
   ######## CHECK INPUT GENETIC ALGORITHM
   ## Check if Crossover Method is chosen correctly.
   if (missing(crossPart1)) {crossPart1 <- readinteger()}
-  if (crossPart1 != "EQU" & crossPart1 !="RAN") {
+  if (crossPart1 != "EQU" & crossPart1 != "RAN") {
     crossPart1 <- readinteger()
   }
   ## Check if Selection Method is chosen correctly.

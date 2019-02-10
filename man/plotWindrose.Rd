@@ -5,14 +5,15 @@
 \title{Plot a Windrose}
 \usage{
 plotWindrose(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
-  spdmax = 30, palette = "YlGnBu", debug = 0, spdseq = NULL)
+  spdmax = 30, palette = "YlGnBu", debug = 0, spdseq = NULL,
+  plotit = TRUE)
 }
 \arguments{
 \item{data}{A data.frame containing the wind information}
 
-\item{spd}{The column of the wind speeds in the "data"-data.frame}
+\item{spd}{The column of the wind speeds in "data"}
 
-\item{dir}{The column of the wind directions in the "data"-data.frame}
+\item{dir}{The column of the wind directions in "data"}
 
 \item{spdres}{The increment of the wind speed legend. Default is 2}
 
@@ -27,6 +28,8 @@ plotWindrose(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 \item{debug}{For running a debug. Default is 0}
 
 \item{spdseq}{A wind speed sequence, that is used for plotting}
+
+\item{plotit}{Should the windrose be plotted? Default is TRUE}
 }
 \description{
 Plot a wind rose of the wind data frame.

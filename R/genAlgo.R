@@ -219,10 +219,10 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   if (missing(trimForce)) {
     trimForce <- FALSE
   }
-  if (missing(referenceHeight)){
+  if (missing(referenceHeight)) {
     referenceHeight <- RotorHeight
   }
-  if (missing(iteration)){
+  if (missing(iteration)) {
     iteration <- 20
   }
   if (missing(Projection)) {
@@ -247,6 +247,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   ## INIT VARIABLES 1 #################
   selstate <- toupper(selstate)
+  crossPart1 <- toupper(crossPart1)
 
   ## Is the Polygon Spatial / SF / coordinates - It will transform to SpatialPolygon
   Polygon1 <- isSpatial(Polygon1, ProjLAEA)
@@ -357,45 +358,8 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   }
 
   ## Winddata Formatting #######################
-  vdirspe <- as.data.frame(vdirspe)
-  if (!all(colnames(vdirspe) %in% c("ws", "wd"))) {
-    vdirspe <- vdirspe[, 1:2]
-    colnames(vdirspe) <- c("ws", "wd")
-  }
-  vdirspe$wd <- round(vdirspe$wd, 0)
-  vdirspe$wd <-  round(vdirspe$wd / 100, 1) * 100
-  ## If no probabilites are given, assign uniform distributed ones.
-  if (any(names(vdirspe) == "probab") == FALSE) {
-    vdirspe$probab <- 100 / nrow(vdirspe)
-  }
-  ## Checks if all wind directions/speeds have a possibility greater than 0.
-  vdirspe$probab <- round(vdirspe$probab, 0)
-  if (sum(vdirspe$probab) != 100) {
-    vdirspe$probab <- vdirspe$probab * (100 / sum(vdirspe$probab))
-  }
-  ## Checks if duplicated wind directions are at hand
-  if   (any(duplicated(vdirspe$wd) == TRUE)) {
-    for (i in 1:nrow(vdirspe[duplicated(vdirspe$wd) == FALSE, ])){
-      temp <- vdirspe[vdirspe$wd ==  vdirspe[duplicated(
-        vdirspe$wd) == FALSE, ][i, "wd"], ]
-      temp$ws < -with(temp, sum(ws * (probab / sum(probab))))
-      temp$probab <- with(temp, sum(probab * (probab / sum(probab))))
-      vdirspe[vdirspe$wd ==  vdirspe[duplicated(
-        vdirspe$wd) == FALSE, ][i, "wd"], ]$ws <- round(temp$ws, 2)[1]
-      vdirspe[vdirspe$wd ==  vdirspe[duplicated(
-        vdirspe$wd) == FALSE, ][i, "wd"], ]$probab <- round(temp$probab, 2)[1]
-    }
-  }
-  vdirspe <- vdirspe[!duplicated(vdirspe$wd) == TRUE, ]
-  vdirspe <- vdirspe[with(vdirspe, order(wd)), ]
-  if (sum(vdirspe$probab) != 100) {
-    vdirspe$probab <- vdirspe$probab * (100 / sum(vdirspe$probab))
-  }
-  probabDir <- vdirspe$probab
-  pp <- sum(probabDir) / 100
-  probabDir <- probabDir / pp
-  vdirspe <- as.matrix(vdirspe)
-  winddata <- list(vdirspe, probabDir)
+  winddata <- windata_format(vdirspe)
+  
   #######################
   ## Project Polygon ###############
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
@@ -456,7 +420,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     srtm_crop <- ""
     cclRaster <- ""
   } else {
-    if (verbose){
+    if (verbose) {
       cat("Topography and orography are taken into account.")
     }
 
@@ -464,7 +428,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       par(mfrow = c(3, 1))
     }
 
-    if (missing(sourceCCL)){
+    if (missing(sourceCCL)) {
       message("No raster was given. Should it be downloaded?")
       readline(prompt = "Press [enter] to continue or Escpae to exit.")
       if (!file.exists("g100_06.tif")) {
@@ -514,7 +478,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
       sourceCCLRoughness <- paste0(path, "clc_legend.csv")
     } else {
-      if (verbose){
+      if (verbose) {
         print("You are using your own Corine Land Cover legend.")
         readline(prompt = "\nPress <ENTER> if you want to continue")
       }
@@ -529,7 +493,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                     matrix(c(rauhigkeitz$GRID_CODE,
                                              rauhigkeitz$Rauhigkeit_z),
                                            ncol = 2))
-    if (plotit){
+    if (plotit) {
       plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
     }
   }
@@ -622,7 +586,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                            breaks = lebre))]
       }
       lebre2 <- length(unique(bestPaEf[[i]][, "AbschGesamt"]))
-      if (lebre2 < 2){
+      if (lebre2 < 2) {
         Col1 <- "green"
       } else {
         Col1 <- rbPal(lebre2)[as.numeric(cut(-bestPaEf[[i]][, "AbschGesamt"],
@@ -688,7 +652,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       }
 
       last7 <- besPE[i:(i - 5)]
-      if (!any(last7 == maxBisher)){
+      if (!any(last7 == maxBisher)) {
         if (verbose) {
           cat(paste("Park with highest Fitness level to date ",
                     "is replaced in the list.", "\n\n"))
@@ -708,7 +672,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       fuzzycontr[[i]] <- rbind(allcoef0)
       colnames(fuzzycontr[[i]]) <- c("Min", "Max", "Mean")
       teil <- 2
-      if (selstate == "VAR"){
+      if (selstate == "VAR") {
         teil <- 1.35
       }
       u <- 1.1
@@ -751,7 +715,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         u <- u + 0.03
       }
 
-      if (teil > 5){
+      if (teil > 5) {
         teil <- 5
         u <- u + 0.09
         if (verbose) {
@@ -759,7 +723,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
           cat(paste("CPR is increased! CPR:", u, "SP: ", teil, "\n"))
         }
       }
-      if (trunc(u) < 0){
+      if (trunc(u) < 0) {
         u <- 0.5
         teil <- teil - 0.4
         if (verbose) {
@@ -817,7 +781,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     ## SELECTION #################
     if (selstate == "FIX") {
-      if (teil == 1){
+      if (teil == 1) {
         teil <- 1
       } else {
         teil <- 2
@@ -893,7 +857,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                 length(mut1[1, ])))
     }
     Trus3 <- colSums(mut1) == n
-    if (any(Trus3 == FALSE)){
+    if (any(Trus3 == FALSE)) {
       stop("Number of turbines is not as required. Trus3. Fix Bug.")
     }
 
@@ -1020,3 +984,132 @@ isSpatial <- function(Polygon1, Projection) {
   }
   return(Polygon1)
 }
+
+
+#' @title Transform Winddata
+#' @name windata_format
+#' @description Helper Function, which transforms winddata
+#' to an acceptable format
+#'
+#' @param df The wind data with speeds, direction and optionally
+#' a probability column. If not assigned, it will be calculated
+#'
+#' @return A list of windspeed and pobabilities
+#'
+#' @examples \donttest{
+#' wind_df <- data.frame(ws = c(12, 30, 45), 
+#'                       wd = c(0, 90, 150),
+#'                       probab = 30:32)
+#' windata_format(wind_df)
+#' 
+#' wind_df <- data.frame(speed = c(12, 30, 45), 
+#'                       direction = c(90, 90, 150)
+#'                       ,probab = c(10, 20, 60)
+#' )
+#' windata_format(wind_df)
+#' 
+#' wind_df <- data.frame(speed = c(12, 30, 45), 
+#'                       direction = c(400, 90, 150)
+#' )
+#' windata_format(wind_df)
+#' }
+#' @author Sebastian Gatscha
+windata_format <- function(df) {
+  wind_df <- data.frame(df)
+  if (!all(colnames(wind_df) %in% c("ws", "wd"))) {
+      # Assume that we've been given a wind_df frame. 
+      # Lets find the correct columns
+      if (length(colnames(wind_df)) && 
+          all(!colnames(wind_df) %in% c("X1", "X2", "X3")) ) {
+        accep_speed <- c("SPEED", "GESCH", "V", "WS")
+        accep_direc <- c("DIR", "RICHT", "WD")
+        accep_proba <- c("PRO", "WAHR")
+        sum_col_match <- sum(sapply(c(accep_speed, accep_direc, accep_proba),
+                                    grepl, toupper(colnames(wind_df)) ))
+        if (sum_col_match >= 2) {
+          speed_match <- which(sapply(
+            lapply(accep_speed, grepl, toupper(colnames(wind_df))),
+            any))
+          direc_match <- which(sapply(
+            lapply(accep_direc, grepl, toupper(colnames(wind_df))),
+            any))
+          probab_match <- which(sapply(
+            lapply(accep_proba, grepl, toupper(colnames(wind_df))),
+            any))
+          speed_index <- which(grepl(accep_speed[speed_match],
+                                     toupper(colnames(wind_df))))
+          direc_index <- which(grepl(accep_direc[direc_match],
+                                     toupper(colnames(wind_df))))
+          if (length(probab_match) != 0) {
+            probab_index <- which(grepl(accep_proba[probab_match],
+                                        toupper(colnames(wind_df))))
+            wind_df[, c(speed_index[1], direc_index[1], probab_index[1])]
+            colnames(wind_df) <- c("ws", "wd", "probab")            
+          } else {
+            wind_df[, c(speed_index[1], direc_index[1])]
+            colnames(wind_df) <- c("ws", "wd")            
+          }
+        } else {
+          col_numeric <- which(sapply(wind_df[1, ], is.numeric))
+          wind_df <- wind_df[, col_numeric]
+          colnames(wind_df) <- c("ws", "wd")
+        }
+      } else {
+        col_numeric <- which(sapply(wind_df[1, ], is.numeric))
+        wind_df <- wind_df[, col_numeric]
+        if (length(colnames(wind_df)) == 2) {
+          colnames(wind_df) <- c("ws", "wd")        
+        } else {
+          colnames(wind_df) <- c("ws", "wd", "probab")
+        }
+      }
+  }
+  wind_df$wd <- round(wind_df$wd, 0)
+  wind_df$wd <-  round(wind_df$wd / 100, 1) * 100
+  ## If no probabilites are given, assign uniform distributed ones.
+  if (anyNA(colnames(wind_df))) {
+    which(is.na(colnames(wind_df)))
+    colnames(wind_df)[3] <- "probab"    
+  }
+  if (any(names(wind_df) == "probab") == FALSE) {
+    wind_df$probab <- 100 / nrow(wind_df)
+  }
+  ## Checks if all the sum of possibility is  100
+  if (sum(wind_df$probab) != 100) {
+    wind_df$probab <- wind_df$probab * (100 / sum(wind_df$probab))
+  }
+  ## Checks if duplicated wind directions are at hand
+  if  (any(duplicated(wind_df$wd))) {
+    for (i in 1:length(wind_df[duplicated(wind_df$wd) == FALSE, 1]) ) {
+      ## Get duplicated direction rows
+      temp <- wind_df[wind_df$wd ==  wind_df[duplicated(
+        wind_df$wd) == FALSE, ][i, "wd"], ]
+      ## Sum up speed and probability 
+      temp$ws <- sum(temp$ws * (temp$probab / sum(temp$probab)))
+      temp$probab <- sum(temp$probab * (temp$probab / sum(temp$probab)))
+      ## Assign new/uniwue windspeed and probablity per direction
+      wind_df[wind_df$wd ==  wind_df[duplicated(
+        wind_df$wd) == FALSE, ][i, "wd"], ]$ws <- round(temp$ws, 2)[1]
+      wind_df[wind_df$wd ==  wind_df[duplicated(
+        wind_df$wd) == FALSE, ][i, "wd"], ]$probab <- round(temp$probab, 2)[1]
+    }
+  }
+  ## Delete duplicated direction rows
+  wind_df <- wind_df[!duplicated(wind_df$wd) == TRUE, ]
+  ## Order by direction
+  wind_df <- wind_df[with(wind_df, order(wd)), ]
+  ## Sum up probabilites to 100% again
+  if (sum(wind_df$probab) != 100) {
+    wind_df$probab <- wind_df$probab * (100 / sum(wind_df$probab))
+  }
+  probabDir <- wind_df$probab
+  if (any(wind_df$wd > 360)) {
+    wind_df[wind_df$wd > 360, "wd"] <- wind_df[wind_df$wd > 360, "wd"] - 360 
+  }
+  wind_df <- as.matrix(wind_df)
+  winddata <- list(wind_df, probabDir)
+  return(winddata)
+}
+
+
+

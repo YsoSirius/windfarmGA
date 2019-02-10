@@ -42,99 +42,104 @@
 #' startsel <- StartGA(Grid,10,20);
 #' wind <- as.data.frame(cbind(ws=12,wd=0))
 #' wind <- list(wind, probab = 100)
-#' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
-#'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20, dirspeed = wind,
-#'                srtm_crop="",topograp=FALSE,cclRaster="")
+#' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
+#'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,
+#'                rot = 20, dirspeed = wind, 
+#'                srtm_crop = "", topograp = FALSE, cclRaster = "")
 #' allparks <- do.call("rbind",fit);
 #'
 #' ## SELECTION
-#' ## print the amount of Individuals selected. Check if the amount of Turbines is as requested.
+#' ## print the amount of Individuals selected. Check if the amount 
+#' ## of Turbines is as requested.
 #' selec6best <- selection1(fit, Grid, 2, T, 6, "VAR", NULL)
 #' selec6best <- selection1(fit, Grid, 2, T, 6, "FIX", NULL)
 #' selec6best <- selection1(fit, Grid, 4, F, 6, "FIX", NULL)
 #' str(selec6best)
 #' }
 #' @author Sebastian Gatscha
-selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose) {
- 
-  if (missing(verbose)) {verbose = FALSE}
-  
+selection1         <- function(fit, Grid, teil, elitism, nelit, 
+                               selstate, verbose) {
+  if (missing(verbose)) {
+    verbose = FALSE
+  }
+
   ## Make a DataFrame of the Fitness Function Output. Representing all x Parks with their fitness value.
   new <- do.call("rbind", fit)
-  
+
   ## Get the unique Fitness value according to the RunID
   new1 <- subset.matrix(new, subset = !duplicated(new[,'Run']), 
                         select = c("Run", "Parkfitness", "EnergyOverall"))
-  
+
   ## arrange descending, to dismiss last 2
   new1 <- new1[order(new1[,'Parkfitness'], decreasing = TRUE),]
   row.names(new1) <- NULL
-  
+
   ## Elitarism - A certain amount of individuals will get their fitness values increased
-  if (elitism){
-    if (verbose){
-      cat(paste("Elitarism activated. Best", nelit, "individuals are increased\n"))
-    }
+  if (elitism) {
     if (nrow(new1) < nelit) {
       nelit = nrow(new1)
+    }
+    if (verbose) {
+      cat(paste("Elitarism activated. Best", nelit, "individuals are increased\n"))
     }
     ## Increase best 'nelit' individuals by factor 10
     new1[1:nelit,'Parkfitness'] <- new1[1:nelit,'Parkfitness'] * 10
   }
-  
+
   ## Delete some of the worst individuals, if there are more than 10
   if (nrow(new1) > 10) {
-    new1 <- new1[-seq(length(new1[,1]), nrow(new1) -3 , -1),]
+    new1 <- new1[-seq(length(new1[,1]), nrow(new1) - 3 , -1), ]
   }
-  
+
   ## The next two methods determine how a selection percentage is calculated
   # Either a fixed percentage of 50% is used
   if (selstate == "FIX") {
     # Select a fixed amount of indivs. # Teil=2 takes always 50% of population
-    if (teil == 1){
+    if (teil == 1) {
       teil = 1
     } else {
       teil = 2
     }
     nPar <- ceiling(nrow(new1) / teil)
-    if (verbose){
+    if (verbose) {
       cat(paste("Selection Percentage:", round(100 / teil, 3), "\n"))
       cat(paste("FIX: How many parental individuals are selected:", nPar, "from",  
                 nrow(new1), "with", ((1 / teil) * 100), "%\n"))
     }
-    
   }
   ## Or the selection percentage is variable, depending on the development of the fitness values.
   if (selstate == "VAR") {
     # Select a variable amount of indivs. Teil comes from the "fuzzy logic" modell
     nPar <- ceiling(nrow(new1) / teil)
-    if(verbose){
+    if (verbose) {
       cat(paste("VAR: How many parental individuals are selected:", nPar, "from",
                 nrow(new1), "with", ((1 / teil) * 100), "%\n"))
     }
-    
   }
-  
+
   ## Upper Limit of selected individuals is 100.
   if (nPar > 100) {nPar <- 100}
-  
+
   ## Check if some fitness values are NA. STOP
   if (any(is.na(new1[,'Parkfitness']))) {
     # browser()
     cat("some Fitness-values are NA.")
     stop("Please report a github issue")
   }
-  
+
   ## Randomly sample some individuals, based on their fitness value
-  childsRunID <- sample(new1[,1], nPar, prob = new1[,'Parkfitness'], replace = FALSE)
-  
-  ## Pick the parks with those list indeces. (park with all config) and return Run and Rect_ID
+  childsRunID <- sample(new1[, 1], nPar, prob = new1[, 'Parkfitness'], 
+                        replace = FALSE)
+
+  ## Pick the parks with those list indeces. 
+  ## (park with all config) and return Run and Rect_ID
   chile <- seq_len(length(childsRunID)) 
   child <- lapply(chile, function(z) {
-    subset.matrix(fit[[childsRunID[z]]], select = c("Run", "Rect_ID", "Parkfitness"))
+    subset.matrix(fit[[childsRunID[z]]], 
+                  select = c("Run", "Rect_ID", "Parkfitness"))
   })
-  
-  ## Create binary code for every parkconfiguration (individual) respective to the whole Grid. 
+
+  ## Create binary code for every parkconfiguration (individual) 
   ## (Turbine yes = 1, Turbine no = 0)
   childbin <- lapply(chile, function(i) {
     ## For every Child element, assign the total Grid to a binaryvariable[i], 
@@ -145,34 +150,33 @@ selection1         <- function(fit, Grid,teil,elitism,nelit,selstate, verbose) {
                  "Fitness" = child[[i]][1, 'Parkfitness'])
 
     for (e in 1:length(child[[i]][,1])) {
-      ## For every element in a child (turbines) get his Rect_ID and set binaryvariable[i] to 1, 
-      ## where GridId = Rect_ID
+      ## For every element in a child (turbines) get his Rect_ID and 
+      ## set binary to 1, where GridId = Rect_ID
       rectid <- child[[i]][e, 2]
       tmp[tmp[,'ID'] == rectid, 'bin'] <- 1
     }
     tmp
   })
-  
+
   ## Create the parents
-  # new <- new1[new1[,'Run'] %in% childsRunID,]   ## TODO - DO I NEED THAT LINE ???? WHATS 'NEW' FOR??
   parents <- vector("list", length(childsRunID) / 2)
   for (i in 1:(length(childsRunID) / 2) ) {
     parents[[i]] <- sample(x = childsRunID, 2, replace = FALSE)
     childsRunID <-  childsRunID[!(childsRunID %in% parents[[i]])]
   }
   parall <- unlist(parents)
-  
+
   ## Create the children
   childbindf <- do.call("rbind", childbin)
   paralli <- lapply(1:length(parall), function(i) {
-    subset.matrix(childbindf[which(childbindf[,'Run'] %in% parall[i]),],
+    subset.matrix( childbindf[which( childbindf[,'Run'] %in% parall[i]),],
                   select = c("ID", "Run", "bin", "Fitness"))
   })
-  
+
   ## Squeeze list to data.frame and remove unnecessary columns 
   parentsall <- data.frame(paralli)
   lePar <- length(parentsall)
-  
+
   ## Select the binary matrix and the fitness values of the parents and return as list
   parents_Fitness <- parentsall[1, c(1, seq(4, lePar, 4))]
   parentsall      <- parentsall[, c(1, seq(3, lePar, 4))]
