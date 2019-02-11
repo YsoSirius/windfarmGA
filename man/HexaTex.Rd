@@ -14,13 +14,13 @@ HexaTex(Polygon1, size, plotTrue = FALSE)
 \item{plotTrue}{Should the object be plotted}
 }
 \value{
-Returns a list with an indexed data frame of the point coordinates
+Returns a list with an indexed matrix of the point coordinates
 and a SpatialPolygons object of the hexagons
 }
 \description{
 The function takes a Polygon and a sizing argument and
-creates a list with an indexed data frame with coordinates
-and a SpatialPolygons object, that consists of hexagonal grid cells.
+creates a list with an indexed matrix with coordinates
+and a SpatialPolygons object, that consists of hexagonal grids
 }
 \examples{
 library(spatstat)

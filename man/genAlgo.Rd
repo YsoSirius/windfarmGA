@@ -72,9 +72,9 @@ Default is FALSE}
 \item{Projection}{A desired Projection can be used instead
 of the default Lambert Azimuthal Equal Area Projection.}
 
-\item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated. If nothing is assign, it 
-will try to download a version from the EEA-website.}
+\item{sourceCCL}{The path to the Corine Land Cover raster (.tif). Only
+required when the terrain effect model is activated. If nothing is assign,
+it will try to download a version from the EEA-website.}
 
 \item{sourceCCLRoughness}{The source to the adapted
 Corine Land Cover legend as .csv file. Only required when terrain
@@ -179,17 +179,17 @@ result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
 PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 
 ## Run an optimization with given Weibull parameter rasters.
-araster <- "/..pathto../a_param_raster.tif"
-kraster <- "/..pathto../k_param_raster.tif"
-weibullrasters <- list(raster(kraster), raster(araster))
-result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
-                 fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-                 selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-                 SurfaceRoughness = 0.3, topograp = FALSE,
-                 elitism=TRUE, nelit = 7, trimForce = TRUE,
-                 referenceHeight = 50,RotorHeight = 100,
-                 weibull = TRUE, weibullsrc = weibullrasters)
-PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
+#araster <- "/..pathto../a_param_raster.tif"
+#kraster <- "/..pathto../k_param_raster.tif"
+#weibullrasters <- list(raster(kraster), raster(araster))
+#result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
+#                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
+#                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
+#                  SurfaceRoughness = 0.3, topograp = FALSE,
+#                  elitism=TRUE, nelit = 7, trimForce = TRUE,
+#                  referenceHeight = 50,RotorHeight = 100,
+#                  weibull = TRUE, weibullsrc = weibullrasters)
+#PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 }
 }
 \author{

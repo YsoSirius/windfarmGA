@@ -74,8 +74,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// euc_CPP
+float euc_CPP(float x1, float x2, float y1, float y2);
+RcppExport SEXP _windfarmGA_euc_CPP(SEXP x1SEXP, SEXP x2SEXP, SEXP y1SEXP, SEXP y2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< float >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< float >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< float >::type y1(y1SEXP);
+    Rcpp::traits::input_parameter< float >::type y2(y2SEXP);
+    rcpp_result_gen = Rcpp::wrap(euc_CPP(x1, x2, y1, y2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // point_2_line_CPP
-NumericMatrix point_2_line_CPP(NumericVector x, NumericVector y);
+NumericVector point_2_line_CPP(NumericVector x, NumericVector y);
 RcppExport SEXP _windfarmGA_point_2_line_CPP(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -99,20 +113,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// eucdist_CPP
-double eucdist_CPP(double x1, double x2, double y1, double y2);
-RcppExport SEXP _windfarmGA_eucdist_CPP(SEXP x1SEXP, SEXP x2SEXP, SEXP y1SEXP, SEXP y2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< double >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< double >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< double >::type y2(y2SEXP);
-    rcpp_result_gen = Rcpp::wrap(eucdist_CPP(x1, x2, y1, y2));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_windfarmGA_wake_CPP", (DL_FUNC) &_windfarmGA_wake_CPP, 3},
@@ -120,9 +120,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_windfarmGA_rotate_CPP", (DL_FUNC) &_windfarmGA_rotate_CPP, 5},
     {"_windfarmGA_angles_CPP", (DL_FUNC) &_windfarmGA_angles_CPP, 3},
     {"_windfarmGA_energy_calc_CPP", (DL_FUNC) &_windfarmGA_energy_calc_CPP, 3},
+    {"_windfarmGA_euc_CPP", (DL_FUNC) &_windfarmGA_euc_CPP, 4},
     {"_windfarmGA_point_2_line_CPP", (DL_FUNC) &_windfarmGA_point_2_line_CPP, 2},
     {"_windfarmGA_wakeradius_CPP", (DL_FUNC) &_windfarmGA_wakeradius_CPP, 3},
-    {"_windfarmGA_eucdist_CPP", (DL_FUNC) &_windfarmGA_eucdist_CPP, 4},
     {NULL, NULL, 0}
 };
 

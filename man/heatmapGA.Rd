@@ -16,6 +16,10 @@ resolution of the heatmap. Default is 2}
 \item{idistw}{The inverse distance weighting power. Default is the
 rotor radius from the 'result' values}
 }
+\value{
+Invisibly returns a list with the result of the inverse distance
+weighting and an aggregated dataframe of all grid cells
+}
 \description{
 Plot a heatmap of the selected grid cells. Green grid
 cells have been selected more often than red grid cells.

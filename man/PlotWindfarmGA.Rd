@@ -18,7 +18,7 @@ arguments: "h","hexa", "hexagonal".}
 \item{Polygon1}{The considered area as shapefile. Only required if the
 shapefile is already loaded.}
 
-\item{whichPl}{Which plots should be shown: 1-8 are possible. The default
+\item{whichPl}{Which plots should be shown: 1-6 are possible. The default
 is "all" which shows all available plots.}
 
 \item{best}{A numeric value indicating how many of the best individuals

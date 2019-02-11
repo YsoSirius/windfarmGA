@@ -88,21 +88,21 @@ double energy_calc_CPP(NumericVector wind_speed, NumericVector rotor_radius, Num
 }
 
 
-
-// Replacement of PointToLine.R /Not used, less performant --------------------------
+// Calculate euclidean distance between two coordinates.
 // [[Rcpp::export]]
-NumericMatrix point_2_line_CPP(NumericVector x, NumericVector y) {
-  NumericMatrix C1 = cbind(y[0], x[1]);
-
-  Rcpp::Environment windfarmGA("package:windfarmGA"); 
-  Function f = windfarmGA["euc.dist"]; 
-
-  NumericVector l_c = f(x, y);
-  NumericVector l_b = f(C1, y);
-  NumericVector l_a = f(x, C1);
-
-  return cbind(y[0], y[1], x[0], x[1], C1[0], C1[1], l_c, l_b, l_a);
+float euc_CPP(float x1, float x2, float y1, float y2) {
+  return sqrt(pow(x1 - y1, 2) + pow(x2 - y2, 2));
 }
+
+// Replacement of PointToLine.R
+// [[Rcpp::export]]
+NumericVector point_2_line_CPP(NumericVector x, NumericVector y) {
+  double lc = euc_CPP(x[0], x[1], y[0], y[1]);
+  double lb = euc_CPP(y[0], x[1], y[0], y[1]);
+  double la = euc_CPP(x[0], x[1], y[0], x[1]);
+  return NumericVector::create(y[0], y[1], x[0], x[1], y[0], x[1], lc, lb, la);
+}
+
 
 // Calculate the wake radius. /Not used, less performant --------------------------
 // [[Rcpp::export]]
@@ -117,9 +117,3 @@ NumericVector wakeradius_CPP(double lenght_b, double RotD, double k) {
   return NumericVector::create(wakR, rotar);
 }
 
-// Calculate euclidean distance between two coordinates. /Not used, less performant --------------------------
-// [[Rcpp::export]]
-double eucdist_CPP(double x1, double x2, double y1, double y2) {
-   double dist = sqrt(pow(x1 - y1, 2) + pow(x2 - y2, 2));
-   return dist;
-}

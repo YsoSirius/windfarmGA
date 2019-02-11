@@ -51,7 +51,7 @@
 #' }
 #' @author Sebastian Gatscha
 leafPlot <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
-  poly1 <- isSpatial(Polygon1 = Polygon1)
+  poly1 <- isSpatial(shape = Polygon1)
 
   if (which > nrow(result)) {
     cat(paste("Maximum possible number for 'which': ", nrow(result)))

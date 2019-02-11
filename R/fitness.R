@@ -9,8 +9,6 @@
 #'
 #' @importFrom raster extent rasterize
 #' @importFrom foreach foreach %dopar% 
-#' @importFrom doParallel registerDoParallel
-#' @importFrom parallel makeCluster stopCluster
 #'
 #' @param selection A list containing all individuals of the current
 #' population.
@@ -82,16 +80,16 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
                               weibull, Parallel, numCluster) {
 
   ## Missing Arguments? #############
-  if (missing(srtm_crop)){
+  if (missing(srtm_crop)) {
     srtm_crop <- NULL
   }
-  if (missing(cclRaster)){
+  if (missing(cclRaster)) {
     cclRaster <- NULL
   }
-  if (missing(Parallel)){
+  if (missing(Parallel)) {
     Parallel <- FALSE
   }
-  if (missing(weibull)){
+  if (missing(weibull)) {
     weibull <- FALSE
   }
   #############
@@ -139,7 +137,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     }
 
     euniqu <- vector("list", length(selection))
-    for (i in 1:length(selection)){
+    for (i in 1:length(selection)) {
       if (!Parallel) {
         # Calculate EnergyOutput for every config i and for
         # every angle j - not Parallel
@@ -175,7 +173,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       })
 
       ## get Energy Output and Efficiency rate for every wind direction
-      enOut <- lapply(ee, function(x){
+      res_energy <- lapply(ee, function(x){
         subset.matrix(x,
                       subset = c(TRUE, rep(FALSE, length(ee[[1]][, 1]) - 1)),
                       select = c("Windrichtung",
@@ -186,41 +184,44 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
 
       ## TODO - Make this lot easier, vectorize it all
       #######################
-      enOut <- do.call("rbind", enOut)
+      res_energy <- do.call("rbind", res_energy)
 
       # Add the Probability of every direction
       # Calculate the relative Energy outputs respective to the
       # probability of the wind direction
-      enOut <- cbind(enOut, "probability_direction" = probability_direction)
-      enOut <- cbind(enOut, "Eneralldire" = enOut[, "Energy_Output_Red"] *
-                       (enOut[, "probability_direction"] / 100))
+      res_energy <- cbind(res_energy, 
+                              "probability_direction" = probability_direction)
+      res_energy <- cbind(res_energy, 
+                              "Eneralldire" = res_energy[, "Energy_Output_Red"] *
+                                (res_energy[, "probability_direction"] / 100))
 
       # Calculate the sum of the relative Energy outputs
-      enOut <- cbind(enOut, "EnergyOverall" = sum(enOut[, "Eneralldire"]))
+      res_energy <- cbind(res_energy, 
+                              "EnergyOverall" = sum(res_energy[, "Eneralldire"]))
 
       # Calculate the sum of the relative Efficiency rates respective to
       # the probability of the wind direction
-      enOut <- cbind(
-        enOut, "Efficalldire" = sum(enOut[, "Parkwirkungsgrad"] *
-                                   (enOut[, "probability_direction"] / 100)))
+      res_energy <- cbind(res_energy, 
+                              "Efficalldire" = sum(res_energy[, "Parkwirkungsgrad"] *
+                                    (res_energy[, "probability_direction"] / 100)))
 
       # Get the total Wake Effect of every Turbine for all Wind directions
-      AbschGesamt <- lapply(ee, function(x) {
+      total_wake <- lapply(ee, function(x) {
         x[, "TotAbschProz"]
       })
-      AbschGesamt <- do.call("cbind", AbschGesamt)
-      AbschGesamt <- rowSums(AbschGesamt)
+      total_wake <- do.call("cbind", total_wake)
+      total_wake <- rowSums(total_wake)
 
       # Get the original X / Y - Coordinates of the selected individual
-      xundyOrig <- selection[[i]][, 2:3]
+      xy_individuals <- selection[[i]][, 2:3]
 
       # Add the Efficieny and the Energy Output of all wind directions and
       # add the total Wake Effect of every Point Location
       # Include the Run of the genertion to the data frame
-      xundyOrig <- cbind(xundyOrig,
-                         "EfficAllDir" = enOut[1, "Efficalldire"],
-                         "EnergyOverall" = enOut[1, "EnergyOverall"],
-                         "AbschGesamt" = AbschGesamt,
+      xy_individuals <- cbind(xy_individuals,
+                         "EfficAllDir" = res_energy[1, "Efficalldire"],
+                         "EnergyOverall" = res_energy[1, "EnergyOverall"],
+                         "AbschGesamt" = total_wake,
                          "Run" = i)
       #######################
 
@@ -228,7 +229,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       ## Get the Rotor Radius and the Rect_IDs of the park configuration
       dt <- subset.matrix(ee[[1]], select = c("RotorR", "Rect_ID"))
       ## Bind the Efficiency,Energy,WakeEffect,Run to the Radius and Rect_IDs
-      dt <- cbind(xundyOrig, dt)
+      dt <- cbind(xy_individuals, dt)
 
       ## Add this information to the the i-th element of the list
       euniqu[[i]] <- dt

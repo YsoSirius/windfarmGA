@@ -151,7 +151,7 @@ test_that("Test Genetic Algorithm Function", {
   # Produce Errors (quietly)
   quiet(expect_error(StartGA(Grid[[1]][1:10,], n = 10, nStart = 20)))
   quiet(expect_error(StartGA(Grid[[1]][1:10,], n = 7, nStart = 20)))
-
+  
   startsel <- StartGA(Grid[[1]], n = 20, nStart = 25);
   expect_is(startsel, "list")
   expect_true(all(sapply(startsel, class) == "matrix"))

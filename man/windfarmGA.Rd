@@ -158,12 +158,6 @@ layer="Name of Polygon"
 Polygon1 <- rgdal::readOGR(dsn=dsn,layer=layer)
 plot(Polygon1)
 
-
-## The following two sources are required, if terrain effects should
-## be considered
-sourceCCL <- "Source of the CCL raster (TIF)"
-sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
-
 ############### REQUIRED INPUT WIND SPEED DATA FRAME
 ## Exemplary Input Wind speed and direction data frame
 ## Uniform wind speed and single wind direction
@@ -217,17 +211,17 @@ result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
 PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
 
 ## Run an optimization with given Weibull parameter rasters.
-araster <- "/..pathto../a_param_raster.tif"
-kraster <- "/..pathto../k_param_raster.tif"
-weibullrasters <- list(raster(kraster), raster(araster))
-result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
-                 fcrR=fcrR, iteration=10, vdirspe=vdirspe,crossPart1= "EQU",
-                 selstate="FIX",mutr=0.8, Proportionality = 1, Rotor= Rotor,
-                 SurfaceRoughness = 0.3, topograp = FALSE,
-                 elitism=TRUE, nelit = 7, trimForce = TRUE,
-                 referenceHeight = 50,RotorHeight = 100,
-                 weibull = TRUE, weibullsrc = weibullrasters)
-PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
+#araster <- "/..pathto../a_param_raster.tif"
+#kraster <- "/..pathto../k_param_raster.tif"
+#weibullrasters <- list(raster(kraster), raster(araster))
+#result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
+#                  fcrR=fcrR, iteration=10, vdirspe=vdirspe,crossPart1= "EQU",
+#                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor= Rotor,
+#                  SurfaceRoughness = 0.3, topograp = FALSE,
+#                  elitism=TRUE, nelit = 7, trimForce = TRUE,
+#                  referenceHeight = 50,RotorHeight = 100,
+#                  weibull = TRUE, weibullsrc = weibullrasters)
+# PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
 
 ## Use the resulting matrix with the different plotting methods of
 ## this package, to explore the behaviour of the genetic algorithm.

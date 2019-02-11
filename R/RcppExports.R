@@ -21,15 +21,15 @@ energy_calc_CPP <- function(wind_speed, rotor_radius, air_rh) {
     .Call(`_windfarmGA_energy_calc_CPP`, wind_speed, rotor_radius, air_rh)
 }
 
+euc_CPP <- function(x1, x2, y1, y2) {
+    .Call(`_windfarmGA_euc_CPP`, x1, x2, y1, y2)
+}
+
 point_2_line_CPP <- function(x, y) {
     .Call(`_windfarmGA_point_2_line_CPP`, x, y)
 }
 
 wakeradius_CPP <- function(lenght_b, RotD, k) {
     .Call(`_windfarmGA_wakeradius_CPP`, lenght_b, RotD, k)
-}
-
-eucdist_CPP <- function(x1, x2, y1, y2) {
-    .Call(`_windfarmGA_eucdist_CPP`, x1, x2, y1, y2)
 }
 

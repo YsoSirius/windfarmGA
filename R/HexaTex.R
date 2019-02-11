@@ -49,8 +49,8 @@ tess2SPdf <- function(x) {
 #' @name HexaTex
 #'
 #' @description  The function takes a Polygon and a sizing argument and
-#' creates a list with an indexed data frame with coordinates
-#' and a SpatialPolygons object, that consists of hexagonal grid cells.
+#' creates a list with an indexed matrix with coordinates
+#' and a SpatialPolygons object, that consists of hexagonal grids
 #'
 #' @export
 #'
@@ -64,7 +64,7 @@ tess2SPdf <- function(x) {
 #' @param size The side length of an hexagon 
 #' @param plotTrue Should the object be plotted
 #'
-#' @return Returns a list with an indexed data frame of the point coordinates
+#' @return Returns a list with an indexed matrix of the point coordinates
 #' and a SpatialPolygons object of the hexagons 
 #'
 #' @examples

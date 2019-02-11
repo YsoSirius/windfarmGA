@@ -13,7 +13,7 @@
 #' arguments: "h","hexa", "hexagonal". 
 #' @param Polygon1 The considered area as shapefile. Only required if the
 #' shapefile is already loaded.
-#' @param whichPl Which plots should be shown: 1-8 are possible. The default
+#' @param whichPl Which plots should be shown: 1-6 are possible. The default
 #' is "all" which shows all available plots.
 #' @param best A numeric value indicating how many of the best individuals
 #' should be plotted. 
@@ -84,34 +84,34 @@ PlotWindfarmGA <- function(result, GridMethod = "r", Polygon1,
   #################
 
   ## PLOTTING OUTPUTS ####################
-  if (any(whichPl == 1)){
+  if (any(whichPl == 1)) {
     print("plotResult: Plot the 'best' Individuals of the GA:")
     plotResult(result = result, Polygon1 = Polygon1, best = best , plotEn = plotEn,
-               topographie = FALSE, Grid= Grid[[2]], weibullsrc = weibullsrc)
+               topographie = FALSE, Grid = Grid[[2]], weibullsrc = weibullsrc)
     readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl == 2)){
+  if (any(whichPl == 2)) {
     print("plotEvolution: Plot the Evolution of the Efficiency and Energy Values:")
     plotEvolution(result, TRUE, 0.3)
   }
-  if (any(whichPl == 3)){
+  if (any(whichPl == 3)) {
     print("plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
     plotparkfitness(result, 0.1)
     readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl == 4)){
+  if (any(whichPl == 4)) {
     print("plotfitnessevolution: Plot the Changes in Fitness Values:")
     plotfitnessevolution(result)
     readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl == 5)){
+  if (any(whichPl == 5)) {
     print("plotCloud: Plot all individual Values of the whole Evolution:")
     plotCloud(result, TRUE)
     readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl == 6)){
+  if (any(whichPl == 6)) {
     print("heatmapGA: Plot a Heatmap of all Grid Cells:")
-    plot(heatmapGA(result = result, si = 5))
+    heatmapGA(result = result, si = 5)
     # readline(prompt = "Press [enter] to continue")
   }
   # if (any(whichPl==7)){

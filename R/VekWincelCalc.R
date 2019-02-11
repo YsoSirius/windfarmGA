@@ -74,7 +74,8 @@ VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
     ## If turbines are in front of the current turbine, create a list and save only the
     ## ones that could possibly influence others
     datalist <- lapply(1:len2, function(i) {
-      P2LFu <- PointToLine2(WKA_akt, xynew1[i,], plotAngles)
+      # P2LFu <- PointToLine2(WKA_akt, xynew1[i,], plotAngles)
+      P2LFu <- point_2_line_CPP(WKA_akt, xynew1[i,])
       winkel <- angles_CPP(xynew1[i,], WKA_akt, P2LFu[5:6])
       c(P2LFu, winkel) 
     })

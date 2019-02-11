@@ -4,13 +4,13 @@
 \alias{isSpatial}
 \title{Transform to SpatialPolygons}
 \usage{
-isSpatial(Polygon1, Projection)
+isSpatial(shape, proj)
 }
 \arguments{
-\item{Polygon1}{An area as SpatialPolygon, SimpleFeature Polygon
+\item{shape}{An area as SpatialPolygon, SimpleFeature Polygon
 or coordinates as matrix/data.frame}
 
-\item{Projection}{Which Projection should be assigned to matrix / 
+\item{proj}{Which Projection should be assigned to matrix / 
 data.frame coordinates}
 }
 \value{
@@ -39,7 +39,7 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 proj4string(Polygon1) <- CRS(Projection)
 df_fort <- ggplot2::fortify(Polygon1)
-isSpatial(df_fort)
+isSpatial(df_fort, Projection)
 }
 }
 \author{

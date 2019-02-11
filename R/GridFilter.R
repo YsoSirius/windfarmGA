@@ -99,7 +99,7 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
 
   grid_intersect$layer <- info[, 3] / info[, 2]
   if (!any(grid_intersect$layer >= prop)) {
-    print("\n################### GA ERROR MESSAGE ###################")
+    cat("\n################### GA ERROR MESSAGE ###################\n")
     stop("A grid cannot be drawn. Reduce the resolution ",
          "or define a projection in meters.")
   }
@@ -113,9 +113,10 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
       sapply(x@Polygons, function(y) y@area))) / 1000000, 3)
 
     par_grid <- par(ask = FALSE, no.readonly = TRUE)
+    on.exit(par_grid)
+    plot.new()
     par(mar = c(5, 5, 5, 4))
     par(mfrow = c(1, 1))
-    plot.new()
     raster::plot(shape, col = "orange",
            main = paste("Resolution:", resol, "m and prop: ", prop,
                         "\n Total Area:", round(sum(areadrygrid) / 1000000, 3),
@@ -128,11 +129,10 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   centpo <- sp::coordinates(grid_filtered)
   centpo <- cbind(ID = 1:nrow(centpo), "X" = centpo[, 1], "Y" = centpo[, 2])
 
-  if (plotGrid){
+  if (plotGrid) {
     graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
     graphics::text(centpo[, "X"], centpo[, "Y"],
                    labels = centpo[, "ID"], pos = 2)
-    par(par_grid)
   }
 
   ## Return Grid Cell Matrix and Grid as SpatialObject

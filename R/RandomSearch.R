@@ -41,8 +41,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
 
 
   ## TODO - Performance and structure ---
-
-
+  ## Missing arguments ########
   if (missing(Plot)) {
     Plot <- TRUE
   }
@@ -52,21 +51,21 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
   if (missing(best)) {
     best <- 1
   }
-
-  if (missing(GridMethod)){
+  if (missing(GridMethod)) {
     GridMethod <- "Rectangular"
   }
-  GridMethod <- toupper(GridMethod)
 
   if (Plot) {
     opar <- par(no.readonly = TRUE)
-    par(mfrow = c(1,1))
+    par(mfrow = c(1, 1))
+    on.exit(opar)
   }
 
+  ## Process Data ########
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
-  resldat <- data.frame(resldat[!duplicated(resldat[,'Run']),])
+  resldat <- data.frame(resldat[!duplicated(resldat[, 'Run']),])
   resldat$GARun <- 1:nrow(resldat)
-  resldat <- resldat[order(resldat$EnergyOverall, decreasing = T),]
+  resldat <- resldat[order(resldat$EnergyOverall, decreasing = TRUE),]
 
   if (best > nrow(resldat)) { best = nrow(resldat)}
   bestGARunIn <- resldat$GARun[1:best]
@@ -75,45 +74,18 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
   rotRad <- max(as.numeric(result[bestGARunIn[1],]$inputData["Rotorradius",][1]))
   propu  <- as.numeric(result[bestGARunIn[1],]$inputData["Percentage of Polygon",][1])
   winddata <- result[bestGARunIn[1],]$inputWind
-
+  ## Get max factor for alteration of coordination
+  maxFac <- rotRad * (resolu / (rotRad * 2))
+  
   ## Windata Formatting ###################
-  winddata$wd <- round(winddata$wd,0)
-  winddata$wd <-  round(winddata$wd/100,1)*100;
-  ## If no probabilites are given, assign uniform distributed ones.
-  if (any(names(winddata) == "probab") == FALSE) {
-    winddata$probab <- 100/nrow(winddata)
-  }
-  ## Checks if all wind directions/speeds have a possibility greater than 0.
-  winddata$probab <- round(winddata$probab,0)
-  if (sum(winddata$probab) != 100) {
-    winddata$probab <- winddata$probab*(100/sum(winddata$probab))
-  }
-  ## Checks if duplicated wind directions are at hand
-  if   (any(duplicated(winddata$wd)==TRUE)) {
-    for (i in 1:nrow(winddata[duplicated(winddata$wd)==F,])){
-      temp <- winddata[winddata$wd ==  winddata[duplicated(
-        winddata$wd)==F,][i,'wd'],];
-      temp$ws < -with(temp, sum(ws * (probab/sum(probab))));
-      temp$probab <- with(temp, sum(probab * (probab/sum(probab))));
-      
-      winddata[winddata$wd ==  winddata[duplicated(
-        winddata$wd)==F,][i,'wd'],]$ws <- round(temp$ws,2)[1]
-      winddata[winddata$wd ==  winddata[duplicated(
-        winddata$wd)==F,][i,'wd'],]$probab <- round(temp$probab,2)[1]
-    }
-  }
-  winddata <- winddata[!duplicated(winddata$wd)==TRUE,];
-  winddata <- winddata[with(winddata, order(wd)), ]
-  if (sum(winddata$probab) != 100) {
-    winddata$probab <- winddata$probab*(100/sum(winddata$probab))
-  }
-  probabDir <- winddata$probab;
-  pp <- sum(probabDir)/100;   
-  probabDir <- probabDir/pp;
+  winddata <- windata_format(winddata)
+  probabDir <- winddata[[2]]
+  winddata <- winddata[[1]]
   ###################
+  ## Init arguments ########
+  Polygon1 <- isSpatial(shape = Polygon1)
 
-  Polygon1 <- isSpatial(Polygon1 = Polygon1)
-
+  GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
@@ -124,12 +96,19 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
     Grid <- HexaTex(Polygon1, resolu / 2)
   }
 
-  ## Optimize with several best layouts
+  ## Get reference /turbine height and rotor radius of 1 individual.
+  # TODO - if 3D-wake possible, turbine height must be evaluated in the loop
+  ## If different rotor radii, it must also go in the loop
+  ref_height <- as.numeric(result[1, ]$inputData[12, ])
+  rotor_height <- as.numeric(result[1, ]$inputData[13, ])
+  rotor_radius <- as.numeric(result[1,]$inputData[1,])
+  
   RandResultAll <- vector(mode = "list", length = best)
+  ########
+
+  ## Optimize Layout in Random Setps
   for (o in 1:best) {
     bestGARun <- bestGARunIn[o]
-    ## Get max factor for alteration of coordination
-    maxFac <- rotRad * (resolu / (rotRad * 2))
 
     ## Get the starting layout of windfarm[o]
     layout_start <- result[bestGARun,]$bestPaEn    
@@ -142,13 +121,13 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
       legend(x = "bottom", 
               legend = c("Starting Location", "Randomly generated Location", 
                        "Suitable Location", "Relocated due to Turbine Collision"),
-              col=c("black", "blue","green", "purple"), lwd = 1, lty = c(0, 0), 
-              pch=c(15, 3, 1, 20))
+              col = c("black", "blue","green", "purple"), lwd = 1, lty = c(0, 0), 
+              pch = c(15, 3, 1, 20))
     }
 
     ## Run n random searches on windfarm[o]
     RandResult <- vector(mode = "list", length = n)
-    for (i in 1:n){
+    for (i in 1:n) {
       coordLayTmp <- vector(mode = "list", length = nrow(coordLay))
       ## For every turbine, alter x/y coordinates randomly
       for (j in 1:nrow(coordLay)) {
@@ -167,7 +146,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
       ## Check if turbines are not colliding #####################
       pointsDistBl <- sp::SpatialPoints(coordsj)
       pointsDist <- sp::spDists(sp::SpatialPoints(coordsj))
-      distMin <- pointsDist[which(pointsDist<maxDist & pointsDist!=0)]
+      distMin <- pointsDist[which(pointsDist < maxDist & pointsDist != 0)]
 
       while (length(distMin) > 0) {
         pointsDistBl <- sp::SpatialPoints(coordsj)
@@ -215,17 +194,17 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
                        "bin" = 1)
       coordsj <- subset.matrix(coordsj, select = c("ID", "X", "Y", "bin"))
 
-
       # Calculate energy and save in list with length n ################
       resCalcen <- calculateEn(sel = coordsj,
-                               referenceHeight = as.numeric(result[bestGARun, ]$inputData[12, ]),
-                               RotorHeight = as.numeric(result[bestGARun, ]$inputData[13, ]),
+                               referenceHeight = ref_height,
+                               RotorHeight = rotor_height,
                                SurfaceRoughness = 0.3,
                                wnkl = 20, distanz = 100000,
                                resol = resolu, dirSpeed = winddata,
-                               RotorR = as.numeric(result[bestGARun,]$inputData[1,]),
+                               RotorR = rotor_radius,
                                polygon1 = Polygon1, topograp = FALSE,
-                               srtm_crop = NULL, cclRaster = NULL, weibull = FALSE)
+                               srtm_crop = NULL, cclRaster = NULL, 
+                               weibull = FALSE)
       
       ee  <- lapply(resCalcen, function(x){
         subset.matrix(x, subset = !duplicated(x[,"Punkt_id"]))
@@ -249,22 +228,22 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
       # Calculate the relative Energy outputs relative to wind direction probabilities
       enOut <- cbind(enOut, "probabDir" = probabDir)
       enOut <- cbind(enOut, "Eneralldire" = 
-                       enOut[,"Energy_Output_Red"] * (enOut[,"probabDir"] / 100))
+                       enOut[,"Energy_Output_Red"] * (enOut[, "probabDir"] / 100))
       
       # Calculate the sum of the relative Energy outputs
-      enOut <- cbind(enOut, "EnergyOverall" = sum(enOut[,"Eneralldire"]))
+      enOut <- cbind(enOut, "EnergyOverall" = sum(enOut[, "Eneralldire"]))
       
       # Calculate the sum of the relative Efficiency rates respective to 
       # the probability of the wind direction
       enOut <- cbind(enOut, "Efficalldire" = 
-                       sum(enOut[,"Parkwirkungsgrad"] * (enOut[,"probabDir"] / 100)))
+                       sum(enOut[, "Parkwirkungsgrad"] * (enOut[, "probabDir"] / 100)))
       
       # Get the total Wake Effect of every Turbine for all Wind directions
-      AbschGesamt <- lapply(ee, function(x){
-        x[,"TotAbschProz"]
+      total_wake <- lapply(ee, function(x){
+        x[, "TotAbschProz"]
       })
-      AbschGesamt <- do.call("cbind", AbschGesamt)
-      AbschGesamt <- rowSums(AbschGesamt)
+      total_wake <- do.call("cbind", total_wake)
+      total_wake <- rowSums(total_wake)
 
       # Get the original X / Y - Coordinates of the selected individual
       xundyOrig <- coordsj[, 2:3]
@@ -273,9 +252,9 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
       # Wake Effect of every Point Location
       # Include the Run of the genertion to the data frame
       xundyOrig <- cbind(xundyOrig,
-                         "EfficAllDir" = enOut[1,"Efficalldire"],
-                         "EnergyOverall" = enOut[1,"EnergyOverall"],
-                         "AbschGesamt" = AbschGesamt,
+                         "EfficAllDir" = enOut[1, "Efficalldire"],
+                         "EnergyOverall" = enOut[1, "EnergyOverall"],
+                         "AbschGesamt" = total_wake,
                          "Run" = i)
 
       # Get the Rotor Radius and the Rect_IDs of the park configuration
@@ -294,8 +273,5 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod) {
     RandResultAll[[o]] <- RandResult
   }
 
-  if (Plot) {
-    par(opar)
-  }
   return(RandResultAll)
 }

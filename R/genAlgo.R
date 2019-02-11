@@ -17,6 +17,9 @@
 #' @importFrom graphics plot.new
 #' @importFrom stats runif
 #' @importFrom utils download.file unzip
+#' @importFrom doParallel registerDoParallel
+#' @importFrom parallel makeCluster stopCluster
+#' 
 #'
 #' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
 #' or coordinates as matrix/data.frame
@@ -34,9 +37,9 @@
 #' considered area in m.  If the terrain effect model is activated, a
 #' surface roughness will be calculated for every grid cell with the
 #' elevation and land cover information. Default is 0.3
-#' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
-#' required when the terrain effect model is activated. If nothing is assign, it 
-#' will try to download a version from the EEA-website.
+#' @param sourceCCL The path to the Corine Land Cover raster (.tif). Only
+#' required when the terrain effect model is activated. If nothing is assign,
+#' it will try to download a version from the EEA-website.
 #' @param sourceCCLRoughness The source to the adapted
 #' Corine Land Cover legend as .csv file. Only required when terrain
 #' effect model is activated. As default a .csv file within this
@@ -149,17 +152,17 @@
 #' PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 #'
 #' ## Run an optimization with given Weibull parameter rasters.
-#' araster <- "/..pathto../a_param_raster.tif"
-#' kraster <- "/..pathto../k_param_raster.tif"
-#' weibullrasters <- list(raster(kraster), raster(araster))
-#' result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100,
-#'                  weibull = TRUE, weibullsrc = weibullrasters)
-#' PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
+#' #araster <- "/..pathto../a_param_raster.tif"
+#' #kraster <- "/..pathto../k_param_raster.tif"
+#' #weibullrasters <- list(raster(kraster), raster(araster))
+#' #result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
+#' #                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
+#' #                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
+#' #                  SurfaceRoughness = 0.3, topograp = FALSE,
+#' #                  elitism=TRUE, nelit = 7, trimForce = TRUE,
+#' #                  referenceHeight = 50,RotorHeight = 100,
+#' #                  weibull = TRUE, weibullsrc = weibullrasters)
+#' #PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 #'}
 #' @author Sebastian Gatscha
 genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
@@ -172,6 +175,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## set Graphic Params ###############
   if (plotit) {
     oldpar <- graphics::par(no.readonly = TRUE)
+    on.exit(par(oldpar))
     plot.new()
     graphics::par(ask = FALSE)
   }
@@ -261,13 +265,15 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
-    numPossClus <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
-    if (numCluster > numPossClus) {
-      numCluster <- numPossClus - 1
+    ## TODO - test on Linux
+    max_cores <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
+    if (numCluster > max_cores) {
+      numCluster <- max_cores - 1
     }
-    typeCluster <- "PSOCK"
-    cl <- parallel::makeCluster(numCluster, type = typeCluster)
+    type_cluster <- "PSOCK"
+    cl <- parallel::makeCluster(numCluster, type = type_cluster)
     doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl))
   }
 
   ## WEIBULL ###############
@@ -277,7 +283,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       cat("\nWeibull Distribution is used.")
     }
     if (missing(weibullsrc)) {
-      if (verbose){
+      if (verbose) {
         cat("\nWeibull Informations from package will be used.\n")
       }
       path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
@@ -288,32 +294,32 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       # weibullsrc = list(k_param, a_param)
       k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
       a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
-      ## Project Shapefile to raster, Crop/Mask and project raster back
-      PolygonRaster <- sp::spTransform(Polygon1,
+      ## Project Shapefile to raster proj, Crop/Mask and project raster back
+      shape_project <- sp::spTransform(Polygon1,
                                        CRSobj = sp::proj4string(a_weibull))
       k_par_crop <- raster::crop(x = k_weibull,
-                                 y = raster::extent(PolygonRaster))
+                                 y = raster::extent(shape_project))
       a_par_crop <- raster::crop(x = a_weibull,
-                                 y = raster::extent(PolygonRaster))
-      weibl_k <- raster::mask(x = k_par_crop, mask = PolygonRaster)
-      weibl_a <- raster::mask(x = a_par_crop, mask = PolygonRaster)
+                                 y = raster::extent(shape_project))
+      weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
+      weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
       estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
       estim_speed_raster <- raster::projectRaster(estim_speed_raster,
                                               crs = sp::proj4string(Polygon1))
     } else {
-      if (verbose){
+      if (verbose) {
         cat("\nWeibull Informations are given.\n")
       }
       weibullsrc <- weibullsrc
       ## Project Shapefile to raster, Crop/Mask and project raster back
-      PolygonRaster <- sp::spTransform(Polygon1,
+      shape_project <- sp::spTransform(Polygon1,
                                     CRSobj = sp::proj4string(weibullsrc[[1]]))
       k_par_crop <- raster::crop(x = weibullsrc[[1]],
-                                 y = raster::extent(PolygonRaster))
+                                 y = raster::extent(shape_project))
       a_par_crop <- raster::crop(x = weibullsrc[[2]],
-                                 y = raster::extent(PolygonRaster))
-      weibl_k <- raster::mask(x = k_par_crop, mask = PolygonRaster)
-      weibl_a <- raster::mask(x = a_par_crop, mask = PolygonRaster)
+                                 y = raster::extent(shape_project))
+      weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
+      weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
       estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
       estim_speed_raster <- raster::projectRaster(estim_speed_raster,
                                                   crs = proj4string(Polygon1))
@@ -383,12 +389,12 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     grid_filtered <- Grid1[[2]]
   }
 
-  AmountGrids <- nrow(Grid)
+  n_gridcells <- nrow(Grid)
 
 
   ## INIT VARIABLES 2 ###############
   ## Determine the amount of initial individuals and create initial population.
-  nStart <- (AmountGrids * n) / iteration
+  nStart <- (n_gridcells * n) / iteration
   if (nStart < 100) {
     nStart <- 100
   }
@@ -429,7 +435,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
 
     if (missing(sourceCCL)) {
-      message("No raster was given. Should it be downloaded?")
+      message("No land cover raster ('sourceCCL') was given. Should it be downloaded?")
       readline(prompt = "Press [enter] to continue or Escpae to exit.")
       if (!file.exists("g100_06.tif")) {
         ## download an zip CCL-tif
@@ -849,7 +855,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ## After Crossover and Mutation, the amount of turbines in a windpark
     ## change and have to be corrected to the required amount of turbines.
     mut1 <- trimton(mut = mut, nturb = n, allparks = allparks,
-                    nGrids = AmountGrids, trimForce = trimForce,
+                    nGrids = n_gridcells, trimForce = trimForce,
                     seed = NULL)
 
     if (verbose) {
@@ -869,10 +875,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
   }
 
-  ## Stop Parallel Cluster ###############
+  ## Remove Parallel Cluster ###############
   if (Parallel) {
-    parallel::stopCluster(cl)
-    try(rm(cl), silent = TRUE)
+  try(rm(cl), silent = TRUE)
   }
 
   ## Reduce list, if algorithm didnt run all iterations. (Found Optimum) #################
@@ -894,9 +899,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                    clouddata, selcross, beorwor,
                    inputData, inputWind, mut_rate, allCoords)
 
-  if (plotit) {
-    graphics::par(oldpar)
-  }
   return(alldata)
 }
 
@@ -910,9 +912,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 #' @importFrom sp proj4string Polygon Polygons SpatialPolygons
 #' @importFrom methods as
 #'
-#' @param Polygon1 An area as SpatialPolygon, SimpleFeature Polygon
+#' @param shape An area as SpatialPolygon, SimpleFeature Polygon
 #' or coordinates as matrix/data.frame
-#' @param Projection Which Projection should be assigned to matrix / 
+#' @param proj Which Projection should be assigned to matrix / 
 #' data.frame coordinates
 #'
 #' @return A SpatialPolygons object
@@ -934,57 +936,56 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
 #' df_fort <- ggplot2::fortify(Polygon1)
-#' isSpatial(df_fort)
+#' isSpatial(df_fort, Projection)
 #'}
 #' @author Sebastian Gatscha
-isSpatial <- function(Polygon1, Projection) {
-  # Polygon1 = xy_matrix
-  if (class(Polygon1)[1] == "sf") {
-    Polygon1 <- as(Polygon1, "Spatial")
+isSpatial <- function(shape, proj) {
+  # shape = xy_matrix
+  if (class(shape)[1] == "sf") {
+    shape <- as(shape, "Spatial")
     ## This is needed for GridFilter. Attribute names must have same length
-    Polygon1$names <- "layer"
-  } else if (class(Polygon1)[1] == "data.frame" |
-             class(Polygon1)[1] == "matrix") {
+    shape$names <- "layer"
+  } else if (class(shape)[1] == "data.frame" |
+             class(shape)[1] == "matrix") {
     ## If coordinate names are found, take those columns, 
     ## otherwise take the first 2
-    if (length(colnames(Polygon1))) {
+    if (length(colnames(shape))) {
       accep_cols_x <- c("L*N", "X")
       accep_cols_y <- c("L*T", "Y", "BREITE")
       sum_col_match <- sum(sapply(c(accep_cols_x, accep_cols_y), grepl,
-                                 toupper(colnames(Polygon1)) ))
+                                 toupper(colnames(shape)) ))
       if (sum_col_match >= 2) {
         x_col_match <- which(sapply(
-          lapply(accep_cols_x, grepl, toupper(colnames(Polygon1))),
+          lapply(accep_cols_x, grepl, toupper(colnames(shape))),
           any))
         y_col_match <- which(sapply(
-          lapply(accep_cols_y, grepl, toupper(colnames(Polygon1))),
+          lapply(accep_cols_y, grepl, toupper(colnames(shape))),
           any))
 
         x_col_index <- which(grepl(accep_cols_x[x_col_match],
-                                   toupper(colnames(Polygon1))))
+                                   toupper(colnames(shape))))
         y_col_index <- which(grepl(accep_cols_y[y_col_match],
-                                   toupper(colnames(Polygon1))))
+                                   toupper(colnames(shape))))
 
-        pltm <- Polygon1[, c(x_col_index[1], y_col_index[1])]
+        pltm <- shape[, c(x_col_index[1], y_col_index[1])]
       } else {
-        col_numeric <- which(sapply(Polygon1[1, ], is.numeric))
-        pltm <- Polygon1[, col_numeric]
+        col_numeric <- which(sapply(shape[1, ], is.numeric))
+        pltm <- shape[, col_numeric]
       }
     } else {
-      col_numeric <- which(sapply(Polygon1[1, ], is.numeric))
-      pltm <- Polygon1[, col_numeric]
+      col_numeric <- which(sapply(shape[1, ], is.numeric))
+      pltm <- shape[, col_numeric]
     }
 
     pltm <- Polygon(pltm)
     pltm <- Polygons(list(pltm), 1)
-    Polygon1 <- SpatialPolygons(list(pltm))
-    if (!missing(Projection)) {
-      sp::proj4string(Polygon1) <- Projection
+    shape <- SpatialPolygons(list(pltm))
+    if (!missing(proj)) {
+      sp::proj4string(shape) <- proj
     }
   }
-  return(Polygon1)
+  return(shape)
 }
-
 
 #' @title Transform Winddata
 #' @name windata_format

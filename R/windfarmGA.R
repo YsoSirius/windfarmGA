@@ -134,12 +134,6 @@
 #' Polygon1 <- rgdal::readOGR(dsn=dsn,layer=layer)
 #' plot(Polygon1)
 #'
-#'
-#' ## The following two sources are required, if terrain effects should
-#' ## be considered
-#' sourceCCL <- "Source of the CCL raster (TIF)"
-#' sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
-#'
 #' ############### REQUIRED INPUT WIND SPEED DATA FRAME
 #' ## Exemplary Input Wind speed and direction data frame
 #' ## Uniform wind speed and single wind direction
@@ -194,33 +188,35 @@
 #' PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
 #'
 #' ## Run an optimization with given Weibull parameter rasters.
-#' araster <- "/..pathto../a_param_raster.tif"
-#' kraster <- "/..pathto../k_param_raster.tif"
-#' weibullrasters <- list(raster(kraster), raster(araster))
-#' result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#'                  fcrR=fcrR, iteration=10, vdirspe=vdirspe,crossPart1= "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor= Rotor,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100,
-#'                  weibull = TRUE, weibullsrc = weibullrasters)
-#' PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
+#' #araster <- "/..pathto../a_param_raster.tif"
+#' #kraster <- "/..pathto../k_param_raster.tif"
+#' #weibullrasters <- list(raster(kraster), raster(araster))
+#' #result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
+#' #                  fcrR=fcrR, iteration=10, vdirspe=vdirspe,crossPart1= "EQU",
+#' #                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor= Rotor,
+#' #                  SurfaceRoughness = 0.3, topograp = FALSE,
+#' #                  elitism=TRUE, nelit = 7, trimForce = TRUE,
+#' #                  referenceHeight = 50,RotorHeight = 100,
+#' #                  weibull = TRUE, weibullsrc = weibullrasters)
+#' # PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
 #'
 #' ## Use the resulting matrix with the different plotting methods of
 #' ## this package, to explore the behaviour of the genetic algorithm.
 #'
 #' }
 #' @author Sebastian Gatscha
-utils::globalVariables(c("X","Y","X1","X2","var1.pred","x",
-                         "y","EfficAllDir","sourceCCLRoughness","sourceCCL","RotorR",
-                         "Punkt_id","A_ov","WakeR","Windmean","Laenge_A","Laenge_B",
-                         "Ay","Ax","V_i","V_red","Rotorflaeche","AbschatInProz",
-                         "Windrichtung","element_rect","element_line","alpha","Laenge_A",
-                         "unit", "Laenge_B","By","Bx",
-                         "dry.grid.filtered","spd.binned","Run","EnergyOverall",
-                         "ID", "bin", "Fitness","Rect_ID", "Parkfitness", "AbschGesamt",
-                         "srtm_crop", "cclRaster", "weibullsrc","globalparks","<<-", "cl",
-                         "k", "proj4string", "`proj4string<-`"))
+utils::globalVariables(
+  c(
+    "X","Y",
+    "var1.pred","x","y",
+    "element_rect","element_line",
+    "unit", 
+    "srtm_crop", "cclRaster", "weibullsrc",
+    "cl",
+    "k" 
+    # ,"proj4string" 
+    # ,"`proj4string<-`"
+    ))
 
 
 windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection, 
@@ -235,6 +231,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
                        Parallel, numCluster, verbose = FALSE, plotit = FALSE) {
 
   opar = par(no.readonly = TRUE)
+  on.exit(par(opar))
   par(mfrow = c(1,2), ask = FALSE)
   ######## CHECK INPUT POLYGON
   ## Check if Polygon given is correctly
@@ -285,7 +282,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   }
   ## Check if Selection Method is chosen correctly.
   if (missing(selstate)) {selstate <- readinteger()}
-  if (selstate != "FIX" & selstate !="VAR") {
+  if (selstate != "FIX" & selstate != "VAR") {
     selstate <- readintegerSel()
   }
 
@@ -293,34 +290,37 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   if (missing(vdirspe)) {
     stop("\n##### No wind data.frame is given. \nThis input is required for an optimization run")
   }
-  plot.new();   
-  plotWindrose(data = vdirspe, spd = vdirspe[,'ws'], dir = vdirspe[,'wd'])
+  plot.new()
+  plotWindrose(data = vdirspe, spd = vdirspe[, 'ws'], dir = vdirspe[, 'wd'])
   readline(prompt = "\nPress <ENTER> if the windrose looks correct?")
-  ## Check if Rotor,fcrR,n,iteration,RotorHeight,SurfaceRoughness,Proportionality,mutr,nelit are numeric
+  ## Check if Rotor,fcrR,n,iteration,RotorHeight,
+  ## SurfaceRoughness,Proportionality,mutr,nelit are numeric
   ChekNumer <- is.numeric(c(Rotor, n, fcrR, iteration, referenceHeight, 
                             RotorHeight, SurfaceRoughness, Proportionality, mutr, nelit))
-  if (ChekNumer == F) {
+  if (ChekNumer == FALSE) {
     cat("################### GA WARNING MESSAGE ###################")
     stop("\n##### A required numeric input is not numeric.\n
          See documentation.")
   }
   ## Check if topograp,elitism,trimForce are logical
   ChekLogic <- is.logical(c(topograp, elitism, trimForce))
-  if (ChekLogic == F) {
+  if (ChekLogic == FALSE) {
     cat("################### GA WARNING MESSAGE ###################")
     stop("\n##### A required logical input is not logical.\n
          See documentation.")
   }
   ## Check if Grid with given inputs is correctly
-  if (missing(GridMethod)){
+  if (missing(GridMethod)) {
     GridMethod <- "Rectangular"
   }
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod == "HEXAGON" | GridMethod == "H") {
-    Grid <- HexaTex(Polygon1 = Polygon1, size = (Rotor * fcrR) / 2, plotTrue = TRUE)
+    Grid <- HexaTex(Polygon1 = Polygon1, 
+                    size = (Rotor * fcrR) / 2, plotTrue = TRUE)
   } else {
-    Grid <- GridFilter(shape = Polygon1,resol = (Rotor * fcrR), prop = Proportionality, plotGrid = TRUE)
+    Grid <- GridFilter(shape = Polygon1,resol = (Rotor * fcrR), 
+                       prop = Proportionality, plotGrid = TRUE)
   }
   cat("\nIs the grid spacing appropriate?")
   InputDaccor <- readline(prompt = "Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
@@ -335,15 +335,15 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   }
 
 
-  if (missing(topograp)){
+  if (missing(topograp)) {
     topograp <- FALSE
   }    
-  if (missing(weibull)){
+  if (missing(weibull)) {
     weibull <- FALSE
   }  
-  if (weibull){
+  if (weibull) {
     cat("\nWeibull Distribution is used.")
-    if (missing(weibullsrc)){
+    if (missing(weibullsrc)) {
       cat("\nWeibull Informations from package will be used.\n")
     } else {
       cat("\nWeibull Informations are given.\n")
@@ -359,13 +359,13 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
       weibullsrc <- weibullsrc
     }
   }
-  if (missing(weibullsrc)){
+  if (missing(weibullsrc)) {
     weibullsrc <- ""
   }
-  if (missing(Parallel)){
+  if (missing(Parallel)) {
     Parallel <- FALSE
   }
-  if (missing(numCluster)){
+  if (missing(numCluster)) {
     numCluster <- 1
   }
   if (Parallel == TRUE) {
@@ -397,7 +397,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
                     weibull = weibull, weibullsrc = weibullsrc, 
                     Parallel = Parallel, numCluster = numCluster,
                     verbose = verbose, plotit = plotit)
-  par(opar)
+
   invisible(result)
 }
 

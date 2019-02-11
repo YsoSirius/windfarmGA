@@ -76,16 +76,15 @@ plot(Polygon1, col = "blue", axes = TRUE)
 ## Create random Wind data 
 - Exemplary input Wind data with uniform wind speed and single wind direction
  ```sh
-data.in <- structure(list(ws =  c(12, 12), wd = c(0,0), probab = c(25, 25)),
-              .Names = c("ws", "wd", "probab"), row.names = c(NA, 2L), class = "data.frame")
-windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-              dir = data.in$wd, dirres=10, spdmax = 20)
+wind_df <- data.frame(ws = c(12, 12), wd = c(0, 0), probab = c(25, 25))
+windrosePlot <- plotWindrose(data = wind_df, spd = wind_df$ws,
+                             dir = wind_df$wd, dirres=10, spdmax = 20)
 ```
 - Exemplary input Wind data with random wind speeds and random wind directions
  ```sh
-data.in <- as.data.frame(cbind(ws=sample(1:25,10), wd = sample(1:260,10)))
-windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-              dir = data.in$wd)
+wind_df <- data.frame(ws = sample(1:25, 10), wd = sample(1:260, 10)))
+windrosePlot <- plotWindrose(data = wind_df, spd = wind_df$ws,
+                             dir = wind_df$wd)
 ```
 
 ## Grid Spacing
@@ -129,10 +128,6 @@ Be sure that all rows are filled with numeric values and save the .csv file with
 the resulting .csv file to the input variable **`sourceCCLRoughness`** of this function. For further information, see
 the examples of the package.
 
- ```sh
-sourceCCL <- "Source of the CCL raster (TIF)"
-sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
-```
 
 ## Start an Optimization
 An optimization run can be initiated with the following functions: 
@@ -143,40 +138,46 @@ An optimization run can be initiated with the following functions:
 - without terrain effects
  ```sh
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
              elitism =TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100)
 ```
 - with terrain effects
  ```sh
+sourceCCL <- "Source of the CCL raster (TIF)"
+sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
+
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
-             referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
-             sourceCCLRoughness = "C:/...Path_to.../clc_legend.csv")
+             referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
+             sourceCCLRoughness = sourceCCLRoughness)
 ```
 
 ###  Function calls for genAlgo
 - without terrain effects
 ```sh
 result <- genAlgo(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr =0.8,
+             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr =0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100)
 ```
 - with terrain effects
  ```sh
+sourceCCL <- "Source of the CCL raster (TIF)"
+sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 result <- genAlgo(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
-             referenceHeight = 50, RotorHeight = 100, sourceCCL = "C:/...Path_to.../g100_06.tif",
-             sourceCCLRoughness = "C:/...Path_to.../clc_legend.csv")
+             referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
+             sourceCCLRoughness = sourceCCLRoughness)
 ```
-```
+
+```sh
 ## Run an optimization with your own Weibull parameter rasters. The shape and scale 
 ## parameter rasters of the weibull distributions must be added to a list, with the first
 ## list item being the shape parameter (k) and the second list item being the scale
@@ -186,7 +187,7 @@ araster <- "/..pathto../a_param_raster.tif"
 weibullrasters <- list(raster(kraster), raster(araster))
 
 result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
-                  fcrR=5,iteration=10, vdirspe = data.in, crossPart1 = "EQU",
+                  fcrR=5,iteration=10, vdirspe = wind_df, crossPart1 = "EQU",
                   selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
                   SurfaceRoughness = 0.3, topograp = FALSE,
                   elitism=TRUE, nelit = 7, trimForce = TRUE,
@@ -214,8 +215,6 @@ Several plotting functions are available:
 - plotparkfitness(result, spar = 0.1)
 - plotfitnessevolution(result)
 - plotCloud(result, pl = TRUE)
-- GooglePlot(result,Polygon1)
-- GoogleChromePlot(result, Polygon1, best = 1, plotEn = 1)
 - heatmapGA(result = result, si = 5)
 - leafPlot(result = result, Polygon1 = polygon, which = 1)
 ```
@@ -240,31 +239,28 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 proj4string(Polygon1) <- CRS(Projection)
 plot(Polygon1, col = "blue", axes = TRUE)
 
-data.in <- structure(list(ws =  c(12,12), wd =c(0,0), probab = c(25,25)),
-                     .Names = c("ws", "wd","probab"), row.names = c(NA, 2L), class = "data.frame")
-windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
-                             dir = data.in$wd, dirres = 10, spdmax = 20)
-Rotor <- 20; 
+wind_df <- data.frame(ws = 12, wd = 0)
+windrosePlot <- plotWindrose(data = wind_df, spd = wind_df$ws,
+                             dir = wind_df$wd, dirres = 10, spdmax = 20)
+Rotor <- 20
 fcrR <- 9
 Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, iteration = 10,
-                     vdirspe = data.in, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+                     vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
                      Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
                      elitism = TRUE, nelit = 7, trimForce = TRUE,
                      referenceHeight = 50, RotorHeight = 100)
 
-# The following function will execute all plotting function of this package:
+# The following function will execute all plotting function further below:
 PlotWindfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
-# The plotting functions can also be called at once with the following functions:
+# The plotting functions can also be called individually:
 plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
 plotEvolution(result, ask = TRUE, spar = 0.1)
 plotparkfitness(result, spar = 0.1)
 plotfitnessevolution(result)
 plotCloud(result, pl = TRUE)
-GooglePlot(result, Polygon1)
-GoogleChromePlot(result, Polygon1, best = 1, plotEn = 1)
 heatmapGA(result = result, si = 5)
 leafPlot(result = result, Polygon1 = polygon, which = 1)
 ```

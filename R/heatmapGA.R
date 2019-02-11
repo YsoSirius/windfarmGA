@@ -5,10 +5,8 @@
 #'
 #' @export
 #'
-#' @importFrom geoR dup.coords
 #' @importFrom sp SpatialPoints coordinates gridded
 #' @importFrom gstat idw
-#' @importFrom rgl open3d rgl.surface rgl.snapshot
 #' @importFrom ggplot2 ggplot geom_tile geom_point aes scale_fill_gradient
 #' coord_equal labs
 #'
@@ -20,7 +18,8 @@
 #' @param idistw The inverse distance weighting power. Default is the
 #' rotor radius from the 'result' values 
 #'
-#' @return NULL
+#' @return Invisibly returns a list with the result of the inverse distance
+#' weighting and an aggregated dataframe of all grid cells
 #' @examples \donttest{
 #' ## Add some data examples from the package
 #' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
@@ -36,6 +35,8 @@
 #' }
 #' @author Sebastian Gatscha
 heatmapGA <- function(result, si = 2, idistw){
+  ## TODO removed imports rgl. Why did I have it?
+  ## @importFrom rgl open3d rgl.surface rgl.snapshot
   parheat <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parheat))
   par(mfrow = c(1, 1))
@@ -47,14 +48,15 @@ heatmapGA <- function(result, si = 2, idistw){
   sizingidw <- as.integer(result[, "inputData"][[1]][, 1]["Rotorradius"])
   sizing <- as.integer(result[, "inputData"][[1]][, 1]["Resolution"]) / si
 
-  dupco <- geoR::dup.coords(bpe, simplify = TRUE)
+  # dupco <- geoR::dup.coords(bpe, simplify = TRUE)
+  dupco <- dup_coords(bpe, simplify = TRUE)
 
   bpe$Ids <- as.integer(rownames(bpe))
 
   dupco <- lapply(dupco, function(x) as.integer(x))
   dupcosum <- lapply(dupco, function(x) length(x))
   bpenew <- vector("list", length(dupco))
-  for (i in 1:length(dupco)){
+  for (i in 1:length(dupco)) {
     bpenew[[i]] <- bpe[bpe$Ids == dupco[[i]][1], ]
     bpenew[[i]]$Sum <- dupcosum[[i]][1]
   }
@@ -70,21 +72,23 @@ heatmapGA <- function(result, si = 2, idistw){
                              to = x_range[2] + extra_margin, by = sizing),
                      y = seq(from = y_range[1] - extra_margin,
                              to = y_range[2] + extra_margin, by = sizing))
+
+  ## TODO - Need global variable for NSE-values (x,y,var1.pred,X,Y). How to avoid it?
   ## convert grid to SpatialPixel class
   sp::coordinates(grd) <- ~ x + y
   sp::gridded(grd) <- TRUE
 
-
-  if (missing(idistw)){
+  if (missing(idistw)) {
     idistw <- sizingidw
   } else {
     idistw <- idistw
   }
 
-  idwout <- as.data.frame(gstat::idw(formula = bpenew$Sum ~ 1,
-                                     locations = polo, newdata = grd,
-                                     idp = idistw))
-
+  ## TODO - can NSE values be wrapped in quotes?
+  # as.data.frame to data.frame ?
+  idwout <- data.frame(gstat::idw(formula = bpenew$Sum ~ 1,
+                                  locations = polo, newdata = grd,
+                                  idp = idistw))
 
   plot1 <- ggplot2::ggplot(data = idwout,
                            mapping = ggplot2::aes(x = x, y = y)) +
@@ -96,7 +100,42 @@ heatmapGA <- function(result, si = 2, idistw){
                         show.legend = TRUE, size = sqrt(sqrt(bpenew$Sum)),
                         alpha = 0.6)
 
-  plot1 +
+  plot1 <- plot1 +
     ggplot2::scale_fill_gradient(low = "red", high = "green") +
     ggplot2::coord_equal()
+  
+  print(plot1)
+  
+  invisible(list("idw" = idwout,
+                 "GA_grids" = bpenew))
+}
+
+
+#' @title Splits duplicated coords (copy of geoR)
+#' @name dup_coords
+#' @description This funtions takes an object with 2-D coordinates and returns
+#' the positions of the duplicated coordinates. Also sets a method for
+#' duplicated. Helper function for \code{\link{heatmapGA}}
+#'
+#' @export
+#'
+#' @param x Two column numeric matrix or data frame
+#' @param ... passed to sapply. If simplify = TRUE (default) results are
+#' returned as an array if possible (when the number of replicates are the
+#' same at each replicated location)
+#' 
+#' @return NULL
+#' @author Sebastian Gatscha
+dup_coords <- function(x, ...) {
+  ap1 <- unclass(factor(paste("x", x[, 1], "y", x[, 2], sep = "")))
+  ap2 <- table(ap1)
+  ap2 <- ap2[ap2 > 1]
+  takecoords <- function(n){
+    if (!is.null(rownames(x))) rownames(x[ap1 == n, ])
+    else (1:nrow(x))[ap1 == n]
+  }
+  res <- sapply(as.numeric(names(ap2)), takecoords, ...)
+  if (length(res) == 0) res <- NULL
+  if (!is.null(res)) class(res) <- "duplicated.coords"
+  return(res)
 }
