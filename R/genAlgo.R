@@ -1,12 +1,9 @@
-#' @title Start The Genetic Algorithm for a wind Farm Layout
+#' @title Start a Genetic Algorithm for a wind farm layout optimization
 #' @name genAlgo
-#' @description  This function coordinates all other elements of the
-#' genetic algorithm. To initiate an optimization run, this method has to
-#' be called with the desired inputs. To be able to include the terrain effect
-#' model, the source of the Corine Land cover raster has to be given.
-#' This function will not control user inputs before an optimization process.
-#' It is therefore recommended to start an optimization run with
-#' the \code{\link{windfarmGA}} function.
+#' @description Run a Genetic Algorithm to optimize the layout of wind turbines
+#' on a given area. The algorithm works with a fixed amount of turbines, a 
+#' fixed rotor radius and a mean wind speed value for every incoming wind 
+#' direction.
 #'
 #' @export
 #'
@@ -70,7 +67,7 @@
 #' (\code{trimForce == FALSE}) the adjustment will be random.
 #' Default is FALSE
 #' @param Projection A desired Projection can be used instead
-#' of the default Lambert Azimuthal Equal Area Projection.
+#' of the default Lambert Azimuthal Equal Area Projection (EPSG:3035).
 #' @param weibull A logical value that specifies whether to take Weibull
 #' parameters into account. If weibull==TRUE, the wind speed values from the
 #' 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
@@ -85,15 +82,35 @@
 #' should be used. The parallel and doParallel packages are used for parallel
 #' processing. Default is FALSE
 #' @param numCluster If Parallel is TRUE, this variable defines the number
-#' of clusters to be used.
-#' @param verbose If TRUE, will print out information in every iteration. 
+#' of clusters to be used
+#' @param verbose If TRUE, will print out information for every generation 
 #' Default is FALSE
 #' @param plotit If TRUE, will plot the best windfarm of a generation. Default
 #' is FALSE 
 #' 
-#' @return The result of this run is a matrix of all relevant output
-#' parameters. This output can be used for several plotting functions.
-#'
+#' @return The result is a matrix with aggregated values per generation,
+#' the best individual regarding energy and efficiency per generation,
+#' some fuzzy control variables per generation, a list of all fitness values
+#' per generation, the amount of individuals after each process, a matrix of
+#' all energy, efficiency and fitness values per generation, the selection and 
+#' crossover paramters, a matrix with the generational difference in maximum
+#' and mean energy output, a matrix with the given inputs, a dataframe with
+#' the wind information, the mutation rate per generation and matrix with all 
+#' tested wind farm layouts. 
+#' 
+#' @details A terrain effect model can be included in the optimization process.
+#' Therefore, an SRTM elevation model will be downloaded automatically via the
+#' \code{raster::getData} function. A land cover raster can also be downloaded
+#' automatically from the EEA-website, or the path to a raster file can be 
+#' passed to \code{sourceCCL}. The algorithm uses an adapted version of the
+#' Raster legend ("clc_legend.csv"), which is stored in the package directory 
+#' \file{~/inst/extdata}. To use other values for the land cover roughness 
+#' lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file, 
+#' assign a surface roughness length to all land cover types. 
+#' Be sure that all rows are filled with numeric values and save the file
+#' with \strong{";"} separation. Assign the path of the file to the 
+#' input variable \code{sourceCCLRoughness} of this function.
+#' 
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)
@@ -435,8 +452,9 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
 
     if (missing(sourceCCL)) {
-      message("No land cover raster ('sourceCCL') was given. Should it be downloaded?")
-      readline(prompt = "Press [enter] to continue or Escpae to exit.")
+      message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+              "the EEA-website.")
+      # readline(prompt = "Press [enter] to continue or Escpae to exit.")
       if (!file.exists("g100_06.tif")) {
         ## download an zip CCL-tif
         ccl_raster_url <-
@@ -486,7 +504,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     } else {
       if (verbose) {
         print("You are using your own Corine Land Cover legend.")
-        readline(prompt = "\nPress <ENTER> if you want to continue")
+        # readLines(prompt = "\nPress <ENTER> if you want to continue")
       }
       sourceCCLRoughness <- sourceCCLRoughness
     }

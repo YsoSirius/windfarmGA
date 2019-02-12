@@ -5,10 +5,6 @@ wake_CPP <- function(Rotorf, wakr, leA) {
     .Call(`_windfarmGA_wake_CPP`, Rotorf, wakr, leA)
 }
 
-aov_CPP <- function(lenght_b, wakr, leA, Rotorf, rotor_rad) {
-    .Call(`_windfarmGA_aov_CPP`, lenght_b, wakr, leA, Rotorf, rotor_rad)
-}
-
 rotate_CPP <- function(X1, Y1, Px, Py, angle) {
     .Call(`_windfarmGA_rotate_CPP`, X1, Y1, Px, Py, angle)
 }
@@ -27,9 +23,5 @@ euc_CPP <- function(x1, x2, y1, y2) {
 
 point_2_line_CPP <- function(x, y) {
     .Call(`_windfarmGA_point_2_line_CPP`, x, y)
-}
-
-wakeradius_CPP <- function(lenght_b, RotD, k) {
-    .Call(`_windfarmGA_wakeradius_CPP`, lenght_b, RotD, k)
 }
 

@@ -276,7 +276,6 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
 
     ## If Weibull is active/raster, multiply wind speeds with dummy vector
     if (weibull_bool) {
-      ## Multiply dummy vector `windpo` with expected wind speeds
       point_wind <- windpo * estim_speed
     }
 
@@ -306,7 +305,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
 
     ## Rotate Coordinates by the incoming wind direction
     xy_individual <- rotate_CPP(xy_individual[, 1], xy_individual[, 2],
-                          pcent[1], pcent[2], angle)
+                                pcent[1], pcent[2], angle)
 
     ## If activated, plots the rotated turbines in red
     if (plotit) {
@@ -392,22 +391,23 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
 
     ## Calculate the wind velocity reduction.
     ## Names -> NULL otherwise all rows are called Windmean
-    tmp <- unlist(lapply(1:lnro, function(p) {
-      RotrR <- windlist[p, "RotorR"]
-      a <- 1 - sqrt(1 - cT)
-      s <- windlist[p, "Laenge_B"] / RotrR
-      if (topograp) {
-        b <- (1 + (k[windlist[p, "Punkt_id"]] * s)) ^ 2
-      } else {
-        b <- (1 + (k * s)) ^ 2
-      }
-      aov <- windlist[p, "A_ov"] / windlist[p, "Rotorflaeche"]
-      windlist[p, "Windmean"] * (aov * (a / b))
-      }
-    ))
-    names(tmp) <- NULL
+    # tmp <- unlist(lapply(1:lnro, function(p) {
+    #   RotrR <- windlist[p, "RotorR"]
+    #   a <- 1 - sqrt(1 - cT)
+    #   s <- windlist[p, "Laenge_B"] / RotrR
+    #   b <- (1 + (k1[p] * s)) ^ 2
+    #   aov <- windlist[p, "A_ov"] / windlist[p, "Rotorflaeche"]
+    #   windlist[p, "Windmean"] * (aov * (a / b))
+    #   }
+    # ))
+    # names(tmp) <- NULL
+    a <- {1 - sqrt(1 - cT)}
+    s <- windlist[, "Laenge_B"]/windlist[, "RotorR"]
+    b <- (1 + (k1 * s))^2
+    aov <- windlist[, "A_ov"] / windlist[, "Rotorflaeche"]
+    vredu <- windlist[, "Windmean"] * (aov * (a / b))
     windlist <- cbind(windlist,
-                      "V_red" = tmp)
+                      "V_red" = vredu)
 
     ## Calculate multiple wake effects, total wake influence,
     ## the new resulting wind velocity and add the Grid IDs.

@@ -1,209 +1,45 @@
-#' @title Controls the given inputs and initiates an Optimization run
+#' @title Check user input and start an optimization
 #' @name windfarmGA
-#' @description  The initiating function of an optimization process which
-#' will interactively check user-inputs first. If all inputs are correct,
-#' an optimization run will be started. This process can take a long time
-#' depending on the size of the problem and the number of desired iterations.
+#' @description The initiating function of an optimization run which
+#' will interactively check user-inputs. If all inputs are correct,
+#' an optimization will be started.
 #'
 #' @details A terrain effect model can be included in the optimization process.
 #' Therefore, an SRTM elevation model will be downloaded automatically via the
-#' \code{raster::getData} function. Another raster (.tif) is
-#' \strong{required} which has to be downloaded previously at the following
-#' page: \url{http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1}.
-#' Download the .zip package with \strong{100 meter} resolution.
-#' Unzip the downloaded package and assign the source of the Raster Image
-#' \file{"g100_06.tif"} in the package to the input variable \code{sourceCCL}.
-#' The algorithm will use an adapted version of the Raster legend
-#' ("clc_legend.csv"), which is stored in the package subdirectory
-#' \file{~/extdata}. To use own values for the land cover roughness
-#' lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file
-#' in the Corine Land Cover package, assign a surface roughness length
-#' to all land cover types. Be sure that all rows are filled with numeric
-#' values and save the .csv file then with \strong{";"} separation. Assign the
-#' source of the resulting .csv file to the input variable
-#' \code{sourceCCLRoughness} of this function. For further information, see
-#' the examples.
+#' \code{raster::getData} function. A land cover raster can also be downloaded
+#' automatically from the EEA-website, or the path to a raster file can be 
+#' passed to \code{sourceCCL}. The algorithm uses an adapted version of the
+#' Raster legend ("clc_legend.csv"), which is stored in the package directory 
+#' \file{~/inst/extdata}. To use other values for the land cover roughness 
+#' lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file, 
+#' assign a surface roughness length to all land cover types. 
+#' Be sure that all rows are filled with numeric values and save the file
+#' with \strong{";"} separation. Assign the path of the file to the 
+#' input variable \code{sourceCCLRoughness} of this function.
 #'
 #' @export
-#'
+#' @seealso \code{\link{genAlgo}} 
+#' 
 #' @useDynLib windfarmGA, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
-#' 
 #' @importFrom rgdal readOGR
 #' @importFrom sp Polygon SpatialPolygons CRS proj4string spTransform
 #' @importFrom raster plot crs
 #' @importFrom utils globalVariables
 #' @importFrom graphics plot.new title
 #'
-#' @param dns The source to the desired Shapefile. Only required if the
-#' shapefile is not already loaded.
-#' @param layer The name of the desired Shapefile. Only required if the
-#' shapefile is not already loaded.
-#' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
-#' or coordinates as matrix/data.frame
-#' @param GridMethod Should the polygon be divided into rectangular or
-#' hexagonal grid cells? The default is rectangular grid cells and hexagonal
-#' grid cells are computed when assigning "h" or "hexagon" to this input
-#' variable.
-#' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
-#' required, when the terrain effect model is activated.
-#' @param sourceCCLRoughness The source to the adapted
-#' Corine Land Cover legend as .csv file. Only required when terrain
-#' effect model is activated. As default a .csv file within this
-#' package (\file{~/extdata}) is taken that was already adapted
-#' manually. To use your own .csv legend this variable has to be assigned.
-#' See Details.
-#' @param vdirspe A data.frame containing the incoming wind speeds,
-#' wind directions and probabilities. To plot a wind rose from this
-#' data frame, see: \code{\link{plotWindrose}}.
-#' @param n A numeric value indicating the required amount of turbines.
-#' @param Rotor A numeric value that gives the rotor radius in meter.
-#' @param fcrR A numeric value that is used for grid spacing. The resolution
-#' of a grid cell will be the rotor radius \code{Rotor} multiplied with this
-#' value.
-#' @param iteration A numeric value indicating the desired amount of
-#' iterations of the algorithm.
-#' @param topograp Logical value that indicates whether the terrain effect
-#' model is activated (TRUE) or deactivated (FALSE).
-#' @param referenceHeight The height at which the incoming
-#' wind speeds were measured. Default is 50m
-#' @param RotorHeight The desired height of the turbine.
-#' Default is 100m
-#' @param SurfaceRoughness A surface roughness length of the
-#' considered area in m. If the terrain effect model is activated, a
-#' surface roughness will be calculated for every grid cell with the
-#' elevation and land cover information.
-#' @param Proportionality A numeric factor used for grid calculation.
-#' Determines the percentage a grid has to overlay.
-#' See also: \code{\link{GridFilter}}
-#' @param mutr A numeric mutation rate with low default value of 0.008
-#' @param elitism Boolean value which indicates whether elitism should
-#' be included or not.
-#' @param nelit If \code{elitism} is TRUE, then this input variable
-#' determines the amount of individuals in the elite group.
-#' @param selstate Determines which selection method is used,
-#' "FIX" selects a constant percentage and "VAR" selects a variable percentage,
-#' depending on the development of the fitness values.
-#' @param crossPart1 Determines which crossover method is used,
-#' "EQU" divides the genetic code at equal intervals and
-#' "RAN" divides the genetic code at random locations.
-#' @param trimForce If activated (\code{trimForce}==TRUE),
-#' the algorithm will take a probabilistic approach to trim the wind farms
-#' to the desired amount of turbines. If \code{trimForce}==FALSE the
-#' adjustment will be random. Default is TRUE.
-#' @param Projection A desired Projection can be used instead
-#' of the default Lambert Azimuthal Equal Area Projection.
-#' @param weibull A logical value that specifies whether to take Weibull
-#' parameters into account. If weibull==TRUE, the wind speed values from the
-#' 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
-#' wind speed for every wind turbine according to the Weibull parameters.
-#' @param weibullsrc A list of Weibull parameter rasters, where the first list
-#' item must be the shape parameter raster k and the second item must be the
-#' scale parameter raster a of the Weibull distribution. If no list is given,
-#' then rasters included in the package are used instead, which currently
-#' only cover Austria. This variable is only used if weibull==TRUE.
-#' @param Parallel Boolean value, indicating whether parallel processing
-#' should be used. The parallel and doParallel packages are used for parallel 
-#' processing.
-#' @param numCluster If Parallel is TRUE, this variable defines the number
-#' of clusters to be used.
-#' @param verbose If TRUE, will print out information in every iteration. 
-#' Default is FALSE
-#' @param plotit If TRUE, will plot the best windfarm of every generation. 
-#' Default is FALSE 
+#' @inheritParams genAlgo
 #' 
-#' @return Assigns the needed input values and starts an optimization run.
-#' The result of this run is a matrix of all relevant output parameters.
-#' This output is used for several plotting functions.
+#' @return The result is a matrix with aggregated values per generation,
+#' the best individual regarding energy and efficiency per generation,
+#' some fuzzy control variables per generation, a list of all fitness values
+#' per generation, the amount of individuals after each process, a matrix of
+#' all energy, efficiency and fitness values per generation, the selection and 
+#' crossover paramters, a matrix with the generational difference in maximum
+#' and mean energy output, a matrix with the given inputs, a dataframe with
+#' the wind information, the mutation rate per generation and matrix with all 
+#' tested wind farm layouts. 
 #'
-#' @examples \donttest{
-#' ############### REQUIRED INPUT POLYGON AND CCL SOURCE
-#' library(rgdal);library(sp);
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- sp::Polygons(list(Polygon1),1);
-#' Polygon1 <- sp::SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=TRUE)
-#
-#' ## Or Polygon is given by source:
-#' dsn="Source of the Polygon File (SHP)"
-#' layer="Name of Polygon"
-#' Polygon1 <- rgdal::readOGR(dsn=dsn,layer=layer)
-#' plot(Polygon1)
-#'
-#' ############### REQUIRED INPUT WIND SPEED DATA FRAME
-#' ## Exemplary Input Wind speed and direction data frame
-#' ## Uniform wind speed and single wind direction
-#' vdirspe <- structure(list(ws = c(12,12), wd = c(0,0), probab = c(25,25)),
-#'                     .Names = c("ws", "wd","probab"),
-#'                     row.names = c(NA, 2L),class ="data.frame")
-#' windrosePlot <- plotWindrose(data = vdirspe, spd = vdirspe$ws,
-#'                              dir = vdirspe$wd, dirres = 10, spdmax = 20)
-#
-#' ## First check if the grid size is convenient
-#' Rotor <- 50;
-#' fcrR <- 3.5
-#' ## with rectangular Grid Cells
-#' GridFilter(shape = Polygon1,resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
-#' ## or with hexagonal Grid Cells
-#' HexaTex(Polygon1 = Polygon1, size = ((Rotor*fcrR)/2), plotTrue = TRUE)
-#'
-#' ############### STARTING AN OPTIMIZATION RUN
-#' result <- windfarmGA(Polygon1 = Polygon1, n=12, Rotor=Rotor,fcrR=fcrR,
-#'              vdirspe = vdirspe, crossPart1 = "EQU",selstate="FIX",mutr=0.8,
-#'              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-#'              elitism=TRUE, nelit = 7, trimForce = TRUE,iteration=10,
-#'              referenceHeight = 50,RotorHeight = 100)
-#' PlotWindfarmGA(result = result, Polygon1 = Polygon1)
-#'
-#' ## Start the same optimization run, with parallel processing.
-#' result_par <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
-#'              fcrR=fcrR,iteration=10, vdirspe = vdirspe, crossPart1 = "EQU",
-#'              selstate="FIX",mutr=0.8,Proportionality = 1,
-#'              SurfaceRoughness = 0.3, topograp = FALSE,elitism=TRUE,
-#'              nelit = 7, trimForce = TRUE,referenceHeight = 50,
-#'              RotorHeight = 100, Parallel = TRUE, numCluster = 3)
-#' PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
-#' 
-#' ## Start the same optimization run, with hexagonal grid cells.
-#' result_hex <- windfarmGA(Polygon1 = Polygon1, GridMethod="h", n=12, Rotor=Rotor,
-#'              fcrR=fcrR,iteration=10, vdirspe = vdirspe, crossPart1 = "EQU",
-#'              selstate="FIX",mutr=0.8,Proportionality = 1,
-#'              SurfaceRoughness = 0.3, topograp = FALSE,elitism=TRUE,
-#'              nelit = 7, trimForce = TRUE,referenceHeight = 50,
-#'              RotorHeight = 100)
-#' PlotWindfarmGA(result = result_hex, GridMethod = "h", Polygon1 = Polygon1)
-#'
-#' ## Run an optimization with the Weibull parameters included in the package.
-#' result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#'                  fcrR=fcrR,iteration=10, vdirspe= vdirspe,crossPart1= "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=Rotor,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100,
-#'                  weibull = TRUE)
-#' PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
-#'
-#' ## Run an optimization with given Weibull parameter rasters.
-#' #araster <- "/..pathto../a_param_raster.tif"
-#' #kraster <- "/..pathto../k_param_raster.tif"
-#' #weibullrasters <- list(raster(kraster), raster(araster))
-#' #result_wbul <- windfarmGA(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#' #                  fcrR=fcrR, iteration=10, vdirspe=vdirspe,crossPart1= "EQU",
-#' #                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor= Rotor,
-#' #                  SurfaceRoughness = 0.3, topograp = FALSE,
-#' #                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#' #                  referenceHeight = 50,RotorHeight = 100,
-#' #                  weibull = TRUE, weibullsrc = weibullrasters)
-#' # PlotWindfarmGA(result = result_wbul, GridMethod = "h", Polygon1 = Polygon1)
-#'
-#' ## Use the resulting matrix with the different plotting methods of
-#' ## this package, to explore the behaviour of the genetic algorithm.
-#'
-#' }
 #' @author Sebastian Gatscha
 utils::globalVariables(
   c(

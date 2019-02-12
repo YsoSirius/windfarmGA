@@ -1,8 +1,7 @@
 #' @title Calculate distances and angles of possibly influencing turbines
 #' @name VekWinkelCalc
-#' @description  Calculate the relevant distances \code{\link{PointToLine2}}
-#' and angles \code{\link{WinkelCalc}} for a given turbine location and
-#' all potentially influencing turbines.
+#' @description Calculate distances and angles for a turbine and
+#' all it's potentially influencing turbines.
 #' @export
 #'
 #' @importFrom raster extent plot
@@ -46,69 +45,71 @@
 #' potInfTur
 #'
 #' @author Sebastian Gatscha
-VekWinkelCalc     <- function(t,o, wkl, distanz, polYgon, plotAngles) {
-  # t = t; o = 2; wkl = wnkl;
-  # distanz = distanz; polYgon = polYgon; plotAngles=TRUE
-  
+VekWinkelCalc     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
+  col_names = c("Ax", "Ay", "Bx", "By", "Cx", "Cy",
+               "Laenge_C", "Laenge_B", "Laenge_A",
+               "alpha", "betha", "gamma")
   ## Get coordinates of actual turbine location
-  WKA_akt <- c(x = t[o,1L], y = t[o,2L])
+  turbine_loc <- c(x = t[o, 1L], y = t[o, 2L])
   ## Find all turbines that are in front of actual turbine
-  xynew1 <- subset.matrix(x = t, subset = (t[o,2L] < t[,2L]))
-  
-  if (plotAngles){
-    graphics::plot(t, xlim = raster::extent(polYgon)[1:2], ylim = raster::extent(polYgon)[3:4],
-                   col.axis = "darkblue", xlab = "X-Coordinates", ylab = "Y-Coordinates");
+  turbines_ahead <- subset.matrix(x = t, subset = (t[o, 2L] < t[, 2L]))
+
+  if (plotAngles) {
+    graphics::plot(t, xlim = raster::extent(polYgon)[1:2],
+                   ylim = raster::extent(polYgon)[3:4],
+                   col.axis = "darkblue",
+                   xlab = "X-Coordinates", ylab = "Y-Coordinates")
     title(main = "Potentially Influential Points",
-          sub = paste("PointNr: ", o,";","Distance: ", distanz,"Meter",";", "Angle: ", wkl,"Degrees"),
+          sub = paste("PointNr: ", o,";","Distance: ",
+                      distanz,"Meter",";", "Angle: ", wkl,"Degrees"),
           outer = FALSE, cex.main = 1, cex.sub = 1)
     raster::plot(polYgon, add = TRUE)
     ## Plot the actual turbine in green, the ones in front in red
-    points(x = WKA_akt[1], y = WKA_akt[2], col = "green", pch = 20)
-    points(xynew1[,1], y = xynew1[,2], col = "red", pch = 20)
+    points(x = turbine_loc[1], y = turbine_loc[2], col = "green", pch = 20)
+    points(turbines_ahead[,1], y = turbines_ahead[,2], col = "red", pch = 20)
   }
-  
-  ## Are there turbines in front or not? If yes, calculate distances and angles and check 
-  ## if they might have an influence or not
-  len2 <- length(xynew1[,1L])
+
+  ## Are there turbines in front or not? If yes, calculate distances and
+  ## angles and check if they might have an influence or not
+  len2 <- length(turbines_ahead[,1L])
   if (len2 != 0L) {
-    ## If turbines are in front of the current turbine, create a list and save only the
-    ## ones that could possibly influence others
+    ## If turbines are in front of the current turbine, create a list and
+    ## save only the ones that could possibly influence others
     datalist <- lapply(1:len2, function(i) {
-      # P2LFu <- PointToLine2(WKA_akt, xynew1[i,], plotAngles)
-      P2LFu <- point_2_line_CPP(WKA_akt, xynew1[i,])
-      winkel <- angles_CPP(xynew1[i,], WKA_akt, P2LFu[5:6])
+      P2LFu <- point_2_line_CPP(turbine_loc, turbines_ahead[i, ])
+      winkel <- angles_CPP(turbines_ahead[i,], turbine_loc, P2LFu[5:6])
       c(P2LFu, winkel) 
     })
     res <- matrix(unlist(datalist), ncol = 12, byrow = TRUE)
-    colnames(res) <- c("Ax", "Ay", "Bx", "By", "Cx", "Cy", 
-                        "Laenge_C", "Laenge_B", "Laenge_A", 
-                        "alpha", "betha", "gamma")
-    
+    colnames(res) <- col_names
+
     ## Dismiss the ones with too high distances or big angles.
-    dl <- subset.matrix(res, subset = res[,'alpha'] < wkl & res[,'Laenge_B'] < distanz) 
-    
-    if (plotAngles){
+    dl <- subset.matrix(res, 
+                        subset = 
+                          res[, 'alpha'] < wkl & res[, 'Laenge_B'] < distanz)
+
+    if (plotAngles) {
       points(dl[,'Ax'], dl[,'Ay'], col = "orange", pch = 20, cex = 2)
     }
-    
+    ## TODO can i take length here?
     ## Are turbines left after subsetting?
     if (nrow(dl) != 0) {
       ## If possible influencing turbines exist, save them in the variable "DataLun3"
       DataLun3 <- dl
     } else {
+      ## TODO WHY??
       ## If no possible influencing turbines remain and the variable "dl" therefoe is empty,
-      ## the variable "DataLun3" is fulled with default Values of 0 for distances and angles
-      DataLun3 <- matrix(data = c(0, 0, t[o,1], t[o,2], (rep(0, 8))), nrow = 1, ncol = 12);
-      colnames(DataLun3) <- c("Ax","Ay","Bx","By","Cx","Cy","Laenge_C","Laenge_B","Laenge_A",
-                              "alpha","betha","gamma")
+      ## the variable "DataLun3" is filled with default Values of 0 for distances and angles
+      DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 8)), nrow = 1, ncol = 12)
+      colnames(DataLun3) <- col_names
     }
-  } else  {
+  } else {
+    ## TODO WHY??
     # If no turbines are in front, the variabel "DataLun3" is again filled with default 
     ## values of 0 for angles and distances.
-    DataLun3 <- matrix(data = c(0,0, t[o,1], t[o,2], (rep(0,8))), nrow = 1, ncol = 12);
-    colnames(DataLun3) <- c("Ax","Ay","Bx","By","Cx","Cy","Laenge_C","Laenge_B","Laenge_A",
-                            "alpha","betha","gamma")
+    DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 8)), nrow = 1, ncol = 12)
+    colnames(DataLun3) <- col_names
   }
-  
+
   return(DataLun3)
 }

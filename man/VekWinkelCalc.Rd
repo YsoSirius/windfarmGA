@@ -27,9 +27,8 @@ Returns a matrix with the distances and angles of
 potentially influencing turbines
 }
 \description{
-Calculate the relevant distances \code{\link{PointToLine2}}
-and angles \code{\link{WinkelCalc}} for a given turbine location and
-all potentially influencing turbines.
+Calculate distances and angles for a turbine and
+all it's potentially influencing turbines.
 }
 \examples{
 library(sp)
