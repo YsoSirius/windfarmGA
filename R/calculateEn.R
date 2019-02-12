@@ -312,7 +312,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
       points(xy_individual, col = "red", pch = 20)
     }
 
-    ## Bind Wind Information and X/Y Coords together
+    ## Bind Wind Data and X/Y Coords together
     dat_xyspeed <- cbind(point_wind, xy_individual)
     colnames(dat_xyspeed) <- c("Windmittel", "X", "Y")
 
@@ -322,7 +322,8 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
                        polYgon = polygon1, dirct = angle)
     df_all <- do.call("rbind", tmp)
 
-    ## Sometimes betha / gamma are NA - Set to 0.. Why is that hapenning?
+    ## Sometimes betha / gamma are NA - Set to 0.. 
+    ## TODO Why/When is that hapenning?
     if (any(is.na(df_all))) {
       df_all[which(is.na(df_all))] <- 0
     }
@@ -401,6 +402,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     #   }
     # ))
     # names(tmp) <- NULL
+    ## TODO - now vectorized, but correct??
     a <- {1 - sqrt(1 - cT)}
     s <- windlist[, "Laenge_B"]/windlist[, "RotorR"]
     b <- (1 + (k1 * s))^2
@@ -439,7 +441,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
 
     ## Get a reduced dataframe and split duplicated Point_id, since a
     ## turbine with fixed Point_id, can have several influencing turbines
-    ## and therefore several data frame elements
+    ## and therefore several matrix rows
     windlist2 <- subset.matrix(
       windlist,
       select = c("Punkt_id", "Ax", "Ay", "Bx", "By",
