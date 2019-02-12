@@ -28,12 +28,11 @@ install.packages("windfarmGA")
 ```
 
 # Description
-The genetic algorithm is designed to optimize small wind farms. 
-The algorithm works with a fixed amount of turbines, a fixed 
-rotor radius and a mean wind speed value for every incoming wind direction.
+The genetic algorithm is used to optimize small wind farms of any shape.
+It requires a predefined number of turbines, a uniform rotor radius and 
+an average wind speed per wind direction.
 If required it can include a terrain effect model, which downloads an 
-'SRTM' elevation model automatically and loads a Corine Land Cover raster, 
-which has to be downloaded previously. 
+'SRTM' elevation model a 'Corine Land Cover' raster automatically.
 
 To start an optimization, either the function 'windfarmGA' or 'genAlgo' can 
 be used. The function 'windfarmGA' checks the user inputs interactively and then 
