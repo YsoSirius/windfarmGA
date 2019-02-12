@@ -32,13 +32,18 @@ The genetic algorithm is used to optimize small wind farms of any shape.
 It requires a predefined number of turbines, a uniform rotor radius and 
 an average wind speed per wind direction.
 If required it can include a terrain effect model, which downloads an 
-'SRTM' elevation model a 'Corine Land Cover' raster automatically.
+'SRTM' elevation model a 'Corine Land Cover' raster automatically. The elevation 
+model is used on the one hand to find mountains and valleys and to adjust the 
+wind speeds accordingly by 'wind multipliers' and on the other hand to determine 
+the air density of a certain height. The land cover grid including an elevation
+roughness value is used to re-evaluate the surface roughness and to individually
+determine the wake-decay constant for each turbine.
 
 To start an optimization, either the function 'windfarmGA' or 'genAlgo' can 
 be used. The function 'windfarmGA' checks the user inputs interactively and then 
 runs the function 'genAlgo'. If the input parameters are already known, an 
 optimization can be run directly via the function 'genAlgo'. 
-Their output is identical.   
+Their output is identical.
 
 <div>
   <img src="/inst/img/result2.png" width="430"/>
