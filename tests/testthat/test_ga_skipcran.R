@@ -8,8 +8,8 @@ library(windfarmGA)
 
 test_that("Test Terrain Model and Weibull", {
   skip_on_cran()
-  # skip_on_travis()
-  # skip_on_appveyor()
+  skip_on_travis()
+  skip_on_appveyor()
 
   ## Data ##############
   Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
@@ -42,6 +42,6 @@ test_that("Test Terrain Model and Weibull", {
   expect_true(nrow(resultWB) == 1)
   expect_is(resultWB, "matrix")
   expect_false(any(unlist(sapply(resultWB[,1:13], is.na))))
-  
-  
+
+
 })
