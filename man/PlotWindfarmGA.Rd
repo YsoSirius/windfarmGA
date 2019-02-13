@@ -4,19 +4,19 @@
 \alias{PlotWindfarmGA}
 \title{Plot the results of an optimization run}
 \usage{
-PlotWindfarmGA(result, GridMethod = "r", Polygon1, whichPl = "all",
+PlotWindfarmGA(result, Polygon1, GridMethod = "r", whichPl = "all",
   best = 1, plotEn = 1, Projection, weibullsrc)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}} or
 \code{\link{genAlgo}}, which has stored all relevant information.}
 
+\item{Polygon1}{The considered area as shapefile. Only required if the
+shapefile is already loaded.}
+
 \item{GridMethod}{Which grid spacing method was used. Default is
 "rectangular". If hexagonal grid cells were used, assign any of the following
 arguments: "h","hexa", "hexagonal".}
-
-\item{Polygon1}{The considered area as shapefile. Only required if the
-shapefile is already loaded.}
 
 \item{whichPl}{Which plots should be shown: 1-6 are possible. The default
 is "all" which shows all available plots.}

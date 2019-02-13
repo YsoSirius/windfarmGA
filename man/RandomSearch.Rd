@@ -4,7 +4,7 @@
 \alias{RandomSearch}
 \title{RandomSearch Randomise the output of the Genetic Algorithm.}
 \usage{
-RandomSearch(result, Polygon1, n, best, Plot, GridMethod)
+RandomSearch(result, Polygon1, n, best, Plot, GridMethod, max_dist = 2.2)
 }
 \arguments{
 \item{result}{The resulting matrix of the function 'genAlgo' or
@@ -17,13 +17,16 @@ RandomSearch(result, Polygon1, n, best, Plot, GridMethod)
 \item{best}{Which best indidvuals should be the
 starting conditions fo a random search. The default is 1.}
 
-\item{Plot}{Should the random serach be plotted? Default is TRUE}
+\item{Plot}{Should the random serach be plotted? Default is FALSE}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or
 hexagonal grid cells? The default is rectangular grid cells and hexagonal
 grid cells are computed when assigning "h" or "hexagon" to this input
 variable. The randomly generated points may also be paced outside of 
 their hexagon.}
+
+\item{max_dist}{A numeric value multiplied by the rotor radius to perform
+collision checks. Default is 2.2}
 }
 \value{
 Returns a list.

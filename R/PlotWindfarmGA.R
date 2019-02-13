@@ -8,11 +8,11 @@
 #'
 #' @param result An output matrix of the function \code{\link{windfarmGA}} or
 #' \code{\link{genAlgo}}, which has stored all relevant information. 
+#' @param Polygon1 The considered area as shapefile. Only required if the
+#' shapefile is already loaded.
 #' @param GridMethod Which grid spacing method was used. Default is
 #' "rectangular". If hexagonal grid cells were used, assign any of the following
 #' arguments: "h","hexa", "hexagonal". 
-#' @param Polygon1 The considered area as shapefile. Only required if the
-#' shapefile is already loaded.
 #' @param whichPl Which plots should be shown: 1-6 are possible. The default
 #' is "all" which shows all available plots.
 #' @param best A numeric value indicating how many of the best individuals
@@ -55,7 +55,7 @@
 #' }
 #' @author Sebastian Gatscha
 
-PlotWindfarmGA <- function(result, GridMethod = "r", Polygon1,
+PlotWindfarmGA <- function(result, Polygon1, GridMethod = "r",
                            whichPl = "all", best = 1, plotEn = 1, 
                            Projection, weibullsrc){
 

@@ -4,7 +4,7 @@
 \alias{RandomSearchTurb}
 \title{RandomSearchTurb Randomise the location of a single turbine.}
 \usage{
-RandomSearchTurb(result, Polygon1, n, Plot, GridMethod)
+RandomSearchTurb(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2)
 }
 \arguments{
 \item{result}{The resulting matrix of the function 'genAlgo' or
@@ -21,6 +21,9 @@ hexagonal grid cells? The default is rectangular grid cells and hexagonal
 grid cells are computed when assigning "h" or "hexagon" to this input
 variable. The randomly generated points may also be paced outside of 
 their hexagon.}
+
+\item{max_dist}{A numeric value multiplied by the rotor radius to perform
+collision checks. Default is 2.2}
 }
 \value{
 Returns a list.
