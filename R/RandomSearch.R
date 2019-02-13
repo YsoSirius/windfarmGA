@@ -69,7 +69,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist =
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
   resldat <- data.frame(resldat[!duplicated(resldat[, 'Run']),])
   resldat$GARun <- 1:nrow(resldat)
-  resldat <- resldat[order(resldat$EnergyOverall, decreasing = TRUE),]
+  resldat <- resldat[order(resldat[, "EnergyOverall"], decreasing = TRUE),]
 
   if (best > nrow(resldat)) { best = nrow(resldat)}
   bestGARunIn <- resldat$GARun[1:best]
@@ -156,10 +156,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist =
         pointsDistBl <- sp::SpatialPoints(coordsj)
         pointsDist <- sp::spDists(sp::SpatialPoints(coordsj))
         distMin <- pointsDist[which(pointsDist < maxDist & pointsDist != 0)]
-        if (length(distMin) == 0) {
-          # print("Relocation of turbines due to fasablity checks done.")
-          # break()
-        } else {
+        if (length(distMin) != 0) {
           pointsDist <- data.frame(pointsDist)
           colnames(pointsDist) <- 1:length(pointsDist)
 
@@ -169,9 +166,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist =
 
           ColRowMin <- which(pointsDist == distMin, 
                              useNames = TRUE, arr.ind = TRUE)
-          if (length(ColRowMin) == 0) {
-            break("Something is wrong")
-          }
+
           CoordsWrongOrigin <- coordLay[ColRowMin[1, 2],]
 
           maxAlterX <- runif(1, min = -maxFac, max = maxFac)

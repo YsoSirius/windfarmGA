@@ -60,7 +60,7 @@ RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
   resldat <- data.frame(resldat[!duplicated(resldat[,'Run']),])
   resldat$GARun <- 1:nrow(resldat)
-  resldat <- resldat[order(resldat$EnergyOverall, decreasing = TRUE),]
+  resldat <- resldat[order(resldat[, "EnergyOverall"], decreasing = TRUE),]
 
   ## Get the GA-run of the best layout
   bestGARun <- resldat$GARun[1]
@@ -164,9 +164,6 @@ RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2
 
         ## TODO - yeah somethins wrong with the whole loop.. and no docs...
         ColRowMin <- which(pointsDist == distMin, useNames = T, arr.ind = T)
-        if (length(ColRowMin) == 0) {
-          break("Something is wrong")
-        }
 
         ## Copy the original layout (really need that? AGAIN ?)
         cordNew <- coordLay[as.numeric(turbInx), ]
