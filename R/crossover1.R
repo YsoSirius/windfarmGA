@@ -6,8 +6,6 @@
 #'
 #' @export
 #'
-#' @importFrom gtools permutations
-#'
 #' @param se6 The selected individuals. The output of \code{\link{selection1}}
 #' (list)
 #' @param u The crossover point rate. (numeric)
@@ -100,8 +98,10 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
     }
 
     x1 <- rbind(a, b)
-    perm <- gtools::permutations(n = 2, r = ncol(x1), v = 1:nrow(x1),
-                                 repeats.allowed = TRUE)
+    perm <- permutations(n = 2, r = ncol(x1), v = 1:nrow(x1))
+    # perm <- gtools::permutations(n = 2, r = ncol(x1), v = 1:nrow(x1),
+                                 # repeats.allowed = TRUE)
+
     # for every possible permutation
     permut <- list()
     for (pp in 1:nrow(perm)) {
@@ -182,4 +182,54 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
 #' @author Sebastian Gatscha
 splitAt           <- function(x, pos) {
   unname(split(x, cumsum(seq_along(x) %in% pos)))
+}
+
+#' @title Enumerate the Combinations or Permutations of the Elements of a
+#' Vector
+#' @name permutations
+#' @description permutations enumerates the possible permutations. The 
+#' function is forked and minified from gtools::permutations
+#' 
+#' @param n Size of the source vector
+#' @param r Size of the target vectors
+#' @param v Source vector. Defaults to 1:n
+#'
+#' @return Returns a matrix where each row contains a vector of length r.
+#'
+#' @author Original versions by Bill Venables 
+#' \email{Bill.Venables@@cmis.csiro.au.} Extended to handle repeats.allowed
+#' by Gregory R. Warnes \email{greg@@warnes.net.}
+#' 
+#' @references Venables, Bill. "Programmers Note", R-News, Vol 1/1, Jan. 2001.
+#' \url{https://cran.r-project.org/doc/Rnews/}
+#' 
+#' @examples
+#' permutations(3,2,letters[1:3])
+#' permutations(3,2,letters[1:3],repeats=TRUE)
+permutations <- function(n, r, v = 1:n) {
+  # n=3; r=2; v=letters[1:3]; repeats.allowed=T; set=T
+  if (mode(n) != "numeric" || length(n) != 1 || n < 1 || (n %% 1) != 
+      0) 
+    stop("bad value of n")
+  if (mode(r) != "numeric" || length(r) != 1 || r < 1 || (r %% 1) != 
+      0) 
+    stop("bad value of r")
+  if (!is.atomic(v) || length(v) < n) 
+    stop("v is either non-atomic or too short")
+  v <- unique(sort(v))
+  if (length(v) < n) 
+    stop("too few different elements")
+  sub <- function(n, r, v) {
+    if (r == 1) 
+      matrix(v, n, 1)
+    else if (n == 1) 
+      matrix(v, 1, r)
+    else {
+      inner <- Recall(n, r - 1, v)
+      cbind(rep(v, rep(nrow(inner), n)), matrix(t(inner), 
+                                                ncol = ncol(inner), nrow = nrow(inner) * n, 
+                                                byrow = TRUE))
+    }
+  }
+  sub(n, r, v[1:n])
 }

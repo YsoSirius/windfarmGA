@@ -213,7 +213,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
-  
+
   ## Produce error
   fitNA <- fit
   fitNA[[1]][, "Parkfitness"] <- NA
@@ -230,21 +230,21 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
-  
+
   selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "FIX");
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
-  
+
   selec6best <- selection1(fit, Grid[[1]], 2, TRUE, 6, "FIX")
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
-  
+
   selec6best <- quiet(selection1(fit, Grid[[1]],4, FALSE, 6, selstate = "VAR",
                            verbose = TRUE))
   expect_output(str(selec6best), "List of 2")
@@ -252,15 +252,20 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
   rm(selec6best)
-  
-  
+
   selec6best <- quiet(selection1(fit, Grid[[1]],4, FALSE, 6, "FIX",
                            verbose = TRUE))
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
   expect_true(all(selec6best[[2]][,-1] > 0))
-  
+
+  selec6best <- quiet(selection1(fit, Grid[[1]],4, TRUE, 6, "FIX",
+                                 verbose = TRUE))
+  expect_output(str(selec6best), "List of 2")
+  expect_false(any(unlist(sapply(selec6best, is.na))))
+  expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
+  expect_true(all(selec6best[[2]][,-1] > 0))
   
   ## CROSSOVER #####################
   crossOut <- quiet(crossover1(selec6best, 2, uplimit = 300, crossPart = "RAN",
@@ -269,41 +274,47 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
   rm(crossOut)
-  
+
   crossOut <- crossover1(selec6best, 7, uplimit = 500, crossPart = "RAN")
   expect_output(str(crossOut), "num")
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
   rm(crossOut)
-  
-  crossOut <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
-                         crossPart = "EQU", seed = 105)
-  # crossOut1 <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
-  #                        crossPart = "EQU", seed = 105)
-  # expect_true(identical(crossOut, crossOut1))
-  # expect_true(all.equal(crossOut, crossOut1))
+
+  crossOut <- quiet(crossover1(se6 = selec6best, u = 3, uplimit = 300,
+                         crossPart = "EQU", seed = 105, verbose = TRUE))
   expect_output(str(crossOut), "num")
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
-  rm(crossOut)
-  
+
+  crossOut1 <- crossover1(se6 = selec6best, u = 3, uplimit = 300,
+                          crossPart = "EQU", seed = 105)
+  crossOut2 <- crossover1(se6 = selec6best, u = 3, uplimit = 300,
+                          crossPart = "EQU", seed = 105)
+  expect_true(all.equal(crossOut1, crossOut2))
+
+  expect_output(str(crossOut1), "num")
+  expect_false(any(is.na(crossOut1)))
+  expect_true(all(crossOut1 %in% c(0, 1)))
+  rm(crossOut, crossOut1)
+
   crossOut <- crossover1(se6 = selec6best, u = 7, uplimit = 500,
                          crossPart = "RAN", seed = 105)
   expect_output(str(crossOut), "num")
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
   rm(crossOut)
-  
+
   ## Produce error
   expect_error(crossover1(se6 = selec6best, u = 7, uplimit = 500,
                          crossPart = "something"))
-  
+
   crossOut <- crossover1(selec6best, 3, uplimit = 300, crossPart = "EQU");
   expect_output(str(crossOut), "num")
   expect_false(any(is.na(crossOut)))
   expect_true(all(crossOut %in% c(0, 1)))
-  
-  
+
+
   ## MUTATION #####################
   ## Variable Mutation Rate is activated if more than 2 individuals represent the
   ## current best solution.
@@ -331,16 +342,16 @@ test_that("Test Genetic Algorithm Function", {
   expect_output(str(mut), "num")
   expect_false(any(is.na(mut)))
   expect_true(all(mut %in% c(0, 1)))
-  
+
   mut <- mutation(a = crossOut, p = -1, seed = 104)
   mut1 <- mutation(a = crossOut, p = -1, seed = 104)
   expect_true(identical(mut, mut1))
-  
+
   mut <- mutation(a = crossOut, p = 0.0005)
   expect_output(str(mut), "num")
   expect_false(any(is.na(mut)))
   expect_true(all(mut %in% c(0, 1)))
-  
+
   ## TRIMTON #####################
   ## After Crossover and Mutation, the amount of turbines in a windpark change
   ## and have to be corrected to the required amount of turbines.
@@ -378,7 +389,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(colSums(mut1) == 5))
   expect_true(all(dim(mut) == dim(mut1)))
   rm(mut1)
-  
+
   mut1 <- trimton(mut = mut, nturb = 1, allparks = allparks,
                   nGrids = nrow(Grid[[1]]), trimForce = TRUE)
   expect_output(str(mut1), "num")
@@ -429,9 +440,9 @@ test_that("Test Genetic Algorithm Function", {
 
 
   ## FITNESS AGAIN #####################
-  fit <- fitness(selection = getRectV,referenceHeight = 100, RotorHeight=100,
-                 SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-                 dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
+  fit <- fitness(selection = getRectV,referenceHeight = 100, RotorHeight = 100,
+                 SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
+                 dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = "")
   expect_is(fit, "list")
   expect_true(all(sapply(fit, nrow) == 20))
   expect_true(length(fit) == length(getRectV))
