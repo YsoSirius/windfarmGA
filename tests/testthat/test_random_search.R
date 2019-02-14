@@ -27,6 +27,22 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   
+  new <- RandomSearch(resultSP, Polygon1, Plot = TRUE)
+  expect_is(new, "list")
+  expect_false(anyNA(unlist(new)))
+  new_df <- do.call(rbind, new)
+  expect_true(all(new_df[, "EfficAllDir"] < 100 & new_df[, "EfficAllDir"] > 0))
+  expect_true(all(new_df[, "EnergyOverall"] > 0))
+  expect_true(all(new_df[, "AbschGesamt"] >= 0))
+  
+  new <- RandomSearch(resultSP, Polygon1, best = 10000)
+  expect_is(new, "list")
+  expect_false(anyNA(unlist(new)))
+  new_df <- do.call(rbind, new)
+  expect_true(all(new_df[, "EfficAllDir"] < 100 & new_df[, "EfficAllDir"] > 0))
+  expect_true(all(new_df[, "EnergyOverall"] > 0))
+  expect_true(all(new_df[, "AbschGesamt"] >= 0))
+  
   ## Test Plots with Hexagons
   new <- RandomSearch(resultSP, GridMethod = "h", Polygon1, n = 10, best = 1)
   expect_is(new, "list")
@@ -35,9 +51,18 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "EfficAllDir"] < 100 & new_df[, "EfficAllDir"] > 0))
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
-  # RandomSearchPlot(resultRS = new, result = resultSP,
-                   # Polygon1 = Polygon1, best = 2)
+  
+  ## Plots
+  res = RandomSearchPlot(resultRS = new, result = resultSP,
+                   Polygon1 = Polygon1, best = 2)
+  expect_true(is.null(res))
 
+  ## TODO - error when n = 1
+  new <- RandomSearch(resultSP, GridMethod = "h", Polygon1, n = 2, best = 1)
+  res = RandomSearchPlot(resultRS = new, result = resultSP,
+                         Polygon1 = Polygon1, best = 100)
+  expect_true(is.null(res))
+  
   ## Cannot test, as User input is required.
   ## TODO If not enough results, then it errors
   # Res = RandomSearchTurb(result = resultSP, Polygon1 = Polygon1, n = 10)

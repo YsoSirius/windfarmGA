@@ -5,8 +5,7 @@
 \title{Plot a Windrose}
 \usage{
 plotWindrose(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
-  spdmax = 30, palette = "YlGnBu", debug = 0, spdseq = NULL,
-  plotit = TRUE)
+  spdmax = 30, palette = "YlGnBu", spdseq = NULL, plotit = TRUE)
 }
 \arguments{
 \item{data}{A data.frame containing the wind information}
@@ -25,8 +24,6 @@ plotWindrose(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 
 \item{palette}{A color palette used for drawing the wind rose}
 
-\item{debug}{For running a debug. Default is 0}
-
 \item{spdseq}{A wind speed sequence, that is used for plotting}
 
 \item{plotit}{Should the windrose be plotted? Default is TRUE}
@@ -37,12 +34,13 @@ Plot a wind rose of the wind data frame.
 \examples{
 ## Exemplary Input Wind speed and direction data frame
 # Uniform wind speed and single wind direction
-data.in <- as.data.frame(cbind(ws=12,wd=0))
+data.in <- data.frame(ws = 12, wd = 0)
 windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
    dir = data.in$wd)
 
 # Random wind speeds and random wind directions
-data.in <- as.data.frame(cbind(ws=sample(1:25,10),wd=sample(1:260,10)))
+data.in <- data.frame(ws = sample(1:25, 10), 
+                      wd = sample(1:260, 10))
 windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
    dir = data.in$wd)
 

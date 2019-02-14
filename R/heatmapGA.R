@@ -35,8 +35,6 @@
 #' }
 #' @author Sebastian Gatscha
 heatmapGA <- function(result, si = 2, idistw){
-  ## TODO removed imports rgl. Why did I have it?
-  ## @importFrom rgl open3d rgl.surface rgl.snapshot
   parheat <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parheat))
   par(mfrow = c(1, 1))
@@ -84,12 +82,12 @@ heatmapGA <- function(result, si = 2, idistw){
     idistw <- idistw
   }
 
-  ## TODO - can NSE values be wrapped in quotes?
-  # as.data.frame to data.frame ?
+  ## Calculate IDW
   idwout <- data.frame(gstat::idw(formula = bpenew$Sum ~ 1,
                                   locations = polo, newdata = grd,
                                   idp = idistw))
 
+  ## Plot heatmap
   plot1 <- ggplot2::ggplot(data = idwout,
                            mapping = ggplot2::aes(x = x, y = y)) +
     ggplot2::geom_tile(data = idwout, ggplot2::aes(fill = var1.pred),
@@ -111,7 +109,7 @@ heatmapGA <- function(result, si = 2, idistw){
 }
 
 
-#' @title Splits duplicated coords (copy of geoR)
+#' @title Splits duplicated coords (copy of geoR::dup.coords)
 #' @name dup_coords
 #' @description This funtions takes an object with 2-D coordinates and returns
 #' the positions of the duplicated coordinates. Also sets a method for
@@ -124,8 +122,16 @@ heatmapGA <- function(result, si = 2, idistw){
 #' returned as an array if possible (when the number of replicates are the
 #' same at each replicated location)
 #' 
-#' @return NULL
-#' @author Sebastian Gatscha
+#' @return Function and methods returns NULL if there are no duplicates 
+#' locations. Otherwise, the default method returns a list where each component
+#' is a vector with the positions or the rownames, if available, of the
+#' duplicates coordinates. The method for geodata returns a data-frame with
+#' rownames equals to the positions of the duplicated coordinates, the first
+#' column is a factor indicating duplicates and the remaning are output of
+#' as.data.frame.geodata.
+#' 
+#' @author Paulo Justiniano Ribeiro Jr. \email{paulojus@@leg.ufpr.br}
+#' Peter J. Diggle \email{p.diggle@@lancaster.ac.uk}
 dup_coords <- function(x, ...) {
   ap1 <- unclass(factor(paste("x", x[, 1], "y", x[, 2], sep = "")))
   ap2 <- table(ap1)

@@ -16,7 +16,6 @@
 #' @param spdmin Minimum wind speed. Default is 1
 #' @param spdmax Maximal wind speed. Default is 30
 #' @param palette A color palette used for drawing the wind rose
-#' @param debug For running a debug. Default is 0
 #' @param spdseq A wind speed sequence, that is used for plotting
 #' @param plotit Should the windrose be plotted? Default is TRUE
 #'
@@ -25,12 +24,13 @@
 #' @examples
 #' ## Exemplary Input Wind speed and direction data frame
 #' # Uniform wind speed and single wind direction
-#' data.in <- as.data.frame(cbind(ws=12,wd=0))
+#' data.in <- data.frame(ws = 12, wd = 0)
 #' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 #'    dir = data.in$wd)
 #'
 #' # Random wind speeds and random wind directions
-#' data.in <- as.data.frame(cbind(ws=sample(1:25,10),wd=sample(1:260,10)))
+#' data.in <- data.frame(ws = sample(1:25, 10), 
+#'                       wd = sample(1:260, 10))
 #' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 #'    dir = data.in$wd)
 #'
@@ -39,10 +39,8 @@
 
 plotWindrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                          spdmax = 30, palette = "YlGnBu",
-                         debug = 0, spdseq = NULL, plotit = TRUE) {
+                         spdseq = NULL, plotit = TRUE) {
 
-  countmax <- NA
-  
   if (!missing(data) && exists("data")) {
     # Assume that we've been given a data frame. Lets find the correct columns
     if (length(colnames(data))) {
@@ -86,8 +84,6 @@ plotWindrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
     data <- data.frame(spd = spd, dir = dir)
     spd <- "spd"
     dir <- "dir"
-  } else {
-    stop("Cannot process the data.")
   }
 
   # Tidy up input data #################
@@ -98,11 +94,8 @@ plotWindrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
   # figure out the wind speed bins #################
   if (missing(spdseq)) {
     spdseq <- seq(spdmin, spdmax, spdres)
-  } else {
-    if (debug > 0) {
-      cat("Using custom speed bins \n")
-    }
   }
+
   # get some information about the number of bins, etc. #################
   seq_length <- length(spdseq)
   colorpal_n <- seq_length - 1
@@ -139,13 +132,6 @@ plotWindrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
   levels(dir_bins) <- dir_labls
   data$dir_bins <- dir_bins
 
-  # Run debug if required #################
-  if (debug > 0) {
-    cat(dir_brks,"\n")
-    cat(dir_labls,"\n")
-    cat(levels(dir_bins),"\n")
-  }
-
   # create the plot #################
   plot_windrose <- ggplot2::ggplot(data = data,
                            ggplot2::aes(x = dir_bins,
@@ -173,11 +159,6 @@ plotWindrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                                                            colour = "gray96"),
                    plot.margin = ggplot2::unit(c(0, 0, 0, 0), "lines"))
 
-  # adjust axes if required #################
-  if (!is.na(countmax)) {
-    plot_windrose <- plot_windrose +
-      ggplot2::ylim(c(0, countmax))
-  }
 
   if (plotit) {
     # print the plot #################

@@ -18,12 +18,8 @@ permutations(n, r, v = 1:n)
 Returns a matrix where each row contains a vector of length r.
 }
 \description{
-permutations enumerates the possible permutations. The 
+permutations enumerates the possible permutations. The
 function is forked and minified from gtools::permutations
-}
-\examples{
-permutations(3,2,letters[1:3])
-permutations(3,2,letters[1:3],repeats=TRUE)
 }
 \references{
 Venables, Bill. "Programmers Note", R-News, Vol 1/1, Jan. 2001.

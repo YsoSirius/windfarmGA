@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmapGA.R
 \name{dup_coords}
 \alias{dup_coords}
-\title{Splits duplicated coords (copy of geoR)}
+\title{Splits duplicated coords (copy of geoR::dup.coords)}
 \usage{
 dup_coords(x, ...)
 }
@@ -13,11 +13,21 @@ dup_coords(x, ...)
 returned as an array if possible (when the number of replicates are the
 same at each replicated location)}
 }
+\value{
+Function and methods returns NULL if there are no duplicates 
+locations. Otherwise, the default method returns a list where each component
+is a vector with the positions or the rownames, if available, of the
+duplicates coordinates. The method for geodata returns a data-frame with
+rownames equals to the positions of the duplicated coordinates, the first
+column is a factor indicating duplicates and the remaning are output of
+as.data.frame.geodata.
+}
 \description{
 This funtions takes an object with 2-D coordinates and returns
 the positions of the duplicated coordinates. Also sets a method for
 duplicated. Helper function for \code{\link{heatmapGA}}
 }
 \author{
-Sebastian Gatscha
+Paulo Justiniano Ribeiro Jr. \email{paulojus@leg.ufpr.br}
+Peter J. Diggle \email{p.diggle@lancaster.ac.uk}
 }

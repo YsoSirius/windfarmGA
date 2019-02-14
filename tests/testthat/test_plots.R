@@ -13,7 +13,6 @@ quiet <- function(x) {
 
 test_that("Test Plotting Functions", {
   ## Windrose Plotting #############
-  
   wind_test <- data.frame(ws = runif(10, 10, 20), 
                         wd = runif(10, 0, 360) )
   a0 = plotWindrose(wind_test, plotit = FALSE)
@@ -33,7 +32,7 @@ test_that("Test Plotting Functions", {
   expect_true(all(c(all.equal(b0$data, b1$data), all.equal(b0$data, b2$data))))
   expect_true(all.equal(b0$data, b3$data, 
                         check.attributes = FALSE))
-  
+
   wind_test <- data.frame(direction = c(0, 90, 150),
                         speed = c(12, 30, 45),
                         id = 1:3,
@@ -63,6 +62,22 @@ test_that("Test Plotting Functions", {
   expect_true(all.equal(c0$data$richt, b3$data$dir, check.attributes = FALSE))
   expect_true(all.equal(c0$data$gesch, b3$data$spd, check.attributes = FALSE))
   
+  
+  wind_test <- data.frame(gesch = c(12, 30, 45),
+                          richt = c(0, 90, 150),
+                          id = 1:3,
+                          probab = 30:32)
+  colnames(wind_test) <- NULL
+  c4 = plotWindrose(wind_test, plotit = FALSE)
+  expect_true(identical(c4$data, c0$data))
+
+  wind_test <- data.frame(blabla = c(12, 30, 45),
+                          blablaa = c(0, 90, 150),
+                          id = 1:3,
+                          somegting = 30:32)
+  colnames(wind_test) <- NULL
+  c5 = plotWindrose(wind_test, plotit = FALSE)
+  expect_true(all.equal(c4$data, c5$data))
 
   ## GenAlgo plotting functions #############
   sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
@@ -84,12 +99,37 @@ test_that("Test Plotting Functions", {
 
   plot_res <- quiet(plotResult(resultrect, Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
+  
+  plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon))
+  expect_false(anyNA(plot_res))
+  
+  
+  Grid <- GridFilter(sp_polygon, resol = 150)
+  plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon, 
+                               Grid = Grid[[2]]))
+  expect_false(anyNA(plot_res))
+  
+  plot_res <- quiet(plotResult(resultrect, Polygon1 = sp_polygon, plotEn = 2, 
+                               Grid = Grid[[2]]))
+  expect_false(anyNA(plot_res))
+  
+  plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon, 
+                               Projection = projection))
+  expect_false(anyNA(plot_res))
+  
+  ## Create error
+  expect_error(quiet(plotResult(resultrect, Polygon1 = sp_polygon, plotEn = 3)))
 
   cloud_res <- plotCloud(resultrect, pl = FALSE)
   expect_true(class(cloud_res) == "matrix")
   expect_false(anyNA(cloud_res))
   expect_true(ncol(cloud_res) == 15)
 
+  cloud_res <- plotCloud(resultrect, pl = TRUE)
+  expect_true(class(cloud_res) == "matrix")
+  expect_false(anyNA(cloud_res))
+  expect_true(ncol(cloud_res) == 15)
+  
   beor_res <- plotbeorwor(resultrect)
   expect_true(is.null(beor_res))
 

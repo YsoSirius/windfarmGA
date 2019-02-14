@@ -53,7 +53,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   ## Matrix Input #####################
   PolygonMat <- ggplot2::fortify(Polygon1)
   PolygonMat <- as.matrix(PolygonMat[,1:2])
-  resultMA <- genAlgo(Polygon1 = PolygonMat,
+  resultMA <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = TRUE,
                         n = 20, iteration = 1,
                         vdirspe = data.in,
                         Rotor = 30,
@@ -93,5 +93,49 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
   expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
+
+
+  ## Create errors ####################
+  expect_error(genAlgo(Polygon1 = Polygon1,
+                       GridMethod = "h", plotit = TRUE,
+                       vdirspe = data.in,
+                       # n = 12,
+                       elitism = F, 
+                       selstate = "var", crossPart1 = "ran", 
+                       trimForce = TRUE,
+                       Rotor = 30,
+                       RotorHeight = 100))
+
+  expect_error(genAlgo(Polygon1 = Polygon1,
+                       GridMethod = "h", 
+                       # vdirspe = data.in, 
+                       n = 12,
+                       elitism = F, 
+                       selstate = "var", crossPart1 = "ran", 
+                       trimForce = TRUE,
+                       Rotor = 30,
+                       RotorHeight = 100))
+
+  expect_error(genAlgo(Polygon1 = Polygon1,
+                       GridMethod = "h", 
+                       vdirspe = data.in, 
+                       n = 12,
+                       elitism = F, 
+                       selstate = "var", crossPart1 = "ran", 
+                       trimForce = TRUE,
+                       # Rotor = 30,
+                       RotorHeight = 100))
+  
+  expect_error(genAlgo(Polygon1 = Polygon1,
+                       GridMethod = "h", 
+                       vdirspe = data.in, 
+                       n = 12,
+                       elitism = F, 
+                       selstate = "var", crossPart1 = "ran", 
+                       trimForce = TRUE,
+                       Rotor = 30
+                       # ,RotorHeight = 100
+                       ))
+  
   
 })
