@@ -1,5 +1,4 @@
 context("Plots")
-
 library(testthat)
 library(windfarmGA)
 library(sp)
@@ -69,7 +68,7 @@ test_that("Test Plotting Functions", {
                           probab = 30:32)
   colnames(wind_test) <- NULL
   c4 = plotWindrose(wind_test, plotit = FALSE)
-  expect_true(identical(c4$data, c0$data))
+  expect_true(identical(c4$data[,"spd"], c0$data[,"gesch"]))
 
   wind_test <- data.frame(blabla = c(12, 30, 45),
                           blablaa = c(0, 90, 150),
