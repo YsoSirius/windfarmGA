@@ -58,7 +58,7 @@ RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2
   }
 
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
-  resldat <- data.frame(resldat[!duplicated(resldat[,'Run']),])
+  resldat <- as.data.frame(resldat[!duplicated(resldat[,'Run']),])
   resldat$GARun <- 1:nrow(resldat)
   resldat <- resldat[order(resldat[, "EnergyOverall"], decreasing = TRUE),]
 
