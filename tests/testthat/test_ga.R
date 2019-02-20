@@ -17,10 +17,10 @@ test_that("Test Genetic Algorithm with different Inputs", {
 
   ## SpatialPolygon Input #####################
   resultSP <- genAlgo(Polygon1 = Polygon1,
-                        n = 20, iteration = 1,
-                        vdirspe = data.in,
-                        Rotor = 35, Proportionality = 1,
-                        RotorHeight = 100)
+                      n = 20, iteration = 1,
+                      vdirspe = data.in,
+                      Rotor = 35, Proportionality = 1,
+                      RotorHeight = 100)
   
   expect_true(nrow(resultSP) == 1)
   expect_is(resultSP, "matrix")

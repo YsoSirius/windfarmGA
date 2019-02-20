@@ -1,7 +1,7 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
-Version: 2.2.1
-Date: 2019-01-30
+Version: 2.2.2
+Date: 2019-02-19
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
 Description: The genetic algorithm is designed to optimize small wind farms with
@@ -18,11 +18,10 @@ Description: The genetic algorithm is designed to optimize small wind farms with
 Depends:
     R (>= 3.2.3)
 Imports:
-    rgdal (>= 1.0-4),
+    rgdal (>= 1.3.6),
     Rcpp (>= 1.0.0),
     raster (>= 2.8.19),
   	sf (>= 0.7.2),
-  	rayshader (>= 0.5.1),
   	plyr (>= 1.8.4),
   	rworldmap (>= 1.3.6),
     sp (>= 1.2-2),
@@ -30,8 +29,7 @@ Imports:
     calibrate (>= 1.7.2),
     gstat (>= 1.0-26),
     ggplot2 (>= 2.2.0),
-    RColorBrewer (>= 1.1-2),
-    rgeos (>= 0.3-11),
+    RColorBrewer (>= 1.1.2),
     magrittr (>= 1.5),
     foreach (>= 1.4.3),
     parallel (>= 3.4.1),
@@ -49,5 +47,5 @@ License: MIT + file LICENSE
 URL: https://github.com/YsoSirius/windfarmGA
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.0.1
-Suggests: testthat
+Suggests: testthat, rgeos (>= 0.3-8)
 Encoding: UTF-8

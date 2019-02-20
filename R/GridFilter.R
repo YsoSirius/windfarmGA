@@ -14,8 +14,7 @@
 #' @importFrom graphics text plot par
 #'
 #' @param shape Shape file of the considered area
-#' @param resol The resolution of the grid in meter. Default is 500.
-#' (numeric)
+#' @param resol The resolution of the grid in meters. Default is 500
 #' @param prop A factor used for grid calculation.
 #' Determines the percentage a grid has to overlay the considered area
 #' to be represented as grid cell. Default is 1.
@@ -32,7 +31,7 @@
 #'
 #' @examples
 #' library(sp)
-#' library(raster) 
+#' library(raster)
 #' library(rgeos)
 #' 
 #' ## Exemplary input Polygon with 2km x 2km:
@@ -70,7 +69,7 @@
 #'
 #' @author Jose Hidasi (original) / Sebastian Gatscha (adapted)
 GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
-
+  # shape=Polygon1; resol=200; prop=1
   if (prop < 0.01) {
     prop <- 0.01
   }
@@ -88,6 +87,7 @@ GridFilter <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   gridpolygon$layer <- c(1:length(gridpolygon$layer))
   areagrid <- raster::area(gridpolygon)
 
+  # requireNamespace("rgeos")
   ## Intersect Polygon with Grid and get new areas
   grid_intersect <- raster::intersect(shape, gridpolygon)
   areadrygrid <- raster::area(grid_intersect)

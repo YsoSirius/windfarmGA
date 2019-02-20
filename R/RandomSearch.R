@@ -16,14 +16,14 @@
 #' @param best Which best indidvuals should be the
 #' starting conditions fo a random search. The default is 1.
 #' @param n The number of random searches to be perfomed. Default is 20.
-#' @param Plot Should the random serach be plotted? Default is FALSE
+#' @param Plot Should the random search be plotted? Default is FALSE
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #' collision checks. Default is 2.2
 #' @param GridMethod Should the polygon be divided into rectangular or
 #' hexagonal grid cells? The default is rectangular grid cells and hexagonal
 #' grid cells are computed when assigning "h" or "hexagon" to this input
-#' variable. The randomly generated points may also be paced outside of 
-#' their hexagon. 
+#' variable. The randomly generated points might be placed outside
+#' their hexagons.
 #'
 #' @return Returns a list.
 #'
@@ -67,11 +67,19 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist =
 
   ## Process Data ########
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
-  resldat <- as.data.frame(resldat[!duplicated(resldat[, 'Run']),])
+  resldat <- resldat[!duplicated(resldat[, 'Run']),]
+  resldat <- as.data.frame(resldat)
+  # colnames(resldat) <- c("X", "Y", "EfficAllDir", "EnergyOverall", "AbschGesamt", "Run",
+                         # "RotorR", "Rect_ID", "Parkfitness")
   resldat$GARun <- 1:nrow(resldat)
-  resldat <- resldat[order(resldat[, "EnergyOverall"], decreasing = TRUE),]
+  ## Sort by EnergyOverall / column 4, pass cran tests??
+  resldat <- resldat[order(resldat[, 4], decreasing = TRUE),]
 
-  if (best > nrow(resldat)) { best = nrow(resldat)}
+  if (best > nrow(resldat)) {
+    message(paste0("Only ",nrow(resldat), " unique layouts found. Set 'best' to ",
+                   nrow(resldat)))
+    best = nrow(resldat)
+  }
   bestGARunIn <- resldat$GARun[1:best]
 
   resolu <- max(as.numeric(result[bestGARunIn[1],]$inputData["Resolution",][1]))

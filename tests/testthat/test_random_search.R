@@ -1,9 +1,9 @@
 context("Test Random Search")
 library(testthat)
 library(sp)
-library(windfarmGA)
 
 test_that("Test Random Search Functions", {
+  skip_on_cran()
   ## Data ##############
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
   Polygon1 <- Polygons(list(Polygon1), 1)
@@ -14,10 +14,10 @@ test_that("Test Random Search Functions", {
   data.in <- data.frame(ws = 12, wd = 0)
 
   resultSP <- genAlgo(Polygon1 = Polygon1,
-                        n = 20, iteration = 4,
-                        vdirspe = data.in,
-                        Rotor = 35, Proportionality = 1,
-                        RotorHeight = 100)
+                      n = 20, iteration = 4,
+                      vdirspe = data.in,
+                      Rotor = 35, Proportionality = 1,
+                      RotorHeight = 100)
 
   new <- RandomSearch(resultSP, Polygon1, n = 20, best = 3, Plot = FALSE)
   expect_is(new, "list")

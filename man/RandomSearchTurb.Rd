@@ -14,12 +14,12 @@ RandomSearchTurb(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2)
 
 \item{n}{The number of random searches to be perfomed. Default is 20.}
 
-\item{Plot}{Should the random serach be plotted? Default is TRUE}
+\item{Plot}{Should the random search be plotted? Default is TRUE}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or
 hexagonal grid cells? The default is rectangular grid cells and hexagonal
-grid cells are computed when assigning "h" or "hexagon" to this input
-variable. The randomly generated points may also be paced outside of 
+grid cells are computed when assigning "h" or "hexagon" to this
+variable. The randomly generated points might be placed outside
 their hexagon.}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform

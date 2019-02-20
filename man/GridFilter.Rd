@@ -9,8 +9,7 @@ GridFilter(shape, resol = 500, prop = 1, plotGrid = FALSE)
 \arguments{
 \item{shape}{Shape file of the considered area}
 
-\item{resol}{The resolution of the grid in meter. Default is 500.
-(numeric)}
+\item{resol}{The resolution of the grid in meters. Default is 500}
 
 \item{prop}{A factor used for grid calculation.
 Determines the percentage a grid has to overlay the considered area
@@ -36,7 +35,7 @@ The grid of the genetic algorithm will have a resolution of
 }
 \examples{
 library(sp)
-library(raster) 
+library(raster)
 library(rgeos)
 
 ## Exemplary input Polygon with 2km x 2km:
