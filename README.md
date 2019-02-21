@@ -22,7 +22,7 @@ The latest version can be installed from GitHub with:
 # install.packages("devtools")
 devtools::install_github("YsoSirius/windfarmGA")
 ```
-and version 1.2.1 via CRAN with:
+and the CRAN-version with:
  ```sh
 install.packages("windfarmGA")
 ```
