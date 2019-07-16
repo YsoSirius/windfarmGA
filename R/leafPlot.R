@@ -49,7 +49,6 @@
 #' leafPlot(result = resulthex, Polygon1 = polygon, which = 1, 
 #'          GridPol = Grid[[2]])
 #' }
-#' @author Sebastian Gatscha
 leafPlot <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
   poly1 <- isSpatial(shape = Polygon1)
 

@@ -75,6 +75,3 @@ head(fit)
 
 }
 }
-\author{
-Sebastian Gatscha
-}

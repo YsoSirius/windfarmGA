@@ -42,6 +42,3 @@ df_fort <- ggplot2::fortify(Polygon1)
 isSpatial(df_fort, Projection)
 }
 }
-\author{
-Sebastian Gatscha
-}

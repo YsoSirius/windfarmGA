@@ -38,8 +38,8 @@
 #' crossover paramters, a matrix with the generational difference in maximum
 #' and mean energy output, a matrix with the given inputs, a dataframe with
 #' the wind information, the mutation rate per generation and matrix with all 
-#' tested wind farm layouts. 
-#'
+#' tested wind farm layouts.
+#'  
 #' @author Sebastian Gatscha
 utils::globalVariables(
   c(
@@ -50,8 +50,6 @@ utils::globalVariables(
     "srtm_crop", "cclRaster", "weibullsrc",
     "cl",
     "k" 
-    # ,"proj4string" 
-    # ,"`proj4string<-`"
     ))
 
 

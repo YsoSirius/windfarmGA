@@ -38,6 +38,3 @@ plot(Hex2spdf)
 Hex2spdf
 
 }
-\author{
-Sebastian Gatscha
-}

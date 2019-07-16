@@ -2,6 +2,7 @@ context("Plots")
 library(testthat)
 library(windfarmGA)
 library(sp)
+library(raster)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -155,4 +156,27 @@ test_that("Test Plotting Functions", {
   
   windr_res <- plotWindrose(winddat, "ws", "wd")
   expect_true(class(windr_res)[1] == "gg")
+  
+  
+  pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon, which = 1)
+  expect_true(is.recursive(pl)); rm(pl)
+  
+  gr <- GridFilter(sp_polygon, resol = 220)
+  spnop <- gr[[2]]
+  raster::projection(spnop) <- NA
+  pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon, GridPol = spnop)
+  expect_true(is.recursive(pl));   rm(pl)
+  
+  load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
+  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1)
+  expect_true(is.recursive(pl));rm(pl)
+  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1, orderitems = F)
+  expect_true(is.recursive(pl));rm(pl)
+  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1000, orderitems = F)
+  expect_true(is.recursive(pl));rm(pl)
+  gr <- GridFilter(polygon, resol = 250)
+  pl <- leafPlot(result = resulthex, Polygon1 = polygon, GridPol = gr[[2]])
+  expect_true(is.recursive(pl));rm(pl)
+
 })

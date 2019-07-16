@@ -64,7 +64,6 @@
 #' head(fit)
 #'
 #'}
-#' @author Sebastian Gatscha
 getRects          <- function(trimtonOut, Grid){
   len1 <- dim(trimtonOut)[2]
   childli <- childnew <- rectidli <- vector("list", len1)

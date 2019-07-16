@@ -14,7 +14,6 @@
 #'
 #' @return A boolean value, indicating if the point (xy2) is visible
 #'
-#' @author Sebastian Gatscha
 cansee <- function(r, xy1, xy2, h1=0, h2=0){
   # xy1 = c(4653100.36021378, 2744048.65794167); 
   # xy2 = c(4648381.88040377, 2741196.10301024);
@@ -53,8 +52,6 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0){
 #' @return A boolean vector, indicating if Point 1 (xy1) is visible
 #' from all elements of Points 2 (xy2)
 #'
-#' @author Sebastian Gatscha
-#' 
 viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
   # xy1 = c(x = 4653100.36021378, y = 2744048.65794167); 
   # xy2 = structure(c(4648381.88040377, 4649001.7726914, 4649621.66497904, 
@@ -89,7 +86,6 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
 #' @return A boolean vector, indicating if Point 1 (xy1) is visible
 #' from all elements of Points 2 (xy2)
 #'
-#' @author Sebastian Gatscha
 rasterprofile <- function(r, xy1, xy2, plot=FALSE){
   # r = DEM_meter[[1]]; xy1 = sample_xy[29,]; xy2 = sample_xy[26,]; plot=T
   
@@ -170,7 +166,6 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
 #' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
 #' }
-#' @author Sebastian Gatscha
 viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
   # r = DEM_meter[[1]]; shape=DEM_meter[[2]]; turbine_locs = turbloc
   # h1=0; h2=0; progress="none"
@@ -285,7 +280,6 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
 #' plot_viewshed(res)
 #' }
-#' @author Sebastian Gatscha
 plot_viewshed <- function(res, legend=FALSE) {
   # r=DEM_meter[[1]]; leg=TRUE
   raster::plot(res[[4]])
@@ -360,7 +354,6 @@ plot_viewshed <- function(res, legend=FALSE) {
 #' interpol_view(res, plotDEM = F, breakseq = seq(0,10,1), colNA="black")
 #' 
 #' }
-#' @author Sebastian Gatscha
 interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL, 
                           plotDEM=FALSE, fun = mean, ...) {
   # res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
@@ -438,7 +431,6 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' st_crs(points) <- 3035
 #' getISO3(pp = points, crs_pp = 3035)
 #' }
-#' @author Sebastian Gatscha
 getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low", 
                     coords = c("LONG", "LAT"), ask=F) {
   # pp= points; col = "ISO3"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT")
@@ -526,7 +518,6 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 #' plot(DEM_meter[[1]])
 #' plot(DEM_meter[[2]], add=T)
 #' }
-#' @author Sebastian Gatscha
 getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
   # polygon = shape; ISO3 = "AUT"
   PROJ <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs"

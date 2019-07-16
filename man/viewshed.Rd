@@ -48,6 +48,3 @@ turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
 }
 }
-\author{
-Sebastian Gatscha
-}

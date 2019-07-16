@@ -34,9 +34,6 @@
 #' windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
 #'    dir = data.in$wd)
 #'
-#' @author Sebastian Gatscha
-
-
 plotWindrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                          spdmax = 30, palette = "YlGnBu",
                          spdseq = NULL, plotit = TRUE) {

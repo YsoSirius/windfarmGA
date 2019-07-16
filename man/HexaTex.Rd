@@ -40,6 +40,3 @@ plot(HexGrid[[2]])
 str(HexGrid[[1]])
 
 }
-\author{
-Sebastian Gatscha
-}

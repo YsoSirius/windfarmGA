@@ -4,8 +4,9 @@
 \alias{calculateEn}
 \title{Calculate Energy Outputs of Individuals}
 \usage{
-calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl, distanz,
-  polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp, cclRaster, weibull)
+calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl,
+  distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp,
+  cclRaster, weibull)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population
@@ -124,7 +125,5 @@ resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
 length(resCalcEn)
 str(resCalcEn)
 }
-}
-\author{
-Sebastian Gatscha
+
 }

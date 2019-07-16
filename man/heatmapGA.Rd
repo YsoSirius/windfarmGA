@@ -39,6 +39,3 @@ heatmapGA(result, si = 6, idistw = 100)
 heatmapGA(result, si = 20, idistw = 10)
 }
 }
-\author{
-Sebastian Gatscha
-}

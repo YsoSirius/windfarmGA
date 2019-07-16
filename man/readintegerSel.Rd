@@ -21,6 +21,3 @@ percentage, based on the development of the population fitness values.
   readintegerSel()
 }
 }
-\author{
-Sebastian Gatscha
-}

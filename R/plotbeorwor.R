@@ -19,7 +19,6 @@
 #' result <- resulthex
 #' plotbeorwor(result)
 #' }
-#' @author Sebastian Gatscha
 plotbeorwor <- function(result){
   parbeorwo <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parbeorwo))

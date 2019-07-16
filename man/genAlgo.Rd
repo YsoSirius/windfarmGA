@@ -210,6 +210,3 @@ PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 #PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 }
 }
-\author{
-Sebastian Gatscha
-}

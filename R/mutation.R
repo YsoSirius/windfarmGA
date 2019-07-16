@@ -31,7 +31,6 @@
 #' ## Check which values are not like the originals
 #' a==aMut
 #'
-#' @author Sebastian Gatscha
 mutation          <- function(a, p, seed) {
   if (missing(seed)) {
     seed <- NULL

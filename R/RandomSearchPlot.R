@@ -24,7 +24,6 @@
 #' Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
 #' RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
 #' }
-#' @author Sebastian Gatscha
 RandomSearchPlot <- function(resultRS, result, Polygon1, best) {
 
   op <- par(no.readonly = TRUE) 

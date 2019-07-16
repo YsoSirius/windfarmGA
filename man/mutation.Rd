@@ -39,6 +39,3 @@ aMut <- mutation(a,0.4)
 a==aMut
 
 }
-\author{
-Sebastian Gatscha
-}

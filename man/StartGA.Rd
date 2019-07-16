@@ -46,6 +46,3 @@ firstPop <- StartGA(Grid = Grid[[1]], n = 10, nStart = 5)
 str(firstPop)
 
 }
-\author{
-Sebastian Gatscha
-}

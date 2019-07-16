@@ -24,6 +24,3 @@ result <- resulthex
 plotbeorwor(result)
 }
 }
-\author{
-Sebastian Gatscha
-}

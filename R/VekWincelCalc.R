@@ -44,7 +44,6 @@
 #' }
 #' potInfTur
 #'
-#' @author Sebastian Gatscha
 VekWinkelCalc     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
   col_names = c("Ax", "Ay", "Bx", "By", "Cx", "Cy",
                "Laenge_C", "Laenge_B", "Laenge_A",

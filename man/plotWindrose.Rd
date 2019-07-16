@@ -45,6 +45,3 @@ windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
    dir = data.in$wd)
 
 }
-\author{
-Sebastian Gatscha
-}

@@ -34,7 +34,6 @@
 #' new <- RandomSearch(resultrect, polygon, n = 20, best = 4)
 #' RandomSearchPlot(resultRS = new, result = resultrect, Polygon1 = polygon, best = 2)
 #' }
-#' @author Sebastian Gatscha
 RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist = 2.2) {
   # Order the resulting layouts with highest Energy output
   resldat <- do.call("rbind", result[,"bestPaEn"])

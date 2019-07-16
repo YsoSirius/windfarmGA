@@ -11,7 +11,6 @@
 #'   readinteger()
 #' }
 #'
-#' @author Sebastian Gatscha
 readinteger        <- function(){
   cat("\nSelect appropriate Method. Either 'EQU' for equal crossover parts or 'RAN' for random parts.")
   crPaInter <- readline(prompt = "Type 'R' for random and 'E' for equal parts.")
@@ -40,7 +39,6 @@ readinteger        <- function(){
 #' @examples \donttest{
 #'   readintegerSel()
 #' }
-#' @author Sebastian Gatscha
 readintegerSel        <- function(){
   cat("\nSelect appropriate Selection Method. Either 'FIX' or 'VAR' are available.")
   selstaPr <- readline(prompt = "Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.")

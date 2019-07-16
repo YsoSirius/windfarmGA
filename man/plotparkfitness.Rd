@@ -27,6 +27,3 @@ result <- resulthex
 plotparkfitness(result)
 }
 }
-\author{
-Sebastian Gatscha
-}

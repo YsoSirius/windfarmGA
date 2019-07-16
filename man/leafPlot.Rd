@@ -51,6 +51,3 @@ leafPlot(result = resulthex, Polygon1 = polygon, which = 1,
          GridPol = Grid[[2]])
 }
 }
-\author{
-Sebastian Gatscha
-}

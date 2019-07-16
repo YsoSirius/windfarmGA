@@ -35,6 +35,3 @@ res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc
 plot_viewshed(res)
 }
 }
-\author{
-Sebastian Gatscha
-}

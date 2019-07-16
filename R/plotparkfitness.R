@@ -25,7 +25,6 @@
 #' result <- resulthex
 #' plotparkfitness(result)
 #'}
-#' @author Sebastian Gatscha
 plotparkfitness <- function(result, spar = 0.1){
 
   ## Data #####################

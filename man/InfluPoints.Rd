@@ -57,6 +57,3 @@ resInfluPoi <- InfluPoints(t, wnkl, dist, polYgon, dirct, plotAngles = TRUE)
 str(resInfluPoi)
 
 }
-\author{
-Sebastian Gatscha
-}

@@ -24,7 +24,6 @@
 #' plcdf <- plotCloud(result, TRUE)
 #' str(plcdf)
 #'}
-#' @author Sebastian Gatscha
 plotCloud <- function(result, pl = FALSE){
   parcloud <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parcloud))

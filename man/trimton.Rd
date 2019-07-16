@@ -90,6 +90,3 @@ colSums(mut1)
 
 }
 }
-\author{
-Sebastian Gatscha
-}

@@ -19,8 +19,6 @@
 #' data <- matrix(seq(0,5000,500));
 #' BaroHoehe(data)
 #' plot.ts(BaroHoehe(data))
-#'
-#' @author Sebastian Gatscha
 BaroHoehe         <- function(data, height, po = 101325, ro = 1.225) {
   if ( is.numeric(data) || (ncol(data)) == 1 ) {
     ## Luftdruck auf Hoehe h berechnen

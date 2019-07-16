@@ -27,6 +27,3 @@ from all elements of Points 2 (xy2)
 Check if Point 1 (xy) is visible from multiple points
 (xy2)
 }
-\author{
-Sebastian Gatscha
-}

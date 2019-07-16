@@ -68,6 +68,3 @@ PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all",
                best = 1, plotEn = 1, weibullsrc = weibullsrc)
 }
 }
-\author{
-Sebastian Gatscha
-}

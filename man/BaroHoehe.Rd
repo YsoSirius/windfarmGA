@@ -29,8 +29,4 @@ Calculates air density, temperature and air pressure
 data <- matrix(seq(0,5000,500));
 BaroHoehe(data)
 plot.ts(BaroHoehe(data))
-
-}
-\author{
-Sebastian Gatscha
 }

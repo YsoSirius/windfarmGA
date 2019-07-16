@@ -5,16 +5,11 @@ Date: 2019-02-19
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
 Description: The genetic algorithm is designed to optimize small wind farms with
-    irregular shapes. The algorithm works with a fixed amount of turbines, a fixed
-    rotor radius and a mean wind speed value for every incoming wind direction.
-    If required, it can include a terrain effect model which downloads an
-    'SRTM' elevation model automatically and loads a Corine Land Cover raster,
-    which has to be downloaded previously. Further information can be found in the
-    description of the function 'windfarmGA'. To start an optimization run, either the
-    function 'windfarmGA' or 'genAlgo' can be used. The function 'windfarmGA' checks
-    the user inputs interactively and then runs the function 'genAlgo'. If the input
-    parameters are already known, an optimization can be run directly via the function
-    'genAlgo'. Their output is identical.
+    irregular shapes. It requires a fixed amount of turbines, a fixed
+    rotor radius and an average wind speed value for each incoming wind direction.
+    A terrain effect model can be included that downloads an 'SRTM' elevation model
+    and loads a Corine Land Cover raster to approximate surface roughness. 
+    Further information can be found in the description of the function 'windfarmGA'.
 Depends:
     R (>= 3.2.3)
 Imports:
@@ -46,6 +41,6 @@ LazyData: TRUE
 License: MIT + file LICENSE
 URL: https://github.com/YsoSirius/windfarmGA
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Suggests: testthat, rgeos (>= 0.3-8), dplyr (>= 0.8.0.1)
 Encoding: UTF-8

@@ -20,7 +20,6 @@
 #' result <- resulthex
 #' plotfitnessevolution(result, 0.1)
 #' }
-#' @author Sebastian Gatscha
 plotfitnessevolution <- function(result, spar = 0.1){
   # library(stats)
   oparplotfitness <- par(ask = F, no.readonly = T)

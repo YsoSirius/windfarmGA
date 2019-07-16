@@ -4,8 +4,9 @@
 \alias{plotResult}
 \title{Plot the best Results}
 \usage{
-plotResult(result, Polygon1, best = 3, plotEn = 1, topographie = FALSE,
-  Grid, Projection, sourceCCLRoughness, sourceCCL, weibullsrc)
+plotResult(result, Polygon1, best = 3, plotEn = 1,
+  topographie = FALSE, Grid, Projection, sourceCCLRoughness, sourceCCL,
+  weibullsrc)
 }
 \arguments{
 \item{result}{An output matrix of the function \code{\link{windfarmGA}} or
@@ -90,7 +91,4 @@ Grid <- HexaTex(Polygon1, size = 87.5, FALSE)
 plotResult(result, Polygon1, best = 2, plotEn = 2, topographie = FALSE,
            Grid = Grid[[2]], weibullsrc = weibullsrc)
 }
-}
-\author{
-Sebastian Gatscha
 }

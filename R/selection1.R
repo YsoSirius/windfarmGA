@@ -56,7 +56,6 @@
 #' selec6best <- selection1(fit, Grid, 4, F, 6, "FIX", NULL)
 #' str(selec6best)
 #' }
-#' @author Sebastian Gatscha
 selection1         <- function(fit, Grid, teil, elitism, nelit, 
                                selstate, verbose) {
   if (missing(verbose)) {
@@ -122,7 +121,6 @@ selection1         <- function(fit, Grid, teil, elitism, nelit,
 
   ## Check if some fitness values are NA. STOP
   if (any(is.na(new1[,'Parkfitness']))) {
-    # browser()
     cat("some Fitness-values are NA.")
     stop("Please report a github issue")
   }

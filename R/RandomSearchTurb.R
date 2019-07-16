@@ -32,7 +32,6 @@
 #' Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n = 10)
 #' RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best =2)
 #' }
-#' @author Sebastian Gatscha
 RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2) {
   ## TODO - Performance and structure ---
 

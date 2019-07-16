@@ -36,6 +36,3 @@ input variable \code{sourceCCLRoughness} of this function.
 \seealso{
 \code{\link{genAlgo}}
 }
-\author{
-Sebastian Gatscha
-}

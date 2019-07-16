@@ -37,6 +37,3 @@ plot(DEM_meter[[1]])
 plot(DEM_meter[[2]], add=T)
 }
 }
-\author{
-Sebastian Gatscha
-}

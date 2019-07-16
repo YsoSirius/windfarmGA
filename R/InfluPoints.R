@@ -44,7 +44,6 @@
 #' resInfluPoi <- InfluPoints(t, wnkl, dist, polYgon, dirct, plotAngles = TRUE)
 #' str(resInfluPoi)
 #'
-#' @author Sebastian Gatscha
 InfluPoints       <- function(t, wnkl, dist, polYgon, dirct,
                               plotAngles = FALSE) {
   ## For every turbine in the wind farm, find all other turbines,

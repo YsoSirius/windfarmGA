@@ -24,6 +24,3 @@ A boolean value, indicating if the point (xy2) is visible
 Check if point1 (xy1) visible from point2 (xy2) given 
 a certain DEM (r)
 }
-\author{
-Sebastian Gatscha
-}

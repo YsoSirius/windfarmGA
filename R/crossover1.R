@@ -44,7 +44,6 @@
 #' ## or with random locations and 5 crossover parts
 #' crossover1(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 #'
-#' @author Sebastian Gatscha
 crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
   if (missing(verbose)) {
     verbose <- FALSE
@@ -179,7 +178,6 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
 #' splitAt(1:100,20)
 #' splitAt(as.matrix(1:100),20)
 #'
-#' @author Sebastian Gatscha
 splitAt           <- function(x, pos) {
   unname(split(x, cumsum(seq_along(x) %in% pos)))
 }

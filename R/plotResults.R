@@ -82,7 +82,6 @@
 #' plotResult(result, Polygon1, best = 2, plotEn = 2, topographie = FALSE,
 #'            Grid = Grid[[2]], weibullsrc = weibullsrc)
 #'}
-#' @author Sebastian Gatscha
 plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
                        topographie = FALSE, Grid, Projection,
                        sourceCCLRoughness, sourceCCL,

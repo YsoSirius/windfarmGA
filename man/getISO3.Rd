@@ -40,6 +40,3 @@ st_crs(points) <- 3035
 getISO3(pp = points, crs_pp = 3035)
 }
 }
-\author{
-Sebastian Gatscha
-}

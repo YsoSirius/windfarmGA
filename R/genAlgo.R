@@ -181,7 +181,6 @@
 #' #                  weibull = TRUE, weibullsrc = weibullrasters)
 #' #PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 #'}
-#' @author Sebastian Gatscha
 genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
                               RotorHeight, SurfaceRoughness, Proportionality,
                               iteration, mutr, vdirspe, topograp, elitism, nelit,
@@ -956,7 +955,6 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 #' df_fort <- ggplot2::fortify(Polygon1)
 #' isSpatial(df_fort, Projection)
 #'}
-#' @author Sebastian Gatscha
 isSpatial <- function(shape, proj) {
   # shape = xy_matrix
   if (class(shape)[1] == "sf") {
@@ -1032,7 +1030,6 @@ isSpatial <- function(shape, proj) {
 #' )
 #' windata_format(wind_df)
 #' }
-#' @author Sebastian Gatscha
 windata_format <- function(df) {
   wind_df <- data.frame(df)
   if (!all(colnames(wind_df) %in% c("ws", "wd"))) {

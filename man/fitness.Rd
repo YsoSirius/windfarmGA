@@ -92,8 +92,4 @@ fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
                Parallel = FALSE)
 head(fit)
 }
-
-}
-\author{
-Sebastian Gatscha
 }

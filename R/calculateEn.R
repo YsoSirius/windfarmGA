@@ -110,7 +110,6 @@
 #' length(resCalcEn)
 #' str(resCalcEn)
 #' }
-#' @author Sebastian Gatscha
 #'
 calculateEn       <- function(sel, referenceHeight, RotorHeight,
                               SurfaceRoughness, wnkl, distanz,

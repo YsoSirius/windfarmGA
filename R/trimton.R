@@ -76,7 +76,6 @@
 #' colSums(mut1)
 #'
 #'}
-#' @author Sebastian Gatscha
 trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
   if (missing(seed)) {seed = NULL}
   k <- 0.5

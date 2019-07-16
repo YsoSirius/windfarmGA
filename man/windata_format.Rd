@@ -36,6 +36,3 @@ wind_df <- data.frame(speed = c(12, 30, 45),
 windata_format(wind_df)
 }
 }
-\author{
-Sebastian Gatscha
-}

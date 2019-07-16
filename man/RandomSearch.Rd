@@ -44,6 +44,3 @@ new <- RandomSearch(resultrect, polygon, n = 20, best = 4)
 RandomSearchPlot(resultRS = new, result = resultrect, Polygon1 = polygon, best = 2)
 }
 }
-\author{
-Sebastian Gatscha
-}

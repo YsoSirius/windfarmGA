@@ -30,6 +30,3 @@ result <- resultrect
 plotEvolution(result, ask = TRUE, spar = 0.1)
 }
 }
-\author{
-Sebastian Gatscha
-}

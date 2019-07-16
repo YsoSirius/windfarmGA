@@ -73,6 +73,3 @@ selec6best <- selection1(fit, Grid, 4, F, 6, "FIX", NULL)
 str(selec6best)
 }
 }
-\author{
-Sebastian Gatscha
-}

@@ -22,7 +22,6 @@
 #' result <- resultrect
 #' plotEvolution(result, ask = TRUE, spar = 0.1)
 #'}
-#' @author Sebastian Gatscha
 plotEvolution <- function(result, ask = TRUE, spar = 0.1){
   ## Set the graphical parameters
   parevol <- par(no.readonly = TRUE)

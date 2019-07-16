@@ -25,6 +25,3 @@ splitAt(1:100,20)
 splitAt(as.matrix(1:100),20)
 
 }
-\author{
-Sebastian Gatscha
-}

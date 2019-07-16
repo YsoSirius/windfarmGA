@@ -62,6 +62,3 @@ interpol_view(res, plotDEM = F, breakseq = seq(0,10,1), colNA="black")
 
 }
 }
-\author{
-Sebastian Gatscha
-}

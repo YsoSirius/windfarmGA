@@ -35,7 +35,6 @@
 #' plot(Hex2spdf)
 #' Hex2spdf
 #'
-#' @author Sebastian Gatscha
 tess2SPdf <- function(x) {
   stopifnot(spatstat::is.tess(x))
   sp.obj <- methods::as(x, "SpatialPolygons")
@@ -84,7 +83,6 @@ tess2SPdf <- function(x) {
 #' plot(HexGrid[[2]])
 #' str(HexGrid[[1]])
 #'
-#' @author Sebastian Gatscha
 HexaTex <- function(Polygon1, size, plotTrue = FALSE){
 
   if (plotTrue) {

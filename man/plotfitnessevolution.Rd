@@ -27,6 +27,3 @@ result <- resulthex
 plotfitnessevolution(result, 0.1)
 }
 }
-\author{
-Sebastian Gatscha
-}

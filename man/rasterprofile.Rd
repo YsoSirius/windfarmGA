@@ -22,6 +22,3 @@ from all elements of Points 2 (xy2)
 \description{
 Sample a raster along a straight line between 2 points
 }
-\author{
-Sebastian Gatscha
-}

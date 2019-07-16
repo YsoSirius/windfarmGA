@@ -31,6 +31,3 @@ plcdf <- plotCloud(result, TRUE)
 str(plcdf)
 }
 }
-\author{
-Sebastian Gatscha
-}

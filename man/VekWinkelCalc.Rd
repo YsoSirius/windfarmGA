@@ -57,6 +57,3 @@ for (i in 1:(length(t[,1]))) {
 potInfTur
 
 }
-\author{
-Sebastian Gatscha
-}

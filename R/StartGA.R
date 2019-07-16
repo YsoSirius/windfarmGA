@@ -36,7 +36,6 @@
 #' firstPop <- StartGA(Grid = Grid[[1]], n = 10, nStart = 5)
 #' str(firstPop)
 #'
-#' @author Sebastian Gatscha
 StartGA           <- function(Grid, n, nStart = 100) {
   if (length(Grid[,'ID']) <= n) {
     cat("\n################### GA ERROR MESSAGE ###################\n")

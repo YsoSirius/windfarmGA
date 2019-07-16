@@ -53,8 +53,6 @@
 #' PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all",
 #'                best = 1, plotEn = 1, weibullsrc = weibullsrc)
 #' }
-#' @author Sebastian Gatscha
-
 PlotWindfarmGA <- function(result, Polygon1, GridMethod = "r",
                            whichPl = "all", best = 1, plotEn = 1, 
                            Projection, weibullsrc){

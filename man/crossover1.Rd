@@ -57,6 +57,3 @@ crossover1(CrossSampl, u = 2.5, uplimit = 300, crossPart = "EQU")
 crossover1(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 
 }
-\author{
-Sebastian Gatscha
-}
