@@ -1,5 +1,6 @@
-### Updates 2.2.1
-#### Performance Tuning / Restructuring
+# Updates 2.2.1
+
+## Performance Tuning / Restructuring
 Switch to matrices instead of data.frames and a lot of restructuring and 
 performance optimization of the whole algorithm.
 
@@ -10,8 +11,9 @@ with long, lat or x, y column names. The terrain effect model can now be activat
 The new functions for visual assessment are **`cansee`**, **`viewTo`**, **`rasterprofile`**, **`viewshed`**, **`plot_viewshed`**, **`interpol_view`**, **`getISO3`**, **`getDEM`**
 - **`plot_farm_3d`** Experimental rayshader function
 
-### Updates 1.2.1
-#### Randomization
+# Updates 1.2.1
+
+## Randomization
 The output of **`genAlgo`** or **`windfarmGA`** can be further randomized/optimized with the following
 functions:
 - RandomSearch
@@ -44,8 +46,10 @@ result_par <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
 PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
 ```
 
-### Updates 1.1
-#### Optimization with Hexagonal Grid Cells
+# Updates 1.1
+
+
+## Optimization with Hexagonal Grid Cells
 ```sh
 result_hex <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
                   fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",

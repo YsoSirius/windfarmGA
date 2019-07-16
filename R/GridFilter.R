@@ -26,8 +26,7 @@
 #' of each grid cell. List element 2 is the grid as SpatialPolygons,
 #' which is used for plotting purposes.
 #'
-#' @references \url{http://rfunctions.blogspot.co.at/2014/12/
-#' gridfilter-intersect-grid-with-shape.html}
+#' @references \url{http://rfunctions.blogspot.co.at/2014/12/gridfilter-intersect-grid-with-shape.html}
 #'
 #' @examples
 #' library(sp)

@@ -24,14 +24,6 @@
 #' their hexagon. 
 #'
 #' @return Returns a list.
-#'
-#' @examples \donttest{
-#' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-#' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
-#' 
-#' Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n = 10)
-#' RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best =2)
-#' }
 RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2) {
   ## TODO - Performance and structure ---
 

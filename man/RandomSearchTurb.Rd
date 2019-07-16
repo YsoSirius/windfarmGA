@@ -32,12 +32,3 @@ Returns a list.
 Perform a random search for a single turbine, to
 further optimize the output of the wind farm layout.
 }
-\examples{
-\donttest{
-load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
-
-Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n = 10)
-RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best =2)
-}
-}

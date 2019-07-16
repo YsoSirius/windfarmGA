@@ -21,7 +21,7 @@
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 #' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
-#' Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
+#' Res = RandomSearchPlot(result = resultrect, Polygon1 = polygon)
 #' RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
 #' }
 RandomSearchPlot <- function(resultRS, result, Polygon1, best) {

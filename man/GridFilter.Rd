@@ -73,8 +73,7 @@ GridFilter(Polygon1,400,0.1,TRUE)
 
 }
 \references{
-\url{http://rfunctions.blogspot.co.at/2014/12/
-gridfilter-intersect-grid-with-shape.html}
+\url{http://rfunctions.blogspot.co.at/2014/12/gridfilter-intersect-grid-with-shape.html}
 }
 \author{
 Jose Hidasi (original) / Sebastian Gatscha (adapted)
