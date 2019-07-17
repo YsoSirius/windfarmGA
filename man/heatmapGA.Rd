@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmapGA.R
 \name{heatmapGA}
 \alias{heatmapGA}
-\title{Plot heatmap of fit grid cells}
+\title{Plot a heatmap of selected grid cells}
 \usage{
 heatmapGA(result, si = 2, idistw)
 }
@@ -10,19 +10,19 @@ heatmapGA(result, si = 2, idistw)
 \item{result}{The output matrix of \code{\link{windfarmGA}} or
 \code{\link{genAlgo}}, which has stored all relevant information}
 
-\item{si}{A numeric value that is used for the sizing of the
-resolution of the heatmap. Default is 2}
+\item{si}{A numeric value that is used for the sizing of the resolution of
+the heatmap. Default is 2}
 
-\item{idistw}{The inverse distance weighting power. Default is the
-rotor radius from the 'result' values}
+\item{idistw}{The inverse distance weighting power. Default is the rotor
+radius from the 'result' values}
 }
 \value{
 Invisibly returns a list with the result of the inverse distance
-weighting and an aggregated dataframe of all grid cells
+  weighting and an aggregated dataframe of all grid cells
 }
 \description{
-Plot a heatmap of the selected grid cells. Green grid
-cells have been selected more often than red grid cells.
+Plot a heatmap of selected grid cells. Green grid cells
+  have been selected more often than red grid cells.
 }
 \examples{
 \donttest{
@@ -39,3 +39,14 @@ heatmapGA(result, si = 6, idistw = 100)
 heatmapGA(result, si = 20, idistw = 10)
 }
 }
+\seealso{
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{RandomSearchTurb}},
+  \code{\link{interpol_view}}, \code{\link{plotCloud}},
+  \code{\link{plotEvolution}}, \code{\link{plotResult}},
+  \code{\link{plotWindrose}}, \code{\link{plot_viewshed}},
+  \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}},
+  \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}

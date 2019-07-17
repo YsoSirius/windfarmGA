@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{getDEM}
 \alias{getDEM}
-\title{getDEM}
+\title{Get DEM raster}
 \usage{
 getDEM(polygon, ISO3 = "AUT", clip = TRUE)
 }
@@ -11,12 +11,11 @@ getDEM(polygon, ISO3 = "AUT", clip = TRUE)
 
 \item{ISO3}{The ISO3 code of the country}
 
-\item{clip}{boolean, indicating if polygon should be cropped.
-Default is TRUE}
+\item{clip}{boolean, indicating if polygon should be cropped. Default is TRUE}
 }
 \value{
-A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL
-if no polygon is given
+A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL if
+  no polygon is given
 }
 \description{
 Get a DEM raster for a country based on ISO3 code
@@ -37,3 +36,13 @@ plot(DEM_meter[[1]])
 plot(DEM_meter[[2]], add=T)
 }
 }
+\seealso{
+Other Helper Functions: \code{\link{HexaTex}},
+  \code{\link{dup_coords}}, \code{\link{getISO3}},
+  \code{\link{get_grids}}, \code{\link{grid_area}},
+  \code{\link{isSpatial}}, \code{\link{permutations}},
+  \code{\link{readintegerSel}}, \code{\link{readinteger}},
+  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
+  \code{\link{windata_format}}
+}
+\concept{Helper Functions}

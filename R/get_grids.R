@@ -1,16 +1,18 @@
 #' @title Get the Grid-IDs from binary matrix
-#' @name getRects
+#' @name get_grids
 #' @description  Get the grid IDs from the trimmed binary matrix, where the
-#' binary code indicates which grid cells are used in the current
-#' wind farm constellation.
+#'   binary code indicates which grid cells are used in the current wind farm
+#'   constellation.
 #'
 #' @export
 #'
-#' @param trimtonOut Input matrix with binary values. 
+#' @param trimtonOut Input matrix with binary values.
 #' @param Grid Grid of the considered area
 #'
-#' @return Returns a list of all individuals with X and Y coordinates
-#' and the grid cell ID.
+#' @family Helper Functions
+#' @return Returns a list of all individuals with X and Y coordinates and the
+#'   grid cell ID.
+#'
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sp)
@@ -22,11 +24,11 @@
 #' proj4string(Polygon1) <- CRS(Projection)
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-#' Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+#' Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
-#' startsel <- StartGA(Grid,10,20);
+#' startsel <- init_population(Grid,10,20);
 #' wind <- data.frame(ws = 12, wd = 0)
 #' wind <- list(wind, probab = 100)
 #' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
@@ -37,13 +39,13 @@
 #' ## SELECTION
 #' ## print the amount of Individuals selected.
 #' ## Check if the amount of Turbines is as requested.
-#' selec6best <- selection1(fit, Grid,2, TRUE, 6, "VAR");
+#' selec6best <- selection(fit, Grid,2, TRUE, 6, "VAR");
 #'
 #' ## CROSSOVER
 #' ## u determines the amount of crossover points,
 #' ## crossPart determines the method used (Equal/Random),
 #' ## uplimit is the maximum allowed permutations
-#' crossOut <- crossover1(selec6best, 2, uplimit = 300, crossPart="RAN");
+#' crossOut <- crossover(selec6best, 2, uplimit = 300, crossPart="RAN");
 #'
 #' ## MUTATION
 #' ## Variable Mutation Rate is activated if more than 2 individuals represent the
@@ -57,14 +59,14 @@
 #'                nGrids = AmountGrids, trimForce=FALSE)
 #'
 #' ## Get the new Grid-Ids and run a new fitness run.
-#' getRectV <- getRects(mut1, Grid)
+#' getRectV <- get_grids(mut1, Grid)
 #' fit <- fitness(selection = getRectV,referenceHeight = 100, RotorHeight=100,
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
 #'                dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
 #' head(fit)
 #'
 #'}
-getRects          <- function(trimtonOut, Grid){
+get_grids          <- function(trimtonOut, Grid){
   len1 <- dim(trimtonOut)[2]
   childli <- childnew <- rectidli <- vector("list", len1)
   for (i in 1:len1) {

@@ -1,23 +1,23 @@
 #' @title Create a random initial Population
-#' @name StartGA
-#' @description  Create \code{nStart} random sub-selections from the
-#' indexed grid and assign binary variable 1 to selected grids.
-#' This function initiates the genetic algorithm with a first random
-#' population and will only be needed in the first iteration.
-#' 
-#' @export
-#' 
-#' @param Grid The data.frame output of "GridFilter" function,
-#' with X and Y coordinates and Grid cell IDs.
-#' @param n A numeric value indicating the amount of required turbines.
-#' @param nStart A numeric indicating the amount of randomly generated
-#' initial individuals. Default is 100.
+#' @name init_population
+#' @description  Create \code{nStart} random sub-selections from the indexed
+#'   grid and assign binary variable 1 to selected grids. This function
+#'   initiates the genetic algorithm with a first random population and will
+#'   only be needed in the first iteration.
 #'
-#' @return Returns a list of \code{nStart} initial individuals,
-#' each consisting of \code{n} turbines.
-#' Resulting list has the x and y coordinates, the grid cell ID
-#' and a binary variable of 1, indicating a turbine in the grid cell.
-#' 
+#' @export
+#'
+#' @param Grid The data.frame output of \code{\link{grid_area}}" function, with
+#'   X and Y coordinates and Grid cell IDs.
+#' @param n A numeric value indicating the amount of required turbines.
+#' @param nStart A numeric indicating the amount of randomly generated initial
+#'   individuals. Default is 100.
+#'
+#' @family Genetic Algorithm Functions
+#' @return Returns a list of \code{nStart} initial individuals, each consisting
+#'   of \code{n} turbines. Resulting list has the x and y coordinates, the grid
+#'   cell ID and a binary variable of 1, indicating a turbine in the grid cell.
+#'   
 #' @examples
 #' library(sp)
 #' ## Exemplary input Polygon with 2km x 2km:
@@ -30,13 +30,13 @@
 #' proj4string(Polygon1) <- CRS(Projection)
 #' plot(Polygon1,axes=TRUE)
 #'
-#' Grid <- GridFilter(Polygon1,200,1,"TRUE")
+#' Grid <- grid_area(Polygon1,200,1,"TRUE")
 #'
 #' ## Create 5 individuals with 10 wind turbines each.
-#' firstPop <- StartGA(Grid = Grid[[1]], n = 10, nStart = 5)
+#' firstPop <- init_population(Grid = Grid[[1]], n = 10, nStart = 5)
 #' str(firstPop)
 #'
-StartGA           <- function(Grid, n, nStart = 100) {
+init_population           <- function(Grid, n, nStart = 100) {
   if (length(Grid[,'ID']) <= n) {
     cat("\n################### GA ERROR MESSAGE ###################\n")
     cat(paste("##### Amount Grid-cells: ", length(Grid[,'ID']),

@@ -9,16 +9,15 @@ fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
   numCluster)
 }
 \arguments{
-\item{selection}{A list containing all individuals of the current
-population.}
+\item{selection}{A list containing all individuals of the current population.}
 
 \item{referenceHeight}{The height at which the incoming wind speeds were
 measured.}
 
 \item{RotorHeight}{The desired height of the turbine.}
 
-\item{SurfaceRoughness}{A surface roughness length of the considered area
-in m.}
+\item{SurfaceRoughness}{A surface roughness length of the considered area in
+m.}
 
 \item{Polygon}{The considered area as shapefile.}
 
@@ -31,8 +30,8 @@ in m.}
 \item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
 and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
 
-\item{topograp}{Logical value that indicates whether the terrain effect
-model is activated (TRUE) or deactivated (FALSE).}
+\item{topograp}{Logical value that indicates whether the terrain effect model
+is activated (TRUE) or deactivated (FALSE).}
 
 \item{cclRaster}{A Corine Land Cover raster, that has to be adapted
 previously by hand with the surface roughness lenght for every land cover
@@ -40,23 +39,23 @@ type. Is only used, when the terrain effect model is activated.}
 
 \item{weibull}{A raster representing the estimated wind speeds}
 
-\item{Parallel}{Boolean value, indicating whether parallel processing
-should be used. The parallel and doParallel packages are used for parallel 
+\item{Parallel}{Boolean value, indicating whether parallel processing should
+be used. The parallel and doParallel packages are used for parallel
 processing.}
 
-\item{numCluster}{If Parallel is TRUE, this variable defines the number
-of clusters to be used.}
+\item{numCluster}{If Parallel is TRUE, this variable defines the number of
+clusters to be used.}
 }
 \value{
 Returns a list with every individual, consisting of X & Y
-coordinates, rotor radii, the runs and the selected grid cell IDs, and
-the resulting energy outputs, efficiency rates and fitness values.
+  coordinates, rotor radii, the runs and the selected grid cell IDs, and the
+  resulting energy outputs, efficiency rates and fitness values.
 }
 \description{
-The fitness values of the individuals in the
-current population are calculated after having evaluated their energy
-outputs in \code{\link{calculateEn}}. This function reduces the resulting
-energy outputs to a single fitness value for every individual.
+The fitness values of the individuals in the current population
+  are calculated after having evaluated their energy outputs in
+  \code{\link{calculate_energy}}. This function reduces the resulting energy
+  outputs to a single fitness value for every individual.
 }
 \examples{
 \donttest{
@@ -80,12 +79,12 @@ wind <- data.frame(ws = 12, wd = 0)
 
 ## Calculate a Grid and an indexed data.frame with coordinates and
 ## grid cell IDs.
-Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
 wind <- list(wind, probab = 100)
-startsel <- StartGA(Grid,10,20);
+startsel <- init_population(Grid,10,20);
 fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
@@ -93,3 +92,10 @@ fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
 head(fit)
 }
 }
+\seealso{
+Other Genetic Algorithm Functions: \code{\link{crossover}},
+  \code{\link{genAlgo}}, \code{\link{init_population}},
+  \code{\link{mutation}}, \code{\link{selection}},
+  \code{\link{trimton}}, \code{\link{windfarmGA}}
+}
+\concept{Genetic Algorithm Functions}

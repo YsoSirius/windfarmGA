@@ -1,115 +1,103 @@
-#' @title Start a Genetic Algorithm for a wind farm layout optimization
+#' @title Run a Genetic Algorithm to optimize a wind farm layout
 #' @name genAlgo
 #' @description Run a Genetic Algorithm to optimize the layout of wind turbines
-#' on a given area. The algorithm works with a fixed amount of turbines, a 
-#' fixed rotor radius and a mean wind speed value for every incoming wind 
-#' direction.
+#'   on a given area. The algorithm works with a fixed amount of turbines, a
+#'   fixed rotor radius and a mean wind speed value for every incoming wind
+#'   direction.
 #'
 #' @export
 #'
-#' @importFrom raster crs getData crop mask projectRaster reclassify
-#' @importFrom sp spTransform proj4string Polygon Polygons SpatialPolygons
-#' @importFrom utils read.csv
-#' @importFrom grDevices colorRampPalette
-#' @importFrom graphics plot.new
-#' @importFrom stats runif
-#' @importFrom utils download.file unzip
-#' @importFrom doParallel registerDoParallel
-#' @importFrom parallel makeCluster stopCluster
-#' 
-#'
 #' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
-#' or coordinates as matrix/data.frame
-#' @param GridMethod Should the polygon be divided into rectangular or
-#' hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
-#' grid cells are computed when assigning "h" or "hexagon" to this input
-#' variable.
+#'   or coordinates as matrix/data.frame
+#' @param GridMethod Should the polygon be divided into rectangular or hexagonal
+#'   grid cells? The default is "Rectangular" grid cells and hexagonal grid
+#'   cells are computed when assigning "h" or "hexagon" to this input variable.
 #' @param Rotor A numeric value that gives the rotor radius in meter
 #' @param n A numeric value indicating the required amount of turbines
 #' @param fcrR A numeric value that is used for grid spacing. Default is 5
-#' @param referenceHeight The height at which the incoming
-#' wind speeds were measured. Default is the RotorHeight.
+#' @param referenceHeight The height at which the incoming wind speeds were
+#'   measured. Default is the RotorHeight.
 #' @param RotorHeight The desired height of the turbine.
-#' @param SurfaceRoughness A surface roughness length of the
-#' considered area in m.  If the terrain effect model is activated, a
-#' surface roughness will be calculated for every grid cell with the
-#' elevation and land cover information. Default is 0.3
+#' @param SurfaceRoughness A surface roughness length of the considered area in
+#'   m.  If the terrain effect model is activated, a surface roughness will be
+#'   calculated for every grid cell with the elevation and land cover
+#'   information. Default is 0.3
 #' @param sourceCCL The path to the Corine Land Cover raster (.tif). Only
-#' required when the terrain effect model is activated. If nothing is assign,
-#' it will try to download a version from the EEA-website.
-#' @param sourceCCLRoughness The source to the adapted
-#' Corine Land Cover legend as .csv file. Only required when terrain
-#' effect model is activated. As default a .csv file within this
-#' package (\file{~/extdata}) is taken that was already adapted
-#' manually. To use your own .csv legend this variable has to be assigned.
-#' @param Proportionality A numeric value used for grid calculation.
-#' Determines the percentage a grid has to overlay. Default is 1
-#' @param iteration A numeric value indicating the desired amount
-#' of iterations of the algorithm. Default is 20
+#'   required when the terrain effect model is activated. If nothing is assign,
+#'   it will try to download a version from the EEA-website.
+#' @param sourceCCLRoughness The source to the adapted Corine Land Cover legend
+#'   as .csv file. Only required when terrain effect model is activated. As
+#'   default a .csv file within this package (\file{~/extdata}) is taken that
+#'   was already adapted manually. To use your own .csv legend this variable has
+#'   to be assigned.
+#' @param Proportionality A numeric value used for grid calculation. Determines
+#'   the percentage a grid has to overlay. Default is 1
+#' @param iteration A numeric value indicating the desired amount of iterations
+#'   of the algorithm. Default is 20
 #' @param mutr A numeric mutation rate with low default value of 0.008
-#' @param vdirspe A data.frame containing the incoming wind speeds,
-#' wind directions and probabilities
+#' @param vdirspe A data.frame containing the incoming wind speeds, wind
+#'   directions and probabilities
 #' @param topograp Logical value, which indicates if the terrain effect model
-#'  should be activated or not. Default is FALSE
-#' @param elitism Boolean value, which indicates whether elitism should
-#' be included or not. Default is TRUE
-#' @param nelit If \code{elitism} is TRUE, then this input variable
-#' determines the amount of individuals in the elite group. Default is 7
-#' @param selstate Determines which selection method is used,
-#' "FIX" selects a constant percentage and "VAR" selects a variable percentage,
-#' depending on the development of the fitness values. Default is "FIX"
-#' @param crossPart1 Determines which crossover method is used,
-#' "EQU" divides the genetic code at equal intervals and
-#' "RAN" divides the genetic code at random locations. Default is "EQU"
-#' @param trimForce If activated (\code{trimForce == TRUE}),
-#' the algorithm will take a probabilistic approach to trim the windfarms
-#' to the desired amount of turbines. If deactivated
-#' (\code{trimForce == FALSE}) the adjustment will be random.
-#' Default is FALSE
-#' @param Projection A desired Projection can be used instead
-#' of the default Lambert Azimuthal Equal Area Projection (EPSG:3035).
+#'   should be activated or not. Default is FALSE
+#' @param elitism Boolean value, which indicates whether elitism should be
+#'   included or not. Default is TRUE
+#' @param nelit If \code{elitism} is TRUE, then this input variable determines
+#'   the amount of individuals in the elite group. Default is 7
+#' @param selstate Determines which selection method is used, "FIX" selects a
+#'   constant percentage and "VAR" selects a variable percentage, depending on
+#'   the development of the fitness values. Default is "FIX"
+#' @param crossPart1 Determines which crossover method is used, "EQU" divides
+#'   the genetic code at equal intervals and "RAN" divides the genetic code at
+#'   random locations. Default is "EQU"
+#' @param trimForce If activated (\code{trimForce == TRUE}), the algorithm will
+#'   take a probabilistic approach to trim the windfarms to the desired amount
+#'   of turbines. If deactivated (\code{trimForce == FALSE}) the adjustment will
+#'   be random. Default is FALSE
+#' @param Projection A desired Projection can be used instead of the default
+#'   Lambert Azimuthal Equal Area Projection (EPSG:3035).
 #' @param weibull A logical value that specifies whether to take Weibull
-#' parameters into account. If weibull==TRUE, the wind speed values from the
-#' 'dirSpeed' data frame are ignored. The algorithm will calculate the mean
-#' wind speed for every wind turbine according to the Weibull parameters.
-#' Default is FALSE
+#'   parameters into account. If weibull==TRUE, the wind speed values from the
+#'   'dirSpeed' data frame are ignored. The algorithm will calculate the mean
+#'   wind speed for every wind turbine according to the Weibull parameters.
+#'   Default is FALSE
 #' @param weibullsrc A list of Weibull parameter rasters, where the first list
-#' item must be the shape parameter raster k and the second item must be the
-#' scale parameter raster a of the Weibull distribution. If no list is given,
-#' then rasters included in the package are used instead, which currently
-#' only cover Austria. This variable is only used if weibull==TRUE.
-#' @param Parallel Boolean value, indicating whether parallel processing
-#' should be used. The parallel and doParallel packages are used for parallel
-#' processing. Default is FALSE
-#' @param numCluster If Parallel is TRUE, this variable defines the number
-#' of clusters to be used
-#' @param verbose If TRUE, will print out information for every generation 
-#' Default is FALSE
+#'   item must be the shape parameter raster k and the second item must be the
+#'   scale parameter raster a of the Weibull distribution. If no list is given,
+#'   then rasters included in the package are used instead, which currently only
+#'   cover Austria. This variable is only used if weibull==TRUE.
+#' @param Parallel Boolean value, indicating whether parallel processing should
+#'   be used. The parallel and doParallel packages are used for parallel
+#'   processing. Default is FALSE
+#' @param numCluster If Parallel is TRUE, this variable defines the number of
+#'   clusters to be used
+#' @param verbose If TRUE, will print out information for every generation
+#'   Default is FALSE
 #' @param plotit If TRUE, will plot the best windfarm of a generation. Default
-#' is FALSE 
+#'   is FALSE
 #' 
-#' @return The result is a matrix with aggregated values per generation,
-#' the best individual regarding energy and efficiency per generation,
-#' some fuzzy control variables per generation, a list of all fitness values
-#' per generation, the amount of individuals after each process, a matrix of
-#' all energy, efficiency and fitness values per generation, the selection and 
-#' crossover paramters, a matrix with the generational difference in maximum
-#' and mean energy output, a matrix with the given inputs, a dataframe with
-#' the wind information, the mutation rate per generation and matrix with all 
-#' tested wind farm layouts. 
-#' 
+#' @family Genetic Algorithm Functions
+#' @return The result is a matrix with aggregated values per generation, the
+#'   best individual regarding energy and efficiency per generation, some fuzzy
+#'   control variables per generation, a list of all fitness values per
+#'   generation, the amount of individuals after each process, a matrix of all
+#'   energy, efficiency and fitness values per generation, the selection and
+#'   crossover paramters, a matrix with the generational difference in maximum
+#'   and mean energy output, a matrix with the given inputs, a dataframe with
+#'   the wind information, the mutation rate per generation and matrix with all
+#'   tested wind farm layouts.
+#'
 #' @details A terrain effect model can be included in the optimization process.
-#' Therefore, an SRTM elevation model will be downloaded automatically via the
-#' \code{raster::getData} function. A land cover raster can also be downloaded
-#' automatically from the EEA-website, or the path to a raster file can be 
-#' passed to \code{sourceCCL}. The algorithm uses an adapted version of the
-#' Raster legend ("clc_legend.csv"), which is stored in the package directory 
-#' \file{~/inst/extdata}. To use other values for the land cover roughness 
-#' lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file, 
-#' assign a surface roughness length to all land cover types. 
-#' Be sure that all rows are filled with numeric values and save the file
-#' with \strong{";"} separation. Assign the path of the file to the 
-#' input variable \code{sourceCCLRoughness} of this function.
+#'   Therefore, an SRTM elevation model will be downloaded automatically via the
+#'   \code{raster::getData} function. A land cover raster can also be downloaded
+#'   automatically from the EEA-website, or the path to a raster file can be
+#'   passed to \code{sourceCCL}. The algorithm uses an adapted version of the
+#'   Raster legend ("clc_legend.csv"), which is stored in the package directory
+#'   \file{~/inst/extdata}. To use other values for the land cover roughness
+#'   lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file,
+#'   assign a surface roughness length to all land cover types. Be sure that all
+#'   rows are filled with numeric values and save the file with \strong{";"}
+#'   separation. Assign the path of the file to the input variable
+#'   \code{sourceCCLRoughness} of this function.
 #' 
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
@@ -347,7 +335,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## CHECK INPUTS ###############
   ## Check if Input Data is correct and prints it out.
   if  (crossPart1 != "EQU" & crossPart1 != "RAN") {
-    crossPart1 <- readinteger()
+    ocrossPart1 <- readinteger()
   }
   if  (selstate != "FIX" & selstate != "VAR") {
     selstate <- readintegerSel()
@@ -388,13 +376,13 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
 
-  ## GRIDFILTER ###############
+  ## grid_area ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid1 <- GridFilter(shape = Polygon1, resol = resol2, prop = Proportionality)
+    Grid1 <- grid_area(shape = Polygon1, resol = resol2, prop = Proportionality)
     Grid <- Grid1[[1]]
     grid_filtered <- Grid1[[2]]
   } else {
@@ -418,7 +406,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     nStart <- 300
   }
   nStart <- ceiling(nStart)
-  startsel <- StartGA(Grid, n, nStart)
+  startsel <- init_population(Grid, n, nStart)
   ## Initialize all needed variables as list.
   maxParkwirkungsg <- 0
   allparkcoeff <- vector("list", iteration)
@@ -541,7 +529,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                      weibull = estim_speed_raster,
                      Parallel = Parallel, numCluster = numCluster)
     } else {
-      getRectV <- getRects(mut1, Grid)
+      getRectV <- get_grids(mut1, Grid)
       fit <- fitness(selection = getRectV, referenceHeight = referenceHeight,
                      RotorHeight = RotorHeight,
                      SurfaceRoughness = SurfaceRoughness,
@@ -816,7 +804,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     ## How many are selected and how much crossover points are used?
     selcross[[i]] <- cbind(cross = trunc(u + 1), teil)
-    selec6best <- selection1(fit = fit, Grid = Grid, teil = teil,
+    selec6best <- selection(fit = fit, Grid = Grid, teil = teil,
                              elitism = elitism, nelit = nelit,
                              selstate = selstate, verbose = verbose)
 
@@ -835,7 +823,7 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ## u determines the amount of crossover points,
     ## crossPart determines the method used (Equal/Random),
     ## uplimit is the maximum allowed permutations
-    crossOut <- crossover1(se6 = selec6best, u = u, uplimit = CrossUpLimit,
+    crossOut <- crossover(se6 = selec6best, u = u, uplimit = CrossUpLimit,
                            crossPart = crossPart1,
                            verbose = verbose, seed = NULL)
     if (verbose) {
@@ -921,24 +909,22 @@ genAlgo           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
 #' @title Transform to SpatialPolygons
 #' @name isSpatial
-#' @description Helper Function, which transforms SimpleFeatures or
-#' coordinates in matrix/data.frame/data.table into a SpatialPolygon
+#' @description Helper Function, which transforms SimpleFeatures or coordinates
+#'   in matrix/data.frame/data.table into a SpatialPolygon
 #'
 #' @export
 #'
-#' @importFrom sp proj4string Polygon Polygons SpatialPolygons
-#' @importFrom methods as
+#' @param shape An area as SpatialPolygon, SimpleFeature Polygon or coordinates
+#'   as matrix/data.frame
+#' @param proj Which Projection should be assigned to matrix / data.frame
+#'   coordinates
 #'
-#' @param shape An area as SpatialPolygon, SimpleFeature Polygon
-#' or coordinates as matrix/data.frame
-#' @param proj Which Projection should be assigned to matrix / 
-#' data.frame coordinates
-#'
+#' @family Helper Functions
 #' @return A SpatialPolygons object
-#' 
-#' @details If the columns are named, it will look for common abbreviation
-#' to match x/y or long/lat columns. If the columns are not named, the first
-#' 2 numeric columns are taken.
+#'
+#' @details If the columns are named, it will look for common abbreviation to
+#'   match x/y or long/lat columns. If the columns are not named, the first 2
+#'   numeric columns are taken.
 #'
 #' @examples \donttest{
 #' df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
@@ -959,7 +945,7 @@ isSpatial <- function(shape, proj) {
   # shape = xy_matrix
   if (class(shape)[1] == "sf") {
     shape <- as(shape, "Spatial")
-    ## This is needed for GridFilter. Attribute names must have same length
+    ## This is needed for grid_area. Attribute names must have same length
     shape$names <- "layer"
   } else if (class(shape)[1] == "data.frame" |
              class(shape)[1] == "matrix") {
@@ -1005,12 +991,15 @@ isSpatial <- function(shape, proj) {
 
 #' @title Transform Winddata
 #' @name windata_format
-#' @description Helper Function, which transforms winddata
-#' to an acceptable format
+#' @description Helper Function, which transforms winddata to an acceptable
+#'   format
 #'
-#' @param df The wind data with speeds, direction and optionally
-#' a probability column. If not assigned, it will be calculated
+#' @export
 #'
+#' @param df The wind data with speeds, direction and optionally a probability
+#'   column. If not assigned, it will be calculated
+#'
+#' @family Helper Functions
 #' @return A list of windspeed and pobabilities
 #'
 #' @examples \donttest{

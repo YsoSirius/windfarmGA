@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Leaflet Plot of a Wind Park — leafPlot • windfarmGA</title>
+<title>Plot a Wind Farm with leaflet — leafPlot • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Leaflet Plot of a Wind Park — leafPlot" />
+<meta property="og:title" content="Plot a Wind Farm with leaflet — leafPlot" />
 
 <meta property="og:description" content="Plot a resulting wind farm on a leaflet map." />
 <meta name="twitter:card" content="summary" />
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Leaflet Plot of a Wind Park</h1>
+    <h1>Plot a Wind Farm with leaflet</h1>
     <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/leafPlot.R'><code>R/leafPlot.R</code></a></small>
     <div class="hidden name"><code>leafPlot.Rd</code></div>
     </div>
@@ -120,8 +120,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>result</th>
-      <td><p>The resulting matrix of the function 'genAlgo' or
-'windfarmGA'.</p></td>
+      <td><p>The resulting matrix of the function 'genAlgo' or 'windfarmGA'.</p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
@@ -129,17 +128,17 @@
     </tr>
     <tr>
       <th>which</th>
-      <td><p>A numeric value, indicating which best indidvual to plot.
-The default is 1 (the best resulting wind farm).</p></td>
+      <td><p>A numeric value, indicating which best indidvual to plot. The
+default is 1 (the best resulting wind farm).</p></td>
     </tr>
     <tr>
       <th>orderitems</th>
-      <td><p>A logical value indicating whether the results should
-be ordered by energy values (TRUE) or chronologically (FALSE).</p></td>
+      <td><p>A logical value indicating whether the results should be
+ordered by energy values (TRUE) or chronologically (FALSE).</p></td>
     </tr>
     <tr>
       <th>GridPol</th>
-      <td><p>The output grid polygon of the <code><a href='GridFilter.html'>GridFilter</a></code> or
+      <td><p>The output grid polygon of the <code><a href='grid_area.html'>grid_area</a></code> or
 <code><a href='HexaTex.html'>HexaTex</a></code> functions.</p></td>
     </tr>
     </table>
@@ -162,7 +161,7 @@ be ordered by energy values (TRUE) or chronologically (FALSE).</p></td>
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
 <span class='co'>## Plot the best wind farm on a leaflet map with the rectangular Grid</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GridFilter.html'>GridFilter</a></span>(<span class='no'>polygon</span>, <span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>150</span>, <span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>0.4</span>)
+<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='no'>polygon</span>, <span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>150</span>, <span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>0.4</span>)
 <span class='fu'>leafPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>which</span> <span class='kw'>=</span> <span class='fl'>1</span>,
          <span class='kw'>GridPol</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])
 

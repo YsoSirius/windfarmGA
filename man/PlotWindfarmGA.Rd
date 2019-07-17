@@ -15,32 +15,32 @@ PlotWindfarmGA(result, Polygon1, GridMethod = "r", whichPl = "all",
 shapefile is already loaded.}
 
 \item{GridMethod}{Which grid spacing method was used. Default is
-"rectangular". If hexagonal grid cells were used, assign any of the following
-arguments: "h","hexa", "hexagonal".}
+"rectangular". If hexagonal grid cells were used, assign any of the
+following arguments: "h","hexa", "hexagonal".}
 
-\item{whichPl}{Which plots should be shown: 1-6 are possible. The default
-is "all" which shows all available plots.}
+\item{whichPl}{Which plots should be shown: 1-6 are possible. The default is
+"all" which shows all available plots.}
 
 \item{best}{A numeric value indicating how many of the best individuals
 should be plotted.}
 
-\item{plotEn}{A numeric value that indicates if the best energy or
-efficiency output should be plotted. If (plotEn==1) plots the best energy
-solutions and (plotEn==2) plots the best efficiency solutions.}
+\item{plotEn}{A numeric value that indicates if the best energy or efficiency
+output should be plotted. If (plotEn==1) plots the best energy solutions
+and (plotEn==2) plots the best efficiency solutions.}
 
-\item{Projection}{A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection.}
+\item{Projection}{A desired Projection can be used instead of the default
+Lambert Azimuthal Equal Area Projection.}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE.}
+then rasters included in the package are used instead, which currently only
+cover Austria. This variable is only used if weibull==TRUE.}
 }
 \description{
 Plot the results of a genetic algorithm run with given inputs.
-Several plots try to show all relevant effects and outcomes of the
-algorithm. 6 plot methods are available that can be selected individually.
+  Several plots try to show all relevant effects and outcomes of the
+  algorithm. 6 plot methods are available that can be selected individually.
 }
 \examples{
 \donttest{
@@ -68,3 +68,13 @@ PlotWindfarmGA(result, GridMethod = "h", Polygon1, whichPl = "all",
                best = 1, plotEn = 1, weibullsrc = weibullsrc)
 }
 }
+\seealso{
+Other Plotting Functions: \code{\link{RandomSearchTurb}},
+  \code{\link{heatmapGA}}, \code{\link{interpol_view}},
+  \code{\link{plotCloud}}, \code{\link{plotEvolution}},
+  \code{\link{plotResult}}, \code{\link{plotWindrose}},
+  \code{\link{plot_viewshed}}, \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}},
+  \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}

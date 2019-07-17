@@ -1,43 +1,40 @@
 #' @title Evaluate the Individual Fitness values
 #' @name fitness
-#' @description The fitness values of the individuals in the
-#' current population are calculated after having evaluated their energy
-#' outputs in \code{\link{calculateEn}}. This function reduces the resulting
-#' energy outputs to a single fitness value for every individual.
+#' @description The fitness values of the individuals in the current population
+#'   are calculated after having evaluated their energy outputs in
+#'   \code{\link{calculate_energy}}. This function reduces the resulting energy
+#'   outputs to a single fitness value for every individual.
 #'
 #' @export
 #'
-#' @importFrom raster extent rasterize
-#' @importFrom foreach foreach %dopar% 
-#'
-#' @param selection A list containing all individuals of the current
-#' population.
+#' @param selection A list containing all individuals of the current population.
 #' @param referenceHeight The height at which the incoming wind speeds were
-#' measured. 
-#' @param RotorHeight The desired height of the turbine. 
-#' @param SurfaceRoughness A surface roughness length of the considered area
-#' in m. 
-#' @param Polygon The considered area as shapefile. 
+#'   measured.
+#' @param RotorHeight The desired height of the turbine.
+#' @param SurfaceRoughness A surface roughness length of the considered area in
+#'   m.
+#' @param Polygon The considered area as shapefile.
 #' @param resol1 The resolution of the grid in meter.
 #' @param rot The desired rotor radius in meter.
 #' @param dirspeed The wind data as list.
 #' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
-#' and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
-#' @param topograp Logical value that indicates whether the terrain effect
-#' model is activated (TRUE) or deactivated (FALSE).
+#'   and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
+#' @param topograp Logical value that indicates whether the terrain effect model
+#'   is activated (TRUE) or deactivated (FALSE).
 #' @param cclRaster A Corine Land Cover raster, that has to be adapted
-#' previously by hand with the surface roughness lenght for every land cover
-#' type. Is only used, when the terrain effect model is activated.
+#'   previously by hand with the surface roughness lenght for every land cover
+#'   type. Is only used, when the terrain effect model is activated.
 #' @param weibull A raster representing the estimated wind speeds
-#' @param Parallel Boolean value, indicating whether parallel processing
-#' should be used. The parallel and doParallel packages are used for parallel 
-#' processing.
-#' @param numCluster If Parallel is TRUE, this variable defines the number
-#' of clusters to be used.
+#' @param Parallel Boolean value, indicating whether parallel processing should
+#'   be used. The parallel and doParallel packages are used for parallel
+#'   processing.
+#' @param numCluster If Parallel is TRUE, this variable defines the number of
+#'   clusters to be used.
 #'
+#' @family Genetic Algorithm Functions
 #' @return Returns a list with every individual, consisting of X & Y
-#' coordinates, rotor radii, the runs and the selected grid cell IDs, and
-#' the resulting energy outputs, efficiency rates and fitness values.
+#'   coordinates, rotor radii, the runs and the selected grid cell IDs, and the
+#'   resulting energy outputs, efficiency rates and fitness values.
 #'
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
@@ -60,12 +57,12 @@
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and
 #' ## grid cell IDs.
-#' Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+#' Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
 #' wind <- list(wind, probab = 100)
-#' startsel <- StartGA(Grid,10,20);
+#' startsel <- init_population(Grid,10,20);
 #' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
 #'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
@@ -124,7 +121,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   # every angle j - in Parallel
   if (Parallel == TRUE) {
     e <- foreach::foreach(k = 1:length(selection)) %dopar% {
-      windfarmGA::calculateEn(
+      windfarmGA::calculate_energy(
         sel = selection[[k]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
         wnkl = 20, distanz = 100000,
@@ -139,7 +136,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     if (!Parallel) {
       # Calculate EnergyOutput for every config i and for
       # every angle j - not Parallel
-      e <- calculateEn(
+      e <- calculate_energy(
         sel = selection[[i]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
         wnkl = 20, distanz = 100000,

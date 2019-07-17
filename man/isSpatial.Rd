@@ -7,23 +7,23 @@
 isSpatial(shape, proj)
 }
 \arguments{
-\item{shape}{An area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{shape}{An area as SpatialPolygon, SimpleFeature Polygon or coordinates
+as matrix/data.frame}
 
-\item{proj}{Which Projection should be assigned to matrix / 
-data.frame coordinates}
+\item{proj}{Which Projection should be assigned to matrix / data.frame
+coordinates}
 }
 \value{
 A SpatialPolygons object
 }
 \description{
-Helper Function, which transforms SimpleFeatures or
-coordinates in matrix/data.frame/data.table into a SpatialPolygon
+Helper Function, which transforms SimpleFeatures or coordinates
+  in matrix/data.frame/data.table into a SpatialPolygon
 }
 \details{
-If the columns are named, it will look for common abbreviation
-to match x/y or long/lat columns. If the columns are not named, the first
-2 numeric columns are taken.
+If the columns are named, it will look for common abbreviation to
+  match x/y or long/lat columns. If the columns are not named, the first 2
+  numeric columns are taken.
 }
 \examples{
 \donttest{
@@ -42,3 +42,13 @@ df_fort <- ggplot2::fortify(Polygon1)
 isSpatial(df_fort, Projection)
 }
 }
+\seealso{
+Other Helper Functions: \code{\link{HexaTex}},
+  \code{\link{dup_coords}}, \code{\link{getDEM}},
+  \code{\link{getISO3}}, \code{\link{get_grids}},
+  \code{\link{grid_area}}, \code{\link{permutations}},
+  \code{\link{readintegerSel}}, \code{\link{readinteger}},
+  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
+  \code{\link{windata_format}}
+}
+\concept{Helper Functions}

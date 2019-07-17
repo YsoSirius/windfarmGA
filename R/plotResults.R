@@ -1,51 +1,41 @@
-#' @title Plot the best Results
+#' @title Plot the best results
 #' @name plotResult
 #' @description  Plot the best resulting solutions of the genetic algorithm.
-#' Depending on \code{plotEn}, either the best energy or efficiency solutions
-#' can be plotted. \code{best} indicates the amount of best solutions that
-#' should be plotted.
+#'   Depending on \code{plotEn}, either the best energy or efficiency solutions
+#'   can be plotted. \code{best} indicates the amount of best solutions that
+#'   should be plotted.
 #'
 #' @export
 #'
-#' @importFrom raster crs getData crop mask projectRaster raster getData
-#' reclassify plot calc extract cellStats terrain resample overlay res
-#' extent
-#' @importFrom sp spTransform proj4string
-#' @importFrom grDevices colorRampPalette topo.colors
-#' @importFrom graphics mtext par plot
-#' @importFrom utils read.csv
-#' @importFrom calibrate textxy
-#' @importFrom stats dist
-#'
 #' @param result An output matrix of the function \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information.
+#'   \code{\link{genAlgo}}, which has stored all relevant information.
 #' @param Polygon1 The considered area as shapefile.
 #' @param best A numeric value indicating how many of the best individuals
-#' should be plotted.
-#' @param plotEn A numeric value that indicates if the best energy or
-#' efficiency output should be plotted. If (plotEn==1) plots the best energy
-#' solutions and (plotEn==2) plots the best efficiency solutions.
-#' @param topographie A logical value, indicating whether terrain effects
-#' should be considered and plotted or not.
+#'   should be plotted.
+#' @param plotEn A numeric value that indicates if the best energy or efficiency
+#'   output should be plotted. If (plotEn==1) plots the best energy solutions
+#'   and (plotEn==2) plots the best efficiency solutions.
+#' @param topographie A logical value, indicating whether terrain effects should
+#'   be considered and plotted or not.
 #' @param Grid The grid as SpatialPolygons, which is obtained from
-#' \code{\link{GridFilter}} and used for plotting.
-#' @param Projection A desired Projection can be used instead
-#' of the default Lambert Azimuthal Equal Area Projection.
+#'   \code{\link{grid_area}} and used for plotting.
+#' @param Projection A desired Projection can be used instead of the default
+#'   Lambert Azimuthal Equal Area Projection.
 #' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
-#' required, when the terrain effect model is activated.
-#' @param sourceCCLRoughness The source to the adapted
-#' Corine Land Cover legend as .csv file. Only required when terrain
-#' effect model is activated. As default a .csv file within this
-#' package (\file{~/extdata/clc_legend.csv}) is taken that was already adapted
-#' manually.
+#'   required, when the terrain effect model is activated.
+#' @param sourceCCLRoughness The source to the adapted Corine Land Cover legend
+#'   as .csv file. Only required when terrain effect model is activated. As
+#'   default a .csv file within this package (\file{~/extdata/clc_legend.csv})
+#'   is taken that was already adapted manually.
 #' @param weibullsrc A list of Weibull parameter rasters, where the first list
-#' item must be the shape parameter raster k and the second item must be the
-#' scale parameter raster a of the Weibull distribution. If no list is given,
-#' then rasters included in the package are used instead, which currently
-#' only cover Austria. This variable is only used if weibull==TRUE. 
+#'   item must be the shape parameter raster k and the second item must be the
+#'   scale parameter raster a of the Weibull distribution. If no list is given,
+#'   then rasters included in the package are used instead, which currently only
+#'   cover Austria. This variable is only used if weibull==TRUE.
 #'
+#' @family Plotting Functions
 #' @return Returns a data.frame of the best (energy/efficiency) individual
-#' during all iterations.
+#'   during all iterations.
 #'
 #' @examples \donttest{
 #' ## Add some data examples from the package
@@ -63,7 +53,7 @@
 #' ## Plot the results of a rectangular grid optimization
 #' result <- resultrect
 #' Polygon1 <- polygon
-#' Grid <- GridFilter(Polygon1, resol = 175, 1, FALSE)
+#' Grid <- grid_area(Polygon1, resol = 175, 1, FALSE)
 #' plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
 #'            Grid = Grid[[2]])
 #'
@@ -306,7 +296,7 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
 
           # Get Air Density and Pressure from Height Values
           HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
-          air_dt <- BaroHoehe(matrix(HeighttoBaro), HeighttoBaro)
+          air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
 
           plot(srtm_crop, main = "Normal Air Density",
                col = topo.colors(10))
@@ -504,7 +494,7 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
 
           # Get Air Density and Pressure from Height Values
           HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
-          air_dt <- BaroHoehe(matrix(HeighttoBaro), HeighttoBaro)
+          air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
           raster::plot(srtm_crop, main = "Normal Air Density", col = topo.colors(10))
           graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = rep(1.225, nrow(sel1)), cex = 0.8)
@@ -618,7 +608,7 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
   # 
   #     # Get Air Density and Pressure from Height Values
   #     HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
-  #     air_dt <- BaroHoehe(matrix(HeighttoBaro),HeighttoBaro)
+  #     air_dt <- barometric_height(matrix(HeighttoBaro),HeighttoBaro)
   #     # graphics::par(mfrow=c(1,1))
   #     raster::plot(srtm_crop, main="Normal Air Density",col=topo.colors(10));
   #     graphics::points(sel1$X,sel1$Y,pch=20);

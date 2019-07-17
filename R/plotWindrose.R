@@ -3,10 +3,6 @@
 #' @description  Plot a wind rose of the wind data frame.
 #'
 #' @export
-#' @importFrom grDevices colorRampPalette
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom ggplot2 ggplot aes geom_bar scale_x_discrete waiver
-#'  coord_polar scale_fill_manual theme element_blank ylim
 #'
 #' @param data A data.frame containing the wind information
 #' @param spd The column of the wind speeds in "data"
@@ -19,6 +15,7 @@
 #' @param spdseq A wind speed sequence, that is used for plotting
 #' @param plotit Should the windrose be plotted? Default is TRUE
 #'
+#' @family Plotting Functions
 #' @return NULL
 #'
 #' @examples

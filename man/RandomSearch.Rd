@@ -2,28 +2,26 @@
 % Please edit documentation in R/RandomSearch.R
 \name{RandomSearch}
 \alias{RandomSearch}
-\title{RandomSearch Randomise the output of the Genetic Algorithm.}
+\title{Randomise the output of the Genetic Algorithm}
 \usage{
 RandomSearch(result, Polygon1, n, best, Plot, GridMethod, max_dist = 2.2)
 }
 \arguments{
-\item{result}{The resulting matrix of the function 'genAlgo' or
-'windfarmGA'.}
+\item{result}{The resulting matrix of the function 'genAlgo' or 'windfarmGA'.}
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
 \item{n}{The number of random searches to be perfomed. Default is 20.}
 
-\item{best}{Which best indidvuals should be the
-starting conditions fo a random search. The default is 1.}
+\item{best}{Which best indidvuals should be the starting conditions fo a
+random search. The default is 1.}
 
 \item{Plot}{Should the random search be plotted? Default is FALSE}
 
-\item{GridMethod}{Should the polygon be divided into rectangular or
-hexagonal grid cells? The default is rectangular grid cells and hexagonal
-grid cells are computed when assigning "h" or "hexagon" to this input
-variable. The randomly generated points might be placed outside
-their hexagons.}
+\item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
+grid cells? The default is rectangular grid cells and hexagonal grid cells
+are computed when assigning "h" or "hexagon" to this input variable. The
+randomly generated points might be placed outside their hexagons.}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
 collision checks. Default is 2.2}
@@ -32,8 +30,8 @@ collision checks. Default is 2.2}
 Returns a list.
 }
 \description{
-Perform a random search in the grid cells, to
-further optimize the output of the wind farm layout.
+Perform a random search in the grid cells, to further optimize
+  the output of the wind farm layout.
 }
 \examples{
 \donttest{
@@ -44,3 +42,8 @@ new <- RandomSearch(resultrect, polygon, n = 20, best = 4)
 RandomSearchPlot(resultRS = new, result = resultrect, Polygon1 = polygon, best = 2)
 }
 }
+\seealso{
+Other Randomization: \code{\link{RandomSearchPlot}},
+  \code{\link{RandomSearchTurb}}
+}
+\concept{Randomization}

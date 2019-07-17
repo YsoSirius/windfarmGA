@@ -1,31 +1,19 @@
-#' @title Leaflet Plot of a Wind Park
+#' @title Plot a Wind Farm with leaflet
 #' @name leafPlot
 #' @description  Plot a resulting wind farm on a leaflet map.
 #'
 #' @export
-#' 
-#' @importFrom leaflet colorFactor iconList makeIcon leaflet addTiles
-#' addProviderTiles popupOptions addMarkers addCircleMarkers hideGroup
-#' addPolygons addLegend labelFormat addLayersControl layersControlOptions
-#' addPopups
-#' 
-#' @importFrom sp proj4string SpatialPoints CRS spTransform coordinates
-#' SpatialPolygons Polygon Polygons
-#' @importFrom grDevices colorRampPalette
-#' @importFrom raster extent
-#' @importFrom magrittr %>%
 #'
-#' @param result The resulting matrix of the function 'genAlgo' or
-#' 'windfarmGA'.
+#' @param result The resulting matrix of the function 'genAlgo' or 'windfarmGA'.
 #' @param Polygon1 The Polygon for the wind farm area.
-#' @param which A numeric value, indicating which best indidvual to plot.
-#' The default is 1 (the best resulting wind farm). 
-#' @param orderitems A logical value indicating whether the results should
-#' be ordered by energy values (TRUE) or chronologically (FALSE).
-#' @param GridPol The output grid polygon of the \code{\link{GridFilter}} or
-#' \code{\link{HexaTex}} functions.
+#' @param which A numeric value, indicating which best indidvual to plot. The
+#'   default is 1 (the best resulting wind farm).
+#' @param orderitems A logical value indicating whether the results should be
+#'   ordered by energy values (TRUE) or chronologically (FALSE).
+#' @param GridPol The output grid polygon of the \code{\link{grid_area}} or
+#'   \code{\link{HexaTex}} functions.
 #'
-#' @return Returns a leaflet map. 
+#' @return Returns a leaflet map.
 #'
 #' @examples \donttest{
 #' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
@@ -40,7 +28,7 @@
 #'          
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 #' ## Plot the best wind farm on a leaflet map with the rectangular Grid
-#' Grid <- GridFilter(polygon, resol = 150, prop = 0.4)
+#' Grid <- grid_area(polygon, resol = 150, prop = 0.4)
 #' leafPlot(result = resultrect, Polygon1 = polygon, which = 1, 
 #'          GridPol = Grid[[2]])
 #'

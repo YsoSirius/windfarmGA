@@ -1,65 +1,25 @@
-#' @title Check user input and start an optimization
 #' @name windfarmGA
-#' @description The initiating function of an optimization run which
-#' will interactively check user-inputs. If all inputs are correct,
-#' an optimization will be started.
-#'
-#' @details A terrain effect model can be included in the optimization process.
-#' Therefore, an SRTM elevation model will be downloaded automatically via the
-#' \code{raster::getData} function. A land cover raster can also be downloaded
-#' automatically from the EEA-website, or the path to a raster file can be 
-#' passed to \code{sourceCCL}. The algorithm uses an adapted version of the
-#' Raster legend ("clc_legend.csv"), which is stored in the package directory 
-#' \file{~/inst/extdata}. To use other values for the land cover roughness 
-#' lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file, 
-#' assign a surface roughness length to all land cover types. 
-#' Be sure that all rows are filled with numeric values and save the file
-#' with \strong{";"} separation. Assign the path of the file to the 
-#' input variable \code{sourceCCLRoughness} of this function.
+#' @description The initiating function of an optimization run which will
+#'   interactively check user-inputs. If all inputs are correct, an optimization
+#'   will be started.
 #'
 #' @export
-#' @seealso \code{\link{genAlgo}} 
-#' 
-#' @useDynLib windfarmGA, .registration = TRUE
-#' @importFrom Rcpp sourceCpp
-#' @importFrom rgdal readOGR
-#' @importFrom sp Polygon SpatialPolygons CRS proj4string spTransform
-#' @importFrom raster plot crs
-#' @importFrom utils globalVariables
-#' @importFrom graphics plot.new title
 #'
-#' @inheritParams genAlgo
-#' 
-#' @return The result is a matrix with aggregated values per generation,
-#' the best individual regarding energy and efficiency per generation,
-#' some fuzzy control variables per generation, a list of all fitness values
-#' per generation, the amount of individuals after each process, a matrix of
-#' all energy, efficiency and fitness values per generation, the selection and 
-#' crossover paramters, a matrix with the generational difference in maximum
-#' and mean energy output, a matrix with the given inputs, a dataframe with
-#' the wind information, the mutation rate per generation and matrix with all 
-#' tested wind farm layouts.
-#'  
-#' @author Sebastian Gatscha
-utils::globalVariables(
-  c(
-    "X","Y",
-    "var1.pred","x","y",
-    "element_rect","element_line",
-    "unit", 
-    "srtm_crop", "cclRaster", "weibullsrc",
-    "cl",
-    "k" 
-    ))
-
-
+#' @param dns The data source name (interpretation varies by driver — for some
+#'   drivers, dsn is a file name, but may also be a folder)
+#' @param layer The layer name
+#'
+#' @seealso \code{\link{genAlgo}}
+#' @family Genetic Algorithm Functions
+#'
+#' @inherit genAlgo details return params title
 windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection, 
                        sourceCCL, sourceCCLRoughness,
                        vdirspe, Rotor = 30, fcrR = 3, n = 10, topograp = FALSE,
-                       iteration = 100, referenceHeight = 50,
+                       iteration = 20, referenceHeight = 50,
                        RotorHeight = 50, SurfaceRoughness = 0.14, 
-                       Proportionality = 1, mutr = 0.001, 
-                       elitism = TRUE, nelit = 6,
+                       Proportionality = 1, mutr = 0.008, 
+                       elitism = TRUE, nelit = 7,
                        selstate = "FIX", crossPart1 = "EQU", trimForce = TRUE, 
                        weibull, weibullsrc,
                        Parallel, numCluster, verbose = FALSE, plotit = FALSE) {
@@ -153,7 +113,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     Grid <- HexaTex(Polygon1 = Polygon1, 
                     size = (Rotor * fcrR) / 2, plotTrue = TRUE)
   } else {
-    Grid <- GridFilter(shape = Polygon1,resol = (Rotor * fcrR), 
+    Grid <- grid_area(shape = Polygon1,resol = (Rotor * fcrR), 
                        prop = Proportionality, plotGrid = TRUE)
   }
   cat("\nIs the grid spacing appropriate?")
@@ -163,8 +123,8 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     cat("################### GA WARNING MESSAGE ###################")
     stop("\n##### The grid spacing is not as required. \n
              Adjust radius (Rotor) or fraction of the radius (fcrR) or the reference system.\n
-             You can also use the function GridFilter first, to see the resulting grid with given inputs.\n
-             Be carefull, with GridFilter you have to give a resolution as input, in this case this will be fcrR*Rotor.
+             You can also use the function grid_area first, to see the resulting grid with given inputs.\n
+             Be carefull, with grid_area you have to give a resolution as input, in this case this will be fcrR*Rotor.
              ")
   }
 

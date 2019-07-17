@@ -10,11 +10,11 @@ readinteger()
 Returns the selected crossover method (character)
 }
 \description{
-Checks whether the input for \code{\link{crossover1}} is
-given correctly. If not, a message is prompted which asks to input one
-of the 2 available crossover methods. The available inputs are "E" and "R".
-"E" refers to partitioning at equal intervals and "R" refers to random
-partitioning.
+Checks whether the input for \code{\link{crossover}} is given
+  correctly. If not, a message is prompted which asks to input one of the 2
+  available crossover methods. The available inputs are "E" and "R". "E"
+  refers to partitioning at equal intervals and "R" refers to random
+  partitioning.
 }
 \examples{
 \donttest{
@@ -22,3 +22,13 @@ partitioning.
 }
 
 }
+\seealso{
+Other Helper Functions: \code{\link{HexaTex}},
+  \code{\link{dup_coords}}, \code{\link{getDEM}},
+  \code{\link{getISO3}}, \code{\link{get_grids}},
+  \code{\link{grid_area}}, \code{\link{isSpatial}},
+  \code{\link{permutations}}, \code{\link{readintegerSel}},
+  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
+  \code{\link{windata_format}}
+}
+\concept{Helper Functions}

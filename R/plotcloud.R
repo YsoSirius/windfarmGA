@@ -1,19 +1,17 @@
 #' @title Plot outputs of all generations with standard deviations
 #' @name plotCloud
-#' @description  Plot all the fitness, efficiency and energy outputs of
-#' all generations. Plot the corresponding standard deviation below.
+#' @description  Plot all the fitness, efficiency and energy outputs of all
+#'   generations. Plot the corresponding standard deviation below.
 #'
 #' @export
 #'
-#' @importFrom stats smooth.spline sd aggregate
-#' @importFrom graphics lines par plot points
-#'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information.
-#' @param pl Should the results be plotted? Default is FALSE 
+#'   \code{\link{genAlgo}}, which has stored all relevant information.
+#' @param pl Should the results be plotted? Default is FALSE
 #'
-#' @return Returns a data.frame with the values for fitness, efficiency
-#' and energy for all evaluated individuals. 
+#' @family Plotting Functions
+#' @return Returns a data.frame with the values for fitness, efficiency and
+#'   energy for all evaluated individuals.
 #'
 #' @examples \donttest{
 #' ## Add some data examples from the package

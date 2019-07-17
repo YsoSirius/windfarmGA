@@ -11,24 +11,24 @@ trimton(mut, nturb, allparks, nGrids, trimForce, seed)
 
 \item{nturb}{A numeric value indicating the amount of required turbines}
 
-\item{allparks}{A data.frame consisting of all individuals of the
-current generation}
+\item{allparks}{A data.frame consisting of all individuals of the current
+generation}
 
 \item{nGrids}{A numeric value indicating the total amount of grid cells}
 
-\item{trimForce}{A boolean value which determines which adjustment
-method should be used. TRUE uses a probabilistic approach and
-FALSE uses a random approach}
+\item{trimForce}{A boolean value which determines which adjustment method
+should be used. TRUE uses a probabilistic approach and FALSE uses a random
+approach}
 
 \item{seed}{Set a seed for comparability. Default is NULL}
 }
 \value{
-Returns a binary matrix with the correct amount of turbines
-per individual
+Returns a binary matrix with the correct amount of turbines per
+  individual
 }
 \description{
 Adjust the mutated individuals to the required amount of
-turbines.
+  turbines.
 }
 \examples{
 \donttest{
@@ -48,11 +48,11 @@ plot(Polygon1,axes=TRUE)
 data.in <- as.data.frame(cbind(ws=12,wd=0))
 
 ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
-startsel <- StartGA(Grid,10,20);
+startsel <- init_population(Grid,10,20);
 wind <- as.data.frame(cbind(ws=12,wd=0))
 wind <- list(wind, probab = 100)
 fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
@@ -63,17 +63,17 @@ allparks <- do.call("rbind",fit);
 ## SELECTION
 ## print the amount of Individuals selected.
 ## Check if the amount of Turbines is as requested.
-selec6best <- selection1(fit, Grid,2, T, 6, "VAR");
-selec6best <- selection1(fit, Grid,2, T, 6, "FIX");
-selec6best <- selection1(fit, Grid,4, F, 6, "FIX");
+selec6best <- selection(fit, Grid,2, T, 6, "VAR");
+selec6best <- selection(fit, Grid,2, T, 6, "FIX");
+selec6best <- selection(fit, Grid,4, F, 6, "FIX");
 
 ## CROSSOVER
 ## u determines the amount of crossover points,
 ## crossPart determines the method used (Equal/Random),
 ## uplimit is the maximum allowed permutations
-crossOut <- crossover1(selec6best, 2, uplimit = 300, crossPart="RAN");
-crossOut <- crossover1(selec6best, 7, uplimit = 500, crossPart="RAN");
-crossOut <- crossover1(selec6best, 3, uplimit = 300, crossPart="EQU");
+crossOut <- crossover(selec6best, 2, uplimit = 300, crossPart="RAN");
+crossOut <- crossover(selec6best, 7, uplimit = 500, crossPart="RAN");
+crossOut <- crossover(selec6best, 3, uplimit = 300, crossPart="EQU");
 
 ## MUTATION
 ## Variable Mutation Rate is activated if more than 2 individuals represent
@@ -90,3 +90,10 @@ colSums(mut1)
 
 }
 }
+\seealso{
+Other Genetic Algorithm Functions: \code{\link{crossover}},
+  \code{\link{fitness}}, \code{\link{genAlgo}},
+  \code{\link{init_population}}, \code{\link{mutation}},
+  \code{\link{selection}}, \code{\link{windfarmGA}}
+}
+\concept{Genetic Algorithm Functions}

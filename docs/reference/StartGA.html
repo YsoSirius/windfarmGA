@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a random initial Population — StartGA • windfarmGA</title>
+<title>Deprecated use <code>StartGA</code> instead. — StartGA • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,12 +30,9 @@
 
 
 
-<meta property="og:title" content="Create a random initial Population — StartGA" />
+<meta property="og:title" content="Deprecated use <code>StartGA</code> instead. — StartGA" />
 
-<meta property="og:description" content="Create nStart random sub-selections from the
-indexed grid and assign binary variable 1 to selected grids.
-This function initiates the genetic algorithm with a first random
-population and will only be needed in the first iteration." />
+<meta property="og:description" content="StartGA is replaced by init_population." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +63,7 @@ population and will only be needed in the first iteration." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -105,17 +102,14 @@ population and will only be needed in the first iteration." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a random initial Population</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/StartGA.R'><code>R/StartGA.R</code></a></small>
+    <h1>Deprecated use <code>StartGA</code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>StartGA.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create <code>nStart</code> random sub-selections from the
-indexed grid and assign binary variable 1 to selected grids.
-This function initiates the genetic algorithm with a first random
-population and will only be needed in the first iteration.</p>
+    <p>StartGA is replaced by <code><a href='init_population.html'>init_population</a></code>.</p>
     
     </div>
 
@@ -126,8 +120,8 @@ population and will only be needed in the first iteration.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>Grid</th>
-      <td><p>The data.frame output of "GridFilter" function,
-with X and Y coordinates and Grid cell IDs.</p></td>
+      <td><p>The data.frame output of <code><a href='grid_area.html'>grid_area</a></code>" function, with
+X and Y coordinates and Grid cell IDs.</p></td>
     </tr>
     <tr>
       <th>n</th>
@@ -135,65 +129,18 @@ with X and Y coordinates and Grid cell IDs.</p></td>
     </tr>
     <tr>
       <th>nStart</th>
-      <td><p>A numeric indicating the amount of randomly generated
-initial individuals. Default is 100.</p></td>
+      <td><p>A numeric indicating the amount of randomly generated initial
+individuals. Default is 100.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a list of <code>nStart</code> initial individuals,
-each consisting of <code>n</code> turbines.
-Resulting list has the x and y coordinates, the grid cell ID
-and a binary variable of 1, indicating a turbine in the grid cell.</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
-<span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygon</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>2000</span>),
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2000</span>, <span class='fl'>2000</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2000</span>, <span class='fl'>0</span>)))
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>),<span class='fl'>1</span>);
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>SpatialPolygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>))
-<span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='StartGA-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GridFilter.html'>GridFilter</a></span>(<span class='no'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>1</span>,<span class='st'>"TRUE"</span>)</div><div class='img'><img src='StartGA-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='StartGA-3.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Create 5 individuals with 10 wind turbines each.</span>
-<span class='no'>firstPop</span> <span class='kw'>&lt;-</span> <span class='fu'>StartGA</span>(<span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nStart</span> <span class='kw'>=</span> <span class='fl'>5</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>firstPop</span>)</div><div class='output co'>#&gt; List of 5
-#&gt;  $ : num [1:10, 1:4] 12 13 20 28 41 60 67 80 85 96 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "12" "13" "20" "28" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 1 2 9 46 55 59 66 77 80 100 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "1" "2" "9" "46" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 6 7 11 19 22 46 54 56 92 93 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "6" "7" "11" "19" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 3 5 10 19 28 64 69 73 87 93 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "3" "5" "10" "19" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 17 27 31 38 41 53 58 64 82 83 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "17" "27" "31" "38" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

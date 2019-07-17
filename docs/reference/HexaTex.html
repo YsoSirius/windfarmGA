@@ -32,9 +32,9 @@
 
 <meta property="og:title" content="Polygon to Hexagonal Grid Tessellation — HexaTex" />
 
-<meta property="og:description" content="The function takes a Polygon and a sizing argument and
-creates a list with an indexed matrix with coordinates
-and a SpatialPolygons object, that consists of hexagonal grids" />
+<meta property="og:description" content="The function takes a Polygon and a sizing argument and creates
+  a list with an indexed matrix with coordinates and a SpatialPolygons
+  object, that consists of hexagonal grids" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +65,7 @@ and a SpatialPolygons object, that consists of hexagonal grids" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -111,9 +111,9 @@ and a SpatialPolygons object, that consists of hexagonal grids" />
 
     <div class="ref-description">
     
-    <p>The function takes a Polygon and a sizing argument and
-creates a list with an indexed matrix with coordinates
-and a SpatialPolygons object, that consists of hexagonal grids</p>
+    <p>The function takes a Polygon and a sizing argument and creates
+  a list with an indexed matrix with coordinates and a SpatialPolygons
+  object, that consists of hexagonal grids</p>
     
     </div>
 
@@ -138,19 +138,29 @@ and a SpatialPolygons object, that consists of hexagonal grids</p>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a list with an indexed matrix of the point coordinates
-and a SpatialPolygons object of the hexagons</p>
+    <p>Returns a list with an indexed matrix of the point coordinates and a
+  SpatialPolygons object of the hexagons</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Helper Functions: <code><a href='dup_coords.html'>dup_coords</a></code>,
+  <code><a href='getDEM.html'>getDEM</a></code>, <code><a href='getISO3.html'>getISO3</a></code>,
+  <code><a href='get_grids.html'>get_grids</a></code>, <code><a href='grid_area.html'>grid_area</a></code>,
+  <code><a href='isSpatial.html'>isSpatial</a></code>, <code><a href='permutations.html'>permutations</a></code>,
+  <code><a href='readintegerSel.html'>readintegerSel</a></code>, <code><a href='readinteger.html'>readinteger</a></code>,
+  <code><a href='splitAt.html'>splitAt</a></code>, <code><a href='tess2SPdf.html'>tess2SPdf</a></code>,
+  <code><a href='windata_format.html'>windata_format</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>spatstat</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: spatstat.data</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: nlme</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: 'nlme'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:raster':</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>spatstat</span>)</div><div class='output co'>#&gt; <span class='message'>Lade nötiges Paket: spatstat.data</span></div><div class='output co'>#&gt; <span class='message'>Lade nötiges Paket: nlme</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attache Paket: 'nlme'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:raster':</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    getData</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: rpart</span></div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>    getData</span></div><div class='output co'>#&gt; <span class='message'>Lade nötiges Paket: rpart</span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>spatstat 1.58-2       (nickname: 'Not Even Wrong') </span>
 #&gt; <span class='message'>For an introduction to spatstat, type 'beginner' </span></div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Note: spatstat version 1.58-2 is out of date by more than 6 months; we recommend upgrading to the latest version.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: 'spatstat'</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:raster':</span>
+#&gt; <span class='message'>Attache Paket: 'spatstat'</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:raster':</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    area, rotate, shift</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>maptools</span>)</div><div class='output co'>#&gt; <span class='message'>Checking rgeos availability: TRUE</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>raster</span>)
@@ -173,6 +183,8 @@ and a SpatialPolygons object of the hexagons</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

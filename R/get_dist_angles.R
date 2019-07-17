@@ -1,23 +1,22 @@
 #' @title Calculate distances and angles of possibly influencing turbines
-#' @name VekWinkelCalc
-#' @description Calculate distances and angles for a turbine and
-#' all it's potentially influencing turbines.
+#' @name get_dist_angles
+#' @description Calculate distances and angles for a turbine and all it's
+#'   potentially influencing turbines.
 #' @export
-#'
-#' @importFrom raster extent plot
-#' @importFrom graphics title plot points
 #'
 #' @param t A matrix of the current individual with x and y coordinates
 #' @param o A numeric value indicating the index of the current turbine
-#' @param wkl A numeric value indicating the angle, at which no wake
-#' influences are considered. Default is 20 degrees.
-#' @param distanz A numeric value indicating the distance, after which
-#' the wake effects are considered to be eliminated. Default is 100km.
+#' @param wkl A numeric value indicating the angle, at which no wake influences
+#'   are considered. Default is 20 degrees.
+#' @param distanz A numeric value indicating the distance, after which the wake
+#'   effects are considered to be eliminated. Default is 100km.
 #' @param polYgon A shapefile representing the considered area
-#' @param plotAngles A logical variable, which is used to plot the
-#' distances and angles. Default is FALSE 
-#' @return Returns a matrix with the distances and angles of
-#' potentially influencing turbines
+#' @param plotAngles A logical variable, which is used to plot the distances and
+#'   angles. Default is FALSE
+#'
+#' @family Wind Energy Calculation Functions
+#' @return Returns a matrix with the distances and angles of potentially
+#'   influencing turbines
 #' @examples
 #' library(sp)
 #' library(raster)
@@ -39,12 +38,12 @@
 #' ## Evaluate and plot for every turbine all other potentially influencing turbines
 #' potInfTur <- list()
 #' for (i in 1:(length(t[,1]))) {
-#'   potInfTur[[i]] <- VekWinkelCalc(t = t, o = i, wkl = wnkl,
+#'   potInfTur[[i]] <- get_dist_angles(t = t, o = i, wkl = wnkl,
 #'                    distanz = distanz, polYgon = polYgon, plotAngles = TRUE)
 #' }
 #' potInfTur
 #'
-VekWinkelCalc     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
+get_dist_angles     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
   col_names = c("Ax", "Ay", "Bx", "By", "Cx", "Cy",
                "Laenge_C", "Laenge_B", "Laenge_A",
                "alpha", "betha", "gamma")

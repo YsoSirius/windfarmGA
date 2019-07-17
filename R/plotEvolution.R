@@ -1,18 +1,17 @@
 #' @title Plot the evolution of fitness values
 #' @name plotEvolution
-#' @description  Plot the evolution of energy outputs and efficiency rates
-#' over the whole generations. Plots min, mean and max values.
+#' @description  Plot the evolution of energy outputs and efficiency rates over
+#'   the whole generations. Plots min, mean and max values.
 #' @export
 #'
-#' @importFrom graphics plot lines grid points par
-#'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information. 
-#' @param ask Should R wait for interaction for subsequent plotting.
-#' Default is TRUE
-#' @param spar A numeric value determining how exact a spline should
-#' be drawn. Default is 0.1 
+#'   \code{\link{genAlgo}}, which has stored all relevant information.
+#' @param ask Should R wait for interaction for subsequent plotting. Default is
+#'   TRUE
+#' @param spar A numeric value determining how exact a spline should be drawn.
+#'   Default is 0.1
 #'
+#' @family Plotting Functions
 #' @return NULL
 #' @examples \donttest{
 #' ## Add some data examples from the package

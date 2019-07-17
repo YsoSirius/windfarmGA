@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{viewTo}
 \alias{viewTo}
-\title{viewTo}
+\title{Calculate Visibility between multiple locations}
 \usage{
 viewTo(r, xy1, xy2, h1 = 0, h2 = 0, progress = "none")
 }
@@ -20,10 +20,15 @@ viewTo(r, xy1, xy2, h1 = 0, h2 = 0, progress = "none")
 \item{progress}{Is passed on to plyr::aaply}
 }
 \value{
-A boolean vector, indicating if Point 1 (xy1) is visible
-from all elements of Points 2 (xy2)
+A boolean vector, indicating if Point 1 (xy1) is visible from all
+  elements of Points 2 (xy2)
 }
 \description{
-Check if Point 1 (xy) is visible from multiple points
-(xy2)
+Check if Point 1 (xy) is visible from multiple points (xy2)
 }
+\seealso{
+Other Viewshed Analysis: \code{\link{cansee}},
+  \code{\link{interpol_view}}, \code{\link{plot_viewshed}},
+  \code{\link{rasterprofile}}, \code{\link{viewshed}}
+}
+\concept{Viewshed Analysis}

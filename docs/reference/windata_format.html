@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Transform Winddata — windata_format" />
 
-<meta property="og:description" content="Helper Function, which transforms winddata
-to an acceptable format" />
+<meta property="og:description" content="Helper Function, which transforms winddata to an acceptable
+  format" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@ to an acceptable format" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -110,8 +110,8 @@ to an acceptable format" />
 
     <div class="ref-description">
     
-    <p>Helper Function, which transforms winddata
-to an acceptable format</p>
+    <p>Helper Function, which transforms winddata to an acceptable
+  format</p>
     
     </div>
 
@@ -122,8 +122,8 @@ to an acceptable format</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>df</th>
-      <td><p>The wind data with speeds, direction and optionally
-a probability column. If not assigned, it will be calculated</p></td>
+      <td><p>The wind data with speeds, direction and optionally a probability
+column. If not assigned, it will be calculated</p></td>
     </tr>
     </table>
     
@@ -131,21 +131,54 @@ a probability column. If not assigned, it will be calculated</p></td>
 
     <p>A list of windspeed and pobabilities</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Helper Functions: <code><a href='HexaTex.html'>HexaTex</a></code>,
+  <code><a href='dup_coords.html'>dup_coords</a></code>, <code><a href='getDEM.html'>getDEM</a></code>,
+  <code><a href='getISO3.html'>getISO3</a></code>, <code><a href='get_grids.html'>get_grids</a></code>,
+  <code><a href='grid_area.html'>grid_area</a></code>, <code><a href='isSpatial.html'>isSpatial</a></code>,
+  <code><a href='permutations.html'>permutations</a></code>, <code><a href='readintegerSel.html'>readintegerSel</a></code>,
+  <code><a href='readinteger.html'>readinteger</a></code>, <code><a href='splitAt.html'>splitAt</a></code>,
+  <code><a href='tess2SPdf.html'>tess2SPdf</a></code></p></div>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>wind_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>ws</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>12</span>, <span class='fl'>30</span>, <span class='fl'>45</span>),
                       <span class='kw'>wd</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>90</span>, <span class='fl'>150</span>),
                       <span class='kw'>probab</span> <span class='kw'>=</span> <span class='fl'>30</span>:<span class='fl'>32</span>)
-<span class='fu'>windata_format</span>(<span class='no'>wind_df</span>)</div><div class='output co'>#&gt; <span class='error'>Error in windata_format(wind_df): could not find function "windata_format"</span></div><div class='input'>
+<span class='fu'>windata_format</span>(<span class='no'>wind_df</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt;   ws  wd   probab
+#&gt; 1 12   0 32.25806
+#&gt; 2 30  90 33.33333
+#&gt; 3 45 150 34.40860
+#&gt; 
+#&gt; [[2]]
+#&gt; [1] 32.25806 33.33333 34.40860
+#&gt; </div><div class='input'>
 <span class='no'>wind_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>speed</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>12</span>, <span class='fl'>30</span>, <span class='fl'>45</span>),
                       <span class='kw'>direction</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>90</span>, <span class='fl'>90</span>, <span class='fl'>150</span>)
                       ,<span class='kw'>probab</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>60</span>)
 )
-<span class='fu'>windata_format</span>(<span class='no'>wind_df</span>)</div><div class='output co'>#&gt; <span class='error'>Error in windata_format(wind_df): could not find function "windata_format"</span></div><div class='input'>
+<span class='fu'>windata_format</span>(<span class='no'>wind_df</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt;   ws  wd   probab
+#&gt; 1 24  90 21.73964
+#&gt; 3 45 150 78.26036
+#&gt; 
+#&gt; [[2]]
+#&gt; [1] 21.73964 78.26036
+#&gt; </div><div class='input'>
 <span class='no'>wind_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>speed</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>12</span>, <span class='fl'>30</span>, <span class='fl'>45</span>),
                       <span class='kw'>direction</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>400</span>, <span class='fl'>90</span>, <span class='fl'>150</span>)
 )
-<span class='fu'>windata_format</span>(<span class='no'>wind_df</span>)</div><div class='output co'>#&gt; <span class='error'>Error in windata_format(wind_df): could not find function "windata_format"</span></div></pre>
+<span class='fu'>windata_format</span>(<span class='no'>wind_df</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt;   ws  wd   probab
+#&gt; 2 30  90 33.33333
+#&gt; 3 45 150 33.33333
+#&gt; 1 12  40 33.33333
+#&gt; 
+#&gt; [[2]]
+#&gt; [1] 33.33333 33.33333 33.33333
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -153,6 +186,8 @@ a probability column. If not assigned, it will be calculated</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

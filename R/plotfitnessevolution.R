@@ -1,16 +1,15 @@
 #' @title Plot the changes of min/mean/max fitness values
 #' @name plotfitnessevolution
-#' @description  Plot the evolution of fitness values and the change in the
-#' min, mean and max fitness values to the former generations.
+#' @description  Plot the evolution of fitness values and the change in the min,
+#'   mean and max fitness values to the former generations.
 #' @export
 #'
-#' @importFrom graphics par layout plot title grid abline axis points lines
+#' @param result An output matrix of the function \code{\link{windfarmGA}} or
+#'   \code{\link{genAlgo}} which has stored all relevant information.
+#' @param spar A numeric value determining how exact a spline should be drawn.
+#'   Default is 0.1
 #'
-#' @param result An output matrix of the function \code{\link{windfarmGA}}
-#' or \code{\link{genAlgo}} which has stored all relevant information.
-#' @param spar A numeric value determining how exact a spline should
-#' be drawn. Default is 0.1 
-#'
+#' @family Plotting Functions
 #' @return NULL
 #' @examples \donttest{
 #' ## Add some data examples from the package

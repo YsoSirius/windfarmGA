@@ -7,15 +7,15 @@
 windata_format(df)
 }
 \arguments{
-\item{df}{The wind data with speeds, direction and optionally
-a probability column. If not assigned, it will be calculated}
+\item{df}{The wind data with speeds, direction and optionally a probability
+column. If not assigned, it will be calculated}
 }
 \value{
 A list of windspeed and pobabilities
 }
 \description{
-Helper Function, which transforms winddata
-to an acceptable format
+Helper Function, which transforms winddata to an acceptable
+  format
 }
 \examples{
 \donttest{
@@ -36,3 +36,13 @@ wind_df <- data.frame(speed = c(12, 30, 45),
 windata_format(wind_df)
 }
 }
+\seealso{
+Other Helper Functions: \code{\link{HexaTex}},
+  \code{\link{dup_coords}}, \code{\link{getDEM}},
+  \code{\link{getISO3}}, \code{\link{get_grids}},
+  \code{\link{grid_area}}, \code{\link{isSpatial}},
+  \code{\link{permutations}}, \code{\link{readintegerSel}},
+  \code{\link{readinteger}}, \code{\link{splitAt}},
+  \code{\link{tess2SPdf}}
+}
+\concept{Helper Functions}

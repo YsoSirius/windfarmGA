@@ -24,7 +24,7 @@ getISO3(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 A character vector
 }
 \description{
-Get point values from the rworldmap package
+Get point values from the \code{\link[rworldmap]{getMap}}
 }
 \examples{
 \dontrun{
@@ -40,3 +40,13 @@ st_crs(points) <- 3035
 getISO3(pp = points, crs_pp = 3035)
 }
 }
+\seealso{
+Other Helper Functions: \code{\link{HexaTex}},
+  \code{\link{dup_coords}}, \code{\link{getDEM}},
+  \code{\link{get_grids}}, \code{\link{grid_area}},
+  \code{\link{isSpatial}}, \code{\link{permutations}},
+  \code{\link{readintegerSel}}, \code{\link{readinteger}},
+  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
+  \code{\link{windata_format}}
+}
+\concept{Helper Functions}

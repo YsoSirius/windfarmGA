@@ -1,30 +1,24 @@
-#' @title RandomSearch Randomise the output of the Genetic Algorithm.
+#' @title Randomise the output of the Genetic Algorithm
 #' @name RandomSearch
-#' @description Perform a random search in the grid cells, to
-#' further optimize the output of the wind farm layout. 
-#' 
+#' @description Perform a random search in the grid cells, to further optimize
+#'   the output of the wind farm layout.
+#'
 #' @export
 #'
-#' @importFrom sp proj4string SpatialPoints CRS spTransform coordinates
-#' SpatialPolygons Polygon Polygons
-#' @importFrom raster plot
-#' 
-#'
-#' @param result The resulting matrix of the function 'genAlgo' or
-#' 'windfarmGA'.
+#' @param result The resulting matrix of the function 'genAlgo' or 'windfarmGA'.
 #' @param Polygon1 The Polygon for the wind farm area.
-#' @param best Which best indidvuals should be the
-#' starting conditions fo a random search. The default is 1.
+#' @param best Which best indidvuals should be the starting conditions fo a
+#'   random search. The default is 1.
 #' @param n The number of random searches to be perfomed. Default is 20.
 #' @param Plot Should the random search be plotted? Default is FALSE
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
-#' collision checks. Default is 2.2
-#' @param GridMethod Should the polygon be divided into rectangular or
-#' hexagonal grid cells? The default is rectangular grid cells and hexagonal
-#' grid cells are computed when assigning "h" or "hexagon" to this input
-#' variable. The randomly generated points might be placed outside
-#' their hexagons.
+#'   collision checks. Default is 2.2
+#' @param GridMethod Should the polygon be divided into rectangular or hexagonal
+#'   grid cells? The default is rectangular grid cells and hexagonal grid cells
+#'   are computed when assigning "h" or "hexagon" to this input variable. The
+#'   randomly generated points might be placed outside their hexagons.
 #'
+#' @family Randomization
 #' @return Returns a list.
 #'
 #' @examples \donttest{
@@ -100,7 +94,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist =
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid <- GridFilter(shape = Polygon1, resol = resolu, prop = propu, 
+    Grid <- grid_area(shape = Polygon1, resol = resolu, prop = propu, 
                        plotGrid = FALSE)
   } else {
     # Calculate a Grid with hexagonal grid cells
@@ -196,14 +190,14 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist =
       #####################
 
 
-      ## Arrange random points to input for calculateEn
+      ## Arrange random points to input for calculate_energy
       coordsj <- cbind(coordsj,
                        "ID" = 1,
                        "bin" = 1)
       coordsj <- coordsj[, c("ID", "X", "Y", "bin")]
 
       # Calculate energy and save in list with length n ################
-      resCalcen <- calculateEn(sel = coordsj,
+      resCalcen <- calculate_energy(sel = coordsj,
                                referenceHeight = ref_height,
                                RotorHeight = rotor_height,
                                SurfaceRoughness = 0.3,
@@ -214,7 +208,7 @@ RandomSearch <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist =
                                srtm_crop = NULL, cclRaster = NULL, 
                                weibull = FALSE)
 
-      ## TODO - optimize all next lines (calculateEn has already beeter method)
+      ## TODO - optimize all next lines (calculate_energy has already beeter method)
       ## Do not need lapply if winddirection == 1
       ee  <- lapply(resCalcen, function(x){
         subset.matrix(x, subset = !duplicated(x[,"Punkt_id"]))

@@ -1,28 +1,29 @@
 #' @title Selection Method
-#' @name selection1
-#' @description  Select a certain amount of individuals and recombine them
-#' to parental teams. Add the mean fitness value of both parents to
-#' the parental team. Depending on the selected \code{selstate}, the
-#' algorithm will either take always 50 percent or a variable percentage
-#' of the current population. The variable percentage depends on the
-#' evolution of the populations fitness values.
+#' @name selection
+#' @description  Select a certain amount of individuals and recombine them to
+#'   parental teams. Add the mean fitness value of both parents to the parental
+#'   team. Depending on the selected \code{selstate}, the algorithm will either
+#'   take always 50 percent or a variable percentage of the current population.
+#'   The variable percentage depends on the evolution of the populations fitness
+#'   values.
 #' @export
 #'
-#' @param fit A list of all fitness-evaluated individuals 
-#' @param Grid Is the indexed grid output from \code{\link{GridFilter}}
+#' @param fit A list of all fitness-evaluated individuals
+#' @param Grid Is the indexed grid output from \code{\link{grid_area}}
 #' @param teil A numeric value that determines the selection percentage
 #' @param elitism Boolean value which indicates whether elitism should be
-#' included or not. 
-#' @param nelit If \code{elitism} is TRUE, then this input variable
-#' determines the amount of individuals in the elite group. 
-#' @param selstate Determines which selection method is used, "FIX" selects
-#' a constant percentage and "VAR" selects a variable percentage, depending
-#' on the development of the fitness values. 
-#' @param verbose If TRUE, will print out further information. 
+#'   included or not.
+#' @param nelit If \code{elitism} is TRUE, then this input variable determines
+#'   the amount of individuals in the elite group.
+#' @param selstate Determines which selection method is used, "FIX" selects a
+#'   constant percentage and "VAR" selects a variable percentage, depending on
+#'   the development of the fitness values.
+#' @param verbose If TRUE, will print out further information.
 #'
-#' @return Returns list with 2 elements. Element 1 is the binary encoded
-#' matrix which shows all selected individuals. Element 2 represent the mean
-#' fitness values of each parental team.
+#' @family Genetic Algorithm Functions
+#' @return Returns list with 2 elements. Element 1 is the binary encoded matrix
+#'   which shows all selected individuals. Element 2 represent the mean fitness
+#'   values of each parental team.
 #' @examples \dontrun{
 #' ## Create a random rectangular shapefile
 #' library(sp)
@@ -35,11 +36,11 @@
 #' plot(Polygon1,axes=TRUE)
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-#' Grid1 <- GridFilter(shape = Polygon1,resol = 200,prop = 1);
+#' Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
-#' startsel <- StartGA(Grid,10,20);
+#' startsel <- init_population(Grid,10,20);
 #' wind <- as.data.frame(cbind(ws=12,wd=0))
 #' wind <- list(wind, probab = 100)
 #' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
@@ -51,12 +52,12 @@
 #' ## SELECTION
 #' ## print the amount of Individuals selected. Check if the amount 
 #' ## of Turbines is as requested.
-#' selec6best <- selection1(fit, Grid, 2, T, 6, "VAR", NULL)
-#' selec6best <- selection1(fit, Grid, 2, T, 6, "FIX", NULL)
-#' selec6best <- selection1(fit, Grid, 4, F, 6, "FIX", NULL)
+#' selec6best <- selection(fit, Grid, 2, T, 6, "VAR", NULL)
+#' selec6best <- selection(fit, Grid, 2, T, 6, "FIX", NULL)
+#' selec6best <- selection(fit, Grid, 4, F, 6, "FIX", NULL)
 #' str(selec6best)
 #' }
-selection1         <- function(fit, Grid, teil, elitism, nelit, 
+selection         <- function(fit, Grid, teil, elitism, nelit, 
                                selstate, verbose) {
   if (missing(verbose)) {
     verbose = FALSE

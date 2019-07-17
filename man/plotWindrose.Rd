@@ -45,3 +45,13 @@ windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
    dir = data.in$wd)
 
 }
+\seealso{
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{RandomSearchTurb}}, \code{\link{heatmapGA}},
+  \code{\link{interpol_view}}, \code{\link{plotCloud}},
+  \code{\link{plotEvolution}}, \code{\link{plotResult}},
+  \code{\link{plot_viewshed}}, \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}},
+  \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}

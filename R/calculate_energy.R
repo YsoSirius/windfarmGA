@@ -1,51 +1,43 @@
 #' @title Calculate Energy Outputs of Individuals
-#' @name calculateEn
+#' @name calculate_energy
 #' @description  Calculate the energy output and efficiency rates of an
-#'    individual in the current population under all given wind directions
-#'    and speeds. If the terrain effect model is activated, the main
-#'    calculations to model those effects will be done in this function.
+#'   individual in the current population under all given wind directions and
+#'   speeds. If the terrain effect model is activated, the main calculations to
+#'   model those effects will be done in this function.
 #'
 #' @export
 #'
-#' @importFrom raster extract calc cellStats terrain resample overlay plot
-#' crop extent mask projectRaster cellFromXY
-#' @importFrom sp SpatialPoints coordinates spTransform proj4string bbox
-#' @importFrom calibrate textxy
-#' @importFrom maptools elide
-#' @importFrom graphics mtext plot par points
-#' @importFrom grDevices topo.colors
-#'
 #' @param sel A data.frame of an individual of the current population
-#' (data.frame)
-#' @param referenceHeight The height at which the incoming wind speeds
-#' were measured (numeric)
+#'   (data.frame)
+#' @param referenceHeight The height at which the incoming wind speeds were
+#'   measured (numeric)
 #' @param RotorHeight The desired height of the turbines
-#' @param SurfaceRoughness A surface roughness length of the
-#' considered area in m. If the terrain effect model is activated, a
-#' surface roughness will be calculated for every grid cell with the
-#' elevation and land cover information 
-#' @param wnkl Indicates the angle at which no wake influences are
-#' considered (numeric)
+#' @param SurfaceRoughness A surface roughness length of the considered area in
+#'   m. If the terrain effect model is activated, a surface roughness will be
+#'   calculated for every grid cell with the elevation and land cover
+#'   information
+#' @param wnkl Indicates the angle at which no wake influences are considered
+#'   (numeric)
 #' @param distanz Indicates the distance after which the wake effects are
-#' considered to be eliminated
-#' @param polygon1 The considered area as shapefile 
-#' @param resol The resolution of the grid in meter 
+#'   considered to be eliminated
+#' @param polygon1 The considered area as shapefile
+#' @param resol The resolution of the grid in meter
 #' @param RotorR The desired rotor radius in meter
 #' @param dirSpeed The wind speed and direction data.frame
-#' @param topograp Logical value that indicates whether the
-#' terrain effect model is activated (TRUE) or deactivated (FALSE)
+#' @param topograp Logical value that indicates whether the terrain effect model
+#'   is activated (TRUE) or deactivated (FALSE)
 #' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
-#' and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
+#'   and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
 #' @param cclRaster A Corine Land Cover raster that has to be downloaded
-#' previously. See also the details at \code{\link{windfarmGA}}
-#' The raster will only be used when the terrain effect model is activated.
-#' (raster)
+#'   previously. See also the details at \code{\link{windfarmGA}} The raster
+#'   will only be used when the terrain effect model is activated. (raster)
 #' @param weibull A raster representing the estimated wind speeds
 #'
-#' @return Returns a list of an individual of the current generation
-#' with resulting wake effects, energy outputs, efficiency rates for every
-#' wind direction. The length of the list will be the amount of incoming
-#' wind directions.
+#' @family Wind Energy Calculation Functions
+#' @return Returns a list of an individual of the current generation with
+#'   resulting wake effects, energy outputs, efficiency rates for every wind
+#'   direction. The length of the list will be the amount of incoming wind
+#'   directions.
 #'
 #' @examples \dontrun{
 #' ## Create a random shapefile
@@ -67,7 +59,7 @@
 #'
 #' ## Assign the rotor radius and a factor of the radius for grid spacing.
 #' Rotor= 50; fcrR= 3
-#' resGrid <- GridFilter(shape = Polygon1, resol = Rotor*fcrR, prop=1,
+#' resGrid <- grid_area(shape = Polygon1, resol = Rotor*fcrR, prop=1,
 #'                       plotGrid = TRUE)
 #' ## Assign the indexed data frame to new variable. Element 2 of the list
 #' ## is the grid, saved as SpatialPolygon.
@@ -75,14 +67,14 @@
 #'
 #' ## Create an initial population with the indexed Grid, 15 turbines and
 #' ## 100 individuals.
-#' resStartGA <- StartGA(Grid = resGrid1, n = 15, nStart = 100)
+#' initpop <- init_population(Grid = resGrid1, n = 15, nStart = 100)
 #'
 #' ## Calculate the expected energy output of the first individual of the
 #' ## population.
 #' par(mfrow = c(1,2))
-#' plot(Polygon1); points(resStartGA[[1]][,'X'],resStartGA[[1]][,'Y'], pch=20,cex=2)
+#' plot(Polygon1); points(initpop[[1]][,'X'],initpop[[1]][,'Y'], pch=20,cex=2)
 #' plot(resGrid[[2]], add = TRUE)
-#' resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+#' resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
 #'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
 #'                    distanz = 100000, resol = 200,dirSpeed = data.in,
 #'                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
@@ -102,7 +94,7 @@
 #'
 #' ## Calculate the energy outputs for the first individual with more than one
 #' ## wind direction.
-#' resCalcEn <- calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+#' resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
 #'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
 #'                    distanz = 100000, resol = 200,dirSpeed = data.in10,
 #'                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
@@ -111,7 +103,7 @@
 #' str(resCalcEn)
 #' }
 #'
-calculateEn       <- function(sel, referenceHeight, RotorHeight,
+calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                               SurfaceRoughness, wnkl, distanz,
                               polygon1, resol, RotorR, dirSpeed,
                               srtm_crop, topograp, cclRaster, weibull) {
@@ -164,7 +156,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     }
 
     ## Get Air Density and Pressure from Height Values
-    air_dt <- BaroHoehe(matrix(turb_elev), turb_elev)
+    air_dt <- barometric_height(matrix(turb_elev), turb_elev)
     air_rh <- as.numeric(air_dt[, "rh"])
     ## Plot the normal and corrected Air Density Values
     if (plotit){
@@ -317,7 +309,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
 
     ## Get the influecing points given with incoming wind direction angle
     ## and reduce then to data frame
-    tmp <- InfluPoints(t = xy_individual, wnkl = wnkl, dist = distanz,
+    tmp <- turbine_influences(t = xy_individual, wnkl = wnkl, dist = distanz,
                        polYgon = polygon1, dirct = angle)
     df_all <- do.call("rbind", tmp)
 
@@ -468,7 +460,7 @@ calculateEn       <- function(sel, referenceHeight, RotorHeight,
     efficiency <- (energy_reduced * 100) / energy_full
 
     if (is.na(energy_full) | is.na(energy_reduced)) {
-      stop("Some energy values are NA in calculateEn. Fix Bug")
+      stop("Some energy values are NA in calculate_energy Fix Bug")
     }
 
 

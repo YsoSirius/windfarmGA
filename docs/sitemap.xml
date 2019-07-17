@@ -7,10 +7,19 @@
     <loc>https://YsoSirius.github.io/windfarmGA/reference/BaroHoehe.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/barometric_height.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/calculateEn.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/calculate_energy.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/cansee.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/crossover.html</loc>
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/crossover1.html</loc>
@@ -34,7 +43,16 @@
     <loc>https://YsoSirius.github.io/windfarmGA/reference/getRects.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/get_dist_angles.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/get_grids.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/GridFilter.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/grid_area.html</loc>
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/heatmapGA.html</loc>
@@ -44,6 +62,9 @@
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/InfluPoints.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/init_population.html</loc>
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/interpol_view.html</loc>
@@ -106,6 +127,9 @@
     <loc>https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/selection.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/selection1.html</loc>
   </url>
   <url>
@@ -121,6 +145,9 @@
     <loc>https://YsoSirius.github.io/windfarmGA/reference/trimton.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/VekWinkelCalc.html</loc>
   </url>
   <url>
@@ -134,5 +161,8 @@
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/windfarmGA.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/windfarmGA_.html</loc>
   </url>
 </urlset>

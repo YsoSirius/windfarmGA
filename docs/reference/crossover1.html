@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Crossover Method — crossover1 • windfarmGA</title>
+<title>Deprecated use <code>crossover1</code> instead. — crossover1 • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,9 @@
 
 
 
-<meta property="og:title" content="Crossover Method — crossover1" />
+<meta property="og:title" content="Deprecated use <code>crossover1</code> instead. — crossover1" />
 
-<meta property="og:description" content="The crossover method of the genetic algorithm, which takes
-the selected individuals after the selection1 function and
-produces new offsprings through permutation." />
+<meta property="og:description" content="crossover1 is replaced by crossover." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +63,7 @@ produces new offsprings through permutation." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -104,16 +102,14 @@ produces new offsprings through permutation." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Crossover Method</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/crossover1.R'><code>R/crossover1.R</code></a></small>
+    <h1>Deprecated use <code>crossover1</code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>crossover1.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The crossover method of the genetic algorithm, which takes
-the selected individuals after the <code><a href='selection1.html'>selection1</a></code> function and
-produces new offsprings through permutation.</p>
+    <p>crossover1 is replaced by <code><a href='crossover.html'>crossover</a></code>.</p>
     
     </div>
 
@@ -124,7 +120,7 @@ produces new offsprings through permutation.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>se6</th>
-      <td><p>The selected individuals. The output of <code><a href='selection1.html'>selection1</a></code>
+      <td><p>The selected individuals. The output of <code><a href='selection.html'>selection</a></code>
 (list)</p></td>
     </tr>
     <tr>
@@ -133,8 +129,8 @@ produces new offsprings through permutation.</p>
     </tr>
     <tr>
       <th>uplimit</th>
-      <td><p>The upper limit of allowed permutations. The current
-algorithm has an upper bound of 300 permutations. (numeric)</p></td>
+      <td><p>The upper limit of allowed permutations. The current algorithm
+has an upper bound of 300 permutations. (numeric)</p></td>
     </tr>
     <tr>
       <th>crossPart</th>
@@ -150,174 +146,13 @@ algorithm has an upper bound of 300 permutations. (numeric)</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a binary coded matrix of all permutations and all grid
-cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
-(matrix)</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Create two random parents with an index and random binary values</span>
-<span class='no'>Parents</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(
-  <span class='kw'>ID</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>20</span>,
-  <span class='kw'>bin</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>),<span class='fl'>20</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>70</span>,<span class='fl'>30</span>)),
-  <span class='kw'>bin.1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>),<span class='fl'>20</span>, <span class='kw'>replace</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>30</span>,<span class='fl'>70</span>)))
-<span class='no'>Parents</span></div><div class='output co'>#&gt;    ID bin bin.1
-#&gt; 1   1   0     1
-#&gt; 2   2   1     1
-#&gt; 3   3   0     0
-#&gt; 4   4   0     1
-#&gt; 5   5   0     0
-#&gt; 6   6   0     0
-#&gt; 7   7   0     1
-#&gt; 8   8   0     1
-#&gt; 9   9   1     1
-#&gt; 10 10   1     1
-#&gt; 11 11   1     1
-#&gt; 12 12   0     1
-#&gt; 13 13   0     1
-#&gt; 14 14   0     1
-#&gt; 15 15   0     1
-#&gt; 16 16   0     1
-#&gt; 17 17   0     0
-#&gt; 18 18   0     0
-#&gt; 19 19   0     1
-#&gt; 20 20   1     1</div><div class='input'>
-<span class='co'>## Create random Fitness values for both individuals</span>
-<span class='no'>FitParents</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Fitness</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>Fitness.1</span> <span class='kw'>=</span> <span class='fl'>20</span>)
-<span class='no'>FitParents</span></div><div class='output co'>#&gt;   ID Fitness Fitness.1
-#&gt; 1  1    1000        20</div><div class='input'>
-<span class='co'>## Assign both values to a list</span>
-<span class='no'>CrossSampl</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Parents</span>,<span class='no'>FitParents</span>);
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>CrossSampl</span>)</div><div class='output co'>#&gt; List of 2
-#&gt;  $ :'data.frame':	20 obs. of  3 variables:
-#&gt;   ..$ ID   : int [1:20] 1 2 3 4 5 6 7 8 9 10 ...
-#&gt;   ..$ bin  : num [1:20] 0 1 0 0 0 0 0 0 1 1 ...
-#&gt;   ..$ bin.1: num [1:20] 1 1 0 1 0 0 1 1 1 1 ...
-#&gt;  $ :'data.frame':	1 obs. of  3 variables:
-#&gt;   ..$ ID       : num 1
-#&gt;   ..$ Fitness  : num 1000
-#&gt;   ..$ Fitness.1: num 20</div><div class='input'>
-<span class='co'>## Cross their data at equal locations with 2 crossover parts</span>
-<span class='fu'>crossover1</span>(<span class='no'>CrossSampl</span>, <span class='kw'>u</span> <span class='kw'>=</span> <span class='fl'>1.1</span>, <span class='kw'>uplimit</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>crossPart</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4]
-#&gt;  [1,]    1    1    0    0
-#&gt;  [2,]    1    1    1    1
-#&gt;  [3,]    0    0    0    0
-#&gt;  [4,]    1    1    0    0
-#&gt;  [5,]    0    0    0    0
-#&gt;  [6,]    0    0    0    0
-#&gt;  [7,]    1    1    0    0
-#&gt;  [8,]    1    1    0    0
-#&gt;  [9,]    1    1    1    1
-#&gt; [10,]    1    1    1    1
-#&gt; [11,]    1    1    1    1
-#&gt; [12,]    1    0    1    0
-#&gt; [13,]    1    0    1    0
-#&gt; [14,]    1    0    1    0
-#&gt; [15,]    1    0    1    0
-#&gt; [16,]    1    0    1    0
-#&gt; [17,]    0    0    0    0
-#&gt; [18,]    0    0    0    0
-#&gt; [19,]    1    0    1    0
-#&gt; [20,]    1    1    1    1</div><div class='input'>
-<span class='co'>## with 3 crossover parts and equal locations</span>
-<span class='fu'>crossover1</span>(<span class='no'>CrossSampl</span>, <span class='kw'>u</span> <span class='kw'>=</span> <span class='fl'>2.5</span>, <span class='kw'>uplimit</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>crossPart</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
-#&gt;  [1,]    1    1    1    1    0    0    0    0
-#&gt;  [2,]    1    1    1    1    1    1    1    1
-#&gt;  [3,]    0    0    0    0    0    0    0    0
-#&gt;  [4,]    1    1    1    1    0    0    0    0
-#&gt;  [5,]    0    0    0    0    0    0    0    0
-#&gt;  [6,]    0    0    0    0    0    0    0    0
-#&gt;  [7,]    1    1    1    1    0    0    0    0
-#&gt;  [8,]    1    1    0    0    1    1    0    0
-#&gt;  [9,]    1    1    1    1    1    1    1    1
-#&gt; [10,]    1    1    1    1    1    1    1    1
-#&gt; [11,]    1    1    1    1    1    1    1    1
-#&gt; [12,]    1    1    0    0    1    1    0    0
-#&gt; [13,]    1    1    0    0    1    1    0    0
-#&gt; [14,]    1    1    0    0    1    1    0    0
-#&gt; [15,]    1    0    1    0    1    0    1    0
-#&gt; [16,]    1    0    1    0    1    0    1    0
-#&gt; [17,]    0    0    0    0    0    0    0    0
-#&gt; [18,]    0    0    0    0    0    0    0    0
-#&gt; [19,]    1    0    1    0    1    0    1    0
-#&gt; [20,]    1    1    1    1    1    1    1    1</div><div class='input'>
-<span class='co'>## or with random locations and 5 crossover parts</span>
-<span class='fu'>crossover1</span>(<span class='no'>CrossSampl</span>, <span class='kw'>u</span> <span class='kw'>=</span> <span class='fl'>4.9</span>, <span class='kw'>uplimit</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>crossPart</span> <span class='kw'>=</span> <span class='st'>"RAN"</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
-#&gt;  [1,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-#&gt;  [2,]    1    1    1    1    1    1    1    1    1     1     1     1     1
-#&gt;  [3,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-#&gt;  [4,]    0    0    0    0    0    0    0    0    1     1     1     1     1
-#&gt;  [5,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-#&gt;  [6,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-#&gt;  [7,]    0    0    0    0    1    1    1    1    0     0     0     0     1
-#&gt;  [8,]    0    0    1    1    0    0    1    1    0     0     1     1     0
-#&gt;  [9,]    1    1    1    1    1    1    1    1    1     1     1     1     1
-#&gt; [10,]    1    1    1    1    1    1    1    1    1     1     1     1     1
-#&gt; [11,]    1    1    1    1    1    1    1    1    1     1     1     1     1
-#&gt; [12,]    0    0    1    1    0    0    1    1    0     0     1     1     0
-#&gt; [13,]    0    0    1    1    0    0    1    1    0     0     1     1     0
-#&gt; [14,]    0    0    1    1    0    0    1    1    0     0     1     1     0
-#&gt; [15,]    0    1    0    1    0    1    0    1    0     1     0     1     0
-#&gt; [16,]    0    1    0    1    0    1    0    1    0     1     0     1     0
-#&gt; [17,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-#&gt; [18,]    0    0    0    0    0    0    0    0    0     0     0     0     0
-#&gt; [19,]    0    1    0    1    0    1    0    1    0     1     0     1     0
-#&gt; [20,]    1    1    1    1    1    1    1    1    1     1     1     1     1
-#&gt;       [,14] [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25]
-#&gt;  [1,]     0     0     0     1     1     1     1     1     1     1     1     1
-#&gt;  [2,]     1     1     1     1     1     1     1     1     1     1     1     1
-#&gt;  [3,]     0     0     0     0     0     0     0     0     0     0     0     0
-#&gt;  [4,]     1     1     1     0     0     0     0     0     0     0     0     1
-#&gt;  [5,]     0     0     0     0     0     0     0     0     0     0     0     0
-#&gt;  [6,]     0     0     0     0     0     0     0     0     0     0     0     0
-#&gt;  [7,]     1     1     1     0     0     0     0     1     1     1     1     0
-#&gt;  [8,]     0     1     1     0     0     1     1     0     0     1     1     0
-#&gt;  [9,]     1     1     1     1     1     1     1     1     1     1     1     1
-#&gt; [10,]     1     1     1     1     1     1     1     1     1     1     1     1
-#&gt; [11,]     1     1     1     1     1     1     1     1     1     1     1     1
-#&gt; [12,]     0     1     1     0     0     1     1     0     0     1     1     0
-#&gt; [13,]     0     1     1     0     0     1     1     0     0     1     1     0
-#&gt; [14,]     0     1     1     0     0     1     1     0     0     1     1     0
-#&gt; [15,]     1     0     1     0     1     0     1     0     1     0     1     0
-#&gt; [16,]     1     0     1     0     1     0     1     0     1     0     1     0
-#&gt; [17,]     0     0     0     0     0     0     0     0     0     0     0     0
-#&gt; [18,]     0     0     0     0     0     0     0     0     0     0     0     0
-#&gt; [19,]     1     0     1     0     1     0     1     0     1     0     1     0
-#&gt; [20,]     1     1     1     1     1     1     1     1     1     1     1     1
-#&gt;       [,26] [,27] [,28] [,29] [,30] [,31] [,32]
-#&gt;  [1,]     1     1     1     1     1     1     1
-#&gt;  [2,]     1     1     1     1     1     1     1
-#&gt;  [3,]     0     0     0     0     0     0     0
-#&gt;  [4,]     1     1     1     1     1     1     1
-#&gt;  [5,]     0     0     0     0     0     0     0
-#&gt;  [6,]     0     0     0     0     0     0     0
-#&gt;  [7,]     0     0     0     1     1     1     1
-#&gt;  [8,]     0     1     1     0     0     1     1
-#&gt;  [9,]     1     1     1     1     1     1     1
-#&gt; [10,]     1     1     1     1     1     1     1
-#&gt; [11,]     1     1     1     1     1     1     1
-#&gt; [12,]     0     1     1     0     0     1     1
-#&gt; [13,]     0     1     1     0     0     1     1
-#&gt; [14,]     0     1     1     0     0     1     1
-#&gt; [15,]     1     0     1     0     1     0     1
-#&gt; [16,]     1     0     1     0     1     0     1
-#&gt; [17,]     0     0     0     0     0     0     0
-#&gt; [18,]     0     0     0     0     0     0     0
-#&gt; [19,]     1     0     1     0     1     0     1
-#&gt; [20,]     1     1     1     1     1     1     1</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

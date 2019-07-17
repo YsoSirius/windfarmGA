@@ -1,20 +1,18 @@
-#' @title RandomSearchPlot Plot the result of a randomized ouput.
+#' @title Plot the result of a randomized ouput.
 #' @name RandomSearchPlot
-#' @description Plotting method for the functions \code{\link{RandomSearchTurb}}
-#' and \code{\link{RandomSearch}}.
-#' 
+#' @description Plotting method for the results of \code{\link{RandomSearchTurb}}
+#'   and \code{\link{RandomSearch}}.
+#'
 #' @export
 #'
-#' @importFrom raster plot 
-#'
-#' @param resultRS The result of the random functions \code{\link{RandomSearchTurb}}
-#' and \code{\link{RandomSearch}}.
+#' @param resultRS The result of the random functions
+#'   \code{\link{RandomSearchTurb}} and \code{\link{RandomSearch}}.
 #' @param result The result of the function \code{\link{genAlgo}} or
-#' \code{\link{windfarmGA}}.
+#'   \code{\link{windfarmGA}}.
 #' @param Polygon1 The Polygon for the wind farm area.
 #' @param best How many best candidates to plot.
-#' 
-#' 
+#'
+#' @family Randomization
 #' @return NULL
 #' 
 #' @examples \donttest{
@@ -56,7 +54,7 @@ RandomSearchPlot <- function(resultRS, result, Polygon1, best) {
   PropG <- as.numeric(result[,"inputData"][[1]][,1]["Percentage of Polygon"])
 
   Polygon1 <- isSpatial(Polygon1)
-  Grid <- GridFilter(Polygon1, resol = resolR, prop = PropG)[[2]]
+  Grid <- grid_area(Polygon1, resol = resolR, prop = PropG)[[2]]
   rbPal1 <- grDevices::colorRampPalette(c("green","red"))
   col2res <- "lightblue"
 

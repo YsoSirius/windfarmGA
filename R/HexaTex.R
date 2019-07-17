@@ -2,18 +2,15 @@
 #'
 #' @name tess2SPdf
 #'
-#' @description  Returns a Spatial Polygons object from
-#' a Tesselation object.
+#' @description  Returns a Spatial Polygons object from a Tesselation object.
 #'
 #' @export
 #'
-#' @importFrom spatstat is.tess
-#' @importFrom methods as
-#'
 #' @param x The Tesselation object (Tessellation)
 #'
+#' @family Helper Functions
 #' @return Returns a SpatialPolygons. (SpatialPolygons)
-#'
+#'   
 #' @examples
 #' library(spatstat)
 #' library(maptools)
@@ -47,25 +44,20 @@ tess2SPdf <- function(x) {
 #'
 #' @name HexaTex
 #'
-#' @description  The function takes a Polygon and a sizing argument and
-#' creates a list with an indexed matrix with coordinates
-#' and a SpatialPolygons object, that consists of hexagonal grids
+#' @description  The function takes a Polygon and a sizing argument and creates
+#'   a list with an indexed matrix with coordinates and a SpatialPolygons
+#'   object, that consists of hexagonal grids
 #'
 #' @export
 #'
-#' @importFrom spatstat hextess hexgrid
-#' @importFrom maptools as.owin.SpatialPolygons
-#' @importFrom sp proj4string
-#' @importFrom graphics points
-#' @importFrom raster plot area
-#'
-#' @param Polygon1 The SpatialPolygons object 
-#' @param size The side length of an hexagon 
+#' @param Polygon1 The SpatialPolygons object
+#' @param size The side length of an hexagon
 #' @param plotTrue Should the object be plotted
 #'
-#' @return Returns a list with an indexed matrix of the point coordinates
-#' and a SpatialPolygons object of the hexagons 
-#'
+#' @family Helper Functions
+#' @return Returns a list with an indexed matrix of the point coordinates and a
+#'   SpatialPolygons object of the hexagons
+#'   
 #' @examples
 #' library(spatstat)
 #' library(maptools)

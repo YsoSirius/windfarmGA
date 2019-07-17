@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>RandomSearchPlot Plot the result of a randomized ouput. — RandomSearchPlot • windfarmGA</title>
+<title>Plot the result of a randomized ouput. — RandomSearchPlot • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="RandomSearchPlot Plot the result of a randomized ouput. — RandomSearchPlot" />
+<meta property="og:title" content="Plot the result of a randomized ouput. — RandomSearchPlot" />
 
-<meta property="og:description" content="Plotting method for the functions RandomSearchTurb
-and RandomSearch." />
+<meta property="og:description" content="Plotting method for the results of RandomSearchTurb
+  and RandomSearch." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@ and RandomSearch." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -103,15 +103,15 @@ and RandomSearch." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>RandomSearchPlot Plot the result of a randomized ouput.</h1>
+    <h1>Plot the result of a randomized ouput.</h1>
     <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/RandomSearchPlot.R'><code>R/RandomSearchPlot.R</code></a></small>
     <div class="hidden name"><code>RandomSearchPlot.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plotting method for the functions <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>
-and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p>
+    <p>Plotting method for the results of <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>
+  and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p>
     
     </div>
 
@@ -122,8 +122,8 @@ and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>resultRS</th>
-      <td><p>The result of the random functions <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>
-and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p></td>
+      <td><p>The result of the random functions
+<code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code> and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p></td>
     </tr>
     <tr>
       <th>result</th>
@@ -140,18 +140,25 @@ and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p></td>
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Randomization: <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>,
+  <code><a href='RandomSearch.html'>RandomSearch</a></code></p></div>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/polygon.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
 
-<span class='no'>Res</span> <span class='kw'>=</span> <span class='fu'>RandomSearchPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cbind(resultRS): argument "resultRS" is missing, with no default</span></div><div class='input'><span class='fu'>RandomSearchPlot</span>(<span class='kw'>resultRS</span> <span class='kw'>=</span> <span class='no'>Res</span>, <span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>best</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cbind(resultRS): object 'Res' not found</span></div></pre>
+<span class='no'>Res</span> <span class='kw'>=</span> <span class='fu'>RandomSearchPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cbind(resultRS): Argument "resultRS" fehlt (ohne Standardwert)</span></div><div class='input'><span class='fu'>RandomSearchPlot</span>(<span class='kw'>resultRS</span> <span class='kw'>=</span> <span class='no'>Res</span>, <span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>best</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cbind(resultRS): Objekt 'Res' nicht gefunden</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
+      
+      <li><a href="#see-also">See also</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

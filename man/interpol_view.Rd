@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{interpol_view}
 \alias{interpol_view}
-\title{interpol_view}
+\title{Plot an interpolated viewshed}
 \usage{
 interpol_view(res, plot = TRUE, breakseq, breakform = NULL,
   plotDEM = FALSE, fun = mean, ...)
@@ -12,11 +12,11 @@ interpol_view(res, plot = TRUE, breakseq, breakform = NULL,
 
 \item{plot}{Should the result be plotted? Default is TRUE}
 
-\item{breakseq}{The breaks for value plotting. By default, 5 equal 
-intervals are generated.}
+\item{breakseq}{The breaks for value plotting. By default, 5 equal intervals
+are generated.}
 
-\item{breakform}{If 'breakseq' is missing, a sampling function to 
-calculate the breaks, like \code{\link{quantile}}, fivenum, etc.}
+\item{breakform}{If 'breakseq' is missing, a sampling function to calculate
+the breaks, like \code{\link{quantile}}, fivenum, etc.}
 
 \item{plotDEM}{Plot the DEM? Default is FALSE}
 
@@ -62,3 +62,18 @@ interpol_view(res, plotDEM = F, breakseq = seq(0,10,1), colNA="black")
 
 }
 }
+\seealso{
+Other Viewshed Analysis: \code{\link{cansee}},
+  \code{\link{plot_viewshed}}, \code{\link{rasterprofile}},
+  \code{\link{viewTo}}, \code{\link{viewshed}}
+
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{RandomSearchTurb}}, \code{\link{heatmapGA}},
+  \code{\link{plotCloud}}, \code{\link{plotEvolution}},
+  \code{\link{plotResult}}, \code{\link{plotWindrose}},
+  \code{\link{plot_viewshed}}, \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}},
+  \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}
+\concept{Viewshed Analysis}

@@ -1,5 +1,4 @@
 ^CRAN-RELEASE$
-.travis.yml
 ^packrat/
 ^newstuff/
 ^\.Rprofile$
@@ -8,6 +7,10 @@
 ^\.Rproj\.user$
 ^srtm*.*tif
 ^.gitignore
+^.*\.yml$
+^.*\.yaml$
+^.*\.ini$
+^.*\.txt$
 ^srtm*
 ^srtm*.*hdr
 ^srtm*.*tfw
@@ -19,3 +22,6 @@ AUT_msk_alt.gri
 AUT_msk_alt.grd
 AUT_msk_alt.vrt
 g100_06.tif
+^docs$
+^pkgdown$
+^cran-comments\.md$

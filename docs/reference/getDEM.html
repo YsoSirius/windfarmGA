@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>getDEM — getDEM • windfarmGA</title>
+<title>Get DEM raster — getDEM • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="getDEM — getDEM" />
+<meta property="og:title" content="Get DEM raster — getDEM" />
 
 <meta property="og:description" content="Get a DEM raster for a country based on ISO3 code" />
 <meta name="twitter:card" content="summary" />
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>getDEM</h1>
+    <h1>Get DEM raster</h1>
     <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/visibility.R'><code>R/visibility.R</code></a></small>
     <div class="hidden name"><code>getDEM.Rd</code></div>
     </div>
@@ -128,15 +128,24 @@
     </tr>
     <tr>
       <th>clip</th>
-      <td><p>boolean, indicating if polygon should be cropped.
-Default is TRUE</p></td>
+      <td><p>boolean, indicating if polygon should be cropped. Default is TRUE</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL
-if no polygon is given</p>
+    <p>A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL if
+  no polygon is given</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Helper Functions: <code><a href='HexaTex.html'>HexaTex</a></code>,
+  <code><a href='dup_coords.html'>dup_coords</a></code>, <code><a href='getISO3.html'>getISO3</a></code>,
+  <code><a href='get_grids.html'>get_grids</a></code>, <code><a href='grid_area.html'>grid_area</a></code>,
+  <code><a href='isSpatial.html'>isSpatial</a></code>, <code><a href='permutations.html'>permutations</a></code>,
+  <code><a href='readintegerSel.html'>readintegerSel</a></code>, <code><a href='readinteger.html'>readinteger</a></code>,
+  <code><a href='splitAt.html'>splitAt</a></code>, <code><a href='tess2SPdf.html'>tess2SPdf</a></code>,
+  <code><a href='windata_format.html'>windata_format</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -161,6 +170,8 @@ if no polygon is given</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

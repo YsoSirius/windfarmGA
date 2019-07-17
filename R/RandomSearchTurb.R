@@ -1,29 +1,24 @@
-#' @title RandomSearchTurb Randomise the location of a single turbine.
+#' @title Randomise the location of a single turbine
 #' @name RandomSearchTurb
-#' @description Perform a random search for a single turbine, to
-#' further optimize the output of the wind farm layout.
-#' 
+#' @description Perform a random search for a single turbine, to further
+#'   optimize the output of the wind farm layout.
+#'
 #' @export
 #'
-#' @importFrom sp SpatialPoints
-#' @importFrom calibrate textxy
-#' @importFrom raster plot
-#' 
-#'
-#' @param result The resulting matrix of the function 'genAlgo' or
-#' 'windfarmGA'.
-#' @param Polygon1 The Polygon for the wind farm area. 
+#' @param result The resulting matrix of the function 'genAlgo' or 'windfarmGA'.
+#' @param Polygon1 The Polygon for the wind farm area.
 #' @param n The number of random searches to be perfomed. Default is 20.
 #' @param Plot Should the random search be plotted? Default is TRUE
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
-#' collision checks. Default is 2.2
-#' @param GridMethod Should the polygon be divided into rectangular or
-#' hexagonal grid cells? The default is rectangular grid cells and hexagonal
-#' grid cells are computed when assigning "h" or "hexagon" to this
-#' variable. The randomly generated points might be placed outside
-#' their hexagon. 
+#'   collision checks. Default is 2.2
+#' @param GridMethod Should the polygon be divided into rectangular or hexagonal
+#'   grid cells? The default is rectangular grid cells and hexagonal grid cells
+#'   are computed when assigning "h" or "hexagon" to this variable. The randomly
+#'   generated points might be placed outside their hexagon.
 #'
-#' @return Returns a list.
+#' @family Randomization
+#' @family Plotting Functions
+#' @return Returns a list
 RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2) {
   ## TODO - Performance and structure ---
 
@@ -65,7 +60,7 @@ RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and indexed coordinates of all grid cell centers
-    Grid <- GridFilter(shape = Polygon1, resol = resolu, 
+    Grid <- grid_area(shape = Polygon1, resol = resolu, 
                        prop = propu, plotGrid = FALSE)
   } else {
     # Calculate a Grid with hexagonal grid cells
@@ -183,7 +178,7 @@ RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2
     }
     #####################
 
-    ## Arrange random points to input for calculateEn
+    ## Arrange random points to input for calculate_energy
     coordLayRnd <- cbind(coordLayRnd,
                      "ID" = 1,
                      "bin" = 1)
@@ -191,7 +186,7 @@ RandomSearchTurb <- function(result, Polygon1, n, Plot, GridMethod, max_dist = 2
 
 
     # Calculate energy and save in list with length n ################
-    resCalcen <- calculateEn(sel = coordLayRnd,
+    resCalcen <- calculate_energy(sel = coordLayRnd,
                              referenceHeight = as.numeric(result[bestGARun,]$inputData[12, ]),
                              RotorHeight = as.numeric(result[bestGARun,]$inputData[13, ]),
                              SurfaceRoughness = 0.3, wnkl = 20, distanz = 100000,

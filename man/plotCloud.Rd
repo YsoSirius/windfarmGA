@@ -13,12 +13,12 @@ plotCloud(result, pl = FALSE)
 \item{pl}{Should the results be plotted? Default is FALSE}
 }
 \value{
-Returns a data.frame with the values for fitness, efficiency
-and energy for all evaluated individuals.
+Returns a data.frame with the values for fitness, efficiency and
+  energy for all evaluated individuals.
 }
 \description{
-Plot all the fitness, efficiency and energy outputs of
-all generations. Plot the corresponding standard deviation below.
+Plot all the fitness, efficiency and energy outputs of all
+  generations. Plot the corresponding standard deviation below.
 }
 \examples{
 \donttest{
@@ -31,3 +31,13 @@ plcdf <- plotCloud(result, TRUE)
 str(plcdf)
 }
 }
+\seealso{
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{RandomSearchTurb}}, \code{\link{heatmapGA}},
+  \code{\link{interpol_view}}, \code{\link{plotEvolution}},
+  \code{\link{plotResult}}, \code{\link{plotWindrose}},
+  \code{\link{plot_viewshed}}, \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}},
+  \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}

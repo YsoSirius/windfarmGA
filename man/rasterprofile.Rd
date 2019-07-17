@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{rasterprofile}
 \alias{rasterprofile}
-\title{rasterprofile}
+\title{Sample values from a raster}
 \usage{
 rasterprofile(r, xy1, xy2, plot = FALSE)
 }
@@ -16,9 +16,15 @@ rasterprofile(r, xy1, xy2, plot = FALSE)
 \item{plot}{Plot the process? Default is FALSE}
 }
 \value{
-A boolean vector, indicating if Point 1 (xy1) is visible
-from all elements of Points 2 (xy2)
+A boolean vector, indicating if Point 1 (xy1) is visible from all
+  elements of Points 2 (xy2)
 }
 \description{
 Sample a raster along a straight line between 2 points
 }
+\seealso{
+Other Viewshed Analysis: \code{\link{cansee}},
+  \code{\link{interpol_view}}, \code{\link{plot_viewshed}},
+  \code{\link{viewTo}}, \code{\link{viewshed}}
+}
+\concept{Viewshed Analysis}

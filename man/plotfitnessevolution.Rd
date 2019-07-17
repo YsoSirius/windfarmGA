@@ -7,15 +7,15 @@
 plotfitnessevolution(result, spar = 0.1)
 }
 \arguments{
-\item{result}{An output matrix of the function \code{\link{windfarmGA}}
-or \code{\link{genAlgo}} which has stored all relevant information.}
+\item{result}{An output matrix of the function \code{\link{windfarmGA}} or
+\code{\link{genAlgo}} which has stored all relevant information.}
 
-\item{spar}{A numeric value determining how exact a spline should
-be drawn. Default is 0.1}
+\item{spar}{A numeric value determining how exact a spline should be drawn.
+Default is 0.1}
 }
 \description{
-Plot the evolution of fitness values and the change in the
-min, mean and max fitness values to the former generations.
+Plot the evolution of fitness values and the change in the min,
+  mean and max fitness values to the former generations.
 }
 \examples{
 \donttest{
@@ -27,3 +27,12 @@ result <- resulthex
 plotfitnessevolution(result, 0.1)
 }
 }
+\seealso{
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{RandomSearchTurb}}, \code{\link{heatmapGA}},
+  \code{\link{interpol_view}}, \code{\link{plotCloud}},
+  \code{\link{plotEvolution}}, \code{\link{plotResult}},
+  \code{\link{plotWindrose}}, \code{\link{plot_viewshed}},
+  \code{\link{plotbeorwor}}, \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}

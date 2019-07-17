@@ -10,12 +10,12 @@ plotparkfitness(result, spar = 0.1)
 \item{result}{An output matrix of \code{\link{windfarmGA}} or
 \code{\link{genAlgo}}, which has stored all relevant information.}
 
-\item{spar}{A numeric value determining how exact a spline should
-be drawn. Default is 0.1}
+\item{spar}{A numeric value determining how exact a spline should be drawn.
+Default is 0.1}
 }
 \description{
 Plot the evolution of fitness values with the influences of
-selection, crossover and mutation.
+  selection, crossover and mutation.
 }
 \examples{
 \donttest{
@@ -27,3 +27,13 @@ result <- resulthex
 plotparkfitness(result)
 }
 }
+\seealso{
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{RandomSearchTurb}}, \code{\link{heatmapGA}},
+  \code{\link{interpol_view}}, \code{\link{plotCloud}},
+  \code{\link{plotEvolution}}, \code{\link{plotResult}},
+  \code{\link{plotWindrose}}, \code{\link{plot_viewshed}},
+  \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}}
+}
+\concept{Plotting Functions}

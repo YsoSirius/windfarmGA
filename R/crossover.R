@@ -1,23 +1,23 @@
 #' @title Crossover Method
-#' @name crossover1
-#' @description The crossover method of the genetic algorithm, which takes
-#' the selected individuals after the \code{\link{selection1}} function and
-#' produces new offsprings through permutation.
+#' @name crossover
+#' @description The crossover method of the genetic algorithm, which takes the
+#'   selected individuals after the \code{\link{selection}} function and
+#'   produces new offsprings through permutation.
 #'
 #' @export
 #'
-#' @param se6 The selected individuals. The output of \code{\link{selection1}}
-#' (list)
+#' @param se6 The selected individuals. The output of \code{\link{selection}}
+#'   (list)
 #' @param u The crossover point rate. (numeric)
-#' @param uplimit The upper limit of allowed permutations. The current
-#' algorithm has an upper bound of 300 permutations. (numeric)
+#' @param uplimit The upper limit of allowed permutations. The current algorithm
+#'   has an upper bound of 300 permutations. (numeric)
 #' @param crossPart The crossover method. Either "EQU" or "RAN". (character)
-#' @param verbose If TRUE, will print out further information. 
+#' @param verbose If TRUE, will print out further information.
 #' @param seed Set a seed for comparability. Default is NULL
-#' 
-#' @return Returns a binary coded matrix of all permutations and all grid
-#' cells, 0 indicates no turbine and 1 indicates a turbine in the grid cell.
-#' (matrix)
+#'
+#' @family Genetic Algorithm Functions
+#' @return Returns a binary coded matrix of all permutations and all grid cells,
+#'   0 indicates no turbine and 1 indicates a turbine in the grid cell. (matrix)
 #'
 #' @examples
 #' ## Create two random parents with an index and random binary values
@@ -36,15 +36,15 @@
 #' str(CrossSampl)
 #' 
 #' ## Cross their data at equal locations with 2 crossover parts
-#' crossover1(CrossSampl, u = 1.1, uplimit = 300, crossPart = "EQU")
+#' crossover(CrossSampl, u = 1.1, uplimit = 300, crossPart = "EQU")
 #' 
 #' ## with 3 crossover parts and equal locations
-#' crossover1(CrossSampl, u = 2.5, uplimit = 300, crossPart = "EQU")
+#' crossover(CrossSampl, u = 2.5, uplimit = 300, crossPart = "EQU")
 #' 
 #' ## or with random locations and 5 crossover parts
-#' crossover1(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
+#' crossover(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 #'
-crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
+crossover        <- function(se6, u, uplimit, crossPart, verbose, seed) {
   if (missing(verbose)) {
     verbose <- FALSE
   }
@@ -165,13 +165,14 @@ crossover1        <- function(se6, u, uplimit, crossPart, verbose, seed) {
 #' @title Divide matrices or integer at certain locations
 #' @name splitAt
 #' @description  Required function for the crossover method to
-#' split a genetic code at random intervals. See also \code{\link{crossover1}}.
+#' split a genetic code at random intervals. See also \code{\link{crossover}}.
 #' @export
 #' @param x A numeric variable representing the binary genetic code of an
 #' individual (numeric)
 #' @param pos A numeric value which shows at which position the
 #' genetic code is cut (numeric)
 #'
+#' @family Helper Functions
 #' @return Returns a list of the splitted genetic code.
 #'
 #' @examples
@@ -192,6 +193,7 @@ splitAt           <- function(x, pos) {
 #' @param r Size of the target vectors
 #' @param v Source vector. Defaults to 1:n
 #'
+#' @family Helper Functions
 #' @return Returns a matrix where each row contains a vector of length r.
 #'
 #' @author Original versions by Bill Venables 

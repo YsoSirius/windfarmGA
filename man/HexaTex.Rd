@@ -14,13 +14,13 @@ HexaTex(Polygon1, size, plotTrue = FALSE)
 \item{plotTrue}{Should the object be plotted}
 }
 \value{
-Returns a list with an indexed matrix of the point coordinates
-and a SpatialPolygons object of the hexagons
+Returns a list with an indexed matrix of the point coordinates and a
+  SpatialPolygons object of the hexagons
 }
 \description{
-The function takes a Polygon and a sizing argument and
-creates a list with an indexed matrix with coordinates
-and a SpatialPolygons object, that consists of hexagonal grids
+The function takes a Polygon and a sizing argument and creates
+  a list with an indexed matrix with coordinates and a SpatialPolygons
+  object, that consists of hexagonal grids
 }
 \examples{
 library(spatstat)
@@ -40,3 +40,13 @@ plot(HexGrid[[2]])
 str(HexGrid[[1]])
 
 }
+\seealso{
+Other Helper Functions: \code{\link{dup_coords}},
+  \code{\link{getDEM}}, \code{\link{getISO3}},
+  \code{\link{get_grids}}, \code{\link{grid_area}},
+  \code{\link{isSpatial}}, \code{\link{permutations}},
+  \code{\link{readintegerSel}}, \code{\link{readinteger}},
+  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
+  \code{\link{windata_format}}
+}
+\concept{Helper Functions}

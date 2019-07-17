@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Mutation Method — mutation" />
 
-<meta property="og:description" content="Mutate the genes of every chromosome or individual with
-low probability." />
+<meta property="og:description" content="Mutate the genes of every chromosome or individual with low
+  probability." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -64,7 +64,7 @@ low probability." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -110,8 +110,8 @@ low probability." />
 
     <div class="ref-description">
     
-    <p>Mutate the genes of every chromosome or individual with
-low probability.</p>
+    <p>Mutate the genes of every chromosome or individual with low
+  probability.</p>
     
     </div>
 
@@ -138,6 +138,13 @@ low probability.</p>
 
     <p>Returns a binary matrix with mutated genes.</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Genetic Algorithm Functions: <code><a href='crossover.html'>crossover</a></code>,
+  <code><a href='fitness.html'>fitness</a></code>, <code><a href='genAlgo.html'>genAlgo</a></code>,
+  <code><a href='init_population.html'>init_population</a></code>, <code><a href='selection.html'>selection</a></code>,
+  <code><a href='trimton.html'>trimton</a></code>, <code><a href='windfarmGA.html'>windfarmGA</a></code></p></div>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Create 4 random individuals with binary values</span>
@@ -147,45 +154,45 @@ low probability.</p>
         <span class='kw'>bin.3</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>),<span class='fl'>20</span>,<span class='kw'>replace</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>30</span>,<span class='fl'>70</span>)))
 <span class='no'>a</span></div><div class='output co'>#&gt;       bin bin.1 bin.2 bin.3
 #&gt;  [1,]   0     1     1     1
-#&gt;  [2,]   0     1     1     1
-#&gt;  [3,]   1     1     0     0
-#&gt;  [4,]   0     1     1     0
-#&gt;  [5,]   0     1     1     1
+#&gt;  [2,]   1     0     1     1
+#&gt;  [3,]   0     1     1     1
+#&gt;  [4,]   1     1     1     1
+#&gt;  [5,]   0     1     0     1
 #&gt;  [6,]   0     1     1     1
-#&gt;  [7,]   0     0     1     1
-#&gt;  [8,]   0     0     1     1
-#&gt;  [9,]   0     1     1     1
-#&gt; [10,]   0     1     1     1
-#&gt; [11,]   1     1     0     1
-#&gt; [12,]   0     0     0     0
-#&gt; [13,]   0     1     1     0
-#&gt; [14,]   0     1     1     1
-#&gt; [15,]   0     1     0     1
+#&gt;  [7,]   1     0     1     1
+#&gt;  [8,]   0     1     1     1
+#&gt;  [9,]   0     0     1     1
+#&gt; [10,]   0     1     1     0
+#&gt; [11,]   0     0     0     0
+#&gt; [12,]   0     1     1     1
+#&gt; [13,]   0     0     0     0
+#&gt; [14,]   1     1     1     1
+#&gt; [15,]   0     0     1     1
 #&gt; [16,]   0     1     1     1
-#&gt; [17,]   0     0     1     1
-#&gt; [18,]   1     1     1     1
-#&gt; [19,]   0     1     1     0
-#&gt; [20,]   0     0     1     1</div><div class='input'>
+#&gt; [17,]   0     1     1     1
+#&gt; [18,]   0     0     1     1
+#&gt; [19,]   0     1     1     1
+#&gt; [20,]   1     1     1     0</div><div class='input'>
 <span class='co'>## Mutate the individuals with a low percentage</span>
 <span class='no'>aMut</span> <span class='kw'>&lt;-</span> <span class='fu'>mutation</span>(<span class='no'>a</span>,<span class='fl'>0.1</span>)
 <span class='co'>## Check which values are not like the originals</span>
 <span class='no'>a</span><span class='kw'>==</span><span class='no'>aMut</span></div><div class='output co'>#&gt;         bin bin.1 bin.2 bin.3
-#&gt;  [1,]  TRUE  TRUE  TRUE  TRUE
+#&gt;  [1,]  TRUE  TRUE  TRUE FALSE
 #&gt;  [2,]  TRUE  TRUE  TRUE  TRUE
-#&gt;  [3,] FALSE  TRUE  TRUE  TRUE
-#&gt;  [4,]  TRUE  TRUE FALSE FALSE
+#&gt;  [3,]  TRUE  TRUE  TRUE FALSE
+#&gt;  [4,]  TRUE  TRUE  TRUE FALSE
 #&gt;  [5,]  TRUE  TRUE  TRUE  TRUE
-#&gt;  [6,]  TRUE  TRUE  TRUE  TRUE
+#&gt;  [6,] FALSE  TRUE FALSE  TRUE
 #&gt;  [7,]  TRUE  TRUE  TRUE  TRUE
 #&gt;  [8,]  TRUE  TRUE  TRUE  TRUE
-#&gt;  [9,]  TRUE FALSE  TRUE  TRUE
-#&gt; [10,]  TRUE  TRUE  TRUE  TRUE
+#&gt;  [9,]  TRUE  TRUE  TRUE  TRUE
+#&gt; [10,]  TRUE  TRUE  TRUE FALSE
 #&gt; [11,]  TRUE  TRUE  TRUE  TRUE
 #&gt; [12,]  TRUE  TRUE  TRUE FALSE
 #&gt; [13,]  TRUE  TRUE  TRUE  TRUE
-#&gt; [14,]  TRUE  TRUE  TRUE  TRUE
-#&gt; [15,] FALSE  TRUE  TRUE FALSE
-#&gt; [16,]  TRUE  TRUE  TRUE  TRUE
+#&gt; [14,]  TRUE  TRUE  TRUE FALSE
+#&gt; [15,]  TRUE  TRUE  TRUE  TRUE
+#&gt; [16,]  TRUE FALSE  TRUE  TRUE
 #&gt; [17,]  TRUE  TRUE  TRUE  TRUE
 #&gt; [18,]  TRUE  TRUE FALSE  TRUE
 #&gt; [19,]  TRUE  TRUE  TRUE  TRUE
@@ -194,26 +201,26 @@ low probability.</p>
 <span class='no'>aMut</span> <span class='kw'>&lt;-</span> <span class='fu'>mutation</span>(<span class='no'>a</span>,<span class='fl'>0.4</span>)
 <span class='co'>## Check which values are not like the originals</span>
 <span class='no'>a</span><span class='kw'>==</span><span class='no'>aMut</span></div><div class='output co'>#&gt;         bin bin.1 bin.2 bin.3
-#&gt;  [1,] FALSE FALSE  TRUE FALSE
-#&gt;  [2,] FALSE  TRUE  TRUE  TRUE
-#&gt;  [3,]  TRUE  TRUE FALSE  TRUE
-#&gt;  [4,]  TRUE FALSE FALSE FALSE
+#&gt;  [1,]  TRUE  TRUE  TRUE  TRUE
+#&gt;  [2,] FALSE FALSE FALSE  TRUE
+#&gt;  [3,]  TRUE FALSE  TRUE  TRUE
+#&gt;  [4,] FALSE FALSE FALSE  TRUE
 #&gt;  [5,]  TRUE FALSE  TRUE  TRUE
-#&gt;  [6,]  TRUE  TRUE FALSE FALSE
-#&gt;  [7,]  TRUE FALSE  TRUE FALSE
-#&gt;  [8,]  TRUE  TRUE FALSE  TRUE
-#&gt;  [9,]  TRUE  TRUE  TRUE FALSE
-#&gt; [10,]  TRUE  TRUE  TRUE FALSE
-#&gt; [11,] FALSE  TRUE FALSE  TRUE
-#&gt; [12,]  TRUE  TRUE  TRUE FALSE
-#&gt; [13,]  TRUE FALSE  TRUE FALSE
-#&gt; [14,] FALSE  TRUE  TRUE FALSE
-#&gt; [15,] FALSE  TRUE  TRUE  TRUE
-#&gt; [16,] FALSE FALSE FALSE FALSE
-#&gt; [17,] FALSE  TRUE FALSE FALSE
-#&gt; [18,] FALSE  TRUE  TRUE FALSE
-#&gt; [19,]  TRUE  TRUE  TRUE FALSE
-#&gt; [20,]  TRUE FALSE  TRUE  TRUE</div><div class='input'>
+#&gt;  [6,]  TRUE FALSE  TRUE FALSE
+#&gt;  [7,]  TRUE FALSE FALSE  TRUE
+#&gt;  [8,] FALSE  TRUE  TRUE FALSE
+#&gt;  [9,] FALSE  TRUE  TRUE FALSE
+#&gt; [10,]  TRUE FALSE  TRUE FALSE
+#&gt; [11,]  TRUE  TRUE  TRUE  TRUE
+#&gt; [12,]  TRUE  TRUE  TRUE  TRUE
+#&gt; [13,]  TRUE FALSE  TRUE  TRUE
+#&gt; [14,] FALSE FALSE FALSE  TRUE
+#&gt; [15,]  TRUE FALSE FALSE  TRUE
+#&gt; [16,]  TRUE FALSE FALSE  TRUE
+#&gt; [17,]  TRUE  TRUE FALSE  TRUE
+#&gt; [18,] FALSE  TRUE FALSE  TRUE
+#&gt; [19,] FALSE FALSE FALSE  TRUE
+#&gt; [20,]  TRUE  TRUE  TRUE  TRUE</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -222,6 +229,8 @@ low probability.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

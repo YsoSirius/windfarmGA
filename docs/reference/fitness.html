@@ -32,10 +32,10 @@
 
 <meta property="og:title" content="Evaluate the Individual Fitness values — fitness" />
 
-<meta property="og:description" content="The fitness values of the individuals in the
-current population are calculated after having evaluated their energy
-outputs in calculateEn. This function reduces the resulting
-energy outputs to a single fitness value for every individual." />
+<meta property="og:description" content="The fitness values of the individuals in the current population
+  are calculated after having evaluated their energy outputs in
+  calculate_energy. This function reduces the resulting energy
+  outputs to a single fitness value for every individual." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +66,7 @@ energy outputs to a single fitness value for every individual." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -112,10 +112,10 @@ energy outputs to a single fitness value for every individual." />
 
     <div class="ref-description">
     
-    <p>The fitness values of the individuals in the
-current population are calculated after having evaluated their energy
-outputs in <code><a href='calculateEn.html'>calculateEn</a></code>. This function reduces the resulting
-energy outputs to a single fitness value for every individual.</p>
+    <p>The fitness values of the individuals in the current population
+  are calculated after having evaluated their energy outputs in
+  <code><a href='calculate_energy.html'>calculate_energy</a></code>. This function reduces the resulting energy
+  outputs to a single fitness value for every individual.</p>
     
     </div>
 
@@ -128,8 +128,7 @@ energy outputs to a single fitness value for every individual.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>selection</th>
-      <td><p>A list containing all individuals of the current
-population.</p></td>
+      <td><p>A list containing all individuals of the current population.</p></td>
     </tr>
     <tr>
       <th>referenceHeight</th>
@@ -142,8 +141,8 @@ measured.</p></td>
     </tr>
     <tr>
       <th>SurfaceRoughness</th>
-      <td><p>A surface roughness length of the considered area
-in m.</p></td>
+      <td><p>A surface roughness length of the considered area in
+m.</p></td>
     </tr>
     <tr>
       <th>Polygon</th>
@@ -168,8 +167,8 @@ and 3) a terrain raster. Calculated in <code><a href='genAlgo.html'>genAlgo</a><
     </tr>
     <tr>
       <th>topograp</th>
-      <td><p>Logical value that indicates whether the terrain effect
-model is activated (TRUE) or deactivated (FALSE).</p></td>
+      <td><p>Logical value that indicates whether the terrain effect model
+is activated (TRUE) or deactivated (FALSE).</p></td>
     </tr>
     <tr>
       <th>cclRaster</th>
@@ -183,22 +182,29 @@ type. Is only used, when the terrain effect model is activated.</p></td>
     </tr>
     <tr>
       <th>Parallel</th>
-      <td><p>Boolean value, indicating whether parallel processing
-should be used. The parallel and doParallel packages are used for parallel 
+      <td><p>Boolean value, indicating whether parallel processing should
+be used. The parallel and doParallel packages are used for parallel
 processing.</p></td>
     </tr>
     <tr>
       <th>numCluster</th>
-      <td><p>If Parallel is TRUE, this variable defines the number
-of clusters to be used.</p></td>
+      <td><p>If Parallel is TRUE, this variable defines the number of
+clusters to be used.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns a list with every individual, consisting of X &amp; Y
-coordinates, rotor radii, the runs and the selected grid cell IDs, and
-the resulting energy outputs, efficiency rates and fitness values.</p>
+  coordinates, rotor radii, the runs and the selected grid cell IDs, and the
+  resulting energy outputs, efficiency rates and fitness values.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Genetic Algorithm Functions: <code><a href='crossover.html'>crossover</a></code>,
+  <code><a href='genAlgo.html'>genAlgo</a></code>, <code><a href='init_population.html'>init_population</a></code>,
+  <code><a href='mutation.html'>mutation</a></code>, <code><a href='selection.html'>selection</a></code>,
+  <code><a href='trimton.html'>trimton</a></code>, <code><a href='windfarmGA.html'>windfarmGA</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -221,11 +227,12 @@ the resulting energy outputs, efficiency rates and fitness values.</p>
 
 <span class='co'>## Calculate a Grid and an indexed data.frame with coordinates and</span>
 <span class='co'>## grid cell IDs.</span>
-<span class='no'>Grid1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GridFilter.html'>GridFilter</a></span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,<span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>1</span>);</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: rgeos</span></div><div class='input'><span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='no'>Grid1</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='no'>Grid1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,<span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>1</span>);
+<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='no'>Grid1</span><span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>AmountGrids</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>Grid</span>)
 
 <span class='no'>wind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>wind</span>, <span class='kw'>probab</span> <span class='kw'>=</span> <span class='fl'>100</span>)
-<span class='no'>startsel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='StartGA.html'>StartGA</a></span>(<span class='no'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span>);
+<span class='no'>startsel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='init_population.html'>init_population</a></span>(<span class='no'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span>);
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fitness</span>(<span class='kw'>selection</span> <span class='kw'>=</span> <span class='no'>startsel</span>, <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>RotorHeight</span><span class='kw'>=</span><span class='fl'>100</span>,
                <span class='kw'>SurfaceRoughness</span><span class='kw'>=</span><span class='fl'>0.3</span>,<span class='kw'>Polygon</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>resol1</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>rot</span><span class='kw'>=</span><span class='fl'>20</span>,
                <span class='kw'>dirspeed</span> <span class='kw'>=</span> <span class='no'>wind</span>, <span class='kw'>srtm_crop</span><span class='kw'>=</span><span class='st'>""</span>, <span class='kw'>topograp</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>cclRaster</span><span class='kw'>=</span><span class='st'>""</span>,
@@ -381,6 +388,8 @@ the resulting energy outputs, efficiency rates and fitness values.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

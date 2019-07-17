@@ -2,13 +2,13 @@
 % Please edit documentation in R/RandomSearchPlot.R
 \name{RandomSearchPlot}
 \alias{RandomSearchPlot}
-\title{RandomSearchPlot Plot the result of a randomized ouput.}
+\title{Plot the result of a randomized ouput.}
 \usage{
 RandomSearchPlot(resultRS, result, Polygon1, best)
 }
 \arguments{
-\item{resultRS}{The result of the random functions \code{\link{RandomSearchTurb}}
-and \code{\link{RandomSearch}}.}
+\item{resultRS}{The result of the random functions
+\code{\link{RandomSearchTurb}} and \code{\link{RandomSearch}}.}
 
 \item{result}{The result of the function \code{\link{genAlgo}} or
 \code{\link{windfarmGA}}.}
@@ -18,8 +18,8 @@ and \code{\link{RandomSearch}}.}
 \item{best}{How many best candidates to plot.}
 }
 \description{
-Plotting method for the functions \code{\link{RandomSearchTurb}}
-and \code{\link{RandomSearch}}.
+Plotting method for the results of \code{\link{RandomSearchTurb}}
+  and \code{\link{RandomSearch}}.
 }
 \examples{
 \donttest{
@@ -30,3 +30,8 @@ Res = RandomSearchPlot(result = resultrect, Polygon1 = polygon)
 RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
 }
 }
+\seealso{
+Other Randomization: \code{\link{RandomSearchTurb}},
+  \code{\link{RandomSearch}}
+}
+\concept{Randomization}

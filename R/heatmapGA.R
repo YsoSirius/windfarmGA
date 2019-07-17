@@ -1,25 +1,20 @@
-#' @title Plot heatmap of fit grid cells
+#' @title Plot a heatmap of selected grid cells
 #' @name heatmapGA
-#' @description  Plot a heatmap of the selected grid cells. Green grid
-#' cells have been selected more often than red grid cells.
+#' @description  Plot a heatmap of selected grid cells. Green grid cells
+#'   have been selected more often than red grid cells.
 #'
 #' @export
 #'
-#' @importFrom sp SpatialPoints coordinates gridded
-#' @importFrom gstat idw
-#' @importFrom ggplot2 ggplot geom_tile geom_point aes scale_fill_gradient
-#' coord_equal labs
-#'
-#'
+#' @family Plotting Functions
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information
-#' @param si A numeric value that is used for the sizing of the
-#' resolution of the heatmap. Default is 2 
-#' @param idistw The inverse distance weighting power. Default is the
-#' rotor radius from the 'result' values 
+#'   \code{\link{genAlgo}}, which has stored all relevant information
+#' @param si A numeric value that is used for the sizing of the resolution of
+#'   the heatmap. Default is 2
+#' @param idistw The inverse distance weighting power. Default is the rotor
+#'   radius from the 'result' values
 #'
 #' @return Invisibly returns a list with the result of the inverse distance
-#' weighting and an aggregated dataframe of all grid cells
+#'   weighting and an aggregated dataframe of all grid cells
 #' @examples \donttest{
 #' ## Add some data examples from the package
 #' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
@@ -121,6 +116,7 @@ heatmapGA <- function(result, si = 2, idistw){
 #' returned as an array if possible (when the number of replicates are the
 #' same at each replicated location)
 #' 
+#' @family Helper Functions
 #' @return Function and methods returns NULL if there are no duplicates 
 #' locations. Otherwise, the default method returns a list where each component
 #' is a vector with the positions or the rownames, if available, of the

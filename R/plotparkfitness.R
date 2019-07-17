@@ -1,21 +1,15 @@
 #' @title Plot the genetic algorithm results
 #' @name plotparkfitness
 #' @description Plot the evolution of fitness values with the influences of
-#' selection, crossover and mutation.
+#'   selection, crossover and mutation.
 #' @export
 #'
-#' @importFrom graphics par layout lines grid plot points axis legend abline
-#' mtext title
-#' @importFrom grDevices colorRampPalette
-#' @importFrom stats smooth.spline median
-#' @importFrom calibrate textxy
-#'
-#'
 #' @param result An output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information.
-#' @param spar A numeric value determining how exact a spline should
-#' be drawn. Default is 0.1 
+#'   \code{\link{genAlgo}}, which has stored all relevant information.
+#' @param spar A numeric value determining how exact a spline should be drawn.
+#'   Default is 0.1
 #'
+#' @family Plotting Functions
 #' @return NULL
 #' @examples \donttest{
 #' ## Add some data examples from the package

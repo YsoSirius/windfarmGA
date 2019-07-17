@@ -2,13 +2,12 @@
 % Please edit documentation in R/RandomSearchTurb.R
 \name{RandomSearchTurb}
 \alias{RandomSearchTurb}
-\title{RandomSearchTurb Randomise the location of a single turbine.}
+\title{Randomise the location of a single turbine}
 \usage{
 RandomSearchTurb(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2)
 }
 \arguments{
-\item{result}{The resulting matrix of the function 'genAlgo' or
-'windfarmGA'.}
+\item{result}{The resulting matrix of the function 'genAlgo' or 'windfarmGA'.}
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
@@ -16,19 +15,32 @@ RandomSearchTurb(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2)
 
 \item{Plot}{Should the random search be plotted? Default is TRUE}
 
-\item{GridMethod}{Should the polygon be divided into rectangular or
-hexagonal grid cells? The default is rectangular grid cells and hexagonal
-grid cells are computed when assigning "h" or "hexagon" to this
-variable. The randomly generated points might be placed outside
-their hexagon.}
+\item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
+grid cells? The default is rectangular grid cells and hexagonal grid cells
+are computed when assigning "h" or "hexagon" to this variable. The randomly
+generated points might be placed outside their hexagon.}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
 collision checks. Default is 2.2}
 }
 \value{
-Returns a list.
+Returns a list
 }
 \description{
-Perform a random search for a single turbine, to
-further optimize the output of the wind farm layout.
+Perform a random search for a single turbine, to further
+  optimize the output of the wind farm layout.
 }
+\seealso{
+Other Randomization: \code{\link{RandomSearchPlot}},
+  \code{\link{RandomSearch}}
+
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{heatmapGA}}, \code{\link{interpol_view}},
+  \code{\link{plotCloud}}, \code{\link{plotEvolution}},
+  \code{\link{plotResult}}, \code{\link{plotWindrose}},
+  \code{\link{plot_viewshed}}, \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}},
+  \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}
+\concept{Randomization}

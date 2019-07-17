@@ -1,15 +1,14 @@
 #' @title Plot if previous population was better or worse
 #' @name plotbeorwor
 #' @description  Plot the changes in mean and max fitness values to previous
-#' generation.
+#'   generation.
 #'
 #' @export
 #'
-#' @importFrom graphics plot par abline title
-#'
 #' @param result The output matrix of \code{\link{windfarmGA}} or
-#' \code{\link{genAlgo}}, which has stored all relevant information.
+#'   \code{\link{genAlgo}}, which has stored all relevant information.
 #'
+#' @family Plotting Functions
 #' @return NULL
 #' @examples \donttest{
 #' ## Add some data examples from the package

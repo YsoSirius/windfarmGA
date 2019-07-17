@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the best Results — plotResult • windfarmGA</title>
+<title>Plot the best results — plotResult • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,12 +30,12 @@
 
 
 
-<meta property="og:title" content="Plot the best Results — plotResult" />
+<meta property="og:title" content="Plot the best results — plotResult" />
 
 <meta property="og:description" content="Plot the best resulting solutions of the genetic algorithm.
-Depending on plotEn, either the best energy or efficiency solutions
-can be plotted. best indicates the amount of best solutions that
-should be plotted." />
+  Depending on plotEn, either the best energy or efficiency solutions
+  can be plotted. best indicates the amount of best solutions that
+  should be plotted." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +66,7 @@ should be plotted." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
       </span>
     </div>
 
@@ -105,7 +105,7 @@ should be plotted." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the best Results</h1>
+    <h1>Plot the best results</h1>
     <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plotResults.R'><code>R/plotResults.R</code></a></small>
     <div class="hidden name"><code>plotResult.Rd</code></div>
     </div>
@@ -113,9 +113,9 @@ should be plotted." />
     <div class="ref-description">
     
     <p>Plot the best resulting solutions of the genetic algorithm.
-Depending on <code>plotEn</code>, either the best energy or efficiency solutions
-can be plotted. <code>best</code> indicates the amount of best solutions that
-should be plotted.</p>
+  Depending on <code>plotEn</code>, either the best energy or efficiency solutions
+  can be plotted. <code>best</code> indicates the amount of best solutions that
+  should be plotted.</p>
     
     </div>
 
@@ -142,32 +142,31 @@ should be plotted.</p></td>
     </tr>
     <tr>
       <th>plotEn</th>
-      <td><p>A numeric value that indicates if the best energy or
-efficiency output should be plotted. If (plotEn==1) plots the best energy
-solutions and (plotEn==2) plots the best efficiency solutions.</p></td>
+      <td><p>A numeric value that indicates if the best energy or efficiency
+output should be plotted. If (plotEn==1) plots the best energy solutions
+and (plotEn==2) plots the best efficiency solutions.</p></td>
     </tr>
     <tr>
       <th>topographie</th>
-      <td><p>A logical value, indicating whether terrain effects
-should be considered and plotted or not.</p></td>
+      <td><p>A logical value, indicating whether terrain effects should
+be considered and plotted or not.</p></td>
     </tr>
     <tr>
       <th>Grid</th>
       <td><p>The grid as SpatialPolygons, which is obtained from
-<code><a href='GridFilter.html'>GridFilter</a></code> and used for plotting.</p></td>
+<code><a href='grid_area.html'>grid_area</a></code> and used for plotting.</p></td>
     </tr>
     <tr>
       <th>Projection</th>
-      <td><p>A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection.</p></td>
+      <td><p>A desired Projection can be used instead of the default
+Lambert Azimuthal Equal Area Projection.</p></td>
     </tr>
     <tr>
       <th>sourceCCLRoughness</th>
-      <td><p>The source to the adapted
-Corine Land Cover legend as .csv file. Only required when terrain
-effect model is activated. As default a .csv file within this
-package (<code class="file">~/extdata/clc_legend.csv</code>) is taken that was already adapted
-manually.</p></td>
+      <td><p>The source to the adapted Corine Land Cover legend
+as .csv file. Only required when terrain effect model is activated. As
+default a .csv file within this package (<code class="file">~/extdata/clc_legend.csv</code>)
+is taken that was already adapted manually.</p></td>
     </tr>
     <tr>
       <th>sourceCCL</th>
@@ -179,15 +178,25 @@ required, when the terrain effect model is activated.</p></td>
       <td><p>A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE.</p></td>
+then rasters included in the package are used instead, which currently only
+cover Austria. This variable is only used if weibull==TRUE.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns a data.frame of the best (energy/efficiency) individual
-during all iterations.</p>
+  during all iterations.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Plotting Functions: <code><a href='PlotWindfarmGA.html'>PlotWindfarmGA</a></code>,
+  <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>, <code><a href='heatmapGA.html'>heatmapGA</a></code>,
+  <code><a href='interpol_view.html'>interpol_view</a></code>, <code><a href='plotCloud.html'>plotCloud</a></code>,
+  <code><a href='plotEvolution.html'>plotEvolution</a></code>, <code><a href='plotWindrose.html'>plotWindrose</a></code>,
+  <code><a href='plot_viewshed.html'>plot_viewshed</a></code>, <code><a href='plotbeorwor.html'>plotbeorwor</a></code>,
+  <code><a href='plotfitnessevolution.html'>plotfitnessevolution</a></code>,
+  <code><a href='plotparkfitness.html'>plotparkfitness</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -207,7 +216,7 @@ during all iterations.</p>
 <span class='co'>## Plot the results of a rectangular grid optimization</span>
 <span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resultrect</span>
 <span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='no'>polygon</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GridFilter.html'>GridFilter</a></span>(<span class='no'>Polygon1</span>, <span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>175</span>, <span class='fl'>1</span>, <span class='fl'>FALSE</span>)
+<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='no'>Polygon1</span>, <span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>175</span>, <span class='fl'>1</span>, <span class='fl'>FALSE</span>)
 <span class='fu'>plotResult</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
            <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div><div class='output co'>#&gt; N different optimal configurations: 15 
 #&gt; Amount duplicates: 15
@@ -219,18 +228,12 @@ during all iterations.</p>
 <span class='no'>k_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/readRDS'>readRDS</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/k_weibull.RDS"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
 <span class='no'>weibullsrc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>k_param</span>, <span class='no'>a_param</span>)
 <span class='fu'>plotResult</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>weibullsrc</span> <span class='kw'>=</span> <span class='no'>weibullsrc</span>)</div><div class='output co'>#&gt; N different optimal configurations: 15 
-#&gt; Amount duplicates: 15
-#&gt; Plot  2  Best Efficiency Solution:</div><div class='img'><img src='plotResult-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; 
-#&gt; Plot  1  Best Efficiency Solution:</div><div class='img'><img src='plotResult-4.png' alt='' width='700' height='433' /></div><div class='input'>
+           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>weibullsrc</span> <span class='kw'>=</span> <span class='no'>weibullsrc</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .local(.Object, ...): </span></div><div class='input'>
 <span class='co'>## Plot the hexagonal results ith weibull mean background</span>
 <span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resulthex</span>
 <span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='HexaTex.html'>HexaTex</a></span>(<span class='no'>Polygon1</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>87.5</span>, <span class='fl'>FALSE</span>)
 <span class='fu'>plotResult</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>weibullsrc</span> <span class='kw'>=</span> <span class='no'>weibullsrc</span>)</div><div class='output co'>#&gt; N different optimal configurations: 9 
-#&gt; Amount duplicates: 1
-#&gt; Plot  2  Best Efficiency Solution:</div><div class='img'><img src='plotResult-5.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; 
-#&gt; Plot  1  Best Efficiency Solution:</div><div class='img'><img src='plotResult-6.png' alt='' width='700' height='433' /></div></pre>
+           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>weibullsrc</span> <span class='kw'>=</span> <span class='no'>weibullsrc</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .local(.Object, ...): </span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -238,6 +241,8 @@ during all iterations.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

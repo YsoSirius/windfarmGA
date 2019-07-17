@@ -10,15 +10,15 @@ plotEvolution(result, ask = TRUE, spar = 0.1)
 \item{result}{The output matrix of \code{\link{windfarmGA}} or
 \code{\link{genAlgo}}, which has stored all relevant information.}
 
-\item{ask}{Should R wait for interaction for subsequent plotting.
-Default is TRUE}
+\item{ask}{Should R wait for interaction for subsequent plotting. Default is
+TRUE}
 
-\item{spar}{A numeric value determining how exact a spline should
-be drawn. Default is 0.1}
+\item{spar}{A numeric value determining how exact a spline should be drawn.
+Default is 0.1}
 }
 \description{
-Plot the evolution of energy outputs and efficiency rates
-over the whole generations. Plots min, mean and max values.
+Plot the evolution of energy outputs and efficiency rates over
+  the whole generations. Plots min, mean and max values.
 }
 \examples{
 \donttest{
@@ -30,3 +30,13 @@ result <- resultrect
 plotEvolution(result, ask = TRUE, spar = 0.1)
 }
 }
+\seealso{
+Other Plotting Functions: \code{\link{PlotWindfarmGA}},
+  \code{\link{RandomSearchTurb}}, \code{\link{heatmapGA}},
+  \code{\link{interpol_view}}, \code{\link{plotCloud}},
+  \code{\link{plotResult}}, \code{\link{plotWindrose}},
+  \code{\link{plot_viewshed}}, \code{\link{plotbeorwor}},
+  \code{\link{plotfitnessevolution}},
+  \code{\link{plotparkfitness}}
+}
+\concept{Plotting Functions}
