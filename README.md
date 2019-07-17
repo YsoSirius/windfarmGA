@@ -39,11 +39,10 @@ the air densities at rotor heights. The land cover raster with an additional ele
 roughness value is used to re-evaluate the surface roughness and to individually
 determine the wake-decay constant for each turbine.
 
-To start an optimization, either the function 'windfarmGA' or 'genetic_algorithm' can 
-be used. The function 'windfarmGA' checks the user inputs interactively and then 
-runs the function 'genetic_algorithm'. If the input parameters are already known, an 
-optimization can be run directly via the function 'genetic_algorithm'. 
-Their output is identical.
+To start an optimization, either the function `windfarmGA` or `genetic_algorithm` can 
+be used. The function `windfarmGA` checks the user inputs interactively and then 
+runs the function `genetic_algorithm`. If the input parameters are already known, an 
+optimization can be run directly via `genetic_algorithm`. 
 
 <div style="display: inline-flex;">
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" width="430"/>
@@ -79,14 +78,14 @@ plot(Polygon1, col = "blue", axes = TRUE)
 ```
 
 ## Create random Wind data 
-- Exemplary input Wind data with uniform wind speed and single wind direction
+- Exemplary input Wind data with *uniform* wind speed and *single* wind direction
 ```sh
 wind_df <- data.frame(ws = c(12, 12), wd = c(0, 0), probab = c(25, 25))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd, dirres=10, spdmax = 20)
 ```
 
-- Exemplary input Wind data with random wind speeds and random wind directions
+- Exemplary input Wind data with *random* wind speeds and *random* wind directions
 ```sh
 wind_df <- data.frame(ws = sample(1:25, 10), wd = sample(1:260, 10)))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
@@ -123,10 +122,10 @@ str(HexGrid)
 
 
 ## Terrain Effect Model
-If the input variable **`topograp`** for the functions 'windfarmGA' or 'genetic_algorithm' is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( [Download a CLC raster](http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1) ).
+If the input variable **topograp** for the functions `windfarmGA` or `genetic_algorithm` is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( [Download a CLC raster](http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1) ).
 
-If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable **`sourceCCL`**. The algorithm uses an adapted version of the Raster legend ("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named **Rauhigkeit_z** to the .csv file. Assign a surface roughness length to all land cover types. 
-Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the .csv file path to the input variable **`sourceCCLRoughness`**.
+If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable **sourceCCL**. The algorithm uses an adapted version of the Raster legend ("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named **Rauhigkeit_z** to the .csv file. Assign a surface roughness length to all land cover types. 
+Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the .csv file path to the input variable **sourceCCLRoughness**.
 
 
 ## Start an Optimization
@@ -197,7 +196,7 @@ result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
                   weibull = TRUE, weibullsrc = weibullrasters)
 plot_windfarmGA(result = result_weibull, GridMethod = "h", Polygon1 = Polygon1)
 ```
-The argument **'GridMethod'**, **'weibull'**, **'weibullsrc'** can also be given to the function **'windfarmGA'**.
+The argument **GridMethod**, **weibull**, **weibullsrc** can also be given to the function `windfarmGA`.
 
 #### Plot the Results on a Leaflet Map
 ```sh

@@ -88,7 +88,7 @@
 <h1 class="hasAnchor">
 <a href="#description" class="anchor"></a>Description</h1>
 <p>The genetic algorithm is used to optimize small wind farms of any shape. It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction. If required it can include a terrain effect model, which downloads an ‘SRTM’ elevation model and a ‘Corine Land Cover’ raster automatically. The elevation model is used to find mountains and valleys and to adjust the wind speeds accordingly by ‘wind multipliers’ and to determine the air densities at rotor heights. The land cover raster with an additional elevation roughness value is used to re-evaluate the surface roughness and to individually determine the wake-decay constant for each turbine.</p>
-<p>To start an optimization, either the function ‘windfarmGA’ or ‘genetic_algorithm’ can be used. The function ‘windfarmGA’ checks the user inputs interactively and then runs the function ‘genetic_algorithm’. If the input parameters are already known, an optimization can be run directly via the function ‘genetic_algorithm’. Their output is identical.</p>
+<p>To start an optimization, either the function <code>windfarmGA</code> or <code>genetic_algorithm</code> can be used. The function <code>windfarmGA</code> checks the user inputs interactively and then runs the function <code>genetic_algorithm</code>. If the input parameters are already known, an optimization can be run directly via <code>genetic_algorithm</code>.</p>
 <div style="display: inline-flex;">
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" width="430"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" width="430">
 </div>
@@ -124,13 +124,13 @@
 <a href="#create-random-wind-data" class="anchor"></a>Create random Wind data</h2>
 <ul>
 <li>
-<p>Exemplary input Wind data with uniform wind speed and single wind direction</p>
+<p>Exemplary input Wind data with <em>uniform</em> wind speed and <em>single</em> wind direction</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame(ws = c(12, 12), <span class="ex">wd</span> = c(0, 0), <span class="ex">probab</span> = c(25, 25))
 <span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose(data = wind_df, spd = wind_df<span class="va">$ws</span>,
                          <span class="fu">dir</span> = wind_df<span class="va">$wd</span>, dirres=10, spdmax = 20)</code></pre></div>
 </li>
 <li>
-<p>Exemplary input Wind data with random wind speeds and random wind directions</p>
+<p>Exemplary input Wind data with <em>random</em> wind speeds and <em>random</em> wind directions</p>
 <div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame(ws = sample(1:25, 10), <span class="ex">wd</span> = sample(1:260, 10)))
 <span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose(data = wind_df, spd = wind_df<span class="va">$ws</span>,
                          <span class="fu">dir</span> = wind_df<span class="va">$wd</span>)</code></pre></div>
@@ -174,8 +174,8 @@
 <div id="terrain-effect-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#terrain-effect-model" class="anchor"></a>Terrain Effect Model</h2>
-<p>If the input variable <strong><code>topograp</code></strong> for the functions ‘windfarmGA’ or ‘genetic_algorithm’ is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( <a href="http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1">Download a CLC raster</a> ).</p>
-<p>If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable <strong><code>sourceCCL</code></strong>. The algorithm uses an adapted version of the Raster legend (“clc_legend.csv”), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named <strong>Rauhigkeit_z</strong> to the .csv file. Assign a surface roughness length to all land cover types. Be sure that all rows are filled with numeric values and save the .csv file with “;” delimiter. Assign the .csv file path to the input variable <strong><code>sourceCCLRoughness</code></strong>.</p>
+<p>If the input variable <strong>topograp</strong> for the functions <code>windfarmGA</code> or <code>genetic_algorithm</code> is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( <a href="http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1">Download a CLC raster</a> ).</p>
+<p>If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable <strong>sourceCCL</strong>. The algorithm uses an adapted version of the Raster legend (“clc_legend.csv”), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named <strong>Rauhigkeit_z</strong> to the .csv file. Assign a surface roughness length to all land cover types. Be sure that all rows are filled with numeric values and save the .csv file with “;” delimiter. Assign the .csv file path to the input variable <strong>sourceCCLRoughness</strong>.</p>
 </div>
 <div id="start-an-optimization" class="section level2">
 <h2 class="hasAnchor">
@@ -241,7 +241,7 @@
                   <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,
                   <span class="ex">weibull</span> = TRUE, weibullsrc = weibullrasters)
 <span class="ex">plot_windfarmGA</span>(result = result_weibull, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</code></pre></div>
-<p>The argument <strong>‘GridMethod’</strong>, <strong>‘weibull’</strong>, <strong>‘weibullsrc’</strong> can also be given to the function <strong>‘windfarmGA’</strong>.</p>
+<p>The argument <strong>GridMethod</strong>, <strong>weibull</strong>, <strong>weibullsrc</strong> can also be given to the function <code>windfarmGA</code>.</p>
 <div id="plot-the-results-on-a-leaflet-map" class="section level4">
 <h4 class="hasAnchor">
 <a href="#plot-the-results-on-a-leaflet-map" class="anchor"></a>Plot the Results on a Leaflet Map</h4>

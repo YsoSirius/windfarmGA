@@ -116,7 +116,7 @@
 <h2 class="hasAnchor">
 <a href="#renaming-functions" class="anchor"></a>Renaming Functions</h2>
 <p>Almost all functions have been renamed to have a consistent appearance and a clearer meaning. The old functions still exist, but are deprecated now.</p>
-<p><details><summary><strong>Renaming Overview</strong></summary></details></p>
+<p><details><summary><strong>Renaming Overview</strong></summary><p></p>
 <table>
 <thead><tr class="header">
 <th>Old names</th>
@@ -221,6 +221,7 @@
 </tr>
 </tbody>
 </table>
+<p></p></details></p>
 <p></p>
 </div>
 </div>
@@ -232,14 +233,14 @@
 <h2 class="hasAnchor">
 <a href="#performance-tuning-restructuring" class="anchor"></a>Performance Tuning / Restructuring</h2>
 <p>Switch to matrices instead of data.frames and a lot of restructuring and performance optimization of the whole algorithm.</p>
-<p>The function <strong><code>genAlgo</code></strong>/<strong><code>windfarmGA</code></strong> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <code>topograp</code> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p>
+<p>The function <code>genAlgo</code>/<code>windfarmGA</code> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <strong>topograp</strong> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p>
 <ul>
 <li>
-<strong><code>viewshed</code></strong> A new set of functions, to analyze the visual impact of a wind farm.<br>
-The new functions for visual assessment are <strong><code>cansee</code></strong>, <strong><code>viewTo</code></strong>, <strong><code>rasterprofile</code></strong>, <strong><code>viewshed</code></strong>, <strong><code>plot_viewshed</code></strong>, <strong><code>interpol_view</code></strong>, <strong><code>getISO3</code></strong>, <strong><code>getDEM</code></strong>
+<code>viewshed</code> A new set of functions, to analyze the visual impact of a wind farm.<br>
+The new functions for visual assessment are <code>cansee</code>, <code>viewTo</code>, <code>rasterprofile</code>, <code>viewshed</code>, <code>plot_viewshed</code>, <code>interpol_view</code>, <code>getISO3</code>, <code>getDEM</code>
 </li>
 <li>
-<strong><code>plot_farm_3d</code></strong> Experimental rayshader function</li>
+<code>plot_farm_3d</code> Experimental rayshader function</li>
 </ul>
 </div>
 </div>
@@ -250,7 +251,7 @@ The new functions for visual assessment are <strong><code>cansee</code></strong>
 <div id="randomization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#randomization" class="anchor"></a>Randomization</h2>
-<p>The output of <strong><code>genAlgo</code></strong> or <strong><code>windfarmGA</code></strong> can be further randomized/optimized with the following functions:</p>
+<p>The output of <code>genAlgo</code> or <code>windfarmGA</code> can be further randomized/optimized with the following functions:</p>
 <ul>
 <li>RandomSearch</li>
 <li>RandomSearchTurb</li>
