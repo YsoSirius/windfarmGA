@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -173,54 +173,14 @@ angles. Default is FALSE.</p></td>
 <span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>polYgon</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>polYgon</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='turbine_influences-1.png' alt='' width='700' height='433' /></div><div class='input'>
+
 <span class='no'>t</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/as.matrix'>as.matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></span>(<span class='fl'>10</span>, <span class='fl'>0</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>polYgon</span>)[<span class='fl'>2</span>]),
      <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></span>(<span class='fl'>10</span>, <span class='fl'>0</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/extent'>extent</a></span>(<span class='no'>polYgon</span>)[<span class='fl'>4</span>])))
 <span class='no'>wnkl</span> <span class='kw'>&lt;-</span> <span class='fl'>20</span>
 <span class='no'>dist</span> <span class='kw'>&lt;-</span> <span class='fl'>100000</span>
 <span class='no'>dirct</span> <span class='kw'>&lt;-</span> <span class='fl'>0</span>
 
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>turbine_influences</span>(<span class='no'>t</span>, <span class='no'>wnkl</span>, <span class='no'>dist</span>, <span class='no'>polYgon</span>, <span class='no'>dirct</span>, <span class='kw'>plotAngles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='turbine_influences-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-8.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-10.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; List of 10
-#&gt;  $ : num [1, 1:14] 167 949 229 733 167 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1, 1:14] 569 1360 711 773 569 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1, 1:14] 0 0 2000 1599 0 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1, 1:14] 0 0 967 976 0 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1:3, 1:14] 711 967 569 773 976 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1, 1:14] 0 0 428 1103 0 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1, 1:14] 0 0 1230 673 0 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1, 1:14] 0 0 167 949 0 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1:3, 1:14] 711 428 569 773 1103 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...
-#&gt;  $ : num [1, 1:14] 0 0 569 1360 0 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : NULL
-#&gt;   .. ..$ : chr [1:14] "Ax" "Ay" "Bx" "By" ...</div><div class='input'>
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>turbine_influences</span>(<span class='no'>t</span>, <span class='no'>wnkl</span>, <span class='no'>dist</span>, <span class='no'>polYgon</span>, <span class='no'>dirct</span>, <span class='kw'>plotAngles</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='turbine_influences-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-8.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='turbine_influences-10.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

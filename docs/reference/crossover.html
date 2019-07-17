@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -158,9 +158,10 @@ has an upper bound of 300 permutations. (numeric)</p></td>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Genetic Algorithm Functions: <code><a href='fitness.html'>fitness</a></code>,
-  <code><a href='genAlgo.html'>genAlgo</a></code>, <code><a href='init_population.html'>init_population</a></code>,
-  <code><a href='mutation.html'>mutation</a></code>, <code><a href='selection.html'>selection</a></code>,
-  <code><a href='trimton.html'>trimton</a></code>, <code><a href='windfarmGA.html'>windfarmGA</a></code></p></div>
+  <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>,
+  <code><a href='init_population.html'>init_population</a></code>, <code><a href='mutation.html'>mutation</a></code>,
+  <code><a href='selection.html'>selection</a></code>, <code><a href='trimton.html'>trimton</a></code>,
+  <code><a href='windfarmGA.html'>windfarmGA</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -169,42 +170,13 @@ has an upper bound of 300 permutations. (numeric)</p></td>
   <span class='kw'>ID</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>20</span>,
   <span class='kw'>bin</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>),<span class='fl'>20</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>70</span>,<span class='fl'>30</span>)),
   <span class='kw'>bin.1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>1</span>),<span class='fl'>20</span>, <span class='kw'>replace</span><span class='kw'>=</span><span class='fl'>TRUE</span>,<span class='kw'>prob</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>30</span>,<span class='fl'>70</span>)))
-<span class='no'>Parents</span></div><div class='output co'>#&gt;    ID bin bin.1
-#&gt; 1   1   0     1
-#&gt; 2   2   1     1
-#&gt; 3   3   0     0
-#&gt; 4   4   0     1
-#&gt; 5   5   0     0
-#&gt; 6   6   0     0
-#&gt; 7   7   0     1
-#&gt; 8   8   0     1
-#&gt; 9   9   1     1
-#&gt; 10 10   1     1
-#&gt; 11 11   1     1
-#&gt; 12 12   0     1
-#&gt; 13 13   0     1
-#&gt; 14 14   0     1
-#&gt; 15 15   0     1
-#&gt; 16 16   0     1
-#&gt; 17 17   0     0
-#&gt; 18 18   0     0
-#&gt; 19 19   0     1
-#&gt; 20 20   1     1</div><div class='input'>
+
 <span class='co'>## Create random Fitness values for both individuals</span>
 <span class='no'>FitParents</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>ID</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Fitness</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>Fitness.1</span> <span class='kw'>=</span> <span class='fl'>20</span>)
-<span class='no'>FitParents</span></div><div class='output co'>#&gt;   ID Fitness Fitness.1
-#&gt; 1  1    1000        20</div><div class='input'>
+
 <span class='co'>## Assign both values to a list</span>
 <span class='no'>CrossSampl</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Parents</span>,<span class='no'>FitParents</span>);
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>CrossSampl</span>)</div><div class='output co'>#&gt; List of 2
-#&gt;  $ :'data.frame':	20 obs. of  3 variables:
-#&gt;   ..$ ID   : int [1:20] 1 2 3 4 5 6 7 8 9 10 ...
-#&gt;   ..$ bin  : num [1:20] 0 1 0 0 0 0 0 0 1 1 ...
-#&gt;   ..$ bin.1: num [1:20] 1 1 0 1 0 0 1 1 1 1 ...
-#&gt;  $ :'data.frame':	1 obs. of  3 variables:
-#&gt;   ..$ ID       : num 1
-#&gt;   ..$ Fitness  : num 1000
-#&gt;   ..$ Fitness.1: num 20</div><div class='input'>
+
 <span class='co'>## Cross their data at equal locations with 2 crossover parts</span>
 <span class='fu'>crossover</span>(<span class='no'>CrossSampl</span>, <span class='kw'>u</span> <span class='kw'>=</span> <span class='fl'>1.1</span>, <span class='kw'>uplimit</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>crossPart</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>)</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4]
 #&gt;  [1,]    1    1    0    0

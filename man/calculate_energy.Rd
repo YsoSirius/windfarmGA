@@ -37,7 +37,7 @@ considered to be eliminated}
 \item{dirSpeed}{The wind speed and direction data.frame}
 
 \item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
+and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}}
 
 \item{topograp}{Logical value that indicates whether the terrain effect model
 is activated (TRUE) or deactivated (FALSE)}
@@ -71,12 +71,11 @@ Polygon1 <- SpatialPolygons(list(Polygon1))
 Projection <- '+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
 proj4string(Polygon1) <- CRS(Projection)
-plot(Polygon1,axes=TRUE)
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
 data.in <- data.frame(ws = 12, wd = 0)
-windrosePlot <- plotWindrose(data = data.in, spd = data.in$ws,
+windrosePlot <- plot_windrose(data = data.in, spd = data.in$ws,
                 dir = data.in$wd, dirres=10, spdmax=20)
 
 ## Assign the rotor radius and a factor of the radius for grid spacing.
@@ -101,8 +100,6 @@ resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
                    distanz = 100000, resol = 200,dirSpeed = data.in,
                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                    weibull = FALSE)
-length(resCalcEn)
-str(resCalcEn)
 resCalcEn <- as.data.frame(resCalcEn)
 plot(Polygon1, main = resCalcEn[,'Energy_Output_Red'][[1]])
 points(x = resCalcEn[,'Bx'], y = resCalcEn[,'By'], pch = 20)
@@ -111,7 +108,7 @@ points(x = resCalcEn[,'Bx'], y = resCalcEn[,'By'], pch = 20)
 ## Create a variable and multidirectional wind data.frame and plot the
 ## resulting wind rose
 data.in10 <- data.frame(ws = runif(10,1,25), wd = runif(10,0,360))
-windrosePlot <- plotWindrose(data = data.in10, spd = data.in10$ws,
+windrosePlot <- plot_windrose(data = data.in10, spd = data.in10$ws,
                 dir = data.in10$wd, dirres=10, spdmax=20)
 
 ## Calculate the energy outputs for the first individual with more than one
@@ -121,8 +118,6 @@ resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
                    distanz = 100000, resol = 200,dirSpeed = data.in10,
                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                    weibull = FALSE)
-length(resCalcEn)
-str(resCalcEn)
 }
 
 }

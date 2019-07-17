@@ -5,9 +5,12 @@ template:
   bootswatch: flatly
 
 reference:
+  - title: Package Documentation
+    contents:
+    - windfarmGA_
   - title: Run an Optimization
     contents:
-    - genAlgo
+    - genetic_algorithm
     - windfarmGA
   - title: Genetic Algorithm Components
     desc: Main components of the genetic algorithm
@@ -26,13 +29,11 @@ reference:
     - calculate_energy
   - title: Randomization
     contents:
-    - starts_with("Random", internal = TRUE)
+    - starts_with("random", internal = TRUE)
+    - plot_random_search
   - title: Plotting Functions
     contents:
-    - starts_with("plot", internal = TRUE)
-    - starts_with("Plot", internal = TRUE)
-    - ends_with("Plot", internal = TRUE)
-    - heatmapGA
+    - starts_with("plot_", internal = TRUE)
     - interpol_view
   - title: Viewshed Analysis Functions
     contents:
@@ -41,12 +42,13 @@ reference:
     - viewshed
     - viewTo
     - interpol_view
+    - plot_viewshed
   - title: Helper Functions
     contents:
     - get_grids
     - grid_area
+    - hexa_area
     - windata_format
-    - HexaTex
     - tess2SPdf
     - isSpatial
     - permutations

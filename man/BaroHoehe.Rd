@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{BaroHoehe}
 \alias{BaroHoehe}
-\title{Deprecated use \code{\link[windfarmGA]{BaroHoehe}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{barometric_height}} instead.}
 \usage{
 BaroHoehe(data, height, po = 101325, ro = 1.225)
 }
@@ -16,6 +16,7 @@ BaroHoehe(data, height, po = 101325, ro = 1.225)
 \item{ro}{Standardized air density at sea level (1,225 kg per m3)}
 }
 \description{
-BaroHoehe is replaced by \code{\link[windfarmGA]{barometric_height}}.
+BaroHoehe is replaced by
+  \code{\link[windfarmGA]{barometric_height}}.
 }
 \keyword{internal}

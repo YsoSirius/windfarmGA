@@ -25,15 +25,12 @@
 #'   ID = 1:20,
 #'   bin = sample(c(0,1),20, replace = TRUE, prob = c(70,30)),
 #'   bin.1 = sample(c(0,1),20, replace=TRUE,prob = c(30,70)))
-#' Parents
 #' 
 #' ## Create random Fitness values for both individuals
 #' FitParents <- data.frame(ID = 1, Fitness = 1000, Fitness.1 = 20)
-#' FitParents
 #' 
 #' ## Assign both values to a list
 #' CrossSampl <- list(Parents,FitParents);
-#' str(CrossSampl)
 #' 
 #' ## Cross their data at equal locations with 2 crossover parts
 #' crossover(CrossSampl, u = 1.1, uplimit = 300, crossPart = "EQU")

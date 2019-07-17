@@ -28,13 +28,11 @@
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=TRUE)
 #'
 #' Grid <- grid_area(Polygon1,200,1,"TRUE")
 #'
 #' ## Create 5 individuals with 10 wind turbines each.
 #' firstPop <- init_population(Grid = Grid[[1]], n = 10, nStart = 5)
-#' str(firstPop)
 #'
 init_population           <- function(Grid, n, nStart = 100) {
   if (length(Grid[,'ID']) <= n) {

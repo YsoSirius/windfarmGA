@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot a Wind Farm with leaflet — leafPlot • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_leaflet.html'>plot_leaflet</a></code> instead. — leafPlot • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Plot a Wind Farm with leaflet — leafPlot" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_leaflet.html'>plot_leaflet</a></code> instead. — leafPlot" />
 
-<meta property="og:description" content="Plot a resulting wind farm on a leaflet map." />
+<meta property="og:description" content="leafPlot is replaced by plot_leaflet." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -102,14 +102,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot a Wind Farm with leaflet</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/leafPlot.R'><code>R/leafPlot.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_leaflet.html'>plot_leaflet</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>leafPlot.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plot a resulting wind farm on a leaflet map.</p>
+    <p>leafPlot is replaced by <code><a href='plot_leaflet.html'>plot_leaflet</a></code>.</p>
     
     </div>
 
@@ -120,7 +120,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>result</th>
-      <td><p>The resulting matrix of the function 'genAlgo' or 'windfarmGA'.</p></td>
+      <td><p>The resulting matrix of the function <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>
+or <code><a href='windfarmGA.html'>windfarmGA</a></code></p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
@@ -139,46 +140,17 @@ ordered by energy values (TRUE) or chronologically (FALSE).</p></td>
     <tr>
       <th>GridPol</th>
       <td><p>The output grid polygon of the <code><a href='grid_area.html'>grid_area</a></code> or
-<code><a href='HexaTex.html'>HexaTex</a></code> functions.</p></td>
+<code><a href='hexa_area.html'>hexa_area</a></code> functions.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a leaflet map.</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resulthex.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/polygon.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='co'>## Plot the best wind farm on a leaflet map (ordered by energy values)</span>
-<span class='fu'>leafPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resulthex</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>which</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-
-<span class='co'>## Plot the last wind farm (ordered by chronology).</span>
-<span class='fu'>leafPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resulthex</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>orderitems</span> <span class='kw'>=</span> <span class='no'>F</span>,
-         <span class='kw'>which</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='co'>## Plot the best wind farm on a leaflet map with the rectangular Grid</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='no'>polygon</span>, <span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>150</span>, <span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>0.4</span>)
-<span class='fu'>leafPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>which</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-         <span class='kw'>GridPol</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])
-
-<span class='co'>## Plot the last wind farm with hexagonal Grid</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='HexaTex.html'>HexaTex</a></span>(<span class='no'>polygon</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>75</span>)
-<span class='fu'>leafPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resulthex</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>which</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-         <span class='kw'>GridPol</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

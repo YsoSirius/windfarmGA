@@ -33,7 +33,6 @@
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=TRUE)
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
 #' Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
@@ -55,7 +54,6 @@
 #' selec6best <- selection(fit, Grid, 2, T, 6, "VAR", NULL)
 #' selec6best <- selection(fit, Grid, 2, T, 6, "FIX", NULL)
 #' selec6best <- selection(fit, Grid, 4, F, 6, "FIX", NULL)
-#' str(selec6best)
 #' }
 selection         <- function(fit, Grid, teil, elitism, nelit, 
                                selstate, verbose) {

@@ -28,7 +28,7 @@ m.}
 \item{dirspeed}{The wind data as list.}
 
 \item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
+and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}}
 
 \item{topograp}{Logical value that indicates whether the terrain effect model
 is activated (TRUE) or deactivated (FALSE).}
@@ -68,13 +68,12 @@ Polygon1 <- SpatialPolygons(list(Polygon1))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 proj4string(Polygon1) <- CRS(Projection)
-plot(Polygon1,axes=TRUE)
 
 ## Create a uniform and unidirectional wind data.frame and plots the
 ## resulting wind rose
 ## Uniform wind speed and single wind direction
 wind <- data.frame(ws = 12, wd = 0)
-# windrosePlot <- plotWindrose(data = wind, spd = wind$ws,
+# windrosePlot <- plot_windrose(data = wind, spd = wind$ws,
 #                dir = wind$wd, dirres=10, spdmax=20)
 
 ## Calculate a Grid and an indexed data.frame with coordinates and
@@ -89,13 +88,13 @@ fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
                Parallel = FALSE)
-head(fit)
 }
 }
 \seealso{
 Other Genetic Algorithm Functions: \code{\link{crossover}},
-  \code{\link{genAlgo}}, \code{\link{init_population}},
-  \code{\link{mutation}}, \code{\link{selection}},
-  \code{\link{trimton}}, \code{\link{windfarmGA}}
+  \code{\link{genetic_algorithm}},
+  \code{\link{init_population}}, \code{\link{mutation}},
+  \code{\link{selection}}, \code{\link{trimton}},
+  \code{\link{windfarmGA}}
 }
 \concept{Genetic Algorithm Functions}

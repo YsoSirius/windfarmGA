@@ -18,7 +18,7 @@
 #' @param rot The desired rotor radius in meter.
 #' @param dirspeed The wind data as list.
 #' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
-#'   and 3) a terrain raster. Calculated in \code{\link{genAlgo}}
+#'   and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}
 #' @param topograp Logical value that indicates whether the terrain effect model
 #'   is activated (TRUE) or deactivated (FALSE).
 #' @param cclRaster A Corine Land Cover raster, that has to be adapted
@@ -46,13 +46,12 @@
 #' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 #' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 #' proj4string(Polygon1) <- CRS(Projection)
-#' plot(Polygon1,axes=TRUE)
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plots the
 #' ## resulting wind rose
 #' ## Uniform wind speed and single wind direction
 #' wind <- data.frame(ws = 12, wd = 0)
-#' # windrosePlot <- plotWindrose(data = wind, spd = wind$ws,
+#' # windrosePlot <- plot_windrose(data = wind, spd = wind$ws,
 #' #                dir = wind$wd, dirres=10, spdmax=20)
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and
@@ -67,7 +66,6 @@
 #'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
 #'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
 #'                Parallel = FALSE)
-#' head(fit)
 #' }
 fitness           <- function(selection, referenceHeight, RotorHeight,
                               SurfaceRoughness, Polygon, resol1,

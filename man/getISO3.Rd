@@ -41,9 +41,9 @@ getISO3(pp = points, crs_pp = 3035)
 }
 }
 \seealso{
-Other Helper Functions: \code{\link{HexaTex}},
-  \code{\link{dup_coords}}, \code{\link{getDEM}},
-  \code{\link{get_grids}}, \code{\link{grid_area}},
+Other Helper Functions: \code{\link{dup_coords}},
+  \code{\link{getDEM}}, \code{\link{get_grids}},
+  \code{\link{grid_area}}, \code{\link{hexa_area}},
   \code{\link{isSpatial}}, \code{\link{permutations}},
   \code{\link{readintegerSel}}, \code{\link{readinteger}},
   \code{\link{splitAt}}, \code{\link{tess2SPdf}},

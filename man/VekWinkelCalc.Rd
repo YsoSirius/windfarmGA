@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{VekWinkelCalc}
 \alias{VekWinkelCalc}
-\title{Deprecated use \code{\link[windfarmGA]{VekWinkelCalc}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{get_dist_angles}} instead.}
 \usage{
 VekWinkelCalc(t, o, wkl, distanz, polYgon, plotAngles)
 }
@@ -23,6 +23,7 @@ effects are considered to be eliminated. Default is 100km.}
 angles. Default is FALSE}
 }
 \description{
-VekWinkelCalc is replaced by \code{\link[windfarmGA]{get_dist_angles}}.
+VekWinkelCalc is replaced by
+  \code{\link[windfarmGA]{get_dist_angles}}.
 }
 \keyword{internal}

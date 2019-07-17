@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@ individuals. Default is 100.</p></td>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Genetic Algorithm Functions: <code><a href='crossover.html'>crossover</a></code>,
-  <code><a href='fitness.html'>fitness</a></code>, <code><a href='genAlgo.html'>genAlgo</a></code>,
+  <code><a href='fitness.html'>fitness</a></code>, <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>,
   <code><a href='mutation.html'>mutation</a></code>, <code><a href='selection.html'>selection</a></code>,
   <code><a href='trimton.html'>trimton</a></code>, <code><a href='windfarmGA.html'>windfarmGA</a></code></p></div>
     
@@ -164,32 +164,10 @@ individuals. Default is 100.</p></td>
 <span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='init_population-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='no'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>1</span>,<span class='st'>"TRUE"</span>)</div><div class='img'><img src='init_population-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='init_population-3.png' alt='' width='700' height='433' /></div><div class='input'>
+
+<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='no'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>1</span>,<span class='st'>"TRUE"</span>)</div><div class='img'><img src='init_population-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='init_population-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Create 5 individuals with 10 wind turbines each.</span>
-<span class='no'>firstPop</span> <span class='kw'>&lt;-</span> <span class='fu'>init_population</span>(<span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nStart</span> <span class='kw'>=</span> <span class='fl'>5</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>firstPop</span>)</div><div class='output co'>#&gt; List of 5
-#&gt;  $ : num [1:10, 1:4] 19 43 47 51 55 59 69 70 79 83 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "19" "43" "47" "51" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 1 3 18 27 49 74 77 81 82 98 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "1" "3" "18" "27" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 12 16 28 37 61 80 81 87 92 93 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "12" "16" "28" "37" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 8 9 29 43 57 66 70 71 72 77 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "8" "9" "29" "43" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"
-#&gt;  $ : num [1:10, 1:4] 3 17 28 42 68 75 79 94 95 99 ...
-#&gt;   ..- attr(*, "dimnames")=List of 2
-#&gt;   .. ..$ : chr [1:10] "3" "17" "28" "42" ...
-#&gt;   .. ..$ : chr [1:4] "ID" "X" "Y" "bin"</div><div class='input'>
-</div></pre>
+<span class='no'>firstPop</span> <span class='kw'>&lt;-</span> <span class='fu'>init_population</span>(<span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nStart</span> <span class='kw'>=</span> <span class='fl'>5</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

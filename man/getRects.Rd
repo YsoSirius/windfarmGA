@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{getRects}
 \alias{getRects}
-\title{Deprecated use \code{\link[windfarmGA]{getRects}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{get_grids}} instead.}
 \usage{
 getRects(trimtonOut, Grid)
 }

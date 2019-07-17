@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{InfluPoints}
 \alias{InfluPoints}
-\title{Deprecated use \code{\link[windfarmGA]{InfluPoints}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{turbine_influences}} instead.}
 \usage{
 InfluPoints(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE)
 }
@@ -23,6 +23,7 @@ effects are considered to be eliminated. Default is 100km.}
 angles. Default is FALSE.}
 }
 \description{
-InfluPoints is replaced by \code{\link[windfarmGA]{turbine_influences}}.
+InfluPoints is replaced by
+  \code{\link[windfarmGA]{turbine_influences}}.
 }
 \keyword{internal}

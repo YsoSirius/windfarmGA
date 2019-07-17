@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot a Windrose — plotWindrose • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_windrose.html'>plot_windrose</a></code> instead. — plotWindrose • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="Plot a Windrose — plotWindrose" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_windrose.html'>plot_windrose</a></code> instead. — plotWindrose" />
 
-<meta property="og:description" content="Plot a wind rose of the wind data frame." />
+<meta property="og:description" content="plotWindrose is replaced by
+  plot_windrose." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -102,14 +103,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot a Windrose</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plotWindrose.R'><code>R/plotWindrose.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_windrose.html'>plot_windrose</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>plotWindrose.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plot a wind rose of the wind data frame.</p>
+    <p>plotWindrose is replaced by
+  <code><a href='plot_windrose.html'>plot_windrose</a></code>.</p>
     
     </div>
 
@@ -161,39 +163,13 @@
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Plotting Functions: <code><a href='PlotWindfarmGA.html'>PlotWindfarmGA</a></code>,
-  <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>, <code><a href='heatmapGA.html'>heatmapGA</a></code>,
-  <code><a href='interpol_view.html'>interpol_view</a></code>, <code><a href='plotCloud.html'>plotCloud</a></code>,
-  <code><a href='plotEvolution.html'>plotEvolution</a></code>, <code><a href='plotResult.html'>plotResult</a></code>,
-  <code><a href='plot_viewshed.html'>plot_viewshed</a></code>, <code><a href='plotbeorwor.html'>plotbeorwor</a></code>,
-  <code><a href='plotfitnessevolution.html'>plotfitnessevolution</a></code>,
-  <code><a href='plotparkfitness.html'>plotparkfitness</a></code></p></div>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Exemplary Input Wind speed and direction data frame</span>
-<span class='co'># Uniform wind speed and single wind direction</span>
-<span class='no'>data.in</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>ws</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>wd</span> <span class='kw'>=</span> <span class='fl'>0</span>)
-<span class='no'>windrosePlot</span> <span class='kw'>&lt;-</span> <span class='fu'>plotWindrose</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>data.in</span>, <span class='kw'>spd</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>ws</span>,
-   <span class='kw'>dir</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>wd</span>)</div><div class='img'><img src='plotWindrose-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># Random wind speeds and random wind directions</span>
-<span class='no'>data.in</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>ws</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>1</span>:<span class='fl'>25</span>, <span class='fl'>10</span>),
-                      <span class='kw'>wd</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>1</span>:<span class='fl'>260</span>, <span class='fl'>10</span>))
-<span class='no'>windrosePlot</span> <span class='kw'>&lt;-</span> <span class='fu'>plotWindrose</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>data.in</span>, <span class='kw'>spd</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>ws</span>,
-   <span class='kw'>dir</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>wd</span>)</div><div class='img'><img src='plotWindrose-2.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

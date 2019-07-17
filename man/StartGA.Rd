@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{StartGA}
 \alias{StartGA}
-\title{Deprecated use \code{\link[windfarmGA]{StartGA}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{init_population}} instead.}
 \usage{
 StartGA(Grid, n, nStart = 100)
 }
@@ -16,6 +16,7 @@ X and Y coordinates and Grid cell IDs.}
 individuals. Default is 100.}
 }
 \description{
-StartGA is replaced by \code{\link[windfarmGA]{init_population}}.
+StartGA is replaced by
+  \code{\link[windfarmGA]{init_population}}.
 }
 \keyword{internal}

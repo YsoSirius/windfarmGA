@@ -34,6 +34,9 @@
     <loc>https://YsoSirius.github.io/windfarmGA/reference/genAlgo.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/getDEM.html</loc>
   </url>
   <url>
@@ -59,6 +62,9 @@
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/HexaTex.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/hexa_area.html</loc>
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/InfluPoints.html</loc>
@@ -106,7 +112,40 @@
     <loc>https://YsoSirius.github.io/windfarmGA/reference/plotWindrose.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_cloud.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_development.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_heatmap.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_leaflet.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_random_search.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_result.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_viewshed.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_windfarmGA.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.html</loc>
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/RandomSearch.html</loc>
@@ -116,6 +155,12 @@
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/RandomSearchTurb.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/random_search.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/random_search_single.html</loc>
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/rasterprofile.html</loc>

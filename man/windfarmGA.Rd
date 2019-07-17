@@ -143,10 +143,10 @@ A terrain effect model can be included in the optimization process.
   \code{sourceCCLRoughness} of this function.
 }
 \seealso{
-\code{\link{genAlgo}}
+\code{\link{genetic_algorithm}}
 
 Other Genetic Algorithm Functions: \code{\link{crossover}},
-  \code{\link{fitness}}, \code{\link{genAlgo}},
+  \code{\link{fitness}}, \code{\link{genetic_algorithm}},
   \code{\link{init_population}}, \code{\link{mutation}},
   \code{\link{selection}}, \code{\link{trimton}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{crossover1}
 \alias{crossover1}
-\title{Deprecated use \code{\link[windfarmGA]{crossover1}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{crossover}} instead.}
 \usage{
 crossover1(se6, u, uplimit, crossPart, verbose, seed)
 }

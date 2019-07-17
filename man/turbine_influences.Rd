@@ -42,7 +42,6 @@ polYgon <- SpatialPolygons(list(polYgon))
 Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 proj4string(polYgon) <- CRS(Projection)
-plot(polYgon, axes = TRUE)
 
 t <- as.matrix(cbind(x = runif(10, 0, extent(polYgon)[2]),
      y = runif(10, 0, extent(polYgon)[4])))
@@ -51,7 +50,6 @@ dist <- 100000
 dirct <- 0
 
 res <- turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = TRUE)
-str(res)
 
 }
 \seealso{

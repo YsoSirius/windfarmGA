@@ -20,6 +20,7 @@ functions:
 - RandomSearchTurb
 
 **`RandomSearch`** is used to randomize all turbines of the layout whereas
+
 **`RandomSearchTurb`** is used to randomize a single turbine
 
 **`RandomSearchPlot`** is used to plot the outputs of those functions, compared with the 

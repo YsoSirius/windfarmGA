@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{calculateEn}
 \alias{calculateEn}
-\title{Deprecated use \code{\link[windfarmGA]{calculateEn}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{calculate_energy}} instead.}
 \usage{
 calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl,
   distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp,
@@ -37,7 +37,7 @@ considered to be eliminated}
 \item{dirSpeed}{The wind speed and direction data.frame}
 
 \item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in \code{\link{genAlgo}}}
+and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}}
 
 \item{topograp}{Logical value that indicates whether the terrain effect model
 is activated (TRUE) or deactivated (FALSE)}
@@ -49,6 +49,7 @@ will only be used when the terrain effect model is activated. (raster)}
 \item{weibull}{A raster representing the estimated wind speeds}
 }
 \description{
-calculateEn is replaced by \code{\link[windfarmGA]{calculate_energy}}.
+calculateEn is replaced by
+  \code{\link[windfarmGA]{calculate_energy}}.
 }
 \keyword{internal}

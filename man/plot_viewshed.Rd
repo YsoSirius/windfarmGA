@@ -40,13 +40,15 @@ Other Viewshed Analysis: \code{\link{cansee}},
   \code{\link{interpol_view}}, \code{\link{rasterprofile}},
   \code{\link{viewTo}}, \code{\link{viewshed}}
 
-Other Plotting Functions: \code{\link{PlotWindfarmGA}},
-  \code{\link{RandomSearchTurb}}, \code{\link{heatmapGA}},
-  \code{\link{interpol_view}}, \code{\link{plotCloud}},
-  \code{\link{plotEvolution}}, \code{\link{plotResult}},
-  \code{\link{plotWindrose}}, \code{\link{plotbeorwor}},
-  \code{\link{plotfitnessevolution}},
-  \code{\link{plotparkfitness}}
+Other Plotting Functions: \code{\link{interpol_view}},
+  \code{\link{plot_cloud}}, \code{\link{plot_development}},
+  \code{\link{plot_evolution}},
+  \code{\link{plot_fitness_evolution}},
+  \code{\link{plot_heatmap}},
+  \code{\link{plot_parkfitness}},
+  \code{\link{plot_result}}, \code{\link{plot_windfarmGA}},
+  \code{\link{plot_windrose}},
+  \code{\link{random_search_single}}
 }
 \concept{Plotting Functions}
 \concept{Viewshed Analysis}

@@ -22,10 +22,10 @@ Checks whether the input for \code{\link{selection}} is given
 }
 }
 \seealso{
-Other Helper Functions: \code{\link{HexaTex}},
-  \code{\link{dup_coords}}, \code{\link{getDEM}},
-  \code{\link{getISO3}}, \code{\link{get_grids}},
-  \code{\link{grid_area}}, \code{\link{isSpatial}},
+Other Helper Functions: \code{\link{dup_coords}},
+  \code{\link{getDEM}}, \code{\link{getISO3}},
+  \code{\link{get_grids}}, \code{\link{grid_area}},
+  \code{\link{hexa_area}}, \code{\link{isSpatial}},
   \code{\link{permutations}}, \code{\link{readinteger}},
   \code{\link{splitAt}}, \code{\link{tess2SPdf}},
   \code{\link{windata_format}}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated.R
 \name{GridFilter}
 \alias{GridFilter}
-\title{Deprecated use \code{\link[windfarmGA]{GridFilter}} instead.}
+\title{Deprecated use \code{\link[windfarmGA]{grid_area}} instead.}
 \usage{
 GridFilter(shape, resol = 500, prop = 1, plotGrid = FALSE)
 }

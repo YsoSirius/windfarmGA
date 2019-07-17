@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the best results — plotResult • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_result.html'>plot_result</a></code> instead. — plotResult • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,12 +30,10 @@
 
 
 
-<meta property="og:title" content="Plot the best results — plotResult" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_result.html'>plot_result</a></code> instead. — plotResult" />
 
-<meta property="og:description" content="Plot the best resulting solutions of the genetic algorithm.
-  Depending on plotEn, either the best energy or efficiency solutions
-  can be plotted. best indicates the amount of best solutions that
-  should be plotted." />
+<meta property="og:description" content="plotResult is replaced by
+  plot_result." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -66,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -105,17 +103,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the best results</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plotResults.R'><code>R/plotResults.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_result.html'>plot_result</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>plotResult.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plot the best resulting solutions of the genetic algorithm.
-  Depending on <code>plotEn</code>, either the best energy or efficiency solutions
-  can be plotted. <code>best</code> indicates the amount of best solutions that
-  should be plotted.</p>
+    <p>plotResult is replaced by
+  <code><a href='plot_result.html'>plot_result</a></code>.</p>
     
     </div>
 
@@ -129,7 +125,7 @@
     <tr>
       <th>result</th>
       <td><p>An output matrix of the function <code><a href='windfarmGA.html'>windfarmGA</a></code> or
-<code><a href='genAlgo.html'>genAlgo</a></code>, which has stored all relevant information.</p></td>
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>, which has stored all relevant information.</p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
@@ -183,69 +179,13 @@ cover Austria. This variable is only used if weibull==TRUE.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a data.frame of the best (energy/efficiency) individual
-  during all iterations.</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other Plotting Functions: <code><a href='PlotWindfarmGA.html'>PlotWindfarmGA</a></code>,
-  <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>, <code><a href='heatmapGA.html'>heatmapGA</a></code>,
-  <code><a href='interpol_view.html'>interpol_view</a></code>, <code><a href='plotCloud.html'>plotCloud</a></code>,
-  <code><a href='plotEvolution.html'>plotEvolution</a></code>, <code><a href='plotWindrose.html'>plotWindrose</a></code>,
-  <code><a href='plot_viewshed.html'>plot_viewshed</a></code>, <code><a href='plotbeorwor.html'>plotbeorwor</a></code>,
-  <code><a href='plotfitnessevolution.html'>plotfitnessevolution</a></code>,
-  <code><a href='plotparkfitness.html'>plotparkfitness</a></code></p></div>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Add some data examples from the package</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resulthex.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/polygon.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='co'>## Plot the results of a hexagonal grid optimization</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resulthex</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='no'>polygon</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='HexaTex.html'>HexaTex</a></span>(<span class='no'>Polygon1</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>87.5</span>, <span class='fl'>FALSE</span>)
-<span class='fu'>plotResult</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div><div class='output co'>#&gt; N different optimal configurations: 9 
-#&gt; Amount duplicates: 1
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='plotResult-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Plot the results of a rectangular grid optimization</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resultrect</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='no'>polygon</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='no'>Polygon1</span>, <span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>175</span>, <span class='fl'>1</span>, <span class='fl'>FALSE</span>)
-<span class='fu'>plotResult</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div><div class='output co'>#&gt; N different optimal configurations: 15 
-#&gt; Amount duplicates: 15
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='plotResult-2.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Plot the results of with a weibull mean background</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resultrect</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='no'>polygon</span>
-<span class='no'>a_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/readRDS'>readRDS</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/a_weibull.RDS"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='no'>k_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/readRDS'>readRDS</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/k_weibull.RDS"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='no'>weibullsrc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>k_param</span>, <span class='no'>a_param</span>)
-<span class='fu'>plotResult</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>weibullsrc</span> <span class='kw'>=</span> <span class='no'>weibullsrc</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .local(.Object, ...): </span></div><div class='input'>
-<span class='co'>## Plot the hexagonal results ith weibull mean background</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resulthex</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='HexaTex.html'>HexaTex</a></span>(<span class='no'>Polygon1</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>87.5</span>, <span class='fl'>FALSE</span>)
-<span class='fu'>plotResult</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>weibullsrc</span> <span class='kw'>=</span> <span class='no'>weibullsrc</span>)</div><div class='output co'>#&gt; <span class='error'>Error in .local(.Object, ...): </span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

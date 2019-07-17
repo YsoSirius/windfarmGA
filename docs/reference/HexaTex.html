@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Polygon to Hexagonal Grid Tessellation — HexaTex • windfarmGA</title>
+<title>Deprecated use <code><a href='hexa_area.html'>hexa_area</a></code> instead. — HexaTex • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,9 @@
 
 
 
-<meta property="og:title" content="Polygon to Hexagonal Grid Tessellation — HexaTex" />
+<meta property="og:title" content="Deprecated use <code><a href='hexa_area.html'>hexa_area</a></code> instead. — HexaTex" />
 
-<meta property="og:description" content="The function takes a Polygon and a sizing argument and creates
-  a list with an indexed matrix with coordinates and a SpatialPolygons
-  object, that consists of hexagonal grids" />
+<meta property="og:description" content="HexaTex is replaced by hexa_area." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -65,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -104,16 +102,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Polygon to Hexagonal Grid Tessellation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/HexaTex.R'><code>R/HexaTex.R</code></a></small>
+    <h1>Deprecated use <code><a href='hexa_area.html'>hexa_area</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>HexaTex.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The function takes a Polygon and a sizing argument and creates
-  a list with an indexed matrix with coordinates and a SpatialPolygons
-  object, that consists of hexagonal grids</p>
+    <p>HexaTex is replaced by <code><a href='hexa_area.html'>hexa_area</a></code>.</p>
     
     </div>
 
@@ -136,58 +132,13 @@
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a list with an indexed matrix of the point coordinates and a
-  SpatialPolygons object of the hexagons</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other Helper Functions: <code><a href='dup_coords.html'>dup_coords</a></code>,
-  <code><a href='getDEM.html'>getDEM</a></code>, <code><a href='getISO3.html'>getISO3</a></code>,
-  <code><a href='get_grids.html'>get_grids</a></code>, <code><a href='grid_area.html'>grid_area</a></code>,
-  <code><a href='isSpatial.html'>isSpatial</a></code>, <code><a href='permutations.html'>permutations</a></code>,
-  <code><a href='readintegerSel.html'>readintegerSel</a></code>, <code><a href='readinteger.html'>readinteger</a></code>,
-  <code><a href='splitAt.html'>splitAt</a></code>, <code><a href='tess2SPdf.html'>tess2SPdf</a></code>,
-  <code><a href='windata_format.html'>windata_format</a></code></p></div>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>spatstat</span>)</div><div class='output co'>#&gt; <span class='message'>Lade nötiges Paket: spatstat.data</span></div><div class='output co'>#&gt; <span class='message'>Lade nötiges Paket: nlme</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attache Paket: 'nlme'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:raster':</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    getData</span></div><div class='output co'>#&gt; <span class='message'>Lade nötiges Paket: rpart</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>spatstat 1.58-2       (nickname: 'Not Even Wrong') </span>
-#&gt; <span class='message'>For an introduction to spatstat, type 'beginner' </span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Note: spatstat version 1.58-2 is out of date by more than 6 months; we recommend upgrading to the latest version.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attache Paket: 'spatstat'</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:raster':</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    area, rotate, shift</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>maptools</span>)</div><div class='output co'>#&gt; <span class='message'>Checking rgeos availability: TRUE</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>raster</span>)
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygon</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2668272</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2669343</span>),
-                          <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2669343</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2668272</span>)))
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>),<span class='fl'>1</span>);
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>SpatialPolygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>))
-<span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='HexaTex-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>HexGrid</span> <span class='kw'>&lt;-</span> <span class='fu'>HexaTex</span>(<span class='no'>Polygon1</span>, <span class='fl'>100</span>, <span class='fl'>TRUE</span>)</div><div class='img'><img src='HexaTex-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>HexGrid</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div><div class='img'><img src='HexaTex-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>HexGrid</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt;  num [1:71, 1:3] 1 2 3 4 5 6 7 8 9 10 ...
-#&gt;  - attr(*, "dimnames")=List of 2
-#&gt;   ..$ : NULL
-#&gt;   ..$ : chr [1:3] "ID" "X" "Y"</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

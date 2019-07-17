@@ -9,10 +9,10 @@
 #'   drivers, dsn is a file name, but may also be a folder)
 #' @param layer The layer name
 #'
-#' @seealso \code{\link{genAlgo}}
+#' @seealso \code{\link{genetic_algorithm}}
 #' @family Genetic Algorithm Functions
 #'
-#' @inherit genAlgo details return params title
+#' @inherit genetic_algorithm details return params title
 windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection, 
                        sourceCCL, sourceCCLRoughness,
                        vdirspe, Rotor = 30, fcrR = 3, n = 10, topograp = FALSE,
@@ -85,7 +85,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     stop("\n##### No wind data.frame is given. \nThis input is required for an optimization run")
   }
   plot.new()
-  plotWindrose(data = vdirspe, spd = vdirspe[, 'ws'], dir = vdirspe[, 'wd'])
+  plot_windrose(data = vdirspe, spd = vdirspe[, 'ws'], dir = vdirspe[, 'wd'])
   readline(prompt = "\nPress <ENTER> if the windrose looks correct?")
   ## Check if Rotor,fcrR,n,iteration,RotorHeight,
   ## SurfaceRoughness,Proportionality,mutr,nelit are numeric
@@ -110,7 +110,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod == "HEXAGON" | GridMethod == "H") {
-    Grid <- HexaTex(Polygon1 = Polygon1, 
+    Grid <- hexa_area(Polygon1 = Polygon1, 
                     size = (Rotor * fcrR) / 2, plotTrue = TRUE)
   } else {
     Grid <- grid_area(shape = Polygon1,resol = (Rotor * fcrR), 
@@ -177,7 +177,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
 
   ##########################################################
   ############### RUNNING GENETIC ALGORITHM
-  result <- genAlgo(Polygon1 = Polygon1, GridMethod = GridMethod, 
+  result <- genetic_algorithm(Polygon1 = Polygon1, GridMethod = GridMethod, 
                     Rotor = Rotor, n = n, fcrR = fcrR, iteration = iteration,
                     vdirspe = vdirspe, topograp = topograp,
                     referenceHeight = referenceHeight, RotorHeight = RotorHeight, 
