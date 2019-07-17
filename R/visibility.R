@@ -1,4 +1,3 @@
-########################################
 #' @title Calculate Visibility between 2 locations
 #' @name cansee
 #' @description Check if point1 (xy1) visible from point2 (xy2) given a certain
@@ -160,9 +159,6 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
 #' }
 viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
-  # r = DEM_meter[[1]]; shape=DEM_meter[[2]]; turbine_locs = turbloc
-  # h1=0; h2=0; progress="none"
-  
   if (class(shape)[1] == "sf") {
     shape <- as(shape, "Spatial")  
   }
@@ -174,25 +170,27 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
   smplf <- sf::st_buffer(smplf, dist = 10)
   shape <- as(smplf, "Spatial")  
   
-  
   sample_POI <- sp::spsample(shape, n = raster::ncell(r), type = "regular")
   sample_xy <- sp::coordinates(sample_POI)
   
-  ## xy2 is a matrix of x,y coords (not a data frame)
+  ## xy2 is a matrix of x,y coords
   res <- plyr::aaply(turbine_locs, 1, function(d){
     viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2)
-  }, .progress=progress)
+  }, .progress = progress)
   
+  # if (is.matrix(res)) {
+  #   ## TODO - Why is that? Doesnt do
+  #   res <- res[1:nrow(res), 1:nrow(sample_xy)]
+  # }
+  # if (is.logical(res)) {
+  #   res[1:nrow(sample_xy)]
+  # }
   
-  if (is.matrix(res)) {
-    res <- res[1:nrow(res),1:nrow(sample_xy)]
-  }
-  if (is.logical(res)) {
-    res[1:nrow(sample_xy)]
-  }
-  
-  return(list("Result"=res, "Raster_POI" = sample_xy, 
-              "Area" = sf::st_as_sf(shape), "DEM" = r, "Turbines" = turbine_locs))
+  return(list("Result" = res, 
+              "Raster_POI" = sample_xy, 
+              "Area" = sf::st_as_sf(shape), 
+              "DEM" = r, 
+              "Turbines" = turbine_locs))
 }
 ## Geht noch nicht
 # viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
@@ -290,7 +288,7 @@ plot_viewshed <- function(res, legend=FALSE) {
            col=c("green","black", "red"), 
            legend = c("Not visible","Turbines","Turbine/s visible"), pch=20)    
   }
-  
+  return()
 }
 
 
@@ -425,7 +423,7 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   # pp= points; col = "ISO3"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT")
   # pp = points; col = "?"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT"); ask=T
   
-  if (col == "?") {ask=T}
+  if ("?" %in% col) {ask = TRUE}
   
   countriesSP <- rworldmap::getMap(resolution=resol)
   
@@ -445,7 +443,7 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   pp <- as.data.frame(pp)
   colnames(pp) <- coords
   
-  pp <- st_as_sf(pp, coords=coords, crs = crs_pp)
+  pp <- st_as_sf(pp, coords = coords, crs = crs_pp)
   pp <- st_transform(pp, crs = countriesSP@proj4string@projargs)
   
   pp1 <- as(pp, "Spatial")
@@ -453,11 +451,8 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   # use 'over' to get indices of the Polygons object containing each point 
   worldmap_values <- sp::over(pp1, countriesSP)
   
-  ##-------what if multiple columns?
-  
-  # return desired column of each country
-  res <- as.character(unique(worldmap_values[[col]]))
-  return(res)
+  # return desired columns of each country
+  unique(worldmap_values[, col, drop = FALSE])
 }
 # points=sample_POI
 # getISO3(pp = points, ask = T)
