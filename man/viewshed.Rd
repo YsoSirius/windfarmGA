@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{viewshed}
 \alias{viewshed}
-\title{viewshed}
+\title{Calculate visibility}
 \usage{
 viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0, progress = "none")
 }
@@ -11,8 +11,8 @@ viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0, progress = "none")
 
 \item{shape}{A SpatialPolygon of the windfarm area.}
 
-\item{turbine_locs}{Coordinates or SpatialPoint representing
-the wind turbines}
+\item{turbine_locs}{Coordinates or SpatialPoint representing the wind
+turbines}
 
 \item{h1}{A numeric giving the extra height offset of Point 1}
 
@@ -21,13 +21,11 @@ the wind turbines}
 \item{progress}{Is passed on to plyr::aaply}
 }
 \value{
-A list of 5, containing the boolean result for every cell, 
-the raster cell points, a SimpleFeature Polygon of the given area 
-and the DEM raster
+A list of 5, containing the boolean result for every cell, the raster
+  cell points, a SimpleFeature Polygon of the given area and the DEM raster
 }
 \description{
-Calculate visibility for given points in 
-a given area.
+Calculate visibility for given points in a given area.
 }
 \examples{
 \dontrun{
@@ -48,3 +46,9 @@ turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
 }
 }
+\seealso{
+Other Viewshed Analysis: \code{\link{cansee}},
+  \code{\link{interpol_view}}, \code{\link{plot_viewshed}},
+  \code{\link{rasterprofile}}, \code{\link{viewTo}}
+}
+\concept{Viewshed Analysis}

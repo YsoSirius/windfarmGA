@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot heatmap of fit grid cells — heatmapGA • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_heatmap.html'>plot_heatmap</a></code> instead. — heatmapGA • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Plot heatmap of fit grid cells — heatmapGA" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_heatmap.html'>plot_heatmap</a></code> instead. — heatmapGA" />
 
-<meta property="og:description" content="Plot a heatmap of the selected grid cells. Green grid
-cells have been selected more often than red grid cells." />
+<meta property="og:description" content="heatmapGA is replaced by plot_heatmap." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,15 +102,14 @@ cells have been selected more often than red grid cells." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot heatmap of fit grid cells</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/heatmapGA.R'><code>R/heatmapGA.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_heatmap.html'>plot_heatmap</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>heatmapGA.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plot a heatmap of the selected grid cells. Green grid
-cells have been selected more often than red grid cells.</p>
+    <p>heatmapGA is replaced by <code><a href='plot_heatmap.html'>plot_heatmap</a></code>.</p>
     
     </div>
 
@@ -123,45 +121,27 @@ cells have been selected more often than red grid cells.</p>
     <tr>
       <th>result</th>
       <td><p>The output matrix of <code><a href='windfarmGA.html'>windfarmGA</a></code> or
-<code><a href='genAlgo.html'>genAlgo</a></code>, which has stored all relevant information</p></td>
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>, which has stored all relevant information</p></td>
     </tr>
     <tr>
       <th>si</th>
-      <td><p>A numeric value that is used for the sizing of the
-resolution of the heatmap. Default is 2</p></td>
+      <td><p>A numeric value that is used for the sizing of the resolution of
+the heatmap. Default is 2</p></td>
     </tr>
     <tr>
       <th>idistw</th>
-      <td><p>The inverse distance weighting power. Default is the
-rotor radius from the 'result' values</p></td>
+      <td><p>The inverse distance weighting power. Default is the rotor
+radius from the 'result' values</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Invisibly returns a list with the result of the inverse distance
-weighting and an aggregated dataframe of all grid cells</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Add some data examples from the package</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resulthex.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='co'>## Plot the results of a hexagonal grid optimization</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resulthex</span>
-<span class='fu'>heatmapGA</span>(<span class='no'>result</span>)</div><div class='output co'>#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='heatmapGA-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Plot the heatmap with different settings</span>
-<span class='fu'>heatmapGA</span>(<span class='no'>result</span>, <span class='kw'>si</span> <span class='kw'>=</span> <span class='fl'>6</span>, <span class='kw'>idistw</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='heatmapGA-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>heatmapGA</span>(<span class='no'>result</span>, <span class='kw'>si</span> <span class='kw'>=</span> <span class='fl'>6</span>, <span class='kw'>idistw</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='heatmapGA-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>heatmapGA</span>(<span class='no'>result</span>, <span class='kw'>si</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>idistw</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='heatmapGA-4.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

@@ -32,8 +32,7 @@
 
 <meta property="og:title" content="Create a Tesselation from a Polygon — tess2SPdf" />
 
-<meta property="og:description" content="Returns a Spatial Polygons object from
-a Tesselation object." />
+<meta property="og:description" content="Returns a Spatial Polygons object from a Tesselation object." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,14 +103,13 @@ a Tesselation object." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a Tesselation from a Polygon</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/HexaTex.R'><code>R/HexaTex.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/hexa_area.R'><code>R/hexa_area.R</code></a></small>
     <div class="hidden name"><code>tess2SPdf.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Returns a Spatial Polygons object from
-a Tesselation object.</p>
+    <p>Returns a Spatial Polygons object from a Tesselation object.</p>
     
     </div>
 
@@ -130,6 +128,16 @@ a Tesselation object.</p>
 
     <p>Returns a SpatialPolygons. (SpatialPolygons)</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Helper Functions: <code><a href='dup_coords.html'>dup_coords</a></code>,
+  <code><a href='getDEM.html'>getDEM</a></code>, <code><a href='getISO3.html'>getISO3</a></code>,
+  <code><a href='get_grids.html'>get_grids</a></code>, <code><a href='grid_area.html'>grid_area</a></code>,
+  <code><a href='hexa_area.html'>hexa_area</a></code>, <code><a href='isSpatial.html'>isSpatial</a></code>,
+  <code><a href='permutations.html'>permutations</a></code>, <code><a href='readintegerSel.html'>readintegerSel</a></code>,
+  <code><a href='readinteger.html'>readinteger</a></code>, <code><a href='splitAt.html'>splitAt</a></code>,
+  <code><a href='windata_format.html'>windata_format</a></code></p></div>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>spatstat</span>)
@@ -142,17 +150,13 @@ a Tesselation object.</p>
 <span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='tess2SPdf-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'>## Create a hexagonal Tesselation</span>
+
+<span class='co'>## Create a hexagonal Tesselation</span>
 <span class='no'>HexaGrid</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>spatstat</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/spatstat/topics/hextess'>hextess</a></span>(<span class='kw pkg'>maptools</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/maptools/topics/as.ppp'>as.owin.SpatialPolygons</a></span>(<span class='no'>Polygon1</span>),<span class='kw'>s</span> <span class='kw'>=</span> <span class='fl'>100</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>HexaGrid</span>)</div><div class='img'><img src='tess2SPdf-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>HexaGrid</span></div><div class='output co'>#&gt; Tessellation
-#&gt; Tiles are windows of general type
-#&gt; 83 tiles (irregular windows)
-#&gt; window: rectangle = [4498482, 4499991] x [2668272, 2669343] units</div><div class='input'><span class='co'>## Convert the Tesselation to SpatialPolygons</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>HexaGrid</span>)</div><div class='img'><img src='tess2SPdf-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'>## Convert the Tesselation to SpatialPolygons</span>
 <span class='no'>Hex2spdf</span> <span class='kw'>&lt;-</span> <span class='fu'>tess2SPdf</span>(<span class='no'>HexaGrid</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>Hex2spdf</span>)</div><div class='img'><img src='tess2SPdf-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>Hex2spdf</span></div><div class='output co'>#&gt; class       : SpatialPolygons 
-#&gt; features    : 83 
-#&gt; extent      : 4498482, 4499991, 2668272, 2669343  (xmin, xmax, ymin, ymax)
-#&gt; coord. ref. : NA </div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>Hex2spdf</span>)</div><div class='img'><img src='tess2SPdf-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -161,6 +165,8 @@ a Tesselation object.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

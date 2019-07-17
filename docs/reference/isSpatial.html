@@ -32,8 +32,8 @@
 
 <meta property="og:title" content="Transform to SpatialPolygons — isSpatial" />
 
-<meta property="og:description" content="Helper Function, which transforms SimpleFeatures or
-coordinates in matrix/data.frame/data.table into a SpatialPolygon" />
+<meta property="og:description" content="Helper Function, which transforms SimpleFeatures or coordinates
+  in matrix/data.frame/data.table into a SpatialPolygon" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,14 +104,14 @@ coordinates in matrix/data.frame/data.table into a SpatialPolygon" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Transform to SpatialPolygons</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/genAlgo.R'><code>R/genAlgo.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/genetic_algorithm.R'><code>R/genetic_algorithm.R</code></a></small>
     <div class="hidden name"><code>isSpatial.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Helper Function, which transforms SimpleFeatures or
-coordinates in matrix/data.frame/data.table into a SpatialPolygon</p>
+    <p>Helper Function, which transforms SimpleFeatures or coordinates
+  in matrix/data.frame/data.table into a SpatialPolygon</p>
     
     </div>
 
@@ -122,13 +122,13 @@ coordinates in matrix/data.frame/data.table into a SpatialPolygon</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>shape</th>
-      <td><p>An area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame</p></td>
+      <td><p>An area as SpatialPolygon, SimpleFeature Polygon or coordinates
+as matrix/data.frame</p></td>
     </tr>
     <tr>
       <th>proj</th>
-      <td><p>Which Projection should be assigned to matrix / 
-data.frame coordinates</p></td>
+      <td><p>Which Projection should be assigned to matrix / data.frame
+coordinates</p></td>
     </tr>
     </table>
     
@@ -138,9 +138,19 @@ data.frame coordinates</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If the columns are named, it will look for common abbreviation
-to match x/y or long/lat columns. If the columns are not named, the first
-2 numeric columns are taken.</p>
+    <p>If the columns are named, it will look for common abbreviation to
+  match x/y or long/lat columns. If the columns are not named, the first 2
+  numeric columns are taken.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Helper Functions: <code><a href='dup_coords.html'>dup_coords</a></code>,
+  <code><a href='getDEM.html'>getDEM</a></code>, <code><a href='getISO3.html'>getISO3</a></code>,
+  <code><a href='get_grids.html'>get_grids</a></code>, <code><a href='grid_area.html'>grid_area</a></code>,
+  <code><a href='hexa_area.html'>hexa_area</a></code>, <code><a href='permutations.html'>permutations</a></code>,
+  <code><a href='readintegerSel.html'>readintegerSel</a></code>, <code><a href='readinteger.html'>readinteger</a></code>,
+  <code><a href='splitAt.html'>splitAt</a></code>, <code><a href='tess2SPdf.html'>tess2SPdf</a></code>,
+  <code><a href='windata_format.html'>windata_format</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -171,6 +181,8 @@ to match x/y or long/lat columns. If the columns are not named, the first
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

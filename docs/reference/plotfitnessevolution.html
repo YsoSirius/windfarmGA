@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the changes of min/mean/max fitness values — plotfitnessevolution • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_fitness_evolution.html'>plot_fitness_evolution</a></code> instead. — plotfitnessevolution • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="Plot the changes of min/mean/max fitness values — plotfitnessevolution" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_fitness_evolution.html'>plot_fitness_evolution</a></code> instead. — plotfitnessevolution" />
 
-<meta property="og:description" content="Plot the evolution of fitness values and the change in the
-min, mean and max fitness values to the former generations." />
+<meta property="og:description" content="plotfitnessevolution is replaced by
+  plot_fitness_evolution." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,51 +103,42 @@ min, mean and max fitness values to the former generations." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the changes of min/mean/max fitness values</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plotfitnessevolution.R'><code>R/plotfitnessevolution.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_fitness_evolution.html'>plot_fitness_evolution</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>plotfitnessevolution.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plot the evolution of fitness values and the change in the
-min, mean and max fitness values to the former generations.</p>
+    <p>plotfitnessevolution is replaced by
+  <code><a href='plot_fitness_evolution.html'>plot_fitness_evolution</a></code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>plotfitnessevolution</span>(<span class='no'>result</span>, <span class='kw'>spar</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</pre>
+    <pre class="usage"><span class='fu'>plotfitnessevolution</span>(<span class='no'>result</span>, <span class='kw'>ask</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>spar</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>result</th>
-      <td><p>An output matrix of the function <code><a href='windfarmGA.html'>windfarmGA</a></code>
-or <code><a href='genAlgo.html'>genAlgo</a></code> which has stored all relevant information.</p></td>
+      <td><p>An output matrix of the function <code><a href='windfarmGA.html'>windfarmGA</a></code> or
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a></code> which has stored all relevant information.</p></td>
     </tr>
     <tr>
       <th>spar</th>
-      <td><p>A numeric value determining how exact a spline should
-be drawn. Default is 0.1</p></td>
+      <td><p>A numeric value determining how exact a spline should be drawn.
+Default is 0.1</p></td>
     </tr>
     </table>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Add some data examples from the package</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resulthex.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='co'>## Plot the results of a hexagonal grid optimization</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resulthex</span>
-<span class='fu'>plotfitnessevolution</span>(<span class='no'>result</span>, <span class='fl'>0.1</span>)</div><div class='img'><img src='plotfitnessevolution-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

@@ -1,11 +1,12 @@
 #' @title Check Input Crossover Method
 #' @name readinteger
-#' @description  Checks whether the input for \code{\link{crossover1}} is
-#' given correctly. If not, a message is prompted which asks to input one
-#' of the 2 available crossover methods. The available inputs are "E" and "R".
-#' "E" refers to partitioning at equal intervals and "R" refers to random
-#' partitioning.
-#' 
+#' @description  Checks whether the input for \code{\link{crossover}} is given
+#'   correctly. If not, a message is prompted which asks to input one of the 2
+#'   available crossover methods. The available inputs are "E" and "R". "E"
+#'   refers to partitioning at equal intervals and "R" refers to random
+#'   partitioning.
+#'
+#' @family Helper Functions
 #' @return Returns the selected crossover method (character)
 #' @examples \donttest{
 #'   readinteger()
@@ -29,12 +30,13 @@ readinteger        <- function(){
 
 #' @title Check Input Selection Method
 #' @name readintegerSel
-#' @description  Checks whether the input for \code{\link{selection1}} is
-#' given correctly. If not, a message is prompted which asks to input one
-#' of the 2 available selection methods. The available inputs are "F" and "V".
-#' "F" refers to a fixed percentage of 50% and "V" refers to a variable
-#' percentage, based on the development of the population fitness values.
-#' 
+#' @description  Checks whether the input for \code{\link{selection}} is given
+#'   correctly. If not, a message is prompted which asks to input one of the 2
+#'   available selection methods. The available inputs are "F" and "V". "F"
+#'   refers to a fixed percentage of 50% and "V" refers to a variable
+#'   percentage, based on the development of the population fitness values.
+#'
+#' @family Helper Functions
 #' @return Returns the selected selection method (character)
 #' @examples \donttest{
 #'   readintegerSel()

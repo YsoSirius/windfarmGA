@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Start a Genetic Algorithm for a wind farm layout optimization — genAlgo • windfarmGA</title>
+<title>Deprecated use <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code> instead. — genAlgo • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,12 +30,10 @@
 
 
 
-<meta property="og:title" content="Start a Genetic Algorithm for a wind farm layout optimization — genAlgo" />
+<meta property="og:title" content="Deprecated use <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code> instead. — genAlgo" />
 
-<meta property="og:description" content="Run a Genetic Algorithm to optimize the layout of wind turbines
-on a given area. The algorithm works with a fixed amount of turbines, a 
-fixed rotor radius and a mean wind speed value for every incoming wind 
-direction." />
+<meta property="og:description" content="genAlgo is replaced by
+  genetic_algorithm." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -105,17 +103,15 @@ direction." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Start a Genetic Algorithm for a wind farm layout optimization</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/genAlgo.R'><code>R/genAlgo.R</code></a></small>
+    <h1>Deprecated use <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>genAlgo.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Run a Genetic Algorithm to optimize the layout of wind turbines
-on a given area. The algorithm works with a fixed amount of turbines, a 
-fixed rotor radius and a mean wind speed value for every incoming wind 
-direction.</p>
+    <p>genAlgo is replaced by
+  <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>.</p>
     
     </div>
 
@@ -135,10 +131,9 @@ or coordinates as matrix/data.frame</p></td>
     </tr>
     <tr>
       <th>GridMethod</th>
-      <td><p>Should the polygon be divided into rectangular or
-hexagonal grid cells? The default is "Rectangular" grid cells and hexagonal
-grid cells are computed when assigning "h" or "hexagon" to this input
-variable.</p></td>
+      <td><p>Should the polygon be divided into rectangular or hexagonal
+grid cells? The default is "Rectangular" grid cells and hexagonal grid
+cells are computed when assigning "h" or "hexagon" to this input variable.</p></td>
     </tr>
     <tr>
       <th>Rotor</th>
@@ -154,8 +149,8 @@ variable.</p></td>
     </tr>
     <tr>
       <th>referenceHeight</th>
-      <td><p>The height at which the incoming
-wind speeds were measured. Default is the RotorHeight.</p></td>
+      <td><p>The height at which the incoming wind speeds were
+measured. Default is the RotorHeight.</p></td>
     </tr>
     <tr>
       <th>RotorHeight</th>
@@ -163,20 +158,20 @@ wind speeds were measured. Default is the RotorHeight.</p></td>
     </tr>
     <tr>
       <th>SurfaceRoughness</th>
-      <td><p>A surface roughness length of the
-considered area in m.  If the terrain effect model is activated, a
-surface roughness will be calculated for every grid cell with the
-elevation and land cover information. Default is 0.3</p></td>
+      <td><p>A surface roughness length of the considered area in
+m.  If the terrain effect model is activated, a surface roughness will be
+calculated for every grid cell with the elevation and land cover
+information. Default is 0.3</p></td>
     </tr>
     <tr>
       <th>Proportionality</th>
-      <td><p>A numeric value used for grid calculation.
-Determines the percentage a grid has to overlay. Default is 1</p></td>
+      <td><p>A numeric value used for grid calculation. Determines
+the percentage a grid has to overlay. Default is 1</p></td>
     </tr>
     <tr>
       <th>iteration</th>
-      <td><p>A numeric value indicating the desired amount
-of iterations of the algorithm. Default is 20</p></td>
+      <td><p>A numeric value indicating the desired amount of iterations
+of the algorithm. Default is 20</p></td>
     </tr>
     <tr>
       <th>mutr</th>
@@ -184,8 +179,8 @@ of iterations of the algorithm. Default is 20</p></td>
     </tr>
     <tr>
       <th>vdirspe</th>
-      <td><p>A data.frame containing the incoming wind speeds,
-wind directions and probabilities</p></td>
+      <td><p>A data.frame containing the incoming wind speeds, wind
+directions and probabilities</p></td>
     </tr>
     <tr>
       <th>topograp</th>
@@ -194,38 +189,37 @@ should be activated or not. Default is FALSE</p></td>
     </tr>
     <tr>
       <th>elitism</th>
-      <td><p>Boolean value, which indicates whether elitism should
-be included or not. Default is TRUE</p></td>
+      <td><p>Boolean value, which indicates whether elitism should be
+included or not. Default is TRUE</p></td>
     </tr>
     <tr>
       <th>nelit</th>
-      <td><p>If <code>elitism</code> is TRUE, then this input variable
-determines the amount of individuals in the elite group. Default is 7</p></td>
+      <td><p>If <code>elitism</code> is TRUE, then this input variable determines
+the amount of individuals in the elite group. Default is 7</p></td>
     </tr>
     <tr>
       <th>selstate</th>
-      <td><p>Determines which selection method is used,
-"FIX" selects a constant percentage and "VAR" selects a variable percentage,
-depending on the development of the fitness values. Default is "FIX"</p></td>
+      <td><p>Determines which selection method is used, "FIX" selects a
+constant percentage and "VAR" selects a variable percentage, depending on
+the development of the fitness values. Default is "FIX"</p></td>
     </tr>
     <tr>
       <th>crossPart1</th>
-      <td><p>Determines which crossover method is used,
-"EQU" divides the genetic code at equal intervals and
-"RAN" divides the genetic code at random locations. Default is "EQU"</p></td>
+      <td><p>Determines which crossover method is used, "EQU" divides
+the genetic code at equal intervals and "RAN" divides the genetic code at
+random locations. Default is "EQU"</p></td>
     </tr>
     <tr>
       <th>trimForce</th>
-      <td><p>If activated (<code>trimForce == TRUE</code>),
-the algorithm will take a probabilistic approach to trim the windfarms
-to the desired amount of turbines. If deactivated
-(<code>trimForce == FALSE</code>) the adjustment will be random.
-Default is FALSE</p></td>
+      <td><p>If activated (<code>trimForce == TRUE</code>), the algorithm will
+take a probabilistic approach to trim the windfarms to the desired amount
+of turbines. If deactivated (<code>trimForce == FALSE</code>) the adjustment will
+be random. Default is FALSE</p></td>
     </tr>
     <tr>
       <th>Projection</th>
-      <td><p>A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection (EPSG:3035).</p></td>
+      <td><p>A desired Projection can be used instead of the default
+Lambert Azimuthal Equal Area Projection (EPSG:3035).</p></td>
     </tr>
     <tr>
       <th>sourceCCL</th>
@@ -235,11 +229,11 @@ it will try to download a version from the EEA-website.</p></td>
     </tr>
     <tr>
       <th>sourceCCLRoughness</th>
-      <td><p>The source to the adapted
-Corine Land Cover legend as .csv file. Only required when terrain
-effect model is activated. As default a .csv file within this
-package (<code class="file">~/extdata</code>) is taken that was already adapted
-manually. To use your own .csv legend this variable has to be assigned.</p></td>
+      <td><p>The source to the adapted Corine Land Cover legend
+as .csv file. Only required when terrain effect model is activated. As
+default a .csv file within this package (<code class="file">~/extdata</code>) is taken that
+was already adapted manually. To use your own .csv legend this variable has
+to be assigned.</p></td>
     </tr>
     <tr>
       <th>weibull</th>
@@ -254,23 +248,23 @@ Default is FALSE</p></td>
       <td><p>A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE.</p></td>
+then rasters included in the package are used instead, which currently only
+cover Austria. This variable is only used if weibull==TRUE.</p></td>
     </tr>
     <tr>
       <th>Parallel</th>
-      <td><p>Boolean value, indicating whether parallel processing
-should be used. The parallel and doParallel packages are used for parallel
+      <td><p>Boolean value, indicating whether parallel processing should
+be used. The parallel and doParallel packages are used for parallel
 processing. Default is FALSE</p></td>
     </tr>
     <tr>
       <th>numCluster</th>
-      <td><p>If Parallel is TRUE, this variable defines the number
-of clusters to be used</p></td>
+      <td><p>If Parallel is TRUE, this variable defines the number of
+clusters to be used</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>If TRUE, will print out information for every generation 
+      <td><p>If TRUE, will print out information for every generation
 Default is FALSE</p></td>
     </tr>
     <tr>
@@ -280,130 +274,13 @@ is FALSE</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The result is a matrix with aggregated values per generation,
-the best individual regarding energy and efficiency per generation,
-some fuzzy control variables per generation, a list of all fitness values
-per generation, the amount of individuals after each process, a matrix of
-all energy, efficiency and fitness values per generation, the selection and 
-crossover paramters, a matrix with the generational difference in maximum
-and mean energy output, a matrix with the given inputs, a dataframe with
-the wind information, the mutation rate per generation and matrix with all 
-tested wind farm layouts.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>A terrain effect model can be included in the optimization process.
-Therefore, an SRTM elevation model will be downloaded automatically via the
-<code><a href='https://www.rdocumentation.org/packages/raster/topics/getData'>raster::getData</a></code> function. A land cover raster can also be downloaded
-automatically from the EEA-website, or the path to a raster file can be 
-passed to <code>sourceCCL</code>. The algorithm uses an adapted version of the
-Raster legend ("clc_legend.csv"), which is stored in the package directory 
-<code class="file">~/inst/extdata</code>. To use other values for the land cover roughness 
-lengths, insert a column named <strong>"Rauhigkeit_z"</strong> to the .csv file, 
-assign a surface roughness length to all land cover types. 
-Be sure that all rows are filled with numeric values and save the file
-with <strong>";"</strong> separation. Assign the path of the file to the 
-input variable <code>sourceCCLRoughness</code> of this function.</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Create a random rectangular shapefile</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygon</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2668272</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2669343</span>),
-                          <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2669343</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2668272</span>)))
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>), <span class='fl'>1</span>);
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>SpatialPolygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>))
-<span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='genAlgo-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Create a uniform and unidirectional wind data.frame and plot the</span>
-<span class='co'>## resulting wind rose</span>
-<span class='no'>data.in</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>ws</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>wd</span> <span class='kw'>=</span> <span class='fl'>0</span>)
-<span class='no'>windrosePlot</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='plotWindrose.html'>plotWindrose</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>data.in</span>, <span class='kw'>spd</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>ws</span>,
-                <span class='kw'>dir</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>wd</span>, <span class='kw'>dirres</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>spdmax</span><span class='kw'>=</span><span class='fl'>20</span>)</div><div class='img'><img src='genAlgo-2.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Runs an optimization run for 20 iterations with the</span>
-<span class='co'>## given shapefile (Polygon1), the wind data.frame (data.in),</span>
-<span class='co'>## 12 turbines (n) with rotor radii of 30m (Rotor) and rotor height of 100m.</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='fu'>genAlgo</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,
-                  <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>12</span>,
-                  <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,
-                  <span class='kw'>Rotor</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-                  <span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; ....................</div><div class='input'><span class='fu'><a href='PlotWindfarmGA.html'>PlotWindfarmGA</a></span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; [1] "plotResult: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 7 
-#&gt; Amount duplicates: 13
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genAlgo-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotEvolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='genAlgo-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-5.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='genAlgo-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-8.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-10.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotfitnessevolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='genAlgo-11.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotCloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='genAlgo-12.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "heatmapGA: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genAlgo-13.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>## Runs the same optimization, but with parallel processing and 3 cores.</span>
-<span class='no'>result_par</span> <span class='kw'>&lt;-</span> <span class='fu'>genAlgo</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span><span class='st'>"h"</span>, <span class='kw'>n</span><span class='kw'>=</span><span class='fl'>12</span>, <span class='kw'>Rotor</span><span class='kw'>=</span><span class='fl'>30</span>,
-                 <span class='kw'>fcrR</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>iteration</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,<span class='kw'>crossPart1</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>,
-                 <span class='kw'>selstate</span><span class='kw'>=</span><span class='st'>"FIX"</span>,<span class='kw'>mutr</span><span class='kw'>=</span><span class='fl'>0.8</span>, <span class='kw'>Proportionality</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                 <span class='kw'>SurfaceRoughness</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>topograp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>elitism</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>nelit</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>trimForce</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>50</span>,<span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-                 <span class='kw'>Parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>numCluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; ..........</div><div class='output co'>#&gt; <span class='error'>Error in defaultCluster(cl): object 'cl' not found</span></div><div class='input'><span class='fu'><a href='PlotWindfarmGA.html'>PlotWindfarmGA</a></span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result_par</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span> <span class='st'>"h"</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1): object 'result_par' not found</span></div><div class='input'>
-<span class='co'>## Runs the same optimization, this time with hexagonal grids.</span>
-<span class='no'>result_hex</span> <span class='kw'>&lt;-</span> <span class='fu'>genAlgo</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span><span class='st'>"h"</span>, <span class='kw'>n</span><span class='kw'>=</span><span class='fl'>12</span>, <span class='kw'>Rotor</span><span class='kw'>=</span><span class='fl'>30</span>,
-                 <span class='kw'>fcrR</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>iteration</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,<span class='kw'>crossPart1</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>,
-                 <span class='kw'>selstate</span><span class='kw'>=</span><span class='st'>"FIX"</span>,<span class='kw'>mutr</span><span class='kw'>=</span><span class='fl'>0.8</span>, <span class='kw'>Proportionality</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                 <span class='kw'>SurfaceRoughness</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>topograp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>elitism</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>nelit</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>trimForce</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>50</span>,<span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'><a href='PlotWindfarmGA.html'>PlotWindfarmGA</a></span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result_hex</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span> <span class='st'>"h"</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; [1] "plotResult: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 10 
-#&gt; Amount duplicates: 0
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genAlgo-14.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotEvolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='genAlgo-15.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-16.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='genAlgo-17.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-18.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-19.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-20.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-21.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-22.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotfitnessevolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='genAlgo-23.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotCloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='genAlgo-24.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "heatmapGA: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genAlgo-25.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>## Run an optimization with the Weibull parameters included in the package.</span>
-<span class='no'>result_weibull</span> <span class='kw'>&lt;-</span> <span class='fu'>genAlgo</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span><span class='st'>"h"</span>, <span class='kw'>n</span><span class='kw'>=</span><span class='fl'>12</span>,
-                 <span class='kw'>fcrR</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>iteration</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,<span class='kw'>crossPart1</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>,
-                 <span class='kw'>selstate</span><span class='kw'>=</span><span class='st'>"FIX"</span>,<span class='kw'>mutr</span><span class='kw'>=</span><span class='fl'>0.8</span>, <span class='kw'>Proportionality</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rotor</span><span class='kw'>=</span><span class='fl'>30</span>,
-                 <span class='kw'>SurfaceRoughness</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>topograp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>elitism</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>nelit</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>trimForce</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>50</span>,<span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-                 <span class='kw'>weibull</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'><a href='PlotWindfarmGA.html'>PlotWindfarmGA</a></span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result_weibull</span>, <span class='kw'>GridMethod</span><span class='kw'>=</span> <span class='st'>"h"</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; [1] "plotResult: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 10 
-#&gt; Amount duplicates: 0
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genAlgo-26.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotEvolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='genAlgo-27.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-28.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='genAlgo-29.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-30.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-31.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-32.png' alt='' width='700' height='433' /></div><div class='img'><img src='genAlgo-33.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotfitnessevolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='genAlgo-34.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotCloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='genAlgo-35.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "heatmapGA: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genAlgo-36.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-## Run an optimization with given Weibull parameter rasters.
-#araster <- "/..pathto../a_param_raster.tif"
-#kraster <- "/..pathto../k_param_raster.tif"
-#weibullrasters <- list(raster(kraster), raster(araster))
-#result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-#                  SurfaceRoughness = 0.3, topograp = FALSE,
-#                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#                  referenceHeight = 50,RotorHeight = 100,
-#                  weibull = TRUE, weibullsrc = weibullrasters)
-#PlotWindfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

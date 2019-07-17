@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>viewshed — viewshed • windfarmGA</title>
+<title>Calculate visibility — viewshed • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="viewshed — viewshed" />
+<meta property="og:title" content="Calculate visibility — viewshed" />
 
-<meta property="og:description" content="Calculate visibility for given points in 
-a given area." />
+<meta property="og:description" content="Calculate visibility for given points in a given area." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,15 +102,14 @@ a given area." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>viewshed</h1>
+    <h1>Calculate visibility</h1>
     <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/visibility.R'><code>R/visibility.R</code></a></small>
     <div class="hidden name"><code>viewshed.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Calculate visibility for given points in 
-a given area.</p>
+    <p>Calculate visibility for given points in a given area.</p>
     
     </div>
 
@@ -130,8 +128,8 @@ a given area.</p>
     </tr>
     <tr>
       <th>turbine_locs</th>
-      <td><p>Coordinates or SpatialPoint representing
-the wind turbines</p></td>
+      <td><p>Coordinates or SpatialPoint representing the wind
+turbines</p></td>
     </tr>
     <tr>
       <th>h1</th>
@@ -149,9 +147,14 @@ the wind turbines</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of 5, containing the boolean result for every cell, 
-the raster cell points, a SimpleFeature Polygon of the given area 
-and the DEM raster</p>
+    <p>A list of 5, containing the boolean result for every cell, the raster
+  cell points, a SimpleFeature Polygon of the given area and the DEM raster</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Viewshed Analysis: <code><a href='cansee.html'>cansee</a></code>,
+  <code><a href='interpol_view.html'>interpol_view</a></code>, <code><a href='plot_viewshed.html'>plot_viewshed</a></code>,
+  <code><a href='rasterprofile.html'>rasterprofile</a></code>, <code><a href='viewTo.html'>viewTo</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -179,6 +182,8 @@ and the DEM raster</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

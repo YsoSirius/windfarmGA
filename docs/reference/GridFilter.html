@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make a grid from a Polygon — GridFilter • windfarmGA</title>
+<title>Deprecated use <code><a href='grid_area.html'>grid_area</a></code> instead. — GridFilter • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,9 @@
 
 
 
-<meta property="og:title" content="Make a grid from a Polygon — GridFilter" />
+<meta property="og:title" content="Deprecated use <code><a href='grid_area.html'>grid_area</a></code> instead. — GridFilter" />
 
-<meta property="og:description" content="Create a grid from a given polygon and with a certain
-resolution and proportionality. The center points of each grid cell
-represent possible locations for wind turbines." />
+<meta property="og:description" content="GridFilter is replaced by grid_area." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,16 +102,14 @@ represent possible locations for wind turbines." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make a grid from a Polygon</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/GridFilter.R'><code>R/GridFilter.R</code></a></small>
+    <h1>Deprecated use <code><a href='grid_area.html'>grid_area</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>GridFilter.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Create a grid from a given polygon and with a certain
-resolution and proportionality. The center points of each grid cell
-represent possible locations for wind turbines.</p>
+    <p>GridFilter is replaced by <code><a href='grid_area.html'>grid_area</a></code>.</p>
     
     </div>
 
@@ -132,82 +128,25 @@ represent possible locations for wind turbines.</p>
     </tr>
     <tr>
       <th>prop</th>
-      <td><p>A factor used for grid calculation.
-Determines the percentage a grid has to overlay the considered area
-to be represented as grid cell. Default is 1.</p></td>
+      <td><p>A factor used for grid calculation. Determines the percentage a
+grid has to overlay the considered area to be represented as grid cell.
+Default is 1.</p></td>
     </tr>
     <tr>
       <th>plotGrid</th>
-      <td><p>Logical value indicating whether resulting grid
-should be plotted or not. Default is FALSE.</p></td>
+      <td><p>Logical value indicating whether resulting grid should be
+plotted or not. Default is FALSE.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a list with 2 elements. List element 1 will have
-the grid cell IDS, and the X and Y coordinates of the centers
-of each grid cell. List element 2 is the grid as SpatialPolygons,
-which is used for plotting purposes.</p>
-    
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>The grid of the genetic algorithm will have a resolution of
-<code>Rotor * fcrR</code>. See the arguments of <code><a href='windfarmGA.html'>windfarmGA</a></code></p>
-    
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p><a href='http://rfunctions.blogspot.co.at/2014/12/gridfilter-intersect-grid-with-shape.html'>http://rfunctions.blogspot.co.at/2014/12/gridfilter-intersect-grid-with-shape.html</a></p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>raster</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>rgeos</span>)</div><div class='output co'>#&gt; <span class='message'>rgeos version: 0.4-2, (SVN revision 581)</span>
-#&gt; <span class='message'> GEOS runtime version: 3.6.1-CAPI-1.10.1 </span>
-#&gt; <span class='message'> Linking to sp version: 1.3-1 </span>
-#&gt; <span class='message'> Polygon checking: TRUE </span></div><div class='input'>
-<span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygon</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>2000</span>),
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2000</span>, <span class='fl'>2000</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2000</span>, <span class='fl'>0</span>)))
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>),<span class='fl'>1</span>);
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>SpatialPolygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>))
-<span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Create a Grid</span>
-<span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>1</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>1</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-5.png' alt='' width='700' height='433' /></div><div class='input'>
-
-<span class='co'>## Examplary irregular input Polygon</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygon</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>rbind</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>20</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>200</span>),
-                          <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2000</span>, <span class='fl'>2000</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>3000</span>, <span class='fl'>0</span>)))
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>Polygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>),<span class='fl'>1</span>);
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/SpatialPolygons'>SpatialPolygons</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>Polygon1</span>))
-<span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-6.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## Create a Grid</span>
-<span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>1</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>0.5</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-10.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>0.1</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-11.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-12.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>1</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-13.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-14.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>0.5</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-15.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-16.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>GridFilter</span>(<span class='no'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>0.1</span>,<span class='fl'>TRUE</span>)</div><div class='img'><img src='GridFilter-17.png' alt='' width='700' height='433' /></div><div class='img'><img src='GridFilter-18.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
+                </ul>
 
-      <li><a href="#note">Note</a></li>
-
-      <li><a href="#references">References</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Jose Hidasi (original) / Sebastian Gatscha (adapted)</p>
   </div>
 </div>
 

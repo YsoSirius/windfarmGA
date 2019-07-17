@@ -1,39 +1,34 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
 Version: 2.2.2
-Date: 2019-02-19
+Date: 2019-07-17
 Author: Sebastian Gatscha
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
-Description: The genetic algorithm is designed to optimize small wind farms with
-    irregular shapes. It requires a fixed amount of turbines, a fixed
-    rotor radius and an average wind speed value for each incoming wind direction.
-    A terrain effect model can be included that downloads an 'SRTM' elevation model
-    and loads a Corine Land Cover raster to approximate surface roughness. 
-    Further information can be found in the description of the function 'windfarmGA'.
+Description: The genetic algorithm is designed to optimize small wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 Depends:
     R (>= 3.2.3)
-Imports:
-    rgdal (>= 1.3.6),
+Imports: rgdal (>= 1.3.6),
     Rcpp (>= 1.0.0),
     raster (>= 2.8.19),
     sf (>= 0.7.2),
+    sp (>= 1.2-2),
+    rgeos (>= 0.3-8),
     plyr (>= 1.8.4),
     rworldmap (>= 1.3.6),
-    sp (>= 1.2-2),
     maptools (>= 0.8-36),
-    calibrate (>= 1.7.2),
     gstat (>= 1.0-26),
     ggplot2 (>= 2.2.0),
     RColorBrewer (>= 1.1.2),
+    calibrate (>= 1.7.2),
+    grDevices,
+    graphics,
+    leaflet (>= 1.1.0),
     magrittr (>= 1.5),
     foreach (>= 1.4.3),
     parallel (>= 3.4.1),
     doParallel (>= 1.0.11),
-    leaflet (>= 1.1.0),
     methods (>= 3.2.5),
     spatstat (>= 1.42-2),
-    grDevices,
-    graphics,
     stats,
     utils
 LinkingTo: Rcpp
@@ -42,5 +37,5 @@ License: MIT + file LICENSE
 URL: https://github.com/YsoSirius/windfarmGA
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.1.1
-Suggests: testthat, rgeos (>= 0.3-8), dplyr (>= 0.8.0.1)
+Suggests: testthat, dplyr (>= 0.8.0.1)
 Encoding: UTF-8

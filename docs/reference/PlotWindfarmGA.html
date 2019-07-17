@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the results of an optimization run — PlotWindfarmGA • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_windfarmGA.html'>plot_windfarmGA</a></code> instead. — PlotWindfarmGA • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,10 @@
 
 
 
-<meta property="og:title" content="Plot the results of an optimization run — PlotWindfarmGA" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_windfarmGA.html'>plot_windfarmGA</a></code> instead. — PlotWindfarmGA" />
 
-<meta property="og:description" content="Plot the results of a genetic algorithm run with given inputs.
-Several plots try to show all relevant effects and outcomes of the
-algorithm. 6 plot methods are available that can be selected individually." />
+<meta property="og:description" content="PlotWindfarmGA is replaced by
+  plot_windfarmGA." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,16 +103,15 @@ algorithm. 6 plot methods are available that can be selected individually." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the results of an optimization run</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/PlotWindfarmGA.R'><code>R/PlotWindfarmGA.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_windfarmGA.html'>plot_windfarmGA</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>PlotWindfarmGA.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plot the results of a genetic algorithm run with given inputs.
-Several plots try to show all relevant effects and outcomes of the
-algorithm. 6 plot methods are available that can be selected individually.</p>
+    <p>PlotWindfarmGA is replaced by
+  <code><a href='plot_windfarmGA.html'>plot_windfarmGA</a></code>.</p>
     
     </div>
 
@@ -126,7 +124,7 @@ algorithm. 6 plot methods are available that can be selected individually.</p>
     <tr>
       <th>result</th>
       <td><p>An output matrix of the function <code><a href='windfarmGA.html'>windfarmGA</a></code> or
-<code><a href='genAlgo.html'>genAlgo</a></code>, which has stored all relevant information.</p></td>
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>, which has stored all relevant information.</p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
@@ -136,13 +134,13 @@ shapefile is already loaded.</p></td>
     <tr>
       <th>GridMethod</th>
       <td><p>Which grid spacing method was used. Default is
-"rectangular". If hexagonal grid cells were used, assign any of the following
-arguments: "h","hexa", "hexagonal".</p></td>
+"rectangular". If hexagonal grid cells were used, assign any of the
+following arguments: "h","hexa", "hexagonal".</p></td>
     </tr>
     <tr>
       <th>whichPl</th>
-      <td><p>Which plots should be shown: 1-6 are possible. The default
-is "all" which shows all available plots.</p></td>
+      <td><p>Which plots should be shown: 1-6 are possible. The default is
+"all" which shows all available plots.</p></td>
     </tr>
     <tr>
       <th>best</th>
@@ -151,79 +149,32 @@ should be plotted.</p></td>
     </tr>
     <tr>
       <th>plotEn</th>
-      <td><p>A numeric value that indicates if the best energy or
-efficiency output should be plotted. If (plotEn==1) plots the best energy
-solutions and (plotEn==2) plots the best efficiency solutions.</p></td>
+      <td><p>A numeric value that indicates if the best energy or efficiency
+output should be plotted. If (plotEn==1) plots the best energy solutions
+and (plotEn==2) plots the best efficiency solutions.</p></td>
     </tr>
     <tr>
       <th>Projection</th>
-      <td><p>A desired Projection can be used instead
-of the default Lambert Azimuthal Equal Area Projection.</p></td>
+      <td><p>A desired Projection can be used instead of the default
+Lambert Azimuthal Equal Area Projection.</p></td>
     </tr>
     <tr>
       <th>weibullsrc</th>
       <td><p>A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently
-only cover Austria. This variable is only used if weibull==TRUE.</p></td>
+then rasters included in the package are used instead, which currently only
+cover Austria. This variable is only used if weibull==TRUE.</p></td>
     </tr>
     </table>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>sp</span>)
-<span class='co'>## Add some data examples from the package</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resulthex.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/polygon.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='co'>## Plot the results of a hexagonal grid optimization</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resulthex</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='no'>polygon</span>
-<span class='fu'>PlotWindfarmGA</span>(<span class='no'>result</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span> <span class='st'>"h"</span>, <span class='no'>Polygon1</span>, <span class='kw'>whichPl</span> <span class='kw'>=</span> <span class='st'>"all"</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] "plotResult: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 9 
-#&gt; Amount duplicates: 1
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='PlotWindfarmGA-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotEvolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='PlotWindfarmGA-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='PlotWindfarmGA-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-8.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotfitnessevolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='PlotWindfarmGA-9.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotCloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='PlotWindfarmGA-10.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "heatmapGA: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='PlotWindfarmGA-11.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>## Plot the results of a rectangular grid optimization</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resultrect</span>
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='no'>polygon</span>
-<span class='fu'>PlotWindfarmGA</span>(<span class='no'>result</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span> <span class='st'>"r"</span>, <span class='no'>Polygon1</span>, <span class='kw'>whichPl</span> <span class='kw'>=</span> <span class='st'>"all"</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] "plotResult: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 15 
-#&gt; Amount duplicates: 15
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='PlotWindfarmGA-12.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotEvolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='PlotWindfarmGA-13.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-14.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='PlotWindfarmGA-15.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-16.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-17.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-18.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-19.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-20.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotfitnessevolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='PlotWindfarmGA-21.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotCloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='PlotWindfarmGA-22.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "heatmapGA: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='PlotWindfarmGA-23.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>## Plot the results with hexagonal grid cells and a weibull mean background.</span>
-<span class='no'>a_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/readRDS'>readRDS</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/a_weibull.RDS"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='no'>k_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/readRDS'>readRDS</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/k_weibull.RDS"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='no'>weibullsrc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>k_param</span>, <span class='no'>a_param</span>)
-<span class='fu'>PlotWindfarmGA</span>(<span class='no'>result</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span> <span class='st'>"h"</span>, <span class='no'>Polygon1</span>, <span class='kw'>whichPl</span> <span class='kw'>=</span> <span class='st'>"all"</span>,
-               <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>weibullsrc</span> <span class='kw'>=</span> <span class='no'>weibullsrc</span>)</div><div class='output co'>#&gt; [1] "plotResult: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 15 
-#&gt; Amount duplicates: 15
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='PlotWindfarmGA-24.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotEvolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='PlotWindfarmGA-25.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-26.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plotparkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='PlotWindfarmGA-27.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-28.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-29.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-30.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-31.png' alt='' width='700' height='433' /></div><div class='img'><img src='PlotWindfarmGA-32.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotfitnessevolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='PlotWindfarmGA-33.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plotCloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='PlotWindfarmGA-34.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "heatmapGA: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='PlotWindfarmGA-35.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

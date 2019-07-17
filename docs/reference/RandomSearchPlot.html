@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>RandomSearchPlot Plot the result of a randomized ouput. — RandomSearchPlot • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_random_search.html'>plot_random_search</a></code> instead. — RandomSearchPlot • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="RandomSearchPlot Plot the result of a randomized ouput. — RandomSearchPlot" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_random_search.html'>plot_random_search</a></code> instead. — RandomSearchPlot" />
 
-<meta property="og:description" content="Plotting method for the functions RandomSearchTurb
-and RandomSearch." />
+<meta property="og:description" content="RandomSearchPlot is replaced by
+  plot_random_search." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,15 +103,15 @@ and RandomSearch." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>RandomSearchPlot Plot the result of a randomized ouput.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/RandomSearchPlot.R'><code>R/RandomSearchPlot.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_random_search.html'>plot_random_search</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>RandomSearchPlot.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plotting method for the functions <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>
-and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p>
+    <p>RandomSearchPlot is replaced by
+  <code><a href='plot_random_search.html'>plot_random_search</a></code>.</p>
     
     </div>
 
@@ -122,13 +122,13 @@ and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>resultRS</th>
-      <td><p>The result of the random functions <code><a href='RandomSearchTurb.html'>RandomSearchTurb</a></code>
-and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p></td>
+      <td><p>The result of the random functions
+<code><a href='random_search_single.html'>random_search_single</a></code> and <code><a href='random_search.html'>random_search</a></code>.</p></td>
     </tr>
     <tr>
       <th>result</th>
-      <td><p>The result of the function <code><a href='genAlgo.html'>genAlgo</a></code> or
-<code><a href='windfarmGA.html'>windfarmGA</a></code>.</p></td>
+      <td><p>The result of the function <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code> or
+<code><a href='windfarmGA.html'>windfarmGA</a></code></p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
@@ -141,19 +141,12 @@ and <code><a href='RandomSearch.html'>RandomSearch</a></code>.</p></td>
     </table>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/polygon.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='no'>Res</span> <span class='kw'>=</span> <span class='fu'>RandomSearchPlot</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cbind(resultRS): argument "resultRS" is missing, with no default</span></div><div class='input'><span class='fu'>RandomSearchPlot</span>(<span class='kw'>resultRS</span> <span class='kw'>=</span> <span class='no'>Res</span>, <span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>best</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cbind(resultRS): object 'Res' not found</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

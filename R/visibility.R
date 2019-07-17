@@ -1,8 +1,8 @@
 ########################################
-#' @title cansee
+#' @title Calculate Visibility between 2 locations
 #' @name cansee
-#' @description Check if point1 (xy1) visible from point2 (xy2) given 
-#' a certain DEM (r)
+#' @description Check if point1 (xy1) visible from point2 (xy2) given a certain
+#'   DEM (r)
 #'
 #' @export
 #'
@@ -12,6 +12,7 @@
 #' @param h1 A numeric giving the extra height offset of Point 1
 #' @param h2 A numeric giving the extra height offset of Point 2
 #'
+#' @family Viewshed Analysis
 #' @return A boolean value, indicating if the point (xy2) is visible
 #'
 cansee <- function(r, xy1, xy2, h1=0, h2=0){
@@ -34,14 +35,12 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0){
 }
 
 
-#' @title viewTo
+#' @title Calculate Visibility between multiple locations
 #' @name viewTo
-#' @description Check if Point 1 (xy) is visible from multiple points
-#' (xy2)
+#' @description Check if Point 1 (xy) is visible from multiple points (xy2)
 #'
 #' @export
-#' @importFrom plyr aaply
-#' 
+#'
 #' @param r A DEM raster
 #' @param xy1 A matrix with X and Y coordinates for Point 1
 #' @param xy2 A matrix with X and Y coordinates for Points 2
@@ -49,8 +48,9 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0){
 #' @param h2 A numeric giving the extra height offset of Point 2
 #' @param progress Is passed on to plyr::aaply
 #'
-#' @return A boolean vector, indicating if Point 1 (xy1) is visible
-#' from all elements of Points 2 (xy2)
+#' @family Viewshed Analysis
+#' @return A boolean vector, indicating if Point 1 (xy1) is visible from all
+#'   elements of Points 2 (xy2)
 #'
 viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
   # xy1 = c(x = 4653100.36021378, y = 2744048.65794167); 
@@ -70,21 +70,20 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
 }
 
 
-#' @title rasterprofile
+#' @title Sample values from a raster
 #' @name rasterprofile
 #' @description Sample a raster along a straight line between 2 points
 #'
 #' @export
-#' @importFrom raster res cellFromXY
-#' @importFrom stats complete.cases
 #'
 #' @param r A DEM raster
 #' @param xy1 A matrix with X and Y coordinates for Point 1
 #' @param xy2 A matrix with X and Y coordinates for Points 2
 #' @param plot Plot the process? Default is FALSE
 #'
-#' @return A boolean vector, indicating if Point 1 (xy1) is visible
-#' from all elements of Points 2 (xy2)
+#' @family Viewshed Analysis
+#' @return A boolean vector, indicating if Point 1 (xy1) is visible from all
+#'   elements of Points 2 (xy2)
 #'
 rasterprofile <- function(r, xy1, xy2, plot=FALSE){
   # r = DEM_meter[[1]]; xy1 = sample_xy[29,]; xy2 = sample_xy[26,]; plot=T
@@ -125,29 +124,23 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
 }
 
 
-#' @title viewshed
+#' @title Calculate visibility
 #' @name viewshed
-#' @description Calculate visibility for given points in 
-#' a given area.
+#' @description Calculate visibility for given points in a given area.
 #'
 #' @export
-#' 
-#' @importFrom sp coordinates spsample
-#' @importFrom raster res ncell
-#' @importFrom plyr aaply
-#' @importFrom sf st_as_sf
-
+#'
 #' @param r A DEM raster
 #' @param shape A SpatialPolygon of the windfarm area.
-#' @param turbine_locs Coordinates or SpatialPoint representing
-#' the wind turbines
+#' @param turbine_locs Coordinates or SpatialPoint representing the wind
+#'   turbines
 #' @param h1 A numeric giving the extra height offset of Point 1
 #' @param h2 A numeric giving the extra height offset of Point 2
 #' @param progress Is passed on to plyr::aaply
-#' 
-#' @return A list of 5, containing the boolean result for every cell, 
-#' the raster cell points, a SimpleFeature Polygon of the given area 
-#' and the DEM raster
+#'
+#' @family Viewshed Analysis
+#' @return A list of 5, containing the boolean result for every cell, the raster
+#'   cell points, a SimpleFeature Polygon of the given area and the DEM raster
 #' 
 #' @examples \dontrun{
 #' library(sp)
@@ -248,18 +241,18 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 # res <- viewshed_par(r = DEM_meter, shape=shape_meter, turbine_locs = turbloc,  h1=1.8, h2=50)
 
 
-#' @title plot_viewshed
+#' @title Plot viewshed results
 #' @name plot_viewshed
-#' @description Plot the result of viewshed
+#' @description Plot the result of \code{\link{viewshed}}
 #'
 #' @export
-#' 
-#' @importFrom raster plot
-#' @importFrom sf st_geometry
-#' 
+#'
 #' @param res The resulting list from viewshed
 #' @param legend Plot a legend? Default is FALSE
-#' 
+#'
+#' @family Viewshed Analysis
+#' @family Plotting Functions
+#'
 #' @return NULL
 #' @examples \dontrun{
 #' library(sp)
@@ -303,25 +296,24 @@ plot_viewshed <- function(res, legend=FALSE) {
 
 
 
-#' @title interpol_view
+#' @title Plot an interpolated viewshed 
 #' @name interpol_view
 #' @description Plot an interpolated view of the viewshed analysis
 #'
 #' @export
-#' 
-#' @importFrom raster plot rasterize
-#' @importFrom stats quantile
-#' 
+#'
 #' @param res The result list from viewshed.
 #' @param plot Should the result be plotted? Default is TRUE
-#' @param breakseq The breaks for value plotting. By default, 5 equal 
-#' intervals are generated.
-#' @param breakform If 'breakseq' is missing, a sampling function to 
-#' calculate the breaks, like \code{\link{quantile}}, fivenum, etc.
+#' @param breakseq The breaks for value plotting. By default, 5 equal intervals
+#'   are generated.
+#' @param breakform If 'breakseq' is missing, a sampling function to calculate
+#'   the breaks, like \code{\link{quantile}}, fivenum, etc.
 #' @param plotDEM Plot the DEM? Default is FALSE
 #' @param fun Function used for rasterize. Default is mean
 #' @param ... Arguments passed on to \code{\link[raster]{plot}}.
-#' 
+#'
+#' @family Viewshed Analysis
+#' @family Plotting Functions
 #' @return An interpolated raster
 #' 
 #' @examples \dontrun{
@@ -402,13 +394,9 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 
 #' @title getISO3
 #' @name getISO3
-#' @description Get point values from the rworldmap package
+#' @description Get point values from the \code{\link[rworldmap]{getMap}}
 #'
 #' @export
-#' 
-#' @importFrom rworldmap getMap
-#' @importFrom sp over
-#' @importFrom sf st_coordinates st_as_sf st_transform
 #' 
 #' @param pp SpatialPoints or matrix
 #' @param crs_pp The CRS of the points
@@ -417,6 +405,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' @param coords The column names of the point matrix
 #' @param ask A boolean, to ask which columns can be returned
 #' 
+#' @family Helper Functions
 #' @return A character vector
 #' 
 #' @examples \dontrun{
@@ -440,17 +429,12 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   
   countriesSP <- rworldmap::getMap(resolution=resol)
   
-  
   if (ask == TRUE) {
     print(sort(names(countriesSP)))
     col = readline(prompt="Enter an ISO3 code: ")
-    # col = "afs"
-    
     if (!col %in% sort(names(countriesSP))) {
-      
       stop("Column not found")
     }
-    
   }
   
   ## if sf
@@ -485,24 +469,19 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 # getISO3(points, crs_pp = 3035)
 
 
-#' @title getDEM
+#' @title Get DEM raster
 #' @name getDEM
 #' @description Get a DEM raster for a country based on ISO3 code
 #'
 #' @export
-#' 
-#' @importFrom raster getData projection crop extent crs projectRaster
-#' @importFrom sp over
-#' @importFrom sf st_coordinates st_as_sf st_transform
-#' @importFrom methods as
-#' 
+#'
 #' @param ISO3 The ISO3 code of the country
-#' @param clip boolean, indicating if polygon should be cropped.
-#' Default is TRUE
+#' @param clip boolean, indicating if polygon should be cropped. Default is TRUE
 #' @param polygon A Spatial / SimpleFeature Polygon to crop the DEM
-#' 
-#' @return A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL
-#' if no polygon is given
+#'
+#' @family Helper Functions
+#' @return A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL if
+#'   no polygon is given
 #' 
 #' @examples \dontrun{
 #' library(sp)

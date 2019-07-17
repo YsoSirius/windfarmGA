@@ -2,7 +2,7 @@
 % Please edit documentation in R/visibility.R
 \name{cansee}
 \alias{cansee}
-\title{cansee}
+\title{Calculate Visibility between 2 locations}
 \usage{
 cansee(r, xy1, xy2, h1 = 0, h2 = 0)
 }
@@ -21,6 +21,12 @@ cansee(r, xy1, xy2, h1 = 0, h2 = 0)
 A boolean value, indicating if the point (xy2) is visible
 }
 \description{
-Check if point1 (xy1) visible from point2 (xy2) given 
-a certain DEM (r)
+Check if point1 (xy1) visible from point2 (xy2) given a certain
+  DEM (r)
 }
+\seealso{
+Other Viewshed Analysis: \code{\link{interpol_view}},
+  \code{\link{plot_viewshed}}, \code{\link{rasterprofile}},
+  \code{\link{viewTo}}, \code{\link{viewshed}}
+}
+\concept{Viewshed Analysis}

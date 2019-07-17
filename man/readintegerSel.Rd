@@ -10,14 +10,24 @@ readintegerSel()
 Returns the selected selection method (character)
 }
 \description{
-Checks whether the input for \code{\link{selection1}} is
-given correctly. If not, a message is prompted which asks to input one
-of the 2 available selection methods. The available inputs are "F" and "V".
-"F" refers to a fixed percentage of 50% and "V" refers to a variable
-percentage, based on the development of the population fitness values.
+Checks whether the input for \code{\link{selection}} is given
+  correctly. If not, a message is prompted which asks to input one of the 2
+  available selection methods. The available inputs are "F" and "V". "F"
+  refers to a fixed percentage of 50% and "V" refers to a variable
+  percentage, based on the development of the population fitness values.
 }
 \examples{
 \donttest{
   readintegerSel()
 }
 }
+\seealso{
+Other Helper Functions: \code{\link{dup_coords}},
+  \code{\link{getDEM}}, \code{\link{getISO3}},
+  \code{\link{get_grids}}, \code{\link{grid_area}},
+  \code{\link{hexa_area}}, \code{\link{isSpatial}},
+  \code{\link{permutations}}, \code{\link{readinteger}},
+  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
+  \code{\link{windata_format}}
+}
+\concept{Helper Functions}

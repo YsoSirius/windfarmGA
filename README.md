@@ -39,10 +39,10 @@ the air densities at rotor heights. The land cover raster with an additional ele
 roughness value is used to re-evaluate the surface roughness and to individually
 determine the wake-decay constant for each turbine.
 
-To start an optimization, either the function 'windfarmGA' or 'genAlgo' can 
+To start an optimization, either the function 'windfarmGA' or 'genetic_algorithm' can 
 be used. The function 'windfarmGA' checks the user inputs interactively and then 
-runs the function 'genAlgo'. If the input parameters are already known, an 
-optimization can be run directly via the function 'genAlgo'. 
+runs the function 'genetic_algorithm'. If the input parameters are already known, an 
+optimization can be run directly via the function 'genetic_algorithm'. 
 Their output is identical.
 
 <div>
@@ -81,13 +81,13 @@ plot(Polygon1, col = "blue", axes = TRUE)
 - Exemplary input Wind data with uniform wind speed and single wind direction
  ```sh
 wind_df <- data.frame(ws = c(12, 12), wd = c(0, 0), probab = c(25, 25))
-windrosePlot <- plotWindrose(data = wind_df, spd = wind_df$ws,
+windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd, dirres=10, spdmax = 20)
 ```
 - Exemplary input Wind data with random wind speeds and random wind directions
  ```sh
 wind_df <- data.frame(ws = sample(1:25, 10), wd = sample(1:260, 10)))
-windrosePlot <- plotWindrose(data = wind_df, spd = wind_df$ws,
+windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd)
 ```
 
@@ -105,14 +105,14 @@ Rotor <- 20
 fcrR <- 9
 # proj4string(Polygon1)
 # Polygon1 <- spTransform(Polygon1, CRSobj = CRS(Projection))
-Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
+Grid <- grid_area(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 str(Grid)
 ```
 ### Hexagonal Grid Cells
 ```sh
 Rotor <- 20
 fcrR <- 9
-HexGrid <- HexaTex(Polygon1, size = ((Rotor*fcrR)/2), plotTrue = TRUE)
+HexGrid <- hexa_area(Polygon1, size = ((Rotor*fcrR)/2), plotTrue = TRUE)
 str(HexGrid)
 ```
 <p align="center">
@@ -121,9 +121,7 @@ str(HexGrid)
 
 
 ## Terrain Effect Model
-If the input variable **`topograp`** for the functions 'windfarmGA' or 'genAlgo' is TRUE, then the genetic algorithm 
-will take terrain effects into account. For this purpose an elevation model is downloaded automatically by the 'raster' package
-and a Corine Land Cover raster must be downloaded and given manually. (Download at: http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1).
+If the input variable **`topograp`** for the functions 'windfarmGA' or 'genetic_algorithm' is TRUE, then the genetic algorithm will take terrain effects into account. For this purpose an elevation model is downloaded automatically by the 'raster' package and a Corine Land Cover raster must be downloaded and given manually. (Download at: http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1).
 Download the .zip package with 100 meter resolution. Unzip the downloaded package and assign the source of the Raster Image
 "g100_06.tif" to the package input variable **`sourceCCL`**. The algorithm will use an adapted version of the Raster legend
 ("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness
@@ -135,7 +133,7 @@ the examples of the package.
 
 ## Start an Optimization
 An optimization run can be initiated with the following functions: 
-- genAlgo
+- genetic_algorithm
 - windfarmGA
 
 ### Function calls for windfarmGA
@@ -160,10 +158,10 @@ result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteratio
              sourceCCLRoughness = sourceCCLRoughness)
 ```
 
-###  Function calls for genAlgo
+###  Function calls for genetic_algorithm
 - without terrain effects
 ```sh
-result <- genAlgo(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
+result <- genetic_algorithm(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
              vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr =0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
@@ -173,7 +171,7 @@ result <- genAlgo(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration =
  ```sh
 sourceCCL <- "Source of the CCL raster (TIF)"
 sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
-result <- genAlgo(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
+result <- genetic_algorithm(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
              vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
              elitism = TRUE, nelit = 7, trimForce = TRUE,
@@ -190,37 +188,38 @@ kraster <- "/..pathto../k_param_raster.tif"
 araster <- "/..pathto../a_param_raster.tif"
 weibullrasters <- list(raster(kraster), raster(araster))
 
-result_weibull <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12,
+result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
                   fcrR=5,iteration=10, vdirspe = wind_df, crossPart1 = "EQU",
                   selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
                   SurfaceRoughness = 0.3, topograp = FALSE,
                   elitism=TRUE, nelit = 7, trimForce = TRUE,
                   referenceHeight = 50,RotorHeight = 100,
                   weibull = TRUE, weibullsrc = weibullrasters)
-PlotWindfarmGA(result = result_weibull, GridMethod = "h", Polygon1 = Polygon1)
+plot_windfarmGA(result = result_weibull, GridMethod = "h", Polygon1 = Polygon1)
 ```
 The argument **'GridMethod'**, **'weibull'**, **'weibullsrc'** can also be given to the function **'windfarmGA'**.
 
 #### Plot the Results on a Leaflet Map
 ```sh
 ## Plot the best wind farm on a leaflet map (ordered by energy values)
-leafPlot(result = resulthex, Polygon1 = polygon, which = 1)
+plot_leaflet(result = resulthex, Polygon1 = polygon, which = 1)
 
 ## Plot the last wind farm (ordered by chronology).
-leafPlot(result = resulthex, Polygon1 = polygon, orderitems = F, which = 1)
+plot_leaflet(result = resulthex, Polygon1 = polygon, orderitems = F, which = 1)
 ```
 
 ## Plotting Methods of the Genetic Algorithm 
 Several plotting functions are available:
  ```sh
-- PlotWindfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
-- plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
-- plotEvolution(result, ask = TRUE, spar = 0.1)
-- plotparkfitness(result, spar = 0.1)
-- plotfitnessevolution(result)
-- plotCloud(result, pl = TRUE)
-- heatmapGA(result = result, si = 5)
-- leafPlot(result = result, Polygon1 = polygon, which = 1)
+ - plot_windfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
+ - plot_result(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
+ - plot_evolution(result, ask = TRUE, spar = 0.1)
+ - plot_development(result)
+ - plot_parkfitness(result, spar = 0.1)
+ - plot_fitness_evolution(result)
+ - plot_cloud(result, pl = TRUE)
+ - plot_heatmap(result = result, si = 5)
+ - plot_leaflet(result = result, Polygon1 = polygon, which = 1)
 ```
 
 For further information, please check the package description and examples. (https://CRAN.R-project.org/package=windfarmGA/windfarmGA.pdf)
@@ -244,11 +243,11 @@ proj4string(Polygon1) <- CRS(Projection)
 plot(Polygon1, col = "blue", axes = TRUE)
 
 wind_df <- data.frame(ws = 12, wd = 0)
-windrosePlot <- plotWindrose(data = wind_df, spd = wind_df$ws,
+windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd, dirres = 10, spdmax = 20)
 Rotor <- 20
 fcrR <- 9
-Grid <- GridFilter(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
+Grid <- grid_area(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, iteration = 10,
                      vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
@@ -257,14 +256,14 @@ result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, it
                      referenceHeight = 50, RotorHeight = 100)
 
 # The following function will execute all plotting function further below:
-PlotWindfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
+plot_windfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
 # The plotting functions can also be called individually:
-plotResult(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
-plotEvolution(result, ask = TRUE, spar = 0.1)
-plotparkfitness(result, spar = 0.1)
-plotfitnessevolution(result)
-plotCloud(result, pl = TRUE)
-heatmapGA(result = result, si = 5)
-leafPlot(result = result, Polygon1 = polygon, which = 1)
+plot_result(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
+plot_evolution(result, ask = TRUE, spar = 0.1)
+plot_parkfitness(result, spar = 0.1)
+plot_fitness_evolution(result)
+plot_cloud(result, pl = TRUE)
+plot_heatmap(result = result, si = 5)
+plot_leaflet(result = result, Polygon1 = polygon, which = 1)
 ```

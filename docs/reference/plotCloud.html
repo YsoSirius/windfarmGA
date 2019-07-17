@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot outputs of all generations with standard deviations — plotCloud • windfarmGA</title>
+<title>Deprecated use <code><a href='plot_cloud.html'>plot_cloud</a></code> instead. — plotCloud • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="Plot outputs of all generations with standard deviations — plotCloud" />
+<meta property="og:title" content="Deprecated use <code><a href='plot_cloud.html'>plot_cloud</a></code> instead. — plotCloud" />
 
-<meta property="og:description" content="Plot all the fitness, efficiency and energy outputs of
-all generations. Plot the corresponding standard deviation below." />
+<meta property="og:description" content="plotCloud is replaced by plot_cloud." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,15 +102,14 @@ all generations. Plot the corresponding standard deviation below." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot outputs of all generations with standard deviations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plotcloud.R'><code>R/plotcloud.R</code></a></small>
+    <h1>Deprecated use <code><a href='plot_cloud.html'>plot_cloud</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>plotCloud.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Plot all the fitness, efficiency and energy outputs of
-all generations. Plot the corresponding standard deviation below.</p>
+    <p>plotCloud is replaced by <code><a href='plot_cloud.html'>plot_cloud</a></code>.</p>
     
     </div>
 
@@ -123,7 +121,7 @@ all generations. Plot the corresponding standard deviation below.</p>
     <tr>
       <th>result</th>
       <td><p>The output matrix of <code><a href='windfarmGA.html'>windfarmGA</a></code> or
-<code><a href='genAlgo.html'>genAlgo</a></code>, which has stored all relevant information.</p></td>
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>, which has stored all relevant information.</p></td>
     </tr>
     <tr>
       <th>pl</th>
@@ -131,32 +129,13 @@ all generations. Plot the corresponding standard deviation below.</p>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a data.frame with the values for fitness, efficiency
-and energy for all evaluated individuals.</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Add some data examples from the package</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resulthex.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='co'>## Plot the results of a hexagonal grid optimization</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='no'>resulthex</span>
-<span class='no'>plcdf</span> <span class='kw'>&lt;-</span> <span class='fu'>plotCloud</span>(<span class='no'>result</span>, <span class='fl'>TRUE</span>)</div><div class='img'><img src='plotCloud-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>(<span class='no'>plcdf</span>)</div><div class='output co'>#&gt;  num [1:10, 1:15] 1 2 3 4 5 6 7 8 9 10 ...
-#&gt;  - attr(*, "dimnames")=List of 2
-#&gt;   ..$ : NULL
-#&gt;   ..$ : chr [1:15] "FitX1" "FitMax" "FitMean" "FitMin" ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

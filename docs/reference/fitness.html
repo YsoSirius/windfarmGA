@@ -32,10 +32,10 @@
 
 <meta property="og:title" content="Evaluate the Individual Fitness values — fitness" />
 
-<meta property="og:description" content="The fitness values of the individuals in the
-current population are calculated after having evaluated their energy
-outputs in calculateEn. This function reduces the resulting
-energy outputs to a single fitness value for every individual." />
+<meta property="og:description" content="The fitness values of the individuals in the current population
+  are calculated after having evaluated their energy outputs in
+  calculate_energy. This function reduces the resulting energy
+  outputs to a single fitness value for every individual." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,10 +112,10 @@ energy outputs to a single fitness value for every individual." />
 
     <div class="ref-description">
     
-    <p>The fitness values of the individuals in the
-current population are calculated after having evaluated their energy
-outputs in <code><a href='calculateEn.html'>calculateEn</a></code>. This function reduces the resulting
-energy outputs to a single fitness value for every individual.</p>
+    <p>The fitness values of the individuals in the current population
+  are calculated after having evaluated their energy outputs in
+  <code><a href='calculate_energy.html'>calculate_energy</a></code>. This function reduces the resulting energy
+  outputs to a single fitness value for every individual.</p>
     
     </div>
 
@@ -128,8 +128,7 @@ energy outputs to a single fitness value for every individual.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>selection</th>
-      <td><p>A list containing all individuals of the current
-population.</p></td>
+      <td><p>A list containing all individuals of the current population.</p></td>
     </tr>
     <tr>
       <th>referenceHeight</th>
@@ -142,8 +141,8 @@ measured.</p></td>
     </tr>
     <tr>
       <th>SurfaceRoughness</th>
-      <td><p>A surface roughness length of the considered area
-in m.</p></td>
+      <td><p>A surface roughness length of the considered area in
+m.</p></td>
     </tr>
     <tr>
       <th>Polygon</th>
@@ -164,12 +163,12 @@ in m.</p></td>
     <tr>
       <th>srtm_crop</th>
       <td><p>A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in <code><a href='genAlgo.html'>genAlgo</a></code></p></td>
+and 3) a terrain raster. Calculated in <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code></p></td>
     </tr>
     <tr>
       <th>topograp</th>
-      <td><p>Logical value that indicates whether the terrain effect
-model is activated (TRUE) or deactivated (FALSE).</p></td>
+      <td><p>Logical value that indicates whether the terrain effect model
+is activated (TRUE) or deactivated (FALSE).</p></td>
     </tr>
     <tr>
       <th>cclRaster</th>
@@ -183,22 +182,30 @@ type. Is only used, when the terrain effect model is activated.</p></td>
     </tr>
     <tr>
       <th>Parallel</th>
-      <td><p>Boolean value, indicating whether parallel processing
-should be used. The parallel and doParallel packages are used for parallel 
+      <td><p>Boolean value, indicating whether parallel processing should
+be used. The parallel and doParallel packages are used for parallel
 processing.</p></td>
     </tr>
     <tr>
       <th>numCluster</th>
-      <td><p>If Parallel is TRUE, this variable defines the number
-of clusters to be used.</p></td>
+      <td><p>If Parallel is TRUE, this variable defines the number of
+clusters to be used.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns a list with every individual, consisting of X &amp; Y
-coordinates, rotor radii, the runs and the selected grid cell IDs, and
-the resulting energy outputs, efficiency rates and fitness values.</p>
+  coordinates, rotor radii, the runs and the selected grid cell IDs, and the
+  resulting energy outputs, efficiency rates and fitness values.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Genetic Algorithm Functions: <code><a href='crossover.html'>crossover</a></code>,
+  <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>,
+  <code><a href='init_population.html'>init_population</a></code>, <code><a href='mutation.html'>mutation</a></code>,
+  <code><a href='selection.html'>selection</a></code>, <code><a href='trimton.html'>trimton</a></code>,
+  <code><a href='windfarmGA.html'>windfarmGA</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -211,169 +218,26 @@ the resulting energy outputs, efficiency rates and fitness values.</p>
 <span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>Polygon1</span>,<span class='kw'>axes</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='img'><img src='fitness-1.png' alt='' width='700' height='433' /></div><div class='input'>
+
 <span class='co'>## Create a uniform and unidirectional wind data.frame and plots the</span>
 <span class='co'>## resulting wind rose</span>
 <span class='co'>## Uniform wind speed and single wind direction</span>
 <span class='no'>wind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>ws</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>wd</span> <span class='kw'>=</span> <span class='fl'>0</span>)
-<span class='co'># windrosePlot &lt;- plotWindrose(data = wind, spd = wind$ws,</span>
+<span class='co'># windrosePlot &lt;- plot_windrose(data = wind, spd = wind$ws,</span>
 <span class='co'>#                dir = wind$wd, dirres=10, spdmax=20)</span>
 
 <span class='co'>## Calculate a Grid and an indexed data.frame with coordinates and</span>
 <span class='co'>## grid cell IDs.</span>
-<span class='no'>Grid1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GridFilter.html'>GridFilter</a></span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,<span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>1</span>);</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: rgeos</span></div><div class='input'><span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='no'>Grid1</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='no'>Grid1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,<span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>1</span>);
+<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='no'>Grid1</span><span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>AmountGrids</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>Grid</span>)
 
 <span class='no'>wind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>wind</span>, <span class='kw'>probab</span> <span class='kw'>=</span> <span class='fl'>100</span>)
-<span class='no'>startsel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='StartGA.html'>StartGA</a></span>(<span class='no'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span>);
+<span class='no'>startsel</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='init_population.html'>init_population</a></span>(<span class='no'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span>);
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fitness</span>(<span class='kw'>selection</span> <span class='kw'>=</span> <span class='no'>startsel</span>, <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>RotorHeight</span><span class='kw'>=</span><span class='fl'>100</span>,
                <span class='kw'>SurfaceRoughness</span><span class='kw'>=</span><span class='fl'>0.3</span>,<span class='kw'>Polygon</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>resol1</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>rot</span><span class='kw'>=</span><span class='fl'>20</span>,
                <span class='kw'>dirspeed</span> <span class='kw'>=</span> <span class='no'>wind</span>, <span class='kw'>srtm_crop</span><span class='kw'>=</span><span class='st'>""</span>, <span class='kw'>topograp</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>cclRaster</span><span class='kw'>=</span><span class='st'>""</span>,
-               <span class='kw'>Parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $`1,6,9,11,15,19,23,24,26,27`
-#&gt;          X       Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 1  4498582 2669243    87.48165      6899.719           0   1     20       1
-#&gt; 6  4499582 2669243    87.48165      6899.719           0   1     20       6
-#&gt; 10 4498782 2669043    87.48165      6899.719           0   1     20       9
-#&gt; 12 4499182 2669043    87.48165      6899.719           0   1     20      11
-#&gt; 17 4498582 2668843    87.48165      6899.719         100   1     20      15
-#&gt; 21 4499382 2668843    87.48165      6899.719           0   1     20      19
-#&gt; 26 4498782 2668643    87.48165      6899.719         100   1     20      23
-#&gt; 27 4498982 2668643    87.48165      6899.719           0   1     20      24
-#&gt; 29 4499382 2668643    87.48165      6899.719         100   1     20      26
-#&gt; 30 4499582 2668643    87.48165      6899.719         100   1     20      27
-#&gt;    Parkfitness
-#&gt; 1     6899.719
-#&gt; 6     6899.719
-#&gt; 10    6899.719
-#&gt; 12    6899.719
-#&gt; 17    6899.719
-#&gt; 21    6899.719
-#&gt; 26    6899.719
-#&gt; 27    6899.719
-#&gt; 29    6899.719
-#&gt; 30    6899.719
-#&gt; 
-#&gt; $`1,15,16,17,21,22,23,24,25,26`
-#&gt;          X       Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 1  4498582 2669243    81.61814      6437.261           0   2     20       1
-#&gt; 17 4498582 2668843    81.61814      6437.261         100   2     20      15
-#&gt; 18 4498782 2668843    81.61814      6437.261           0   2     20      16
-#&gt; 19 4498982 2668843    81.61814      6437.261           0   2     20      17
-#&gt; 23 4499782 2668843    81.61814      6437.261           0   2     20      21
-#&gt; 25 4498582 2668643    81.61814      6437.261         200   2     20      22
-#&gt; 26 4498782 2668643    81.61814      6437.261         100   2     20      23
-#&gt; 27 4498982 2668643    81.61814      6437.261         100   2     20      24
-#&gt; 28 4499182 2668643    81.61814      6437.261           0   2     20      25
-#&gt; 29 4499382 2668643    81.61814      6437.261           0   2     20      26
-#&gt;    Parkfitness
-#&gt; 1     6437.261
-#&gt; 17    6437.261
-#&gt; 18    6437.261
-#&gt; 19    6437.261
-#&gt; 23    6437.261
-#&gt; 25    6437.261
-#&gt; 26    6437.261
-#&gt; 27    6437.261
-#&gt; 28    6437.261
-#&gt; 29    6437.261
-#&gt; 
-#&gt; $`7,12,16,18,19,20,24,25,32,35`
-#&gt;          X       Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 7  4499782 2669243    82.98769      6545.278           0   3     20       7
-#&gt; 13 4499382 2669043    82.98769      6545.278           0   3     20      12
-#&gt; 18 4498782 2668843    82.98769      6545.278           0   3     20      16
-#&gt; 20 4499182 2668843    82.98769      6545.278           0   3     20      18
-#&gt; 21 4499382 2668843    82.98769      6545.278         100   3     20      19
-#&gt; 22 4499582 2668843    82.98769      6545.278           0   3     20      20
-#&gt; 27 4498982 2668643    82.98769      6545.278           0   3     20      24
-#&gt; 28 4499182 2668643    82.98769      6545.278         100   3     20      25
-#&gt; 36 4499182 2668443    82.98769      6545.278         200   3     20      32
-#&gt; 39 4499782 2668443    82.98769      6545.278         100   3     20      35
-#&gt;    Parkfitness
-#&gt; 7     6545.278
-#&gt; 13    6545.278
-#&gt; 18    6545.278
-#&gt; 20    6545.278
-#&gt; 21    6545.278
-#&gt; 22    6545.278
-#&gt; 27    6545.278
-#&gt; 28    6545.278
-#&gt; 36    6545.278
-#&gt; 39    6545.278
-#&gt; 
-#&gt; $`4,5,6,9,14,19,24,25,31,32`
-#&gt;          X       Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 4  4499182 2669243    85.09737       6711.67           0   4     20       4
-#&gt; 5  4499382 2669243    85.09737       6711.67           0   4     20       5
-#&gt; 6  4499582 2669243    85.09737       6711.67           0   4     20       6
-#&gt; 10 4498782 2669043    85.09737       6711.67           0   4     20       9
-#&gt; 15 4499782 2669043    85.09737       6711.67           0   4     20      14
-#&gt; 21 4499382 2668843    85.09737       6711.67         100   4     20      19
-#&gt; 27 4498982 2668643    85.09737       6711.67           0   4     20      24
-#&gt; 28 4499182 2668643    85.09737       6711.67         100   4     20      25
-#&gt; 35 4498982 2668443    85.09737       6711.67         100   4     20      31
-#&gt; 36 4499182 2668443    85.09737       6711.67         200   4     20      32
-#&gt;    Parkfitness
-#&gt; 4      6711.67
-#&gt; 5      6711.67
-#&gt; 6      6711.67
-#&gt; 10     6711.67
-#&gt; 15     6711.67
-#&gt; 21     6711.67
-#&gt; 27     6711.67
-#&gt; 28     6711.67
-#&gt; 35     6711.67
-#&gt; 36     6711.67
-#&gt; 
-#&gt; $`2,3,5,8,17,20,23,28,30,35`
-#&gt;          X       Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 2  4498782 2669243    85.09737       6711.67           0   5     20       2
-#&gt; 3  4498982 2669243    85.09737       6711.67           0   5     20       3
-#&gt; 5  4499382 2669243    85.09737       6711.67           0   5     20       5
-#&gt; 9  4498582 2669043    85.09737       6711.67           0   5     20       8
-#&gt; 19 4498982 2668843    85.09737       6711.67         100   5     20      17
-#&gt; 22 4499582 2668843    85.09737       6711.67           0   5     20      20
-#&gt; 26 4498782 2668643    85.09737       6711.67         100   5     20      23
-#&gt; 31 4499782 2668643    85.09737       6711.67           0   5     20      28
-#&gt; 34 4498782 2668443    85.09737       6711.67         200   5     20      30
-#&gt; 39 4499782 2668443    85.09737       6711.67         100   5     20      35
-#&gt;    Parkfitness
-#&gt; 2      6711.67
-#&gt; 3      6711.67
-#&gt; 5      6711.67
-#&gt; 9      6711.67
-#&gt; 19     6711.67
-#&gt; 22     6711.67
-#&gt; 26     6711.67
-#&gt; 31     6711.67
-#&gt; 34     6711.67
-#&gt; 39     6711.67
-#&gt; 
-#&gt; $`2,6,7,8,20,21,25,29,32,33`
-#&gt;          X       Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 2  4498782 2669243    87.48165      6899.719           0   6     20       2
-#&gt; 6  4499582 2669243    87.48165      6899.719           0   6     20       6
-#&gt; 7  4499782 2669243    87.48165      6899.719           0   6     20       7
-#&gt; 9  4498582 2669043    87.48165      6899.719           0   6     20       8
-#&gt; 22 4499582 2668843    87.48165      6899.719         100   6     20      20
-#&gt; 23 4499782 2668843    87.48165      6899.719         100   6     20      21
-#&gt; 28 4499182 2668643    87.48165      6899.719           0   6     20      25
-#&gt; 33 4498582 2668443    87.48165      6899.719         100   6     20      29
-#&gt; 36 4499182 2668443    87.48165      6899.719         100   6     20      32
-#&gt; 37 4499382 2668443    87.48165      6899.719           0   6     20      33
-#&gt;    Parkfitness
-#&gt; 2     6899.719
-#&gt; 6     6899.719
-#&gt; 7     6899.719
-#&gt; 9     6899.719
-#&gt; 22    6899.719
-#&gt; 23    6899.719
-#&gt; 28    6899.719
-#&gt; 33    6899.719
-#&gt; 36    6899.719
-#&gt; 37    6899.719
-#&gt; </div></pre>
+               <span class='kw'>Parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -381,6 +245,8 @@ the resulting energy outputs, efficiency rates and fitness values.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>RandomSearch Randomise the output of the Genetic Algorithm. — RandomSearch • windfarmGA</title>
+<title>Deprecated use <code><a href='random_search.html'>random_search</a></code> instead. — RandomSearch • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,10 @@
 
 
 
-<meta property="og:title" content="RandomSearch Randomise the output of the Genetic Algorithm. — RandomSearch" />
+<meta property="og:title" content="Deprecated use <code><a href='random_search.html'>random_search</a></code> instead. — RandomSearch" />
 
-<meta property="og:description" content="Perform a random search in the grid cells, to
-further optimize the output of the wind farm layout." />
+<meta property="og:description" content="RandomSearch is replaced by
+  random_search." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -103,15 +103,15 @@ further optimize the output of the wind farm layout." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>RandomSearch Randomise the output of the Genetic Algorithm.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/RandomSearch.R'><code>R/RandomSearch.R</code></a></small>
+    <h1>Deprecated use <code><a href='random_search.html'>random_search</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>RandomSearch.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Perform a random search in the grid cells, to
-further optimize the output of the wind farm layout.</p>
+    <p>RandomSearch is replaced by
+  <code><a href='random_search.html'>random_search</a></code>.</p>
     
     </div>
 
@@ -122,8 +122,8 @@ further optimize the output of the wind farm layout.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>result</th>
-      <td><p>The resulting matrix of the function 'genAlgo' or
-'windfarmGA'.</p></td>
+      <td><p>The resulting matrix of the function <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>
+or <code><a href='windfarmGA.html'>windfarmGA</a></code></p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
@@ -135,8 +135,8 @@ further optimize the output of the wind farm layout.</p>
     </tr>
     <tr>
       <th>best</th>
-      <td><p>Which best indidvuals should be the
-starting conditions fo a random search. The default is 1.</p></td>
+      <td><p>Which best indidvuals should be the starting conditions fo a
+random search. The default is 1.</p></td>
     </tr>
     <tr>
       <th>Plot</th>
@@ -144,11 +144,10 @@ starting conditions fo a random search. The default is 1.</p></td>
     </tr>
     <tr>
       <th>GridMethod</th>
-      <td><p>Should the polygon be divided into rectangular or
-hexagonal grid cells? The default is rectangular grid cells and hexagonal
-grid cells are computed when assigning "h" or "hexagon" to this input
-variable. The randomly generated points might be placed outside
-their hexagons.</p></td>
+      <td><p>Should the polygon be divided into rectangular or hexagonal
+grid cells? The default is rectangular grid cells and hexagonal grid cells
+are computed when assigning "h" or "hexagon" to this input variable. The
+randomly generated points might be placed outside their hexagons.</p></td>
     </tr>
     <tr>
       <th>max_dist</th>
@@ -157,27 +156,13 @@ collision checks. Default is 2.2</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a list.</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/load'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"extdata/polygon.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-
-<span class='no'>new</span> <span class='kw'>&lt;-</span> <span class='fu'>RandomSearch</span>(<span class='no'>resultrect</span>, <span class='no'>polygon</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>4</span>)
-<span class='fu'><a href='RandomSearchPlot.html'>RandomSearchPlot</a></span>(<span class='kw'>resultRS</span> <span class='kw'>=</span> <span class='no'>new</span>, <span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>resultrect</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>polygon</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='RandomSearch-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='RandomSearch-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

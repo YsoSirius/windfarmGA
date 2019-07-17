@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculates Air Density, Air Pressure and Temperature according
-to the Barometric Height Formula — BaroHoehe • windfarmGA</title>
+<title>Deprecated use <code><a href='barometric_height.html'>barometric_height</a></code> instead. — BaroHoehe • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -31,12 +30,10 @@ to the Barometric Height Formula — BaroHoehe • windfarmGA</title>
 
 
 
-<meta property="og:title" content="Calculates Air Density, Air Pressure and Temperature according
-to the Barometric Height Formula — BaroHoehe" />
+<meta property="og:title" content="Deprecated use <code><a href='barometric_height.html'>barometric_height</a></code> instead. — BaroHoehe" />
 
-<meta property="og:description" content="Calculates air density, temperature and air pressure
-    respective to certain heights according to the International
-    standard atmosphere and the barometric height formula." />
+<meta property="og:description" content="BaroHoehe is replaced by
+  barometric_height." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,17 +103,15 @@ to the Barometric Height Formula — BaroHoehe" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculates Air Density, Air Pressure and Temperature according
-to the Barometric Height Formula</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/BaroHoehe.R'><code>R/BaroHoehe.R</code></a></small>
+    <h1>Deprecated use <code><a href='barometric_height.html'>barometric_height</a></code> instead.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/deprecated.R'><code>R/deprecated.R</code></a></small>
     <div class="hidden name"><code>BaroHoehe.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Calculates air density, temperature and air pressure
-    respective to certain heights according to the International
-    standard atmosphere and the barometric height formula.</p>
+    <p>BaroHoehe is replaced by
+  <code><a href='barometric_height.html'>barometric_height</a></code>.</p>
     
     </div>
 
@@ -143,36 +138,13 @@ to the Barometric Height Formula</h1>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a data.frame with height values and corresponding
-air pressures, air densities and temperatures in Kelvin and Celsius.</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>5000</span>,<span class='fl'>500</span>));
-<span class='fu'>BaroHoehe</span>(<span class='no'>data</span>)</div><div class='output co'>#&gt;    Height        ph        rh  tempK  tempC
-#&gt; 1       0 101325.00 1.2250000 288.15  15.00
-#&gt; 2     500  95176.51 1.1506659 284.90  11.75
-#&gt; 3    1000  89401.12 1.0808425 281.65   8.50
-#&gt; 4    1500  83976.18 1.0152560 278.40   5.25
-#&gt; 5    2000  78880.43 0.9536494 275.15   2.00
-#&gt; 6    2500  74093.90 0.8957811 271.90  -1.25
-#&gt; 7    3000  69597.81 0.8414244 268.65  -4.50
-#&gt; 8    3500  65374.56 0.7903660 265.40  -7.75
-#&gt; 9    4000  61407.57 0.7424059 262.15 -11.00
-#&gt; 10   4500  57681.31 0.6973561 258.90 -14.25
-#&gt; 11   5000  54181.16 0.6550399 255.65 -17.50</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/plot.ts'>plot.ts</a></span>(<span class='fu'>BaroHoehe</span>(<span class='no'>data</span>))</div><div class='img'><img src='BaroHoehe-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

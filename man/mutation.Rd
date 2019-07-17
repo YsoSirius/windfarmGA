@@ -17,8 +17,8 @@ mutation(a, p, seed)
 Returns a binary matrix with mutated genes.
 }
 \description{
-Mutate the genes of every chromosome or individual with
-low probability.
+Mutate the genes of every chromosome or individual with low
+  probability.
 }
 \examples{
 ## Create 4 random individuals with binary values
@@ -39,3 +39,10 @@ aMut <- mutation(a,0.4)
 a==aMut
 
 }
+\seealso{
+Other Genetic Algorithm Functions: \code{\link{crossover}},
+  \code{\link{fitness}}, \code{\link{genetic_algorithm}},
+  \code{\link{init_population}}, \code{\link{selection}},
+  \code{\link{trimton}}, \code{\link{windfarmGA}}
+}
+\concept{Genetic Algorithm Functions}
