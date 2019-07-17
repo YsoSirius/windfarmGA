@@ -15,6 +15,7 @@ test_that("Test Plotting Functions", {
   ## Windrose Plotting #############
   wind_test <- data.frame(ws = runif(10, 10, 20), 
                         wd = runif(10, 0, 360) )
+  a0 = plot_windrose(wind_test, plotit = FALSE)
   a0 = plotWindrose(wind_test, plotit = FALSE)
   a1 = plotWindrose(wind_test, "ws", "wd", plotit = FALSE)
   a2 = plotWindrose(wind_test, 1, 2, plotit = FALSE)

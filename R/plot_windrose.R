@@ -34,7 +34,7 @@
 plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                          spdmax = 30, palette = "YlGnBu",
                          spdseq = NULL, plotit = TRUE) {
-
+  
   if (!missing(data) && exists("data")) {
     # Assume that we've been given a data frame. Lets find the correct columns
     if (length(colnames(data))) {
@@ -72,8 +72,8 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
       spd = "spd"
       dir = "dir"
     }
-  } else if (!missing(spd) && !missing(dir) &&
-             is.numeric(spd) && is.numeric(dir)) {
+  } 
+  else if (!missing(spd) && !missing(dir) && is.numeric(spd) && is.numeric(dir)) {
     # assume that we've been given vectors of the speed and direction vectors
     data <- data.frame(spd = spd, dir = dir)
     spd <- "spd"
@@ -86,7 +86,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
   data[[dir]][dnu] <- NA
 
   # figure out the wind speed bins #################
-  if (missing(spdseq)) {
+  if (missing(spdseq) || is.null(spdseq)) {
     spdseq <- seq(spdmin, spdmax, spdres)
   }
 
@@ -97,7 +97,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
   # create the color map #################
   wind_colorpal <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(
     min(max(3, colorpal_n), min(9, colorpal_n)), palette))(colorpal_n)
-
+  
   if (max(data[[spd]], na.rm = TRUE) > spdmax) {
     speed_brks <- c(spdseq, max(data[[spd]], na.rm = TRUE))
     speed_labls <- c(paste(c(spdseq[1:seq_length - 1]), '-', 
