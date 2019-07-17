@@ -34,7 +34,7 @@ Imports: rgdal (>= 1.3.6),
 LinkingTo: Rcpp
 LazyData: TRUE
 License: MIT + file LICENSE
-URL: https://github.com/YsoSirius/windfarmGA
+URL: https://ysosirius.github.io/windfarmGA/index.html
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.1.1
 Suggests: testthat, dplyr (>= 0.8.0.1)

@@ -8,7 +8,7 @@ Almost all functions have been renamed to have a consistent appearance and a cle
 The old functions still exist, but are deprecated now.
 
 <details>
-  <summary>**Renaming Overview**</summary>
+  <summary>Renaming Overview</summary>
   <p>
   
   Old names             | **New names**
