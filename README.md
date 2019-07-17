@@ -1,7 +1,7 @@
 # windfarmGA
 
 <p align="center">
-  <img src="/inst/img/windfarmGA.png" align="right" width="150"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"/>
 </p>
 
 [![](https://www.r-pkg.org/badges/version/windfarmGA)](https://www.r-pkg.org/pkg/windfarmGA)
@@ -46,8 +46,9 @@ optimization can be run directly via the function 'genetic_algorithm'.
 Their output is identical.
 
 <div>
-  <img src="/inst/img/result2.png" width="430"/>
-  <img src="/inst/img/result1.png"  width="430"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" width="430"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" width="430"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"  width="430"/>
 </div>
 <br>
 
@@ -116,7 +117,7 @@ HexGrid <- hexa_area(Polygon1, size = ((Rotor*fcrR)/2), plotTrue = TRUE)
 str(HexGrid)
 ```
 <p align="center">
-  <img src="/inst/img/hexagon.png" width="300"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/hexagon.png" width="300"/>
 </p>
 
 

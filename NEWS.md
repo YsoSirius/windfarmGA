@@ -1,3 +1,44 @@
+# Updates 2.2.2
+
+## Pkgdown
+A [pkgdown documentation](https://ysosirius.github.io/windfarmGA/) site is now available.
+
+## Renaming Functions
+Almost all functions have been renamed to have a consistent appearance and a clearer meaning.
+The old functions still exist, but are deprecated now.
+
+<details>
+  <summary>**Renaming Overview**</summary>
+  
+  Old names             | **New names**
+  --------------------- | ---------------------
+  StartGA               | **init_population**
+  selection1            | **selection**
+  crossover1            | **crossover**
+  VekWinkelCalc         | **get_dist_angles**
+  calculateEn           | **calculate_energy**
+  getRects              | **get_grids**
+  BaroHoehe             | **barometric_height**
+  GridFilter            | **grid_area**
+  HexaTex               | **hexa_area**
+  InfluPoints           | **turbine_influences**
+  genAlgo               | **genetic_algorithm**
+  RandomSearch          | **random_search**
+  RandomSearchTurb      | **random_search_single**
+  RandomSearchPlot      | **plot_random_search**
+  leafPlot              | **plot_leaflet**
+  heatmapGA             | **plot_heatmap**
+  plotbeorwor           | **plot_development**
+  plotCloud             | **plot_cloud**
+  plotEvolution         | **plot_evolution**
+  plotfitnessevolution  | **plot_fitness_evolution**
+  plotparkfitness       | **plot_parkfitness**
+  plotResult            | **plot_result**
+  PlotWindfarmGA        | **plot_windfarmGA**
+  plotWindrose          | **plot_windrose**
+  
+</details>
+
 # Updates 2.2.1
 
 ## Performance Tuning / Restructuring

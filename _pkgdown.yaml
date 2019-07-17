@@ -2,7 +2,14 @@ title: windfarmGA
 url: https://YsoSirius.github.io/windfarmGA
 template:
   params:
-  bootswatch: flatly
+    bootswatch: cosmo
+
+navbar:
+  title: "windfarmGA"
+  right:
+   - icon: fa-github
+     href: https://github.com/YsoSirius
+
 
 reference:
   - title: Package Documentation
