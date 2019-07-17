@@ -4,11 +4,11 @@
 \alias{plotfitnessevolution}
 \title{Deprecated use \code{\link[windfarmGA]{plot_fitness_evolution}} instead.}
 \usage{
-plotfitnessevolution(result, ask = TRUE, spar = 0.1)
+plotfitnessevolution(result, spar = 0.1)
 }
 \arguments{
-\item{result}{An output matrix of the function \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}} which has stored all relevant information.}
+\item{result}{The output of function \code{\link{windfarmGA}} or
+\code{\link{genetic_algorithm}}}
 
 \item{spar}{A numeric value determining how exact a spline should be drawn.
 Default is 0.1}

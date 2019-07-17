@@ -4,8 +4,8 @@
 #'   mean and max fitness values to the former generations.
 #' @export
 #'
-#' @param result An output matrix of the function \code{\link{windfarmGA}} or
-#'   \code{\link{genetic_algorithm}} which has stored all relevant information.
+#' @param result The output of function \code{\link{windfarmGA}} or
+#'   \code{\link{genetic_algorithm}}
 #' @param spar A numeric value determining how exact a spline should be drawn.
 #'   Default is 0.1
 #'

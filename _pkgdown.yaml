@@ -6,9 +6,6 @@ template:
 
 navbar:
   title: "windfarmGA"
-  right:
-   - icon: fa-github
-     href: https://github.com/YsoSirius
 
 
 reference:

@@ -7,8 +7,8 @@
 plotEvolution(result, ask = TRUE, spar = 0.1)
 }
 \arguments{
-\item{result}{The output matrix of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}, which has stored all relevant information.}
+\item{result}{The output of \code{\link{windfarmGA}} or
+\code{\link{genetic_algorithm}}}
 
 \item{ask}{Should R wait for interaction for subsequent plotting. Default is
 TRUE}

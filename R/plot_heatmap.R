@@ -6,8 +6,8 @@
 #' @export
 #'
 #' @family Plotting Functions
-#' @param result The output matrix of \code{\link{windfarmGA}} or
-#'   \code{\link{genetic_algorithm}}, which has stored all relevant information
+#' @param result The output of \code{\link{windfarmGA}} or
+#'   \code{\link{genetic_algorithm}}
 #' @param si A numeric value that is used for the sizing of the resolution of
 #'   the heatmap. Default is 2
 #' @param idistw The inverse distance weighting power. Default is the rotor

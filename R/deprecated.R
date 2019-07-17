@@ -282,12 +282,12 @@ plotEvolution <- function(result, ask = TRUE, spar = 0.1) {
 #' @inheritParams plot_fitness_evolution
 #' @keywords internal
 #' @export
-plotfitnessevolution <- function(result, ask = TRUE, spar = 0.1) {
+plotfitnessevolution <- function(result, spar = 0.1) {
   .Deprecated(
     new = "plot_fitness_evolution",
     msg = "plotfitnessevolution will be replaced by plot_fitness_evolution"
   )
-  plot_fitness_evolution(result, ask, spar)
+  plot_fitness_evolution(result, spar)
 }
 
 #' Deprecated use \code{\link[windfarmGA]{plot_parkfitness}} instead.

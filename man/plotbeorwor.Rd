@@ -7,8 +7,8 @@
 plotbeorwor(result)
 }
 \arguments{
-\item{result}{The output matrix of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}, which has stored all relevant information.}
+\item{result}{The output \code{\link{windfarmGA}} or 
+\code{\link{genetic_algorithm}}}
 }
 \description{
 plotbeorwor is replaced by

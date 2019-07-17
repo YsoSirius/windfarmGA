@@ -4,8 +4,8 @@
 #'   the whole generations. Plots min, mean and max values.
 #' @export
 #'
-#' @param result The output matrix of \code{\link{windfarmGA}} or
-#'   \code{\link{genetic_algorithm}}, which has stored all relevant information.
+#' @param result The output of \code{\link{windfarmGA}} or
+#'   \code{\link{genetic_algorithm}}
 #' @param ask Should R wait for interaction for subsequent plotting. Default is
 #'   TRUE
 #' @param spar A numeric value determining how exact a spline should be drawn.

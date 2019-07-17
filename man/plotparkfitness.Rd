@@ -7,8 +7,8 @@
 plotparkfitness(result, spar = 0.1)
 }
 \arguments{
-\item{result}{An output matrix of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}, which has stored all relevant information.}
+\item{result}{The output of \code{\link{windfarmGA}} or
+\code{\link{genetic_algorithm}}}
 
 \item{spar}{A numeric value determining how exact a spline should be drawn.
 Default is 0.1}

@@ -4,8 +4,8 @@
 #'   selection, crossover and mutation.
 #' @export
 #'
-#' @param result An output matrix of \code{\link{windfarmGA}} or
-#'   \code{\link{genetic_algorithm}}, which has stored all relevant information.
+#' @param result The output of \code{\link{windfarmGA}} or
+#'   \code{\link{genetic_algorithm}}
 #' @param spar A numeric value determining how exact a spline should be drawn.
 #'   Default is 0.1
 #'

@@ -14,16 +14,16 @@
 
 
 Genetic algorithm to optimize the layout of windfarms.
-The package is hosted on CRAN and can be found at https://CRAN.R-project.org/package=windfarmGA
+The package is hosted on [CRAN](https://CRAN.R-project.org/package=windfarmGA)
 
 # Installation
 The latest version can be installed from GitHub with:
- ```sh
-# install.packages("devtools")
+```sh
 devtools::install_github("YsoSirius/windfarmGA")
 ```
+
 and the CRAN-version with:
- ```sh
+```sh
 install.packages("windfarmGA")
 ```
 
@@ -45,8 +45,7 @@ runs the function 'genetic_algorithm'. If the input parameters are already known
 optimization can be run directly via the function 'genetic_algorithm'. 
 Their output is identical.
 
-<div>
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" width="430"/>
+<div style="display: inline-flex;">
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" width="430"/>
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"  width="430"/>
 </div>
@@ -59,14 +58,15 @@ parameters. For Austria this data is already included in the package.
     
 ## Create an input Polygon
 - Input Polygon by source
- ```sh
+```sh
 dsn <- "Path to the Shapefile"
 layer <- "Name of the Shapefile"
 Polygon1 <- rgdal::readOGR(dsn = dsn, layer = layer)
 plot(Polygon1, col = "blue")
 ```
+
 - Or create a random Polygon
- ```sh
+```sh
 library(rgdal); library(sp); library(windfarmGA);
 Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
                           c(4654475, 2694746), c(4654475, 2692925)))
@@ -80,13 +80,14 @@ plot(Polygon1, col = "blue", axes = TRUE)
 
 ## Create random Wind data 
 - Exemplary input Wind data with uniform wind speed and single wind direction
- ```sh
+```sh
 wind_df <- data.frame(ws = c(12, 12), wd = c(0, 0), probab = c(25, 25))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd, dirres=10, spdmax = 20)
 ```
+
 - Exemplary input Wind data with random wind speeds and random wind directions
- ```sh
+```sh
 wind_df <- data.frame(ws = sample(1:25, 10), wd = sample(1:260, 10)))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd)
@@ -101,7 +102,7 @@ Verify that the grid spacing is appropriate. Adapt the following input variables
 to overlay the considered area to be represented as grid cell.
 
 *Make sure that the Polygon is projected in meters.*
- ```sh
+```sh
 Rotor <- 20
 fcrR <- 9
 # proj4string(Polygon1)
@@ -122,14 +123,10 @@ str(HexGrid)
 
 
 ## Terrain Effect Model
-If the input variable **`topograp`** for the functions 'windfarmGA' or 'genetic_algorithm' is TRUE, then the genetic algorithm will take terrain effects into account. For this purpose an elevation model is downloaded automatically by the 'raster' package and a Corine Land Cover raster must be downloaded and given manually. (Download at: http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1).
-Download the .zip package with 100 meter resolution. Unzip the downloaded package and assign the source of the Raster Image
-"g100_06.tif" to the package input variable **`sourceCCL`**. The algorithm will use an adapted version of the Raster legend
-("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness
-lengths, insert a column named **Rauhigkeit_z** to the .csv file. Assign a surface roughness length to all land cover types. 
-Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the source of 
-the resulting .csv file to the input variable **`sourceCCLRoughness`** of this function. For further information, see
-the examples of the package.
+If the input variable **`topograp`** for the functions 'windfarmGA' or 'genetic_algorithm' is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( [Download a CLC raster](http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1) ).
+
+If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable **`sourceCCL`**. The algorithm uses an adapted version of the Raster legend ("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named **Rauhigkeit_z** to the .csv file. Assign a surface roughness length to all land cover types. 
+Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the .csv file path to the input variable **`sourceCCLRoughness`**.
 
 
 ## Start an Optimization
@@ -139,15 +136,16 @@ An optimization run can be initiated with the following functions:
 
 ### Function calls for windfarmGA
 - without terrain effects
- ```sh
+```sh
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
              vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
              Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
              elitism =TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100)
 ```
+
 - with terrain effects
- ```sh
+```sh
 sourceCCL <- "Source of the CCL raster (TIF)"
 sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 
@@ -168,8 +166,9 @@ result <- genetic_algorithm(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, i
              elitism = TRUE, nelit = 7, trimForce = TRUE,
              referenceHeight = 50, RotorHeight = 100)
 ```
+
 - with terrain effects
- ```sh
+```sh
 sourceCCL <- "Source of the CCL raster (TIF)"
 sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 result <- genetic_algorithm(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
@@ -211,7 +210,7 @@ plot_leaflet(result = resulthex, Polygon1 = polygon, orderitems = F, which = 1)
 
 ## Plotting Methods of the Genetic Algorithm 
 Several plotting functions are available:
- ```sh
+```sh
  - plot_windfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
  - plot_result(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
  - plot_evolution(result, ask = TRUE, spar = 0.1)
@@ -223,16 +222,15 @@ Several plotting functions are available:
  - plot_leaflet(result = result, Polygon1 = polygon, which = 1)
 ```
 
-For further information, please check the package description and examples. (https://CRAN.R-project.org/package=windfarmGA/windfarmGA.pdf)
-A full documentation of the genetic algorithm is given in my master thesis, which can be found at the following link: 
-https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf
+For further information, please check the package [description and examples](https://CRAN.R-project.org/package=windfarmGA/windfarmGA.pdf).
+A full documentation of the genetic algorithm is given in my [master thesis](https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf).
 
 # Shiny Windfarm Optimization
-I also made a Shiny App for the Genetic Algorithm, which can be found here: https://windfarmga.shinyapps.io/windga_shiny/
+I also made a [Shiny App](https://windfarmga.shinyapps.io/windga_shiny/) for the Genetic Algorithm. 
 Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time. 
 
 # Full Optimization example:
- ```sh
+```sh
 library(rgdal); library(sp); library(windfarmGA)
 Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
                           c(4654475, 2694746), c(4654475, 2692925)))

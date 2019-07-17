@@ -7,12 +7,12 @@
 plot_development(result)
 }
 \arguments{
-\item{result}{The output matrix of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}, which has stored all relevant information.}
+\item{result}{The output \code{\link{windfarmGA}} or 
+\code{\link{genetic_algorithm}}}
 }
 \description{
 Plot the changes in mean and max fitness values to previous
-  generation.
+generation.
 }
 \examples{
 \donttest{
