@@ -93,11 +93,13 @@ test_that("Test Plotting Functions", {
                         wd = 0)
   
   resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 6,
+                        n = 12, iteration = 20,
                         vdirspe = winddat,
                         Rotor = 30, 
                         RotorHeight = 100)
-
+  plot.new()
+  respf <- plot_parkfitness(resultrect)
+  
   plot_res <- quiet(plotResult(resultrect, Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
   
