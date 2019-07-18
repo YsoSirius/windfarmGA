@@ -325,7 +325,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     windlist <- do.call("rbind", tmp)
     windlist <- windlist[, c("Punkt_id", "Ax", "Ay", "Bx", "By",
                              "Laenge_B", "Laenge_A", "alpha",
-                             "Windrichtung", "Windmean")]
+                             "Windrichtung", "Windmean"), drop = FALSE]
     
     row.names(windlist) <- NULL
     windlist <- cbind(windlist,

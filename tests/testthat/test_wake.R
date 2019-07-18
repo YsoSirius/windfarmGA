@@ -254,8 +254,6 @@ test_that("Test Wake Functions", {
                         plotGrid = FALSE)
   resStartGA <- StartGA(Grid = resGrid[[1]], n = 15, nStart = 100)
   
-  plot(resGrid[[2]])
-  plot(srtm_crop[[1]], add = T)
   srtm_crop <- raster::mask(srtm_crop, Polygon1)
   roughrast <- raster::terrain(srtm_crop, "roughness")
   if (all(is.na(values(roughrast)))) {

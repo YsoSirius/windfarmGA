@@ -12,14 +12,8 @@ usethis::use_data(ccl, overwrite = TRUE)
 
 ## Download Corine-Land-Cover Legend, save as .csv and add column for Rauhigkeit
 ## TODO - add function to create a legend with other classification
-# legend_url <- "https://www.eea.europa.eu/data-and-maps/data/corine-land-cover-3/corine-land-cover-classes-and/clc_legend.csv/at_download/file"
-# temp <- tempfile()
-# # download.file(legend_url, temp, method = "libcurl", mode = "w")
-# # curl::curl_download(legend_url, temp, mode = "wb")
-# curl::curl_download(legend_url, temp, mode = "wb")
-# unzip(temp)
-# unlink(temp)
-# read.csv("clc_legend.csv")
+legend_url <- "https://www.eea.europa.eu/data-and-maps/data/corine-land-cover-3/corine-land-cover-classes-and/clc_legend.csv/at_download/file"
+data <- read.csv(legend_url)
 
 
 ## Weibull Raster ######################
