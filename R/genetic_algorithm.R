@@ -276,7 +276,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     type_cluster <- "PSOCK"
     cl <- parallel::makeCluster(numCluster, type = type_cluster)
     doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl))
+    # on.exit(parallel::stopCluster(cl))
   }
 
   ## WEIBULL ###############
@@ -881,7 +881,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 
   ## Remove Parallel Cluster ###############
   if (Parallel) {
-  try(rm(cl), silent = TRUE)
+    parallel::stopCluster(cl)
+    # try(rm(cl), silent = TRUE)
   }
 
   ## Reduce list, if algorithm didnt run all iterations. (Found Optimum) #################

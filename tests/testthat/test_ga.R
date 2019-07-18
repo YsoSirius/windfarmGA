@@ -62,6 +62,26 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_is(resultMA, "matrix")
   expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
   
+  ## Matrix Input - 100% #####################
+  resultMA100 <- genAlgo(Polygon1 = PolygonMat, verbose = F, plotit = TRUE,
+                      n = 10, iteration = 20,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100)
+  expect_is(resultMA100, "matrix")
+  expect_false(any(unlist(sapply(resultMA100[,1:13], is.na))))
+  any(as.vector(sapply(resultMA100[,3], function(x) x[,"EfficAllDir"] == 100)))
+  
+  ## Parellel Processing #########################
+  resultMAP <- genAlgo(Polygon1 = PolygonMat, verbose = F, plotit = F,
+                      n = 20, iteration = 50, Parallel = T,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100)
+  expect_true(nrow(resultMAP) == 50)
+  expect_is(resultMAP, "matrix")
+  expect_false(any(unlist(sapply(resultMAP[,1:13], is.na))))
+  
   ## Test with non default arguments ####################
   PolygonMat <- ggplot2::fortify(Polygon1)
   PolygonMat <- as.matrix(PolygonMat[,1:2])
