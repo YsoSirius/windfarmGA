@@ -6,7 +6,7 @@
 \usage{
 calculate_energy(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl,
   distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp,
-  cclRaster, weibull)
+  cclRaster, weibull, plotit = FALSE)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population
@@ -47,6 +47,9 @@ previously. See also the details at \code{\link{windfarmGA}} The raster
 will only be used when the terrain effect model is activated. (raster)}
 
 \item{weibull}{A raster representing the estimated wind speeds}
+
+\item{plotit}{Logical value. If TRUE, the process will be plotted. 
+Default is FALSE.}
 }
 \value{
 Returns a list of an individual of the current generation with

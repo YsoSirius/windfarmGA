@@ -30,7 +30,7 @@
 #'   item must be the shape parameter raster k and the second item must be the
 #'   scale parameter raster a of the Weibull distribution. If no list is given,
 #'   then rasters included in the package are used instead, which currently only
-#'   cover Austria. This variable is only used if weibull==TRUE
+#'   cover Austria.
 #'
 #' @family Plotting Functions
 #' @return Returns a data.frame of the best (energy/efficiency) individual
@@ -223,15 +223,16 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 
         if (is.null(sourceCCL)) {
           if (length(list.files(pattern = "g100_06.tif")) == 0) {
-            stop("\nNo raster given or found in directory for the land coverage.",
-                 "\nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n", 
-                 call. = F)
+            warning("\nNo raster given or found in directory for the land coverage.",
+                 "\nInternal CLC-raster is used.'\n")
+            ## ccl is loaded from /data
           } else {
             sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
+            ccl <- raster::raster(x = sourceCCL)
           }
         }
 
-        if (1 == 1){
+        if (1 == 1) {
           Polygon1 <-  sp::spTransform(
             Polygon1, 
             CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
@@ -244,7 +245,6 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
 
           # Include Corine Land Cover Raster to get an estimation of Surface Roughness
-          ccl <- raster::raster(x = sourceCCL)
           cclPoly <- raster::crop(ccl, Polygon1)
           cclPoly1 <- raster::mask(cclPoly, Polygon1)
 

@@ -289,16 +289,19 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       if (verbose) {
         cat("\nWeibull Informations from package will be used.\n")
       }
-      path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-      k_weibull <- ""
-      a_weibull <- ""
-      # load(file = paste0(path, "k_weibull.rda"))
-      # load(file = paste0(path, "a_weibull.rda"))
-      # weibullsrc = list(k_param, a_param)
-      k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
-      a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
-      k_weibull <- raster(k_weibull)
-      a_weibull <- raster(a_weibull)
+      
+      ## TODO - Change documentation for readRDS, when rasters can be read from /data
+      # path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
+      # k_weibull <- ""
+      # a_weibull <- ""
+      # # load(file = paste0(path, "k_weibull.rda"))
+      # # load(file = paste0(path, "a_weibull.rda"))
+      # # weibullsrc = list(k_param, a_param)
+      # k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
+      # a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
+      # k_weibull <- raster(k_weibull)
+      # a_weibull <- raster(a_weibull)
+      
       ## Project Shapefile to raster proj, Crop/Mask and project raster back
       shape_project <- sp::spTransform(Polygon1,
                                        CRSobj = sp::proj4string(a_weibull))
@@ -306,16 +309,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
                                  y = raster::extent(shape_project))
       a_par_crop <- raster::crop(x = a_weibull,
                                  y = raster::extent(shape_project))
-      weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
-      weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
-      estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
-      estim_speed_raster <- raster::projectRaster(estim_speed_raster,
-                                              crs = sp::proj4string(Polygon1))
     } else {
       if (verbose) {
         cat("\nWeibull Informations are given.\n")
       }
-      weibullsrc <- weibullsrc
       ## Project Shapefile to raster, Crop/Mask and project raster back
       shape_project <- sp::spTransform(Polygon1,
                                     CRSobj = sp::proj4string(weibullsrc[[1]]))
@@ -323,12 +320,12 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
                                  y = raster::extent(shape_project))
       a_par_crop <- raster::crop(x = weibullsrc[[2]],
                                  y = raster::extent(shape_project))
-      weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
-      weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
-      estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
-      estim_speed_raster <- raster::projectRaster(estim_speed_raster,
-                                                  crs = proj4string(Polygon1))
     }
+    weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
+    weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
+    estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
+    estim_speed_raster <- raster::projectRaster(estim_speed_raster,
+                                                crs = proj4string(Polygon1))
   } else {
     estim_speed_raster <- FALSE
   }
@@ -336,7 +333,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   ## CHECK INPUTS ###############
   ## Check if Input Data is correct and prints it out.
   if  (crossPart1 != "EQU" & crossPart1 != "RAN") {
-    ocrossPart1 <- readinteger()
+    crossPart1 <- readinteger()
   }
   if  (selstate != "FIX" & selstate != "VAR") {
     selstate <- readintegerSel()
@@ -381,6 +378,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
+  ## TODO - make whole next part nicer/shorter
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
     Grid1 <- grid_area(shape = Polygon1, resol = resol2, prop = Proportionality)
@@ -440,19 +438,21 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     }
 
     if (missing(sourceCCL)) {
-      message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
-              "the EEA-website.")
+      message("No land cover raster ('sourceCCL') was given. It will be taken from ",
+              "the package (/data/ccl.rda).")
+      # message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+              # "the EEA-website.")
       # readline(prompt = "Press [enter] to continue or Escpae to exit.")
-      if (!file.exists("g100_06.tif")) {
-        ## download an zip CCL-tif
-        ccl_raster_url <-
-          "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-        temp <- tempfile()
-        download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-        unzip(temp, "g100_06.tif")
-        unlink(temp)
-      }
-      ccl <- raster::raster("g100_06.tif")
+      # if (!file.exists("g100_06.tif")) {
+      #   ## download an zip CCL-tif
+      #   ccl_raster_url <-
+      #     "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+      #   temp <- tempfile()
+      #   download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+      #   unzip(temp, "g100_06.tif")
+      #   unlink(temp)
+      # }
+      # ccl <- raster::raster("g100_06.tif")
     } else {
       ccl <- raster::raster(sourceCCL)
     }
@@ -477,12 +477,18 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       plot(grid_filtered, add = TRUE)
     }
 
+    roughrast <- raster::terrain(srtm_crop, "roughness")
+    if (all(is.na(values(roughrast)))) {
+      warning("Cannot calculate a surface roughness. \nMaybe the resolution or ",
+              "the area is too small. Roughness values are set to 1.")
+      values(roughrast) <- 1
+    }
     srtm_crop <- list(
       strm_crop = srtm_crop,
       orogr1 = raster::calc(srtm_crop, function(x) {
         x / (raster::cellStats(srtm_crop, mean, na.rm = TRUE))
       }),
-      raster::terrain(srtm_crop, "roughness")
+      roughness = roughrast
     )
 
     # Include Corine Land Cover Raster to get an estimation of Surface Roughness
@@ -492,7 +498,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     } else {
       if (verbose) {
         print("You are using your own Corine Land Cover legend.")
-        # readLines(prompt = "\nPress <ENTER> if you want to continue")
       }
       sourceCCLRoughness <- sourceCCLRoughness
     }

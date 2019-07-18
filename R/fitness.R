@@ -111,10 +111,10 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   #     # browser()
   #   }
   # }
-  ###################
-
   # known <- TRUE
   # if (known) {
+  ###################
+
   # Calculate EnergyOutput for every config i and for
   # every angle j - in Parallel
   if (Parallel == TRUE) {
@@ -156,6 +156,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       })
     }
 
+    ## TODO - can column selection happen later?
     ## Select only relevant information from list
     ee  <- lapply(ee, function(x){
       subset.matrix(x, select = c("Bx", "By", "Windrichtung", "RotorR",
@@ -167,18 +168,17 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
 
     ## get Energy Output and Efficiency rate for every wind direction
     res_energy <- lapply(ee, function(x){
-      subset.matrix(x,
-                    subset = c(TRUE, rep(FALSE, length(ee[[1]][, 1]) - 1)),
-                    select = c("Windrichtung",
-                               "Energy_Output_Red",
-                               "Parkwirkungsgrad"))
+      subset.matrix(x, subset = c(TRUE, rep(FALSE, length(ee[[1]][, 1]) - 1)))
     })
-
 
     ## TODO - Make this lot easier, vectorize it all
     #######################
     res_energy <- do.call("rbind", res_energy)
-
+    res_energy <- res_energy[,c("Windrichtung",
+                                "Energy_Output_Red",
+                                "Parkwirkungsgrad")]
+    
+    
     # Add the Probability of every direction
     # Calculate the relative Energy outputs respective to the
     # probability of the wind direction

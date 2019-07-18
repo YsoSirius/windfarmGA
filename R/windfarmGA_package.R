@@ -24,7 +24,7 @@
 #'
 #' @importFrom raster crs getData crop mask projectRaster reclassify extent
 #'   rasterize res rasterToPolygons plot area intersect raster calc extract
-#'   cellStats terrain resample overlay cellFromXY ncell projection
+#'   cellStats terrain resample overlay cellFromXY ncell projection values
 #' @importFrom sp spTransform proj4string Polygon Polygons SpatialPolygons CRS
 #'   coordinates SpatialPoints gridded spsample over bbox
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform

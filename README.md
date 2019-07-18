@@ -9,8 +9,8 @@
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen)](https://www.r-pkg.org/pkg/windfarmGA)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://www.rpackages.io/package/windfarmGA)
 [![Build Status](https://travis-ci.org/YsoSirius/windfarmGA.svg?branch=master)](https://travis-ci.org/YsoSirius/windfarmGA)
-[![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)](https://codecov.io/gh/YsoSirius/windfarmGA)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/YsoSirius/windfarmGA?branch=master&svg=true)](https://ci.appveyor.com/project/YsoSirius/windfarmGA)
+[![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)](https://codecov.io/gh/YsoSirius/windfarmGA)
 
 
 

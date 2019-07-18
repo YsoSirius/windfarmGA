@@ -42,7 +42,7 @@ required, when the terrain effect model is activated}
 item must be the shape parameter raster k and the second item must be the
 scale parameter raster a of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently only
-cover Austria. This variable is only used if weibull==TRUE}
+cover Austria.}
 }
 \value{
 Returns a data.frame of the best (energy/efficiency) individual

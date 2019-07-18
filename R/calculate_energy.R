@@ -32,6 +32,8 @@
 #'   previously. See also the details at \code{\link{windfarmGA}} The raster
 #'   will only be used when the terrain effect model is activated. (raster)
 #' @param weibull A raster representing the estimated wind speeds
+#' @param plotit Logical value. If TRUE, the process will be plotted. 
+#'   Default is FALSE.
 #'
 #' @family Wind Energy Calculation Functions
 #' @return Returns a list of an individual of the current generation with
@@ -101,22 +103,21 @@
 calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                               SurfaceRoughness, wnkl, distanz,
                               polygon1, resol, RotorR, dirSpeed,
-                              srtm_crop, topograp, cclRaster, weibull) {
+                              srtm_crop, topograp, cclRaster, weibull, 
+                              plotit = FALSE) {
 
-  sel1 <- sel[, 2:3];
   ## Assign constant / default values
-  cT <- 0.88;   air_rh <- 1.225;   k <- 0.075;  plotit <- FALSE
+  cT <- 0.88;   air_rh <- 1.225;   k <- 0.075;
+
+  ## Get the Coordinates of the individual / wind farm.
+  xy_individual <- sel[, 2:3];
 
   ## TODO - this can go in some upper level
   pcent <- apply(sp::bbox(polygon1), 1, mean)
 
   ## Create a dummy vector of 1 for the wind speeds for every turbine
-  n_turbines <- length(sel1[, 1])
+  n_turbines <- length(xy_individual[, 1])
   windpo <- rep(1, n_turbines)
-
-  ## TODO - Do I need both sel1 and xyBgl-
-  ## Get the Coordinates of the individual / wind farm.
-  xy_individual <- sel1
 
   ## Terrain Effect Model:
   ## TODO - can be matrix and all raster-methods to genetic_algorithm?
@@ -136,16 +137,16 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     turb_elev[is.na(turb_elev)] <- mean(turb_elev, na.rm = TRUE)
 
     ## Plot the elevation and the wind speed multiplier rasters
-    if (plotit){
+    if (plotit) {
       par(mfrow = c(2, 1))
       plot(srtm_crop[[1]], main = "SRTM Elevation Data")
-      points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"], labs = round(turb_elev, 0),
+      points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"], labs = round(turb_elev, 0),
                         cex = 0.8)
       plot(polygon1, add = TRUE)
       plot(orogr1, main = "Wind Speed Multipliers")
-      points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"], labs = round(windpo, 3),
+      points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"], labs = round(windpo, 3),
                         cex = 0.8)
       plot(polygon1, add = TRUE)
     }
@@ -154,17 +155,17 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     air_dt <- barometric_height(matrix(turb_elev), turb_elev)
     air_rh <- as.numeric(air_dt[, "rh"])
     ## Plot the normal and corrected Air Density Values
-    if (plotit){
+    if (plotit) {
       par(mfrow = c(1, 1))
       plot(srtm_crop[[1]], main = "Normal Air Density", col = topo.colors(10))
-      points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"],
-                        labs = rep(1.225, nrow(sel1)), cex = 0.8)
+      points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
+                        labs = rep(air_rh, nrow(xy_individual)), cex = 0.8)
       plot(polygon1, add = TRUE)
-      raster::plot(srtm_crop, main = "Corrected Air Density",
+      raster::plot(srtm_crop[[1]], main = "Corrected Air Density",
                    col = topo.colors(10))
-      points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"],
+      points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(air_dt[, "rh"], 2), cex = 0.8)
       plot(polygon1, add = TRUE)
     }
@@ -197,18 +198,18 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
       graphics::par(mfrow = c(1, 1))
       cexa <- 0.9
       raster::plot(cclRaster, main = "Corine Land Cover Roughness")
-      graphics::points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"],
+      graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(surf_rough0, 2), cex = cexa)
       plot(polygon1, add = TRUE)
       raster::plot(x = elrouind, main = "Elevation Roughness Indicator")
-      graphics::points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"],
+      graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(surf_rough1, 2), cex = cexa)
       plot(polygon1, add = TRUE)
       plot(modSurf, main = "Modified Surface Roughness")
-      graphics::points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"],
+      graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(SurfaceRoughness, 2), cex = cexa)
       plot(polygon1, add = TRUE)
     }
@@ -219,8 +220,8 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     if (plotit) {
       graphics::par(mfrow = c(1, 1))
       plot(x = elrouind, main = "Adapted Wake Decay Values - K")
-      graphics::points(sel1[, "X"], sel1[, "Y"], pch = 20)
-      calibrate::textxy(sel1[, "X"], sel1[, "Y"],
+      graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(k, 3), cex = cexa)
       plot(polygon1, add = TRUE)
     }
@@ -317,15 +318,15 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     ## Create a list for every turbine
     ## Assign Windspeed to a filtered list with all turbines and add
     ## the desired rotor radius to the data frame
-    ## TODO - Performance
     tmp <- lapply(seq_len(max(df_all[, "Punkt_id"])), function(i) {
-      cbind(subset.matrix(df_all, df_all[, "Punkt_id"] == i,
-                          select = c("Punkt_id", "Ax", "Ay", "Bx", "By",
-                                     "Laenge_B", "Laenge_A", "alpha",
-                                     "Windrichtung")),
+      cbind(subset.matrix(df_all, df_all[, "Punkt_id"] == i),
             "Windmean" = dat_xyspeed[, 1L][i])
     })
     windlist <- do.call("rbind", tmp)
+    windlist <- windlist[, c("Punkt_id", "Ax", "Ay", "Bx", "By",
+                             "Laenge_B", "Laenge_A", "alpha",
+                             "Windrichtung", "Windmean")]
+    
     row.names(windlist) <- NULL
     windlist <- cbind(windlist,
                       "RotorR" = as.numeric(RotorR))
@@ -355,6 +356,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
       if (windlist[o, "Laenge_B"] == 0) {
         aov <- 0
       } else {
+        ## TODO - why not if-else ?
         if ( (wakr - Rotorf) >= leA && leA >= 0) {
           aov <- (windlist[o, "RotorR"] ^ 2) * pi
         }
@@ -454,10 +456,6 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                                  windlist1[, "RotorR"], airrh)
     efficiency <- (energy_reduced * 100) / energy_full
 
-    if (is.na(energy_full) | is.na(energy_reduced)) {
-      stop("Some energy values are NA in calculate_energy Fix Bug")
-    }
-
 
     ## Assign values back to complete matrix
     windlist2 <- cbind(windlist2,
@@ -465,8 +463,6 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                        "Energy_Output_Voll" = energy_full,
                        "Parkwirkungsgrad" = efficiency)
 
-    ## TODO Why do I need that again? Or the -angle in the beginning
-    # (Line ~286)
     windlist2[, "Windrichtung"] <- windlist2[, "Windrichtung"] * (-1)
 
     alllist[[index]] <- windlist2
