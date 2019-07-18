@@ -70,17 +70,27 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       RotorHeight = 100)
   expect_is(resultMA100, "matrix")
   expect_false(any(unlist(sapply(resultMA100[,1:13], is.na))))
-  any(as.vector(sapply(resultMA100[,3], function(x) x[,"EfficAllDir"] == 100)))
+  expect_true(any(as.vector(sapply(resultMA100[,3], function(x) x[,"EfficAllDir"] == 100))))
   
   ## Parellel Processing #########################
-  resultMAP <- genAlgo(Polygon1 = PolygonMat, verbose = F, plotit = F,
+  resultMAP <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = F,
+                       n = 20, iteration = 1, Parallel = T,
+                       vdirspe = data.in,
+                       Rotor = 30,
+                       RotorHeight = 100)
+  expect_true(nrow(resultMAP) == 1)
+  expect_is(resultMAP, "matrix")
+  expect_false(any(unlist(sapply(resultMAP[,1:13], is.na))))
+  
+  
+  resultMAP50 <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = F,
                       n = 20, iteration = 50, Parallel = T,
                       vdirspe = data.in,
                       Rotor = 30,
                       RotorHeight = 100)
-  expect_true(nrow(resultMAP) == 50)
-  expect_is(resultMAP, "matrix")
-  expect_false(any(unlist(sapply(resultMAP[,1:13], is.na))))
+  expect_true(nrow(resultMAP50) == 50)
+  expect_is(resultMAP50, "matrix")
+  expect_false(any(unlist(sapply(resultMAP50[,1:13], is.na))))
   
   ## Test with non default arguments ####################
   PolygonMat <- ggplot2::fortify(Polygon1)

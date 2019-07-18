@@ -36,7 +36,7 @@ test_that("Test Terrain Model and Weibull", {
   resultWB <- genAlgo(Polygon1 = Polygon1,
                       n = 12, iteration = 1,
                       vdirspe = winddf,
-                      weibull = TRUE, verbose = T,
+                      weibull = T, verbose = T,
                       Rotor = 35, Proportionality = 1,
                       RotorHeight = 100)
   expect_true(nrow(resultWB) == 1)
