@@ -99,6 +99,9 @@ test_that("Test Plotting Functions", {
                         RotorHeight = 100)
   plot.new()
   respf <- plot_parkfitness(resultrect)
+  expect_true(is.null(respf))
+  respf <- plotparkfitness(resultrect)
+  expect_true(is.null(respf))
   
   sp_polygonnp <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                               c(4499991, 2669343), c(4499991, 2668272)))

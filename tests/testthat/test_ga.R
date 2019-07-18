@@ -15,6 +15,16 @@ test_that("Test Genetic Algorithm with different Inputs", {
   proj4string(Polygon1) <- CRS(Projection)
   data.in <- data.frame(ws = 12, wd = 0)
 
+  ## SpatialPolygon Input - 100 Iteration #####################
+  resultSP <- genAlgo(Polygon1 = Polygon1,
+                      n = 20, iteration = 100,
+                      vdirspe = data.in,
+                      Rotor = 35, Proportionality = 1,
+                      RotorHeight = 100)
+  expect_true(nrow(resultSP) == 100)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))))
+  
   ## SpatialPolygon Input #####################
   resultSP <- genAlgo(Polygon1 = Polygon1,
                       n = 20, iteration = 1,
@@ -126,6 +136,15 @@ test_that("Test Genetic Algorithm with different Inputs", {
 
 
   ## Create errors ####################
+  expect_error(genAlgo(Polygon1 = Polygon1,
+                       GridMethod = "h", plotit = TRUE,
+                       vdirspe = data.in,
+                       n = 12,
+                       elitism = F, 
+                       selstate = "var", crossPart1 = "ran", 
+                       trimForce = TRUE,
+                       Rotor = 30))
+  
   expect_error(genAlgo(Polygon1 = Polygon1,
                        GridMethod = "h", plotit = TRUE,
                        vdirspe = data.in,
