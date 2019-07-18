@@ -346,8 +346,6 @@ plot_viewshed <- function(res, legend=FALSE) {
 #' }
 interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL, 
                           plotDEM=FALSE, fun = mean, ...) {
-  # res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
-  # fun = mean
   
   if (nrow(res$Result) > 1) {
     res$Result <- apply(res$Result, 2, function(d) {
@@ -371,6 +369,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
       }
       breakseq <- breakseq[!duplicated(breakseq)]
     } 
+
     if (!any(breakseq == maxR)) {
       breakseq <- c(breakseq, maxR)
     }

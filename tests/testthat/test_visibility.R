@@ -133,6 +133,10 @@ test_that("Test Viewshed Functions", {
                            breakseq = seq(1,10,2))
   expect_is(resinpl, "RasterLayer")
   
+  resinpl <- interpol_view(res, alpha = 1, 
+                           breakseq = seq(1,4,2))
+  expect_is(resinpl, "RasterLayer")
+  
   resinpl <- interpol_view(res, alpha = 1.2, 
                            breakform = quantile)
   expect_is(resinpl, "RasterLayer")
