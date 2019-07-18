@@ -167,7 +167,6 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     })
 
     ## get Energy Output and Efficiency rate for every wind direction
-    browser()
     res_energy <- lapply(ee, function(x){
       subset.matrix(x, subset = c(TRUE, rep(FALSE, length(ee[[1]][, 1]) - 1)))
     })
