@@ -297,6 +297,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       # weibullsrc = list(k_param, a_param)
       k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
       a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
+      k_weibull <- raster(k_weibull)
+      a_weibull <- raster(a_weibull)
       ## Project Shapefile to raster proj, Crop/Mask and project raster back
       shape_project <- sp::spTransform(Polygon1,
                                        CRSobj = sp::proj4string(a_weibull))
