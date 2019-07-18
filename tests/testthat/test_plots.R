@@ -152,6 +152,9 @@ test_that("Test Plotting Functions", {
   respwf <- plot_windfarmGA(resultrect[1:3,], GridMethod = "r", sp_polygon, whichPl = "all",
                             best = 1, plotEn = 1)
   expect_true(is.null(respwf))
+  respwf <- PlotWindfarmGA(resultrect[1:3,], GridMethod = "r", sp_polygon, whichPl = "all",
+                            best = 1, plotEn = 1)
+  expect_true(is.null(respwf))
   
   resulthex1 <- genAlgo(Polygon1 = sp_polygon, GridMethod = "h",
                            n = 15, iteration = 10,
