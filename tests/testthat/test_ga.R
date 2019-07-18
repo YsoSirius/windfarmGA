@@ -15,6 +15,16 @@ test_that("Test Genetic Algorithm with different Inputs", {
   proj4string(Polygon1) <- CRS(Projection)
   data.in <- data.frame(ws = 12, wd = 0)
 
+  ## SpatialPolygon Input - 100 Iteration #####################
+  resultSP <- genAlgo(Polygon1 = Polygon1,
+                      n = 20, iteration = 100,
+                      vdirspe = data.in,
+                      Rotor = 35, Proportionality = 1,
+                      RotorHeight = 100)
+  expect_true(nrow(resultSP) == 100)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))))
+  
   ## SpatialPolygon Input #####################
   resultSP <- genAlgo(Polygon1 = Polygon1,
                       n = 20, iteration = 1,
@@ -62,6 +72,36 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_is(resultMA, "matrix")
   expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
   
+  ## Matrix Input - 100% #####################
+  resultMA100 <- genAlgo(Polygon1 = PolygonMat, verbose = F, plotit = TRUE,
+                      n = 10, iteration = 20,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100)
+  expect_is(resultMA100, "matrix")
+  expect_false(any(unlist(sapply(resultMA100[,1:13], is.na))))
+  expect_true(any(as.vector(sapply(resultMA100[,3], function(x) x[,"EfficAllDir"] == 100))))
+  
+  ## Parellel Processing #########################
+  # resultMAP <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = F,
+  #                      n = 20, iteration = 1, Parallel = T,
+  #                      vdirspe = data.in,
+  #                      Rotor = 30,
+  #                      RotorHeight = 100)
+  # expect_true(nrow(resultMAP) == 1)
+  # expect_is(resultMAP, "matrix")
+  # expect_false(any(unlist(sapply(resultMAP[,1:13], is.na))))
+  # 
+  # 
+  # resultMAP50 <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = F,
+  #                     n = 20, iteration = 50, Parallel = T,
+  #                     vdirspe = data.in,
+  #                     Rotor = 30,
+  #                     RotorHeight = 100)
+  # expect_true(nrow(resultMAP50) == 50)
+  # expect_is(resultMAP50, "matrix")
+  # expect_false(any(unlist(sapply(resultMAP50[,1:13], is.na))))
+  
   ## Test with non default arguments ####################
   PolygonMat <- ggplot2::fortify(Polygon1)
   PolygonMat <- as.matrix(PolygonMat[,1:2])
@@ -96,6 +136,15 @@ test_that("Test Genetic Algorithm with different Inputs", {
 
 
   ## Create errors ####################
+  expect_error(genAlgo(Polygon1 = Polygon1,
+                       GridMethod = "h", plotit = TRUE,
+                       vdirspe = data.in,
+                       n = 12,
+                       elitism = F, 
+                       selstate = "var", crossPart1 = "ran", 
+                       trimForce = TRUE,
+                       Rotor = 30))
+  
   expect_error(genAlgo(Polygon1 = Polygon1,
                        GridMethod = "h", plotit = TRUE,
                        vdirspe = data.in,

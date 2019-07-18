@@ -61,7 +61,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
 
   ## Process Data ########
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
-  resldat <- resldat[!duplicated(resldat[, 'Run']),]
+  resldat <- resldat[!duplicated(resldat[, 'Run']),, drop=FALSE]
   resldat <- as.data.frame(resldat)
   # colnames(resldat) <- c("X", "Y", "EfficAllDir", "EnergyOverall", "AbschGesamt", "Run",
                          # "RotorR", "Rect_ID", "Parkfitness")

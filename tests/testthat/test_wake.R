@@ -1,3 +1,4 @@
+context("Wake Functions")
 library(testthat)
 library(sp)
 library(windfarmGA)

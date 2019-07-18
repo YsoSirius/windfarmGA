@@ -92,7 +92,6 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
     Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
   }
-
   if (missing(sourceCCL)) {
     sourceCCL <- NULL
   }
@@ -157,11 +156,12 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 
     cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", 
               (ledup - ndif)))
+    
     if (ndif < best) {
       cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
       best <- trunc(ndif / 2)
     }
-
+    if (best == 0) best = 1
     result <- result[(length(result) - best + 1):(length(result))]
 
     for (i in (1:length(result))){
@@ -369,6 +369,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
       cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
       best = trunc(ndif / 2)
     }
+    if (best == 0) best = 1
     result <- result[(length(result) - best + 1):(length(result))]
 
     for (i in (1:length(result))) {

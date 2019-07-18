@@ -93,17 +93,44 @@ test_that("Test Plotting Functions", {
                         wd = 0)
   
   resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 6,
+                        n = 12, iteration = 60,
                         vdirspe = winddat,
                         Rotor = 30, 
                         RotorHeight = 100)
-
+  plot.new()
+  respf <- plot_parkfitness(resultrect)
+  expect_true(is.null(respf))
+  respf <- plotparkfitness(resultrect)
+  expect_true(is.null(respf))
+  
+  sp_polygonnp <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+                              c(4499991, 2669343), c(4499991, 2668272)))
+  sp_polygonnp <- Polygons(list(sp_polygonnp), 1)
+  sp_polygonnp <- SpatialPolygons(list(sp_polygonnp))
+  plot_res <- quiet(plot_result(resultrect, Polygon1 = sp_polygonnp, best = 5000, plotEn = 1))
+  expect_false(anyNA(plot_res))
+  expect_true(all(plot_res$EfficAllDir <= 100))
+  plot_res <- quiet(plot_result(resultrect, Polygon1 = sp_polygonnp, best = 5000, plotEn = 2))
+  expect_false(anyNA(plot_res))
+  expect_true(all(plot_res$EfficAllDir <= 100))
+  
+  resultrect100 <- genAlgo(Polygon1 = sp_polygon,
+                        n = 5, iteration = 60,
+                        vdirspe = winddat,
+                        Rotor = 30, 
+                        RotorHeight = 100)
+  plot_res <- quiet(plot_result(resultrect100, Polygon1 = sp_polygonnp, best = 5000, plotEn = 1))
+  expect_false(anyNA(plot_res))
+  expect_true(all(plot_res$EfficAllDir <= 100))
+  plot_res <- quiet(plot_result(resultrect100, Polygon1 = sp_polygonnp, best = 5000, plotEn = 2))
+  expect_false(anyNA(plot_res))
+  expect_true(all(plot_res$EfficAllDir <= 100))
+  
   plot_res <- quiet(plotResult(resultrect, Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
   
   plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
-  
   
   Grid <- GridFilter(sp_polygon, resol = 150)
   plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon, 
@@ -117,6 +144,27 @@ test_that("Test Plotting Functions", {
   plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon, 
                                Projection = projection))
   expect_false(anyNA(plot_res))
+
+
+  respwf <- plot_windfarmGA(resultrect, GridMethod = "r", sp_polygon, whichPl = "all",
+                            best = 1, plotEn = 1)
+  expect_true(is.null(respwf))
+  respwf <- plot_windfarmGA(resultrect[1:3,], GridMethod = "r", sp_polygon, whichPl = "all",
+                            best = 1, plotEn = 1)
+  expect_true(is.null(respwf))
+  respwf <- PlotWindfarmGA(resultrect[1:3,], GridMethod = "r", sp_polygon, whichPl = "all",
+                            best = 1, plotEn = 1)
+  expect_true(is.null(respwf))
+  
+  resulthex1 <- genAlgo(Polygon1 = sp_polygon, GridMethod = "h",
+                           n = 15, iteration = 10,
+                           vdirspe = winddat,
+                           Rotor = 30, 
+                           RotorHeight = 100)
+  respwf <- plot_windfarmGA(resulthex1, GridMethod = "h", sp_polygon, whichPl = "all",
+                  best = 1, plotEn = 1)
+  expect_true(is.null(respwf))
+  
   
   ## Create error
   expect_error(quiet(plotResult(resultrect, Polygon1 = sp_polygon, plotEn = 3)))

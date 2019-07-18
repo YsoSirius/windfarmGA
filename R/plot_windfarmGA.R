@@ -71,7 +71,7 @@ plot_windfarmGA <- function(result, Polygon1, GridMethod = "r",
   }
   if (nrow(result) < 4) {
     if (any(2:5 %in% whichPl)) {
-      cat("Cannot plot option 2,3,4,5. \n Only option 1,6,7,8 are available.")
+      cat("Cannot plot option 2,3,4,5. \n Only option 1,6 are available.")
       whichPl <- c(1, 6)
     }
   }

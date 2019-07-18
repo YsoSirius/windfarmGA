@@ -276,7 +276,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     type_cluster <- "PSOCK"
     cl <- parallel::makeCluster(numCluster, type = type_cluster)
     doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl))
+    # on.exit(parallel::stopCluster(cl))
   }
 
   ## WEIBULL ###############
@@ -297,6 +297,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       # weibullsrc = list(k_param, a_param)
       k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
       a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
+      k_weibull <- raster(k_weibull)
+      a_weibull <- raster(a_weibull)
       ## Project Shapefile to raster proj, Crop/Mask and project raster back
       shape_project <- sp::spTransform(Polygon1,
                                        CRSobj = sp::proj4string(a_weibull))
@@ -881,7 +883,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 
   ## Remove Parallel Cluster ###############
   if (Parallel) {
-  try(rm(cl), silent = TRUE)
+    parallel::stopCluster(cl)
+    # try(rm(cl), silent = TRUE)
   }
 
   ## Reduce list, if algorithm didnt run all iterations. (Found Optimum) #################
