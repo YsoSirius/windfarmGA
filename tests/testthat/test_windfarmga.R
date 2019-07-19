@@ -1,11 +1,11 @@
-context("Test GA")
+context("Test windfarmGA")
 library(testthat)
 library(sp)
 library(sf)
 library(ggplot2)
 library(windfarmGA)
 
-test_that("Test Genetic Algorithm with different Inputs", {
+test_that("Test windfarmGA", {
   ## Data ##############
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
   Polygon1 <- Polygons(list(Polygon1), 1)
@@ -37,7 +37,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                          n = 20, iteration = 5,
                          vdirspe = data.in, GridMethod = "h",
                          selstate = "FIX", crossPart1 = "EQU",
-                         Rotor = 35, Proportionality = 1,
+                         Rotor = 50, Proportionality = 1,
                          RotorHeight = 100, plotit = TRUE)
   expect_true(nrow(resultSP) == 5)
   expect_is(resultSP, "matrix")
@@ -50,13 +50,13 @@ test_that("Test Genetic Algorithm with different Inputs", {
                          # vdirspe = data.in, 
                          selstate = "FIX", crossPart1 = "EQU",
                          Rotor = 35, Proportionality = 1,
-                         RotorHeight = 100, plotit = TRUE))
+                         RotorHeight = 100, plotit = FALSE))
   expect_error(windfarmGA(Polygon1 = Polygon1,
                           n = "20", iteration = "5",
                           vdirspe = data.in,
                           selstate = "FIX", crossPart1 = "EQU",
                           Rotor = 35, Proportionality = 1,
-                          RotorHeight = 100, plotit = TRUE))
+                          RotorHeight = 100, plotit = FALSE))
   expect_error(windfarmGA(Polygon1 = Polygon1,
                           n = 20, iteration = 5,
                           vdirspe = data.in,
