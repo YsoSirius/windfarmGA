@@ -13,6 +13,11 @@ quiet <- function(x) {
 
 test_that("Test Plotting Functions", {
   ## Windrose Plotting #############
+  wind_test <- data.frame(x = runif(10, 10, 20), 
+                          y = runif(10, 0, 360) )
+  a0 = plot_windrose(wind_test, plotit = FALSE)
+  expect_true(is.recursive(a0))
+  
   wind_test <- data.frame(ws = runif(10, 10, 20), 
                         wd = runif(10, 0, 360) )
   a0 = plot_windrose(wind_test, plotit = FALSE)
@@ -268,8 +273,15 @@ test_that("Test Plotting Functions", {
   if(length(list.files(pattern = "g100_06.tif")) != 0) {
     file.remove("g100_06.tif")
   }
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
   plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
-  # expect_false(anyNA(plres))
-  # expect_true(all(plres$EfficAllDir <= 100))
+  if(length(list.files(pattern = "g100_06.tif")) != 0) {
+    file.remove("g100_06.tif")
+  }
+  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 1)
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
   
 })
