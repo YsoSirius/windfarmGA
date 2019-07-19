@@ -273,19 +273,19 @@ test_that("Test Genetic Algorithm with different Inputs", {
   # expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Parallel #############
-  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2668272)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
-  proj4string(sp_polygon) <- CRS(projection)
-  winddat <- data.frame(ws = 12, wd = 0)
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 20,
-                        vdirspe = winddat,
-                        Rotor = 30, 
-                        RotorHeight = 100, 
-                        Parallel = TRUE, verbose = TRUE)
-  expect_true(nrow(resultrect) == 20)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
+  # sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+  #                             c(4499991, 2669343), c(4499991, 2668272)))
+  # sp_polygon <- Polygons(list(sp_polygon), 1)
+  # sp_polygon <- SpatialPolygons(list(sp_polygon))
+  # proj4string(sp_polygon) <- CRS(projection)
+  # winddat <- data.frame(ws = 12, wd = 0)
+  # resultrect <- genAlgo(Polygon1 = sp_polygon,
+  #                       n = 12, iteration = 20,
+  #                       vdirspe = winddat,
+  #                       Rotor = 30, 
+  #                       RotorHeight = 100, 
+  #                       Parallel = TRUE, verbose = TRUE)
+  # expect_true(nrow(resultrect) == 20)
+  # expect_is(resultrect, "matrix")
+  # expect_false(any(unlist(sapply(resultrect, is.na))))
 })
