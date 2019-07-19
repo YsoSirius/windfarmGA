@@ -242,13 +242,16 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     stop("No Winddata is given.")
   }
   if (missing(n)) {
-    stop("The varieble 'n' is not defined. Assign the number of turbines to 'n'.")
+    stop("The variable 'n' is not defined. Assign the number of turbines to 'n'.")
   }
   if (missing(Rotor)) {
-    stop("The varieble 'Rotor' is not defined. Assign the rotor radius to 'Rotor'.")
+    stop("The variable 'Rotor' is not defined. Assign the rotor radius to 'Rotor'.")
   }
   if (missing(RotorHeight)) {
-    stop("The varieble 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
+    stop("The variable 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
+  }
+  if (is.na(proj4string(Polygon1))) {
+    stop("The input area is not projected.")
   }
 
 
@@ -438,21 +441,20 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     }
 
     if (missing(sourceCCL)) {
-      message("No land cover raster ('sourceCCL') was given. It will be taken from ",
-              "the package (/data/ccl.rda).")
-      # message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
-              # "the EEA-website.")
-      # readline(prompt = "Press [enter] to continue or Escpae to exit.")
-      # if (!file.exists("g100_06.tif")) {
-      #   ## download an zip CCL-tif
-      #   ccl_raster_url <-
-      #     "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-      #   temp <- tempfile()
-      #   download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-      #   unzip(temp, "g100_06.tif")
-      #   unlink(temp)
-      # }
-      # ccl <- raster::raster("g100_06.tif")
+      # message("No land cover raster ('sourceCCL') was given. It will be taken from ",
+              # "the package (/data/ccl.rda).")
+      message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+              "the EEA-website.")
+      if (!file.exists("g100_06.tif")) {
+        ## download an zip CCL-tif
+        ccl_raster_url <-
+          "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+        temp <- tempfile()
+        download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+        unzip(temp, "g100_06.tif")
+        unlink(temp)
+      }
+      ccl <- raster::raster("g100_06.tif")
     } else {
       ccl <- raster::raster(sourceCCL)
     }
@@ -497,9 +499,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       sourceCCLRoughness <- paste0(path, "clc_legend.csv")
     } else {
       if (verbose) {
-        print("You are using your own Corine Land Cover legend.")
+        message("You are using your own Corine Land Cover legend.")
       }
-      sourceCCLRoughness <- sourceCCLRoughness
     }
 
     cclPoly <- raster::crop(ccl, Polygon1)
