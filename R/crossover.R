@@ -127,10 +127,6 @@ crossover        <- function(se6, u, uplimit, crossPart, verbose, seed) {
 
   nI <- do.call("cbind", all)
 
-  if (length(fitChi) != ncol(nI)) {
-    stop("\nCrossover. Amount of Turbines is wrong. Fix BUG")
-  }
-
   if (verbose) {
     cat(paste("\nHow many parental pairs are at hand: ", length(z)))
     cat(paste("\nHow many permutations are possible: ", length(z) *

@@ -626,10 +626,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     allparksNewplot <- aggregate(allparksNewplot,
                                  list(allparksNewplot[, "Rect_ID"]), mean)
     allparksNewplot <- allparksNewplot[, -1]
-
-    if (any(allparksNewplot[, "Rect_ID"] %in% Grid[, "ID"] == FALSE)) {
-      stop("Index of Grid not correct. Bigger than maximum Grid? Fix BUG")
-    }
     ##################
 
     if (plotit) {
@@ -819,10 +815,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("Selection  -  Amount of Individuals: ",
                 length(selec6best_bin[1, -1]), "\n"))
     }
-    Trus1 <- colSums(selec6best_bin)[-1] == n
-    if (any(Trus1 == FALSE)) {
-      stop("Number of turbines is not as required. Trus1. Fix BUG")
-    }
+    # Trus1 <- colSums(selec6best_bin)[-1] == n
+    # if (any(Trus1 == FALSE)) {
+    #   stop("Number of turbines is not as required. Trus1. Fix BUG")
+    # }
     nindivsel <- length(selec6best_bin[1, -1])
 
     ## CROSSOVER #################
@@ -873,10 +869,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("\nTrimToN    -  Amount of Individuals: ",
                 length(mut1[1, ])))
     }
-    Trus3 <- colSums(mut1) == n
-    if (any(Trus3 == FALSE)) {
-      stop("Number of turbines is not as required. Trus3. Fix Bug.")
-    }
+    # Trus3 <- colSums(mut1) == n
+    # if (any(Trus3 == FALSE)) {
+    #   stop("Number of turbines is not as required. Trus3. Fix Bug.")
+    # }
 
     nindiv[[i]] <- cbind(nindivfit, nindivsel, nindivcros, nindivmut)
     if (maxParkwirkungsg == 100) {
