@@ -82,7 +82,6 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
 
   ## Get the starting layout of windfarm[o]
   layout_start <- result[bestGARun,]$bestPaEn
-  
   ### Turbine Indexing (Must be plotted?) ################
   raster::plot(Grid[[2]])
   points(x = layout_start[, "X"], y = layout_start[, "Y"], pch = 15)
@@ -91,8 +90,10 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
   turbInx <- ""
 
   while (!turbInx %in% layout_start[,'Rect_ID']) {
-    cat("Enter the number of the turbine you want to optimize.")
-    turbInx <- readline(prompt = "Please enter the corresponding number: ")
+    cat("Enter the turbine number that you want to optimize.")
+    # turbInx <- readline(prompt = "Please enter the corresponding number: ")
+    cat("Please enter the corresponding number:\n")
+    turbInx <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   }
   turbInx <- which(layout_start[, 'Rect_ID'] == as.numeric(turbInx))
   ################

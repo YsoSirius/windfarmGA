@@ -1,3 +1,4 @@
+# nocov start
 #' @title Check Input Crossover Method
 #' @name readinteger
 #' @description  Checks whether the input for \code{\link{crossover}} is given
@@ -54,5 +55,6 @@ readintegerSel        <- function(){
   }
   return(selstate)
 }
+# nocov end
 
 
