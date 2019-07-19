@@ -127,10 +127,6 @@ crossover        <- function(se6, u, uplimit, crossPart, verbose, seed) {
 
   nI <- do.call("cbind", all)
 
-  if (length(fitChi) != ncol(nI)) {
-    stop("\nCrossover. Amount of Turbines is wrong. Fix BUG")
-  }
-
   if (verbose) {
     cat(paste("\nHow many parental pairs are at hand: ", length(z)))
     cat(paste("\nHow many permutations are possible: ", length(z) *
@@ -202,13 +198,10 @@ splitAt           <- function(x, pos) {
 #' 
 permutations <- function(n, r, v = 1:n) {
   v <- unique(sort(v))
-  if (length(v) < n)
-    stop("too few different elements")
   sub <- function(n, r, v) {
-    if (r == 1) 
+    if (r == 1) {
       matrix(v, n, 1)
-    else if (n == 1)
-      matrix(v, 1, r)
+    }
     else {
       inner <- Recall(n, r - 1, v)
       cbind(rep(v, rep(nrow(inner), n)), matrix(t(inner), 

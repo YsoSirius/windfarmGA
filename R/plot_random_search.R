@@ -10,7 +10,7 @@
 #' @param result The result of the function \code{\link{genetic_algorithm}} or
 #'   \code{\link{windfarmGA}}
 #' @param Polygon1 The Polygon for the wind farm area.
-#' @param best How many best candidates to plot.
+#' @param best How many best candidates to plot. Default is 1.
 #'
 #' @family Randomization
 #' @return NULL
@@ -32,12 +32,13 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
   order1 <- order(a, decreasing = TRUE)
   resultRS1 <- resultRS1[order1, ]
 
+  if (missing(best)) best <- 1
 
   # resBest <- resultRS1[!duplicated(resultRS1$Run) & !duplicated(resultRS1$bestGARun),]
-  resBest <- resultRS1[!duplicated(resultRS1[, "Run"]),]
+  resBest <- resultRS1[!duplicated(resultRS1[, "Run"]),,drop = FALSE]
   if (nrow(resBest) < best) {best <- nrow(resBest)}
 
-  resBest <- resBest[1:best,]
+  resBest <- resBest[1:best,,drop = FALSE]
   # resBest <- resBest[nrow(resBest):(nrow(resBest)-best),]
 
   resultRS2 <- list()
@@ -48,7 +49,7 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
   resultRS1 <- resultRS2
 
   resultRS1 <- rev(resultRS1)
-  resBest <- resBest[order(resBest[,"EnergyOverall"]),]
+  resBest <- resBest[order(resBest[,"EnergyOverall"]),,drop=FALSE]
 
   resolR <- as.numeric(result[,"inputData"][[1]][,1]["Resolution"])
   PropG <- as.numeric(result[,"inputData"][[1]][,1]["Percentage of Polygon"])
@@ -60,11 +61,11 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
 
   for (i in 1:length(resultRS1) ) {
     ## Original GA-result ################
-    bestGAR <- resBest[,"bestGARun"][i]
+    bestGAR <- resBest[,"bestGARun",drop=F][i]
     bestrestGA <- result[bestGAR,]$bestPaEn
-    brOrig <- length(levels(factor(bestrestGA[,"AbschGesamt"])))
+    brOrig <- length(levels(factor(bestrestGA[,"AbschGesamt",drop=F])))
     if (brOrig > 1) {
-      ColOri <- rbPal1(brOrig)[as.numeric(cut(as.numeric(bestrestGA[,"AbschGesamt"]),
+      ColOri <- rbPal1(brOrig)[as.numeric(cut(as.numeric(bestrestGA[,"AbschGesamt",drop=F]),
                                               breaks = brOrig))]
     } else {
       ColOri <- "green"

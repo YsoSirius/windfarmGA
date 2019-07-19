@@ -13,6 +13,11 @@ quiet <- function(x) {
 
 test_that("Test Plotting Functions", {
   ## Windrose Plotting #############
+  wind_test <- data.frame(x = runif(10, 10, 20), 
+                          y = runif(10, 0, 360) )
+  a0 = plot_windrose(wind_test, plotit = FALSE)
+  expect_true(is.recursive(a0))
+  
   wind_test <- data.frame(ws = runif(10, 10, 20), 
                         wd = runif(10, 0, 360) )
   a0 = plot_windrose(wind_test, plotit = FALSE)
@@ -93,7 +98,7 @@ test_that("Test Plotting Functions", {
                         wd = 0)
   
   resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 60,
+                        n = 12, iteration = 100,
                         vdirspe = winddat,
                         Rotor = 30, 
                         RotorHeight = 100)
@@ -207,6 +212,7 @@ test_that("Test Plotting Functions", {
   expect_true(class(windr_res)[1] == "gg")
   
   
+  ## plot_leaflet #######################
   pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon, which = 1)
   expect_true(is.recursive(pl)); rm(pl)
   
@@ -228,4 +234,54 @@ test_that("Test Plotting Functions", {
   pl <- leafPlot(result = resulthex, Polygon1 = polygon, GridPol = gr[[2]])
   expect_true(is.recursive(pl));rm(pl)
 
+  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+                              c(4499991, 2669343), c(4499991, 2668272)))
+  sp_polygon <- Polygons(list(sp_polygon), 1)
+  sp_polygon <- SpatialPolygons(list(sp_polygon))
+  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
+                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  proj4string(sp_polygon) <- CRS(projection)
+  winddat <- data.frame(ws = 12, wd = 0)
+  resultrect <- genAlgo(Polygon1 = sp_polygon,
+                        n = 12, iteration = 60,
+                        vdirspe = winddat,
+                        Rotor = 30, 
+                        RotorHeight = 100)
+  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+                              c(4499991, 2669343), c(4499991, 2668272)))
+  sp_polygon <- Polygons(list(sp_polygon), 1)
+  sp_polygon <- SpatialPolygons(list(sp_polygon))
+  pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon)
+  expect_true(is.recursive(pl));rm(pl)
+  expect_error(resultrect <- genAlgo(Polygon1 = sp_polygon,
+                                     n = 12, iteration = 60,
+                                     vdirspe = winddat,
+                                     Rotor = 30,
+                                     RotorHeight = 100))
+  
+  
+  proj4string(sp_polygon) <- CRS(projection)
+  resultrect <- genAlgo(Polygon1 = sp_polygon,
+                        n = 12, iteration = 1,
+                        vdirspe = winddat,
+                        Rotor = 30, 
+                        RotorHeight = 100, topograp = TRUE, plotit = TRUE)
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+  plres <- plot_result(resultrect, sp_polygon, topographie = T)
+  if(length(list.files(pattern = "g100_06.tif")) != 0) {
+    file.remove("g100_06.tif")
+  }
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
+  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
+  if(length(list.files(pattern = "g100_06.tif")) != 0) {
+    file.remove("g100_06.tif")
+  }
+  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 1)
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
 })

@@ -1,6 +1,7 @@
 utils::globalVariables(
   c(
     "X","Y",
+    "a_weibull", "k_weibull",
     "var1.pred","x","y",
     "element_rect","element_line",
     "unit", 

@@ -226,6 +226,9 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   if (missing(trimForce)) {
     trimForce <- FALSE
   }
+  if (missing(RotorHeight)) {
+    stop("The variable 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
+  }
   if (missing(referenceHeight)) {
     referenceHeight <- RotorHeight
   }
@@ -242,13 +245,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     stop("No Winddata is given.")
   }
   if (missing(n)) {
-    stop("The varieble 'n' is not defined. Assign the number of turbines to 'n'.")
+    stop("The variable 'n' is not defined. Assign the number of turbines to 'n'.")
   }
   if (missing(Rotor)) {
-    stop("The varieble 'Rotor' is not defined. Assign the rotor radius to 'Rotor'.")
-  }
-  if (missing(RotorHeight)) {
-    stop("The varieble 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
+    stop("The variable 'Rotor' is not defined. Assign the rotor radius to 'Rotor'.")
   }
 
 
@@ -258,7 +258,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 
   ## Is the Polygon Spatial / SF / coordinates - It will transform to SpatialPolygon
   Polygon1 <- isSpatial(Polygon1, ProjLAEA)
-
+  if (is.na(st_crs(Polygon1))) {
+    stop("The input area is not projected.")
+  }
+  
   ## Grid size calculation
   resol2 <- fcrR * Rotor
 
@@ -424,13 +427,13 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
   if (!topograp) {
     if (verbose) {
-      cat("Topography and orography are not taken into account.")
+      cat("Topography and orography are not taken into account.\n")
     }
     srtm_crop <- ""
     cclRaster <- ""
   } else {
     if (verbose) {
-      cat("Topography and orography are taken into account.")
+      cat("Topography and orography are taken into account.\n")
     }
 
     if (plotit) {
@@ -438,21 +441,20 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     }
 
     if (missing(sourceCCL)) {
-      message("No land cover raster ('sourceCCL') was given. It will be taken from ",
-              "the package (/data/ccl.rda).")
-      # message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
-              # "the EEA-website.")
-      # readline(prompt = "Press [enter] to continue or Escpae to exit.")
-      # if (!file.exists("g100_06.tif")) {
-      #   ## download an zip CCL-tif
-      #   ccl_raster_url <-
-      #     "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-      #   temp <- tempfile()
-      #   download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-      #   unzip(temp, "g100_06.tif")
-      #   unlink(temp)
-      # }
-      # ccl <- raster::raster("g100_06.tif")
+      # message("No land cover raster ('sourceCCL') was given. It will be taken from ",
+              # "the package (/data/ccl.rda).")
+      message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
+              "the EEA-website.\n")
+      if (!file.exists("g100_06.tif")) {
+        ## download an zip CCL-tif
+        ccl_raster_url <-
+          "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+        temp <- tempfile()
+        download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+        unzip(temp, "g100_06.tif")
+        unlink(temp)
+      }
+      ccl <- raster::raster("g100_06.tif")
     } else {
       ccl <- raster::raster(sourceCCL)
     }
@@ -461,11 +463,12 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     Polygon1 <-  sp::spTransform(Polygon1,
                                  CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
     extpol <- round(Polygon1@bbox,0)[, 2]
-    srtm <- raster::getData("SRTM", lon = extpol[1], lat = extpol[2])
-    if (missing(srtm)) {
-      stop("\nCould not download SRTM for the given Polygon.",
-           "Check the Projection of the Polygon.\n", call. = FALSE)
-    }
+    srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
+                     error = function(e) {
+                       stop("\nCould not download SRTM for the given Polygon.",
+                            "Check the Projection of the Polygon.\n", call. = FALSE)
+                     })
+
     srtm_crop <- raster::crop(srtm, Polygon1)
     srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
@@ -478,10 +481,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     }
 
     roughrast <- raster::terrain(srtm_crop, "roughness")
-    if (all(is.na(values(roughrast)))) {
+    if (all(is.na(raster::values(roughrast)))) {
       warning("Cannot calculate a surface roughness. \nMaybe the resolution or ",
-              "the area is too small. Roughness values are set to 1.")
-      values(roughrast) <- 1
+              "the area is too small. Roughness values are set to 1.\n")
+      raster::values(roughrast) <- 1
     }
     srtm_crop <- list(
       strm_crop = srtm_crop,
@@ -497,9 +500,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       sourceCCLRoughness <- paste0(path, "clc_legend.csv")
     } else {
       if (verbose) {
-        print("You are using your own Corine Land Cover legend.")
+        message("You are using your own Corine Land Cover legend.\n")
       }
-      sourceCCLRoughness <- sourceCCLRoughness
     }
 
     cclPoly <- raster::crop(ccl, Polygon1)
@@ -517,7 +519,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 
 
   ## GENETIC ALGORITHM #################
-  if (verbose) {cat("\nStart Genetic Algorithm ...")}
+  if (verbose) {cat("\nStart Genetic Algorithm ...\n")}
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   i <- 1
   while (i <= iteration) {
@@ -626,10 +628,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     allparksNewplot <- aggregate(allparksNewplot,
                                  list(allparksNewplot[, "Rect_ID"]), mean)
     allparksNewplot <- allparksNewplot[, -1]
-
-    if (any(allparksNewplot[, "Rect_ID"] %in% Grid[, "ID"] == FALSE)) {
-      stop("Index of Grid not correct. Bigger than maximum Grid? Fix BUG")
-    }
     ##################
 
     if (plotit) {
@@ -819,10 +817,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("Selection  -  Amount of Individuals: ",
                 length(selec6best_bin[1, -1]), "\n"))
     }
-    Trus1 <- colSums(selec6best_bin)[-1] == n
-    if (any(Trus1 == FALSE)) {
-      stop("Number of turbines is not as required. Trus1. Fix BUG")
-    }
+    # Trus1 <- colSums(selec6best_bin)[-1] == n
+    # if (any(Trus1 == FALSE)) {
+    #   stop("Number of turbines is not as required. Trus1. Fix BUG")
+    # }
     nindivsel <- length(selec6best_bin[1, -1])
 
     ## CROSSOVER #################
@@ -873,10 +871,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("\nTrimToN    -  Amount of Individuals: ",
                 length(mut1[1, ])))
     }
-    Trus3 <- colSums(mut1) == n
-    if (any(Trus3 == FALSE)) {
-      stop("Number of turbines is not as required. Trus3. Fix Bug.")
-    }
+    # Trus3 <- colSums(mut1) == n
+    # if (any(Trus3 == FALSE)) {
+    #   stop("Number of turbines is not as required. Trus3. Fix Bug.")
+    # }
 
     nindiv[[i]] <- cbind(nindivfit, nindivsel, nindivcros, nindivmut)
     if (maxParkwirkungsg == 100) {

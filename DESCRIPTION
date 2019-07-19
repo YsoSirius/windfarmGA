@@ -37,5 +37,5 @@ License: MIT + file LICENSE
 URL: https://ysosirius.github.io/windfarmGA/index.html
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.1.1
-Suggests: testthat, dplyr (>= 0.8.0.1)
+Suggests: testthat, pkgdown, dplyr (>= 0.8.0.1)
 Encoding: UTF-8

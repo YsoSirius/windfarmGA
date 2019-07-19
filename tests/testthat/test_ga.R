@@ -185,6 +185,107 @@ test_that("Test Genetic Algorithm with different Inputs", {
                        Rotor = 30
                        # ,RotorHeight = 100
                        ))
+  expect_error(genetic_algorithm(Polygon1 = Polygon1,
+                       GridMethod = "h", 
+                       vdirspe = data.in, 
+                       n = 12,
+                       elitism = F, 
+                       selstate = "var", crossPart1 = "ran", 
+                       trimForce = TRUE,
+                       Rotor = 30
+                       # ,RotorHeight = 100
+                       ))
+  
+  sp_polygon <- Polygon(rbind(c(1, 1), c(1, 2000),
+                              c(2000, 2000), c(2000, 1)))
+  sp_polygon <- Polygons(list(sp_polygon), 1)
+  sp_polygon <- SpatialPolygons(list(sp_polygon))
+  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
+                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  proj4string(sp_polygon) <- CRS(projection)
+  expect_error(genAlgo(Polygon1 = sp_polygon,
+                       n = 12, iteration = 1,
+                       vdirspe = winddat,
+                       Rotor = 30, 
+                       RotorHeight = 100, topograp = TRUE, verbose = TRUE))
+  
+
+  
+  ## Test Terrain Model ###################
+  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+                              c(4499991, 2669343), c(4499991, 2668272)))
+  sp_polygon <- Polygons(list(sp_polygon), 1)
+  sp_polygon <- SpatialPolygons(list(sp_polygon))
+  proj4string(sp_polygon) <- CRS(projection)
+  winddat <- data.frame(ws = 12, wd = 0)
+  resultrect <- genAlgo(Polygon1 = sp_polygon,
+                        n = 12, iteration = 1,
+                        vdirspe = winddat,
+                        Rotor = 30, 
+                        RotorHeight = 100, topograp = TRUE, verbose = TRUE)
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+  
+  sp_polygon <- Polygon(rbind(c(4498482, 2550272), c(4498482, 2669343),
+                              c(4499991, 2669343), c(4499991, 2550272)))
+  sp_polygon <- Polygons(list(sp_polygon), 1)
+  sp_polygon <- SpatialPolygons(list(sp_polygon))
+  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
+                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  proj4string(sp_polygon) <- CRS(projection)
+  projection84 <- paste("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+  sp_polygon <- spTransform(sp_polygon, CRS(projection84))
+  winddat <- data.frame(ws = 12, wd = 0)
+  resultrect <- genAlgo(Polygon1 = sp_polygon,
+                        n = 12, iteration = 1,
+                        vdirspe = winddat,
+                        Rotor = 30, 
+                        RotorHeight = 100, topograp = TRUE, verbose = TRUE)
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
   
   
+  sp_polygon <- Polygon(rbind(c(4498482, 2550272), c(4498482, 2669343),
+                              c(4499991, 2669343), c(4499991, 2550272)))
+  sp_polygon <- Polygons(list(sp_polygon), 1)
+  sp_polygon <- SpatialPolygons(list(sp_polygon))
+  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
+                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  proj4string(sp_polygon) <- CRS(projection)
+  resultrect <- genAlgo(Polygon1 = sp_polygon,
+                        n = 12, iteration = 1,
+                        vdirspe = winddat,
+                        Rotor = 30, 
+                        RotorHeight = 100, topograp = TRUE, verbose = TRUE)
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+  ## Weibull Raster ######################
+  # resultrect <- genAlgo(Polygon1 = sp_polygon,
+  #                       n = 12, iteration = 1,
+  #                       vdirspe = winddat,
+  #                       Rotor = 30, 
+  #                       RotorHeight = 100, topograp = TRUE, weibull = TRUE)
+  # expect_true(nrow(resultrect) == 1)
+  # expect_is(resultrect, "matrix")
+  # expect_false(any(unlist(sapply(resultrect, is.na))))
+  
+  ## Parallel #############
+  # sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+  #                             c(4499991, 2669343), c(4499991, 2668272)))
+  # sp_polygon <- Polygons(list(sp_polygon), 1)
+  # sp_polygon <- SpatialPolygons(list(sp_polygon))
+  # proj4string(sp_polygon) <- CRS(projection)
+  # winddat <- data.frame(ws = 12, wd = 0)
+  # resultrect <- genAlgo(Polygon1 = sp_polygon,
+  #                       n = 12, iteration = 20,
+  #                       vdirspe = winddat,
+  #                       Rotor = 30, 
+  #                       RotorHeight = 100, 
+  #                       Parallel = TRUE, verbose = TRUE)
+  # expect_true(nrow(resultrect) == 20)
+  # expect_is(resultrect, "matrix")
+  # expect_false(any(unlist(sapply(resultrect, is.na))))
 })
