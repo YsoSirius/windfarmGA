@@ -226,7 +226,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
             # warning("\nNo raster given or found in directory for the land coverage.",
                  # "\nInternal CLC-raster is used.'\n")
             ## ccl is loaded from /data
-            message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+            message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
                     "the EEA-website.")
             ## download an zip CCL-tif
             ccl_raster_url <-
@@ -435,7 +435,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 
         if (is.null(sourceCCL)){
           if (length(list.files(pattern = "g100_06.tif")) == 0) {
-            message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+            message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
                     "the EEA-website.")
             ## download an zip CCL-tif
             ccl_raster_url <-

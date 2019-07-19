@@ -443,7 +443,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     if (missing(sourceCCL)) {
       # message("No land cover raster ('sourceCCL') was given. It will be taken from ",
               # "the package (/data/ccl.rda).")
-      message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+      message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
               "the EEA-website.")
       if (!file.exists("g100_06.tif")) {
         ## download an zip CCL-tif
@@ -463,11 +463,12 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     Polygon1 <-  sp::spTransform(Polygon1,
                                  CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
     extpol <- round(Polygon1@bbox,0)[, 2]
-    srtm <- raster::getData("SRTM", lon = extpol[1], lat = extpol[2])
-    if (missing(srtm)) {
-      stop("\nCould not download SRTM for the given Polygon.",
-           "Check the Projection of the Polygon.\n", call. = FALSE)
-    }
+    srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
+                     error = function(e) {
+                       stop("\nCould not download SRTM for the given Polygon.",
+                            "Check the Projection of the Polygon.\n", call. = FALSE)
+                     })
+
     srtm_crop <- raster::crop(srtm, Polygon1)
     srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
