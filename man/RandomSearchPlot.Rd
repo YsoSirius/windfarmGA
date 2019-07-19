@@ -15,7 +15,7 @@ RandomSearchPlot(resultRS, result, Polygon1, best)
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{best}{How many best candidates to plot.}
+\item{best}{How many best candidates to plot. Default is 1.}
 }
 \description{
 RandomSearchPlot is replaced by
