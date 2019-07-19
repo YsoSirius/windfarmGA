@@ -226,6 +226,9 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   if (missing(trimForce)) {
     trimForce <- FALSE
   }
+  if (missing(RotorHeight)) {
+    stop("The variable 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
+  }
   if (missing(referenceHeight)) {
     referenceHeight <- RotorHeight
   }
@@ -246,9 +249,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   }
   if (missing(Rotor)) {
     stop("The variable 'Rotor' is not defined. Assign the rotor radius to 'Rotor'.")
-  }
-  if (missing(RotorHeight)) {
-    stop("The variable 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
   }
 
 
