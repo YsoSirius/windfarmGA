@@ -27,7 +27,7 @@
 #'   cellStats terrain resample overlay cellFromXY ncell projection values
 #' @importFrom sp spTransform proj4string Polygon Polygons SpatialPolygons CRS
 #'   coordinates SpatialPoints gridded spsample over bbox
-#' @importFrom sf st_as_sf st_geometry st_coordinates st_transform
+#' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
 #' @importFrom rgdal readOGR
 #' @importFrom rgeos gIntersection
 #' @importFrom grDevices colorRampPalette topo.colors

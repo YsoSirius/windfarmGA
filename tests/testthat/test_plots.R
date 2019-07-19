@@ -248,13 +248,14 @@ test_that("Test Plotting Functions", {
   sp_polygon <- SpatialPolygons(list(sp_polygon))
   pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon)
   expect_true(is.recursive(pl));rm(pl)
-  
   expect_error(resultrect <- genAlgo(Polygon1 = sp_polygon,
                                      n = 12, iteration = 60,
                                      vdirspe = winddat,
-                                     Rotor = 30, 
+                                     Rotor = 30,
                                      RotorHeight = 100))
   
+  
+  proj4string(sp_polygon) <- CRS(projection)
   resultrect <- genAlgo(Polygon1 = sp_polygon,
                         n = 12, iteration = 1,
                         vdirspe = winddat,
@@ -263,7 +264,8 @@ test_that("Test Plotting Functions", {
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
-  # plres <- plot_result(resultrect, sp_polygon, topographie = T)
+  plres <- plot_result(resultrect, sp_polygon, topographie = T)
+  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
   # expect_false(anyNA(plres))
   # expect_true(all(plres$EfficAllDir <= 100))
   

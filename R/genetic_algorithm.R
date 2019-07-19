@@ -250,9 +250,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   if (missing(RotorHeight)) {
     stop("The variable 'RotorHeight' is not defined. Assign the turbine heights to 'RotorHeight'.")
   }
-  if (is.na(proj4string(Polygon1))) {
-    stop("The input area is not projected.")
-  }
 
 
   ## INIT VARIABLES 1 #################
@@ -261,7 +258,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 
   ## Is the Polygon Spatial / SF / coordinates - It will transform to SpatialPolygon
   Polygon1 <- isSpatial(Polygon1, ProjLAEA)
-
+  if (is.na(st_crs(Polygon1))) {
+    stop("The input area is not projected.")
+  }
+  
   ## Grid size calculation
   resol2 <- fcrR * Rotor
 

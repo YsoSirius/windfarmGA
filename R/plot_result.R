@@ -223,9 +223,19 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 
         if (is.null(sourceCCL)) {
           if (length(list.files(pattern = "g100_06.tif")) == 0) {
-            warning("\nNo raster given or found in directory for the land coverage.",
-                 "\nInternal CLC-raster is used.'\n")
+            # warning("\nNo raster given or found in directory for the land coverage.",
+                 # "\nInternal CLC-raster is used.'\n")
             ## ccl is loaded from /data
+            message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+                    "the EEA-website.")
+            ## download an zip CCL-tif
+            ccl_raster_url <-
+              "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+            temp <- tempfile()
+            download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+            unzip(temp, "g100_06.tif")
+            unlink(temp)
+            ccl <- raster::raster("g100_06.tif")
           } else {
             sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
             ccl <- raster::raster(x = sourceCCL)
@@ -338,7 +348,8 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
                             labs = round((SurfaceRoughness), 2), cex = cexa)
           raster::plot(polygon1, add = TRUE)
 
-          RotorHeight <- as.integer(resultSafe[1, 'inputData']$inputData['Rotor Height',][[1]])
+          # RotorHeight <- as.integer(resultSafe[1, 'inputData']$inputData['Rotor Height',][[1]])
+          RotorHeight <- as.integer(resultSafe[1, 'inputData'][[1]]['Rotor Height',])
           k_raster <- raster::calc(modSurf, function(x) {x <- 0.5 / (log(RotorHeight / x))})
           # New Wake Decay Constant calculated with new surface roughness values, according to CLC
           k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
@@ -424,10 +435,19 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 
         if (is.null(sourceCCL)){
           if (length(list.files(pattern = "g100_06.tif")) == 0) {
-            stop("\nNo raster given or found in directory for the land coverage.",
-                 "\nAssign the path to the Corine Land Cover raster (.tif) to 'sourceCCL'\n", call. = F)
+            message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
+                    "the EEA-website.")
+            ## download an zip CCL-tif
+            ccl_raster_url <-
+              "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+            temp <- tempfile()
+            download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+            unzip(temp, "g100_06.tif")
+            unlink(temp)
+            ccl <- raster::raster("g100_06.tif")
           } else {
             sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
+            ccl <- raster::raster(x = sourceCCL)
           }
         }
 
@@ -443,7 +463,6 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
 
           # Include Corine Land Cover Raster to get an estimation of Surface Roughness
-          ccl <- raster::raster(x = sourceCCL)
           cclPoly <- raster::crop(ccl, Polygon1)
           cclPoly1 <- raster::mask(cclPoly, Polygon1)
           if (is.null(sourceCCLRoughness)) {
@@ -530,7 +549,9 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
                             labs = round((SurfaceRoughness), 2), cex = cexa)
           plot(polygon1, add = TRUE)
 
-          RotorHeight <- as.integer(resultSafe[1, 'inputData']$inputData['Rotor Height',][[1]])
+          # browser()
+          # RotorHeight <- as.integer(resultSafe[1, 'inputData']$inputData['Rotor Height',][[1]])
+          RotorHeight <- as.integer(resultSafe[1, 'inputData'][[1]]['Rotor Height',])
           k_raster <- raster::calc(modSurf, function(x) {x <- 0.5 / (log(RotorHeight / x))})
           # New Wake Decay Constant calculated with new surface roughness values, according to CLC
           k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
