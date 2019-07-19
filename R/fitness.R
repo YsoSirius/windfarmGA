@@ -170,14 +170,10 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     res_energy <- lapply(ee, function(x){
       subset.matrix(x, subset = c(TRUE, rep(FALSE, length(ee[[1]][, 1]) - 1)))
     })
-
-    ## TODO - Make this lot easier, vectorize it all
-    #######################
     res_energy <- do.call("rbind", res_energy)
-    res_energy <- res_energy[,c("Windrichtung",
-                                "Energy_Output_Red",
-                                "Parkwirkungsgrad"), drop = FALSE]
-    
+    res_energy <- res_energy[, c("Windrichtung",
+                                 "Energy_Output_Red",
+                                 "Parkwirkungsgrad"), drop = FALSE]
     
     # Add the Probability of every direction
     # Calculate the relative Energy outputs respective to the

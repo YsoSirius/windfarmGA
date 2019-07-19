@@ -10,7 +10,7 @@ unlink(temp)
 ccl <- raster::raster("g100_06.tif")
 usethis::use_data(ccl, overwrite = TRUE)
 
-## Download Corine-Land-Cover Legend, save as .csv and add column for Rauhigkeit
+## Download Corine-Land-Cover Legend, save as .csv and add column for Rauhigkeit ###############
 ## TODO - add function to create a legend with other classification
 legend_url <- "https://www.eea.europa.eu/data-and-maps/data/corine-land-cover-3/corine-land-cover-classes-and/clc_legend.csv/at_download/file"
 data <- read.csv(legend_url)

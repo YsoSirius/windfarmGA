@@ -216,6 +216,15 @@ test_that("Test Wake Functions", {
   
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
   expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
+  
+  resCalcEn <- calculateEn(sel = resStartGA[[1]], referenceHeight = 50,
+                           RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
+                           distanz = 100000, resol = 200,dirSpeed = data.in,
+                           RotorR = 50, polygon1 = polYgon, 
+                           topograp = FALSE, weibull = FALSE, plotit = TRUE)
+  
+  expect_output(str(resCalcEn), "List of 1")
+  expect_true(class(resCalcEn[[1]]) == "matrix")
   rm(resCalcEn, df)
   
   ## 2 Wind Directions 

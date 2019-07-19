@@ -48,7 +48,8 @@ VekWinkelCalc <- function(t, o, wkl, distanz, polYgon, plotAngles) {
 calculateEn <- function(sel, referenceHeight, RotorHeight,
                         SurfaceRoughness, wnkl, distanz,
                         polygon1, resol, RotorR, dirSpeed,
-                        srtm_crop, topograp, cclRaster, weibull) {
+                        srtm_crop, topograp, cclRaster, weibull,
+                        plotit = FALSE) {
   .Deprecated(
     new = "calculate_energy",
     msg = "calculateEn will be replaced by calculate_energy"
@@ -56,7 +57,8 @@ calculateEn <- function(sel, referenceHeight, RotorHeight,
   calculate_energy(sel, referenceHeight, RotorHeight,
                   SurfaceRoughness, wnkl, distanz,
                   polygon1, resol, RotorR, dirSpeed,
-                  srtm_crop, topograp, cclRaster, weibull)
+                  srtm_crop, topograp, cclRaster, weibull,
+                  plotit)
 }
 
 #' Deprecated use \code{\link[windfarmGA]{get_grids}} instead.
