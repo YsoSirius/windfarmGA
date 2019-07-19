@@ -480,10 +480,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     }
 
     roughrast <- raster::terrain(srtm_crop, "roughness")
-    if (all(is.na(values(roughrast)))) {
+    if (all(is.na(raster::values(roughrast)))) {
       warning("Cannot calculate a surface roughness. \nMaybe the resolution or ",
               "the area is too small. Roughness values are set to 1.")
-      values(roughrast) <- 1
+      raster::values(roughrast) <- 1
     }
     srtm_crop <- list(
       strm_crop = srtm_crop,
