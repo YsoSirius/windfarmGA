@@ -31,8 +31,6 @@ test_that("Test windfarmGA", {
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
   Polygon1 <- Polygons(list(Polygon1), 1)
   Polygon1 <- SpatialPolygons(list(Polygon1))
-  data.in <- data.frame(ws = 12, wd = 0)
-  
   resultSP <- windfarmGA(Polygon1 = Polygon1,
                          n = 20, iteration = 5,
                          vdirspe = data.in, GridMethod = "h",
@@ -43,6 +41,22 @@ test_that("Test windfarmGA", {
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
   
+  ## SpatialPolygon - Other Projection #####################
+  Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
+  Polygon1 <- Polygons(list(Polygon1), 1)
+  Polygon1 <- SpatialPolygons(list(Polygon1))
+  # Projection <- "+proj=utm +zone=35 +ellps=intl +units=m +no_defs"
+  Projection <- "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  
+  resultSP <- windfarmGA(Polygon1 = Polygon1,Projection = Projection,
+                         n = 20, iteration = 5,
+                         vdirspe = data.in, GridMethod = "h",
+                         selstate = "FIX", crossPart1 = "EQU",
+                         Rotor = 80, Proportionality = 1,
+                         RotorHeight = 100, plotit = TRUE)
+  expect_true(nrow(resultSP) == 5)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))))
   
   ## Errors ############
   expect_error(windfarmGA(Polygon1 = Polygon1,
@@ -64,5 +78,5 @@ test_that("Test windfarmGA", {
                           Rotor = 35, Proportionality = 1,
                           RotorHeight = 100, 
                           elitism = "asd"))
-  
+
 })

@@ -93,7 +93,7 @@ test_that("Test Plotting Functions", {
                         wd = 0)
   
   resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 60,
+                        n = 12, iteration = 100,
                         vdirspe = winddat,
                         Rotor = 30, 
                         RotorHeight = 100)
