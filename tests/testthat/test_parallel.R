@@ -31,23 +31,23 @@ test_that("Test Parallelisation", {
   # expect_false(any(unlist(do.call("rbind", fit)[,-c(1,2)] < 0)))
   
   
-  res <- genetic_algorithm(Polygon1 = Polygon1,
-                           n = 12,
-                           vdirspe = wind,
-                           Rotor = 30,
-                           RotorHeight = 100, Parallel = TRUE)
-  expect_true(nrow(res) == 20)
-  expect_is(res, "matrix")
-  expect_false(any(unlist(sapply(res, is.na))))
-  
-  res <- genetic_algorithm(Polygon1 = Polygon1,
-                           n = 12,
-                           vdirspe = wind,
-                           Rotor = 30,
-                           RotorHeight = 100, 
-                           Parallel = TRUE, numCluster = 4)
-  expect_true(nrow(res) == 20)
-  expect_is(res, "matrix")
-  expect_false(any(unlist(sapply(res, is.na))))
+  # res <- genetic_algorithm(Polygon1 = Polygon1,
+  #                          n = 12,
+  #                          vdirspe = wind,
+  #                          Rotor = 30,
+  #                          RotorHeight = 100, Parallel = TRUE)
+  # expect_true(nrow(res) == 20)
+  # expect_is(res, "matrix")
+  # expect_false(any(unlist(sapply(res, is.na))))
+  # 
+  # res <- genetic_algorithm(Polygon1 = Polygon1,
+  #                          n = 12,
+  #                          vdirspe = wind,
+  #                          Rotor = 30,
+  #                          RotorHeight = 100, 
+  #                          Parallel = TRUE, numCluster = 4)
+  # expect_true(nrow(res) == 20)
+  # expect_is(res, "matrix")
+  # expect_false(any(unlist(sapply(res, is.na))))
   
 })

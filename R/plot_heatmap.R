@@ -132,10 +132,8 @@ dup_coords <- function(x, ...) {
   ap2 <- ap2[ap2 > 1]
   takecoords <- function(n){
     if (!is.null(rownames(x))) rownames(x[ap1 == n, ])
-    else (1:nrow(x))[ap1 == n]
   }
   res <- sapply(as.numeric(names(ap2)), takecoords, ...)
-  if (length(res) == 0) res <- NULL
   if (!is.null(res)) class(res) <- "duplicated.coords"
   return(res)
 }
