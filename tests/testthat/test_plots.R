@@ -265,6 +265,9 @@ test_that("Test Plotting Functions", {
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   plres <- plot_result(resultrect, sp_polygon, topographie = T)
+  if(length(list.files(pattern = "g100_06.tif")) != 0) {
+    file.remove("g100_06.tif")
+  }
   plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
   # expect_false(anyNA(plres))
   # expect_true(all(plres$EfficAllDir <= 100))

@@ -427,13 +427,13 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
   if (!topograp) {
     if (verbose) {
-      cat("Topography and orography are not taken into account.")
+      cat("Topography and orography are not taken into account.\n")
     }
     srtm_crop <- ""
     cclRaster <- ""
   } else {
     if (verbose) {
-      cat("Topography and orography are taken into account.")
+      cat("Topography and orography are taken into account.\n")
     }
 
     if (plotit) {
@@ -444,7 +444,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       # message("No land cover raster ('sourceCCL') was given. It will be taken from ",
               # "the package (/data/ccl.rda).")
       message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
-              "the EEA-website.")
+              "the EEA-website.\n")
       if (!file.exists("g100_06.tif")) {
         ## download an zip CCL-tif
         ccl_raster_url <-
@@ -483,7 +483,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     roughrast <- raster::terrain(srtm_crop, "roughness")
     if (all(is.na(raster::values(roughrast)))) {
       warning("Cannot calculate a surface roughness. \nMaybe the resolution or ",
-              "the area is too small. Roughness values are set to 1.")
+              "the area is too small. Roughness values are set to 1.\n")
       raster::values(roughrast) <- 1
     }
     srtm_crop <- list(
@@ -500,7 +500,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       sourceCCLRoughness <- paste0(path, "clc_legend.csv")
     } else {
       if (verbose) {
-        message("You are using your own Corine Land Cover legend.")
+        message("You are using your own Corine Land Cover legend.\n")
       }
     }
 
@@ -519,7 +519,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 
 
   ## GENETIC ALGORITHM #################
-  if (verbose) {cat("\nStart Genetic Algorithm ...")}
+  if (verbose) {cat("\nStart Genetic Algorithm ...\n")}
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   i <- 1
   while (i <= iteration) {

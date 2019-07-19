@@ -435,6 +435,12 @@ test_that("Test Genetic Algorithm Function", {
                   nGrids = nrow(Grid[[1]]), trimForce = TRUE, seed = 300)
   expect_true(identical(mut1, mut2))
 
+  mut1 <- trimton(mut = mut, nturb = 5, allparks = allparks,
+                  nGrids = nrow(Grid[[1]]), trimForce = FALSE, seed = 234)
+  mut2 <- trimton(mut = mut, nturb = 5, allparks = allparks,
+                  nGrids = nrow(Grid[[1]]), trimForce = FALSE, seed = 234)
+  expect_true(identical(mut1, mut2))
+  
   ## GETRECTV #####################
   getRectV <- getRects(mut1, Grid[[1]])
   expect_is(getRectV, "list")
