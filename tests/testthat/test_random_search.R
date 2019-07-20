@@ -24,7 +24,7 @@ test_that("Test Random Search Functions", {
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
-  expect_true(all(new_df[, "EfficAllDir"] < 100 & new_df[, "EfficAllDir"] > 0))
+  expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   
@@ -32,7 +32,7 @@ test_that("Test Random Search Functions", {
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
-  expect_true(all(new_df[, "EfficAllDir"] < 100 & new_df[, "EfficAllDir"] > 0))
+  expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   
@@ -40,7 +40,7 @@ test_that("Test Random Search Functions", {
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
-  expect_true(all(new_df[, "EfficAllDir"] < 100 & new_df[, "EfficAllDir"] > 0))
+  expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   
@@ -49,7 +49,7 @@ test_that("Test Random Search Functions", {
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
-  expect_true(all(new_df[, "EfficAllDir"] < 100 & new_df[, "EfficAllDir"] > 0))
+  expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   

@@ -27,6 +27,19 @@ test_that("Test windfarmGA", {
   expect_false(any(unlist(sapply(resultSP, is.na))))
   
   
+  ## Use DNS and layer (Shapfile from Source) #######################
+  
+  dns <- system.file("extdata/shape.shp", package = "windfarmGA")
+  resultSP <- windfarmGA(dns = dns, layer = "shape",
+                         n = 20, iteration = 3,
+                         vdirspe = data.in, 
+                         selstate = "FIX", crossPart1 = "EQU",
+                         Rotor = 35, Proportionality = 1,
+                         RotorHeight = 100)
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))))
+  
   ## SpatialPolygon - No Projection #####################
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
   Polygon1 <- Polygons(list(Polygon1), 1)
