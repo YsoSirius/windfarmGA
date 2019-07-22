@@ -102,5 +102,47 @@ test_that("User Input", {
   close(f)
   
   
+  ## windfarmGA ###############
+  f <- file()
+  options(windfarmGA.connection = f)
+  ans <- paste(c("E","E", "F", "n"), collapse = "\n")
+  write(ans, f)
+
+  Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+                            c(4499991, 2669343), c(4499991, 2668272)))
+  Polygon1 <- Polygons(list(Polygon1), 1);
+  Polygon1 <- SpatialPolygons(list(Polygon1))
+  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  proj4string(Polygon1) <- CRS(Projection)
+  data.in <- data.frame(ws = 12, wd = 0)
+  expect_error(windfarmGA(Polygon1 = Polygon1,
+                       n = 12,
+                       vdirspe = data.in,
+                       Rotor = 60,
+                       RotorHeight = 100))
+  
+  # reset connection
+  options(windfarmGA.connection = stdin())
+  # close the file
+  close(f)
+  
+  
+  expect_error(windfarmGA(Polygon1 = Polygon1,
+                          n = 12,
+                          vdirspe = data.in,
+                          selstate = "FIX", crossPart1 = "EQU",
+                          Rotor = 60, weibull = TRUE, 
+                          weibullsrc = data.frame(x=1,y=2),
+                          RotorHeight = 100))
+  
+  expect_error(windfarmGA(Polygon1 = Polygon1,
+                          n = 12,
+                          vdirspe = data.in,
+                          selstate = "FIX", crossPart1 = "EQU",
+                          Rotor = 60, weibull = TRUE, 
+                          weibullsrc = list(x=1,y=2),
+                          RotorHeight = 100))
+  
 })
 

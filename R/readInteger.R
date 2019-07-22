@@ -14,9 +14,11 @@
 #' }
 #'
 readinteger        <- function(){
-  cat("\nSelect appropriate Method. Either 'EQU' for equal crossover parts or 'RAN' for random parts.")
-  crPaInter <- readline(prompt = "Type 'R' for random and 'E' for equal parts.")
-
+  cat("\nSelect appropriate Method. Either 'EQU' for equal crossover parts or 'RAN' for random parts.\n")
+  # crPaInter <- readline(prompt = "Type 'R' for random and 'E' for equal parts.")
+  cat("Type 'R' for random and 'E' for equal parts.\n")
+  crPaInter <- readLines(n = 1, con = getOption("windfarmGA.connection"))
+  
   crPaInter <- toupper(crPaInter)
 
   if (crPaInter == "R") {crossPart <- "RAN"}
@@ -43,8 +45,11 @@ readinteger        <- function(){
 #'   readintegerSel()
 #' }
 readintegerSel        <- function(){
-  cat("\nSelect appropriate Selection Method. Either 'FIX' or 'VAR' are available.")
-  selstaPr <- readline(prompt = "Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.")
+  cat("\nSelect appropriate Selection Method. Either 'FIX' or 'VAR' are available.\n")
+  # selstaPr <- readline(prompt = "Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.")
+  
+  cat("Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.\n")
+  selstaPr <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   
   selstaPr <- toupper(selstaPr)
   if (selstaPr == "F") {selstate <- "FIX"}

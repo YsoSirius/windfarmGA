@@ -117,7 +117,11 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
                        prop = Proportionality, plotGrid = TRUE)
   }
   cat("\nIs the grid spacing appropriate?")
-  InputDaccor <- readline(prompt = "Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  # InputDaccor <- readline(prompt = "Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  
+  cat("Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  InputDaccor <- readLines(n = 1, con = getOption("windfarmGA.connection"))
+  
   InputDaccor <- tolower(InputDaccor)
   if  (InputDaccor == "n") {
     cat("################### GA WARNING MESSAGE ###################")
