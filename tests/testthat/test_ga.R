@@ -190,62 +190,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   
 
   
-  ## Test Terrain Model ###################
-  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2668272)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
-  proj4string(sp_polygon) <- CRS(projection)
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 1,
-                        vdirspe = data.in,
-                        Rotor = 30, 
-                        RotorHeight = 100, topograp = TRUE, verbose = TRUE)
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
-  rm(resultrect, sp_polygon, projection)
-  
-  sp_polygon <- Polygon(rbind(c(4498482, 2550272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2550272)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
-  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
-                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-  proj4string(sp_polygon) <- CRS(projection)
-  projection84 <- paste("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
-  sp_polygon <- spTransform(sp_polygon, CRS(projection84))
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 1,
-                        vdirspe = data.in,
-                        Rotor = 30, 
-                        RotorHeight = 100, topograp = TRUE, verbose = TRUE)
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
-  rm(resultrect, sp_polygon, projection)
-  
-  # sp_polygon <- Polygon(rbind(c(4498482, 2530272), c(4498482, 2669343),
-  #                             c(4499991, 2669343), c(4499991, 2530272)))
-  # sp_polygon <- Polygons(list(sp_polygon), 1)
-  # sp_polygon <- SpatialPolygons(list(sp_polygon))
-  # projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
-  #                     "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-  # proj4string(sp_polygon) <- CRS(projection)
-  # plot(sp_polygon)
-  # resultrect <- genAlgo(Polygon1 = sp_polygon,
-  #                       n = 12, iteration = 1,
-  #                       vdirspe = data.in,
-  #                       Rotor = 30,
-  #                       RotorHeight = 100, topograp = TRUE, verbose = TRUE)
-  # plot_result(resultrect, sp_polygon)
-  
-  # expect_true(nrow(resultrect) == 1)
-  # expect_is(resultrect, "matrix")
-  # expect_false(any(unlist(sapply(resultrect, is.na))))
-  # rm(resultrect, sp_polygon, projection)
-  
-  
+
   ## Weibull Raster ######################
   # resultrect <- genAlgo(Polygon1 = sp_polygon,
   #                       n = 12, iteration = 1,

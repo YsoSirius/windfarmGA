@@ -1,3 +1,4 @@
+context("Visibility Tests")
 library(testthat)
 library(sp)
 library(windfarmGA)

@@ -164,7 +164,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     Parallel <- FALSE
   }
   if (missing(numCluster)) {
-    numCluster <- 1
+    numCluster <- 2
   }
   if (Parallel == TRUE) {
     # numPossClus <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))

@@ -85,41 +85,30 @@ test_that("Test Plotting Functions", {
   c5 = plotWindrose(wind_test, plotit = FALSE)
   expect_true(all.equal(c4$data, c5$data))
 
-  ## GenAlgo plotting functions #############
-  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2668272)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
-  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
-                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-  proj4string(sp_polygon) <- CRS(projection)
-  
   winddat <- data.frame(ws = 12,
                         wd = 0)
+  windr_res <- plotWindrose(winddat, "ws", "wd")
+  expect_true(class(windr_res)[1] == "gg")
   
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 100,
-                        vdirspe = winddat,
-                        Rotor = 30, 
-                        RotorHeight = 100)
 
-  plot.new()
-  respf <- plot_parkfitness(resultrect)
-  expect_true(is.null(respf))
+  ## plot_parkfitness ###############
   respf <- plotparkfitness(resultrect)
   expect_true(is.null(respf))
   
+  ## plot_result ###############
   sp_polygonnp <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                               c(4499991, 2669343), c(4499991, 2668272)))
   sp_polygonnp <- Polygons(list(sp_polygonnp), 1)
   sp_polygonnp <- SpatialPolygons(list(sp_polygonnp))
-  plot_res <- quiet(plot_result(resultrect, Polygon1 = sp_polygonnp, best = 5000, plotEn = 1))
+  plot_res <- quiet(plot_result(resultrect[1:10,], Polygon1 = sp_polygonnp, best = 5000, 
+                                plotEn = 1))
   expect_false(anyNA(plot_res))
   expect_true(all(plot_res$EfficAllDir <= 100))
-  plot_res <- quiet(plot_result(resultrect, Polygon1 = sp_polygonnp, best = 5000, plotEn = 2))
+  plot_res <- quiet(plot_result(resultrect[1:10,], Polygon1 = sp_polygonnp, best = 5000, plotEn = 2))
   expect_false(anyNA(plot_res))
   expect_true(all(plot_res$EfficAllDir <= 100))
   
+  ## Create a result with 100% Efficiency (to plot all green)
   resultrect100 <- genAlgo(Polygon1 = sp_polygon,
                         n = 5, iteration = 60,
                         vdirspe = winddat,
@@ -135,11 +124,11 @@ test_that("Test Plotting Functions", {
   plot_res <- quiet(plotResult(resultrect, Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
   
-  plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon))
+  plot_res <- quiet(plotResult(resultrect, best = 5, Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
   
   Grid <- GridFilter(sp_polygon, resol = 150)
-  plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon, 
+  plot_res <- quiet(plotResult(resultrect, best = 5, Polygon1 = sp_polygon, 
                                Grid = Grid[[2]]))
   expect_false(anyNA(plot_res))
   
@@ -147,11 +136,15 @@ test_that("Test Plotting Functions", {
                                Grid = Grid[[2]]))
   expect_false(anyNA(plot_res))
   
-  plot_res <- quiet(plotResult(resultrect, best = 10, Polygon1 = sp_polygon, 
+  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
+                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  plot_res <- quiet(plotResult(resultrect, best = 5, Polygon1 = sp_polygon, 
                                Projection = projection))
   expect_false(anyNA(plot_res))
 
+  expect_error(quiet(plotResult(resultrect, Polygon1 = sp_polygon, plotEn = 3)))
 
+  ## plot_windfarmGA ###############
   respwf <- plot_windfarmGA(resultrect, GridMethod = "r", sp_polygon, whichPl = "all",
                             best = 1, plotEn = 1)
   expect_true(is.null(respwf))
@@ -162,19 +155,14 @@ test_that("Test Plotting Functions", {
                             best = 1, plotEn = 1)
   expect_true(is.null(respwf))
   
-  resulthex1 <- genAlgo(Polygon1 = sp_polygon, GridMethod = "h",
-                           n = 15, iteration = 10,
-                           vdirspe = winddat,
-                           Rotor = 30, 
-                           RotorHeight = 100)
-  respwf <- plot_windfarmGA(resulthex1, GridMethod = "h", sp_polygon, whichPl = "all",
-                  best = 1, plotEn = 1)
+  load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
+  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+  respwf <- plot_windfarmGA(resulthex, GridMethod = "h", polygon, whichPl = "all",
+                  best = 2, plotEn = 1)
   expect_true(is.null(respwf))
   
   
-  ## Create error
-  expect_error(quiet(plotResult(resultrect, Polygon1 = sp_polygon, plotEn = 3)))
-
+  ## plot_cloud ###############
   cloud_res <- plotCloud(resultrect, pl = FALSE)
   expect_true(class(cloud_res) == "matrix")
   expect_false(anyNA(cloud_res))
@@ -185,12 +173,15 @@ test_that("Test Plotting Functions", {
   expect_false(anyNA(cloud_res))
   expect_true(ncol(cloud_res) == 15)
   
+  ## plot_development ###############
   beor_res <- plotbeorwor(resultrect)
   expect_true(is.null(beor_res))
 
+  ## plot_fitness_evolution ###############
   fitnes_res <- plotfitnessevolution(resultrect)
   expect_true(is.null(fitnes_res))
   
+  ## plot_heatmap ###############
   heat_res <- heatmapGA(resultrect)
   expect_true(class(heat_res) == "list")
   expect_false(anyNA(heat_res[[2]]))
@@ -206,11 +197,9 @@ test_that("Test Plotting Functions", {
   expect_false(anyNA(heat_res[[2]]))
   expect_false(anyNA(heat_res[[1]][, 1:3]))
   
+  ## plot_evolution ###############
   evo_res <- plotEvolution(resultrect, ask = FALSE)
   expect_true(is.null(evo_res))
-  
-  windr_res <- plotWindrose(winddat, "ws", "wd")
-  expect_true(class(windr_res)[1] == "gg")
   
   
   ## plot_leaflet #######################
@@ -223,8 +212,6 @@ test_that("Test Plotting Functions", {
   pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon, GridPol = spnop)
   expect_true(is.recursive(pl));   rm(pl)
   
-  load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
   pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1)
   expect_true(is.recursive(pl));rm(pl)
   pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1, orderitems = F)
@@ -235,19 +222,19 @@ test_that("Test Plotting Functions", {
   pl <- leafPlot(result = resulthex, Polygon1 = polygon, GridPol = gr[[2]])
   expect_true(is.recursive(pl));rm(pl)
 
-  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2668272)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
-  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
-                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-  proj4string(sp_polygon) <- CRS(projection)
-  winddat <- data.frame(ws = 12, wd = 0)
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 60,
-                        vdirspe = winddat,
-                        Rotor = 30,
-                        RotorHeight = 100)
+  # sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+  #                             c(4499991, 2669343), c(4499991, 2668272)))
+  # sp_polygon <- Polygons(list(sp_polygon), 1)
+  # sp_polygon <- SpatialPolygons(list(sp_polygon))
+  # projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
+  #                     "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  # proj4string(sp_polygon) <- CRS(projection)
+  # winddat <- data.frame(ws = 12, wd = 0)
+  # resultrect <- genAlgo(Polygon1 = sp_polygon,
+  #                       n = 12, iteration = 60,
+  #                       vdirspe = winddat,
+  #                       Rotor = 30,
+  #                       RotorHeight = 100)
   
   ## No Projection
   sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
@@ -262,29 +249,5 @@ test_that("Test Plotting Functions", {
                        Rotor = 30,
                        RotorHeight = 100))
   
-  
-  proj4string(sp_polygon) <- CRS(projection)
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 1,
-                        vdirspe = winddat,
-                        Rotor = 30, 
-                        RotorHeight = 100, topograp = TRUE, plotit = TRUE)
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
-  plres <- plot_result(resultrect, sp_polygon, topographie = T)
-  if (length(list.files(pattern = "g100_06.tif")) != 0) {
-    file.remove("g100_06.tif")
-  }
-  expect_false(anyNA(plres))
-  expect_true(all(plres$EfficAllDir <= 100))
-  
-  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
-  if (length(list.files(pattern = "g100_06.tif")) != 0) {
-    file.remove("g100_06.tif")
-  }
-  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 1)
-  expect_false(anyNA(plres))
-  expect_true(all(plres$EfficAllDir <= 100))
   
 })

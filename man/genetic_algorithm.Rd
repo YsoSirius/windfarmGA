@@ -40,19 +40,19 @@ the percentage a grid has to overlay. Default is 1}
 \item{iteration}{A numeric value indicating the desired amount of iterations
 of the algorithm. Default is 20}
 
-\item{mutr}{A numeric mutation rate with low default value of 0.008}
+\item{mutr}{A numeric mutation rate with a default value of 0.008}
 
 \item{vdirspe}{A data.frame containing the incoming wind speeds, wind
 directions and probabilities}
 
 \item{topograp}{Logical value, which indicates if the terrain effect model
-should be activated or not. Default is FALSE}
+should be enabled or not. Default is FALSE}
 
 \item{elitism}{Boolean value, which indicates whether elitism should be
-included or not. Default is TRUE}
+activated or not. Default is TRUE}
 
-\item{nelit}{If \code{elitism} is TRUE, then this input variable determines
-the amount of individuals in the elite group. Default is 7}
+\item{nelit}{If \code{elitism} is TRUE, this input determines the amount 
+of individuals in the elite group. Default is 7}
 
 \item{selstate}{Determines which selection method is used, "FIX" selects a
 constant percentage and "VAR" selects a variable percentage, depending on
@@ -81,29 +81,29 @@ was already adapted manually. To use your own .csv legend this variable has
 to be assigned.}
 
 \item{weibull}{A logical value that specifies whether to take Weibull
-parameters into account. If weibull==TRUE, the wind speed values from the
-'dirSpeed' data frame are ignored. The algorithm will calculate the mean
+parameters into account. If `weibull == TRUE`, the wind speed values from
+the `vdirspe` data frame are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
 Default is FALSE}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster k and the second item must be the
-scale parameter raster a of the Weibull distribution. If no list is given,
+item must be the shape parameter raster `k` and the second item must be the
+scale parameter raster `a` of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently only
-cover Austria. This variable is only used if weibull==TRUE.}
+cover Austria. This variable is only used if `weibull == TRUE`.}
 
 \item{Parallel}{Boolean value, indicating whether parallel processing should
 be used. The parallel and doParallel packages are used for parallel
 processing. Default is FALSE}
 
-\item{numCluster}{If Parallel is TRUE, this variable defines the number of
-clusters to be used}
+\item{numCluster}{If \code{Parallel} is TRUE, this variable defines the 
+number of clusters to be used}
 
-\item{verbose}{If TRUE, will print out information for every generation
+\item{verbose}{If TRUE it will print information for every generation.
 Default is FALSE}
 
-\item{plotit}{If TRUE, will plot the best windfarm of a generation. Default
-is FALSE}
+\item{plotit}{If TRUE it will plot the best windfarm of every generation. 
+Default is FALSE}
 }
 \value{
 The result is a matrix with aggregated values per generation, the
@@ -113,7 +113,7 @@ The result is a matrix with aggregated values per generation, the
   energy, efficiency and fitness values per generation, the selection and
   crossover paramters, a matrix with the generational difference in maximum
   and mean energy output, a matrix with the given inputs, a dataframe with
-  the wind information, the mutation rate per generation and matrix with all
+  the wind information, the mutation rate per generation and a matrix with all
   tested wind farm layouts.
 }
 \description{
