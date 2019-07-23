@@ -105,7 +105,7 @@ test_that("User Input", {
   ## windfarmGA ###############
   f <- file()
   options(windfarmGA.connection = f)
-  ans <- paste(c("E","E", "F", "n"), collapse = "\n")
+  ans <- paste(c("E","E", "F", "n", "n"), collapse = "\n")
   write(ans, f)
 
   Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
@@ -122,12 +122,6 @@ test_that("User Input", {
                        Rotor = 60,
                        RotorHeight = 100))
   
-  # reset connection
-  options(windfarmGA.connection = stdin())
-  # close the file
-  close(f)
-  
-  
   expect_error(windfarmGA(Polygon1 = Polygon1,
                           n = 12,
                           vdirspe = data.in,
@@ -143,6 +137,11 @@ test_that("User Input", {
                           Rotor = 60, weibull = TRUE, 
                           weibullsrc = list(x=1,y=2),
                           RotorHeight = 100))
+  
+  # reset connection
+  options(windfarmGA.connection = stdin())
+  # close the file
+  close(f)
   
 })
 

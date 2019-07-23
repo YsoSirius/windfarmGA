@@ -19,16 +19,16 @@ test_that("Test Parallelisation", {
   wind <- list(wind, probab = 100)
   ##################
   
-  startsel <- init_population(Grid,10,20);
-  fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
-                 SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-                 dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
-                 Parallel = TRUE)
-
-  expect_output(str(fit), "List of 20")
-  expect_true(all(sapply(fit, nrow) == 10))
-  expect_false(any(unlist(sapply(fit, is.na))))
-  expect_false(any(unlist(do.call("rbind", fit)[,-c(1,2)] < 0)))
+  # startsel <- init_population(Grid,10,20);
+  # fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
+  #                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+  #                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
+  #                Parallel = TRUE)
+  # 
+  # expect_output(str(fit), "List of 20")
+  # expect_true(all(sapply(fit, nrow) == 10))
+  # expect_false(any(unlist(sapply(fit, is.na))))
+  # expect_false(any(unlist(do.call("rbind", fit)[,-c(1,2)] < 0)))
   
   
   res <- genetic_algorithm(Polygon1 = Polygon1,
