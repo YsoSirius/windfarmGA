@@ -167,7 +167,8 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     numCluster <- 1
   }
   if (Parallel == TRUE) {
-    numPossClus <- as.integer(Sys.getenv('NUMBER_OF_PROCESSORS'))
+    # numPossClus <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
+    numPossClus <- parallel::detectCores()
     if (numPossClus == 1) {
       cat("\nOnly 1 core is available. Set Parallel to FALSE")
       numCluster <- 1
