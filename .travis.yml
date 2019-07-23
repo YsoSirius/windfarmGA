@@ -16,12 +16,12 @@ before_install:
 script: 
   - |
     R CMD build .
-    travis_wait 30 R CMD check windfarmGA*tar.gz
+    travis_wait 40 R CMD check windfarmGA*tar.gz
 
 r_packages:
   - covr
 after_success:
-  - Rscript -e 'library(covr);codecov()'
+  - Rscript -e 'library(covr);codecov(quiet = FALSE)'
   - Rscript -e 'pkgdown::build_site()'
 
 deploy:
