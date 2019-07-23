@@ -275,7 +275,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     # max_cores <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
     max_cores <- parallel::detectCores()
     if (numCluster > max_cores) {
-      numCluster <- max_cores - 1
+      numCluster <- max_cores
     }
     type_cluster <- "PSOCK"
     cl <- parallel::makeCluster(numCluster, type = type_cluster)
