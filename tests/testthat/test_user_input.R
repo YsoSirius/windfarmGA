@@ -122,21 +122,21 @@ test_that("User Input", {
   #                      Rotor = 60,
   #                      RotorHeight = 100))
   
-  expect_error(windfarmGA(Polygon1 = Polygon1,
-                          n = 12,
-                          vdirspe = data.in,
-                          selstate = "FIX", crossPart1 = "EQU",
-                          Rotor = 60, weibull = TRUE, 
-                          weibullsrc = data.frame(x=1,y=2),
-                          RotorHeight = 100))
-  
-  expect_error(windfarmGA(Polygon1 = Polygon1,
-                          n = 12,
-                          vdirspe = data.in,
-                          selstate = "FIX", crossPart1 = "EQU",
-                          Rotor = 60, weibull = TRUE, 
-                          weibullsrc = list(x=1,y=2),
-                          RotorHeight = 100))
+  # expect_error(windfarmGA(Polygon1 = Polygon1,
+  #                         n = 12,
+  #                         vdirspe = data.in,
+  #                         selstate = "FIX", crossPart1 = "EQU",
+  #                         Rotor = 60, weibull = TRUE, 
+  #                         weibullsrc = data.frame(x=1,y=2),
+  #                         RotorHeight = 100))
+  # 
+  # expect_error(windfarmGA(Polygon1 = Polygon1,
+  #                         n = 12,
+  #                         vdirspe = data.in,
+  #                         selstate = "FIX", crossPart1 = "EQU",
+  #                         Rotor = 60, weibull = TRUE, 
+  #                         weibullsrc = list(x=1,y=2),
+  #                         RotorHeight = 100))
   
   # reset connection
   options(windfarmGA.connection = stdin())
