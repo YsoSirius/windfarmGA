@@ -40,15 +40,15 @@ test_that("Test Parallelisation", {
   expect_is(res, "matrix")
   expect_false(any(unlist(sapply(res, is.na))))
 
-  res <- genetic_algorithm(Polygon1 = Polygon1,
-                           n = 12,
-                           vdirspe = wind,
-                           Rotor = 30,
-                           RotorHeight = 100,
-                           Parallel = TRUE, numCluster = 10)
-  expect_true(nrow(res) == 20)
-  expect_is(res, "matrix")
-  expect_false(any(unlist(sapply(res, is.na))))
+  # res <- genetic_algorithm(Polygon1 = Polygon1,
+  #                          n = 12,
+  #                          vdirspe = wind,
+  #                          Rotor = 30,
+  #                          RotorHeight = 100,
+  #                          Parallel = TRUE, numCluster = 10)
+  # expect_true(nrow(res) == 20)
+  # expect_is(res, "matrix")
+  # expect_false(any(unlist(sapply(res, is.na))))
   
   # res <- windfarmGA(Polygon1 = Polygon1,
   #            n = 12, iteration = 5,
