@@ -116,11 +116,11 @@ test_that("User Input", {
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   proj4string(Polygon1) <- CRS(Projection)
   data.in <- data.frame(ws = 12, wd = 0)
-  expect_error(windfarmGA(Polygon1 = Polygon1,
-                       n = 12,
-                       vdirspe = data.in,
-                       Rotor = 60,
-                       RotorHeight = 100))
+  # expect_error(windfarmGA(Polygon1 = Polygon1,
+  #                      n = 12,
+  #                      vdirspe = data.in,
+  #                      Rotor = 60,
+  #                      RotorHeight = 100))
   
   expect_error(windfarmGA(Polygon1 = Polygon1,
                           n = 12,
