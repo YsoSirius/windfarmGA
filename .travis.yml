@@ -13,6 +13,11 @@ before_install:
     - sh -e /etc/init.d/xvfb start
     - export RGL_USE_NULL=TRUE
  
+script: 
+  - |
+    R CMD build .
+    travis_wait 20 R CMD check packageName*tar.gz
+
 r_packages:
   - covr
 after_success:
