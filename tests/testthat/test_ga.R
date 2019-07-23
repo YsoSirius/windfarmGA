@@ -20,10 +20,10 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       n = 20, iteration = 100,
                       vdirspe = data.in,
                       Rotor = 35, Proportionality = 1,
-                      RotorHeight = 100)
+                      RotorHeight = 100, verbose = TRUE)
   expect_true(nrow(resultSP) == 100)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na))))
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
   
   ## SpatialPolygon Input #####################
   resultSP <- genAlgo(Polygon1 = Polygon1,
@@ -34,7 +34,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   
   expect_true(nrow(resultSP) == 1)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP[,1:13], is.na))))
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
 
 
   ## SimpleFeature Input #####################
@@ -46,7 +46,8 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       RotorHeight = 100)
   expect_true(nrow(resultSF) == 1)
   expect_is(resultSF, "matrix")
-  expect_false(any(unlist(sapply(resultSF[,1:13], is.na))))
+  expect_false(any(unlist(sapply(resultSF, is.na)))); 
+  rm(resultSF, PolygonSF)
 
 
   ## Data.Frame Input #####################
@@ -58,19 +59,19 @@ test_that("Test Genetic Algorithm with different Inputs", {
                         RotorHeight = 100)
   expect_true(nrow(resultDF) == 1)
   expect_is(resultDF, "matrix")
-  expect_false(any(unlist(sapply(resultDF[,1:13], is.na))))
+  expect_false(any(unlist(sapply(resultDF, is.na)))); rm(resultDF, PolygonDF)
 
   ## Matrix Input #####################
   PolygonMat <- ggplot2::fortify(Polygon1)
   PolygonMat <- as.matrix(PolygonMat[,1:2])
-  resultMA <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = TRUE,
+  resultMA <- genAlgo(Polygon1 = PolygonMat, plotit = TRUE,
                         n = 20, iteration = 1,
                         vdirspe = data.in,
                         Rotor = 30,
                         RotorHeight = 100)
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
-  expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
+  expect_false(any(unlist(sapply(resultMA, is.na)))); rm(resultMA)
   
   ## Matrix Input - 100% #####################
   resultMA100 <- genAlgo(Polygon1 = PolygonMat, verbose = F, plotit = TRUE,
@@ -79,29 +80,11 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       Rotor = 30,
                       RotorHeight = 100)
   expect_is(resultMA100, "matrix")
-  expect_false(any(unlist(sapply(resultMA100[,1:13], is.na))))
+  expect_false(any(unlist(sapply(resultMA100, is.na))))
   expect_true(any(as.vector(sapply(resultMA100[,3], function(x) x[,"EfficAllDir"] == 100))))
+  rm(resultMA100, PolygonMat)
   
-  ## Parellel Processing #########################
-  # resultMAP <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = F,
-  #                      n = 20, iteration = 1, Parallel = T,
-  #                      vdirspe = data.in,
-  #                      Rotor = 30,
-  #                      RotorHeight = 100)
-  # expect_true(nrow(resultMAP) == 1)
-  # expect_is(resultMAP, "matrix")
-  # expect_false(any(unlist(sapply(resultMAP[,1:13], is.na))))
-  # 
-  # 
-  # resultMAP50 <- genAlgo(Polygon1 = PolygonMat, verbose = T, plotit = F,
-  #                     n = 20, iteration = 50, Parallel = T,
-  #                     vdirspe = data.in,
-  #                     Rotor = 30,
-  #                     RotorHeight = 100)
-  # expect_true(nrow(resultMAP50) == 50)
-  # expect_is(resultMAP50, "matrix")
-  # expect_false(any(unlist(sapply(resultMAP50[,1:13], is.na))))
-  
+
   ## Test with non default arguments ####################
   PolygonMat <- ggplot2::fortify(Polygon1)
   PolygonMat <- as.matrix(PolygonMat[,1:2])
@@ -114,7 +97,8 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       RotorHeight = 100)
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
-  expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
+  expect_false(any(unlist(sapply(resultMA, is.na))))
+  rm(resultMA)
   
   PolygonMat <- ggplot2::fortify(Polygon1)
   PolygonMat <- as.matrix(PolygonMat[,1:2])
@@ -133,9 +117,11 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
   expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
+  rm(resultMA)
 
 
   ## Create errors ####################
+  ## RotorHeight missing
   expect_error(genAlgo(Polygon1 = Polygon1,
                        GridMethod = "h", plotit = TRUE,
                        vdirspe = data.in,
@@ -143,8 +129,19 @@ test_that("Test Genetic Algorithm with different Inputs", {
                        elitism = F, 
                        selstate = "var", crossPart1 = "ran", 
                        trimForce = TRUE,
+                       # RotorHeight = 100,
                        Rotor = 30))
+  expect_error(genetic_algorithm(Polygon1 = Polygon1,
+                                 GridMethod = "h", 
+                                 vdirspe = data.in, 
+                                 n = 12,
+                                 elitism = F, 
+                                 selstate = "var", crossPart1 = "ran", 
+                                 trimForce = TRUE,
+                                 # ,RotorHeight = 100
+                                 Rotor = 30))
   
+  ## n is missing
   expect_error(genAlgo(Polygon1 = Polygon1,
                        GridMethod = "h", plotit = TRUE,
                        vdirspe = data.in,
@@ -154,7 +151,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                        trimForce = TRUE,
                        Rotor = 30,
                        RotorHeight = 100))
-
+  ## No winddata
   expect_error(genAlgo(Polygon1 = Polygon1,
                        GridMethod = "h", 
                        # vdirspe = data.in, 
@@ -165,6 +162,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                        Rotor = 30,
                        RotorHeight = 100))
 
+  ## No Rotor Radius
   expect_error(genAlgo(Polygon1 = Polygon1,
                        GridMethod = "h", 
                        vdirspe = data.in, 
@@ -175,27 +173,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                        # Rotor = 30,
                        RotorHeight = 100))
   
-  expect_error(genAlgo(Polygon1 = Polygon1,
-                       GridMethod = "h", 
-                       vdirspe = data.in, 
-                       n = 12,
-                       elitism = F, 
-                       selstate = "var", crossPart1 = "ran", 
-                       trimForce = TRUE,
-                       Rotor = 30
-                       # ,RotorHeight = 100
-                       ))
-  expect_error(genetic_algorithm(Polygon1 = Polygon1,
-                       GridMethod = "h", 
-                       vdirspe = data.in, 
-                       n = 12,
-                       elitism = F, 
-                       selstate = "var", crossPart1 = "ran", 
-                       trimForce = TRUE,
-                       Rotor = 30
-                       # ,RotorHeight = 100
-                       ))
-  
+  ## Cannot download SRTM (Wrong Polygon)
   sp_polygon <- Polygon(rbind(c(1, 1), c(1, 2000),
                               c(2000, 2000), c(2000, 1)))
   sp_polygon <- Polygons(list(sp_polygon), 1)
@@ -205,9 +183,10 @@ test_that("Test Genetic Algorithm with different Inputs", {
   proj4string(sp_polygon) <- CRS(projection)
   expect_error(genAlgo(Polygon1 = sp_polygon,
                        n = 12, iteration = 1,
-                       vdirspe = winddat,
+                       vdirspe = data.in,
                        Rotor = 30, 
                        RotorHeight = 100, topograp = TRUE, verbose = TRUE))
+  rm(sp_polygon)
   
 
   
@@ -217,15 +196,15 @@ test_that("Test Genetic Algorithm with different Inputs", {
   sp_polygon <- Polygons(list(sp_polygon), 1)
   sp_polygon <- SpatialPolygons(list(sp_polygon))
   proj4string(sp_polygon) <- CRS(projection)
-  winddat <- data.frame(ws = 12, wd = 0)
   resultrect <- genAlgo(Polygon1 = sp_polygon,
                         n = 12, iteration = 1,
-                        vdirspe = winddat,
+                        vdirspe = data.in,
                         Rotor = 30, 
                         RotorHeight = 100, topograp = TRUE, verbose = TRUE)
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
+  rm(resultrect, sp_polygon, projection)
   
   sp_polygon <- Polygon(rbind(c(4498482, 2550272), c(4498482, 2669343),
                               c(4499991, 2669343), c(4499991, 2550272)))
@@ -236,56 +215,45 @@ test_that("Test Genetic Algorithm with different Inputs", {
   proj4string(sp_polygon) <- CRS(projection)
   projection84 <- paste("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
   sp_polygon <- spTransform(sp_polygon, CRS(projection84))
-  winddat <- data.frame(ws = 12, wd = 0)
   resultrect <- genAlgo(Polygon1 = sp_polygon,
                         n = 12, iteration = 1,
-                        vdirspe = winddat,
+                        vdirspe = data.in,
                         Rotor = 30, 
                         RotorHeight = 100, topograp = TRUE, verbose = TRUE)
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
+  rm(resultrect, sp_polygon, projection)
+  
+  # sp_polygon <- Polygon(rbind(c(4498482, 2530272), c(4498482, 2669343),
+  #                             c(4499991, 2669343), c(4499991, 2530272)))
+  # sp_polygon <- Polygons(list(sp_polygon), 1)
+  # sp_polygon <- SpatialPolygons(list(sp_polygon))
+  # projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
+  #                     "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  # proj4string(sp_polygon) <- CRS(projection)
+  # plot(sp_polygon)
+  # resultrect <- genAlgo(Polygon1 = sp_polygon,
+  #                       n = 12, iteration = 1,
+  #                       vdirspe = data.in,
+  #                       Rotor = 30,
+  #                       RotorHeight = 100, topograp = TRUE, verbose = TRUE)
+  # plot_result(resultrect, sp_polygon)
+  
+  # expect_true(nrow(resultrect) == 1)
+  # expect_is(resultrect, "matrix")
+  # expect_false(any(unlist(sapply(resultrect, is.na))))
+  # rm(resultrect, sp_polygon, projection)
   
   
-  sp_polygon <- Polygon(rbind(c(4498482, 2550272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2550272)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
-  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
-                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-  proj4string(sp_polygon) <- CRS(projection)
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 1,
-                        vdirspe = winddat,
-                        Rotor = 30, 
-                        RotorHeight = 100, topograp = TRUE, verbose = TRUE)
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
   ## Weibull Raster ######################
   # resultrect <- genAlgo(Polygon1 = sp_polygon,
   #                       n = 12, iteration = 1,
-  #                       vdirspe = winddat,
+  #                       vdirspe = data.in,
   #                       Rotor = 30, 
   #                       RotorHeight = 100, topograp = TRUE, weibull = TRUE)
   # expect_true(nrow(resultrect) == 1)
   # expect_is(resultrect, "matrix")
   # expect_false(any(unlist(sapply(resultrect, is.na))))
   
-  ## Parallel #############
-  # sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-  #                             c(4499991, 2669343), c(4499991, 2668272)))
-  # sp_polygon <- Polygons(list(sp_polygon), 1)
-  # sp_polygon <- SpatialPolygons(list(sp_polygon))
-  # proj4string(sp_polygon) <- CRS(projection)
-  # winddat <- data.frame(ws = 12, wd = 0)
-  # resultrect <- genAlgo(Polygon1 = sp_polygon,
-  #                       n = 12, iteration = 20,
-  #                       vdirspe = winddat,
-  #                       Rotor = 30, 
-  #                       RotorHeight = 100, 
-  #                       Parallel = TRUE, verbose = TRUE)
-  # expect_true(nrow(resultrect) == 20)
-  # expect_is(resultrect, "matrix")
-  # expect_false(any(unlist(sapply(resultrect, is.na))))
 })
