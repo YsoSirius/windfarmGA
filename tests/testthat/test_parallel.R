@@ -50,25 +50,25 @@ test_that("Test Parallelisation", {
   expect_is(res, "matrix")
   expect_false(any(unlist(sapply(res, is.na))))
   
-  res <- windfarmGA(Polygon1 = Polygon1,
-             n = 12, iteration = 5,
-             vdirspe = data.in,
-             selstate = "FIX", crossPart1 = "EQU",
-             Rotor = 60, Parallel = TRUE,
-             RotorHeight = 100)
-  expect_true(nrow(res) == 5)
-  expect_is(res, "matrix")
-  expect_false(any(unlist(sapply(res, is.na))))
-  
-  res <- windfarmGA(Polygon1 = Polygon1,
-                    n = 12, iteration = 5,
-                    vdirspe = data.in,
-                    selstate = "FIX", crossPart1 = "EQU",
-                    Rotor = 60, Parallel = TRUE, 
-                    numCluster = 10,
-                    RotorHeight = 100)
-  expect_true(nrow(res) == 5)
-  expect_is(res, "matrix")
-  expect_false(any(unlist(sapply(res, is.na))))
+  # res <- windfarmGA(Polygon1 = Polygon1,
+  #            n = 12, iteration = 5,
+  #            vdirspe = data.in,
+  #            selstate = "FIX", crossPart1 = "EQU",
+  #            Rotor = 60, Parallel = TRUE,
+  #            RotorHeight = 100)
+  # expect_true(nrow(res) == 5)
+  # expect_is(res, "matrix")
+  # expect_false(any(unlist(sapply(res, is.na))))
+  # 
+  # res <- windfarmGA(Polygon1 = Polygon1,
+  #                   n = 12, iteration = 5,
+  #                   vdirspe = data.in,
+  #                   selstate = "FIX", crossPart1 = "EQU",
+  #                   Rotor = 60, Parallel = TRUE, 
+  #                   numCluster = 10,
+  #                   RotorHeight = 100)
+  # expect_true(nrow(res) == 5)
+  # expect_is(res, "matrix")
+  # expect_false(any(unlist(sapply(res, is.na))))
   
 })
