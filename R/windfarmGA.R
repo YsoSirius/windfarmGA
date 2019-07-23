@@ -37,7 +37,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     }
     plot(Polygon1, col = "red", main = "Original Input Shapefile");
     title(sub = Polygon1@proj4string, line = 1)
-    readline(prompt = "\nPress <ENTER> if this is your Polygon")
+    readline(prompt = "\nHit <ENTER> if this is your Polygon")
   }
   ## Load Polygon from a Source File. Just if dns and layer are not missing.
   if (!missing(dns) & !missing(layer)) {
@@ -45,7 +45,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     Polygon1 <- rgdal::readOGR(dsn = dns, layer = layer)
     plot(Polygon1, col = "red", main = "Original Input Shapefile")
     title(sub = Polygon1@proj4string, line = 1)
-    readline(prompt = "\nPress <ENTER> if this is your Polygon")
+    readline(prompt = "\nHit <ENTER> if this is your Polygon")
   }
   ##  Project the Polygon to LAEA if it is not already.
   if (is.na(sp::proj4string(Polygon1))) {
@@ -66,7 +66,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   }
   plot(Polygon1, col = "red", main = "Projected Input Shapefile")
   title(sub = Polygon1@proj4string, line = 1)
-  readline(prompt = "\nPress <ENTER> if this is your Polygon")
+  readline(prompt = "\nHit <ENTER> if this is your Polygon")
 
   ######## CHECK INPUT GENETIC ALGORITHM
   ## Check if Crossover Method is chosen correctly.
@@ -117,7 +117,11 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
                        prop = Proportionality, plotGrid = TRUE)
   }
   cat("\nIs the grid spacing appropriate?")
-  InputDaccor <- readline(prompt = "Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  InputDaccor <- readline(prompt = "Hit 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  
+  # cat("Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  # InputDaccor <- readLines(n = 1, con = getOption("windfarmGA.connection"))
+  
   InputDaccor <- tolower(InputDaccor)
   if  (InputDaccor == "n") {
     cat("################### GA WARNING MESSAGE ###################")
@@ -163,7 +167,8 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     numCluster <- 1
   }
   if (Parallel == TRUE) {
-    numPossClus <- as.integer(Sys.getenv('NUMBER_OF_PROCESSORS'))
+    # numPossClus <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
+    numPossClus <- parallel::detectCores()
     if (numPossClus == 1) {
       cat("\nOnly 1 core is available. Set Parallel to FALSE")
       numCluster <- 1
