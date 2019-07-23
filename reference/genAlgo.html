@@ -170,7 +170,7 @@ of the algorithm. Default is 20</p></td>
     </tr>
     <tr>
       <th>mutr</th>
-      <td><p>A numeric mutation rate with low default value of 0.008</p></td>
+      <td><p>A numeric mutation rate with a default value of 0.008</p></td>
     </tr>
     <tr>
       <th>vdirspe</th>
@@ -180,17 +180,17 @@ directions and probabilities</p></td>
     <tr>
       <th>topograp</th>
       <td><p>Logical value, which indicates if the terrain effect model
-should be activated or not. Default is FALSE</p></td>
+should be enabled or not. Default is FALSE</p></td>
     </tr>
     <tr>
       <th>elitism</th>
       <td><p>Boolean value, which indicates whether elitism should be
-included or not. Default is TRUE</p></td>
+activated or not. Default is TRUE</p></td>
     </tr>
     <tr>
       <th>nelit</th>
-      <td><p>If <code>elitism</code> is TRUE, then this input variable determines
-the amount of individuals in the elite group. Default is 7</p></td>
+      <td><p>If <code>elitism</code> is TRUE, this input determines the amount 
+of individuals in the elite group. Default is 7</p></td>
     </tr>
     <tr>
       <th>selstate</th>
@@ -233,18 +233,18 @@ to be assigned.</p></td>
     <tr>
       <th>weibull</th>
       <td><p>A logical value that specifies whether to take Weibull
-parameters into account. If weibull==TRUE, the wind speed values from the
-'dirSpeed' data frame are ignored. The algorithm will calculate the mean
+parameters into account. If `weibull == TRUE`, the wind speed values from
+the `vdirspe` data frame are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
 Default is FALSE</p></td>
     </tr>
     <tr>
       <th>weibullsrc</th>
       <td><p>A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster k and the second item must be the
-scale parameter raster a of the Weibull distribution. If no list is given,
+item must be the shape parameter raster `k` and the second item must be the
+scale parameter raster `a` of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently only
-cover Austria. This variable is only used if weibull==TRUE.</p></td>
+cover Austria. This variable is only used if `weibull == TRUE`.</p></td>
     </tr>
     <tr>
       <th>Parallel</th>
@@ -254,18 +254,18 @@ processing. Default is FALSE</p></td>
     </tr>
     <tr>
       <th>numCluster</th>
-      <td><p>If Parallel is TRUE, this variable defines the number of
-clusters to be used</p></td>
+      <td><p>If <code>Parallel</code> is TRUE, this variable defines the 
+number of clusters to be used</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>If TRUE, will print out information for every generation
+      <td><p>If TRUE it will print information for every generation.
 Default is FALSE</p></td>
     </tr>
     <tr>
       <th>plotit</th>
-      <td><p>If TRUE, will plot the best windfarm of a generation. Default
-is FALSE</p></td>
+      <td><p>If TRUE it will plot the best windfarm of every generation. 
+Default is FALSE</p></td>
     </tr>
     </table>
     
