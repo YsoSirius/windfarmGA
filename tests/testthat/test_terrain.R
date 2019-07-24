@@ -86,16 +86,16 @@ test_that("Test Terrain and Weibull Effects", {
   # expect_is(resultrect, "matrix")
   # expect_false(any(unlist(sapply(resultrect, is.na))))
   
-  resultrect <- windfarmGA(Polygon1 = sp_polygon,
-                           selstate = "FIX", crossPart1 = "EQU",
-                        n = 12, iteration = 1,
-                        vdirspe = data.in,
-                        Rotor = 30,
-                        RotorHeight = 100, verbose = TRUE,
-                        weibull = TRUE)
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
+  # resultrect <- windfarmGA(Polygon1 = sp_polygon,
+  #                          selstate = "FIX", crossPart1 = "EQU",
+  #                       n = 12, iteration = 1,
+  #                       vdirspe = data.in,
+  #                       Rotor = 30,
+  #                       RotorHeight = 100, verbose = TRUE,
+  #                       weibull = TRUE)
+  # expect_true(nrow(resultrect) == 1)
+  # expect_is(resultrect, "matrix")
+  # expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Plotting Terrain Effects #############
   plres <- plot_result(resultrect, sp_polygon, topographie = T)
