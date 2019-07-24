@@ -29,7 +29,6 @@
 #'   coordinates SpatialPoints gridded spsample over bbox
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
 #' @importFrom rgdal readOGR
-#' @importFrom rgeos gIntersection
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics plot.new text plot par points abline title lines grid
 #'   layout axis legend mtext
