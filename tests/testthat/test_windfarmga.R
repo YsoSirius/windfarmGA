@@ -71,6 +71,17 @@ test_that("Test windfarmGA", {
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
   
+  resultSP <- windfarmGA(Polygon1 = Polygon1,Projection = Projection,
+                         n = 20, iteration = 3,
+                         vdirspe = data.in, GridMethod = "h",
+                         selstate = "FIX", crossPart1 = "EQU",
+                         Rotor = 80, Proportionality = 1,
+                         RotorHeight = 100, 
+                         Parallel = TRUE, numCluster = 10)
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))))
+  
   ## Errors ############
   expect_error(windfarmGA(Polygon1 = Polygon1,
                          n = 20, iteration = 5,

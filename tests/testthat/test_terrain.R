@@ -20,7 +20,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
                         n = 12, iteration = 1,
                         vdirspe = data.in,
                         Rotor = 30,
-                        RotorHeight = 100, topograp = TRUE, verbose = TRUE)
+                        RotorHeight = 100, 
+                        topograp = TRUE, verbose = TRUE, 
+                        plotit = TRUE)
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
