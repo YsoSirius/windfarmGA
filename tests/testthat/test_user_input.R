@@ -57,7 +57,7 @@ test_that("User Input", {
   winddata <- winddata[[1]]
   layout_start <- resultrect[bestGARun,]$bestPaEn
   
-  id <- sample(layout_start[,"Rect_ID"], size = 10, T)
+  id <- sample(layout_start[,"Rect_ID"], size = 100, T)
   f <- file()
   options(windfarmGA.connection = f)
   ans <- paste(id, collapse = "\n")
@@ -71,7 +71,18 @@ test_that("User Input", {
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   rm(new, new_df)
-  
+
+  for (i in 1:40) {
+    new <- random_search_single(resultrect, polygon, max_dist = 5, Plot = FALSE)
+    expect_is(new, "list")
+    expect_false(anyNA(unlist(new)))
+    new_df <- do.call(rbind, new)
+    expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
+    expect_true(all(new_df[, "EnergyOverall"] > 0))
+    expect_true(all(new_df[, "AbschGesamt"] >= 0))
+    rm(new, new_df)    
+  }
+    
   new <- random_search_single(resultrect, polygon)
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))

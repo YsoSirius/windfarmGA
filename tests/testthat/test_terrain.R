@@ -16,6 +16,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   data.in <- data.frame(ws = 12, wd = 0)
   proj4string(sp_polygon) <- CRS(Projection)
+  options(windfarmGA.connection = stdin())
   resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
                                        n = 5, iteration = 1,
                                        vdirspe = data.in,
