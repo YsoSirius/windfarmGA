@@ -135,7 +135,7 @@ test_that("Test Viewshed Functions", {
   xy2 <- spsample(Polygon1, 5, "random")
   xy2 <- coordinates(xy2)
   a <- expect_warning(plyr::aaply(xy2, 1, function(d){
-    cansee1(r[[1]],xy1 = xy1,xy2 = d,h1=0,h2=0)}, .progress="none"))
+    cansee(r[[1]],xy1 = xy1,xy2 = d,h1=0,h2=0)}, .progress="none"))
   expect_true(is.logical(a))
   expect_false(anyNA(a))
   
