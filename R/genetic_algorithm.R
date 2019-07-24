@@ -290,7 +290,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat("\nWeibull Distribution is used.")
     }
     if (missing(weibullsrc)) {
-      if (verbose) cat("\nWeibull Informations from package will be used.\n")
+      if (verbose) cat("\nWeibull Information from package is used.\n")
 
       
       ## TODO - Change documentation for readRDS, when rasters can be read from /data
@@ -314,7 +314,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
                                  y = raster::extent(shape_project))
     } else {
       if (verbose) {
-        cat("\nWeibull Informations are given.\n")
+        cat("\nWeibull Information from input is used.\n")
       }
       ## Project Shapefile to raster, Crop/Mask and project raster back
       shape_project <- sp::spTransform(Polygon1,

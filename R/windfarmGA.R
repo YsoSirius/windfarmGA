@@ -140,11 +140,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     weibull <- FALSE
   }  
   if (weibull) {
-    cat("\nWeibull Distribution is used.")
-    if (missing(weibullsrc)) {
-      cat("\nWeibull Informations from package will be used.\n")
-    } else {
-      cat("\nWeibull Informations are given.\n")
+    if (!missing(weibullsrc)) {
       if (!class(weibullsrc) == "list") {
         cat(paste("weibullsrc class: \n1 - ", class(weibullsrc)))
         stop("\n'weibullsrc' must be a list with two rasters. List item 1 should be the shape parameter (k) raster
@@ -156,9 +152,9 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
       }
     }
   }
-  if (missing(weibullsrc)) {
-    weibullsrc <- ""
-  }
+  # if (missing(weibullsrc)) {
+  #   weibullsrc <- ""
+  # }
   if (missing(Parallel)) {
     Parallel <- FALSE
   }
