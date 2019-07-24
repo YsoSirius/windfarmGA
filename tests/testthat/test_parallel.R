@@ -38,6 +38,7 @@ test_that("Test Parallelisation", {
   
   ## windfarmGA ####################
   ## Too many Cluster
+  options(windfarmGA.connection = stdin())
   resultSP <- windfarmGA(Polygon1 = Polygon1,Projection = Projection,
                          n = 20, iteration = 3,
                          vdirspe = wind, GridMethod = "h",

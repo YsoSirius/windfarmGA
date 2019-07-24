@@ -12,6 +12,8 @@ test_that("Test Genetic Algorithm with different Inputs", {
                               c(4499991, 2619343), c(4499991, 2619203)))
   sp_polygon <- Polygons(list(sp_polygon), 1)
   sp_polygon <- SpatialPolygons(list(sp_polygon))
+  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+  +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   proj4string(sp_polygon) <- CRS(Projection)
   resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
                                        n = 5, iteration = 1,
@@ -29,8 +31,6 @@ test_that("Test Genetic Algorithm with different Inputs", {
                               c(4499991, 2669343), c(4499991, 2668272)))
   sp_polygon <- Polygons(list(sp_polygon), 1)
   sp_polygon <- SpatialPolygons(list(sp_polygon))
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-  +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   proj4string(sp_polygon) <- CRS(Projection)
   data.in <- data.frame(ws = 12, wd = 0)
   

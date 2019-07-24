@@ -16,6 +16,7 @@ test_that("Test windfarmGA", {
   data.in <- data.frame(ws = 12, wd = 0)
   
   ## SpatialPolygon Input #####################
+  options(windfarmGA.connection = stdin())
   resultSP <- windfarmGA(Polygon1 = Polygon1,
                          n = 20, iteration = 5,
                          vdirspe = data.in, 
