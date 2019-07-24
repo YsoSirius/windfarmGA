@@ -1,22 +1,18 @@
 context("Test Terrain Effects")
-library(testthat)
 library(sp)
-library(windfarmGA)
 library(raster)
 
 
-test_that("Test Genetic Algorithm with different Inputs", {
+test_that("Test Terrain Effects", {
   ## Test Terrain Model ###################
   ## Create Warning, that no Sourface Roughness can be calculated.
   sp_polygon <- Polygon(rbind(c(4498482, 2619203), c(4498482, 2619343),
                               c(4499991, 2619343), c(4499991, 2619203)))
   sp_polygon <- Polygons(list(sp_polygon), 1)
   sp_polygon <- SpatialPolygons(list(sp_polygon))
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-  +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   data.in <- data.frame(ws = 12, wd = 0)
   proj4string(sp_polygon) <- CRS(Projection)
-  options(windfarmGA.connection = stdin())
   resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
                                        n = 5, iteration = 1,
                                        vdirspe = data.in,
