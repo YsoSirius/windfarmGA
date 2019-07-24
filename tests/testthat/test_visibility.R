@@ -83,6 +83,11 @@ test_that("Test Viewshed Functions", {
   plt <- plot_viewshed(res, legend = T)
   expect_true(is.null(plt))
   
+  turbloc = spsample(DEM_meter[[2]], 1, type = "random");
+  res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
+                  turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
+  plt <- plot_viewshed(res, legend = T)
+  expect_true(is.null(plt))
   
   ## rasterprofile ##################
   sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular")

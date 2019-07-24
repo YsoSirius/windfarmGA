@@ -72,6 +72,11 @@ test_that("Test Basic Functions", {
   res12 <- isSpatial(coords_df)
   expect_true(class(res12)[1] == "SpatialPolygons")
   expect_true(identical(res0@bbox, res12@bbox))
+  
+  colnames(coords_df) <- c("asd","fasf")
+  res12 <- isSpatial(coords_df)
+  expect_true(class(res12)[1] == "SpatialPolygons")
+  expect_true(identical(res0@bbox, res12@bbox))
 
   ## Simple Feature
   simple_feature <- sf::st_as_sf(spatial_polygon)

@@ -948,7 +948,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 #' isSpatial(df_fort, Projection)
 #'}
 isSpatial <- function(shape, proj) {
-  # shape = xy_matrix
   if (class(shape)[1] == "sf") {
     shape <- as(shape, "Spatial")
     ## This is needed for grid_area. Attribute names must have same length
