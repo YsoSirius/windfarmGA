@@ -12,7 +12,6 @@ Imports: rgdal (>= 1.3.6),
     raster (>= 2.8.19),
     sf (>= 0.7.2),
     sp (>= 1.2-2),
-    rgeos (>= 0.3-8),
     plyr (>= 1.8.4),
     rworldmap (>= 1.3.6),
     maptools (>= 0.8-36),
@@ -37,5 +36,5 @@ License: MIT + file LICENSE
 URL: https://ysosirius.github.io/windfarmGA/index.html
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.1.1
-Suggests: testthat, pkgdown, dplyr (>= 0.8.0.1)
+Suggests: testthat, pkgdown, dplyr (>= 0.8.0.1), rgeos (>= 0.3-8)
 Encoding: UTF-8

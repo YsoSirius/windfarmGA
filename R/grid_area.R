@@ -83,9 +83,8 @@ grid_area <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   gridpolygon$layer <- c(1:length(gridpolygon$layer))
   areagrid <- raster::area(gridpolygon)
 
-  # requireNamespace("rgeos")
-  if (FALSE) {rgeos::gIntersection(shape, gridpolygon)}
-  
+  requireNamespace("rgeos")
+  # if (FALSE) {rgeos::gIntersection(shape, gridpolygon)}
   ## Intersect Polygon with Grid and get new areas
   grid_intersect <- raster::intersect(shape, gridpolygon)
   areadrygrid <- raster::area(grid_intersect)

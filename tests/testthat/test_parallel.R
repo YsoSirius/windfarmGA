@@ -13,7 +13,6 @@ test_that("Test Parallelisation", {
   +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   proj4string(Polygon1) <- CRS(Projection)
   wind <- data.frame(ws = 12, wd = 0)
-  ##################
   
   ## genetic_algorithm ####################
   ## Default amount of Cluster
@@ -38,27 +37,16 @@ test_that("Test Parallelisation", {
   expect_false(any(unlist(sapply(res, is.na))))
   
   ## windfarmGA ####################
-  ## Default amount of Cluster
-  # res <- windfarmGA(Polygon1 = Polygon1,
-  #            n = 12, iteration = 5,
-  #            vdirspe = data.in,
-  #            selstate = "FIX", crossPart1 = "EQU",
-  #            Rotor = 60, Parallel = TRUE,
-  #            RotorHeight = 100)
-  # expect_true(nrow(res) == 5)
-  # expect_is(res, "matrix")
-  # expect_false(any(unlist(sapply(res, is.na))))
-  # 
   ## Too many Cluster
-  # res <- windfarmGA(Polygon1 = Polygon1,
-  #                   n = 12, iteration = 5,
-  #                   vdirspe = data.in,
-  #                   selstate = "FIX", crossPart1 = "EQU",
-  #                   Rotor = 60, Parallel = TRUE, 
-  #                   numCluster = 10,
-  #                   RotorHeight = 100)
-  # expect_true(nrow(res) == 5)
-  # expect_is(res, "matrix")
-  # expect_false(any(unlist(sapply(res, is.na))))
+  resultSP <- windfarmGA(Polygon1 = Polygon1,Projection = Projection,
+                         n = 20, iteration = 3,
+                         vdirspe = wind, GridMethod = "h",
+                         selstate = "FIX", crossPart1 = "EQU",
+                         Rotor = 80, Proportionality = 1,
+                         RotorHeight = 100, 
+                         Parallel = TRUE, numCluster = 10)
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))))
   
 })

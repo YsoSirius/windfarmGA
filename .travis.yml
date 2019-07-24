@@ -8,11 +8,15 @@ addons:
       - libproj-dev
       - libudunits2-dev
 
+sudo: required
+services:
+  - xvfb
+
 before_install:
     - export DISPLAY=:99.0
-    - sh -e /etc/init.d/xvfb start
+#    - sh -e /etc/init.d/xvfb start
     - export RGL_USE_NULL=TRUE
- 
+
 script: 
   - |
     R CMD build .
