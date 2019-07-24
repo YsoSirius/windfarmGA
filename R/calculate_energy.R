@@ -240,8 +240,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     
     ## Check for NA Values..
     if (anyNA(estim_speed)) {
-      estim_speed[which(is.na(estim_speed))] <- mean(
-        estim_speed, na.rm = TRUE)
+      estim_speed[which(is.na(estim_speed))] <- mean(estim_speed, na.rm = TRUE)
     }
 
     weibull_bool <- TRUE
