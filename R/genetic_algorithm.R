@@ -290,9 +290,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat("\nWeibull Distribution is used.")
     }
     if (missing(weibullsrc)) {
-      if (verbose) {
-        cat("\nWeibull Informations from package will be used.\n")
-      }
+      if (verbose) cat("\nWeibull Informations from package will be used.\n")
+
       
       ## TODO - Change documentation for readRDS, when rasters can be read from /data
       # path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
@@ -732,55 +731,34 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       }
 
       if (teil > 5) {
-        teil <- 5
-        u <- u + 0.09
-        if (verbose) {
-          cat("Min 20% Selected")
-          cat(paste("CPR is increased! CPR:", u, "SP: ", teil, "\n"))
-        }
+        teil <- 5; u <- u + 0.09
+        if (verbose) cat("Min 20% Selected"); cat(paste("CPR is increased! CPR:", u, "SP: ", teil, "\n"))
       }
       if (trunc(u) < 0) {
-        u <- 0.5
-        teil <- teil - 0.4
-        if (verbose) {
-          cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",
-                    u, "SP: ", teil, "\n"))
-        }
+        u <- 0.5;  teil <- teil - 0.4
+        if (verbose) cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",u, "SP: ", teil, "\n"))
       }
       if (u >= 4) {
-        u <- 4
-        teil <- 4
-        if (verbose) {
-          cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil, "\n"))
-        }
+        u <- 4;  teil <- 4
+        if (verbose) cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil, "\n"))
       }
       if (teil <= 4 / 3) {
         teil <- 4 / 3
-        if (verbose) {
-          cat(paste("Max 75% selected. SP: ", teil, "\n"))
-        }
+        if (verbose) cat(paste("Max 75% selected. SP: ", teil, "\n"))
       }
       if (length(fit) <= 20) {
-        teil <- 1
-        u <- u + 0.07
-        if (verbose) {
-          cat(paste("Less than 20 individuals. Select all and increase ",
-                    "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
-        }
+        teil <- 1;  u <- u + 0.07
+        if (verbose) cat(paste("Less than 20 individuals. Select all and increase ",
+                               "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
       }
       if (length(fit) <= 10) {
-        teil <- 1
-        u <- u + 0.4
-        if (verbose) {
-          cat(paste("Less than 10 individuals. Select all and increase ",
-                    "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
-        }
+        teil <- 1;  u <- u + 0.4
+        if (verbose) cat(paste("Less than 10 individuals. Select all and increase ",
+                               "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
       }
       if (teil > 5) {
         teil <- 5
-        if (verbose) {
-          cat(paste("Teil is bigger than 5. Set to max 5. SP:", teil, "\n"))
-        }
+        if (verbose) cat(paste("Teil is bigger than 5. Set to max 5. SP:", teil, "\n"))
       }
 
       u <- round(u, 2)
