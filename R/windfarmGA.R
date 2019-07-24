@@ -154,7 +154,6 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
         cat(paste("list item classes: \n1 - ", class(weibullsrc[[1]]), "\n2 - ", class(weibullsrc[[2]])))
         stop("\nOne of the given list items is not a raster.")
       }
-      weibullsrc <- weibullsrc
     }
   }
   if (missing(weibullsrc)) {

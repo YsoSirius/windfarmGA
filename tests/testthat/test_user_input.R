@@ -145,10 +145,6 @@ test_that("User Input", {
   
   
   ## windfarmGA ###############
-  f <- file()
-  options(windfarmGA.connection = f)
-  ans <- paste(c("E","E", "F", "n"), collapse = "\n")
-  write(ans, f)
 
   Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                             c(4499991, 2669343), c(4499991, 2668272)))
@@ -160,14 +156,39 @@ test_that("User Input", {
   data.in <- data.frame(ws = 12, wd = 0)
   
   ## grid spacing NOT appropriate
+  f <- file()
+  options(windfarmGA.connection = f)
+  ans <- paste(c("E","E", "F", "n"), collapse = "\n")
+  write(ans, f)
   expect_error(windfarmGA(
     Polygon1 = Polygon1,
-    n = 12,
+    n = 12, 
     vdirspe = data.in,
     Rotor = 60,
     RotorHeight = 100
   ))
+  # reset connection
+  options(windfarmGA.connection = stdin())
+  # close the file
+  close(f)
   
+
+  ## Wrong crossPart1 argument
+  f <- file()
+  options(windfarmGA.connection = f)
+  ans <- paste(c("E","E", "F", "", ""), collapse = "\n")
+  write(ans, f)
+  ## grid spacing NOT appropriate
+  res <- windfarmGA(
+    Polygon1 = Polygon1, crossPart1 = "somethign",
+    n = 12, iteration = 3,
+    vdirspe = data.in,
+    Rotor = 60,
+    RotorHeight = 100
+  )
+  expect_true(nrow(res) == 3)
+  expect_is(res, "matrix")
+  expect_false(any(unlist(sapply(res, is.na))))
   # reset connection
   options(windfarmGA.connection = stdin())
   # close the file
