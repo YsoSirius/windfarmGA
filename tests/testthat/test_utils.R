@@ -188,4 +188,13 @@ test_that("Test Basic Functions", {
   expect_false(any(duplicated(a[[1]][, "wd"])))
   expect_true(sum(a[[2]]) == 100)
   
+  wind_df <- wind_df[,1:2]
+  a = windata_format(wind_df)
+  expect_false(all(sapply(a, anyNA)))
+  expect_false(any(a[[1]][, "wd"] > 360))
+  expect_true(all(a[[1]][, "ws"] == wind_df[, 1]))
+  expect_true(all(a[[1]][, "wd"] %in% unique(wind_df[, 2])))
+  expect_false(any(duplicated(a[[1]][, "wd"])))
+  expect_true(sum(a[[2]]) == 100)
+  
 })
