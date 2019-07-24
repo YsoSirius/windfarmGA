@@ -223,8 +223,7 @@ clusters to be used.</p></td>
 
 <span class='co'>## Calculate a Grid and an indexed data.frame with coordinates and</span>
 <span class='co'>## grid cell IDs.</span>
-<span class='no'>Grid1</span> <span class='kw'>&lt;-</span> <span class='fu'>grid_area</span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,<span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>1</span>);
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='no'>Grid1</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='no'>Grid1</span> <span class='kw'>&lt;-</span> <span class='fu'>grid_area</span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,<span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>1</span>);</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: rgeos</span></div><div class='input'><span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='no'>Grid1</span><span class='kw'>[[</span><span class='fl'>1</span>]]
 <span class='no'>AmountGrids</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>Grid</span>)
 
 <span class='no'>wind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>wind</span>, <span class='kw'>probab</span> <span class='kw'>=</span> <span class='fl'>100</span>)

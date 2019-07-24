@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate Visibility between multiple locations — viewTo • windfarmGA</title>
+<title>A resultign matrix of <code>genetic_algorithm</code> with 200 iterations 
+and a rectangular shapefile <code>sp_polygon</code> — resultrect • windfarmGA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +31,11 @@
 
 
 
-<meta property="og:title" content="Calculate Visibility between multiple locations — viewTo" />
+<meta property="og:title" content="A resultign matrix of <code>genetic_algorithm</code> with 200 iterations 
+and a rectangular shapefile <code>sp_polygon</code> — resultrect" />
 
-<meta property="og:description" content="Check if Point 1 (xy) is visible from multiple points (xy2)" />
+<meta property="og:description" content="A resultign matrix of genetic_algorithm with 200 iterations 
+and a rectangular shapefile sp_polygon" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,69 +100,32 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate Visibility between multiple locations</h1>
+    <h1>A resultign matrix of <code>genetic_algorithm</code> with 200 iterations 
+and a rectangular shapefile <code>sp_polygon</code></h1>
     
-    <div class="hidden name"><code>viewTo.Rd</code></div>
+    <div class="hidden name"><code>resultrect.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Check if Point 1 (xy) is visible from multiple points (xy2)</p>
+    <p>A resultign matrix of <code>genetic_algorithm</code> with 200 iterations 
+and a rectangular shapefile <code>sp_polygon</code></p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>viewTo</span>(<span class='no'>r</span>, <span class='no'>xy1</span>, <span class='no'>xy2</span>, <span class='kw'>h1</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>h2</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>progress</span> <span class='kw'>=</span> <span class='st'>"none"</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>r</th>
-      <td><p>A DEM raster</p></td>
-    </tr>
-    <tr>
-      <th>xy1</th>
-      <td><p>A matrix with X and Y coordinates for Point 1</p></td>
-    </tr>
-    <tr>
-      <th>xy2</th>
-      <td><p>A matrix with X and Y coordinates for Points 2</p></td>
-    </tr>
-    <tr>
-      <th>h1</th>
-      <td><p>A numeric giving the extra height offset of Point 1</p></td>
-    </tr>
-    <tr>
-      <th>h2</th>
-      <td><p>A numeric giving the extra height offset of Point 2</p></td>
-    </tr>
-    <tr>
-      <th>progress</th>
-      <td><p>Is passed to <code><a href='https://www.rdocumentation.org/packages/plyr/topics/aaply'>plyr::aaply</a></code></p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <pre class="usage"><span class='no'>resultrect</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A boolean vector, indicating if Point 1 (xy1) is visible from all
-  elements of Points 2 (xy2)</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other Viewshed Analysis: <code>cansee</code>,
-  <code>interpol_view</code>, <code>plot_viewshed</code>,
-  <code>rasterprofile</code>, <code>viewshed</code></p></div>
+    <p>An object of class <code>matrix</code> with 200 rows and 13 columns.</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#format">Format</a></li>
           </ul>
 
   </div>
