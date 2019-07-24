@@ -145,6 +145,7 @@ test_that("Test Viewshed Functions", {
   expect_false(anyNA(a))
   
   ## interpol_view ################
+  turbloc = spsample(DEM_meter[[2]], 10, type = "random");
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   resinpl <- interpol_view(res, plotDEM = T, alpha = 0.5)
