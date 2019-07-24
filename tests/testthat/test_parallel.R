@@ -38,7 +38,6 @@ test_that("Test Parallelisation", {
   
   ## windfarmGA ####################
   ## Too many Cluster
-  options(windfarmGA.connection = stdin())
   f <- file()
   options(windfarmGA.connection = f)
   ans <- paste(rep(c(" "),10), collapse = "\n")

@@ -61,10 +61,10 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0){
   # xy1 = turbine_locs[1,]; xy2 = sample_xy; h1=h2=0
   
   ## xy2 is a matrix of x,y coords (not a data frame)
-  # a <- plyr::aaply(xy2, 1, function(d){
-    # cansee(r,xy1 = xy1,xy2 = d,h1,h2)}, .progress=progress)
-  a <- apply(xy2, 1, function(d){
-    cansee(r[[1]],xy1 = xy1,xy2 = d,h1,h2)})
+  a <- plyr::aaply(xy2, 1, function(d){
+    cansee(r,xy1 = xy1,xy2 = d,h1,h2)}, .progress="none")
+  # a <- t(apply(xy2, 1, function(d){
+    # cansee(r[[1]],xy1 = xy1,xy2 = d,h1,h2)}))
   a[is.na(a)] <- FALSE
   return(a)
 }

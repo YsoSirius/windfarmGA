@@ -17,6 +17,10 @@ test_that("Test windfarmGA", {
   
   ## SpatialPolygon Input #####################
   options(windfarmGA.connection = stdin())
+  f <- file()
+  options(windfarmGA.connection = f)
+  ans <- paste(rep(c(" "),10), collapse = "\n")
+  write(ans, f)
   resultSP <- windfarmGA(Polygon1 = Polygon1,
                          n = 20, iteration = 5,
                          vdirspe = data.in, 
@@ -26,7 +30,9 @@ test_that("Test windfarmGA", {
   expect_true(nrow(resultSP) == 5)
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
-  
+  # reset connection
+  options(windfarmGA.connection = stdin())
+  close(f)
   
   ## Use DNS and layer (Shapfile from Source) #######################
   dns <- system.file("extdata/shape.shp", package = "windfarmGA")
