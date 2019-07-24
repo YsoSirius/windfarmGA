@@ -103,7 +103,7 @@
 calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                               SurfaceRoughness, wnkl, distanz,
                               polygon1, resol, RotorR, dirSpeed,
-                              srtm_crop, topograp, cclRaster, weibull, 
+                              srtm_crop, topograp, cclRaster, weibull,
                               plotit = FALSE) {
 
   ## Assign constant / default values
@@ -141,12 +141,14 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
       par(mfrow = c(2, 1))
       plot(srtm_crop[[1]], main = "SRTM Elevation Data")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
-      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"], labs = round(turb_elev, 0),
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
+                        labs = round(turb_elev, 0),
                         cex = 0.8)
       plot(polygon1, add = TRUE)
       plot(orogr1, main = "Wind Speed Multipliers")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
-      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"], labs = round(windpo, 3),
+      calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
+                        labs = round(windpo, 3),
                         cex = 0.8)
       plot(polygon1, add = TRUE)
     }
@@ -237,7 +239,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
 
     ## TODO Extract via raster::extract or can we do by matrix?
     estim_speed <- raster::extract(weibull, xy_individual)
-    
+
     ## Check for NA Values..
     if (anyNA(estim_speed)) {
       estim_speed[which(is.na(estim_speed))] <- mean(estim_speed, na.rm = TRUE)
@@ -390,8 +392,8 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     # ))
     # names(tmp) <- NULL
     ## TODO - now vectorized, but correct??
-    a <- {1 - sqrt(1 - cT)}
-    s <- windlist[, "Laenge_B"]/windlist[, "RotorR"]
+    a <- 1 - sqrt(1 - cT)
+    s <- windlist[, "Laenge_B"] / windlist[, "RotorR"]
     b <- (1 + (k1 * s))^2
     aov <- windlist[, "A_ov"] / windlist[, "Rotorflaeche"]
     vredu <- windlist[, "Windmean"] * (aov * (a / b))

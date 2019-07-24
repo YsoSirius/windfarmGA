@@ -204,7 +204,7 @@ permutations <- function(n, r, v = 1:n) {
     }
     else {
       inner <- Recall(n, r - 1, v)
-      cbind(rep(v, rep(nrow(inner), n)), matrix(t(inner), 
+      cbind(rep(v, rep(nrow(inner), n)), matrix(t(inner),
                                                 ncol = ncol(inner), nrow = nrow(inner) * n,
                                                 byrow = TRUE))
     }
