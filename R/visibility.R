@@ -45,13 +45,12 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0){
 #' @param xy2 A matrix with X and Y coordinates for Points 2
 #' @param h1 A numeric giving the extra height offset of Point 1
 #' @param h2 A numeric giving the extra height offset of Point 2
-#' @param progress Is passed on to plyr::aaply
 #'
 #' @family Viewshed Analysis
 #' @return A boolean vector, indicating if Point 1 (xy1) is visible from all
 #'   elements of Points 2 (xy2)
 #'
-viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
+viewTo <- function(r, xy1, xy2, h1=0, h2=0){
   # xy1 = c(x = 4653100.36021378, y = 2744048.65794167); 
   # xy2 = structure(c(4648381.88040377, 4649001.7726914, 4649621.66497904, 
   #                   4650241.55726667, 4650861.4495543, 4648381.88040377, 2741196.10301024, 
@@ -62,8 +61,10 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
   # xy1 = turbine_locs[1,]; xy2 = sample_xy; h1=h2=0
   
   ## xy2 is a matrix of x,y coords (not a data frame)
-  a <- plyr::aaply(xy2, 1, function(d){
-    cansee(r,xy1 = xy1,xy2 = d,h1,h2)}, .progress=progress)
+  # a <- plyr::aaply(xy2, 1, function(d){
+    # cansee(r,xy1 = xy1,xy2 = d,h1,h2)}, .progress=progress)
+  a <- apply(xy2, 1, function(d){
+    cansee(r[[1]],xy1 = xy1,xy2 = d,h1,h2)})
   a[is.na(a)] <- FALSE
   return(a)
 }
@@ -176,6 +177,9 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
   res <- plyr::aaply(turbine_locs, 1, function(d){
     viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2)
   }, .progress = progress)
+  # res <- apply(turbine_locs, 1, function(d){
+  #   viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2)
+  # })
   
   # if (is.matrix(res)) {
   #   ## TODO - Why is that? Doesnt do

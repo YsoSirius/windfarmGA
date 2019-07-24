@@ -39,6 +39,10 @@ test_that("Test Parallelisation", {
   ## windfarmGA ####################
   ## Too many Cluster
   options(windfarmGA.connection = stdin())
+  f <- file()
+  options(windfarmGA.connection = f)
+  ans <- paste(rep(c(" "),10), collapse = "\n")
+  write(ans, f)
   resultSP <- windfarmGA(Polygon1 = Polygon1,Projection = Projection,
                          n = 20, iteration = 3,
                          vdirspe = wind, GridMethod = "h",
@@ -50,4 +54,7 @@ test_that("Test Parallelisation", {
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
   
+  # reset connection
+  options(windfarmGA.connection = stdin())
+  close(f)
 })
