@@ -115,9 +115,8 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
     text(pointsZ$x, pointsZ$y, pos=1, pointsZ$z, cex=0.5)
   }
   
-  if (any(is.na(pointsZ))) {
+  if (anyNA(pointsZ)) {
     pointsZ <- pointsZ[stats::complete.cases(pointsZ),]
-    # browser()
   }
   return(pointsZ)
 }
@@ -428,7 +427,9 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   
   if (ask == TRUE) {
     print(sort(names(countriesSP)))
-    col = readline(prompt="Enter an ISO3 code: ")
+    # col = readline(prompt="Enter an ISO3 code: ")
+    cat("Enter an ISO3 code: ")
+    col <- readLines(n = 1, con = getOption("windfarmGA.connection"))
     if (!col %in% sort(names(countriesSP))) {
       stop("Column not found")
     }

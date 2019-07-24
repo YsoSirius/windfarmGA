@@ -28,7 +28,6 @@ test_that("Test windfarmGA", {
   
   
   ## Use DNS and layer (Shapfile from Source) #######################
-  
   dns <- system.file("extdata/shape.shp", package = "windfarmGA")
   resultSP <- windfarmGA(dns = dns, layer = "shape",
                          n = 20, iteration = 3,
@@ -83,18 +82,21 @@ test_that("Test windfarmGA", {
   expect_false(any(unlist(sapply(resultSP, is.na))))
   
   ## Errors ############
+  ## no winddata
   expect_error(windfarmGA(Polygon1 = Polygon1,
                          n = 20, iteration = 5,
                          # vdirspe = data.in, 
                          selstate = "FIX", crossPart1 = "EQU",
                          Rotor = 35, Proportionality = 1,
                          RotorHeight = 100, plotit = FALSE))
+  ## n/iteration should be numeric
   expect_error(windfarmGA(Polygon1 = Polygon1,
                           n = "20", iteration = "5",
                           vdirspe = data.in,
                           selstate = "FIX", crossPart1 = "EQU",
                           Rotor = 35, Proportionality = 1,
                           RotorHeight = 100, plotit = FALSE))
+  ## elitism should be boolean
   expect_error(windfarmGA(Polygon1 = Polygon1,
                           n = 20, iteration = 5,
                           vdirspe = data.in,
@@ -102,5 +104,20 @@ test_that("Test windfarmGA", {
                           Rotor = 35, Proportionality = 1,
                           RotorHeight = 100, 
                           elitism = "asd"))
+  ## weibullsrc in wrong format
+  expect_error(windfarmGA(Polygon1 = Polygon1,
+                          n = 12,
+                          vdirspe = data.in,
+                          selstate = "FIX", crossPart1 = "EQU",
+                          Rotor = 60, weibull = TRUE,
+                          weibullsrc = data.frame(x=1,y=2),
+                          RotorHeight = 100))
+  expect_error(windfarmGA(Polygon1 = Polygon1,
+                          n = 12,
+                          vdirspe = data.in,
+                          selstate = "FIX", crossPart1 = "EQU",
+                          Rotor = 60, weibull = TRUE,
+                          weibullsrc = list(x=1,y=2),
+                          RotorHeight = 100))
 
 })

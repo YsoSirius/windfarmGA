@@ -117,10 +117,10 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
                        prop = Proportionality, plotGrid = TRUE)
   }
   cat("\nIs the grid spacing appropriate?")
-  InputDaccor <- readline(prompt = "Hit 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  # InputDaccor <- readline(prompt = "Hit 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
   
-  # cat("Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
-  # InputDaccor <- readLines(n = 1, con = getOption("windfarmGA.connection"))
+  cat("Type 'ENTER' if the the grid is corrent and 'n' if you like to change some inputs.")
+  InputDaccor <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   
   InputDaccor <- tolower(InputDaccor)
   if  (InputDaccor == "n") {
@@ -169,11 +169,11 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   if (Parallel == TRUE) {
     # numPossClus <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
     numPossClus <- parallel::detectCores()
-    if (numPossClus == 1) {
-      cat("\nOnly 1 core is available. Set Parallel to FALSE")
-      numCluster <- 1
-      Parallel <- FALSE
-    } 
+    # if (numPossClus == 1) {
+    #   cat("\nOnly 1 core is available. Set Parallel to FALSE")
+    #   numCluster <- 1
+    #   Parallel <- FALSE
+    # } 
     if (numCluster > numPossClus) {
       cat("\nNumber of clusters is bigger than the amount of available cores. Reduce to max.")
       numCluster <- numPossClus

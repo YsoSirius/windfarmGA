@@ -7,6 +7,24 @@ library(windfarmGA)
 
 test_that("Test Genetic Algorithm with different Inputs", {
   ## Test Terrain Model ###################
+  ## Create Warning, that no Sourface Roughness can be calculated.
+  sp_polygon <- Polygon(rbind(c(4498482, 2619203), c(4498482, 2619343),
+                              c(4499991, 2619343), c(4499991, 2619203)))
+  sp_polygon <- Polygons(list(sp_polygon), 1)
+  sp_polygon <- SpatialPolygons(list(sp_polygon))
+  proj4string(sp_polygon) <- CRS(Projection)
+  resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
+                                       n = 5, iteration = 1,
+                                       vdirspe = data.in,
+                                       Rotor = 20,
+                                       RotorHeight = 100, 
+                                       topograp = TRUE, verbose = TRUE, 
+                                       plotit = TRUE))
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+  
+  ## Normal Terrain Example
   sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                               c(4499991, 2669343), c(4499991, 2668272)))
   sp_polygon <- Polygons(list(sp_polygon), 1)
@@ -27,15 +45,12 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
 
-  
+
   ## Plotting Terrain Effects #############
   plres <- plot_result(resultrect, sp_polygon, topographie = T)
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  if (length(list.files(pattern = "g100_06.tif")) != 0) {
-    file.remove("g100_06.tif")
-  }
   plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
@@ -44,6 +59,13 @@ test_that("Test Genetic Algorithm with different Inputs", {
     file.remove("g100_06.tif")
   }
   plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 1)
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
+  if (length(list.files(pattern = "g100_06.tif")) != 0) {
+    file.remove("g100_06.tif")
+  }
+  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
