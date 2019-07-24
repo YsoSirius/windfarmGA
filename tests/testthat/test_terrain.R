@@ -105,6 +105,20 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
+  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2,
+                       sourceCCLRoughness = sourceCCLRoughness, 
+                       weibullsrc = list(a_raster * (gamma(1 + (1 / k_raster)))))
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
+  weibullraster <- a_raster * (gamma(1 + (1 / k_raster)))
+  plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2,
+                       sourceCCLRoughness = sourceCCLRoughness, 
+                       weibullsrc = weibullraster)
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
+  
   plres <- plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2)
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
