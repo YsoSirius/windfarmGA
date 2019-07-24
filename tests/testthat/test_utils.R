@@ -72,6 +72,11 @@ test_that("Test Basic Functions", {
   res12 <- isSpatial(coords_df)
   expect_true(class(res12)[1] == "SpatialPolygons")
   expect_true(identical(res0@bbox, res12@bbox))
+  
+  colnames(coords_df) <- c("asd","fasf")
+  res12 <- isSpatial(coords_df)
+  expect_true(class(res12)[1] == "SpatialPolygons")
+  expect_true(identical(res0@bbox, res12@bbox))
 
   ## Simple Feature
   simple_feature <- sf::st_as_sf(spatial_polygon)
@@ -175,6 +180,15 @@ test_that("Test Basic Functions", {
   expect_true(sum(a[[2]]) == 100)
   
   colnames(wind_df) <- NULL
+  a = windata_format(wind_df)
+  expect_false(all(sapply(a, anyNA)))
+  expect_false(any(a[[1]][, "wd"] > 360))
+  expect_true(all(a[[1]][, "ws"] == wind_df[, 1]))
+  expect_true(all(a[[1]][, "wd"] %in% unique(wind_df[, 2])))
+  expect_false(any(duplicated(a[[1]][, "wd"])))
+  expect_true(sum(a[[2]]) == 100)
+  
+  wind_df <- wind_df[,1:2]
   a = windata_format(wind_df)
   expect_false(all(sapply(a, anyNA)))
   expect_false(any(a[[1]][, "wd"] > 360))

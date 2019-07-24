@@ -45,13 +45,13 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0){
 #' @param xy2 A matrix with X and Y coordinates for Points 2
 #' @param h1 A numeric giving the extra height offset of Point 1
 #' @param h2 A numeric giving the extra height offset of Point 2
-#' @param progress Is passed on to plyr::aaply
+#' @param progress Is passed to \code{plyr::aaply}
 #'
 #' @family Viewshed Analysis
 #' @return A boolean vector, indicating if Point 1 (xy1) is visible from all
 #'   elements of Points 2 (xy2)
 #'
-viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
+viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress = "none"){
   # xy1 = c(x = 4653100.36021378, y = 2744048.65794167); 
   # xy2 = structure(c(4648381.88040377, 4649001.7726914, 4649621.66497904, 
   #                   4650241.55726667, 4650861.4495543, 4648381.88040377, 2741196.10301024, 
@@ -64,6 +64,8 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress="none"){
   ## xy2 is a matrix of x,y coords (not a data frame)
   a <- plyr::aaply(xy2, 1, function(d){
     cansee(r,xy1 = xy1,xy2 = d,h1,h2)}, .progress=progress)
+  # a <- t(apply(xy2, 1, function(d){
+    # cansee(r[[1]],xy1 = xy1,xy2 = d,h1,h2)}))
   a[is.na(a)] <- FALSE
   return(a)
 }
@@ -115,9 +117,8 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
     text(pointsZ$x, pointsZ$y, pos=1, pointsZ$z, cex=0.5)
   }
   
-  if (any(is.na(pointsZ))) {
+  if (anyNA(pointsZ)) {
     pointsZ <- pointsZ[stats::complete.cases(pointsZ),]
-    # browser()
   }
   return(pointsZ)
 }
@@ -177,6 +178,9 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
   res <- plyr::aaply(turbine_locs, 1, function(d){
     viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2)
   }, .progress = progress)
+  # res <- apply(turbine_locs, 1, function(d){
+  #   viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2)
+  # })
   
   # if (is.matrix(res)) {
   #   ## TODO - Why is that? Doesnt do
@@ -272,7 +276,6 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #' plot_viewshed(res)
 #' }
 plot_viewshed <- function(res, legend=FALSE) {
-  # r=DEM_meter[[1]]; leg=TRUE
   raster::plot(res[[4]])
   plot(sf::st_geometry(res[[3]]), add = T)
   points(res[[2]], col="green", pch=20)
@@ -281,7 +284,6 @@ plot_viewshed <- function(res, legend=FALSE) {
     invisible(apply(res[[1]], 1, function(d) {points(res[[2]][d,], col="red", pch=20)}))
   } else {
     points(res[[2]][res[[1]],], col="red", pch=20)
-    # invisible(apply(res[[1]], 1, function(d) {points(res[[2]][d,], col="red", pch=20)}))
   }
   if (legend) {
     legend(x = "bottomright", y = "topleft", yjust=0, title="Visibility", 
@@ -377,10 +379,8 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
     if (plotDEM) {
       raster::plot(res$DEM, legend = F)
       raster::plot(visible, breaks=breakseq, add = T, col=pal(length(breakseq)), ...)
-      # raster::plot(visible, breaks=breakseq, add = T, col=pal(length(breakseq)), alpha=0.1)
     } else {
       raster::plot(visible, breaks=breakseq, col=pal(length(breakseq)), ...)
-      # raster::plot(visible, breaks=breakseq, col=pal(length(breakseq)))
     }
     
     points(res$Turbines, pch=20, col="black", cex=1.5)
@@ -428,7 +428,8 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   
   if (ask == TRUE) {
     print(sort(names(countriesSP)))
-    col = readline(prompt="Enter an ISO3 code: ")
+    cat("Enter an ISO3 code: ")
+    col <- readLines(n = 1, con = getOption("windfarmGA.connection"))
     if (!col %in% sort(names(countriesSP))) {
       stop("Column not found")
     }

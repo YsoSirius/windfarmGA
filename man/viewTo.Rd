@@ -17,7 +17,7 @@ viewTo(r, xy1, xy2, h1 = 0, h2 = 0, progress = "none")
 
 \item{h2}{A numeric giving the extra height offset of Point 2}
 
-\item{progress}{Is passed on to plyr::aaply}
+\item{progress}{Is passed to \code{plyr::aaply}}
 }
 \value{
 A boolean vector, indicating if Point 1 (xy1) is visible from all

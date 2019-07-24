@@ -83,6 +83,11 @@ test_that("Test Viewshed Functions", {
   plt <- plot_viewshed(res, legend = T)
   expect_true(is.null(plt))
   
+  turbloc = spsample(DEM_meter[[2]], 1, type = "random");
+  res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
+                  turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
+  plt <- plot_viewshed(res, legend = T)
+  expect_true(is.null(plt))
   
   ## rasterprofile ##################
   sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular")
@@ -120,8 +125,27 @@ test_that("Test Viewshed Functions", {
   expect_true(is.logical(canrs))
   expect_true(length(canrs) == 1)
   
+  ## Create Warning (complete.cases)
+  Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
+                            c(4499991, 2669343), c(4499991, 2668272)))
+  Polygon1 <- Polygons(list(Polygon1), 1);
+  Polygon1 <- SpatialPolygons(list(Polygon1))
+  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
++ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  proj4string(Polygon1) <- CRS(Projection)
+  r <- getDEM(polygon = Polygon1, ISO3 = "AUT", clip=T)
+  
+  xy1 <- spsample(Polygon1, 1, "random")
+  xy1 <- as.vector(coordinates(xy1))
+  xy2 <- spsample(Polygon1, 5, "random")
+  xy2 <- coordinates(xy2)
+  a <- expect_warning(plyr::aaply(xy2, 1, function(d){
+    cansee(r[[1]],xy1 = xy1,xy2 = d,h1=0,h2=0)}, .progress="none"))
+  expect_true(is.logical(a))
+  expect_false(anyNA(a))
   
   ## interpol_view ################
+  turbloc = spsample(DEM_meter[[2]], 10, type = "random");
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   resinpl <- interpol_view(res, plotDEM = T, alpha = 0.5)
