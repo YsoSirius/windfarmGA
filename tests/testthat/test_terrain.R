@@ -4,6 +4,8 @@ library(raster)
 
 
 test_that("Test Terrain and Weibull Effects", {
+  skip_on_appveyor()
+  
   ## Test Terrain Model ###################
   ## Create Warning, that no Sourface Roughness can be calculated.
   sp_polygon <- Polygon(rbind(c(4498482, 2619203), c(4498482, 2619343),
