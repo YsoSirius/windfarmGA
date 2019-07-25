@@ -15,3 +15,9 @@
 
 #' The rectangular shapefile used to create \code{resultrect}
 "sp_polygon"
+
+#' A big shapefile
+"big_shape"
+
+#' A multi-shapefile with 3 Polygons
+"hole_shape"

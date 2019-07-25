@@ -16,7 +16,7 @@ Returns a SpatialPolygons. (SpatialPolygons)
 Returns a Spatial Polygons object from a Tesselation object.
 }
 \examples{
-\dontrun {
+\dontrun{
 library(spatstat)
 library(maptools)
 library(sp)

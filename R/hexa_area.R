@@ -11,7 +11,7 @@
 #' @family Helper Functions
 #' @return Returns a SpatialPolygons. (SpatialPolygons)
 #'   
-#' @examples \dontrun {
+#' @examples \dontrun{
 #' library(spatstat)
 #' library(maptools)
 #' library(sp)

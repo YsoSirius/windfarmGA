@@ -47,7 +47,7 @@
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster stopCluster detectCores
 #' @importFrom foreach foreach %dopar% 
-#' @importFrom methods as
+#' @importFrom methods as slot
 #' @importFrom gstat idw
 #' @importFrom spatstat is.tess hextess hexgrid
 #' @importFrom magrittr %>% 
