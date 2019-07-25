@@ -4,6 +4,8 @@ library(raster)
 
 
 test_that("Test Terrain and Weibull Effects", {
+  skip_on_appveyor()
+  
   ## Test Terrain Model ###################
   ## Create Warning, that no Sourface Roughness can be calculated.
   sp_polygon <- Polygon(rbind(c(4498482, 2619203), c(4498482, 2619343),
@@ -75,7 +77,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
-  # Weibull-Raster from Package used (NOT WORKING!)
+  ## Weibull-Raster from Package used (NOT WORKING!)
   # resultrect <- genAlgo(Polygon1 = sp_polygon,
   #                       n = 12, iteration = 1,
   #                       vdirspe = data.in,
@@ -221,6 +223,28 @@ test_that("Test Terrain and Weibull Effects", {
                                 distanz = 100000, resol = 200,dirSpeed = data.in,
                                 RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                                 weibull = weibullraster, plotit = T)
+  expect_output(str(resCalcEn), "List of 1")
+  expect_true(class(resCalcEn[[1]]) == "matrix")
+  df <- do.call(rbind, resCalcEn)
+  expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
+  expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <
+                    df[df[, "TotAbschProz"] != 0, "Windmean"]))
+  expect_false(any(unlist(sapply(resCalcEn, is.na))))
+  expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
+  
+  
+  ## Make Hole in Weibull-Raster, so some Values are NA 
+  weibullraster <- projectRaster(weibullraster, crs = CRS(Projection))
+  Polygon1 <- spTransform(Polygon1, CRS(Projection))
+  min_y_ppt <- data.frame(resStartGA[[1]][order(resStartGA[[1]][,2])<=9,])
+  coordinates(min_y_ppt) <- ~X+Y
+  weibullrastercrop <- crop(weibullraster, extent(min_y_ppt))
+  resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
+                                srtm_crop = srtm_crop, cclRaster = cclRaster,
+                                RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
+                                distanz = 100000, resol = 200,dirSpeed = data.in,
+                                RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+                                weibull = weibullrastercrop, plotit = T)
   expect_output(str(resCalcEn), "List of 1")
   expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)

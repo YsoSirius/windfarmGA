@@ -2,6 +2,8 @@ context("User Interaction")
 library(windfarmGA)
 
 test_that("User Input", {
+  skip_on_appveyor()
+  
   ## getISO3 ################
   f <- file()
   options(windfarmGA.connection = f)
@@ -73,7 +75,7 @@ test_that("User Input", {
   rm(new, new_df)
 
   for (i in 1:40) {
-    new <- random_search_single(resultrect, polygon, max_dist = 5, Plot = FALSE)
+    new <- random_search_single(resultrect, polygon, max_dist = 5, Plot = TRUE)
     expect_is(new, "list")
     expect_false(anyNA(unlist(new)))
     new_df <- do.call(rbind, new)

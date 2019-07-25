@@ -113,7 +113,8 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   result$X <- resultxy[, 1]
   result$Y <- resultxy[, 2]
   ## Assign sorted color palette for legend
-  pal <- leaflet::colorFactor(color_pal, domain = result$AbschGesamt,
+  pal <- leaflet::colorFactor(color_pal, domain = sort(result$AbschGesamt), 
+                              ordered = TRUE,
                               reverse = FALSE)
 
   result$wake_radius <- wake_radius
@@ -128,6 +129,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       iconWidth = 30, iconHeight = 50))
   list_popup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
                      "% </dd>")
+  
   ## Start a Leaflet Map with OSM background and another Tile.
   map <- leaflet() %>%
     addTiles(group = "OSM") %>%
@@ -163,9 +165,8 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
                icon = turbine_icon[1], popup = list_popup,
                group = "Turbines") %>%
     addLegend(position = "topleft",
-              colors = sort(unique(result$farbe)),
-              values = as.character(result$AbschGesamt),
-              labels = sort(unique(result$AbschGesamt)),
+              pal = pal,
+              values = result$AbschGesamt,
               labFormat = labelFormat(suffix = "%"),
               opacity = 1, title = "Total Wake Effect",
               layerId = "Legend") %>%
@@ -177,7 +178,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       "Toner"),
       overlayGroups = overlay_group,
       options = layersControlOptions(collapsed = TRUE)
-    )
+    );
 
   # Plot the map
   map
