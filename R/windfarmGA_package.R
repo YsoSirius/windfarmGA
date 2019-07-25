@@ -50,7 +50,6 @@
 #' @importFrom methods as
 #' @importFrom gstat idw
 #' @importFrom spatstat is.tess hextess hexgrid
-#' @importFrom maptools as.owin.SpatialPolygons elide
 #' @importFrom magrittr %>% 
 #' @importFrom plyr aaply
 #' @importFrom rworldmap getMap

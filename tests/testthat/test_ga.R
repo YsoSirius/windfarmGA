@@ -5,6 +5,13 @@ library(sf)
 library(ggplot2)
 library(windfarmGA)
 
+## Function to suppress print/cat outputs
+quiet <- function(x) { 
+  sink(tempfile()) 
+  on.exit(sink()) 
+  invisible(force(x)) 
+}
+
 test_that("Test Genetic Algorithm with different Inputs", {
   ## Data ##############
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
@@ -16,11 +23,11 @@ test_that("Test Genetic Algorithm with different Inputs", {
   data.in <- data.frame(ws = 12, wd = 0)
 
   ## SpatialPolygon Input - 100 Iteration #####################
-  resultSP <- genAlgo(Polygon1 = Polygon1,
+  resultSP <- quiet(genAlgo(Polygon1 = Polygon1,
                       n = 20, iteration = 100,
                       vdirspe = data.in,
                       Rotor = 35, Proportionality = 1,
-                      RotorHeight = 100, verbose = TRUE)
+                      RotorHeight = 100, verbose = TRUE))
   expect_true(nrow(resultSP) == 100)
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)

@@ -284,8 +284,16 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
       textxy(xy_individual[, 1], xy_individual[, 2],
              labs = dimnames(xy_individual)[[1]], cex = 0.8)
       ## TODO Get rid of elide and store polygon-cetroids already before
-      poly3 <- maptools::elide(polygon1, rotate = angle,
-                               center = apply(bbox(polygon1), 1, mean))
+      # poly3 <- maptools::elide(polygon1, rotate = angle,
+                               # center = apply(bbox(polygon1), 1, mean))
+      
+      ## This code does what maptools::elide did.. a bit more code, but faster
+      cordslist <- lapply(polygon1@polygons, function(x) coordinates(x@Polygons[[1]]))
+      cordslist <- lapply(cordslist, function(x) {
+        Polygon(rotate_CPP(x[,1], x[,2], pcent[1], pcent[2], angle))
+      })
+      poly3 = SpatialPolygons(list(Polygons(cordslist, 1)))
+      
       plot(poly3, main = c("Shape at angle:", (-1 * angle)))
       mtext(paste("Direction: ", index, "\nfrom total: ",
                   nrow(dirSpeed)), side = 1)

@@ -16,6 +16,7 @@ Returns a SpatialPolygons. (SpatialPolygons)
 Returns a Spatial Polygons object from a Tesselation object.
 }
 \examples{
+\dontrun {
 library(spatstat)
 library(maptools)
 library(sp)
@@ -34,7 +35,7 @@ plot(HexaGrid)
 ## Convert the Tesselation to SpatialPolygons
 Hex2spdf <- tess2SPdf(HexaGrid)
 plot(Hex2spdf)
-
+}
 }
 \seealso{
 Other Helper Functions: \code{\link{dup_coords}},

@@ -11,7 +11,7 @@
 #' @family Helper Functions
 #' @return Returns a SpatialPolygons. (SpatialPolygons)
 #'   
-#' @examples
+#' @examples \dontrun {
 #' library(spatstat)
 #' library(maptools)
 #' library(sp)
@@ -30,7 +30,7 @@
 #' ## Convert the Tesselation to SpatialPolygons
 #' Hex2spdf <- tess2SPdf(HexaGrid)
 #' plot(Hex2spdf)
-#'
+#' }
 tess2SPdf <- function(x) {
   stopifnot(spatstat::is.tess(x))
   sp.obj <- methods::as(x, "SpatialPolygons")
@@ -81,7 +81,7 @@ hexa_area <- function(Polygon1, size, plotTrue = FALSE){
   }
 
   ## Make a Tesselation Object from the Polygon with the size parameter.
-  owin_sp <- maptools::as.owin.SpatialPolygons(Polygon1)
+  owin_sp <- owin_spatialPolygons(Polygon1)
   hexa_grid <- spatstat::hextess(owin_sp, s = size)
   ## Convert it to a SpatialPolygons object.
   hexa_grid <- tess2SPdf(hexa_grid)
@@ -108,4 +108,50 @@ hexa_area <- function(Polygon1, size, plotTrue = FALSE){
   ## Assign same Projection as Polygon
   sp::proj4string(hexa_grid) <- sp::proj4string(Polygon1)
   invisible(list(points_hexa, hexa_grid))
+}
+
+
+
+owin_spatialPolygons <- function(SP) {
+  pls <- slot(SP, "polygons")
+  nParts <- sapply(pls, function(x) length(slot(x, "Polygons")))
+  nOwin <- sum(nParts)
+  if (nOwin == 1) {
+    pl <- slot(pls[[1]], "Polygons")
+    crds <- slot(pl[[1]], "coords")
+    colnames(crds) <- c("x", "y")
+    rD <- pl[[1]]@ringDir
+    if (rD == 1) 
+      crds <- crds[nrow(crds):1, ]
+    crds <- crds[-nrow(crds), ]
+    res <- spatstat::owin(poly = list(x = crds[, 1], y = crds[, 
+                                                              2]))
+  }
+  else if (nOwin > 1) {
+    opls <- vector(mode = "list", length = nOwin)
+    io <- 1
+    for (i in seq(along = pls)) {
+      pl <- slot(pls[[i]], "Polygons")
+      for (j in 1:nParts[i]) {
+        crds <- slot(pl[[j]], "coords")
+        colnames(crds) <- c("x", "y")
+        rD <- slot(pl[[j]], "ringDir")
+        hole <- slot(pl[[j]], "hole")
+        if (rD == -1 && hole) 
+          crds <- crds[nrow(crds):1, ]
+        else if (rD == 1 && !hole) 
+          crds <- crds[nrow(crds):1, ]
+        crds <- crds[-nrow(crds), ]
+        opls[[io]] <- list(x = crds[, 1], y = crds[, 
+                                                   2])
+        io <- io + 1
+      }
+    }
+    if (!spatstat::spatstat.options("checkpolygons")) 
+      res <- spatstat::owin(bbox(SP)[1, ], bbox(SP)[2, 
+                                                    ], poly = opls, check = FALSE)
+    else res <- spatstat::owin(poly = opls)
+  }
+  else stop("no valid polygons")
+  res
 }

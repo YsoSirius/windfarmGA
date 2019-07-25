@@ -65,7 +65,6 @@
 #'
 #' @author Jose Hidasi (original) / Sebastian Gatscha (adapted)
 grid_area <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
-  # shape=Polygon1; resol=200; prop=1
   if (prop < 0.01) {
     prop <- 0.01
   }
@@ -83,9 +82,8 @@ grid_area <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   gridpolygon$layer <- c(1:length(gridpolygon$layer))
   areagrid <- raster::area(gridpolygon)
 
-  requireNamespace("rgeos")
-  # if (FALSE) {rgeos::gIntersection(shape, gridpolygon)}
   ## Intersect Polygon with Grid and get new areas
+  requireNamespace("rgeos")
   grid_intersect <- raster::intersect(shape, gridpolygon)
   areadrygrid <- raster::area(grid_intersect)
 
@@ -102,7 +100,7 @@ grid_area <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   }
 
   ## Subtract Grid cells with too small coverage
-  grid_filtered <- grid_intersect[grid_intersect$layer >= prop, ]
+  grid_filtered <- grid_intersect[grid_intersect$layer >= prop - 0.0001, ]
 
   if (plotGrid) {
     ## Calculate total area
