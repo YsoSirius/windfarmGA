@@ -75,7 +75,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
-  # Weibull-Raster from Package used (NOT WORKING!)
+  ## Weibull-Raster from Package used (NOT WORKING!)
   # resultrect <- genAlgo(Polygon1 = sp_polygon,
   #                       n = 12, iteration = 1,
   #                       vdirspe = data.in,

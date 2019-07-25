@@ -747,19 +747,19 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
         if (verbose) cat(paste("Max 75% selected. SP: ", teil, "\n"))
       }
       if (length(fit) <= 20) {
-        teil <- 1;  u <- u + 0.07
+        teil <- 1;  u <- u + 0.1
         if (verbose) cat(paste("Less than 20 individuals. Select all and increase ",
                                "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
       }
-      if (length(fit) <= 10) {
-        teil <- 1;  u <- u + 0.4
-        if (verbose) cat(paste("Less than 10 individuals. Select all and increase ",
-                               "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
-      }
-      if (teil > 5) {
-        teil <- 5
-        if (verbose) cat(paste("Teil is bigger than 5. Set to max 5. SP:", teil, "\n"))
-      }
+      # if (length(fit) <= 10) {
+      #   teil <- 1;  u <- u + 0.4
+      #   if (verbose) cat(paste("Less than 10 individuals. Select all and increase ",
+      #                          "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
+      # }
+      # if (teil > 5) {
+      #   teil <- 5
+      #   if (verbose) cat(paste("Teil is bigger than 5. Set to max 5. SP:", teil, "\n"))
+      # }
 
       u <- round(u, 2)
       teil <- round(teil, 3)
