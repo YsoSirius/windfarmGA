@@ -104,8 +104,7 @@ owin_spatialPolygons <- function(SP) {
     if (rD == 1) 
       crds <- crds[nrow(crds):1, ]
     crds <- crds[-nrow(crds), ]
-    res <- spatstat::owin(poly = list(x = crds[, 1], y = crds[, 
-                                                              2]))
+    res <- spatstat::owin(poly = list(x = crds[, 1], y = crds[, 2]))
   }
   else if (nOwin > 1) {
     opls <- vector(mode = "list", length = nOwin)
@@ -126,10 +125,8 @@ owin_spatialPolygons <- function(SP) {
         io <- io + 1
       }
     }
-    if (!spatstat::spatstat.options("checkpolygons")) 
-      res <- spatstat::owin(bbox(SP)[1, ], bbox(SP)[2, 
-                                                    ], poly = opls, check = FALSE)
-    else res <- spatstat::owin(poly = opls)
+    res <- spatstat::owin(bbox(SP)[1, ], bbox(SP)[2, ], 
+                          poly = opls, check = FALSE)
   }
   res
 }
