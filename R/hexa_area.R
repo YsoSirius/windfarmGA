@@ -39,7 +39,6 @@ tess2SPdf <- function(x) {
 #'   
 #' @examples
 #' library(spatstat)
-#' library(maptools)
 #' library(sp)
 #' library(raster)
 #' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
@@ -104,8 +103,7 @@ owin_spatialPolygons <- function(SP) {
     if (rD == 1) 
       crds <- crds[nrow(crds):1, ]
     crds <- crds[-nrow(crds), ]
-    res <- spatstat::owin(poly = list(x = crds[, 1], y = crds[, 
-                                                              2]))
+    res <- spatstat::owin(poly = list(x = crds[, 1], y = crds[, 2]))
   }
   else if (nOwin > 1) {
     opls <- vector(mode = "list", length = nOwin)
@@ -122,16 +120,12 @@ owin_spatialPolygons <- function(SP) {
         else if (rD == 1 && !hole) 
           crds <- crds[nrow(crds):1, ]
         crds <- crds[-nrow(crds), ]
-        opls[[io]] <- list(x = crds[, 1], y = crds[, 
-                                                   2])
+        opls[[io]] <- list(x = crds[, 1], y = crds[, 2])
         io <- io + 1
       }
     }
-    if (!spatstat::spatstat.options("checkpolygons")) 
-      res <- spatstat::owin(bbox(SP)[1, ], bbox(SP)[2, 
-                                                    ], poly = opls, check = FALSE)
-    else res <- spatstat::owin(poly = opls)
+    res <- spatstat::owin(bbox(SP)[1, ], bbox(SP)[2, ], 
+                          poly = opls, check = FALSE)
   }
-  else stop("no valid polygons")
   res
 }

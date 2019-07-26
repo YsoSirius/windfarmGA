@@ -20,4 +20,8 @@
 "big_shape"
 
 #' A multi-shapefile with 3 Polygons
+"multi_shape"
+
+#' A shapefile with a hole
 "hole_shape"
+

@@ -1,9 +1,7 @@
 context("Test GA")
-library(testthat)
 library(sp)
 library(sf)
 library(ggplot2)
-library(windfarmGA)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -29,6 +27,44 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       Rotor = 35, Proportionality = 1,
                       RotorHeight = 100, verbose = TRUE))
   expect_true(nrow(resultSP) == 100)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  
+  ## Multi Polygon ###########################
+  resultSP <- quiet(genAlgo(Polygon1 = multi_shape,
+                            n = 20, iteration = 3,
+                            vdirspe = data.in,
+                            Rotor = 35, Proportionality = 1,
+                            RotorHeight = 100, plotit=T))
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  
+  resultSP <- quiet(genAlgo(Polygon1 = multi_shape,
+                            n = 20, iteration = 3, GridMethod = "h",
+                            vdirspe = data.in,
+                            Rotor = 35, Proportionality = 1,
+                            RotorHeight = 100, plotit=T))
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  
+  ## Hole Polygon ###########################
+  resultSP <- quiet(genAlgo(Polygon1 = hole_shape,
+                            n = 20, iteration = 3,
+                            vdirspe = data.in,
+                            Rotor = 35, Proportionality = 1,
+                            RotorHeight = 100, plotit=T))
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  
+  resultSP <- quiet(genAlgo(Polygon1 = hole_shape,
+                            n = 20, iteration = 3, GridMethod = "h",
+                            vdirspe = data.in,
+                            Rotor = 35, Proportionality = 1,
+                            RotorHeight = 100, plotit=T))
+  expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
   
@@ -198,14 +234,4 @@ test_that("Test Genetic Algorithm with different Inputs", {
 
   
 
-  ## Weibull Raster ######################
-  # resultrect <- genAlgo(Polygon1 = sp_polygon,
-  #                       n = 12, iteration = 1,
-  #                       vdirspe = data.in,
-  #                       Rotor = 30, 
-  #                       RotorHeight = 100, topograp = TRUE, weibull = TRUE)
-  # expect_true(nrow(resultrect) == 1)
-  # expect_is(resultrect, "matrix")
-  # expect_false(any(unlist(sapply(resultrect, is.na))))
-  
 })

@@ -34,12 +34,15 @@ cordslist <- list(structure(c(15.0817690096444, 15.0830743800325, 15.09500919500
                               47.1148832909329, 47.1176751573605, 47.1250348303582, 47.1318860245243, 
                               47.1345501394874, 47.1344232798964, 47.1309979565454), .Dim = c(10L, 2L)))
 cordslist <- lapply(cordslist, Polygon) 
-hole_shape = SpatialPolygons(list(Polygons(cordslist, 1)),
+multi_shape = SpatialPolygons(list(Polygons(cordslist, 1)),
                              proj4string = CRS(Proj84))
+multi_shape <- spTransform(multi_shape, CRS(Projection))
+usethis::use_data(multi_shape, overwrite = TRUE)
+
+library(rgdal)
+hole_shape <- readOGR("./inst/extdata/hole_shape.shp")
 hole_shape <- spTransform(hole_shape, CRS(Projection))
 usethis::use_data(hole_shape, overwrite = TRUE)
-
-
 
 ## Download Corine-Land-Cover Raster ######################
 ccl_raster_url <-

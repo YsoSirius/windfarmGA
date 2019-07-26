@@ -1,9 +1,7 @@
 context("GA Functions")
-library(testthat)
-library(windfarmGA)
 library(sp)
 library(spatstat)
-library(maptools)
+# library(maptools)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -131,7 +129,8 @@ test_that("Test Genetic Algorithm Function", {
   rm(HexGrid)
     
   ## TESS2SPDF #############
-  HexaGrid <- spatstat::hextess(maptools::as.owin.SpatialPolygons(Polygon1),s = 100)
+  # HexaGrid <- spatstat::hextess(maptools::as.owin.SpatialPolygons(Polygon1),s = 100)
+  HexaGrid <- spatstat::hextess(windfarmGA:::owin_spatialPolygons(Polygon1),s = 100)
   expect_true(class(HexaGrid)[1] == "tess")
   
   ## Convert the Tesselation to SpatialPolygons

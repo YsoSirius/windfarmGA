@@ -49,7 +49,7 @@
 #' @importFrom foreach foreach %dopar% 
 #' @importFrom methods as slot
 #' @importFrom gstat idw
-#' @importFrom spatstat is.tess hextess hexgrid
+#' @importFrom spatstat is.tess hextess hexgrid owin spatstat.options
 #' @importFrom magrittr %>% 
 #' @importFrom plyr aaply
 #' @importFrom rworldmap getMap
