@@ -39,7 +39,6 @@ tess2SPdf <- function(x) {
 #'   
 #' @examples
 #' library(spatstat)
-#' library(maptools)
 #' library(sp)
 #' library(raster)
 #' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
