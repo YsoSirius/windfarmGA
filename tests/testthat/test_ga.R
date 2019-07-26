@@ -32,6 +32,25 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
   
+  ## Multi Polygon ###########################
+  resultSP <- quiet(genAlgo(Polygon1 = hole_shape,
+                            n = 20, iteration = 3,
+                            vdirspe = data.in,
+                            Rotor = 35, Proportionality = 1,
+                            RotorHeight = 100, plotit=T))
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  
+  resultSP <- quiet(genAlgo(Polygon1 = hole_shape,
+                            n = 20, iteration = 3, GridMethod = "h",
+                            vdirspe = data.in,
+                            Rotor = 35, Proportionality = 1,
+                            RotorHeight = 100, plotit=T))
+  expect_true(nrow(resultSP) == 3)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  
   ## SpatialPolygon Input #####################
   resultSP <- genAlgo(Polygon1 = Polygon1,
                       n = 20, iteration = 1,

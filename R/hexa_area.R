@@ -122,8 +122,7 @@ owin_spatialPolygons <- function(SP) {
         else if (rD == 1 && !hole) 
           crds <- crds[nrow(crds):1, ]
         crds <- crds[-nrow(crds), ]
-        opls[[io]] <- list(x = crds[, 1], y = crds[, 
-                                                   2])
+        opls[[io]] <- list(x = crds[, 1], y = crds[, 2])
         io <- io + 1
       }
     }
@@ -132,6 +131,5 @@ owin_spatialPolygons <- function(SP) {
                                                     ], poly = opls, check = FALSE)
     else res <- spatstat::owin(poly = opls)
   }
-  else stop("no valid polygons")
   res
 }
