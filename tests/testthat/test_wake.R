@@ -1,7 +1,5 @@
 context("Test Wake Functions")
-library(testthat)
 library(sp)
-library(windfarmGA)
 library(raster)
 # devtools::load_all()
 
@@ -245,6 +243,20 @@ test_that("Test Wake Functions", {
   expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
   
   
-  
+  ## Polygon with Holes is not plotted correctly (Hole is omitted)
+  # windraster <- raster::rasterize(hole_shape, raster::raster(
+  #   raster::extent(hole_shape),
+  #   ncol = 180, nrow = 180), field = 1)
+  # data.in <- data.frame(ws = c(12,12), wd = c(0,90))
+  # Rotor <- 50; fcrR <- 3
+  # resGrid <- GridFilter(shape = hole_shape, resol = Rotor * fcrR, prop = 1,
+  #                       plotGrid = FALSE)
+  # resStartGA <- StartGA(Grid = resGrid[[1]], n = 15, nStart = 100)
+  # resCalcEn <- calculateEn(sel = resStartGA[[1]], referenceHeight = 50,
+  #                          RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
+  #                          distanz = 100000, resol = 200,dirSpeed = data.in,
+  #                          RotorR = 50, polygon1 = hole_shape, 
+  #                          topograp = FALSE, weibull=FALSE,
+  #                          plotit = TRUE)
 
 })

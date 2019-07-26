@@ -3,12 +3,12 @@
 \docType{data}
 \name{hole_shape}
 \alias{hole_shape}
-\title{A multi-shapefile with 3 Polygons}
-\format{An object of class \code{SpatialPolygons} of length 1.}
+\title{A shapefile with a hole}
+\format{An object of class \code{SpatialPolygonsDataFrame} with 1 rows and 1 columns.}
 \usage{
 hole_shape
 }
 \description{
-A multi-shapefile with 3 Polygons
+A shapefile with a hole
 }
 \keyword{datasets}
