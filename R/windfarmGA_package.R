@@ -53,6 +53,7 @@
 #' @importFrom magrittr %>% 
 #' @importFrom plyr aaply
 #' @importFrom rworldmap getMap
+#' @importFrom Rcpp sourceCpp
 #' 
 #' @useDynLib windfarmGA, .registration = TRUE
 #' @docType package
