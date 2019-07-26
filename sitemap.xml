@@ -115,6 +115,9 @@
     <loc>https://YsoSirius.github.io/windfarmGA/reference/leafPlot.html</loc>
   </url>
   <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/reference/multi_shape.html</loc>
+  </url>
+  <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/mutation.html</loc>
   </url>
   <url>
@@ -230,5 +233,8 @@
   </url>
   <url>
     <loc>https://YsoSirius.github.io/windfarmGA/reference/windfarmGA_.html</loc>
+  </url>
+  <url>
+    <loc>https://YsoSirius.github.io/windfarmGA/articles/opti_rect.html</loc>
   </url>
 </urlset>
