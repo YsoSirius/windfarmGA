@@ -31,25 +31,15 @@
 #' a==aMut
 #'
 mutation          <- function(a, p, seed) {
-  if (missing(seed)) {
-    seed <- NULL
+  if (!is.null(seed) && !missing(seed)) {
+    set.seed(as.integer(seed))
   }
   ## Probability for every gene to mutate
-  for (i in 1:length(a)) {
-    ## for every element in the 2 children, get a random number between 1 & 0
-    if (!is.null(seed)) {
-      set.seed(as.integer(seed))
-    }
-    rnd <- runif(n = 1, min = 0, max = 1)
-    ## If the random number is smaller than p, the gene is switched
-    ## from 1 to 0 | from 0 to 1
-    if (rnd < p) {
-      if (a[i] == "0") {
-        a[i] <- 1
-      } else {
-        a[i] <- 0
-      }
-    }
-  }
+  rnd <- runif(n = length(a), min = 0, max = 1) 
+  ## for every element in the 2 children, get a random number between 1 & 0
+  ## If the random number is smaller than p, the gene is switched
+  ## from 1 to 0 | from 0 to 1
+  whichs <- which(rnd < p)
+  a[whichs] <- ifelse(a[whichs] == 1, 0, 1)
   return(a)
 }
