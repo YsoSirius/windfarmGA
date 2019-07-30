@@ -4,7 +4,7 @@
 \alias{mutation}
 \title{Mutation Method}
 \usage{
-mutation(a, p, seed)
+mutation(a, p, seed = NULL)
 }
 \arguments{
 \item{a}{The binary matrix of all individuals.}
@@ -29,12 +29,12 @@ a <- cbind(bin=sample(c(0,1),20,replace=TRUE,prob = c(70,30)),
 a
 
 ## Mutate the individuals with a low percentage
-aMut <- mutation(a,0.1)
+aMut <- mutation(a,0.1, NULL)
 ## Check which values are not like the originals
 a==aMut
 
 ## Mutate the individuals with a high percentage
-aMut <- mutation(a,0.4)
+aMut <- mutation(a,0.4, NULL)
 ## Check which values are not like the originals
 a==aMut
 

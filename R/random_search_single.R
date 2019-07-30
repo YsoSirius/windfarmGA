@@ -1,4 +1,4 @@
-#' @title Randomise the location of a single turbine
+#' @title Randomize the location of a single turbine
 #' @name random_search_single
 #' @description Perform a random search for a single turbine, to further
 #'   optimize the output of the wind farm layout.
@@ -8,7 +8,7 @@
 #' @param result The resulting matrix of the function
 #'   \code{\link{genetic_algorithm}} or \code{\link{windfarmGA}}
 #' @param Polygon1 The Polygon for the wind farm area.
-#' @param n The number of random searches to be perfomed. Default is 20.
+#' @param n The number of random searches to be performed. Default is 20.
 #' @param Plot Should the random search be plotted? Default is TRUE
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #'   collision checks. Default is 2.2

@@ -19,11 +19,11 @@ locations. Otherwise, the default method returns a list where each component
 is a vector with the positions or the rownames, if available, of the
 duplicates coordinates. The method for geodata returns a data-frame with
 rownames equals to the positions of the duplicated coordinates, the first
-column is a factor indicating duplicates and the remaning are output of
+column is a factor indicating duplicates and the remaining are output of
 as.data.frame.geodata.
 }
 \description{
-This funtions takes an object with 2-D coordinates and returns
+This function takes an object with 2-D coordinates and returns
 the positions of the duplicated coordinates. Also sets a method for
 duplicated. Helper function for \code{\link{plot_heatmap}}
 }

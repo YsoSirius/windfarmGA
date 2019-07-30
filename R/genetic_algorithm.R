@@ -81,7 +81,7 @@
 #'   control variables per generation, a list of all fitness values per
 #'   generation, the amount of individuals after each process, a matrix of all
 #'   energy, efficiency and fitness values per generation, the selection and
-#'   crossover paramters, a matrix with the generational difference in maximum
+#'   crossover parameters, a matrix with the generational difference in maximum
 #'   and mean energy output, a matrix with the given inputs, a dataframe with
 #'   the wind information, the mutation rate per generation and a matrix with all
 #'   tested wind farm layouts.
@@ -620,14 +620,14 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     y1 <- round(bestPaEf[[i]][, "EfficAllDir"][[1]], 2)
     e1 <- bestPaEf[[i]][, "EfficAllDir"]
 
-    allparksNewplot <- subset.matrix(allparks,
-                                     select = c("Rect_ID",
-                                                "AbschGesamt",
-                                                "Parkfitness"))
-
-    allparksNewplot <- aggregate(allparksNewplot,
-                                 list(allparksNewplot[, "Rect_ID"]), mean)
-    allparksNewplot <- allparksNewplot[, -1]
+    # allparksNewplot <- subset.matrix(allparks,
+    #                                  select = c("Rect_ID",
+    #                                             "AbschGesamt",
+    #                                             "Parkfitness"))
+    # 
+    # allparksNewplot <- aggregate(allparksNewplot,
+    #                              list(allparksNewplot[, "Rect_ID"]), mean)
+    # allparksNewplot <- allparksNewplot[, -1]
     ##################
 
     if (plotit) {
@@ -983,7 +983,7 @@ isSpatial <- function(shape, proj) {
 #'   column. If not assigned, it will be calculated
 #'
 #' @family Helper Functions
-#' @return A list of windspeed and pobabilities
+#' @return A list of windspeed and probabilities
 #'
 #' @examples \donttest{
 #' wind_df <- data.frame(ws = c(12, 30, 45), 

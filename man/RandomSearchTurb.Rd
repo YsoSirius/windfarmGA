@@ -12,7 +12,7 @@ RandomSearchTurb(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2)
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{n}{The number of random searches to be perfomed. Default is 20.}
+\item{n}{The number of random searches to be performed. Default is 20.}
 
 \item{Plot}{Should the random search be plotted? Default is TRUE}
 

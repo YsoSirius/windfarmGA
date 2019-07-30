@@ -2,7 +2,7 @@
 % Please edit documentation in R/random_search.R
 \name{random_search}
 \alias{random_search}
-\title{Randomise the output of the Genetic Algorithm}
+\title{Randomize the output of the Genetic Algorithm}
 \usage{
 random_search(result, Polygon1, n, best, Plot, GridMethod,
   max_dist = 2.2)
@@ -13,9 +13,9 @@ or \code{\link{windfarmGA}}}
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{n}{The number of random searches to be perfomed. Default is 20.}
+\item{n}{The number of random searches to be performed. Default is 20.}
 
-\item{best}{Which best indidvuals should be the starting conditions fo a
+\item{best}{Which best individuals should be the starting conditions for a
 random search. The default is 1.}
 
 \item{Plot}{Should the random search be plotted? Default is FALSE}

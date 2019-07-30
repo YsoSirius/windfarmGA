@@ -12,7 +12,7 @@ or \code{\link{windfarmGA}}}
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{which}{A numeric value, indicating which best indidvual to plot. The
+\item{which}{A numeric value, indicating which best individual to plot. The
 default is 1 (the best resulting wind farm).}
 
 \item{orderitems}{A logical value indicating whether the results should be

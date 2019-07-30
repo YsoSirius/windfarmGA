@@ -64,19 +64,19 @@
 #' ## MUTATION
 #' ## Variable Mutation Rate is activated if more than 2 individuals represent
 #' ## the current best solution.
-#' mut <- mutation(a = crossOut, p = 0.3);
-#' mut==crossOut
+#' mut <- mutation(a = crossOut, p = 0.3, NULL);
 #'
 #' ## TRIMTON
 #' ## After Crossover and Mutation, the amount of turbines in a windpark change and have to be
 #' ## corrected to the required amount of turbines.
 #' mut1 <- trimton(mut = mut, nturb = 10, allparks = allparks, nGrids = AmountGrids,
 #'                 trimForce=FALSE)
+#' colSums(mut)
 #' colSums(mut1)
 #'
 #'}
 trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
-  if (missing(seed)) {seed = NULL}
+  if (missing(seed)) {seed <- NULL}
   k <- 0.5
   nGrids1 <- 1:nGrids
 
@@ -102,18 +102,18 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
       RectID = welche,
       Prop = rep(mean(indivprop[,'AbschGesamt']), length(welche)))
     if (trimForce) {
-      propexi <- indivprop[indivprop[,'Rect_ID'] %in% welche,];
+      propexi <- indivprop[indivprop[,'Rect_ID'] %in% welche,]
       npt  <- (1 + ((max(propexi[,'AbschGesamt']) - propexi[,'AbschGesamt']) / (1 + max(propexi[,'AbschGesamt']))))
       npt0 <- (1 + ((max(propexi[,'Parkfitness']) - propexi[,'Parkfitness']) / (1 + max(propexi[,'Parkfitness'])))) ^ k
       NewProb <- 1 / (npt / npt0)
-      propwelche[welche %in%  indivprop[,'Rect_ID'], 'Prop'] <- NewProb;
+      propwelche[welche %in%  indivprop[,'Rect_ID'], 'Prop'] <- NewProb
     }
 
     propwelcheN <-  cbind(
       Rect_ID = nGrids1,
       Prop = rep(min(indivprop[,'AbschGesamt']), nGrids))
     if (trimForce) {
-      propexiN <- indivprop[indivprop[,'Rect_ID'] %in% nGrids1,];
+      propexiN <- indivprop[indivprop[,'Rect_ID'] %in% nGrids1,]
       npt1 <- (1 + ((max(propexiN[,'AbschGesamt']) - propexiN[,'AbschGesamt']) / (1 + max(propexiN[,'AbschGesamt']))))
       npt2 <- (1 + ((max(propexiN[,'Parkfitness']) - propexiN[,'Parkfitness']) / (1 + max(propexiN[,'Parkfitness'])))) ^ k
       NewProb1 <- npt1 / npt2

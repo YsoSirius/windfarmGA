@@ -7,7 +7,7 @@
 #' @param result The resulting matrix of the function \code{\link{genetic_algorithm}}
 #' or \code{\link{windfarmGA}}
 #' @param Polygon1 The Polygon for the wind farm area.
-#' @param which A numeric value, indicating which best indidvual to plot. The
+#' @param which A numeric value, indicating which best individual to plot. The
 #'   default is 1 (the best resulting wind farm).
 #' @param orderitems A logical value indicating whether the results should be
 #'   ordered by energy values (TRUE) or chronologically (FALSE).
@@ -178,7 +178,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       "Toner"),
       overlayGroups = overlay_group,
       options = layersControlOptions(collapsed = TRUE)
-    );
+    )
 
   # Plot the map
   map

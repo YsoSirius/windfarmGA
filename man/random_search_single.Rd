@@ -2,7 +2,7 @@
 % Please edit documentation in R/random_search_single.R
 \name{random_search_single}
 \alias{random_search_single}
-\title{Randomise the location of a single turbine}
+\title{Randomize the location of a single turbine}
 \usage{
 random_search_single(result, Polygon1, n, Plot, GridMethod,
   max_dist = 2.2)
@@ -13,7 +13,7 @@ random_search_single(result, Polygon1, n, Plot, GridMethod,
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{n}{The number of random searches to be perfomed. Default is 20.}
+\item{n}{The number of random searches to be performed. Default is 20.}
 
 \item{Plot}{Should the random search be plotted? Default is TRUE}
 
