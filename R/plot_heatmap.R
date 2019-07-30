@@ -104,7 +104,7 @@ plot_heatmap <- function(result, si = 2, idistw){
 
 #' @title Splits duplicated coords (copy of geoR::dup.coords)
 #' @name dup_coords
-#' @description This funtions takes an object with 2-D coordinates and returns
+#' @description This function takes an object with 2-D coordinates and returns
 #' the positions of the duplicated coordinates. Also sets a method for
 #' duplicated. Helper function for \code{\link{plot_heatmap}}
 #'
@@ -121,7 +121,7 @@ plot_heatmap <- function(result, si = 2, idistw){
 #' is a vector with the positions or the rownames, if available, of the
 #' duplicates coordinates. The method for geodata returns a data-frame with
 #' rownames equals to the positions of the duplicated coordinates, the first
-#' column is a factor indicating duplicates and the remaning are output of
+#' column is a factor indicating duplicates and the remaining are output of
 #' as.data.frame.geodata.
 #' 
 #' @author Paulo Justiniano Ribeiro Jr. \email{paulojus@@leg.ufpr.br}

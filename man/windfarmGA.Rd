@@ -118,7 +118,7 @@ The result is a matrix with aggregated values per generation, the
   control variables per generation, a list of all fitness values per
   generation, the amount of individuals after each process, a matrix of all
   energy, efficiency and fitness values per generation, the selection and
-  crossover paramters, a matrix with the generational difference in maximum
+  crossover parameters, a matrix with the generational difference in maximum
   and mean energy output, a matrix with the given inputs, a dataframe with
   the wind information, the mutation rate per generation and a matrix with all
   tested wind farm layouts.

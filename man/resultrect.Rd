@@ -3,14 +3,14 @@
 \docType{data}
 \name{resultrect}
 \alias{resultrect}
-\title{A resultign matrix of \code{genetic_algorithm} with 200 iterations 
+\title{A resulting matrix of \code{genetic_algorithm} with 200 iterations 
 and a rectangular shapefile \code{sp_polygon}}
 \format{An object of class \code{matrix} with 200 rows and 13 columns.}
 \usage{
 resultrect
 }
 \description{
-A resultign matrix of \code{genetic_algorithm} with 200 iterations 
+A resulting matrix of \code{genetic_algorithm} with 200 iterations 
 and a rectangular shapefile \code{sp_polygon}
 }
 \keyword{datasets}

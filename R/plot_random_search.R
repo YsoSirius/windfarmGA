@@ -1,4 +1,4 @@
-#' @title Plot the result of a randomized ouput.
+#' @title Plot the result of a randomized output.
 #' @name plot_random_search
 #' @description Plotting method for the results of
 #'   \code{\link{random_search_single}} and \code{\link{random_search}}.
@@ -92,7 +92,7 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
                     side = 1, line = 1)
     ################
 
-    ## Random Search Ouput  ################
+    ## Random Search Output  ################
     EnergyBest <- data.frame(resultRS1[[i]])
     ## Assign the colour depending on the individual wind speed 
     br <- length(levels(factor(EnergyBest[,'AbschGesamt'])))

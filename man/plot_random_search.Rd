@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_random_search.R
 \name{plot_random_search}
 \alias{plot_random_search}
-\title{Plot the result of a randomized ouput.}
+\title{Plot the result of a randomized output.}
 \usage{
 plot_random_search(resultRS, result, Polygon1, best)
 }

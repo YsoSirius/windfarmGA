@@ -11,7 +11,7 @@ windata_format(df)
 column. If not assigned, it will be calculated}
 }
 \value{
-A list of windspeed and pobabilities
+A list of windspeed and probabilities
 }
 \description{
 Helper Function, which transforms winddata to an acceptable

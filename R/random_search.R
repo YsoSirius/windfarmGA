@@ -1,4 +1,4 @@
-#' @title Randomise the output of the Genetic Algorithm
+#' @title Randomize the output of the Genetic Algorithm
 #' @name random_search
 #' @description Perform a random search in the grid cells, to further optimize
 #'   the output of the wind farm layout.
@@ -8,9 +8,9 @@
 #' @param result The resulting matrix of the function \code{\link{genetic_algorithm}}
 #' or \code{\link{windfarmGA}}
 #' @param Polygon1 The Polygon for the wind farm area.
-#' @param best Which best indidvuals should be the starting conditions fo a
+#' @param best Which best individuals should be the starting conditions for a
 #'   random search. The default is 1.
-#' @param n The number of random searches to be perfomed. Default is 20.
+#' @param n The number of random searches to be performed. Default is 20.
 #' @param Plot Should the random search be plotted? Default is FALSE
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #'   collision checks. Default is 2.2
