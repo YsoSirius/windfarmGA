@@ -66,9 +66,9 @@ allparks <- do.call("rbind",fit);
 ## SELECTION
 ## print the amount of Individuals selected. Check if the amount 
 ## of Turbines is as requested.
-selec6best <- selection(fit, Grid, 2, T, 6, "VAR", NULL)
-selec6best <- selection(fit, Grid, 2, T, 6, "FIX", NULL)
-selec6best <- selection(fit, Grid, 4, F, 6, "FIX", NULL)
+selec6best <- selection(fit, Grid, 2, T, 6, "VAR")
+selec6best <- selection(fit, Grid, 2, T, 6, "FIX")
+selec6best <- selection(fit, Grid, 4, F, 6, "FIX")
 }
 }
 \seealso{
