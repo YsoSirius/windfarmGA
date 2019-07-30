@@ -54,7 +54,7 @@ init_population           <- function(Grid, n, nStart = 100) {
   ## Randomly sample n grid cells and assign 1 to bin column
   lapply(seq_len(nStart), function(i) {
     res <- Grid[Grid[,'ID'] %in% sample(x = Grid[,'ID'], size = n, replace = FALSE),]
-    res[,'bin'] = 1L
+    res[,'bin'] <- 1L
     res
   })
 }

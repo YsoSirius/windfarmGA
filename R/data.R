@@ -9,7 +9,7 @@
 #' K Weibull Raster for Austria
 "k_weibull"
 
-#' A resultign matrix of \code{genetic_algorithm} with 200 iterations 
+#' A resulting matrix of \code{genetic_algorithm} with 200 iterations 
 #' and a rectangular shapefile \code{sp_polygon}
 "resultrect"
 

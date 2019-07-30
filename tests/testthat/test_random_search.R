@@ -42,7 +42,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   
   ## Plots ###################
-  res = RandomSearchPlot(resultRS = new, result = resultSP,
+  res <- RandomSearchPlot(resultRS = new, result = resultSP,
                    Polygon1 = Polygon1, best = 2)
   expect_true(is.null(res))
 
@@ -59,7 +59,7 @@ test_that("Test Random Search Functions", {
   expect_true(is.null(respl))
   
   new <- RandomSearch(resultSP, GridMethod = "h", Polygon1, n = 2, best = 1)
-  res = RandomSearchPlot(resultRS = new, result = resultSP,
+  res <- RandomSearchPlot(resultRS = new, result = resultSP,
                          Polygon1 = Polygon1, best = 100)
   expect_true(is.null(res))
 

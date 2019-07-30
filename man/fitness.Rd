@@ -34,7 +34,7 @@ and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}}
 is activated (TRUE) or deactivated (FALSE).}
 
 \item{cclRaster}{A Corine Land Cover raster, that has to be adapted
-previously by hand with the surface roughness lenght for every land cover
+previously by hand with the surface roughness length for every land cover
 type. Is only used, when the terrain effect model is activated.}
 
 \item{weibull}{A raster representing the estimated wind speeds}

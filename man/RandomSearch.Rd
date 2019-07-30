@@ -12,9 +12,9 @@ or \code{\link{windfarmGA}}}
 
 \item{Polygon1}{The Polygon for the wind farm area.}
 
-\item{n}{The number of random searches to be perfomed. Default is 20.}
+\item{n}{The number of random searches to be performed. Default is 20.}
 
-\item{best}{Which best indidvuals should be the starting conditions fo a
+\item{best}{Which best individuals should be the starting conditions for a
 random search. The default is 1.}
 
 \item{Plot}{Should the random search be plotted? Default is FALSE}

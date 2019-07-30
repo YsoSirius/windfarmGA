@@ -24,7 +24,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
                        weibull, weibullsrc,
                        Parallel, numCluster, verbose = FALSE, plotit = FALSE) {
 
-  opar = par(no.readonly = TRUE)
+  opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(mfrow = c(1,2), ask = FALSE)
   ######## CHECK INPUT POLYGON
@@ -35,7 +35,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     } else {
       Polygon1 <- isSpatial(Polygon1)
     }
-    plot(Polygon1, col = "red", main = "Original Input Shapefile");
+    plot(Polygon1, col = "red", main = "Original Input Shapefile")
     title(sub = Polygon1@proj4string, line = 1)
     readline(prompt = "\nHit <ENTER> if this is your Polygon")
   }
@@ -50,13 +50,13 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   ##  Project the Polygon to LAEA if it is not already.
   if (is.na(sp::proj4string(Polygon1))) {
     cat("Polygon is not projected. Lambert Azimuthal Equal Area Projection is used.\n")
-    Projection = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+    Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
     +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
     sp::proj4string(Polygon1) <- CRS(Projection)
   }
   if (missing(Projection)) {
     cat("No Projection is given. Take Lambert Azimuthal Equal Area Projection.\n")
-    Projection = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+    Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
     +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   } else {
     Projection <- Projection

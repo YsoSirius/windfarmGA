@@ -28,7 +28,7 @@ rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
   nsteps = 1 + round(dx / reso)
   xc = xy1[1] + (0:nsteps) * (xy2[1] - xy1[1]) / nsteps
   yc = xy1[2] + (0:nsteps) * (xy2[2] - xy1[2]) / nsteps
-  
+
   if (plot) {
     points(x = xc, y = yc, col = "red", pch = 20, cex = 1.4)
   }
@@ -96,8 +96,7 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0, reso){
 viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso){
   a <- t(apply(xy2, 1, function(d){
     cansee(r[[1]], xy1 = xy1, xy2 = d, h1, h2, reso)}))
-  # a[is.na(a)] <- FALSE
-  a[is.na(a)] <- NULL
+  a[is.na(a)] <- FALSE
   return(as.vector(a))
 }
 
@@ -138,7 +137,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
     shape <- as(shape, "Spatial")  
   }
   if (class(turbine_locs) == "SpatialPoints") {
-    turbine_locs = sp::coordinates(turbine_locs)
+    turbine_locs <- sp::coordinates(turbine_locs)
   }
   
   mw <- methods::as(r, "SpatialPixelsDataFrame")
@@ -324,7 +323,6 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
     })
   }
   
-
   visible = raster::rasterize(res$Raster_POI, res$DEM, 
                               field = res$Result, fun = fun)
   rasterpois <- cbind(res$Raster_POI, "z" = res$Result)
@@ -334,9 +332,10 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
       pal <- colorRampPalette(c("green","orange","red"))
     }
     maxR = max(rasterpois[,3])
+
     
     if (missing(breakseq)) {
-      a = range(rasterpois[,3])
+      a <- range(rasterpois[,3])
       breakseq <- seq(from = a[1], to = a[2], length.out = 5)
       
       if (!is.null(breakform)) {
@@ -395,7 +394,7 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   # pp= points; col = "ISO3"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT")
   # pp = points; col = "?"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT"); ask=T
   
-  if ("?" %in% col) {ask = TRUE}
+  if ("?" %in% col) {ask <- TRUE}
   
   countriesSP <- rworldmap::getMap(resolution=resol)
   

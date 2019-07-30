@@ -15,25 +15,25 @@ test_that("Test Plotting Functions", {
   ## Windrose Plotting #############
   wind_test <- data.frame(x = runif(10, 10, 20), 
                           y = runif(10, 0, 360) )
-  a0 = plot_windrose(wind_test, plotit = FALSE)
+  a0 <- plot_windrose(wind_test, plotit = FALSE)
   expect_true(is.recursive(a0))
   
   wind_test <- data.frame(ws = runif(10, 10, 20), 
                         wd = runif(10, 0, 360) )
-  a0 = plot_windrose(wind_test, plotit = FALSE)
-  a0 = plotWindrose(wind_test, plotit = FALSE)
-  a1 = plotWindrose(wind_test, "ws", "wd", plotit = FALSE)
-  a2 = plotWindrose(wind_test, 1, 2, plotit = FALSE)
-  a3 = plotWindrose(spd = wind_test$ws, dir = wind_test$wd, plotit = FALSE)
+  a0 <- plot_windrose(wind_test, plotit = FALSE)
+  a0 <- plotWindrose(wind_test, plotit = FALSE)
+  a1 <- plotWindrose(wind_test, "ws", "wd", plotit = FALSE)
+  a2 <- plotWindrose(wind_test, 1, 2, plotit = FALSE)
+  a3 <- plotWindrose(spd = wind_test$ws, dir = wind_test$wd, plotit = FALSE)
   expect_true(all(c(all.equal(a0$data, a1$data), all.equal(a0$data, a2$data))))
   expect_true(all.equal(a0$data, a3$data, check.attributes = FALSE))
 
   wind_test <- data.frame(speed = c(12, 30, 45), 
                         direction = c(0, 90, 150) )
-  b0 = plotWindrose(wind_test, plotit = FALSE)
-  b1 = plotWindrose(wind_test, "speed", dir = "direction", plotit = FALSE)
-  b2 = plotWindrose(wind_test, 1, 2, plotit = FALSE)
-  b3 = plotWindrose(spd = wind_test$speed, dir = wind_test$direction,
+  b0 <- plotWindrose(wind_test, plotit = FALSE)
+  b1 <- plotWindrose(wind_test, "speed", dir = "direction", plotit = FALSE)
+  b2 <- plotWindrose(wind_test, 1, 2, plotit = FALSE)
+  b3 <- plotWindrose(spd = wind_test$speed, dir = wind_test$direction,
                     plotit = FALSE)
   expect_true(all(c(all.equal(b0$data, b1$data), all.equal(b0$data, b2$data))))
   expect_true(all.equal(b0$data, b3$data, 
@@ -43,11 +43,11 @@ test_that("Test Plotting Functions", {
                         speed = c(12, 30, 45),
                         id = 1:3,
                         probab = 30:32)
-  b0 = plotWindrose(wind_test, plotit = FALSE)
-  b1 = plotWindrose(wind_test, "speed", dir = "direction", plotit = FALSE)
-  b2 = plotWindrose(wind_test, 1, 2, spdres = 5, spdseq = seq(1,40,5),
+  b0 <- plotWindrose(wind_test, plotit = FALSE)
+  b1 <- plotWindrose(wind_test, "speed", dir = "direction", plotit = FALSE)
+  b2 <- plotWindrose(wind_test, 1, 2, spdres = 5, spdseq = seq(1,40,5),
                     plotit = FALSE)
-  b3 = plotWindrose(spd = wind_test$speed, dir = wind_test$direction,
+  b3 <- plotWindrose(spd = wind_test$speed, dir = wind_test$direction,
                     plotit = FALSE)
   expect_true(all(c(all.equal(b0$data, b1$data), all.equal(b0$data, b2$data))))
   expect_true(all.equal(b0$data$direction, b3$data$dir, 
@@ -59,10 +59,10 @@ test_that("Test Plotting Functions", {
                         gesch = c(12, 30, 45),
                         id = 1:3,
                         probab = 30:32)
-  c0 = plotWindrose(wind_test, plotit = FALSE)
-  c1 = plotWindrose(wind_test, "gesch", "richt", plotit = FALSE)
-  c2 = plotWindrose(wind_test, 1, 2, plotit = FALSE)
-  c3 = plotWindrose(spd = wind_test$gesch, dir = wind_test$richt,
+  c0 <- plotWindrose(wind_test, plotit = FALSE)
+  c1 <- plotWindrose(wind_test, "gesch", "richt", plotit = FALSE)
+  c2 <- plotWindrose(wind_test, 1, 2, plotit = FALSE)
+  c3 <- plotWindrose(spd = wind_test$gesch, dir = wind_test$richt,
                     palette = "Set3", plotit = FALSE)
   expect_true(all(c(all.equal(c0$data, c1$data), all.equal(c0$data, c2$data))))
   expect_true(all.equal(c0$data$richt, b3$data$dir, check.attributes = FALSE))
@@ -74,7 +74,7 @@ test_that("Test Plotting Functions", {
                           id = 1:3,
                           probab = 30:32)
   colnames(wind_test) <- NULL
-  c4 = plotWindrose(wind_test, plotit = FALSE)
+  c4 <- plotWindrose(wind_test, plotit = FALSE)
   expect_true(identical(c4$data[,"spd"], c0$data[,"gesch"]))
 
   wind_test <- data.frame(blabla = c(12, 30, 45),
@@ -82,7 +82,7 @@ test_that("Test Plotting Functions", {
                           id = 1:3,
                           somegting = 30:32)
   colnames(wind_test) <- NULL
-  c5 = plotWindrose(wind_test, plotit = FALSE)
+  c5 <- plotWindrose(wind_test, plotit = FALSE)
   expect_true(all.equal(c4$data, c5$data))
 
   winddat <- data.frame(ws = 12,

@@ -89,7 +89,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       RotorHeight = 100)
   expect_true(nrow(resultSF) == 1)
   expect_is(resultSF, "matrix")
-  expect_false(any(unlist(sapply(resultSF, is.na)))); 
+  expect_false(any(unlist(sapply(resultSF, is.na)))) 
   rm(resultSF, PolygonSF)
 
 

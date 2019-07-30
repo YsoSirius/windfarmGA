@@ -107,10 +107,10 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                               plotit = FALSE) {
 
   ## Assign constant / default values
-  cT <- 0.88;   air_rh <- 1.225;   k <- 0.075;
+  cT <- 0.88;   air_rh <- 1.225;   k <- 0.075
 
   ## Get the Coordinates of the individual / wind farm.
-  xy_individual <- sel[, 2:3];
+  xy_individual <- sel[, 2:3]
 
   ## TODO - this can go in some upper level
   pcent <- apply(sp::bbox(polygon1), 1, mean)
@@ -292,7 +292,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
       cordslist <- lapply(cordslist, function(x) {
         Polygon(rotate_CPP(x[,1], x[,2], pcent[1], pcent[2], angle))
       })
-      poly3 = SpatialPolygons(list(Polygons(cordslist, 1)))
+      poly3 <- SpatialPolygons(list(Polygons(cordslist, 1)))
       
       plot(poly3, main = c("Shape at angle:", (-1 * angle)))
       mtext(paste("Direction: ", index, "\nfrom total: ",

@@ -10,7 +10,7 @@ test_that("User Input", {
   ans <- paste("ADMIN", collapse = "\n")
   write(ans, f)
   
-  points = cbind(c(4488182.26267016, 4488852.91748256),
+  points <- cbind(c(4488182.26267016, 4488852.91748256),
                  c(2667398.93118627, 2667398.93118627))
   res <- getISO3(pp = points, crs_pp = 3035, col="?")
   expect_true(res == "Austria")
@@ -28,7 +28,7 @@ test_that("User Input", {
   ans <- paste("notexistent", collapse = "\n")
   write(ans, f)
   
-  points = cbind(c(4488182.26267016, 4488852.91748256),
+  points <- cbind(c(4488182.26267016, 4488852.91748256),
                  c(2667398.93118627, 2667398.93118627))
   expect_error(getISO3(pp = points, crs_pp = 3035, col="?"))
   
@@ -150,7 +150,7 @@ test_that("User Input", {
 
   Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                             c(4499991, 2669343), c(4499991, 2668272)))
-  Polygon1 <- Polygons(list(Polygon1), 1);
+  Polygon1 <- Polygons(list(Polygon1), 1)
   Polygon1 <- SpatialPolygons(list(Polygon1))
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   proj4string(Polygon1) <- CRS(Projection)

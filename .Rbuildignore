@@ -1,3 +1,4 @@
+^codemeta\.json$
 ^data-raw$
 ^appveyor\.yml$
 ^CRAN-RELEASE$
