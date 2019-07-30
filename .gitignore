@@ -20,3 +20,4 @@ windlist_wakeR.RData
 R/make_clc_legend.R
 *.tif
 *.zip
+*.csv

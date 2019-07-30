@@ -1,15 +1,15 @@
 # Updates 2.2.2
 
-## Pkgdown
-A [pkgdown documentation](https://ysosirius.github.io/windfarmGA/) site is now available.
+#### Pkgdown
+- A [pkgdown documentation](https://ysosirius.github.io/windfarmGA/) site is now available.
 
-## Renaming Functions
-Almost all functions have been renamed to have a consistent appearance and a clearer meaning.
+#### Renaming Functions
+- Almost all functions have been renamed to have a consistent appearance and a clearer meaning.
 The old functions still exist, but are deprecated now.
 
-<details>
-  <summary>Renaming Overview</summary>
-  <p>
+  <details>
+    <summary>Renaming Overview</summary>
+    <p>
   
   Old names             | **New names**
   --------------------- | ---------------------
@@ -40,34 +40,60 @@ The old functions still exist, but are deprecated now.
   
   </p>
   
-</details>
+  </details>
+
+#### Bugfixes / Other Changes 
+- The legend of `plot_leaflet` now works correctly.
+
+- Some general linting / spell checking / performance optimization was done.
+
+- The Weibull Raster (for Austria) are now in a separate [Github-repository](https://github.com/YsoSirius/windfarm_data), instead of
+being stored in the package as .rda file. I guess this never worked except on my computer.
+
+- The Corine Land Cover .tif file is also stored in that repository, as the EEA webpage did restrict
+downloads sometimes, which resulted in an error.
+
+- The `plot_farm_3d` function has temporarily been removed from the package, as I was unhappy with the functionality, the installation of `rayshader` can be tedious and turbine labels can not be displayed very accurately.
+
+- Most functions that required user-input previously used `readline` which is now changed to `readLines` as it allows to read from a file instead. This can be set via `options(windfarmGA.connection = file())`.
+
+- A whole lot of tests were written.
 
 # Updates 2.2.1
 
-## Performance Tuning / Restructuring
-Switch to matrices instead of data.frames and a lot of restructuring and 
+#### Performance Tuning / Restructuring
+- Switch to **matrices** instead of data.frames and a lot of restructuring and 
 performance optimization of the whole algorithm.
 
-The function `genAlgo`/`windfarmGA` and the plotting functions now accept SimpleFeature Polygons or coordinates in table format
-with long, lat or x, y column names. The terrain effect model can now be activated only by setting **topograp** to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.
+#### Viewshed Analysis
+- New set of functions, to analyze the visual impact of a wind farm.
+    + `cansee`,
+    + `viewTo`, 
+    + `rasterprofile`, 
+    + `viewshed`, 
+    + `plot_viewshed`, 
+    + `interpol_view`, 
+    + `getISO3`, 
+    + `getDEM`
 
-- `viewshed` A new set of functions, to analyze the visual impact of a wind farm.    
-The new functions for visual assessment are `cansee`, `viewTo`, `rasterprofile`, `viewshed`, `plot_viewshed`, `interpol_view`, `getISO3`, `getDEM`
+#### Other Changes 
+- The function `genAlgo`/`windfarmGA` and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting **topograp** to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.
+
 - `plot_farm_3d` Experimental rayshader function
 
 # Updates 1.2.1
 
-## Randomization
+#### Randomization
 The output of `genAlgo` or `windfarmGA` can be further randomized/optimized with the following
 functions:
 - RandomSearch
 - RandomSearchTurb
 
-**`RandomSearch`** is used to randomize all turbines of the layout whereas
+**`RandomSearch`** is used to randomize all turbines of the layout
 
 **`RandomSearchTurb`** is used to randomize a single turbine
 
-**`RandomSearchPlot`** is used to plot the outputs of those functions, compared with the 
+**`RandomSearchPlot`** is used to plot the output of those functions, comparing them with the 
 original result.
 
 ```sh
@@ -77,7 +103,7 @@ Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
 RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
 ```
 
-### Updates 1.2
+# Updates 1.2
 #### Parallel Processing
 ```sh
 ## Runs the same optimization, but with parallel processing and 3 cores.
@@ -94,7 +120,7 @@ PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
 # Updates 1.1
 
 
-## Optimization with Hexagonal Grid Cells
+#### Optimization with Hexagonal Grid Cells
 ```sh
 result_hex <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
                   fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",

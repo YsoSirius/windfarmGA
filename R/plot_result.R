@@ -235,9 +235,11 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
             # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
             # unzip(temp, "g100_06.tif")
             # unlink(temp)
-            download.file("http://github.com/YsoSirius/windfarm_data/raw/master/g100_06.tif", 
-                          destfile = "g100_06.tif", 
+            download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
+                          destfile = "clc.zip", 
                           method = "auto")
+            unzip("clc.zip")
+            unlink("clc.zip")
             ccl <- raster::raster("g100_06.tif")
           } else {
             sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
@@ -447,9 +449,11 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
             # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
             # unzip(temp, "g100_06.tif")
             # unlink(temp)
-            download.file("http://github.com/YsoSirius/windfarm_data/raw/master/g100_06.tif", 
-                          destfile = "g100_06.tif", 
+            download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
+                          destfile = "clc.zip", 
                           method = "auto")
+            unzip("clc.zip")
+            unlink("clc.zip")
             ccl <- raster::raster("g100_06.tif")
           } else {
             sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)

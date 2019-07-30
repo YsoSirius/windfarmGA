@@ -4,25 +4,26 @@ library(raster)
 
 
 test_that("Test Terrain and Weibull Effects", {
-  skip_on_appveyor()
-  skip_on_travis()
-  skip_on_cran()
+  # skip_on_appveyor()
+  # skip_on_travis()
+  # skip_on_cran()
   
   ## Test Terrain Model ###################
-  ## Create Warning, that no Sourface Roughness can be calculated.
-  sp_polygon <- Polygon(rbind(c(4498482, 2619203), c(4498482, 2619343),
-                              c(4499991, 2619343), c(4499991, 2619203)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   data.in <- data.frame(ws = 12, wd = 0)
-  proj4string(sp_polygon) <- CRS(Projection)
+  
+  ## Create Warning, that no terrain roughness can be calculated.
+  # sp_polygon <- Polygon(rbind(c(4498482, 2619253), c(4498482, 2619343),
+  #                             c(4499991, 2619343), c(4499991, 2619253)))
+  # sp_polygon <- Polygons(list(sp_polygon), 1)
+  # sp_polygon <- SpatialPolygons(list(sp_polygon))
+  # proj4string(sp_polygon) <- CRS(Projection)
   # resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
   #                                      n = 5, iteration = 1,
   #                                      vdirspe = data.in,
   #                                      Rotor = 20,
-  #                                      RotorHeight = 100, 
-  #                                      topograp = TRUE, verbose = TRUE, 
+  #                                      RotorHeight = 100,
+  #                                      topograp = TRUE, verbose = TRUE,
   #                                      plotit = TRUE))
   # expect_true(nrow(resultrect) == 1)
   # expect_is(resultrect, "matrix")
@@ -62,7 +63,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Weibull ################
-  ## Weibull Params (FAKE)
+  ## Weibull Params (FAKE).
   DEM <- raster("srtm_39_03.tif")
   sp_polygonproj <- spTransform(sp_polygon, CRS(proj4string(DEM)))
   DEMcrop <- crop(DEM, sp_polygonproj)
@@ -80,26 +81,26 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Weibull-Raster from Package used (NOT WORKING!)
-  # resultrect <- genAlgo(Polygon1 = sp_polygon,
-  #                       n = 12, iteration = 1,
-  #                       vdirspe = data.in,
-  #                       Rotor = 30,
-  #                       RotorHeight = 100, verbose = TRUE,
-  #                       weibull=TRUE)
-  # expect_true(nrow(resultrect) == 1)
-  # expect_is(resultrect, "matrix")
-  # expect_false(any(unlist(sapply(resultrect, is.na))))
+  resultrect <- genAlgo(Polygon1 = sp_polygon,
+                        n = 12, iteration = 1,
+                        vdirspe = data.in,
+                        Rotor = 30,
+                        RotorHeight = 100, verbose = TRUE,
+                        weibull=TRUE)
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
   
-  # resultrect <- windfarmGA(Polygon1 = sp_polygon,
-  #                          selstate = "FIX", crossPart1 = "EQU",
-  #                       n = 12, iteration = 1,
-  #                       vdirspe = data.in,
-  #                       Rotor = 30,
-  #                       RotorHeight = 100, verbose = TRUE,
-  #                       weibull = TRUE)
-  # expect_true(nrow(resultrect) == 1)
-  # expect_is(resultrect, "matrix")
-  # expect_false(any(unlist(sapply(resultrect, is.na))))
+  resultrect <- windfarmGA(Polygon1 = sp_polygon,
+                           selstate = "FIX", crossPart1 = "EQU",
+                        n = 12, iteration = 1,
+                        vdirspe = data.in,
+                        Rotor = 30,
+                        RotorHeight = 100, verbose = TRUE,
+                        weibull = TRUE)
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Plotting Terrain Effects #############
   plres <- plot_result(resultrect, sp_polygon, topographie = T)
@@ -150,7 +151,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  ## calculate_energy with Terrain + Plots ##################
+  ## calculate_energy with Terrain + Plots!! ##################
   ## With Terrain (+new function)
   Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
                             c(4499991, 2669343), c(4499991, 2667172)))

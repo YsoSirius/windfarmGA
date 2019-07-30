@@ -7,6 +7,10 @@ template:
 navbar:
   title: "windfarmGA"
 
+articles:
+- title: Optimization with Rectangular Grids
+  contents:
+  - starts_with("opti_rect")
 
 reference:
   - title: Package Documentation

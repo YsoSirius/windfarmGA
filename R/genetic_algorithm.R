@@ -292,10 +292,13 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     if (missing(weibullsrc)) {
       if (verbose) cat("\nWeibull Information from package is used.\n")
 
-      download.file("http://github.com/YsoSirius/windfarm_data/raw/master/weibulldata.zip", 
-                    destfile = "weibulldata.zip", 
-                    method = "auto")
-      unzip("weibulldata.zip")
+      if (!file.exists("k120_100m_Lambert.tif") && !file.exists("a120_100m_Lambert.tif")) {
+        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/weibulldata.zip", 
+                      destfile = "weibulldata.zip", 
+                      method = "auto")
+        unzip("weibulldata.zip")
+        unlink("weibulldata.zip")
+      }
       
       k_weibull <- raster("k120_100m_Lambert.tif")
       a_weibull <- raster("a120_100m_Lambert.tif")
@@ -447,15 +450,19 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
         # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
         # unzip(temp, "g100_06.tif")
         # unlink(temp)
-        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/g100_06.tif", 
-                      destfile = "g100_06.tif", 
+        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
+                      destfile = "clc.zip", 
                       method = "auto")
+        unzip("clc.zip")
+        unlink("clc.zip")
       }
       ccl <- raster::raster("g100_06.tif")
     } else {
       ccl <- raster::raster(sourceCCL)
     }
-
+    cclPoly <- raster::crop(ccl, Polygon1)
+    cclPoly1 <- raster::mask(cclPoly, Polygon1)
+    
     ## SRTM Daten
     Polygon1 <-  sp::spTransform(Polygon1,
                                  CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
@@ -501,8 +508,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       }
     }
 
-    cclPoly <- raster::crop(ccl, Polygon1)
-    cclPoly1 <- raster::mask(cclPoly, Polygon1)
+
     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
                                    header = TRUE, sep = ";")
     cclRaster <- raster::reclassify(cclPoly1,

@@ -2,7 +2,7 @@ context("User Interaction")
 library(windfarmGA)
 
 test_that("User Input", {
-  skip_on_appveyor()
+  # skip_on_appveyor()
   
   ## getISO3 ################
   f <- file()
