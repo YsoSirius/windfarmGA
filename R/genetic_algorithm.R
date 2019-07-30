@@ -620,14 +620,14 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     y1 <- round(bestPaEf[[i]][, "EfficAllDir"][[1]], 2)
     e1 <- bestPaEf[[i]][, "EfficAllDir"]
 
-    allparksNewplot <- subset.matrix(allparks,
-                                     select = c("Rect_ID",
-                                                "AbschGesamt",
-                                                "Parkfitness"))
-
-    allparksNewplot <- aggregate(allparksNewplot,
-                                 list(allparksNewplot[, "Rect_ID"]), mean)
-    allparksNewplot <- allparksNewplot[, -1]
+    # allparksNewplot <- subset.matrix(allparks,
+    #                                  select = c("Rect_ID",
+    #                                             "AbschGesamt",
+    #                                             "Parkfitness"))
+    # 
+    # allparksNewplot <- aggregate(allparksNewplot,
+    #                              list(allparksNewplot[, "Rect_ID"]), mean)
+    # allparksNewplot <- allparksNewplot[, -1]
     ##################
 
     if (plotit) {
