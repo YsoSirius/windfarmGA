@@ -21,16 +21,16 @@
 #' a
 #'
 #' ## Mutate the individuals with a low percentage
-#' aMut <- mutation(a,0.1)
+#' aMut <- mutation(a,0.1, NULL)
 #' ## Check which values are not like the originals
 #' a==aMut
 #'
 #' ## Mutate the individuals with a high percentage
-#' aMut <- mutation(a,0.4)
+#' aMut <- mutation(a,0.4, NULL)
 #' ## Check which values are not like the originals
 #' a==aMut
 #'
-mutation          <- function(a, p, seed) {
+mutation          <- function(a, p, seed=NULL) {
   if (!is.null(seed) && !missing(seed)) {
     set.seed(as.integer(seed))
   }
