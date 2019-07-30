@@ -120,7 +120,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>rasterprofile</span>(<span class='no'>r</span>, <span class='no'>xy1</span>, <span class='no'>xy2</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>rasterprofile</span>(<span class='no'>r</span>, <span class='no'>xy1</span>, <span class='no'>xy2</span>, <span class='no'>reso</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -136,6 +136,11 @@
     <tr>
       <th>xy2</th>
       <td><p>A matrix with X and Y coordinates for Points 2</p></td>
+    </tr>
+    <tr>
+      <th>reso</th>
+      <td><p>The minimal resolution of the DEM raster. It is 
+calculated in <code>viewshed</code> and passed along.</p></td>
     </tr>
     <tr>
       <th>plot</th>

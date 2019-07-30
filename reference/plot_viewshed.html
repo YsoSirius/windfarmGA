@@ -120,7 +120,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>plot_viewshed</span>(<span class='no'>res</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_viewshed</span>(<span class='no'>res</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,6 +132,10 @@
     <tr>
       <th>legend</th>
       <td><p>Plot a legend? Default is FALSE</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Is passed along to <code><a href='https://www.rdocumentation.org/packages/raster/topics/plot'>plot</a></code></p></td>
     </tr>
     </table>
     
@@ -164,12 +168,14 @@
 <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/is.projected'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/CRS-class'>CRS</a></span>(<span class='no'>Projection</span>)
 <span class='no'>DEM_meter</span> <span class='kw'>&lt;-</span> <span class='fu'>getDEM</span>(<span class='no'>Polygon1</span>)
 
-<span class='no'>sample_POI</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/spsample'>spsample</a></span>(<span class='no'>DEM_meter</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>n</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/raster/topics/ncell'>ncell</a></span>(<span class='no'>DEM_meter</span><span class='kw'>[[</span><span class='fl'>1</span>]]), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"regular"</span>)
-<span class='no'>sample_xy</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/coordinates'>coordinates</a></span>(<span class='no'>sample_POI</span>)
-
 <span class='no'>turbloc</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/sp/topics/spsample'>spsample</a></span>(<span class='no'>DEM_meter</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='fl'>10</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"random"</span>);
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>viewshed</span>(<span class='kw'>r</span> <span class='kw'>=</span> <span class='no'>DEM_meter</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>shape</span><span class='kw'>=</span><span class='no'>DEM_meter</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>turbine_locs</span> <span class='kw'>=</span> <span class='no'>turbloc</span>,  <span class='kw'>h1</span><span class='kw'>=</span><span class='fl'>1.8</span>, <span class='kw'>h2</span><span class='kw'>=</span><span class='fl'>50</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>viewshed</span>(<span class='kw'>r</span> <span class='kw'>=</span> <span class='no'>DEM_meter</span><span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>DEM_meter</span><span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>turbine_locs</span> <span class='kw'>=</span> <span class='no'>turbloc</span>,
+                <span class='kw'>h1</span> <span class='kw'>=</span> <span class='fl'>1.8</span>, <span class='kw'>h2</span> <span class='kw'>=</span> <span class='fl'>50</span>)
 <span class='fu'>plot_viewshed</span>(<span class='no'>res</span>)
+
+<span class='co'>## ... Arguments are past on to raster::plot</span>
+<span class='fu'>plot_viewshed</span>(<span class='no'>res</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='no'>T</span>, <span class='kw'>interpolate</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>colNA</span><span class='kw'>=</span><span class='st'>"black"</span>,
+              <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/palettes'>topo.colors</a></span>(<span class='fl'>15</span>))
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
