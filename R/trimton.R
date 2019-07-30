@@ -64,14 +64,14 @@
 #' ## MUTATION
 #' ## Variable Mutation Rate is activated if more than 2 individuals represent
 #' ## the current best solution.
-#' mut <- mutation(a = crossOut, p = 0.3);
-#' mut==crossOut
+#' mut <- mutation(a = crossOut, p = 0.3, NULL);
 #'
 #' ## TRIMTON
 #' ## After Crossover and Mutation, the amount of turbines in a windpark change and have to be
 #' ## corrected to the required amount of turbines.
 #' mut1 <- trimton(mut = mut, nturb = 10, allparks = allparks, nGrids = AmountGrids,
 #'                 trimForce=FALSE)
+#' colSums(mut)
 #' colSums(mut1)
 #'
 #'}
