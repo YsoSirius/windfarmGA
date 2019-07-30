@@ -15,16 +15,16 @@ test_that("Test Terrain and Weibull Effects", {
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
   data.in <- data.frame(ws = 12, wd = 0)
   proj4string(sp_polygon) <- CRS(Projection)
-  resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
-                                       n = 5, iteration = 1,
-                                       vdirspe = data.in,
-                                       Rotor = 20,
-                                       RotorHeight = 100, 
-                                       topograp = TRUE, verbose = TRUE, 
-                                       plotit = TRUE))
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
+  # resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
+  #                                      n = 5, iteration = 1,
+  #                                      vdirspe = data.in,
+  #                                      Rotor = 20,
+  #                                      RotorHeight = 100, 
+  #                                      topograp = TRUE, verbose = TRUE, 
+  #                                      plotit = TRUE))
+  # expect_true(nrow(resultrect) == 1)
+  # expect_is(resultrect, "matrix")
+  # expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Normal Terrain Example
   sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),

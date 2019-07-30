@@ -1,0 +1,389 @@
+{
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
+  "@type": "SoftwareSourceCode",
+  "identifier": "windfarmGA",
+  "description": "The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.",
+  "name": "windfarmGA: Genetic Algorithm for Wind Farm Layout Optimization",
+  "codeRepository": "https://ysosirius.github.io/windfarmGA/index.html",
+  "issueTracker": "https://github.com/YsoSirius/windfarmGA/issues",
+  "license": "https://spdx.org/licenses/MIT",
+  "version": "2.2.2",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "version": "3.5.2",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 3.5.2 (2018-12-20)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Sebastian",
+      "familyName": "Gatscha",
+      "email": "sebastian_gatscha@gmx.at"
+    }
+  ],
+  "contributor": {},
+  "copyrightHolder": {},
+  "funder": {},
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Sebastian",
+      "familyName": "Gatscha",
+      "email": "sebastian_gatscha@gmx.at"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "pkgdown",
+      "name": "pkgdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=pkgdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr",
+      "version": ">= 0.8.0.1",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rgeos",
+      "name": "rgeos",
+      "version": ">= 0.3-8",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rgeos"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    }
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 3.2.3"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rgdal",
+      "name": "rgdal",
+      "version": ">= 1.3.6",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rgdal"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "Rcpp",
+      "name": "Rcpp",
+      "version": ">= 1.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=Rcpp"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "raster",
+      "name": "raster",
+      "version": ">= 2.8.19",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=raster"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "sf",
+      "name": "sf",
+      "version": ">= 0.7.2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=sf"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "sp",
+      "name": "sp",
+      "version": ">= 1.2-2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=sp"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "plyr",
+      "name": "plyr",
+      "version": ">= 1.8.4",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=plyr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rworldmap",
+      "name": "rworldmap",
+      "version": ">= 1.3.6",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rworldmap"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "gstat",
+      "name": "gstat",
+      "version": ">= 1.0-26",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=gstat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "ggplot2",
+      "name": "ggplot2",
+      "version": ">= 2.2.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "RColorBrewer",
+      "name": "RColorBrewer",
+      "version": ">= 1.1.2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=RColorBrewer"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "calibrate",
+      "name": "calibrate",
+      "version": ">= 1.7.2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=calibrate"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "grDevices",
+      "name": "grDevices"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "graphics",
+      "name": "graphics"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "leaflet",
+      "name": "leaflet",
+      "version": ">= 1.1.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=leaflet"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "magrittr",
+      "name": "magrittr",
+      "version": ">= 1.5",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=magrittr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "foreach",
+      "name": "foreach",
+      "version": ">= 1.4.3",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=foreach"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "parallel",
+      "name": "parallel",
+      "version": ">= 3.4.1"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "doParallel",
+      "name": "doParallel",
+      "version": ">= 1.0.11",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=doParallel"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "methods",
+      "name": "methods",
+      "version": ">= 3.2.5"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "spatstat",
+      "name": "spatstat",
+      "version": ">= 1.42-2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=spatstat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "stats",
+      "name": "stats"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "utils",
+      "name": "utils"
+    }
+  ],
+  "keywords": [
+    "windfarm layout",
+    "optimization",
+    "genetic algorithm",
+    "renewable energy",
+    "r",
+    "rstats",
+    "r-package"
+  ],
+  "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
+  "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
+  "fileSize": "42067.627KB",
+  "contIntegration": [
+    "https://travis-ci.org/YsoSirius/windfarmGA",
+    "https://ci.appveyor.com/project/YsoSirius/windfarmGA",
+    "https://codecov.io/gh/YsoSirius/windfarmGA"
+  ],
+  "relatedLink": "https://CRAN.R-project.org/package=windfarmGA",
+  "developmentStatus": "https://www.tidyverse.org/lifecycle/#stable"
+}
