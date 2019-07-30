@@ -367,18 +367,10 @@
       "name": "utils"
     }
   ],
-  "keywords": [
-    "windfarm layout",
-    "optimization",
-    "genetic algorithm",
-    "renewable energy",
-    "r",
-    "rstats",
-    "r-package"
-  ],
+  "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
   "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
-  "fileSize": "42067.627KB",
+  "fileSize": "42067.712KB",
   "contIntegration": [
     "https://travis-ci.org/YsoSirius/windfarmGA",
     "https://ci.appveyor.com/project/YsoSirius/windfarmGA",

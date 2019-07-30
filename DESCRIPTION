@@ -46,3 +46,4 @@ Suggests:
     rmarkdown
 Encoding: UTF-8
 VignetteBuilder: knitr
+X-schema.org-keywords: windfarm-layout, optimization, genetic-algorithm, renewable-energy, r, rstats, r-package
