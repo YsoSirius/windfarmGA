@@ -4,8 +4,8 @@ library(raster)
 
 
 test_that("Test Terrain and Weibull Effects", {
-  # skip_on_appveyor()
-  # skip_on_travis()
+  skip_on_appveyor()
+  skip_on_travis()
   # skip_on_cran()
   
   ## Test Terrain Model ###################
