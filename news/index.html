@@ -114,65 +114,110 @@
 <h1 class="page-header">
 <a href="#updates-2-2-2" class="anchor"></a>Updates 2.2.2<small> Unreleased </small>
 </h1>
-<div id="pkgdown" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pkgdown" class="anchor"></a>Pkgdown</h2>
-<p>A <a href="https://ysosirius.github.io/windfarmGA/">pkgdown documentation</a> site is now available.</p>
+<div id="pkgdown" class="section level4">
+<h4 class="hasAnchor">
+<a href="#pkgdown" class="anchor"></a>Pkgdown</h4>
+<ul>
+<li>A <a href="https://ysosirius.github.io/windfarmGA/">pkgdown documentation</a> site is now available.</li>
+</ul>
 </div>
-<div id="renaming-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#renaming-functions" class="anchor"></a>Renaming Functions</h2>
+<div id="renaming-functions" class="section level4">
+<h4 class="hasAnchor">
+<a href="#renaming-functions" class="anchor"></a>Renaming Functions</h4>
+<ul>
+<li>
 <p>Almost all functions have been renamed to have a consistent appearance and a clearer meaning. The old functions still exist, but are deprecated now.</p>
 <details><summary>Renaming Overview</summary><p>
-  
-  Old names             | **New names**
-  --------------------- | ---------------------
-  StartGA               | **init_population**
-  selection1            | **selection**
-  crossover1            | **crossover**
-  VekWinkelCalc         | **get_dist_angles**
-  calculateEn           | **calculate_energy**
-  getRects              | **get_grids**
-  BaroHoehe             | **barometric_height**
-  GridFilter            | **grid_area**
-  HexaTex               | **hexa_area**
-  InfluPoints           | **turbine_influences**
-  genAlgo               | **genetic_algorithm**
-  RandomSearch          | **random_search**
-  RandomSearchTurb      | **random_search_single**
-  RandomSearchPlot      | **plot_random_search**
-  leafPlot              | **plot_leaflet**
-  heatmapGA             | **plot_heatmap**
-  plotbeorwor           | **plot_development**
-  plotCloud             | **plot_cloud**
-  plotEvolution         | **plot_evolution**
-  plotfitnessevolution  | **plot_fitness_evolution**
-  plotparkfitness       | **plot_parkfitness**
-  plotResult            | **plot_result**
-  PlotWindfarmGA        | **plot_windfarmGA**
-  plotWindrose          | **plot_windrose**
-  
-  </p>
-  
+
+Old names             | **New names**
+--------------------- | ---------------------
+StartGA               | **init_population**
+selection1            | **selection**
+crossover1            | **crossover**
+VekWinkelCalc         | **get_dist_angles**
+calculateEn           | **calculate_energy**
+getRects              | **get_grids**
+BaroHoehe             | **barometric_height**
+GridFilter            | **grid_area**
+HexaTex               | **hexa_area**
+InfluPoints           | **turbine_influences**
+genAlgo               | **genetic_algorithm**
+RandomSearch          | **random_search**
+RandomSearchTurb      | **random_search_single**
+RandomSearchPlot      | **plot_random_search**
+leafPlot              | **plot_leaflet**
+heatmapGA             | **plot_heatmap**
+plotbeorwor           | **plot_development**
+plotCloud             | **plot_cloud**
+plotEvolution         | **plot_evolution**
+plotfitnessevolution  | **plot_fitness_evolution**
+plotparkfitness       | **plot_parkfitness**
+plotResult            | **plot_result**
+PlotWindfarmGA        | **plot_windfarmGA**
+plotWindrose          | **plot_windrose**
+
+</p>
+
 </details>
+</li>
+</ul>
+</div>
+<div id="bugfixes-other-changes" class="section level4">
+<h4 class="hasAnchor">
+<a href="#bugfixes-other-changes" class="anchor"></a>Bugfixes / Other Changes</h4>
+<ul>
+<li><p>The legend of <code>plot_leaflet</code> now works correctly.</p></li>
+<li><p>Some general linting / spell checking / performance optimization was done.</p></li>
+<li><p>The Weibull Raster (for Austria) are now in a separate <a href="https://github.com/YsoSirius/windfarm_data">Github-repository</a>, instead of being stored in the package as .rda file. I guess this never worked except on my computer.</p></li>
+<li><p>The Corine Land Cover .tif file is also stored in that repository, as the EEA webpage did restrict downloads sometimes, which resulted in an error.</p></li>
+<li><p>The <code>plot_farm_3d</code> function has temporarily been removed from the package, as I was unhappy with the functionality, the installation of <code>rayshader</code> can be tedious and turbine labels can not be displayed very accurately.</p></li>
+<li><p>Most functions that required user-input previously used <code>readline</code> which is now changed to <code>readLines</code> as it allows to read from a file instead. This can be set via <code><a href="https://www.rdocumentation.org/packages/base/topics/options">options(windfarmGA.connection = file())</a></code>.</p></li>
+<li><p>A whole lot of tests were written.</p></li>
+</ul>
 </div>
 </div>
     <div id="updates-2-2-1" class="section level1">
 <h1 class="page-header">
 <a href="#updates-2-2-1" class="anchor"></a>Updates 2.2.1<small> 2019-02-18 </small>
 </h1>
-<div id="performance-tuning-restructuring" class="section level2">
-<h2 class="hasAnchor">
-<a href="#performance-tuning-restructuring" class="anchor"></a>Performance Tuning / Restructuring</h2>
-<p>Switch to matrices instead of data.frames and a lot of restructuring and performance optimization of the whole algorithm.</p>
-<p>The function <code>genAlgo</code>/<code>windfarmGA</code> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <strong>topograp</strong> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p>
+<div id="performance-tuning-restructuring" class="section level4">
+<h4 class="hasAnchor">
+<a href="#performance-tuning-restructuring" class="anchor"></a>Performance Tuning / Restructuring</h4>
+<ul>
+<li>Switch to <strong>matrices</strong> instead of data.frames and a lot of restructuring and performance optimization of the whole algorithm.</li>
+</ul>
+</div>
+<div id="viewshed-analysis" class="section level4">
+<h4 class="hasAnchor">
+<a href="#viewshed-analysis" class="anchor"></a>Viewshed Analysis</h4>
+<ul>
+<li>New set of functions, to analyze the visual impact of a wind farm.
 <ul>
 <li>
-<code>viewshed</code> A new set of functions, to analyze the visual impact of a wind farm.<br>
-The new functions for visual assessment are <code>cansee</code>, <code>viewTo</code>, <code>rasterprofile</code>, <code>viewshed</code>, <code>plot_viewshed</code>, <code>interpol_view</code>, <code>getISO3</code>, <code>getDEM</code>
-</li>
+<code>cansee</code>,</li>
 <li>
-<code>plot_farm_3d</code> Experimental rayshader function</li>
+<code>viewTo</code>,</li>
+<li>
+<code>rasterprofile</code>,</li>
+<li>
+<code>viewshed</code>,</li>
+<li>
+<code>plot_viewshed</code>,</li>
+<li>
+<code>interpol_view</code>,</li>
+<li>
+<code>getISO3</code>,</li>
+<li><code>getDEM</code></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="other-changes" class="section level4">
+<h4 class="hasAnchor">
+<a href="#other-changes" class="anchor"></a>Other Changes</h4>
+<ul>
+<li><p>The function <code>genAlgo</code>/<code>windfarmGA</code> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <strong>topograp</strong> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p></li>
+<li><p><code>plot_farm_3d</code> Experimental rayshader function</p></li>
 </ul>
 </div>
 </div>
@@ -180,24 +225,27 @@ The new functions for visual assessment are <code>cansee</code>, <code>viewTo</c
 <h1 class="page-header">
 <a href="#updates-1-2-1" class="anchor"></a>Updates 1.2.1<small> 2018-03-25 </small>
 </h1>
-<div id="randomization" class="section level2">
-<h2 class="hasAnchor">
-<a href="#randomization" class="anchor"></a>Randomization</h2>
+<div id="randomization" class="section level4">
+<h4 class="hasAnchor">
+<a href="#randomization" class="anchor"></a>Randomization</h4>
 <p>The output of <code>genAlgo</code> or <code>windfarmGA</code> can be further randomized/optimized with the following functions:</p>
 <ul>
 <li>RandomSearch</li>
 <li>RandomSearchTurb</li>
 </ul>
-<p><strong><code>RandomSearch</code></strong> is used to randomize all turbines of the layout whereas</p>
+<p><strong><code>RandomSearch</code></strong> is used to randomize all turbines of the layout</p>
 <p><strong><code>RandomSearchTurb</code></strong> is used to randomize a single turbine</p>
-<p><strong><code>RandomSearchPlot</code></strong> is used to plot the outputs of those functions, compared with the original result.</p>
+<p><strong><code>RandomSearchPlot</code></strong> is used to plot the output of those functions, comparing them with the original result.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/resultrect.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/polygon.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="ex">Res</span> = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)</a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="ex">RandomSearchPlot</span>(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)</a></code></pre></div>
-<div id="updates-1-2" class="section level3">
-<h3 class="hasAnchor">
-<a href="#updates-1-2" class="anchor"></a>Updates 1.2</h3>
+</div>
+</div>
+    <div id="updates-1-2" class="section level1">
+<h1 class="page-header">
+<a href="#updates-1-2" class="anchor"></a>Updates 1.2<small> 2018-03-11 </small>
+</h1>
 <div id="parallel-processing" class="section level4">
 <h4 class="hasAnchor">
 <a href="#parallel-processing" class="anchor"></a>Parallel Processing</h4>
@@ -212,15 +260,13 @@ The new functions for visual assessment are <code>cansee</code>, <code>viewTo</c
 <a class="sourceLine" id="cb2-9" data-line-number="9"><span class="ex">PlotWindfarmGA</span>(result = result_par, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</a></code></pre></div>
 </div>
 </div>
-</div>
-</div>
     <div id="updates-1-1" class="section level1">
 <h1 class="page-header">
 <a href="#updates-1-1" class="anchor"></a>Updates 1.1<small> 2017-07-09 </small>
 </h1>
-<div id="optimization-with-hexagonal-grid-cells" class="section level2">
-<h2 class="hasAnchor">
-<a href="#optimization-with-hexagonal-grid-cells" class="anchor"></a>Optimization with Hexagonal Grid Cells</h2>
+<div id="optimization-with-hexagonal-grid-cells" class="section level4">
+<h4 class="hasAnchor">
+<a href="#optimization-with-hexagonal-grid-cells" class="anchor"></a>Optimization with Hexagonal Grid Cells</h4>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo(Polygon1 = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">                  <span class="va">fcrR=</span>5,iteration=<span class="ex">10</span>, vdirspe = data.in,crossPart1 = <span class="st">"EQU"</span>,</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">                  <span class="va">selstate=</span><span class="st">"FIX"</span>,mutr=<span class="ex">0.8</span>, Proportionality = 1,</a>
@@ -239,6 +285,7 @@ The new functions for visual assessment are <code>cansee</code>, <code>viewTo</c
         <li><a href="#updates-2-2-2">2.2.2</a></li>
         <li><a href="#updates-2-2-1">2.2.1</a></li>
         <li><a href="#updates-1-2-1">1.2.1</a></li>
+        <li><a href="#updates-1-2">1.2</a></li>
         <li><a href="#updates-1-1">1.1</a></li>
       </ul>
     </div>
