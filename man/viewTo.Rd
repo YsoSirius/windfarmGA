@@ -4,27 +4,28 @@
 \alias{viewTo}
 \title{Calculate Visibility between multiple locations}
 \usage{
-viewTo(r, xy1, xy2, h1 = 0, h2 = 0, progress = "none")
+viewTo(r, xy1, xy2, h1 = 0, h2 = 0, reso)
 }
 \arguments{
 \item{r}{A DEM raster}
 
-\item{xy1}{A matrix with X and Y coordinates for Point 1}
+\item{xy1}{A vector/matrix with X and Y coordinates for Point 1}
 
-\item{xy2}{A matrix with X and Y coordinates for Points 2}
+\item{xy2}{A vector/matrix with X and Y coordinates for Point 2}
 
-\item{h1}{A numeric giving the extra height offset of Point 1}
+\item{h1}{A numeric giving the extra height offset for Point 1}
 
-\item{h2}{A numeric giving the extra height offset of Point 2}
+\item{h2}{A numeric giving the extra height offset for Point 2}
 
-\item{progress}{Is passed to \code{plyr::aaply}}
+\item{reso}{The minimal resolution of the DEM raster. It is 
+calculated in \code{viewshed} and passed along.}
 }
 \value{
-A boolean vector, indicating if Point 1 (xy1) is visible from all
-  elements of Points 2 (xy2)
+A boolean vector, indicating if \code{xy1} is visible from all
+  elements of \code{xy2}
 }
 \description{
-Check if Point 1 (xy) is visible from multiple points (xy2)
+Check if a location is visible from multiple locations
 }
 \seealso{
 Other Viewshed Analysis: \code{\link{cansee}},

@@ -4,7 +4,7 @@
 \alias{rasterprofile}
 \title{Sample values from a raster}
 \usage{
-rasterprofile(r, xy1, xy2, plot = FALSE)
+rasterprofile(r, xy1, xy2, reso, plot = FALSE)
 }
 \arguments{
 \item{r}{A DEM raster}
@@ -12,6 +12,9 @@ rasterprofile(r, xy1, xy2, plot = FALSE)
 \item{xy1}{A matrix with X and Y coordinates for Point 1}
 
 \item{xy2}{A matrix with X and Y coordinates for Points 2}
+
+\item{reso}{The minimal resolution of the DEM raster. It is 
+calculated in \code{viewshed} and passed along.}
 
 \item{plot}{Plot the process? Default is FALSE}
 }

@@ -1,76 +1,3 @@
-#' @title Calculate Visibility between 2 locations
-#' @name cansee
-#' @description Check if point1 (xy1) visible from point2 (xy2) given a certain
-#'   DEM (r)
-#'
-#' @export
-#'
-#' @param r A DEM raster
-#' @param xy1 A vector/matrix with X and Y coordinates for Point 1
-#' @param xy2 A vector/matrix with X and Y coordinates for Point 2
-#' @param h1 A numeric giving the extra height offset of Point 1
-#' @param h2 A numeric giving the extra height offset of Point 2
-#'
-#' @family Viewshed Analysis
-#' @return A boolean value, indicating if the point (xy2) is visible
-#'
-cansee <- function(r, xy1, xy2, h1=0, h2=0){
-  # xy1 = c(4653100.36021378, 2744048.65794167); 
-  # xy2 = c(4648381.88040377, 2741196.10301024);
-  
-  # xy1 = xy1; xy2 = xy2[1,]
-
-  ### can xy1 see xy2 on DEM r?
-  ### r is a DEM in same x,y, z units
-  ### xy1 and xy2 are 2-length vectors of x,y coords
-  ### h1 and h2 are extra height offsets
-  ###  (eg top of mast, observer on a ladder etc)
-  xyz = rasterprofile(r, xy1, xy2)
-  np = length(xyz[,1])-1
-  h1 = xyz[["z"]][1] + h1
-  h2 = xyz[["z"]][np] + h2
-  hpath = h1 + (0:np)*(h2-h1)/np
-  invisible(!any(hpath < xyz[["z"]], na.rm = T))
-}
-
-
-#' @title Calculate Visibility between multiple locations
-#' @name viewTo
-#' @description Check if Point 1 (xy) is visible from multiple points (xy2)
-#'
-#' @export
-#'
-#' @param r A DEM raster
-#' @param xy1 A matrix with X and Y coordinates for Point 1
-#' @param xy2 A matrix with X and Y coordinates for Points 2
-#' @param h1 A numeric giving the extra height offset of Point 1
-#' @param h2 A numeric giving the extra height offset of Point 2
-#' @param progress Is passed to \code{plyr::aaply}
-#'
-#' @family Viewshed Analysis
-#' @return A boolean vector, indicating if Point 1 (xy1) is visible from all
-#'   elements of Points 2 (xy2)
-#'
-viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress = "none"){
-  # xy1 = c(x = 4653100.36021378, y = 2744048.65794167); 
-  # xy2 = structure(c(4648381.88040377, 4649001.7726914, 4649621.66497904, 
-  #                   4650241.55726667, 4650861.4495543, 4648381.88040377, 2741196.10301024, 
-  #                   2741196.10301024, 2741196.10301024, 2741196.10301024, 2741196.10301024, 
-  #                   2741815.99529787), .Dim = c(6L, 2L), .Dimnames = list(NULL, c("x1", 
-  #                                                                                 "x2")))
-  
-  # xy1 = turbine_locs[1,]; xy2 = sample_xy; h1=h2=0
-  
-  ## xy2 is a matrix of x,y coords (not a data frame)
-  a <- plyr::aaply(xy2, 1, function(d){
-    cansee(r,xy1 = xy1,xy2 = d,h1,h2)}, .progress=progress)
-  # a <- t(apply(xy2, 1, function(d){
-    # cansee(r[[1]],xy1 = xy1,xy2 = d,h1,h2)}))
-  a[is.na(a)] <- FALSE
-  return(a)
-}
-
-
 #' @title Sample values from a raster
 #' @name rasterprofile
 #' @description Sample a raster along a straight line between 2 points
@@ -80,47 +7,98 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, progress = "none"){
 #' @param r A DEM raster
 #' @param xy1 A matrix with X and Y coordinates for Point 1
 #' @param xy2 A matrix with X and Y coordinates for Points 2
+#' @param reso The minimal resolution of the DEM raster. It is 
+#'   calculated in \code{viewshed} and passed along.
 #' @param plot Plot the process? Default is FALSE
 #'
 #' @family Viewshed Analysis
 #' @return A boolean vector, indicating if Point 1 (xy1) is visible from all
 #'   elements of Points 2 (xy2)
 #'
-rasterprofile <- function(r, xy1, xy2, plot=FALSE){
-  # r = DEM_meter[[1]]; xy1 = sample_xy[29,]; xy2 = sample_xy[26,]; plot=T
-  
-  if (plot==TRUE) {
+rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
+  if (plot) {
     plot(r)
-    points(x = xy2[1], y=xy2[2], col="blue", pch=20, cex=1.4)
-    points(x = xy1[1], y=xy1[2], col="red", pch=20, cex=2)
+    points(x = xy2[1], y = xy2[2], col = "blue", pch = 20, cex = 1.4)
+    points(x = xy1[1], y = xy1[2], col = "red", pch = 20, cex = 2)
   }
   
   ### sample a raster along a straight line between two points
   ### try to match the sampling size to the raster resolution
-  dx = sqrt( (xy1[1]-xy2[1])^2 + (xy1[2]-xy2[2])^2 )
-  nsteps = 1 + round(dx/ min(raster::res(r)))
-  xc = xy1[1] + (0:nsteps) * (xy2[1]-xy1[1])/nsteps
-  yc = xy1[2] + (0:nsteps) * (xy2[2]-xy1[2])/nsteps
+  dx = sqrt( (xy1[1] - xy2[1])^2 + (xy1[2] - xy2[2])^2 )
+  nsteps = 1 + round(dx / reso)
+  xc = xy1[1] + (0:nsteps) * (xy2[1] - xy1[1]) / nsteps
+  yc = xy1[2] + (0:nsteps) * (xy2[2] - xy1[2]) / nsteps
   
-  if (plot==TRUE) {
-    points(x = xc, y=yc, col="red", pch=20, cex=1.4)
+  if (plot) {
+    points(x = xc, y = yc, col = "red", pch = 20, cex = 1.4)
   }
   
-  rasterVals <- r[raster::cellFromXY(r, cbind(xc,yc))]
-  # rasterVals <- raster::extract(x = r, y = cbind(xc,yc), buffer=5, df=T)
-  # rasterVals <- rasterVals[!is.na(rasterVals)]
+  # rasterVals <- r[raster::cellFromXY(r, cbind(xc,yc))]
+  rasterVals <- raster::extract(x = r, y = cbind(xc,yc))
   
-  pointsZ <- data.frame(x = xc, y = yc, z = rasterVals)
+  pointsZ <- cbind("x" = xc, "y" = yc, "z" = rasterVals)
   
-  if (plot==TRUE) {
-    points(pointsZ$x, pointsZ$y, pch=20, col="black")
-    text(pointsZ$x, pointsZ$y, pos=1, pointsZ$z, cex=0.5)
+  if (plot) {
+    points(pointsZ[,"x"], pointsZ[,"y"], pch = 20, col = "black")
+    text(pointsZ[,"x"], pointsZ[,"y"], pos = 1, pointsZ[,"z"], cex = 0.5)
   }
   
   if (anyNA(pointsZ)) {
-    pointsZ <- pointsZ[stats::complete.cases(pointsZ),]
+    pointsZ <- pointsZ[stats::complete.cases(pointsZ),,drop = FALSE]
   }
   return(pointsZ)
+}
+
+#' @title Calculate Visibility between 2 locations
+#' @name cansee
+#' @description Check if point 1 is visible from point 2 given
+#'   a certain elevation model
+#'
+#' @export
+#'
+#' @param r A DEM raster
+#' @param xy1 A vector/matrix with X and Y coordinates for Point 1
+#' @param xy2 A vector/matrix with X and Y coordinates for Point 2
+#' @param h1 A numeric giving the extra height offset for Point 1
+#' @param h2 A numeric giving the extra height offset for Point 2
+#' @param reso The minimal resolution of the DEM raster. It is 
+#'   calculated in \code{viewshed} and passed along.
+#'
+#' @family Viewshed Analysis
+#' @return A boolean value, indicating if the point (xy2) is visible
+#'
+cansee <- function(r, xy1, xy2, h1=0, h2=0, reso){
+  ### can xy1 see xy2 on DEM r?
+  ### r is a DEM in same x,y, z units
+  ### xy1 and xy2 are 2-length vectors of x,y coords
+  ### h1 and h2 are extra height offsets
+  xyz = rasterprofile(r, xy1, xy2, reso)
+  np = length(xyz[, 1]) - 1
+  h1 = xyz[, "z"][1] + h1
+  h2 = xyz[, "z"][np] + h2
+  hpath = h1 + (0:np)*(h2 - h1)/np
+  invisible(!any(hpath < xyz[, "z"], na.rm = T))
+}
+
+
+#' @title Calculate Visibility between multiple locations
+#' @name viewTo
+#' @description Check if a location is visible from multiple locations
+#'
+#' @export
+#'
+#' @inheritParams cansee
+#' 
+#' @family Viewshed Analysis
+#' @return A boolean vector, indicating if \code{xy1} is visible from all
+#'   elements of \code{xy2}
+#'
+viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso){
+  a <- t(apply(xy2, 1, function(d){
+    cansee(r[[1]], xy1 = xy1, xy2 = d, h1, h2, reso)}))
+  # a[is.na(a)] <- FALSE
+  a[is.na(a)] <- NULL
+  return(as.vector(a))
 }
 
 
@@ -136,7 +114,6 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
 #'   turbines
 #' @param h1 A numeric giving the extra height offset of Point 1
 #' @param h2 A numeric giving the extra height offset of Point 2
-#' @param progress Is passed on to plyr::aaply
 #'
 #' @family Viewshed Analysis
 #' @return A list of 5, containing the boolean result for every cell, the raster
@@ -153,13 +130,10 @@ rasterprofile <- function(r, xy1, xy2, plot=FALSE){
 #' proj4string(Polygon1) <- CRS(Projection)
 #' DEM_meter <- getDEM(Polygon1)
 #' 
-#' sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular")
-#' sample_xy <- coordinates(sample_POI)
-#' 
 #' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
 #' }
-viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
+viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
   if (class(shape)[1] == "sf") {
     shape <- as(shape, "Spatial")  
   }
@@ -167,28 +141,19 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
     turbine_locs = sp::coordinates(turbine_locs)
   }
   
-  smplf <- sf::st_as_sf(shape)
-  smplf <- sf::st_buffer(smplf, dist = 10)
-  shape <- as(smplf, "Spatial")  
+  mw <- methods::as(r, "SpatialPixelsDataFrame")
+  mw <- methods::as(mw, "SpatialPolygons")
+  sample_xy <- sp::coordinates(mw)
+  rownames(sample_xy) <- NULL; colnames(sample_xy) <- c("x1","x2")
+
   
-  sample_POI <- sp::spsample(shape, n = raster::ncell(r), type = "regular")
-  sample_xy <- sp::coordinates(sample_POI)
+  ## Get minimal Raster Resolution
+  reso <- min(raster::res(r))
   
   ## xy2 is a matrix of x,y coords
-  res <- plyr::aaply(turbine_locs, 1, function(d){
-    viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2)
-  }, .progress = progress)
-  # res <- apply(turbine_locs, 1, function(d){
-  #   viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2)
-  # })
-  
-  # if (is.matrix(res)) {
-  #   ## TODO - Why is that? Doesnt do
-  #   res <- res[1:nrow(res), 1:nrow(sample_xy)]
-  # }
-  # if (is.logical(res)) {
-  #   res[1:nrow(sample_xy)]
-  # }
+  res <- t(apply(turbine_locs, 1, function(d){
+    viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2, reso )
+  }))
   
   return(list("Result" = res, 
               "Raster_POI" = sample_xy, 
@@ -251,6 +216,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #'
 #' @param res The resulting list from viewshed
 #' @param legend Plot a legend? Default is FALSE
+#' @param ... Is passed along to \code{\link[raster]{plot}}
 #'
 #' @family Viewshed Analysis
 #' @family Plotting Functions
@@ -268,27 +234,29 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #' proj4string(Polygon1) <- CRS(Projection)
 #' DEM_meter <- getDEM(Polygon1)
 #' 
-#' sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular")
-#' sample_xy <- coordinates(sample_POI)
-#' 
 #' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
-#' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
+#' res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]], turbine_locs = turbloc,  
+#'                 h1 = 1.8, h2 = 50)
 #' plot_viewshed(res)
+#' 
+#' ## ... Arguments are past on to raster::plot
+#' plot_viewshed(res, legend = T, interpolate=T, colNA="black", 
+#'               col = topo.colors(15))
 #' }
-plot_viewshed <- function(res, legend=FALSE) {
-  raster::plot(res[[4]])
+plot_viewshed <- function(res, legend=FALSE, ...) {
+  raster::plot(res[[4]], ...)
   plot(sf::st_geometry(res[[3]]), add = T)
   points(res[[2]], col="green", pch=20)
   points(res[[5]], cex=1.5, col="black", pch=20)
   if (is.matrix(res[[1]])) {
-    invisible(apply(res[[1]], 1, function(d) {points(res[[2]][d,], col="red", pch=20)}))
+    points(res[[2]][apply(res[[1]], 2, any),], col="red", pch=20)
   } else {
     points(res[[2]][res[[1]],], col="red", pch=20)
   }
   if (legend) {
     legend(x = "bottomright", y = "topleft", yjust=0, title="Visibility", 
-           col=c("green","black", "red"), 
-           legend = c("Not visible","Turbines","Turbine/s visible"), pch=20)    
+           col = c("black", "green", "red"), 
+           legend = c("Turbines", "Not visible","Visible"), pch=20)    
   }
   return()
 }
@@ -310,6 +278,7 @@ plot_viewshed <- function(res, legend=FALSE) {
 #'   the breaks, like \code{\link{quantile}}, fivenum, etc.
 #' @param plotDEM Plot the DEM? Default is FALSE
 #' @param fun Function used for rasterize. Default is mean
+#' @param pal A color palette
 #' @param ... Arguments passed on to \code{\link[raster]{plot}}.
 #'
 #' @family Viewshed Analysis
@@ -328,10 +297,6 @@ plot_viewshed <- function(res, legend=FALSE) {
 #' proj4string(Polygon1) <- CRS(Projection)
 #' DEM_meter <- getDEM(Polygon1)
 #' 
-#' sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), 
-#'                        type = "regular")
-#' sample_xy <- coordinates(sample_POI)
-#' 
 #' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
 #'                 turbine_locs = turbloc,  h1=1.8, h2=50)
@@ -341,13 +306,17 @@ plot_viewshed <- function(res, legend=FALSE) {
 #' interpol_view(res, plotDEM = F, breakform = quantile)
 #' interpol_view(res, breakform = factor)
 #' 
+#' ## Different color palettes
+#' interpol_view(res, plotDEM = T, pal=topo.colors)
+#' interpol_view(res, plotDEM = T, pal=colorRampPalette(c("white","purple")))
+#' 
 #' ## ... Arguments are past on to the raster plot method
 #' interpol_view(res, plotDEM = T, alpha=0.5)
 #' interpol_view(res, plotDEM = F, breakseq = seq(0,10,1), colNA="black")
 #' 
 #' }
 interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL, 
-                          plotDEM=FALSE, fun = mean, ...) {
+                          plotDEM=FALSE, fun = mean, pal = NULL, ...) {
   
   if (nrow(res$Result) > 1) {
     res$Result <- apply(res$Result, 2, function(d) {
@@ -355,11 +324,15 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
     })
   }
   
-  visible = raster::rasterize(res$Raster_POI, res$DEM, field = res$Result, fun = fun)
+
+  visible = raster::rasterize(res$Raster_POI, res$DEM, 
+                              field = res$Result, fun = fun)
   rasterpois <- cbind(res$Raster_POI, "z" = res$Result)
   
   if (plot) {
-    pal <- colorRampPalette(c("green","orange","red"))
+    if (is.null(pal)) {
+      pal <- colorRampPalette(c("green","orange","red"))
+    }
     maxR = max(rasterpois[,3])
     
     if (missing(breakseq)) {
@@ -454,14 +427,6 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   # return desired columns of each country
   unique(worldmap_values[, col, drop = FALSE])
 }
-# points=sample_POI
-# getISO3(pp = points, ask = T)
-# getISO3(pp = points, crs_pp = 3035)
-# points=coordinates(sample_POI)
-# dput(head(coordinates(sample_POI), 2))
-# getISO3(points, crs_pp = 3035)
-# points=st_as_sf(sample_POI)
-# getISO3(points, crs_pp = 3035)
 
 
 #' @title Get DEM raster

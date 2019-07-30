@@ -5,7 +5,7 @@
 \title{Plot an interpolated viewshed}
 \usage{
 interpol_view(res, plot = TRUE, breakseq, breakform = NULL,
-  plotDEM = FALSE, fun = mean, ...)
+  plotDEM = FALSE, fun = mean, pal = NULL, ...)
 }
 \arguments{
 \item{res}{The result list from viewshed.}
@@ -21,6 +21,8 @@ the breaks, like \code{\link{quantile}}, fivenum, etc.}
 \item{plotDEM}{Plot the DEM? Default is FALSE}
 
 \item{fun}{Function used for rasterize. Default is mean}
+
+\item{pal}{A color palette}
 
 \item{...}{Arguments passed on to \code{\link[raster]{plot}}.}
 }
@@ -43,10 +45,6 @@ Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 proj4string(Polygon1) <- CRS(Projection)
 DEM_meter <- getDEM(Polygon1)
 
-sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), 
-                       type = "regular")
-sample_xy <- coordinates(sample_POI)
-
 turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
                 turbine_locs = turbloc,  h1=1.8, h2=50)
@@ -55,6 +53,10 @@ interpol_view(res, plotDEM = T)
 interpol_view(res, breakseq = seq(0,max(colSums(res$Result)),1))
 interpol_view(res, plotDEM = F, breakform = quantile)
 interpol_view(res, breakform = factor)
+
+## Different color palettes
+interpol_view(res, plotDEM = T, pal=topo.colors)
+interpol_view(res, plotDEM = T, pal=colorRampPalette(c("white","purple")))
 
 ## ... Arguments are past on to the raster plot method
 interpol_view(res, plotDEM = T, alpha=0.5)
