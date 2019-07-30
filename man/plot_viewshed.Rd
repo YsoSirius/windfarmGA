@@ -36,7 +36,7 @@ plot_viewshed(res)
 
 ## ... Arguments are past on to raster::plot
 plot_viewshed(res, legend = T, interpolate=T, colNA="black", 
-              scol = topo.colors(15))
+              col = topo.colors(15))
 }
 }
 \seealso{

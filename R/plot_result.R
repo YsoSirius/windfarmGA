@@ -229,12 +229,15 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
             message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
                     "the EEA-website.")
             ## download an zip CCL-tif
-            ccl_raster_url <-
-              "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-            temp <- tempfile()
-            download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-            unzip(temp, "g100_06.tif")
-            unlink(temp)
+            # ccl_raster_url <-
+            #   "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+            # temp <- tempfile()
+            # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+            # unzip(temp, "g100_06.tif")
+            # unlink(temp)
+            download.file("http://github.com/YsoSirius/windfarm_data/raw/master/g100_06.tif", 
+                          destfile = "g100_06.tif", 
+                          method = "auto")
             ccl <- raster::raster("g100_06.tif")
           } else {
             sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
@@ -438,12 +441,15 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
             message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
                     "the EEA-website.")
             ## download an zip CCL-tif
-            ccl_raster_url <-
-              "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-            temp <- tempfile()
-            download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-            unzip(temp, "g100_06.tif")
-            unlink(temp)
+            # ccl_raster_url <-
+            #   "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+            # temp <- tempfile()
+            # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+            # unzip(temp, "g100_06.tif")
+            # unlink(temp)
+            download.file("http://github.com/YsoSirius/windfarm_data/raw/master/g100_06.tif", 
+                          destfile = "g100_06.tif", 
+                          method = "auto")
             ccl <- raster::raster("g100_06.tif")
           } else {
             sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
@@ -451,7 +457,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           }
         }
 
-        if (1 == 1){
+        if (1 == 1) {
           Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84
                                                                       +towgs84=0,0,0"))
           extpol <- round(Polygon1@bbox, 0)[, 2]

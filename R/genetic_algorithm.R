@@ -292,19 +292,13 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     if (missing(weibullsrc)) {
       if (verbose) cat("\nWeibull Information from package is used.\n")
 
+      download.file("http://github.com/YsoSirius/windfarm_data/raw/master/weibulldata.zip", 
+                    destfile = "weibulldata.zip", 
+                    method = "auto")
+      unzip("weibulldata.zip")
       
-      ## TODO - Change documentation for readRDS, when rasters can be read from /data
-      # path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-      # k_weibull <- ""
-      # a_weibull <- ""
-      # # load(file = paste0(path, "k_weibull.rda"))
-      # # load(file = paste0(path, "a_weibull.rda"))
-      # # weibullsrc = list(k_param, a_param)
-      # k_weibull <- readRDS(file = paste0(path, "k_weibull.RDS"))
-      # a_weibull <- readRDS(file = paste0(path, "a_weibull.RDS"))
-      # k_weibull <- raster(k_weibull)
-      # a_weibull <- raster(a_weibull)
-      
+      k_weibull <- raster("k120_100m_Lambert.tif")
+      a_weibull <- raster("a120_100m_Lambert.tif")
       ## Project Shapefile to raster proj, Crop/Mask and project raster back
       shape_project <- sp::spTransform(Polygon1,
                                        CRSobj = sp::proj4string(a_weibull))
@@ -447,12 +441,15 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
               "the EEA-website.\n")
       if (!file.exists("g100_06.tif")) {
         ## download an zip CCL-tif
-        ccl_raster_url <-
-          "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-        temp <- tempfile()
-        download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-        unzip(temp, "g100_06.tif")
-        unlink(temp)
+        # ccl_raster_url <-
+        #   "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
+        # temp <- tempfile()
+        # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
+        # unzip(temp, "g100_06.tif")
+        # unlink(temp)
+        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/g100_06.tif", 
+                      destfile = "g100_06.tif", 
+                      method = "auto")
       }
       ccl <- raster::raster("g100_06.tif")
     } else {

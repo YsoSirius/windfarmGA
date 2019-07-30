@@ -95,11 +95,12 @@ test_that("Test Viewshed Functions", {
 
   n <- 10
   saplms <- sample(1:nrow(sample_xy), size = n, F)
+  reso = min(res(DEM_meter[[1]]))
   reslist <- list()
   for (i in seq(1,n,2)) {
     reslist[[i]] <- rasterprofile(r = DEM_meter[[1]],
                                   xy1 = sample_xy[i, ], 
-                                  xy2 = sample_xy[i + 1,], F)
+                                  xy2 = sample_xy[i + 1,], reso, F)
   }
   resdf <- do.call(rbind, reslist[seq(1,n,2)])
   expect_false(anyNA(resdf))
@@ -107,7 +108,7 @@ test_that("Test Viewshed Functions", {
   
   
   rppl <- rasterprofile(r = DEM_meter[[1]], xy1 = sample_xy[10, ], 
-                xy2 = sample_xy[26,], T)
+                xy2 = sample_xy[26,], reso, T)
   expect_false(anyNA(rppl))
   expect_true(ncol(rppl) == 3)
   
@@ -115,13 +116,13 @@ test_that("Test Viewshed Functions", {
   
   ## viewTo ##################
   viwres <- viewTo(DEM_meter[[1]], xy1 = turblocdf[1,], sample_xy, 
-         h1 = 1.5, h2 = 10)
-  expect_true(is.character(names(viwres)))
+         h1 = 1.5, h2 = 10, reso)
+  # expect_true(is.character(names(viwres)))
   expect_true(is.logical(viwres))
   
   ## cansee ##################
   canrs <- cansee(DEM_meter[[1]], turblocdf[1,], sample_xy[3,], 
-                  h1 = 0, h2 = 0)
+                  h1 = 0, h2 = 0, reso)
   expect_true(is.logical(canrs))
   expect_true(length(canrs) == 1)
   
@@ -139,8 +140,8 @@ test_that("Test Viewshed Functions", {
   xy1 <- as.vector(coordinates(xy1))
   xy2 <- spsample(Polygon1, 5, "random")
   xy2 <- coordinates(xy2)
-  a <- expect_warning(t(apply(xy2, 1, function(d){
-    cansee(r[[1]],xy1 = xy1,xy2 = d,h1=0,h2=0)})))
+  a <- t(apply(xy2, 1, function(d){
+    cansee(r[[1]], xy1 = xy1, xy2 = d, h1=0, h2=0, reso)}))
 
   expect_true(is.logical(a))
   expect_false(anyNA(a))
