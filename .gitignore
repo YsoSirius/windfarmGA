@@ -17,5 +17,6 @@ docs/*
 *.gri
 *.vrt
 windlist_wakeR.RData
-g100_06.tif
 R/make_clc_legend.R
+*.tif
+*.zip
