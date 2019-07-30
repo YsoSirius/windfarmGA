@@ -58,7 +58,7 @@
 selection         <- function(fit, Grid, teil, elitism, nelit, 
                                selstate, verbose) {
   if (missing(verbose)) {
-    verbose = FALSE
+    verbose <- FALSE
   }
 
   ## Make a DataFrame of the Fitness Function Output. Representing all x Parks with their fitness value.
@@ -75,7 +75,7 @@ selection         <- function(fit, Grid, teil, elitism, nelit,
   ## Elitarism - A certain amount of individuals will get their fitness values increased
   if (elitism) {
     if (nrow(new1) < nelit) {
-      nelit = nrow(new1)
+      nelit <- nrow(new1)
     }
     if (verbose) {
       cat(paste("Elitarism activated. Best", nelit, "individuals are increased\n"))
@@ -94,7 +94,7 @@ selection         <- function(fit, Grid, teil, elitism, nelit,
   if (selstate == "FIX") {
     # Select a fixed amount of indivs. # Teil=2 takes always 50% of population
     if (teil != 1) {
-      teil = 2
+      teil <- 2
     }
     nPar <- ceiling(nrow(new1) / teil)
     if (verbose) {

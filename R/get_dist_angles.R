@@ -44,7 +44,7 @@
 #' potInfTur
 #'
 get_dist_angles     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
-  col_names = c("Ax", "Ay", "Bx", "By", "Cx", "Cy",
+  col_names <- c("Ax", "Ay", "Bx", "By", "Cx", "Cy",
                "Laenge_C", "Laenge_B", "Laenge_A",
                "alpha", "betha", "gamma")
   ## Get coordinates of actual turbine location

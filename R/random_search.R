@@ -72,7 +72,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
   if (best > nrow(resldat)) {
     message(paste0("Only ",nrow(resldat), " unique layouts found. Set 'best' to ",
                    nrow(resldat)))
-    best = nrow(resldat)
+    best <- nrow(resldat)
   }
   bestGARunIn <- resldat$GARun[1:best]
 

@@ -178,7 +178,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       "Toner"),
       overlayGroups = overlay_group,
       options = layersControlOptions(collapsed = TRUE)
-    );
+    )
 
   # Plot the map
   map

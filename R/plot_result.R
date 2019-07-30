@@ -330,7 +330,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
                                       })
 
           graphics::par(mfrow = c(1, 2))
-          cexa = 0.9
+          cexa <- 0.9
           raster::plot(cclRaster, main = "Corine Land Cover Roughness")
           points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
@@ -342,7 +342,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
                             labs = round((SurfaceRoughness1), 2), cex = cexa)
           raster::plot(polygon1, add = TRUE)
-          raster::plot(modSurf, main = "Modified Surface Roughness");
+          raster::plot(modSurf, main = "Modified Surface Roughness")
           graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
                             labs = round((SurfaceRoughness), 2), cex = cexa)
@@ -354,7 +354,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           # New Wake Decay Constant calculated with new surface roughness values, according to CLC
           k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
           # graphics::par(mfrow=c(1,1)); cexa=0.9
-          raster::plot(k_raster, main = "Adapted Wake Decay Constant - K");
+          raster::plot(k_raster, main = "Adapted Wake Decay Constant - K")
           graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k, 3), cex = cexa)
           raster::plot(polygon1, add = TRUE)
@@ -378,7 +378,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", (ledup - ndif)))
     if (ndif < best) {
       cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
-      best = trunc(ndif / 2)
+      best <- trunc(ndif / 2)
     }
     if (best == 0) best = 1
     result <- result[(length(result) - best + 1):(length(result))]

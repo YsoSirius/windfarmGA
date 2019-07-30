@@ -191,9 +191,10 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
     # Calculate the sum of the relative Efficiency rates respective to
     # the probability of the wind direction
     res_energy <- cbind(res_energy, 
-                            "Efficalldire" = sum(res_energy[, "Parkwirkungsgrad"] *
-                                  (res_energy[, "probability_direction"] / 100)))
-
+                        "Efficalldire" = sum(
+                          res_energy[, "Parkwirkungsgrad"] *
+                            (res_energy[, "probability_direction"] / 100)))
+    
     # Get the total Wake Effect of every Turbine for all Wind directions
     total_wake <- lapply(ee, function(x) {
       x[, "TotAbschProz"]

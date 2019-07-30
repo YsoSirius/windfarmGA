@@ -9,7 +9,7 @@ test_that("Test Viewshed Functions", {
   ## Input Data #####################
   Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
                             c(4499991, 2669343), c(4499991, 2667172)))
-  Polygon1 <- Polygons(list(Polygon1), 1);
+  Polygon1 <- Polygons(list(Polygon1), 1)
   Polygon1 <- SpatialPolygons(list(Polygon1))
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
   +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -27,7 +27,7 @@ test_that("Test Viewshed Functions", {
   expect_true(is.null(DEM_noclip[[2]]))
   
   ## getISO3 ###############
-  points = cbind(c(4488182.26267016, 4488852.91748256),
+  points <- cbind(c(4488182.26267016, 4488852.91748256),
   c(2667398.93118627, 2667398.93118627))
   res <- getISO3(pp = points, crs_pp = 3035)
   expect_true(res == "AUT")
@@ -54,7 +54,7 @@ test_that("Test Viewshed Functions", {
   
   
   ## viewshed #################
-  turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+  turbloc <- spsample(DEM_meter[[2]], 10, type = "random")
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   expect_is(res, "list")
@@ -83,7 +83,7 @@ test_that("Test Viewshed Functions", {
   plt <- plot_viewshed(res, legend = T)
   expect_true(is.null(plt))
   
-  turbloc = spsample(DEM_meter[[2]], 1, type = "random");
+  turbloc <- spsample(DEM_meter[[2]], 1, type = "random")
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   plt <- plot_viewshed(res, legend = T)
@@ -94,7 +94,7 @@ test_that("Test Viewshed Functions", {
   sample_xy <- coordinates(sample_POI)
 
   n <- 10
-  saplms <- sample(1:nrow(sample_xy), size = n, F);
+  saplms <- sample(1:nrow(sample_xy), size = n, F)
   reslist <- list()
   for (i in seq(1,n,2)) {
     reslist[[i]] <- rasterprofile(r = DEM_meter[[1]],
@@ -128,7 +128,7 @@ test_that("Test Viewshed Functions", {
   ## Create Warning (complete.cases)
   Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                             c(4499991, 2669343), c(4499991, 2668272)))
-  Polygon1 <- Polygons(list(Polygon1), 1);
+  Polygon1 <- Polygons(list(Polygon1), 1)
   Polygon1 <- SpatialPolygons(list(Polygon1))
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -145,7 +145,7 @@ test_that("Test Viewshed Functions", {
   expect_false(anyNA(a))
   
   ## interpol_view ################
-  turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+  turbloc <- spsample(DEM_meter[[2]], 10, type = "random")
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   resinpl <- interpol_view(res, plotDEM = T, alpha = 0.5)

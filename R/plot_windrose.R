@@ -56,21 +56,21 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                                    toupper(colnames(data))))
         data[, c(speed_index[1], direc_index[1])]
         
-        spd = colnames(data)[speed_index]
-        dir = colnames(data)[direc_index]
+        spd <- colnames(data)[speed_index]
+        dir <- colnames(data)[direc_index]
       } else {
         col_numeric <- which(sapply(data[1, ], is.numeric))
         data <- data[, col_numeric]
         colnames(data) <- c("spd", "dir")
-        spd = "spd"
-        dir = "dir"
+        spd <- "spd"
+        dir <- "dir"
       }
     } else {
       col_numeric <- which(sapply(data[1, ], is.numeric))
       data <- data[, col_numeric]
       colnames(data) <- c("spd", "dir")
-      spd = "spd"
-      dir = "dir"
+      spd <- "spd"
+      dir <- "dir"
     }
   } 
   else if (!missing(spd) && !missing(dir) && is.numeric(spd) && is.numeric(dir)) {
