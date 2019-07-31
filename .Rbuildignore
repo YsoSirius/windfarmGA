@@ -25,7 +25,6 @@ AUT_msk_alt.gri
 AUT_msk_alt.grd
 AUT_msk_alt.vrt
 g100_06.tif
-clc_legend.csv
 a120_100m_Lambert.tif
 k120_100m_Lambert.tif
 ^docs$

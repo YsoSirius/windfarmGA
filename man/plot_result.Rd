@@ -69,18 +69,6 @@ plot_result(resulthex, polygon, best = 1, plotEn = 1, topographie = FALSE,
 Grid <- grid_area(polygon, resol = 175, 1, FALSE)
 plot_result(resultrect, polygon, best = 1, plotEn = 1, topographie = FALSE,
            Grid = Grid[[2]])
-
-## Plot the results of with a weibull mean background
-a_param <- readRDS(system.file("extdata/a_weibull.RDS", package = "windfarmGA"))
-k_param <- readRDS(system.file("extdata/k_weibull.RDS", package = "windfarmGA"))
-weibullsrc <- list(k_param, a_param)
-plot_result(resultrect, polygon, best = 2, plotEn = 2, topographie = FALSE,
-           Grid = Grid[[2]], weibullsrc = weibullsrc)
-
-## Plot the hexagonal results ith weibull mean background
-Grid <- hexa_area(polygon, size = 87.5, FALSE)
-plot_result(resulthex, polygon, best = 2, plotEn = 2, topographie = FALSE,
-           Grid = Grid[[2]], weibullsrc = weibullsrc)
 }
 }
 \seealso{

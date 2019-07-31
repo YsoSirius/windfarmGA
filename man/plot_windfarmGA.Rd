@@ -54,13 +54,6 @@ plot_windfarmGA(resulthex, GridMethod = "h", polygon, whichPl = "all", best = 1,
 
 ## Plot the results of a rectangular grid optimization
 plot_windfarmGA(resultrect, GridMethod = "r", polygon, whichPl = "all", best = 1, plotEn = 1)
-
-## Plot the results with hexagonal grid cells and a weibull mean background.
-a_param <- readRDS(system.file("extdata/a_weibull.RDS", package = "windfarmGA"))
-k_param <- readRDS(system.file("extdata/k_weibull.RDS", package = "windfarmGA"))
-weibullsrc <- list(k_param, a_param)
-plot_windfarmGA(resulthex, GridMethod = "h", polygon, whichPl = "all",
-               best = 1, plotEn = 1, weibullsrc = weibullsrc)
 }
 }
 \seealso{
