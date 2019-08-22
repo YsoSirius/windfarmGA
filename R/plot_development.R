@@ -11,11 +11,7 @@
 #' @family Plotting Functions
 #' @return NULL
 #' @examples \donttest{
-#' ## Add some data examples from the package
-#' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-#'
-#' ## Plot the results of a hexagonal grid optimization
-#' plot_development(resulthex)
+#' plot_development(resultrect)
 #' }
 plot_development <- function(result){
   parbeorwo <- par(ask = FALSE, no.readonly = TRUE)

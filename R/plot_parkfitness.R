@@ -41,8 +41,8 @@ plot_parkfitness <- function(result, spar = 0.1){
   
   ## Plot All together (5 Plots) #####################
   plot(rslt$minparkfitness, xaxt = "n", main = "Parkfitness per Generation", pch = 20,
-                 ylab = "Parkfitness in %", cex = 1, cex.main = 1, col = "red", 
-                 ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness)))
+       ylab = "Parkfitness", xlab = "Generation", cex = 1, cex.main = 1, 
+       col = "red", ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness)))
   graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
   graphics::points(rslt$meanparkfitness, ylab = "MeanParkF", cex = 1.2, col = "blue", pch = 20)
   graphics::points(rslt$maxparkfitness, ylab = "maxParkF", cex = 1.2, col = "green", pch = 20)
@@ -63,8 +63,8 @@ plot_parkfitness <- function(result, spar = 0.1){
   farbe <- rep(seq(1,3,1), length(nindiv1)/3)
   ndindiplot <- as.integer(nindiv1)
   plot(ndindiplot, type = "b", col = farbe, cex = 1.5, cex.main = 1, pch = 20, 
-       main = "N-Individuen", axes = FALSE,
-       ylab = "N", ylim = c(0, max(ndindiplot) + 100))
+       main = "Population Size", axes = FALSE, xlab = "Generation",
+       ylab = "Amount of Individuals", ylim = c(0, max(ndindiplot) + 100))
   axis(side = 2, tick = TRUE) 
   axis(side = 1, tick = TRUE, at = seq(1, length(ndindiplot),3),
        labels = (1:(length(ndindiplot)/3)))
@@ -74,7 +74,7 @@ plot_parkfitness <- function(result, spar = 0.1){
          col = farbe[1:3], xjust = 0)
 
   plot(1*100/selteil, ylim = c(20, 110), type = "b", cex = 2, cex.main = 1,
-       col = "green", pch = 20, main = "Selection percentage",
+       col = "green", pch = 20, main = "Selection",
        ylab = "Percentage", xlab = "Generation")
   graphics::grid(col = "gray")
   selrpl <- 1*100/selteil
@@ -83,7 +83,7 @@ plot_parkfitness <- function(result, spar = 0.1){
   calibrate::textxy(timeticksel, selrplval, labs = timeticksel, cex = 0.7)
 
 
-  plot(crossteil, col = crossteil, main = "n Crossoverparts",
+  plot(crossteil, col = crossteil, main = "Crossover",
        xlab = "Generation", ylab = "Crossover Points",
        ylim = c(1, 8), cex = 1, cex.main = 1, pch = 15)
   graphics::grid(col = "gray")
@@ -91,8 +91,8 @@ plot_parkfitness <- function(result, spar = 0.1){
   crorplval <- crossteil[crossteil > median(crossteil)]
   calibrate::textxy(timetickcro, crorplval, labs = timetickcro, cex = 0.5)
 
-  plot(as.numeric(t(mutres)), type = "b", main = "Mutation Rate", xlab = "Generation",
-                 ylab = "Crossover Points", cex = 1, cex.main = 1, pch = 15)
+  plot(as.numeric(t(mutres)), type = "b", main = "Mutation", xlab = "Generation",
+                 ylab = "Mutation Percentage", cex = 1, cex.main = 1, pch = 15)
   mutrpl <- as.numeric(t(mutres))
   timetick <- which(mutrpl > median(mutrpl))
   mutrplval <- mutrpl[mutrpl > median(mutrpl)]
@@ -103,8 +103,8 @@ plot_parkfitness <- function(result, spar = 0.1){
   ## Plot Count Individuals #####################
   par(mfrow = c(1,1))
   plot(ndindiplot, type = "b", col = farbe, cex = 1.5, cex.main = 1, pch = 20, 
-       main = "N-Individuen", axes = FALSE,
-       ylab = "N", ylim = c(0, max(ndindiplot) + 100))
+       main = "Population Size", axes = FALSE, xlab = "Generation",
+       ylab = "Amount of Individuals", ylim = c(0, max(ndindiplot) + 100))
   axis(side = 2, tick = TRUE) 
   axis(side = 1, tick = TRUE, at = seq(1, length(ndindiplot), 3),
        labels = (1:(length(ndindiplot)/3)))
@@ -118,14 +118,14 @@ plot_parkfitness <- function(result, spar = 0.1){
   ## Plot Selection / Crossover Params #####################
   graphics::par(mfrow = c(2,1))
   plot(1*100/selteil, ylim = c(20,110), type = "b", cex = 2, col = "green",
-       pch = 20, main = "Selection percentage",
+       pch = 20, main = "Selection",
        ylab = "Percentage", xlab = "Generation")
   graphics::grid(col = "gray")
   selrpl <- 1*100/selteil
   timeticksel <- which(selrpl > 75)
   selrplval <- selrpl[selrpl > 75]
   calibrate::textxy(timeticksel, selrplval, labs = timeticksel, cex = 0.5)
-  plot(crossteil, col = crossteil, main = "n Crossoverparts", xlab = "Generation",
+  plot(crossteil, col = crossteil, main = "Crossover", xlab = "Generation",
                  ylab = "Crossover Points", ylim = c(1,8), cex = 1, pch = 15)
   grid(col = "gray")
   timetickcro <- which(crossteil > median(crossteil))
@@ -139,7 +139,7 @@ plot_parkfitness <- function(result, spar = 0.1){
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
     plot(rslt$minParkwirkungsg, xaxt = "n", main = "Mutation Influence", 
          ylab = " in %", cex = 1.2, cex.main = 1, 
-         col = "red", pch = 20, 
+         col = "red", pch = 20, xlab = "Generation",
          ylim = c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)))
     graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
     graphics::points(rslt$meanParkwirkungsg, ylab = "MeanParkEff", cex = 1.2, 
@@ -165,7 +165,7 @@ plot_parkfitness <- function(result, spar = 0.1){
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
     graphics::plot(rslt$minParkwirkungsg, xaxt = "n", 
                    main = "Selection Influence", ylab = " in %", cex = 1, 
-                   cex.main = 1, col = "red",
+                   cex.main = 1, col = "red",xlab = "Generation",
                    pch = 20, ylim = c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)))
     graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
     graphics::points(rslt$meanParkwirkungsg, ylab = "MeanParkEff", 
@@ -191,7 +191,7 @@ plot_parkfitness <- function(result, spar = 0.1){
     Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),
                                    breaks = 4))]
     plot(rslt$minParkwirkungsg, xaxt = "n", main = "Crossover Influence",
-         ylab = " in %", cex = 1, cex.main = 1, col = "red",
+         ylab = " in %", cex = 1, cex.main = 1, col = "red", xlab = "Generation",
          pch = 20, ylim = c(min(rslt$minParkwirkungsg),max(rslt$maxParkwirkungsg)))
     axis(1, at = 1:nrow(rslt), tick = TRUE)
     points(rslt$meanParkwirkungsg, ylab = "MeanParkEff", cex = 1.2,
@@ -220,7 +220,7 @@ plot_parkfitness <- function(result, spar = 0.1){
   enesd <- sddata[, grep(pattern = "Ene", colnames(sddata))]
   graphics::par(mfrow = c(4, 1))
   plot(rslt$minparkfitness, xaxt = "n", main = "Parkfitness per Generation", 
-       ylab = "Parkfitness in %", xlab = "Generation",
+       ylab = "Parkfitness", xlab = "Generation",
        cex = 1, cex.main = 1, col = "red", pch = 20,
        ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness)))
   graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
@@ -241,12 +241,12 @@ plot_parkfitness <- function(result, spar = 0.1){
   }
 
   plot(100 / selteil, ylim = c(20, 110), type = "b", lwd = 2, col = "green",
-       pch = 20, main = "Selection percentage",
+       pch = 20, main = "Selection",
        ylab = "Percentage", xlab = "Generation", cex.main = 1)
   graphics::grid(lty = 2)
 
   plot(crossteil, col = crossteil, pch = 20, cex.main = 1, cex = 2,
-       main = "n Crossoverparts", xlab = "Generation", ylab = "Crossover Points",
+       main = "Crossover", xlab = "Generation", ylab = "Crossover Points",
        ylim = c(1, 6))
   graphics::grid(lty = 2)
 
@@ -270,11 +270,11 @@ plot_parkfitness <- function(result, spar = 0.1){
   }
   #######################
 
-  ## Plot Mutation Rate influence #####################
+  ## Plot Mutation influence #####################
   graphics::par(mfrow = c(1, 1))
   plot(fitsd[,'FitSD'], type = "b", col = "red", lwd = 2, cex.main = 1, axes = TRUE,
-       bty = "n", xlab = "", ylab = "",
-       pch = 20, main = "Mutation Rate influence on Standard Deviation")
+       bty = "n", xlab = "Generation", ylab = "",
+       pch = 20, main = "Mutation influence on Standard Deviation")
   if (length(timeticksd) != 0) {
     calibrate::textxy(timeticksd, sdrplval, labs = timeticksd, cex = 0.7)
     graphics::abline(v = timeticksd)
