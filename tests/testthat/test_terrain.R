@@ -5,7 +5,7 @@ library(raster)
 
 test_that("Test Terrain and Weibull Effects", {
   skip_on_appveyor()
-  skip_on_travis()
+  # skip_on_travis()
   # skip_on_cran()
   
   ## Test Terrain Model ###################
@@ -91,6 +91,9 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
+  f <- file()
+  options(windfarmGA.connection = f)
+  write(paste(rep(" ", 20), collapse = "\n"), f)
   resultrect <- windfarmGA(Polygon1 = sp_polygon,
                            selstate = "FIX", crossPart1 = "EQU",
                         n = 12, iteration = 1,
@@ -98,6 +101,8 @@ test_that("Test Terrain and Weibull Effects", {
                         Rotor = 30,
                         RotorHeight = 100, verbose = TRUE,
                         weibull = TRUE)
+  options(windfarmGA.connection = stdin())
+  close(f)
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
