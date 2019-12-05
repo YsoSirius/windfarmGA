@@ -51,7 +51,6 @@
 #' @importFrom gstat idw
 #' @importFrom spatstat is.tess hextess hexgrid owin spatstat.options
 #' @importFrom magrittr %>% 
-#' @importFrom plyr aaply
 #' @importFrom rworldmap getMap
 #' @importFrom Rcpp sourceCpp
 #' 

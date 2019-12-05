@@ -66,7 +66,7 @@ plot_result(resulthex, polygon, best = 1, plotEn = 1, topographie = FALSE,
            Grid = Grid[[2]])
 
 ## Plot the results of a rectangular grid optimization
-Grid <- grid_area(polygon, resol = 175, 1, FALSE)
+Grid <- grid_area(polygon, resol = 150, 1, FALSE)
 plot_result(resultrect, polygon, best = 1, plotEn = 1, topographie = FALSE,
            Grid = Grid[[2]])
 }

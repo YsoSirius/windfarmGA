@@ -1,7 +1,7 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
 Version: 2.2.2
-Date: 2019-07-17
+Date: 2019-08-25
 Authors@R: c(
     person("Sebastian", "Gatscha", , email="sebastian_gatscha@gmx.at", c("aut", "cre"))
     )
@@ -9,26 +9,25 @@ Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
 Description: The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 Depends:
     R (>= 3.2.3)
-Imports: rgdal (>= 1.3.6),
-    Rcpp (>= 1.0.0),
-    raster (>= 2.8.19),
-    sf (>= 0.7.2),
-    sp (>= 1.2-2),
-    plyr (>= 1.8.4),
-    rworldmap (>= 1.3.6),
-    gstat (>= 1.0-26),
-    ggplot2 (>= 2.2.0),
-    RColorBrewer (>= 1.1.2),
-    calibrate (>= 1.7.2),
+Imports: rgdal,
+    Rcpp,
+    raster,
+    sf,
+    sp,
+    rworldmap,
+    gstat,
+    ggplot2,
+    RColorBrewer,
+    calibrate,
     grDevices,
     graphics,
-    leaflet (>= 1.1.0),
-    magrittr (>= 1.5),
-    foreach (>= 1.4.3),
-    parallel (>= 3.4.1),
-    doParallel (>= 1.0.11),
-    methods (>= 3.2.5),
-    spatstat (>= 1.42-2),
+    leaflet,
+    magrittr,
+    foreach,
+    parallel,
+    doParallel,
+    methods,
+    spatstat,
     stats,
     utils
 LinkingTo: Rcpp
@@ -40,10 +39,7 @@ RoxygenNote: 6.1.1
 Suggests: 
     testthat,
     pkgdown,
-    dplyr (>= 0.8.0.1),
-    rgeos (>= 0.3-8),
-    knitr,
-    rmarkdown
+    dplyr,
+    rgeos
 Encoding: UTF-8
-VignetteBuilder: knitr
 X-schema.org-keywords: windfarm-layout, optimization, genetic-algorithm, renewable-energy, r, rstats, r-package
