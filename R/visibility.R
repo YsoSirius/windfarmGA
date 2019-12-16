@@ -159,6 +159,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
               "DEM" = r, 
               "Turbines" = turbine_locs))
 }
+
 ## Geht noch nicht
 # viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc

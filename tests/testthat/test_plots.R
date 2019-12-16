@@ -12,6 +12,8 @@ quiet <- function(x) {
 }
 
 test_that("Test Plotting Functions", {
+  skip_on_cran()
+  
   ## Windrose Plotting #############
   wind_test <- data.frame(x = runif(10, 10, 20), 
                           y = runif(10, 0, 360) )

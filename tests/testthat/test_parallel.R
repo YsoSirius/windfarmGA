@@ -5,6 +5,7 @@ library(windfarmGA)
 
 test_that("Test Parallelisation", {
   skip_if(Sys.info()["machine"] != "x86-64")
+  skip_on_cran()
   
   ## Inputs ##################
   Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),

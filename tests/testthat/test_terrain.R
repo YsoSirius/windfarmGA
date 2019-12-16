@@ -6,7 +6,7 @@ library(raster)
 test_that("Test Terrain and Weibull Effects", {
   skip_on_appveyor()
   # skip_on_travis()
-  # skip_on_cran()
+  skip_on_cran()
   
   ## Test Terrain Model ###################
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
