@@ -6,6 +6,8 @@ library(ggplot2)
 library(windfarmGA)
 
 test_that("Test windfarmGA", {
+  skip_on_cran()
+  
   ## Data ##############
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
   Polygon1 <- Polygons(list(Polygon1), 1)

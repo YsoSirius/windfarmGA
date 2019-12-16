@@ -41,7 +41,7 @@ barometric_height         <- function(data, height, po = 101325, ro = 1.225) {
     Th <- 288.15 - ((6.5 * data) / 1000)
   }
 
-  if (class(data) != "data.frame") {
+  if (class(data)[1] != "data.frame") {
     data <- data.frame(data)
   }
   colnames(data) <- "Height"

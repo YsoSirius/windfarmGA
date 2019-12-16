@@ -136,7 +136,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
   if (class(shape)[1] == "sf") {
     shape <- as(shape, "Spatial")  
   }
-  if (class(turbine_locs) == "SpatialPoints") {
+  if (class(turbine_locs)[1] == "SpatialPoints") {
     turbine_locs <- sp::coordinates(turbine_locs)
   }
   
@@ -145,7 +145,6 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
   sample_xy <- sp::coordinates(mw)
   rownames(sample_xy) <- NULL; colnames(sample_xy) <- c("x1","x2")
 
-  
   ## Get minimal Raster Resolution
   reso <- min(raster::res(r))
   
@@ -160,6 +159,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
               "DEM" = r, 
               "Turbines" = turbine_locs))
 }
+
 ## Geht noch nicht
 # viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
@@ -333,7 +333,6 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
     }
     maxR = max(rasterpois[,3])
 
-    
     if (missing(breakseq)) {
       a <- range(rasterpois[,3])
       breakseq <- seq(from = a[1], to = a[2], length.out = 5)
@@ -485,6 +484,4 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
     return(list(DEM_meter, NULL))
   }
 }
-
-
 

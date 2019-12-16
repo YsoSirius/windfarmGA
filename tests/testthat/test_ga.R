@@ -11,6 +11,8 @@ quiet <- function(x) {
 }
 
 test_that("Test Genetic Algorithm with different Inputs", {
+  skip_on_cran()
+  
   ## Data ##############
   Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
   Polygon1 <- Polygons(list(Polygon1), 1)
@@ -28,7 +30,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                       RotorHeight = 100, verbose = TRUE))
   expect_true(nrow(resultSP) == 100)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  expect_false(any(unlist(sapply(resultSP, is.na))));
   
   ## Multi Polygon ###########################
   resultSP <- quiet(genAlgo(Polygon1 = multi_shape,
@@ -38,7 +40,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                             RotorHeight = 100, plotit=T))
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  expect_false(any(unlist(sapply(resultSP, is.na))));
   
   resultSP <- quiet(genAlgo(Polygon1 = multi_shape,
                             n = 20, iteration = 3, GridMethod = "h",
@@ -47,7 +49,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                             RotorHeight = 100, plotit=T))
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  expect_false(any(unlist(sapply(resultSP, is.na))));
   
   ## Hole Polygon ###########################
   resultSP <- quiet(genAlgo(Polygon1 = hole_shape,
@@ -57,7 +59,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                             RotorHeight = 100, plotit=T))
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  expect_false(any(unlist(sapply(resultSP, is.na))));
   
   resultSP <- quiet(genAlgo(Polygon1 = hole_shape,
                             n = 20, iteration = 3, GridMethod = "h",
@@ -66,7 +68,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                             RotorHeight = 100, plotit=T))
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  expect_false(any(unlist(sapply(resultSP, is.na))));
   
   ## SpatialPolygon Input #####################
   resultSP <- genAlgo(Polygon1 = Polygon1,
@@ -77,7 +79,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   
   expect_true(nrow(resultSP) == 1)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na)))); rm(resultSP)
+  expect_false(any(unlist(sapply(resultSP, is.na))));
 
 
   ## SimpleFeature Input #####################
@@ -90,7 +92,6 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_true(nrow(resultSF) == 1)
   expect_is(resultSF, "matrix")
   expect_false(any(unlist(sapply(resultSF, is.na)))) 
-  rm(resultSF, PolygonSF)
 
 
   ## Data.Frame Input #####################
@@ -102,7 +103,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                         RotorHeight = 100)
   expect_true(nrow(resultDF) == 1)
   expect_is(resultDF, "matrix")
-  expect_false(any(unlist(sapply(resultDF, is.na)))); rm(resultDF, PolygonDF)
+  expect_false(any(unlist(sapply(resultDF, is.na))));
 
   ## Matrix Input #####################
   PolygonMat <- ggplot2::fortify(Polygon1)
@@ -114,7 +115,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                         RotorHeight = 100)
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
-  expect_false(any(unlist(sapply(resultMA, is.na)))); rm(resultMA)
+  expect_false(any(unlist(sapply(resultMA, is.na))));
   
   ## Matrix Input - 100% #####################
   resultMA100 <- genAlgo(Polygon1 = PolygonMat, verbose = F, plotit = TRUE,
@@ -125,8 +126,6 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_is(resultMA100, "matrix")
   expect_false(any(unlist(sapply(resultMA100, is.na))))
   expect_true(any(as.vector(sapply(resultMA100[,3], function(x) x[,"EfficAllDir"] == 100))))
-  rm(resultMA100, PolygonMat)
-  
 
   ## Test with non default arguments ####################
   PolygonMat <- ggplot2::fortify(Polygon1)
@@ -141,7 +140,6 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
   expect_false(any(unlist(sapply(resultMA, is.na))))
-  rm(resultMA)
   
   PolygonMat <- ggplot2::fortify(Polygon1)
   PolygonMat <- as.matrix(PolygonMat[,1:2])
@@ -160,8 +158,6 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
   expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
-  rm(resultMA)
-
 
   ## Create errors ####################
   ## RotorHeight missing
@@ -229,9 +225,5 @@ test_that("Test Genetic Algorithm with different Inputs", {
                        vdirspe = data.in,
                        Rotor = 30, 
                        RotorHeight = 100, topograp = TRUE, verbose = TRUE))
-  rm(sp_polygon)
-  
-
-  
 
 })
