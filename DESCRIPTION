@@ -1,7 +1,6 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
-Version: 2.2.2
-Date: 2019-08-25
+Version: 2.2.3
 Authors@R: c(
     person("Sebastian", "Gatscha", , email="sebastian_gatscha@gmx.at", c("aut", "cre"))
     )
