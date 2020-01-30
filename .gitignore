@@ -21,3 +21,4 @@ R/make_clc_legend.R
 *.tif
 *.zip
 *.csv
+release_to_cran.R

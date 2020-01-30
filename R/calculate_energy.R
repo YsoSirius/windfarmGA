@@ -107,7 +107,12 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                               plotit = FALSE) {
 
   ## Assign constant / default values
-  cT <- 0.88;   air_rh <- 1.225;   k <- 0.075
+  # cT <- 0.88;   
+  cT <- getOption("windfarmGA.cT");   
+  # air_rh <- 1.225;   
+  air_rh <- getOption("windfarmGA.air_rh")
+  # k <- 0.075
+  k <- getOption("windfarmGA.k")
 
   ## Get the Coordinates of the individual / wind farm.
   xy_individual <- sel[, 2:3]
@@ -388,18 +393,6 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                       "AbschatInProz" = round(tmp[2, ], 4))
 
     ## Calculate the wind velocity reduction.
-    ## Names -> NULL otherwise all rows are called Windmean
-    # tmp <- unlist(lapply(1:lnro, function(p) {
-    #   RotrR <- windlist[p, "RotorR"]
-    #   a <- 1 - sqrt(1 - cT)
-    #   s <- windlist[p, "Laenge_B"] / RotrR
-    #   b <- (1 + (k1[p] * s)) ^ 2
-    #   aov <- windlist[p, "A_ov"] / windlist[p, "Rotorflaeche"]
-    #   windlist[p, "Windmean"] * (aov * (a / b))
-    #   }
-    # ))
-    # names(tmp) <- NULL
-    ## TODO - now vectorized, but correct??
     a <- 1 - sqrt(1 - cT)
     s <- windlist[, "Laenge_B"] / windlist[, "RotorR"]
     b <- (1 + (k1 * s))^2

@@ -90,7 +90,6 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
   lepa <- length(mut[1,])
   mut1 <- vector("list", lepa)
   for (i in 1:lepa) {
-    # i=75
     tmp <- mut[,i]
     e <- tmp == 1
     ## How much turbines are there too many?

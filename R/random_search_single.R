@@ -78,6 +78,9 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
   
   probabDir <- winddata[[2]]
   winddata <- winddata[[1]]
+  
+  max_angle <- getOption("windfarmGA.max_angle")
+  max_dist <- getOption("windfarmGA.max_distance")
   ###################
 
   ## Get the starting layout of windfarm[o]
@@ -191,7 +194,7 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
     resCalcen <- calculate_energy(sel = coordLayRnd,
                              referenceHeight = as.numeric(result[bestGARun,]$inputData[12, ]),
                              RotorHeight = as.numeric(result[bestGARun,]$inputData[13, ]),
-                             SurfaceRoughness = 0.3, wnkl = 20, distanz = 100000,
+                             SurfaceRoughness = 0.3, wnkl = max_angle, distanz = max_dist,
                              resol = resolu, dirSpeed = winddata,
                              RotorR = as.numeric(result[bestGARun,]$inputData[1,]),
                              polygon1 = Polygon1, topograp = FALSE,

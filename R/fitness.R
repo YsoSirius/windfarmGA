@@ -115,6 +115,10 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   # if (known) {
   ###################
 
+  ## Get maximum angle and maximum distance
+  wnkl_max <- getOption("windfarmGA.max_angle")
+  dist_max <- getOption("windfarmGA.max_distance")
+  
   # Calculate EnergyOutput for every config i and for
   # every angle j - in Parallel
   if (Parallel == TRUE) {
@@ -122,7 +126,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       windfarmGA::calculate_energy(
         sel = selection[[k]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-        wnkl = 20, distanz = 100000,
+        wnkl = wnkl_max, distanz = dist_max,
         polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
         weibull = weibull)
@@ -137,7 +141,7 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
       e <- calculate_energy(
         sel = selection[[i]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-        wnkl = 20, distanz = 100000,
+        wnkl = wnkl_max, distanz = dist_max,
         polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
         weibull = weibull)
@@ -227,7 +231,6 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
 
   ## Split one from every run and select only Energy information
   maxparkeff <- do.call(rbind, lapply(euniqu, function(x) {
-    # subset.matrix(x[1,], select = "EnergyOverall")
     x[1, "EnergyOverall"]
   }))
 

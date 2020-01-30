@@ -27,6 +27,7 @@ AUT_msk_alt.vrt
 g100_06.tif
 a120_100m_Lambert.tif
 k120_100m_Lambert.tif
+release_to_cran.R
 ^docs$
 ^pkgdown$
 ^cran-comments\.md$

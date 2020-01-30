@@ -114,7 +114,8 @@ selection         <- function(fit, Grid, teil, elitism, nelit,
   }
 
   ## Upper Limit of selected individuals is 100.
-  if (nPar > 100) {nPar <- 100}
+  max_selec <- getOption("windfarmGA.max_selection")
+  if (nPar > max_selec) {nPar <- max_selec}
 
   ## Randomly sample some individuals, based on their fitness value
   childsRunID <- sample(new1[, 1], nPar, prob = new1[, 'Parkfitness'], 

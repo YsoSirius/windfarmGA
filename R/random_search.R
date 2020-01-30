@@ -63,8 +63,6 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
   ## Remove duplicated "Runs", assign do resldat and sort by Energy
   resldat <- resldat[!duplicated(resldat[, 'Run']),, drop=FALSE]
   resldat <- as.data.frame(resldat)
-  # colnames(resldat) <- c("X", "Y", "EfficAllDir", "EnergyOverall", "AbschGesamt", "Run",
-                         # "RotorR", "Rect_ID", "Parkfitness")
   resldat$GARun <- 1:nrow(resldat)
   ## Sort by EnergyOverall / column 4, pass cran tests??
   resldat <- resldat[order(resldat[, 4], decreasing = TRUE),]
@@ -110,6 +108,9 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
   rotor_radius <- as.numeric(result[1,]$inputData[1,])
 
   RandResultAll <- vector(mode = "list", length = best)
+  
+  max_angle <- getOption("windfarmGA.max_angle")
+  max_dist <- getOption("windfarmGA.max_distance")
   ########
 
   ## Optimize Layout in Random Setps
@@ -202,7 +203,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
                                referenceHeight = ref_height,
                                RotorHeight = rotor_height,
                                SurfaceRoughness = 0.3,
-                               wnkl = 20, distanz = 100000,
+                               wnkl = max_angle, distanz = max_dist,
                                resol = resolu, dirSpeed = winddata,
                                RotorR = rotor_radius,
                                polygon1 = Polygon1, topograp = FALSE,

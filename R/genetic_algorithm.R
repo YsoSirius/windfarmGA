@@ -266,7 +266,8 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   resol2 <- fcrR * Rotor
 
   ## Max Amount of individuals in the Crossover-Method
-  CrossUpLimit <- 300
+  # CrossUpLimit <- 300
+  CrossUpLimit <- getOption("windfarmGA.max_population")
 
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
@@ -277,7 +278,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     if (numCluster > max_cores) {
       numCluster <- max_cores - 1
     }
-    type_cluster <- "PSOCK"
+    type_cluster <- "PSOCK"  ## TODO - should this be available as option too?
     cl <- parallel::makeCluster(numCluster, type = type_cluster)
     doParallel::registerDoParallel(cl)
     # on.exit(parallel::stopCluster(cl))
@@ -622,15 +623,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     x1 <- round(bestPaEf[[i]][, "EnergyOverall"][[1]], 2)
     y1 <- round(bestPaEf[[i]][, "EfficAllDir"][[1]], 2)
     e1 <- bestPaEf[[i]][, "EfficAllDir"]
-
-    # allparksNewplot <- subset.matrix(allparks,
-    #                                  select = c("Rect_ID",
-    #                                             "AbschGesamt",
-    #                                             "Parkfitness"))
-    # 
-    # allparksNewplot <- aggregate(allparksNewplot,
-    #                              list(allparksNewplot[, "Rect_ID"]), mean)
-    # allparksNewplot <- allparksNewplot[, -1]
     ##################
 
     if (plotit) {
@@ -696,6 +688,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       u <- 1.1
       beorwor[[i]] <- cbind(0, 0)
     }
+    ## TODO - better fuzzy model and expose weights and values by options?
     if (i >= 2 && i <= iteration) {
       t0 <- subset.matrix(allparks, !duplicated(allparks[, "Run"]))
       t0 <- t0[, "Parkfitness"]
@@ -799,10 +792,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("Selection  -  Amount of Individuals: ",
                 length(selec6best_bin[1, -1]), "\n"))
     }
-    # Trus1 <- colSums(selec6best_bin)[-1] == n
-    # if (any(Trus1 == FALSE)) {
-    #   stop("Number of turbines is not as required. Trus1. Fix BUG")
-    # }
     nindivsel <- length(selec6best_bin[1, -1])
 
     ## CROSSOVER #################
@@ -853,10 +842,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("\nTrimToN    -  Amount of Individuals: ",
                 length(mut1[1, ])))
     }
-    # Trus3 <- colSums(mut1) == n
-    # if (any(Trus3 == FALSE)) {
-    #   stop("Number of turbines is not as required. Trus3. Fix Bug.")
-    # }
 
     nindiv[[i]] <- cbind(nindivfit, nindivsel, nindivcros, nindivmut)
     if (maxParkwirkungsg == 100) {
