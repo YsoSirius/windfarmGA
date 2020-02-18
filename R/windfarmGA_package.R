@@ -28,7 +28,6 @@
 #' @importFrom sp spTransform proj4string Polygon Polygons SpatialPolygons CRS
 #'   coordinates SpatialPoints gridded spsample over bbox
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
-#' @importFrom rgdal readOGR
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics plot.new text plot par points abline title lines grid
 #'   layout axis legend mtext
@@ -51,7 +50,6 @@
 #' @importFrom gstat idw
 #' @importFrom spatstat is.tess hextess hexgrid owin spatstat.options
 #' @importFrom magrittr %>% 
-#' @importFrom rworldmap getMap
 #' @importFrom Rcpp sourceCpp
 #' 
 #' @useDynLib windfarmGA, .registration = TRUE

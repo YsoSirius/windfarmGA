@@ -363,6 +363,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                       "Rotorflaeche" = (windlist[, "RotorR"] ^ 2) * pi )
 
     ## Calculate the overlapping area and the overlapping percentage.
+    ## TODO make this in 3D (especially if terrain is included)
     tmp <- sapply(1:lnro, function(o) {
       Rotorf <- windlist[o, "RotorR"]
       leA <- windlist[o, "Laenge_A"]
