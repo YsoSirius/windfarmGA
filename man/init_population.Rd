@@ -49,4 +49,3 @@ Other Genetic Algorithm Functions: \code{\link{crossover}},
   \code{\link{mutation}}, \code{\link{selection}},
   \code{\link{trimton}}, \code{\link{windfarmGA}}
 }
-\concept{Genetic Algorithm Functions}

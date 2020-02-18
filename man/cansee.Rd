@@ -32,4 +32,3 @@ Other Viewshed Analysis: \code{\link{interpol_view}},
   \code{\link{plot_viewshed}}, \code{\link{rasterprofile}},
   \code{\link{viewTo}}, \code{\link{viewshed}}
 }
-\concept{Viewshed Analysis}

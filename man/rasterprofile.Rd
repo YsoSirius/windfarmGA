@@ -30,4 +30,3 @@ Other Viewshed Analysis: \code{\link{cansee}},
   \code{\link{interpol_view}}, \code{\link{plot_viewshed}},
   \code{\link{viewTo}}, \code{\link{viewshed}}
 }
-\concept{Viewshed Analysis}

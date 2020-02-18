@@ -5,8 +5,8 @@
 \title{Calculate Energy Outputs of Individuals}
 \usage{
 calculate_energy(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl,
-  distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp,
-  cclRaster, weibull, plotit = FALSE)
+  distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp, cclRaster,
+  weibull, plotit = FALSE)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population
@@ -129,4 +129,3 @@ Other Wind Energy Calculation Functions: \code{\link{barometric_height}},
   \code{\link{get_dist_angles}},
   \code{\link{turbine_influences}}
 }
-\concept{Wind Energy Calculation Functions}

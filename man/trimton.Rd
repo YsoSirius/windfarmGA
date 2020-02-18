@@ -95,4 +95,3 @@ Other Genetic Algorithm Functions: \code{\link{crossover}},
   \code{\link{init_population}}, \code{\link{mutation}},
   \code{\link{selection}}, \code{\link{windfarmGA}}
 }
-\concept{Genetic Algorithm Functions}

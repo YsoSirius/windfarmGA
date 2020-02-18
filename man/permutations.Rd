@@ -39,4 +39,3 @@ Original versions by Bill Venables
 \email{Bill.Venables@cmis.csiro.au.} Extended to handle repeats.allowed
 by Gregory R. Warnes \email{greg@warnes.net.}
 }
-\concept{Helper Functions}

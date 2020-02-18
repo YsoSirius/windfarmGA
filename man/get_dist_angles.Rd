@@ -62,4 +62,3 @@ Other Wind Energy Calculation Functions: \code{\link{barometric_height}},
   \code{\link{calculate_energy}},
   \code{\link{turbine_influences}}
 }
-\concept{Wind Energy Calculation Functions}

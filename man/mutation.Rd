@@ -45,4 +45,3 @@ Other Genetic Algorithm Functions: \code{\link{crossover}},
   \code{\link{init_population}}, \code{\link{selection}},
   \code{\link{trimton}}, \code{\link{windfarmGA}}
 }
-\concept{Genetic Algorithm Functions}

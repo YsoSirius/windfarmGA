@@ -34,4 +34,3 @@ Other Helper Functions: \code{\link{dup_coords}},
   \code{\link{readinteger}}, \code{\link{tess2SPdf}},
   \code{\link{windata_format}}
 }
-\concept{Helper Functions}

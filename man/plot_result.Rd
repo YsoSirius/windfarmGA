@@ -4,9 +4,8 @@
 \alias{plot_result}
 \title{Plot the best results}
 \usage{
-plot_result(result, Polygon1, best = 3, plotEn = 1,
-  topographie = FALSE, Grid, Projection, sourceCCLRoughness, sourceCCL,
-  weibullsrc)
+plot_result(result, Polygon1, best = 3, plotEn = 1, topographie = FALSE,
+  Grid, Projection, sourceCCLRoughness, sourceCCL, weibullsrc)
 }
 \arguments{
 \item{result}{The output of \code{\link{windfarmGA}} or
@@ -83,4 +82,3 @@ Other Plotting Functions: \code{\link{interpol_view}},
   \code{\link{plot_windrose}},
   \code{\link{random_search_single}}
 }
-\concept{Plotting Functions}

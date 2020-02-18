@@ -85,4 +85,3 @@ Other Helper Functions: \code{\link{dup_coords}},
 \author{
 Jose Hidasi (original) / Sebastian Gatscha (adapted)
 }
-\concept{Helper Functions}

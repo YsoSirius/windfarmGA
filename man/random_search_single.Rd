@@ -4,8 +4,7 @@
 \alias{random_search_single}
 \title{Randomize the location of a single turbine}
 \usage{
-random_search_single(result, Polygon1, n, Plot, GridMethod,
-  max_dist = 2.2)
+random_search_single(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2)
 }
 \arguments{
 \item{result}{The resulting matrix of the function
@@ -46,5 +45,3 @@ Other Plotting Functions: \code{\link{interpol_view}},
   \code{\link{plot_windfarmGA}},
   \code{\link{plot_windrose}}
 }
-\concept{Plotting Functions}
-\concept{Randomization}

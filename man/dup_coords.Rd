@@ -40,4 +40,3 @@ Other Helper Functions: \code{\link{getDEM}},
 Paulo Justiniano Ribeiro Jr. \email{paulojus@leg.ufpr.br}
 Peter J. Diggle \email{p.diggle@lancaster.ac.uk}
 }
-\concept{Helper Functions}

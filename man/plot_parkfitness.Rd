@@ -37,4 +37,3 @@ Other Plotting Functions: \code{\link{interpol_view}},
   \code{\link{plot_windrose}},
   \code{\link{random_search_single}}
 }
-\concept{Plotting Functions}
