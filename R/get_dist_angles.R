@@ -67,6 +67,7 @@ get_dist_angles     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
     points(turbines_ahead[,1], y = turbines_ahead[,2], col = "red", pch = 20)
   }
 
+  ## TODO - optimize this part (Write the whole function get_dist_angles or even turbine_influences in C++)
   ## Are there turbines in front or not? If yes, calculate distances and
   ## angles and check if they might have an influence or not
   len2 <- length(turbines_ahead[,1L])
@@ -89,20 +90,17 @@ get_dist_angles     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
     if (plotAngles) {
       points(dl[,'Ax'], dl[,'Ay'], col = "orange", pch = 20, cex = 2)
     }
-    ## TODO can i take length here?
     ## Are turbines left after subsetting?
     if (nrow(dl) != 0) {
       ## If possible influencing turbines exist, save them in the variable "DataLun3"
       DataLun3 <- dl
     } else {
-      ## TODO WHY??
       ## If no possible influencing turbines remain and the variable "dl" therefoe is empty,
       ## the variable "DataLun3" is filled with default Values of 0 for distances and angles
       DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 8)), nrow = 1, ncol = 12)
       colnames(DataLun3) <- col_names
     }
   } else {
-    ## TODO WHY??
     # If no turbines are in front, the variabel "DataLun3" is again filled with default 
     ## values of 0 for angles and distances.
     DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 8)), nrow = 1, ncol = 12)
@@ -111,3 +109,4 @@ get_dist_angles     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
 
   return(DataLun3)
 }
+
