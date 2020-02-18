@@ -41,6 +41,10 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   }
   ## Load Polygon from a Source File. Just if dns and layer are not missing.
   if (!missing(dns) & !missing(layer)) {
+    if (!requireNamespace("rgdal", quietly = TRUE)) {
+      ## TODO can be done with sf::st_read
+      stop("Package `rgdal` is not installed, but required to read a Shapefile")
+    }
     # Input the Source of the desired Polygon
     Polygon1 <- rgdal::readOGR(dsn = dns, layer = layer)
     plot(Polygon1, col = "red", main = "Original Input Shapefile")
@@ -164,11 +168,6 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   if (Parallel == TRUE) {
     # numPossClus <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
     numPossClus <- parallel::detectCores()
-    # if (numPossClus == 1) {
-    #   cat("\nOnly 1 core is available. Set Parallel to FALSE")
-    #   numCluster <- 1
-    #   Parallel <- FALSE
-    # } 
     if (numCluster > numPossClus) {
       cat("\nNumber of clusters is bigger than the amount of available cores. Reduce to max.")
       numCluster <- numPossClus

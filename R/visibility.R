@@ -395,7 +395,11 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   
   if ("?" %in% col) {ask <- TRUE}
   
-  countriesSP <- rworldmap::getMap(resolution=resol)
+  if (requireNamespace("rworldmap", quietly = TRUE)) {
+    countriesSP <- rworldmap::getMap(resolution = resol)
+  } else {
+    stop("Package 'rworldmap' is required, but not installed")
+  }
   
   if (ask == TRUE) {
     print(sort(names(countriesSP)))

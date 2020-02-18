@@ -8,12 +8,10 @@ Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
 Description: The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 Depends:
     R (>= 3.2.3)
-Imports: rgdal,
-    Rcpp,
+Imports: Rcpp,
     raster,
     sf,
     sp,
-    rworldmap,
     gstat,
     ggplot2,
     RColorBrewer,
@@ -37,6 +35,8 @@ BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 6.1.1
 Suggests: 
     testthat,
+    rgdal,
+    rworldmap,
     pkgdown,
     dplyr,
     rgeos

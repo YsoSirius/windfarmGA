@@ -90,31 +90,6 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   probability_direction <- dirspeed[[2]]
   dirspeed <- dirspeed[[1]]
 
-  ## Layout Saving 1   ###################
-  # selconfig <- sapply(selection, function(i) {paste0(i$ID, collapse = ",")})
-  # if (exists("globalparks")) {
-  #   if (verbose) {
-  #     cat("\n")
-  #     print("come in here?")
-  #     print(length(globalparks))
-  #   }
-  #   # any(duplicated(selconfig))
-  #   if (any(selconfig %in% names(globalparks)) | any(duplicated(selconfig))) {
-  #     # browser()
-  #     alr_known_ind = which(selconfig %in% names(globalparks))
-  #     gP_ind <- which(names(globalparks) %in% selconfig)
-  #     alr_known = globalparks[gP_ind]
-  #     selection = selection[-alr_known_ind]
-  #     cat("\n")
-      # cat("Some Layouts are already known. Get values from cached results
-      #     instead of recalculating")
-  #     # browser()
-  #   }
-  # }
-  # known <- TRUE
-  # if (known) {
-  ###################
-
   ## Get maximum angle and maximum distance
   wnkl_max <- getOption("windfarmGA.max_angle")
   dist_max <- getOption("windfarmGA.max_distance")
@@ -242,25 +217,10 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   euniqu <- lapply(1:length(euniqu), function(i) {
       cbind(euniqu[[i]], "Parkfitness" = maxparkeff[i, ])
     })
-  # }
 
   names(euniqu) <- unlist(lapply(euniqu, function(i) {
     paste0(i[, "Rect_ID"], collapse = ",")
   }))
-  ## Layout Saving 2   ###################
-  # if (exists("globalparks")) {
-  #   if (any(selconfig %in% names(globalparks)) | any(duplicated(selconfig))) {
-  #     euniqu = c(euniqu, alr_known)
-  #   }
-  #   globalparks <- c(euniqu[!names(euniqu) %in% names(globalparks)], globalparks)
-  #   globalparks <<- globalparks[!duplicated(names(globalparks))]
-  #   if(any(duplicated(names(globalparks)))){
-  #     cat("some layouts are saved multiple times. Remove before adding to globalparks")
-  #   }
-  # } else {
-  #   globalparks <<- euniqu
-  # }
-  ###################
 
   return(euniqu)
 }
