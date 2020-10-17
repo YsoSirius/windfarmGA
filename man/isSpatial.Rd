@@ -27,6 +27,7 @@ If the columns are named, it will look for common abbreviation to
 }
 \examples{
 \donttest{
+library(sp)
 df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
             c(4499991, 2669343), c(4499991, 2668272))
 isSpatial(df)
