@@ -37,8 +37,7 @@ library(sp)
 Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
 Polygon1 <- Polygons(list(Polygon1),1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 
 ## Create a uniform and unidirectional wind data.frame and plots the
@@ -90,9 +89,13 @@ colSums(mut1)
 }
 }
 \seealso{
-Other Genetic Algorithm Functions: \code{\link{crossover}},
-  \code{\link{fitness}}, \code{\link{genetic_algorithm}},
-  \code{\link{init_population}}, \code{\link{mutation}},
-  \code{\link{selection}}, \code{\link{windfarmGA}}
+Other Genetic Algorithm Functions: 
+\code{\link{crossover}()},
+\code{\link{fitness}()},
+\code{\link{genetic_algorithm}()},
+\code{\link{init_population}()},
+\code{\link{mutation}()},
+\code{\link{selection}()},
+\code{\link{windfarmGA}()}
 }
 \concept{Genetic Algorithm Functions}

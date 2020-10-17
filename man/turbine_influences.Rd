@@ -39,8 +39,7 @@ polYgon <- Polygon(rbind(c(0, 0), c(0, 2000),
 c(2000, 2000), c(2000, 0)))
 polYgon <- Polygons(list(polYgon), 1)
 polYgon <- SpatialPolygons(list(polYgon))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+Projection <- "+init=epsg:3035"
 proj4string(polYgon) <- CRS(Projection)
 
 t <- as.matrix(cbind(x = runif(10, 0, extent(polYgon)[2]),
@@ -53,8 +52,9 @@ res <- turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = TRUE)
 
 }
 \seealso{
-Other Wind Energy Calculation Functions: \code{\link{barometric_height}},
-  \code{\link{calculate_energy}},
-  \code{\link{get_dist_angles}}
+Other Wind Energy Calculation Functions: 
+\code{\link{barometric_height}()},
+\code{\link{calculate_energy}()},
+\code{\link{get_dist_angles}()}
 }
 \concept{Wind Energy Calculation Functions}

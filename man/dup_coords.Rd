@@ -28,13 +28,19 @@ the positions of the duplicated coordinates. Also sets a method for
 duplicated. Helper function for \code{\link{plot_heatmap}}
 }
 \seealso{
-Other Helper Functions: \code{\link{getDEM}},
-  \code{\link{getISO3}}, \code{\link{get_grids}},
-  \code{\link{grid_area}}, \code{\link{hexa_area}},
-  \code{\link{isSpatial}}, \code{\link{permutations}},
-  \code{\link{readintegerSel}}, \code{\link{readinteger}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{getDEM}()},
+\code{\link{getISO3}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{readintegerSel}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }
 \author{
 Paulo Justiniano Ribeiro Jr. \email{paulojus@leg.ufpr.br}

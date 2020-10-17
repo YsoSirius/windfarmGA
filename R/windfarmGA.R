@@ -47,22 +47,38 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
     title(sub = Polygon1@proj4string, line = 1)
     readline(prompt = "\nHit <ENTER> if this is your Polygon")
   }
+  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
+  
   ##  Project the Polygon to LAEA if it is not already.
   if (is.na(sp::proj4string(Polygon1))) {
     cat("Polygon is not projected. Lambert Azimuthal Equal Area Projection is used.\n")
-    Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-    +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    if (PROJ6) {
+      Projection <- "+init=epsg:3035"
+    } else {
+      Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    }
     sp::proj4string(Polygon1) <- CRS(Projection)
   }
   if (missing(Projection)) {
     cat("No Projection is given. Take Lambert Azimuthal Equal Area Projection.\n")
-    Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-    +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    if (PROJ6) {
+      Projection <- "+init=epsg:3035"
+    } else {
+      Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    }
   } else {
     Projection <- Projection
   }
-  if (as.character(raster::crs(Polygon1)) != Projection) {
-    Polygon1 <- sp::spTransform(Polygon1, CRSobj = Projection)
+  if (PROJ6) {
+    if (!isTRUE(all.equal(wkt(Polygon1), wkt(CRS(Projection))))) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = CRS(Projection))
+    }
+  } else {
+    if (as.character(raster::crs(Polygon1)) != Projection) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = Projection)
+    }
   }
   plot(Polygon1, col = "red", main = "Projected Input Shapefile")
   title(sub = Polygon1@proj4string, line = 1)

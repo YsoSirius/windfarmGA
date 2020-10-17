@@ -4,8 +4,16 @@
 \alias{plot_windfarmGA}
 \title{Plot the results of an optimization run}
 \usage{
-plot_windfarmGA(result, Polygon1, GridMethod = "r", whichPl = "all",
-  best = 1, plotEn = 1, Projection, weibullsrc)
+plot_windfarmGA(
+  result,
+  Polygon1,
+  GridMethod = "r",
+  whichPl = "all",
+  best = 1,
+  plotEn = 1,
+  Projection,
+  weibullsrc
+)
 }
 \arguments{
 \item{result}{The output of \code{\link{windfarmGA}} or
@@ -57,14 +65,17 @@ plot_windfarmGA(resultrect, GridMethod = "r", polygon, whichPl = "all", best = 1
 }
 }
 \seealso{
-Other Plotting Functions: \code{\link{interpol_view}},
-  \code{\link{plot_cloud}}, \code{\link{plot_development}},
-  \code{\link{plot_evolution}},
-  \code{\link{plot_fitness_evolution}},
-  \code{\link{plot_heatmap}},
-  \code{\link{plot_parkfitness}},
-  \code{\link{plot_result}}, \code{\link{plot_viewshed}},
-  \code{\link{plot_windrose}},
-  \code{\link{random_search_single}}
+Other Plotting Functions: 
+\code{\link{interpol_view}()},
+\code{\link{plot_cloud}()},
+\code{\link{plot_development}()},
+\code{\link{plot_evolution}()},
+\code{\link{plot_fitness_evolution}()},
+\code{\link{plot_heatmap}()},
+\code{\link{plot_parkfitness}()},
+\code{\link{plot_result}()},
+\code{\link{plot_viewshed}()},
+\code{\link{plot_windrose}()},
+\code{\link{random_search_single}()}
 }
 \concept{Plotting Functions}

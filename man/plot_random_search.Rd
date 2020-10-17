@@ -31,7 +31,8 @@ plot_random_search(resultRS = Res, result = resultrect, Polygon1 = polygon, best
 }
 }
 \seealso{
-Other Randomization: \code{\link{random_search_single}},
-  \code{\link{random_search}}
+Other Randomization: 
+\code{\link{random_search_single}()},
+\code{\link{random_search}()}
 }
 \concept{Randomization}

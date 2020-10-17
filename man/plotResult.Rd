@@ -4,9 +4,18 @@
 \alias{plotResult}
 \title{Deprecated use \code{\link[windfarmGA]{plot_result}} instead.}
 \usage{
-plotResult(result, Polygon1, best = 3, plotEn = 1,
-  topographie = FALSE, Grid, Projection, sourceCCLRoughness, sourceCCL,
-  weibullsrc)
+plotResult(
+  result,
+  Polygon1,
+  best = 3,
+  plotEn = 1,
+  topographie = FALSE,
+  Grid,
+  Projection,
+  sourceCCLRoughness,
+  sourceCCL,
+  weibullsrc
+)
 }
 \arguments{
 \item{result}{The output of \code{\link{windfarmGA}} or

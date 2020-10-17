@@ -106,8 +106,7 @@
 #'                           c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' Projection <- "+init=epsg:3035"
 #' proj4string(Polygon1) <- CRS(Projection)
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plot the
@@ -236,8 +235,12 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     iteration <- 20
   }
   if (missing(Projection)) {
-    ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-    +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
+      ProjLAEA <- "+init=epsg:3035"
+    } else {
+      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    }
   } else {
     ProjLAEA <- Projection
   }
@@ -370,15 +373,21 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   
   #######################
   ## Project Polygon ###############
-  if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
-    Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+  if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
+    if (suppressWarnings(!isTRUE( all.equal(wkt(Polygon1), wkt(CRS(ProjLAEA))) ))) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    }
+  } else {
+    if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    }
   }
+
 
   ## grid_area ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
-  ## TODO - make whole next part nicer/shorter
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
     Grid1 <- grid_area(shape = Polygon1, resol = resol2, prop = Proportionality)
@@ -388,7 +397,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     # Calculate a Grid with hexagonal grid cells
     Grid1 <- hexa_area(Polygon1, resol2 / 2)
     Grid <- Grid1[[1]]
-    sp::proj4string(Grid1[[2]]) <- sp::proj4string(Polygon1)
     grid_filtered <- Grid1[[2]]
   }
 
@@ -922,8 +930,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 #'                           c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1), 1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' Projection <- "+init=epsg:3035"
 #' proj4string(Polygon1) <- CRS(Projection)
 #' df_fort <- ggplot2::fortify(Polygon1)
 #' isSpatial(df_fort, Projection)
@@ -969,7 +976,11 @@ isSpatial <- function(shape, proj) {
     pltm <- Polygons(list(pltm), 1)
     shape <- SpatialPolygons(list(pltm))
     if (!missing(proj)) {
-      sp::proj4string(shape) <- proj
+      if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
+        slot(shape, "proj4string") <- CRS(SRS_string = "EPSG:3035")
+      } else {
+        sp::proj4string(shape) <- proj
+      }
     }
   }
   return(shape)

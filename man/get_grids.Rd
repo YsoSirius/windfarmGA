@@ -27,9 +27,8 @@ library(sp)
 Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
 Polygon1 <- Polygons(list(Polygon1),1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-proj4string(Polygon1) <- CRS(Projection)
+Projection <- "+init=epsg:3035"
+proj4string(Polygon1) <- Projection
 
 ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
 Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
@@ -76,12 +75,18 @@ head(fit)
 }
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{getISO3}},
-  \code{\link{grid_area}}, \code{\link{hexa_area}},
-  \code{\link{isSpatial}}, \code{\link{permutations}},
-  \code{\link{readintegerSel}}, \code{\link{readinteger}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{getISO3}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{readintegerSel}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }
 \concept{Helper Functions}

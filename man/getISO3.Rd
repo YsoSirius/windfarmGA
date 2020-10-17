@@ -4,8 +4,14 @@
 \alias{getISO3}
 \title{getISO3}
 \usage{
-getISO3(pp, crs_pp = 4326, col = "ISO3", resol = "low",
-  coords = c("LONG", "LAT"), ask = F)
+getISO3(
+  pp,
+  crs_pp = 4326,
+  col = "ISO3",
+  resol = "low",
+  coords = c("LONG", "LAT"),
+  ask = F
+)
 }
 \arguments{
 \item{pp}{SpatialPoints or matrix}
@@ -41,12 +47,18 @@ getISO3(pp = points, crs_pp = 3035)
 }
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{get_grids}},
-  \code{\link{grid_area}}, \code{\link{hexa_area}},
-  \code{\link{isSpatial}}, \code{\link{permutations}},
-  \code{\link{readintegerSel}}, \code{\link{readinteger}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{readintegerSel}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }
 \concept{Helper Functions}

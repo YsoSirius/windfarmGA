@@ -64,21 +64,38 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   ## Check Projections and reference systems
   Polygon1 <- windfarmGA::isSpatial(Polygon1)
 
-
+  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   if (missing(Projection)) {
-    ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-              +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    if (PROJ6) {
+      ProjLAEA <- "+init=epsg:3035"
+    } else {
+      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    }
   } else {
     ProjLAEA <- Projection
   }
-  if (is.na(sp::proj4string(Polygon1))) {
-    ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
-    sp::proj4string(Polygon1) <- ProjLAEA
-    # stop("Polygon is not projected.", call. = FALSE )
-    message("Polygon is not projected. Same projection from result will be assumed.")
-  }
-  if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
-    Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+  
+  if (PROJ6) {
+    if (is.na(slot(Polygon1, "proj4string"))) {
+      ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
+      slot(Polygon1, "proj4string") <- CRS(ProjLAEA)
+      # stop("Polygon is not projected.", call. = FALSE )
+      message("Polygon is not projected. Same projection from result will be assumed.")
+    }
+    if (suppressWarnings(!isTRUE( all.equal(wkt(Polygon1), wkt(CRS(ProjLAEA))) ))) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    }
+  } else {
+    if (is.na(sp::proj4string(Polygon1))) {
+      ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
+      sp::proj4string(Polygon1) <- ProjLAEA
+      # stop("Polygon is not projected.", call. = FALSE )
+      message("Polygon is not projected. Same projection from result will be assumed.")
+    }
+    if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    }
   }
   if (missing(sourceCCL)) {
     sourceCCL <- NULL

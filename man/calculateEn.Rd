@@ -4,9 +4,23 @@
 \alias{calculateEn}
 \title{Deprecated use \code{\link[windfarmGA]{calculate_energy}} instead.}
 \usage{
-calculateEn(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl,
-  distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp,
-  cclRaster, weibull, plotit = FALSE)
+calculateEn(
+  sel,
+  referenceHeight,
+  RotorHeight,
+  SurfaceRoughness,
+  wnkl,
+  distanz,
+  polygon1,
+  resol,
+  RotorR,
+  dirSpeed,
+  srtm_crop,
+  topograp,
+  cclRaster,
+  weibull,
+  plotit = FALSE
+)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population

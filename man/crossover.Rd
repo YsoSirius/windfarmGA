@@ -54,10 +54,13 @@ crossover(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 
 }
 \seealso{
-Other Genetic Algorithm Functions: \code{\link{fitness}},
-  \code{\link{genetic_algorithm}},
-  \code{\link{init_population}}, \code{\link{mutation}},
-  \code{\link{selection}}, \code{\link{trimton}},
-  \code{\link{windfarmGA}}
+Other Genetic Algorithm Functions: 
+\code{\link{fitness}()},
+\code{\link{genetic_algorithm}()},
+\code{\link{init_population}()},
+\code{\link{mutation}()},
+\code{\link{selection}()},
+\code{\link{trimton}()},
+\code{\link{windfarmGA}()}
 }
 \concept{Genetic Algorithm Functions}

@@ -26,8 +26,11 @@ A boolean vector, indicating if Point 1 (xy1) is visible from all
 Sample a raster along a straight line between 2 points
 }
 \seealso{
-Other Viewshed Analysis: \code{\link{cansee}},
-  \code{\link{interpol_view}}, \code{\link{plot_viewshed}},
-  \code{\link{viewTo}}, \code{\link{viewshed}}
+Other Viewshed Analysis: 
+\code{\link{cansee}()},
+\code{\link{interpol_view}()},
+\code{\link{plot_viewshed}()},
+\code{\link{viewTo}()},
+\code{\link{viewshed}()}
 }
 \concept{Viewshed Analysis}

@@ -16,12 +16,18 @@ Returns a SpatialPolygons. (SpatialPolygons)
 Returns a Spatial Polygons object from a Tesselation object.
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{getISO3}},
-  \code{\link{get_grids}}, \code{\link{grid_area}},
-  \code{\link{hexa_area}}, \code{\link{isSpatial}},
-  \code{\link{permutations}}, \code{\link{readintegerSel}},
-  \code{\link{readinteger}}, \code{\link{splitAt}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{getISO3}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{readintegerSel}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{windata_format}()}
 }
 \concept{Helper Functions}

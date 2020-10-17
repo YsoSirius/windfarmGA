@@ -4,8 +4,7 @@
 \alias{random_search}
 \title{Randomize the output of the Genetic Algorithm}
 \usage{
-random_search(result, Polygon1, n, best, Plot, GridMethod,
-  max_dist = 2.2)
+random_search(result, Polygon1, n, best, Plot, GridMethod, max_dist = 2.2)
 }
 \arguments{
 \item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}
@@ -45,7 +44,8 @@ plot_random_search(resultRS = new, result = resultrect, Polygon1 = polygon, best
 }
 }
 \seealso{
-Other Randomization: \code{\link{plot_random_search}},
-  \code{\link{random_search_single}}
+Other Randomization: 
+\code{\link{plot_random_search}()},
+\code{\link{random_search_single}()}
 }
 \concept{Randomization}

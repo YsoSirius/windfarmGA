@@ -24,7 +24,7 @@
 #'
 #' @importFrom raster crs getData crop mask projectRaster reclassify extent
 #'   rasterize res rasterToPolygons plot area intersect raster calc extract
-#'   cellStats terrain resample overlay cellFromXY ncell projection values
+#'   cellStats terrain resample overlay cellFromXY ncell projection values wkt
 #' @importFrom sp spTransform proj4string Polygon Polygons SpatialPolygons CRS
 #'   coordinates SpatialPoints gridded spsample over bbox
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
@@ -47,7 +47,7 @@
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster stopCluster detectCores
 #' @importFrom foreach foreach %dopar% 
-#' @importFrom methods as slot
+#' @importFrom methods as slot slot<-
 #' @importFrom gstat idw
 #' @importFrom spatstat is.tess hextess hexgrid owin spatstat.options
 #' @importFrom magrittr %>% 

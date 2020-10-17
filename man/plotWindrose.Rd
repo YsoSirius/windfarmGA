@@ -4,8 +4,18 @@
 \alias{plotWindrose}
 \title{Deprecated use \code{\link[windfarmGA]{plot_windrose}} instead.}
 \usage{
-plotWindrose(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
-  spdmax = 30, palette = "YlGnBu", spdseq = NULL, plotit = TRUE)
+plotWindrose(
+  data,
+  spd,
+  dir,
+  spdres = 2,
+  dirres = 10,
+  spdmin = 1,
+  spdmax = 30,
+  palette = "YlGnBu",
+  spdseq = NULL,
+  plotit = TRUE
+)
 }
 \arguments{
 \item{data}{A data.frame containing the wind information}

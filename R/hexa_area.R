@@ -45,9 +45,8 @@ tess2SPdf <- function(x) {
 #'                           c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' Projection <- "+init=epsg:3035"
+#' proj4string(Polygon1) <- Projection
 #' HexGrid <- hexa_area(Polygon1, 100, TRUE)
 #' plot(HexGrid[[2]])
 #'
@@ -72,7 +71,7 @@ hexa_area <- function(Polygon1, size, plotTrue = FALSE){
   points_hexa <- cbind("ID" = 1:nrow(points_hexa), points_hexa)
 
   ## Plot the Tesselation with the points if desired
-  if (plotTrue){
+  if (plotTrue) {
     plot.new()
     raster::plot(hexa_grid, col = "lightgreen",
                  main = paste("Resolution: ", size, "m",
@@ -85,7 +84,11 @@ hexa_area <- function(Polygon1, size, plotTrue = FALSE){
   }
 
   ## Assign same Projection as Polygon
-  sp::proj4string(hexa_grid) <- sp::proj4string(Polygon1)
+  if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
+    slot(hexa_grid, "proj4string") <- slot(Polygon1, "proj4string")
+  } else {
+    sp::proj4string(hexa_grid) <- sp::proj4string(Polygon1)
+  }
   invisible(list(points_hexa, hexa_grid))
 }
 

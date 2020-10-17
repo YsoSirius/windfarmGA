@@ -32,8 +32,7 @@ Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
                           c(4499991, 2669343), c(4499991, 2667172)))
 Polygon1 <- Polygons(list(Polygon1), 1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 DEM_meter <- getDEM(Polygon1)
 
@@ -42,8 +41,11 @@ res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc
 }
 }
 \seealso{
-Other Viewshed Analysis: \code{\link{cansee}},
-  \code{\link{interpol_view}}, \code{\link{plot_viewshed}},
-  \code{\link{rasterprofile}}, \code{\link{viewTo}}
+Other Viewshed Analysis: 
+\code{\link{cansee}()},
+\code{\link{interpol_view}()},
+\code{\link{plot_viewshed}()},
+\code{\link{rasterprofile}()},
+\code{\link{viewTo}()}
 }
 \concept{Viewshed Analysis}

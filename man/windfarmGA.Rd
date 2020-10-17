@@ -4,13 +4,37 @@
 \alias{windfarmGA}
 \title{Run a Genetic Algorithm to optimize a wind farm layout}
 \usage{
-windfarmGA(dns, layer, Polygon1, GridMethod, Projection, sourceCCL,
-  sourceCCLRoughness, vdirspe, Rotor = 30, fcrR = 3, n = 10,
-  topograp = FALSE, iteration = 20, referenceHeight = 50,
-  RotorHeight = 50, SurfaceRoughness = 0.14, Proportionality = 1,
-  mutr = 0.008, elitism = TRUE, nelit = 7, selstate = "FIX",
-  crossPart1 = "EQU", trimForce = TRUE, weibull, weibullsrc, Parallel,
-  numCluster, verbose = FALSE, plotit = FALSE)
+windfarmGA(
+  dns,
+  layer,
+  Polygon1,
+  GridMethod,
+  Projection,
+  sourceCCL,
+  sourceCCLRoughness,
+  vdirspe,
+  Rotor = 30,
+  fcrR = 3,
+  n = 10,
+  topograp = FALSE,
+  iteration = 20,
+  referenceHeight = 50,
+  RotorHeight = 50,
+  SurfaceRoughness = 0.14,
+  Proportionality = 1,
+  mutr = 0.008,
+  elitism = TRUE,
+  nelit = 7,
+  selstate = "FIX",
+  crossPart1 = "EQU",
+  trimForce = TRUE,
+  weibull,
+  weibullsrc,
+  Parallel,
+  numCluster,
+  verbose = FALSE,
+  plotit = FALSE
+)
 }
 \arguments{
 \item{dns}{The data source name (interpretation varies by driver — for some
@@ -145,9 +169,13 @@ A terrain effect model can be included in the optimization process.
 \seealso{
 \code{\link{genetic_algorithm}}
 
-Other Genetic Algorithm Functions: \code{\link{crossover}},
-  \code{\link{fitness}}, \code{\link{genetic_algorithm}},
-  \code{\link{init_population}}, \code{\link{mutation}},
-  \code{\link{selection}}, \code{\link{trimton}}
+Other Genetic Algorithm Functions: 
+\code{\link{crossover}()},
+\code{\link{fitness}()},
+\code{\link{genetic_algorithm}()},
+\code{\link{init_population}()},
+\code{\link{mutation}()},
+\code{\link{selection}()},
+\code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

@@ -4,11 +4,35 @@
 \alias{genAlgo}
 \title{Deprecated use \code{\link[windfarmGA]{genetic_algorithm}} instead.}
 \usage{
-genAlgo(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight, RotorHeight,
-  SurfaceRoughness, Proportionality, iteration, mutr, vdirspe, topograp,
-  elitism, nelit, selstate, crossPart1, trimForce, Projection, sourceCCL,
-  sourceCCLRoughness, weibull, weibullsrc, Parallel, numCluster,
-  verbose = FALSE, plotit = FALSE)
+genAlgo(
+  Polygon1,
+  GridMethod,
+  Rotor,
+  n,
+  fcrR,
+  referenceHeight,
+  RotorHeight,
+  SurfaceRoughness,
+  Proportionality,
+  iteration,
+  mutr,
+  vdirspe,
+  topograp,
+  elitism,
+  nelit,
+  selstate,
+  crossPart1,
+  trimForce,
+  Projection,
+  sourceCCL,
+  sourceCCLRoughness,
+  weibull,
+  weibullsrc,
+  Parallel,
+  numCluster,
+  verbose = FALSE,
+  plotit = FALSE
+)
 }
 \arguments{
 \item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon

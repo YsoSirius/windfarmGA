@@ -28,8 +28,11 @@ A boolean vector, indicating if \code{xy1} is visible from all
 Check if a location is visible from multiple locations
 }
 \seealso{
-Other Viewshed Analysis: \code{\link{cansee}},
-  \code{\link{interpol_view}}, \code{\link{plot_viewshed}},
-  \code{\link{rasterprofile}}, \code{\link{viewshed}}
+Other Viewshed Analysis: 
+\code{\link{cansee}()},
+\code{\link{interpol_view}()},
+\code{\link{plot_viewshed}()},
+\code{\link{rasterprofile}()},
+\code{\link{viewshed}()}
 }
 \concept{Viewshed Analysis}

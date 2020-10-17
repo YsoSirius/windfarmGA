@@ -4,9 +4,22 @@
 \alias{fitness}
 \title{Evaluate the Individual Fitness values}
 \usage{
-fitness(selection, referenceHeight, RotorHeight, SurfaceRoughness, Polygon,
-  resol1, rot, dirspeed, srtm_crop, topograp, cclRaster, weibull, Parallel,
-  numCluster)
+fitness(
+  selection,
+  referenceHeight,
+  RotorHeight,
+  SurfaceRoughness,
+  Polygon,
+  resol1,
+  rot,
+  dirspeed,
+  srtm_crop,
+  topograp,
+  cclRaster,
+  weibull,
+  Parallel,
+  numCluster
+)
 }
 \arguments{
 \item{selection}{A list containing all individuals of the current population.}
@@ -65,8 +78,7 @@ Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                     c(4499991, 2669343), c(4499991, 2668272)))
 Polygon1 <- Polygons(list(Polygon1),1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 
 ## Create a uniform and unidirectional wind data.frame and plots the
@@ -91,10 +103,13 @@ fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
 }
 }
 \seealso{
-Other Genetic Algorithm Functions: \code{\link{crossover}},
-  \code{\link{genetic_algorithm}},
-  \code{\link{init_population}}, \code{\link{mutation}},
-  \code{\link{selection}}, \code{\link{trimton}},
-  \code{\link{windfarmGA}}
+Other Genetic Algorithm Functions: 
+\code{\link{crossover}()},
+\code{\link{genetic_algorithm}()},
+\code{\link{init_population}()},
+\code{\link{mutation}()},
+\code{\link{selection}()},
+\code{\link{trimton}()},
+\code{\link{windfarmGA}()}
 }
 \concept{Genetic Algorithm Functions}
