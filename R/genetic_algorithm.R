@@ -922,6 +922,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 #'   numeric columns are taken.
 #'
 #' @examples \donttest{
+#' library(sp)
 #' df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'             c(4499991, 2669343), c(4499991, 2668272))
 #' isSpatial(df)
