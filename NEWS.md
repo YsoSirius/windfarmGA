@@ -6,6 +6,9 @@
     Discarded datum European_Terrestrial_Reference_System_1989 in CRS definition
   ```
 
+# Updates 2.2.3
+- Fix tests for R 3.4.0, as class(matrix) is of length 2.
+
 # Updates 2.2.2
 
 #### Pkgdown

@@ -7,7 +7,7 @@ library(windfarmGA)
 # testthat::test_file(path = "./tests/testthat/test_ga_skipcran.R")
 
 test_that("Test Terrain Model and Weibull", {
-  # skip_on_cran()
+  skip_on_cran()
   # skip_on_travis()
   # skip_on_appveyor()
 

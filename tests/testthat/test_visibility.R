@@ -1,11 +1,13 @@
 context("Visibility Tests")
 library(testthat)
 library(sp)
-library(windfarmGA)
+# library(windfarmGA)
 library(raster)
 library(sf)
 
 test_that("Test Viewshed Functions", {
+  skip_on_cran()
+  
   ## Input Data #####################
   Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
                             c(4499991, 2669343), c(4499991, 2667172)))

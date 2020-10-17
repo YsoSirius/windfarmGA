@@ -2,6 +2,7 @@ context("User Interaction")
 library(windfarmGA)
 
 test_that("User Input", {
+  skip_on_cran()
   # skip_on_appveyor()
   
   ## getISO3 ################
