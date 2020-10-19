@@ -35,15 +35,16 @@ script:
 r_packages:
   - covr
 
+before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 after_success:
   - Rscript -e 'library(covr);codecov(quiet = FALSE)'
+  - Rscript -e 'library(pkgdown);pkgdown::build_site()'
 
 notifications:
   email:
     on_success: change
     on_failure: change
 
-before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 deploy:
   provider: pages
   skip-cleanup: true
