@@ -11,23 +11,27 @@ to the Barometric Height Formula — barometric_height • windfarmGA</title>
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -41,7 +45,6 @@ to the Barometric Height Formula — barometric_height" />
 <meta property="og:description" content="Calculates air density, temperature and air pressure
     respective to certain heights according to the International
     standard atmosphere and the barometric height formula." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -59,7 +62,7 @@ to the Barometric Height Formula — barometric_height" />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -73,7 +76,7 @@ to the Barometric Height Formula — barometric_height" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -89,11 +92,19 @@ to the Barometric Height Formula — barometric_height" />
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
+  <a href="../articles/index.html">Articles</a>
+</li>
+<li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/YsoSirius/windfarmGA/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -109,7 +120,7 @@ to the Barometric Height Formula — barometric_height" />
     <div class="page-header">
     <h1>Calculates Air Density, Air Pressure and Temperature according
 to the Barometric Height Formula</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/barometric_height.R'><code>R/barometric_height.R</code></a></small>
     <div class="hidden name"><code>barometric_height.Rd</code></div>
     </div>
 
@@ -119,7 +130,7 @@ to the Barometric Height Formula</h1>
     standard atmosphere and the barometric height formula.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>barometric_height</span>(<span class='no'>data</span>, <span class='no'>height</span>, <span class='kw'>po</span> <span class='kw'>=</span> <span class='fl'>101325</span>, <span class='kw'>ro</span> <span class='kw'>=</span> <span class='fl'>1.225</span>)</pre>
+    <pre class="usage"><span class='fu'>barometric_height</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>height</span>, po <span class='op'>=</span> <span class='fl'>101325</span>, ro <span class='op'>=</span> <span class='fl'>1.225</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,13 +159,15 @@ to the Barometric Height Formula</h1>
 air pressures, air densities and temperatures in Kelvin and Celsius.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Wind Energy Calculation Functions: <code>calculate_energy</code>,
-  <code>get_dist_angles</code>,
-  <code>turbine_influences</code></p></div>
+    <div class='dont-index'><p>Other Wind Energy Calculation Functions: 
+<code><a href='calculate_energy.html'>calculate_energy</a>()</code>,
+<code><a href='get_dist_angles.html'>get_dist_angles</a>()</code>,
+<code><a href='turbine_influences.html'>turbine_influences</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>,<span class='fl'>5000</span>,<span class='fl'>500</span>));
-<span class='fu'>barometric_height</span>(<span class='no'>data</span>)</div><div class='output co'>#&gt;    Height        ph        rh  tempK  tempC
+    <pre class="examples"><div class='input'><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>5000</span>,<span class='fl'>500</span><span class='op'>)</span><span class='op'>)</span>;
+<span class='fu'>barometric_height</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    Height        ph        rh  tempK  tempC
 #&gt; 1       0 101325.00 1.2250000 288.15  15.00
 #&gt; 2     500  95176.51 1.1506659 284.90  11.75
 #&gt; 3    1000  89401.12 1.0808425 281.65   8.50
@@ -165,17 +178,13 @@ air pressures, air densities and temperatures in Kelvin and Celsius.</p>
 #&gt; 8    3500  65374.56 0.7903660 265.40  -7.75
 #&gt; 9    4000  61407.57 0.7424059 262.15 -11.00
 #&gt; 10   4500  57681.31 0.6973561 258.90 -14.25
-#&gt; 11   5000  54181.16 0.6550399 255.65 -17.50</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/plot.ts.html'>plot.ts</a></span>(<span class='fu'>barometric_height</span>(<span class='no'>data</span>))</div><div class='img'><img src='barometric_height-1.png' alt='' width='700' height='433' /></div></pre>
+#&gt; 11   5000  54181.16 0.6550399 255.65 -17.50</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/plot.ts.html'>plot.ts</a></span><span class='op'>(</span><span class='fu'>barometric_height</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='barometric_height-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -186,7 +195,7 @@ air pressures, air densities and temperatures in Kelvin and Celsius.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

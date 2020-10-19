@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -39,7 +43,6 @@
 <meta property="og:description" content="Plot the best solutions of the genetic algorithm.
   Depending on plotEn, either the best energy or efficiency solutions
   can be plotted. best indicates the amount of best solutions to plot." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -57,7 +60,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -71,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -87,11 +90,19 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
+  <a href="../articles/index.html">Articles</a>
+</li>
+<li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/YsoSirius/windfarmGA/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -106,7 +117,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot the best results</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plot_result.R'><code>R/plot_result.R</code></a></small>
     <div class="hidden name"><code>plot_result.Rd</code></div>
     </div>
 
@@ -116,17 +127,26 @@
   can be plotted. <code>best</code> indicates the amount of best solutions to plot.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_result</span>(<span class='no'>result</span>, <span class='no'>Polygon1</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>Grid</span>, <span class='no'>Projection</span>, <span class='no'>sourceCCLRoughness</span>, <span class='no'>sourceCCL</span>,
-  <span class='no'>weibullsrc</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_result</span><span class='op'>(</span>
+  <span class='va'>result</span>,
+  <span class='va'>Polygon1</span>,
+  best <span class='op'>=</span> <span class='fl'>3</span>,
+  plotEn <span class='op'>=</span> <span class='fl'>1</span>,
+  topographie <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>Grid</span>,
+  <span class='va'>Projection</span>,
+  <span class='va'>sourceCCLRoughness</span>,
+  <span class='va'>sourceCCL</span>,
+  <span class='va'>weibullsrc</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>result</th>
-      <td><p>The output of <code>windfarmGA</code> or
-<code>genetic_algorithm</code></p></td>
+      <td><p>The output of <code><a href='windfarmGA.html'>windfarmGA</a></code> or
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a></code></p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
@@ -151,7 +171,7 @@ be considered and plotted or not</p></td>
     <tr>
       <th>Grid</th>
       <td><p>The grid as SpatialPolygons, which is obtained from
-<code>grid_area</code> and used for plotting</p></td>
+<code><a href='grid_area.html'>grid_area</a></code> and used for plotting</p></td>
     </tr>
     <tr>
       <th>Projection</th>
@@ -186,46 +206,46 @@ cover Austria.</p></td>
   during all iterations</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Plotting Functions: <code>interpol_view</code>,
-  <code>plot_cloud</code>, <code>plot_development</code>,
-  <code>plot_evolution</code>,
-  <code>plot_fitness_evolution</code>,
-  <code>plot_heatmap</code>,
-  <code>plot_parkfitness</code>,
-  <code>plot_viewshed</code>,
-  <code>plot_windfarmGA</code>,
-  <code>plot_windrose</code>,
-  <code>random_search_single</code></p></div>
+    <div class='dont-index'><p>Other Plotting Functions: 
+<code><a href='interpol_view.html'>interpol_view</a>()</code>,
+<code><a href='plot_cloud.html'>plot_cloud</a>()</code>,
+<code><a href='plot_development.html'>plot_development</a>()</code>,
+<code><a href='plot_evolution.html'>plot_evolution</a>()</code>,
+<code><a href='plot_fitness_evolution.html'>plot_fitness_evolution</a>()</code>,
+<code><a href='plot_heatmap.html'>plot_heatmap</a>()</code>,
+<code><a href='plot_parkfitness.html'>plot_parkfitness</a>()</code>,
+<code><a href='plot_viewshed.html'>plot_viewshed</a>()</code>,
+<code><a href='plot_windfarmGA.html'>plot_windfarmGA</a>()</code>,
+<code><a href='plot_windrose.html'>plot_windrose</a>()</code>,
+<code><a href='random_search_single.html'>random_search_single</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## Add some data examples from the package</span>
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/resultrect.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/resulthex.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span>(<span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/polygon.rda"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"windfarmGA"</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/resultrect.rda"</span>, package <span class='op'>=</span> <span class='st'>"windfarmGA"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/resulthex.rda"</span>, package <span class='op'>=</span> <span class='st'>"windfarmGA"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/polygon.rda"</span>, package <span class='op'>=</span> <span class='st'>"windfarmGA"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Plot the results of a hexagonal grid optimization</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'>hexa_area</span>(<span class='no'>Polygon1</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>87.5</span>, <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in slot(SP, "polygons"): object 'Polygon1' not found</span></div><div class='input'><span class='fu'>plot_result</span>(<span class='no'>resulthex</span>, <span class='no'>polygon</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div><div class='output co'>#&gt; N different optimal configurations: 9 
+<span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='hexa_area.html'>hexa_area</a></span><span class='op'>(</span><span class='va'>polygon</span>, size <span class='op'>=</span> <span class='fl'>75</span>, <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='fu'>plot_result</span><span class='op'>(</span><span class='va'>resulthex</span>, <span class='va'>polygon</span>, best <span class='op'>=</span> <span class='fl'>1</span>, plotEn <span class='op'>=</span> <span class='fl'>1</span>, topographie <span class='op'>=</span> <span class='cn'>FALSE</span>,
+           Grid <span class='op'>=</span> <span class='va'>Grid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; N different optimal configurations: 9 
 #&gt; Amount duplicates: 1
-#&gt; Plot  1  Best Energy Solution:</div><div class='output co'>#&gt; <span class='error'>Error in plot(Grid, add = TRUE): object 'Grid' not found</span></div><div class='img'><img src='plot_result-1.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='plot_result-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Plot the results of a rectangular grid optimization</span>
-<span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='fu'>grid_area</span>(<span class='no'>polygon</span>, <span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>150</span>, <span class='fl'>1</span>, <span class='fl'>FALSE</span>)
-<span class='fu'>plot_result</span>(<span class='no'>resultrect</span>, <span class='no'>polygon</span>, <span class='kw'>best</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>plotEn</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>topographie</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-           <span class='kw'>Grid</span> <span class='kw'>=</span> <span class='no'>Grid</span><span class='kw'>[[</span><span class='fl'>2</span>]])</div><div class='output co'>#&gt; N different optimal configurations: 15 
+<span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span><span class='va'>polygon</span>, resol <span class='op'>=</span> <span class='fl'>150</span>, <span class='fl'>1</span>, <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='fu'>plot_result</span><span class='op'>(</span><span class='va'>resultrect</span>, <span class='va'>polygon</span>, best <span class='op'>=</span> <span class='fl'>1</span>, plotEn <span class='op'>=</span> <span class='fl'>1</span>, topographie <span class='op'>=</span> <span class='cn'>FALSE</span>,
+           Grid <span class='op'>=</span> <span class='va'>Grid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; N different optimal configurations: 15 
 #&gt; Amount duplicates: 15
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='plot_result-2.png' alt='' width='700' height='433' /></div><div class='input'># }
+#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='plot_result-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -236,7 +256,7 @@ cover Austria.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

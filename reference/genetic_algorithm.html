@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -40,7 +44,6 @@
   on a given area. The algorithm works with a fixed amount of turbines, a
   fixed rotor radius and a mean wind speed value for every incoming wind
   direction." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -58,7 +61,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -88,11 +91,19 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
+  <a href="../articles/index.html">Articles</a>
+</li>
+<li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/YsoSirius/windfarmGA/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -107,7 +118,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Run a Genetic Algorithm to optimize a wind farm layout</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/genetic_algorithm.R'><code>R/genetic_algorithm.R</code></a></small>
     <div class="hidden name"><code>genetic_algorithm.Rd</code></div>
     </div>
 
@@ -118,11 +129,35 @@
   direction.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>genetic_algorithm</span>(<span class='no'>Polygon1</span>, <span class='no'>GridMethod</span>, <span class='no'>Rotor</span>, <span class='no'>n</span>, <span class='no'>fcrR</span>, <span class='no'>referenceHeight</span>,
-  <span class='no'>RotorHeight</span>, <span class='no'>SurfaceRoughness</span>, <span class='no'>Proportionality</span>, <span class='no'>iteration</span>, <span class='no'>mutr</span>, <span class='no'>vdirspe</span>,
-  <span class='no'>topograp</span>, <span class='no'>elitism</span>, <span class='no'>nelit</span>, <span class='no'>selstate</span>, <span class='no'>crossPart1</span>, <span class='no'>trimForce</span>, <span class='no'>Projection</span>,
-  <span class='no'>sourceCCL</span>, <span class='no'>sourceCCLRoughness</span>, <span class='no'>weibull</span>, <span class='no'>weibullsrc</span>, <span class='no'>Parallel</span>, <span class='no'>numCluster</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>plotit</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>genetic_algorithm</span><span class='op'>(</span>
+  <span class='va'>Polygon1</span>,
+  <span class='va'>GridMethod</span>,
+  <span class='va'>Rotor</span>,
+  <span class='va'>n</span>,
+  <span class='va'>fcrR</span>,
+  <span class='va'>referenceHeight</span>,
+  <span class='va'>RotorHeight</span>,
+  <span class='va'>SurfaceRoughness</span>,
+  <span class='va'>Proportionality</span>,
+  <span class='va'>iteration</span>,
+  <span class='va'>mutr</span>,
+  <span class='va'>vdirspe</span>,
+  <span class='va'>topograp</span>,
+  <span class='va'>elitism</span>,
+  <span class='va'>nelit</span>,
+  <span class='va'>selstate</span>,
+  <span class='va'>crossPart1</span>,
+  <span class='va'>trimForce</span>,
+  <span class='va'>Projection</span>,
+  <span class='va'>sourceCCL</span>,
+  <span class='va'>sourceCCLRoughness</span>,
+  <span class='va'>weibull</span>,
+  <span class='va'>weibullsrc</span>,
+  <span class='va'>Parallel</span>,
+  <span class='va'>numCluster</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  plotit <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -304,36 +339,42 @@ Default is FALSE</p></td>
   <code>sourceCCLRoughness</code> of this function.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Genetic Algorithm Functions: <code>crossover</code>,
-  <code>fitness</code>, <code>init_population</code>,
-  <code>mutation</code>, <code>selection</code>,
-  <code>trimton</code>, <code>windfarmGA</code></p></div>
+    <div class='dont-index'><p>Other Genetic Algorithm Functions: 
+<code><a href='crossover.html'>crossover</a>()</code>,
+<code><a href='fitness.html'>fitness</a>()</code>,
+<code><a href='init_population.html'>init_population</a>()</code>,
+<code><a href='mutation.html'>mutation</a>()</code>,
+<code><a href='selection.html'>selection</a>()</code>,
+<code><a href='trimton.html'>trimton</a>()</code>,
+<code><a href='windfarmGA.html'>windfarmGA</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## Create a random rectangular shapefile</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2668272</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2669343</span>),
-                          <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2669343</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2668272</span>)))
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>Polygon1</span>), <span class='fl'>1</span>);
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>Polygon1</span>))
-<span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span>(<span class='no'>Projection</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2668272</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2669343</span><span class='op'>)</span>,
+                          <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2669343</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>)</span>;
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
+<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='va'>Projection</span><span class='op'>)</span>
 
 <span class='co'>## Create a uniform and unidirectional wind data.frame and plot the</span>
 <span class='co'>## resulting wind rose</span>
-<span class='no'>data.in</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>ws</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>wd</span> <span class='kw'>=</span> <span class='fl'>0</span>)
-<span class='no'>windrosePlot</span> <span class='kw'>&lt;-</span> <span class='fu'>plot_windrose</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>data.in</span>, <span class='kw'>spd</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>ws</span>,
-                <span class='kw'>dir</span> <span class='kw'>=</span> <span class='no'>data.in</span>$<span class='no'>wd</span>, <span class='kw'>dirres</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>spdmax</span><span class='kw'>=</span><span class='fl'>20</span>)</div><div class='img'><img src='genetic_algorithm-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>data.in</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>ws <span class='op'>=</span> <span class='fl'>12</span>, wd <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
+<span class='va'>windrosePlot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='plot_windrose.html'>plot_windrose</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>data.in</span>, spd <span class='op'>=</span> <span class='va'>data.in</span><span class='op'>$</span><span class='va'>ws</span>,
+                dir <span class='op'>=</span> <span class='va'>data.in</span><span class='op'>$</span><span class='va'>wd</span>, dirres<span class='op'>=</span><span class='fl'>10</span>, spdmax<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span>
+</div><div class='img'><img src='genetic_algorithm-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Runs an optimization run for 20 iterations with the</span>
 <span class='co'>## given shapefile (Polygon1), the wind data.frame (data.in),</span>
 <span class='co'>## 12 turbines (n) with rotor radii of 30m (Rotor) and rotor height of 100m.</span>
-<span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='fu'>genetic_algorithm</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,
-                  <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>12</span>,
-                  <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,
-                  <span class='kw'>Rotor</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-                  <span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; ....................</div><div class='input'><span class='fu'>plot_windfarmGA</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
+<span class='va'>result</span> <span class='op'>&lt;-</span> <span class='fu'>genetic_algorithm</span><span class='op'>(</span>Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>,
+                  n <span class='op'>=</span> <span class='fl'>12</span>,
+                  vdirspe <span class='op'>=</span> <span class='va'>data.in</span>,
+                  Rotor <span class='op'>=</span> <span class='fl'>30</span>,
+                  RotorHeight <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; ....................</div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
 #&gt; N different optimal configurations: 13 
 #&gt; Amount duplicates: 7
 #&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genetic_algorithm-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
@@ -343,20 +384,24 @@ Default is FALSE</p></td>
 #&gt; [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"
 #&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genetic_algorithm-12.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'>## Runs the same optimization, but with parallel processing and 3 cores.</span>
-<span class='no'>result_par</span> <span class='kw'>&lt;-</span> <span class='fu'>genetic_algorithm</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span><span class='st'>"h"</span>, <span class='kw'>n</span><span class='kw'>=</span><span class='fl'>12</span>, <span class='kw'>Rotor</span><span class='kw'>=</span><span class='fl'>30</span>,
-                 <span class='kw'>fcrR</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>iteration</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,<span class='kw'>crossPart1</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>,
-                 <span class='kw'>selstate</span><span class='kw'>=</span><span class='st'>"FIX"</span>,<span class='kw'>mutr</span><span class='kw'>=</span><span class='fl'>0.8</span>, <span class='kw'>Proportionality</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                 <span class='kw'>SurfaceRoughness</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>topograp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>elitism</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>nelit</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>trimForce</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>50</span>,<span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-                 <span class='kw'>Parallel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>numCluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; .</div><div class='output co'>#&gt; <span class='error'>Error in {    windfarmGA::calculate_energy(sel = selection[[k]], referenceHeight = referenceHeight,         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,         wnkl = 20, distanz = 1e+05, polygon1 = Polygon, resol = resol1,         RotorR = rot, dirSpeed = dirspeed, srtm_crop = srtm_crop,         topograp = topograp, cclRaster = cclRaster, weibull = weibull)}: task 1 failed - "there is no package called ‘windfarmGA’"</span></div><div class='input'><span class='fu'>plot_windfarmGA</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result_par</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span> <span class='st'>"h"</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot_windfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1): object 'result_par' not found</span></div><div class='input'>
+<span class='va'>result_par</span> <span class='op'>&lt;-</span> <span class='fu'>genetic_algorithm</span><span class='op'>(</span>Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, GridMethod <span class='op'>=</span><span class='st'>"h"</span>, n<span class='op'>=</span><span class='fl'>12</span>, Rotor<span class='op'>=</span><span class='fl'>30</span>,
+                 fcrR<span class='op'>=</span><span class='fl'>5</span>,iteration<span class='op'>=</span><span class='fl'>10</span>, vdirspe <span class='op'>=</span> <span class='va'>data.in</span>,crossPart1 <span class='op'>=</span> <span class='st'>"EQU"</span>,
+                 selstate<span class='op'>=</span><span class='st'>"FIX"</span>,mutr<span class='op'>=</span><span class='fl'>0.8</span>, Proportionality <span class='op'>=</span> <span class='fl'>1</span>,
+                 SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.3</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                 elitism<span class='op'>=</span><span class='cn'>TRUE</span>, nelit <span class='op'>=</span> <span class='fl'>7</span>, trimForce <span class='op'>=</span> <span class='cn'>TRUE</span>,
+                 referenceHeight <span class='op'>=</span> <span class='fl'>50</span>,RotorHeight <span class='op'>=</span> <span class='fl'>100</span>, 
+                 Parallel <span class='op'>=</span> <span class='cn'>TRUE</span>, numCluster <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; .</div><div class='output co'>#&gt; <span class='error'>Error in {    windfarmGA::calculate_energy(sel = selection[[k]], referenceHeight = referenceHeight,         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,         wnkl = 20, distanz = 1e+05, polygon1 = Polygon, resol = resol1,         RotorR = rot, dirSpeed = dirspeed, srtm_crop = srtm_crop,         topograp = topograp, cclRaster = cclRaster, weibull = weibull)}: task 1 failed - "there is no package called ‘windfarmGA’"</span></div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result_par</span>, GridMethod <span class='op'>=</span> <span class='st'>"h"</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot_windfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1): object 'result_par' not found</span></div><div class='input'>
 <span class='co'>## Runs the same optimization, this time with hexagonal grids.</span>
-<span class='no'>result_hex</span> <span class='kw'>&lt;-</span> <span class='fu'>genetic_algorithm</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span><span class='st'>"h"</span>, <span class='kw'>n</span><span class='kw'>=</span><span class='fl'>12</span>, <span class='kw'>Rotor</span><span class='kw'>=</span><span class='fl'>30</span>,
-                 <span class='kw'>fcrR</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>iteration</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,<span class='kw'>crossPart1</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>,
-                 <span class='kw'>selstate</span><span class='kw'>=</span><span class='st'>"FIX"</span>,<span class='kw'>mutr</span><span class='kw'>=</span><span class='fl'>0.8</span>, <span class='kw'>Proportionality</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                 <span class='kw'>SurfaceRoughness</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>topograp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>elitism</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>nelit</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>trimForce</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>50</span>,<span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'>plot_windfarmGA</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result_hex</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span> <span class='st'>"h"</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
+<span class='va'>result_hex</span> <span class='op'>&lt;-</span> <span class='fu'>genetic_algorithm</span><span class='op'>(</span>Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, GridMethod <span class='op'>=</span><span class='st'>"h"</span>, n<span class='op'>=</span><span class='fl'>12</span>, Rotor<span class='op'>=</span><span class='fl'>30</span>,
+                 fcrR<span class='op'>=</span><span class='fl'>5</span>,iteration<span class='op'>=</span><span class='fl'>10</span>, vdirspe <span class='op'>=</span> <span class='va'>data.in</span>,crossPart1 <span class='op'>=</span> <span class='st'>"EQU"</span>,
+                 selstate<span class='op'>=</span><span class='st'>"FIX"</span>,mutr<span class='op'>=</span><span class='fl'>0.8</span>, Proportionality <span class='op'>=</span> <span class='fl'>1</span>,
+                 SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.3</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                 elitism<span class='op'>=</span><span class='cn'>TRUE</span>, nelit <span class='op'>=</span> <span class='fl'>7</span>, trimForce <span class='op'>=</span> <span class='cn'>TRUE</span>,
+                 referenceHeight <span class='op'>=</span> <span class='fl'>50</span>,RotorHeight <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result_hex</span>, GridMethod <span class='op'>=</span> <span class='st'>"h"</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
 #&gt; N different optimal configurations: 10 
 #&gt; Amount duplicates: 0
 #&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genetic_algorithm-13.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
@@ -366,13 +411,15 @@ Default is FALSE</p></td>
 #&gt; [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"
 #&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genetic_algorithm-24.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'>## Run an optimization with the Weibull parameters included in the package.</span>
-<span class='no'>result_weibull</span> <span class='kw'>&lt;-</span> <span class='fu'>genetic_algorithm</span>(<span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>GridMethod</span> <span class='kw'>=</span><span class='st'>"h"</span>, <span class='kw'>n</span><span class='kw'>=</span><span class='fl'>12</span>,
-                 <span class='kw'>fcrR</span><span class='kw'>=</span><span class='fl'>5</span>,<span class='kw'>iteration</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vdirspe</span> <span class='kw'>=</span> <span class='no'>data.in</span>,<span class='kw'>crossPart1</span> <span class='kw'>=</span> <span class='st'>"EQU"</span>,
-                 <span class='kw'>selstate</span><span class='kw'>=</span><span class='st'>"FIX"</span>,<span class='kw'>mutr</span><span class='kw'>=</span><span class='fl'>0.8</span>, <span class='kw'>Proportionality</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rotor</span><span class='kw'>=</span><span class='fl'>30</span>,
-                 <span class='kw'>SurfaceRoughness</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>topograp</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-                 <span class='kw'>elitism</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>nelit</span> <span class='kw'>=</span> <span class='fl'>7</span>, <span class='kw'>trimForce</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                 <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>50</span>,<span class='kw'>RotorHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>,
-                 <span class='kw'>weibull</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'>plot_windfarmGA</span>(<span class='kw'>result</span> <span class='kw'>=</span> <span class='no'>result_weibull</span>, <span class='kw'>GridMethod</span><span class='kw'>=</span> <span class='st'>"h"</span>, <span class='kw'>Polygon1</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>)</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
+<span class='va'>result_weibull</span> <span class='op'>&lt;-</span> <span class='fu'>genetic_algorithm</span><span class='op'>(</span>Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, GridMethod <span class='op'>=</span><span class='st'>"h"</span>, n<span class='op'>=</span><span class='fl'>12</span>,
+                 fcrR<span class='op'>=</span><span class='fl'>5</span>,iteration<span class='op'>=</span><span class='fl'>10</span>, vdirspe <span class='op'>=</span> <span class='va'>data.in</span>,crossPart1 <span class='op'>=</span> <span class='st'>"EQU"</span>,
+                 selstate<span class='op'>=</span><span class='st'>"FIX"</span>,mutr<span class='op'>=</span><span class='fl'>0.8</span>, Proportionality <span class='op'>=</span> <span class='fl'>1</span>, Rotor<span class='op'>=</span><span class='fl'>30</span>,
+                 SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.3</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                 elitism<span class='op'>=</span><span class='cn'>TRUE</span>, nelit <span class='op'>=</span> <span class='fl'>7</span>, trimForce <span class='op'>=</span> <span class='cn'>TRUE</span>,
+                 referenceHeight <span class='op'>=</span> <span class='fl'>50</span>,RotorHeight <span class='op'>=</span> <span class='fl'>100</span>,
+                 weibull <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result_weibull</span>, GridMethod<span class='op'>=</span> <span class='st'>"h"</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
 #&gt; N different optimal configurations: 10 
 #&gt; Amount duplicates: 0
 #&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genetic_algorithm-25.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
@@ -381,31 +428,25 @@ Default is FALSE</p></td>
 #&gt; [1] "plot_cloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='genetic_algorithm-34.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
 #&gt; [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"
 #&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genetic_algorithm-35.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-## Run an optimization with given Weibull parameter rasters.
-#araster <- "/..pathto../a_param_raster.tif"
-#kraster <- "/..pathto../k_param_raster.tif"
-#weibullrasters <- list(raster(kraster), raster(araster))
-#result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-#                  SurfaceRoughness = 0.3, topograp = FALSE,
-#                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#                  referenceHeight = 50,RotorHeight = 100,
-#                  weibull = TRUE, weibullsrc = weibullrasters)
-#plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
-# }
+<span class='co'>## Run an optimization with given Weibull parameter rasters.</span>
+<span class='co'>#araster &lt;- "/..pathto../a_param_raster.tif"</span>
+<span class='co'>#kraster &lt;- "/..pathto../k_param_raster.tif"</span>
+<span class='co'>#weibullrasters &lt;- list(raster(kraster), raster(araster))</span>
+<span class='co'>#result_weibull &lt;- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,</span>
+<span class='co'>#                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",</span>
+<span class='co'>#                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,</span>
+<span class='co'>#                  SurfaceRoughness = 0.3, topograp = FALSE,</span>
+<span class='co'>#                  elitism=TRUE, nelit = 7, trimForce = TRUE,</span>
+<span class='co'>#                  referenceHeight = 50,RotorHeight = 100,</span>
+<span class='co'>#                  weibull = TRUE, weibullsrc = weibullrasters)</span>
+<span class='co'>#plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)</span>
+<span class='co'># }</span>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -416,7 +457,7 @@ Default is FALSE</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

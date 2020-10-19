@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -40,7 +44,6 @@
   are calculated after having evaluated their energy outputs in
   calculate_energy. This function reduces the resulting energy
   outputs to a single fitness value for every individual." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -58,7 +61,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -88,11 +91,19 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
+  <a href="../articles/index.html">Articles</a>
+</li>
+<li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/YsoSirius/windfarmGA/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -107,20 +118,33 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Evaluate the Individual Fitness values</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/fitness.R'><code>R/fitness.R</code></a></small>
     <div class="hidden name"><code>fitness.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>The fitness values of the individuals in the current population
   are calculated after having evaluated their energy outputs in
-  <code>calculate_energy</code>. This function reduces the resulting energy
+  <code><a href='calculate_energy.html'>calculate_energy</a></code>. This function reduces the resulting energy
   outputs to a single fitness value for every individual.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fitness</span>(<span class='no'>selection</span>, <span class='no'>referenceHeight</span>, <span class='no'>RotorHeight</span>, <span class='no'>SurfaceRoughness</span>, <span class='no'>Polygon</span>,
-  <span class='no'>resol1</span>, <span class='no'>rot</span>, <span class='no'>dirspeed</span>, <span class='no'>srtm_crop</span>, <span class='no'>topograp</span>, <span class='no'>cclRaster</span>, <span class='no'>weibull</span>, <span class='no'>Parallel</span>,
-  <span class='no'>numCluster</span>)</pre>
+    <pre class="usage"><span class='fu'>fitness</span><span class='op'>(</span>
+  <span class='va'>selection</span>,
+  <span class='va'>referenceHeight</span>,
+  <span class='va'>RotorHeight</span>,
+  <span class='va'>SurfaceRoughness</span>,
+  <span class='va'>Polygon</span>,
+  <span class='va'>resol1</span>,
+  <span class='va'>rot</span>,
+  <span class='va'>dirspeed</span>,
+  <span class='va'>srtm_crop</span>,
+  <span class='va'>topograp</span>,
+  <span class='va'>cclRaster</span>,
+  <span class='va'>weibull</span>,
+  <span class='va'>Parallel</span>,
+  <span class='va'>numCluster</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,7 +186,7 @@ m.</p></td>
     <tr>
       <th>srtm_crop</th>
       <td><p>A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in <code>genetic_algorithm</code></p></td>
+and 3) a terrain raster. Calculated in <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code></p></td>
     </tr>
     <tr>
       <th>topograp</th>
@@ -199,53 +223,52 @@ clusters to be used.</p></td>
   resulting energy outputs, efficiency rates and fitness values.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Genetic Algorithm Functions: <code>crossover</code>,
-  <code>genetic_algorithm</code>,
-  <code>init_population</code>, <code>mutation</code>,
-  <code>selection</code>, <code>trimton</code>,
-  <code>windfarmGA</code></p></div>
+    <div class='dont-index'><p>Other Genetic Algorithm Functions: 
+<code><a href='crossover.html'>crossover</a>()</code>,
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a>()</code>,
+<code><a href='init_population.html'>init_population</a>()</code>,
+<code><a href='mutation.html'>mutation</a>()</code>,
+<code><a href='selection.html'>selection</a>()</code>,
+<code><a href='trimton.html'>trimton</a>()</code>,
+<code><a href='windfarmGA.html'>windfarmGA</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## Create a random rectangular shapefile</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sp</span>)
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2668272</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4498482</span>, <span class='fl'>2669343</span>),
-                    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2669343</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4499991</span>, <span class='fl'>2668272</span>)))
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>Polygon1</span>),<span class='fl'>1</span>);
-<span class='no'>Polygon1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>Polygon1</span>))
-<span class='no'>Projection</span> <span class='kw'>&lt;-</span> <span class='st'>"+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span>(<span class='no'>Polygon1</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span>(<span class='no'>Projection</span>)
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2668272</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2669343</span><span class='op'>)</span>,
+                    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2669343</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>)</span>;
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
+<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='va'>Projection</span><span class='op'>)</span>
 
 <span class='co'>## Create a uniform and unidirectional wind data.frame and plots the</span>
 <span class='co'>## resulting wind rose</span>
 <span class='co'>## Uniform wind speed and single wind direction</span>
-<span class='no'>wind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>ws</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>wd</span> <span class='kw'>=</span> <span class='fl'>0</span>)
+<span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>ws <span class='op'>=</span> <span class='fl'>12</span>, wd <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
 <span class='co'># windrosePlot &lt;- plot_windrose(data = wind, spd = wind$ws,</span>
 <span class='co'>#                dir = wind$wd, dirres=10, spdmax=20)</span>
 
 <span class='co'>## Calculate a Grid and an indexed data.frame with coordinates and</span>
 <span class='co'>## grid cell IDs.</span>
-<span class='no'>Grid1</span> <span class='kw'>&lt;-</span> <span class='fu'>grid_area</span>(<span class='kw'>shape</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>,<span class='kw'>resol</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>prop</span> <span class='kw'>=</span> <span class='fl'>1</span>);</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: rgeos</span></div><div class='input'><span class='no'>Grid</span> <span class='kw'>&lt;-</span> <span class='no'>Grid1</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='no'>AmountGrids</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='no'>Grid</span>)
+<span class='va'>Grid1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span>shape <span class='op'>=</span> <span class='va'>Polygon1</span>,resol <span class='op'>=</span> <span class='fl'>200</span>,prop <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>;
+</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: rgeos</span></div><div class='input'><span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='va'>Grid1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
+<span class='va'>AmountGrids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Grid</span><span class='op'>)</span>
 
-<span class='no'>wind</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>wind</span>, <span class='kw'>probab</span> <span class='kw'>=</span> <span class='fl'>100</span>)
-<span class='no'>startsel</span> <span class='kw'>&lt;-</span> <span class='fu'>init_population</span>(<span class='no'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span>);
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>fitness</span>(<span class='kw'>selection</span> <span class='kw'>=</span> <span class='no'>startsel</span>, <span class='kw'>referenceHeight</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>RotorHeight</span><span class='kw'>=</span><span class='fl'>100</span>,
-               <span class='kw'>SurfaceRoughness</span><span class='kw'>=</span><span class='fl'>0.3</span>,<span class='kw'>Polygon</span> <span class='kw'>=</span> <span class='no'>Polygon1</span>, <span class='kw'>resol1</span> <span class='kw'>=</span> <span class='fl'>200</span>,<span class='kw'>rot</span><span class='kw'>=</span><span class='fl'>20</span>,
-               <span class='kw'>dirspeed</span> <span class='kw'>=</span> <span class='no'>wind</span>, <span class='kw'>srtm_crop</span><span class='kw'>=</span><span class='st'>""</span>, <span class='kw'>topograp</span><span class='kw'>=</span><span class='fl'>FALSE</span>, <span class='kw'>cclRaster</span><span class='kw'>=</span><span class='st'>""</span>,
-               <span class='kw'>Parallel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='co'># }</span></div></pre>
+<span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>wind</span>, probab <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
+<span class='va'>startsel</span> <span class='op'>&lt;-</span> <span class='fu'><a href='init_population.html'>init_population</a></span><span class='op'>(</span><span class='va'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span><span class='op'>)</span>;
+<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'>fitness</span><span class='op'>(</span>selection <span class='op'>=</span> <span class='va'>startsel</span>, referenceHeight <span class='op'>=</span> <span class='fl'>100</span>, RotorHeight<span class='op'>=</span><span class='fl'>100</span>,
+               SurfaceRoughness<span class='op'>=</span><span class='fl'>0.3</span>,Polygon <span class='op'>=</span> <span class='va'>Polygon1</span>, resol1 <span class='op'>=</span> <span class='fl'>200</span>,rot<span class='op'>=</span><span class='fl'>20</span>,
+               dirspeed <span class='op'>=</span> <span class='va'>wind</span>, srtm_crop<span class='op'>=</span><span class='st'>""</span>, topograp<span class='op'>=</span><span class='cn'>FALSE</span>, cclRaster<span class='op'>=</span><span class='st'>""</span>,
+               Parallel <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='co'># }</span>
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -256,7 +279,7 @@ clusters to be used.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

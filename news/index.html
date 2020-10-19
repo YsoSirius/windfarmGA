@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -83,11 +87,19 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
+  <a href="../articles/index.html">Articles</a>
+</li>
+<li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/YsoSirius/windfarmGA/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -101,12 +113,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
-      
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="updates-2-3-0" class="section level1">
+<h1 class="page-header" data-toc-text="2.3.0">
+<a href="#updates-2-3-0" class="anchor"></a>Updates 2.3.0<small> Unreleased </small>
+</h1>
+<ul>
+<li>
+<p>Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">Warning</span> message:</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">In</span> showSRID(uprojargs, format = <span class="st">"PROJ"</span>, multiline = <span class="st">"NO"</span>, prefer_proj = prefer_proj) <span class="bu">:</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="ex">Discarded</span> datum European_Terrestrial_Reference_System_1989 in CRS definition</a></code></pre></div>
+</li>
+</ul>
+</div>
     <div id="updates-2-2-3" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.2.3">
 <a href="#updates-2-2-3" class="anchor"></a>Updates 2.2.3<small> 2019-12-16 </small>
 </h1>
 <ul>
@@ -114,7 +139,7 @@
 </ul>
 </div>
     <div id="updates-2-2-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.2.2">
 <a href="#updates-2-2-2" class="anchor"></a>Updates 2.2.2<small> 2019-08-27 </small>
 </h1>
 <div id="pkgdown" class="section level4">
@@ -131,37 +156,111 @@
 <li>
 <p>Almost all functions have been renamed to have a consistent appearance and a clearer meaning. The old functions still exist, but are deprecated now.</p>
 <details><summary>Renaming Overview</summary><p>
-
-Old names             | **New names**
---------------------- | ---------------------
-StartGA               | **init_population**
-selection1            | **selection**
-crossover1            | **crossover**
-VekWinkelCalc         | **get_dist_angles**
-calculateEn           | **calculate_energy**
-getRects              | **get_grids**
-BaroHoehe             | **barometric_height**
-GridFilter            | **grid_area**
-HexaTex               | **hexa_area**
-InfluPoints           | **turbine_influences**
-genAlgo               | **genetic_algorithm**
-RandomSearch          | **random_search**
-RandomSearchTurb      | **random_search_single**
-RandomSearchPlot      | **plot_random_search**
-leafPlot              | **plot_leaflet**
-heatmapGA             | **plot_heatmap**
-plotbeorwor           | **plot_development**
-plotCloud             | **plot_cloud**
-plotEvolution         | **plot_evolution**
-plotfitnessevolution  | **plot_fitness_evolution**
-plotparkfitness       | **plot_parkfitness**
-plotResult            | **plot_result**
-PlotWindfarmGA        | **plot_windfarmGA**
-plotWindrose          | **plot_windrose**
-
 </p>
-
-</details>
+<table>
+<thead><tr class="header">
+<th>Old names</th>
+<th><strong>New names</strong></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>StartGA</td>
+<td><strong>init_population</strong></td>
+</tr>
+<tr class="even">
+<td>selection1</td>
+<td><strong>selection</strong></td>
+</tr>
+<tr class="odd">
+<td>crossover1</td>
+<td><strong>crossover</strong></td>
+</tr>
+<tr class="even">
+<td>VekWinkelCalc</td>
+<td><strong>get_dist_angles</strong></td>
+</tr>
+<tr class="odd">
+<td>calculateEn</td>
+<td><strong>calculate_energy</strong></td>
+</tr>
+<tr class="even">
+<td>getRects</td>
+<td><strong>get_grids</strong></td>
+</tr>
+<tr class="odd">
+<td>BaroHoehe</td>
+<td><strong>barometric_height</strong></td>
+</tr>
+<tr class="even">
+<td>GridFilter</td>
+<td><strong>grid_area</strong></td>
+</tr>
+<tr class="odd">
+<td>HexaTex</td>
+<td><strong>hexa_area</strong></td>
+</tr>
+<tr class="even">
+<td>InfluPoints</td>
+<td><strong>turbine_influences</strong></td>
+</tr>
+<tr class="odd">
+<td>genAlgo</td>
+<td><strong>genetic_algorithm</strong></td>
+</tr>
+<tr class="even">
+<td>RandomSearch</td>
+<td><strong>random_search</strong></td>
+</tr>
+<tr class="odd">
+<td>RandomSearchTurb</td>
+<td><strong>random_search_single</strong></td>
+</tr>
+<tr class="even">
+<td>RandomSearchPlot</td>
+<td><strong>plot_random_search</strong></td>
+</tr>
+<tr class="odd">
+<td>leafPlot</td>
+<td><strong>plot_leaflet</strong></td>
+</tr>
+<tr class="even">
+<td>heatmapGA</td>
+<td><strong>plot_heatmap</strong></td>
+</tr>
+<tr class="odd">
+<td>plotbeorwor</td>
+<td><strong>plot_development</strong></td>
+</tr>
+<tr class="even">
+<td>plotCloud</td>
+<td><strong>plot_cloud</strong></td>
+</tr>
+<tr class="odd">
+<td>plotEvolution</td>
+<td><strong>plot_evolution</strong></td>
+</tr>
+<tr class="even">
+<td>plotfitnessevolution</td>
+<td><strong>plot_fitness_evolution</strong></td>
+</tr>
+<tr class="odd">
+<td>plotparkfitness</td>
+<td><strong>plot_parkfitness</strong></td>
+</tr>
+<tr class="even">
+<td>plotResult</td>
+<td><strong>plot_result</strong></td>
+</tr>
+<tr class="odd">
+<td>PlotWindfarmGA</td>
+<td><strong>plot_windfarmGA</strong></td>
+</tr>
+<tr class="even">
+<td>plotWindrose</td>
+<td><strong>plot_windrose</strong></td>
+</tr>
+</tbody>
+</table></details>
 </li>
 </ul>
 </div>
@@ -180,7 +279,7 @@ plotWindrose          | **plot_windrose**
 </div>
 </div>
     <div id="updates-2-2-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="2.2.1">
 <a href="#updates-2-2-1" class="anchor"></a>Updates 2.2.1<small> 2019-02-18 </small>
 </h1>
 <div id="performance-tuning-restructuring" class="section level4">
@@ -225,7 +324,7 @@ plotWindrose          | **plot_windrose**
 </div>
 </div>
     <div id="updates-1-2-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.2.1">
 <a href="#updates-1-2-1" class="anchor"></a>Updates 1.2.1<small> 2018-03-25 </small>
 </h1>
 <div id="randomization" class="section level4">
@@ -239,60 +338,52 @@ plotWindrose          | **plot_windrose**
 <p><strong><code>RandomSearch</code></strong> is used to randomize all turbines of the layout</p>
 <p><strong><code>RandomSearchTurb</code></strong> is used to randomize a single turbine</p>
 <p><strong><code>RandomSearchPlot</code></strong> is used to plot the output of those functions, comparing them with the original result.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/resultrect.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/polygon.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="ex">Res</span> = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="ex">RandomSearchPlot</span>(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/resultrect.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/polygon.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="ex">Res</span> = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="ex">RandomSearchPlot</span>(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)</a></code></pre></div>
 </div>
 </div>
     <div id="updates-1-2" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.2">
 <a href="#updates-1-2" class="anchor"></a>Updates 1.2<small> 2018-03-11 </small>
 </h1>
 <div id="parallel-processing" class="section level4">
 <h4 class="hasAnchor">
 <a href="#parallel-processing" class="anchor"></a>Parallel Processing</h4>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## Runs the same optimization, but with parallel processing and 3 cores.</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ex">result_par</span> <span class="op">&lt;</span>- genAlgo(Polygon1 = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">                 <span class="va">fcrR=</span>5,iteration=<span class="ex">10</span>, vdirspe = data.in,crossPart1 = <span class="st">"EQU"</span>,</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">                 <span class="va">selstate=</span><span class="st">"FIX"</span>,mutr=<span class="ex">0.8</span>, Proportionality = 1,</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">                 <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">                 <span class="va">elitism=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">                 <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">                 <span class="ex">Parallel</span> = TRUE, numCluster = 3)</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="ex">PlotWindfarmGA</span>(result = result_par, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## Runs the same optimization, but with parallel processing and 3 cores.</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ex">result_par</span> <span class="op">&lt;</span>- genAlgo(Polygon1 = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">                 <span class="va">fcrR=</span>5,iteration=<span class="ex">10</span>, vdirspe = data.in,crossPart1 = <span class="st">"EQU"</span>,</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">                 <span class="va">selstate=</span><span class="st">"FIX"</span>,mutr=<span class="ex">0.8</span>, Proportionality = 1,</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">                 <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">                 <span class="va">elitism=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">                 <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">                 <span class="ex">Parallel</span> = TRUE, numCluster = 3)</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="ex">PlotWindfarmGA</span>(result = result_par, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</a></code></pre></div>
 </div>
 </div>
     <div id="updates-1-1" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="1.1">
 <a href="#updates-1-1" class="anchor"></a>Updates 1.1<small> 2017-07-09 </small>
 </h1>
 <div id="optimization-with-hexagonal-grid-cells" class="section level4">
 <h4 class="hasAnchor">
 <a href="#optimization-with-hexagonal-grid-cells" class="anchor"></a>Optimization with Hexagonal Grid Cells</h4>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo(Polygon1 = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">                  <span class="va">fcrR=</span>5,iteration=<span class="ex">10</span>, vdirspe = data.in,crossPart1 = <span class="st">"EQU"</span>,</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">                  <span class="va">selstate=</span><span class="st">"FIX"</span>,mutr=<span class="ex">0.8</span>, Proportionality = 1,</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">                  <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">                  <span class="va">elitism=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">                  <span class="ex">referenceHeight</span> = 50,RotorHeight = 100)</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="ex">PlotWindfarmGA</span>(result = result_hex, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo(Polygon1 = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">                  <span class="va">fcrR=</span>5,iteration=<span class="ex">10</span>, vdirspe = data.in,crossPart1 = <span class="st">"EQU"</span>,</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">                  <span class="va">selstate=</span><span class="st">"FIX"</span>,mutr=<span class="ex">0.8</span>, Proportionality = 1,</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">                  <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">                  <span class="va">elitism=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">                  <span class="ex">referenceHeight</span> = 50,RotorHeight = 100)</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="ex">PlotWindfarmGA</span>(result = result_hex, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</a></code></pre></div>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#updates-2-2-3">2.2.3</a></li>
-        <li><a href="#updates-2-2-2">2.2.2</a></li>
-        <li><a href="#updates-2-2-1">2.2.1</a></li>
-        <li><a href="#updates-1-2-1">1.2.1</a></li>
-        <li><a href="#updates-1-2">1.2</a></li>
-        <li><a href="#updates-1-1">1.1</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -304,7 +395,7 @@ plotWindrose          | **plot_windrose**
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
