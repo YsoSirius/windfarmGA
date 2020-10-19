@@ -129,7 +129,7 @@
   col <span class='op'>=</span> <span class='st'>"ISO3"</span>,
   resol <span class='op'>=</span> <span class='st'>"low"</span>,
   coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"LONG"</span>, <span class='st'>"LAT"</span><span class='op'>)</span>,
-  ask <span class='op'>=</span> <span class='cn'>F</span>
+  ask <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -184,7 +184,7 @@
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>points</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4488182.26267016</span>, <span class='fl'>4488852.91748256</span><span class='op'>)</span>, 
 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2667398.93118627</span>, <span class='fl'>2667398.93118627</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>getISO3</span><span class='op'>(</span>pp <span class='op'>=</span> <span class='va'>points</span>, ask <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>
+<span class='fu'>getISO3</span><span class='op'>(</span>pp <span class='op'>=</span> <span class='va'>points</span>, ask <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'>getISO3</span><span class='op'>(</span>pp <span class='op'>=</span> <span class='va'>points</span>, crs_pp <span class='op'>=</span> <span class='fl'>3035</span><span class='op'>)</span>
 
 <span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>points</span><span class='op'>)</span>
