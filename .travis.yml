@@ -16,6 +16,8 @@ addons:
       - libgdal-dev
       - libproj-dev
       - libudunits2-dev
+      - libharfbuzz-dev
+      - libfribidi-dev
 
 sudo: required
 services:
