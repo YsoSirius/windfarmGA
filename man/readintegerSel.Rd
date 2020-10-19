@@ -17,7 +17,7 @@ Checks whether the input for \code{\link{selection}} is given
   percentage, based on the development of the population fitness values.
 }
 \examples{
-\donttest{
+\dontrun{
   readintegerSel()
 }
 }

@@ -17,7 +17,7 @@ Checks whether the input for \code{\link{crossover}} is given
   partitioning.
 }
 \examples{
-\donttest{
+\dontrun{
   readinteger()
 }
 
