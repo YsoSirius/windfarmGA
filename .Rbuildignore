@@ -30,3 +30,4 @@ k120_100m_Lambert.tif
 ^docs$
 ^pkgdown$
 ^cran-comments\.md$
+^_pkgdown\.yaml$

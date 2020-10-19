@@ -35,7 +35,6 @@ r_packages:
 
 after_success:
   - Rscript -e 'library(covr);codecov(quiet = FALSE)'
-  - Rscript -e 'pkgdown::build_site()'
 
 notifications:
   email:
@@ -43,10 +42,8 @@ notifications:
     on_failure: change
 
 deploy:
-  provider: pages
-  skip-cleanup: true
+  provider: script
+  script: Rscript -e 'remotes::install_cran("pkgdown");pkgdown::deploy_site_github()'
+  skip_cleanup: true
   github-token: $GITHUB_PAT
   keep-history: true
-  local-dir: docs
-  on:
-    branch: master

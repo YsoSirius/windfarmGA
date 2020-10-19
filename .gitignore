@@ -13,6 +13,7 @@ packrat/lib*/
 packrat/src/
 newstuff/*
 docs/*
+docs
 *.grd
 *.gri
 *.vrt
@@ -21,3 +22,4 @@ R/make_clc_legend.R
 *.tif
 *.zip
 *.csv
+docs/
