@@ -43,7 +43,7 @@
 #' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
 #' ## Plot the results of a hexagonal grid optimization
-#' Grid <- hexa_area(Polygon1, size = 87.5, FALSE)
+#' Grid <- hexa_area(polygon, size = 75, FALSE)
 #' plot_result(resulthex, polygon, best = 1, plotEn = 1, topographie = FALSE,
 #'            Grid = Grid[[2]])
 #'
