@@ -3,7 +3,6 @@
 \docType{package}
 \name{windfarmGA_}
 \alias{windfarmGA_}
-\alias{windfarmGA_-package}
 \title{windfarmGA}
 \description{
 \if{html}{\figure{windfarmGA.png}{options: width="25\%" align=right alt="Figure: windfarmGA.png"}} 

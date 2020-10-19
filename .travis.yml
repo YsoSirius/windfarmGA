@@ -16,6 +16,8 @@ addons:
       - libgdal-dev
       - libproj-dev
       - libudunits2-dev
+      - libharfbuzz-dev
+      - libfribidi-dev
 
 sudo: required
 services:
@@ -33,9 +35,10 @@ script:
 r_packages:
   - covr
 
+before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 after_success:
   - Rscript -e 'library(covr);codecov(quiet = FALSE)'
-  - Rscript -e 'pkgdown::build_site()'
+  - Rscript -e 'library(pkgdown);pkgdown::build_site()'
 
 notifications:
   email:

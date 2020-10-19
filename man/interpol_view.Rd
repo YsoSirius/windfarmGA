@@ -4,8 +4,16 @@
 \alias{interpol_view}
 \title{Plot an interpolated viewshed}
 \usage{
-interpol_view(res, plot = TRUE, breakseq, breakform = NULL,
-  plotDEM = FALSE, fun = mean, pal = NULL, ...)
+interpol_view(
+  res,
+  plot = TRUE,
+  breakseq,
+  breakform = NULL,
+  plotDEM = FALSE,
+  fun = mean,
+  pal = NULL,
+  ...
+)
 }
 \arguments{
 \item{res}{The result list from viewshed.}
@@ -40,43 +48,47 @@ Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
                           c(4499991, 2669343), c(4499991, 2667172)))
 Polygon1 <- Polygons(list(Polygon1), 1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 DEM_meter <- getDEM(Polygon1)
 
 turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
                 turbine_locs = turbloc,  h1=1.8, h2=50)
-interpol_view(res, plotDEM = T)
+interpol_view(res, plotDEM = TRUE)
 
 interpol_view(res, breakseq = seq(0,max(colSums(res$Result)),1))
-interpol_view(res, plotDEM = F, breakform = quantile)
+interpol_view(res, plotDEM = FALSE, breakform = quantile)
 interpol_view(res, breakform = factor)
 
 ## Different color palettes
-interpol_view(res, plotDEM = T, pal=topo.colors)
-interpol_view(res, plotDEM = T, pal=colorRampPalette(c("white","purple")))
+interpol_view(res, plotDEM = TRUE, pal=topo.colors)
+interpol_view(res, plotDEM = TRUE, pal=colorRampPalette(c("white","purple")))
 
 ## ... Arguments are past on to the raster plot method
-interpol_view(res, plotDEM = T, alpha=0.5)
-interpol_view(res, plotDEM = F, breakseq = seq(0,10,1), colNA="black")
+interpol_view(res, plotDEM = TRUE, alpha=0.5)
+interpol_view(res, plotDEM = FALSE, breakseq = seq(0,10,1), colNA="black")
 
 }
 }
 \seealso{
-Other Viewshed Analysis: \code{\link{cansee}},
-  \code{\link{plot_viewshed}}, \code{\link{rasterprofile}},
-  \code{\link{viewTo}}, \code{\link{viewshed}}
+Other Viewshed Analysis: 
+\code{\link{cansee}()},
+\code{\link{plot_viewshed}()},
+\code{\link{rasterprofile}()},
+\code{\link{viewTo}()},
+\code{\link{viewshed}()}
 
-Other Plotting Functions: \code{\link{plot_cloud}},
-  \code{\link{plot_development}},
-  \code{\link{plot_evolution}},
-  \code{\link{plot_fitness_evolution}},
-  \code{\link{plot_heatmap}},
-  \code{\link{plot_parkfitness}},
-  \code{\link{plot_result}}, \code{\link{plot_viewshed}},
-  \code{\link{plot_windfarmGA}},
-  \code{\link{plot_windrose}},
-  \code{\link{random_search_single}}
+Other Plotting Functions: 
+\code{\link{plot_cloud}()},
+\code{\link{plot_development}()},
+\code{\link{plot_evolution}()},
+\code{\link{plot_fitness_evolution}()},
+\code{\link{plot_heatmap}()},
+\code{\link{plot_parkfitness}()},
+\code{\link{plot_result}()},
+\code{\link{plot_viewshed}()},
+\code{\link{plot_windfarmGA}()},
+\code{\link{plot_windrose}()},
+\code{\link{random_search_single}()}
 }

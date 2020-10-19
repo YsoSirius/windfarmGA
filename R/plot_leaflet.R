@@ -24,7 +24,7 @@
 #' plot_leaflet(result = resulthex, Polygon1 = polygon, which = 1)
 #'
 #' ## Plot the last wind farm (ordered by chronology).
-#' plot_leaflet(result = resulthex, Polygon1 = polygon, orderitems = F,
+#' plot_leaflet(result = resulthex, Polygon1 = polygon, orderitems = FALSE,
 #'          which = 1)
 #'          
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
@@ -48,7 +48,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
 
   if (orderitems) {
     a <- sapply(result[, 2], FUN = function(i) {
-      subset.matrix(i, subset = c(T, rep(F, nrow(i) - 1)),
+      subset.matrix(i, subset = c(TRUE, rep(FALSE, nrow(i) - 1)),
                     select = "EnergyOverall")
     })
     b <- data.frame(cbind(a), stringsAsFactors = FALSE)
@@ -58,11 +58,23 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   } else {
     beste <- ""
   }
-  proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+  
+  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
+  if (PROJ6) {
+    proj_longlat <- CRS(SRS_string = "EPSG:4326")
+  } else {
+    proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+  }
 
   if (!missing(GridPol)) {
-    if (is.na(sp::proj4string(GridPol))) {
-      sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
+    if (PROJ6) {
+      if (is.na(slot(GridPol, "proj4string"))) {
+        slot(GridPol, "proj4string") <- CRS(result[, "inputData"][[1]]["Projection", ][[1]])
+      }
+    } else {
+      if (is.na(sp::proj4string(GridPol))) {
+        sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
+      }
     }
     GridPol <- sp::spTransform(GridPol, CRSobj = proj_longlat)
     overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
@@ -74,22 +86,38 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       sp::Polygon(cbind(xses, yses))), ID = "a")), pO = 1:1)
     GridPol <- Sr1
 
-    if (!is.na(sp::proj4string(poly1))) {
-      sp::proj4string(GridPol) <- sp::proj4string(poly1)
+    if (PROJ6) {
+      if (!is.na(slot(poly1, "proj4string"))) {
+        slot(GridPol, "proj4string") <- slot(poly1, "proj4string")
+      } else {
+        slot(GridPol, "proj4string") <- CRS(result[, "inputData"][[1]]["Projection", ][[1]])
+      }
     } else {
-      sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
+      if (!is.na(sp::proj4string(poly1))) {
+        sp::proj4string(GridPol) <- sp::proj4string(poly1)
+      } else {
+        sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
+      }
     }
+    
     GridPol <- sp::spTransform(GridPol, CRSobj = proj_longlat)
     opaycity <- 0
   }
 
-  if (is.na(sp::proj4string(poly1))) {
-    sp::proj4string(poly1) <- result[, "inputData"][[1]]["Projection", ][[1]]
+  if (PROJ6) {
+    if (is.na(slot(poly1, "proj4string"))) {
+      slot(poly1, "proj4string") <- CRS(result[, "inputData"][[1]]["Projection", ][[1]])
+    }
+    proj_pol <- slot(poly1, "proj4string")
+  } else {
+    if (is.na(sp::proj4string(poly1))) {
+      sp::proj4string(poly1) <- result[, "inputData"][[1]]["Projection", ][[1]]
+    }
+    proj_pol <- CRS(sp::proj4string(poly1))
   }
   result <- result[, "bestPaEn"][[which]]
-  proj_pol <- sp::proj4string(poly1)
   xysp <- sp::SpatialPoints(cbind(result[, "X"],
-                                  result[, "Y"]), proj4string = sp::CRS(proj_pol))
+                                  result[, "Y"]), proj4string = proj_pol)
   resultxy <- sp::spTransform(xysp, CRSobj = proj_longlat)
   resultxy <- sp::coordinates(resultxy)
 

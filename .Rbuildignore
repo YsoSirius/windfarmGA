@@ -31,3 +31,4 @@ release_to_cran.R
 ^docs$
 ^pkgdown$
 ^cran-comments\.md$
+^_pkgdown\.yaml$

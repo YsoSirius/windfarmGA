@@ -27,6 +27,7 @@ If the columns are named, it will look for common abbreviation to
 }
 \examples{
 \donttest{
+library(sp)
 df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
             c(4499991, 2669343), c(4499991, 2668272))
 isSpatial(df)
@@ -35,19 +36,24 @@ Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                           c(4499991, 2669343), c(4499991, 2668272)))
 Polygon1 <- Polygons(list(Polygon1), 1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 df_fort <- ggplot2::fortify(Polygon1)
 isSpatial(df_fort, Projection)
 }
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{getISO3}},
-  \code{\link{get_grids}}, \code{\link{grid_area}},
-  \code{\link{hexa_area}}, \code{\link{permutations}},
-  \code{\link{readintegerSel}}, \code{\link{readinteger}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{getISO3}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{permutations}()},
+\code{\link{readintegerSel}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }

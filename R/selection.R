@@ -30,8 +30,7 @@
 #' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+#' Projection <- "+init=epsg:3035"
 #' proj4string(Polygon1) <- CRS(Projection)
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
@@ -51,9 +50,9 @@
 #' ## SELECTION
 #' ## print the amount of Individuals selected. Check if the amount 
 #' ## of Turbines is as requested.
-#' selec6best <- selection(fit, Grid, 2, T, 6, "VAR")
-#' selec6best <- selection(fit, Grid, 2, T, 6, "FIX")
-#' selec6best <- selection(fit, Grid, 4, F, 6, "FIX")
+#' selec6best <- selection(fit, Grid, 2, TRUE, 6, "VAR")
+#' selec6best <- selection(fit, Grid, 2, TRUE, 6, "FIX")
+#' selec6best <- selection(fit, Grid, 4, FALSE, 6, "FIX")
 #' }
 selection         <- function(fit, Grid, teil, elitism, nelit, 
                                selstate, verbose) {

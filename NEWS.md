@@ -1,3 +1,11 @@
+# Updates 2.3.0
+- Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:
+  ```sh
+  Warning message:
+  In showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj = prefer_proj) :
+    Discarded datum European_Terrestrial_Reference_System_1989 in CRS definition
+  ```
+
 # Updates 2.2.3
 - Fix tests for R 3.4.0, as class(matrix) is of length 2.
 - Expose more options which can be set with `options(windfarmGA.cT = 0.75)`:  

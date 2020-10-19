@@ -4,8 +4,18 @@
 \alias{plot_result}
 \title{Plot the best results}
 \usage{
-plot_result(result, Polygon1, best = 3, plotEn = 1, topographie = FALSE,
-  Grid, Projection, sourceCCLRoughness, sourceCCL, weibullsrc)
+plot_result(
+  result,
+  Polygon1,
+  best = 3,
+  plotEn = 1,
+  topographie = FALSE,
+  Grid,
+  Projection,
+  sourceCCLRoughness,
+  sourceCCL,
+  weibullsrc
+)
 }
 \arguments{
 \item{result}{The output of \code{\link{windfarmGA}} or
@@ -60,7 +70,7 @@ load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
 load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 
 ## Plot the results of a hexagonal grid optimization
-Grid <- hexa_area(Polygon1, size = 87.5, FALSE)
+Grid <- hexa_area(polygon, size = 75, FALSE)
 plot_result(resulthex, polygon, best = 1, plotEn = 1, topographie = FALSE,
            Grid = Grid[[2]])
 
@@ -71,14 +81,16 @@ plot_result(resultrect, polygon, best = 1, plotEn = 1, topographie = FALSE,
 }
 }
 \seealso{
-Other Plotting Functions: \code{\link{interpol_view}},
-  \code{\link{plot_cloud}}, \code{\link{plot_development}},
-  \code{\link{plot_evolution}},
-  \code{\link{plot_fitness_evolution}},
-  \code{\link{plot_heatmap}},
-  \code{\link{plot_parkfitness}},
-  \code{\link{plot_viewshed}},
-  \code{\link{plot_windfarmGA}},
-  \code{\link{plot_windrose}},
-  \code{\link{random_search_single}}
+Other Plotting Functions: 
+\code{\link{interpol_view}()},
+\code{\link{plot_cloud}()},
+\code{\link{plot_development}()},
+\code{\link{plot_evolution}()},
+\code{\link{plot_fitness_evolution}()},
+\code{\link{plot_heatmap}()},
+\code{\link{plot_parkfitness}()},
+\code{\link{plot_viewshed}()},
+\code{\link{plot_windfarmGA}()},
+\code{\link{plot_windrose}()},
+\code{\link{random_search_single}()}
 }

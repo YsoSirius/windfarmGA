@@ -43,7 +43,7 @@
 #' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
 #' ## Plot the results of a hexagonal grid optimization
-#' Grid <- hexa_area(Polygon1, size = 87.5, FALSE)
+#' Grid <- hexa_area(polygon, size = 75, FALSE)
 #' plot_result(resulthex, polygon, best = 1, plotEn = 1, topographie = FALSE,
 #'            Grid = Grid[[2]])
 #'
@@ -64,21 +64,38 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   ## Check Projections and reference systems
   Polygon1 <- windfarmGA::isSpatial(Polygon1)
 
-
+  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   if (missing(Projection)) {
-    ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-              +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    if (PROJ6) {
+      ProjLAEA <- "+init=epsg:3035"
+    } else {
+      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    }
   } else {
     ProjLAEA <- Projection
   }
-  if (is.na(sp::proj4string(Polygon1))) {
-    ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
-    sp::proj4string(Polygon1) <- ProjLAEA
-    # stop("Polygon is not projected.", call. = FALSE )
-    message("Polygon is not projected. Same projection from result will be assumed.")
-  }
-  if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
-    Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+  
+  if (PROJ6) {
+    if (is.na(slot(Polygon1, "proj4string"))) {
+      ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
+      slot(Polygon1, "proj4string") <- CRS(ProjLAEA)
+      # stop("Polygon is not projected.", call. = FALSE )
+      message("Polygon is not projected. Same projection from result will be assumed.")
+    }
+    if (suppressWarnings(!isTRUE( all.equal(wkt(Polygon1), wkt(CRS(ProjLAEA))) ))) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    }
+  } else {
+    if (is.na(sp::proj4string(Polygon1))) {
+      ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
+      sp::proj4string(Polygon1) <- ProjLAEA
+      # stop("Polygon is not projected.", call. = FALSE )
+      message("Polygon is not projected. Same projection from result will be assumed.")
+    }
+    if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
+      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    }
   }
   if (missing(sourceCCL)) {
     sourceCCL <- NULL
@@ -403,7 +420,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
       }
       if (!is.null(weibullsrc)) {
         raster::plot(Erwartungswert, alpha = alpha, legend = TRUE, axes = FALSE,
-                     useRaster = TRUE, add = T, legend.lab = "Mean Wind Speed")
+                     useRaster = TRUE, add = TRUE, legend.lab = "Mean Wind Speed")
       }
       if (!missing(Grid)) {
         plot(Grid, add = TRUE)
@@ -487,7 +504,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           windpo <- windpo * orogrnum
           ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
           heightWind <- raster::extract(x = srtm_crop, y = as.matrix((sel1)), 
-                                        small = T, fun = max, na.rm = TRUE)
+                                        small = TRUE, fun = max, na.rm = TRUE)
 
           graphics::par(mfrow = c(1, 2))
           cexa <- 0.9
@@ -518,11 +535,11 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           #CorineLandCover Roughness values
           SurfaceRoughness0 <- raster::extract(x = cclRaster, y = as.matrix((sel1)),
                                                # buffer = resol * 2,
-                                               small = T, fun = mean, na.rm = TRUE)
+                                               small = TRUE, fun = mean, na.rm = TRUE)
           SurfaceRoughness1 <- raster::extract(x = raster::terrain(srtm_crop, "roughness"),
                                                y = as.matrix((sel1)),
                                                # buffer = resol * 2,
-                                               small = T, fun = mean, na.rm = TRUE)
+                                               small = TRUE, fun = mean, na.rm = TRUE)
           SurfaceRoughness <-SurfaceRoughness0 * (1 + (SurfaceRoughness1 / max(raster::res(srtm_crop))))
           elrouind <- raster::terrain(srtm_crop, "roughness")
           elrouindn <- raster::resample(elrouind, cclRaster, method = "ngb")
@@ -600,17 +617,17 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   #       # readline(prompt = "\nPress <ENTER> if you want to continue")
   #       sourceCCLRoughness <- sourceCCLRoughness
   #     }
-  #     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,header = T,sep = ";");
+  #     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,header = TRUE,sep = ";");
   #     cclRaster <- raster::reclassify(cclPoly1,
   #                                     matrix(c(rauhigkeitz$GRID_CODE,rauhigkeitz$Rauhigkeit_z),ncol = 2))
   # 
   # 
   #     # Calculates Wind multiplier. Hills will get higher values, valleys will get lower values.
   #     orogr1 <- raster::calc(srtm_crop, function(x) {x/(raster::cellStats(srtm_crop,mean,na.rm=T))})
-  #     orogrnum <- raster::extract(x= orogr1, y = as.matrix((sel1)), buffer=resol*2, small=T,fun= mean,na.rm=T);
+  #     orogrnum <- raster::extract(x= orogr1, y = as.matrix((sel1)), buffer=resol*2, small=TRUE,fun= mean,na.rm=T);
   #     windpo <- windpo * orogrnum
   #     ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-  #     heightWind <- raster::extract(x= srtm_crop, y = as.matrix((sel1)), small=T,fun= max,na.rm=T);
+  #     heightWind <- raster::extract(x= srtm_crop, y = as.matrix((sel1)), small=TRUE,fun= max,na.rm=T);
   #     
   #     graphics::par(mfrow=c(1,2)); cexa <- 0.9
   #     raster::plot(srtm_crop, main="SRTM Elevation Data");graphics::points(sel1$X,sel1$Y,pch=20);
@@ -634,9 +651,9 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   # 
   #     #CorineLandCover Roughness values
   #     SurfaceRoughness0 <- raster::extract(x= cclRaster, y = as.matrix((sel1)),buffer=resol*2,
-  #                                          small=T,fun= mean,na.rm=T);
+  #                                          small=TRUE,fun= mean,na.rm=T);
   #     SurfaceRoughness1 <- raster::extract(x=raster::terrain(srtm_crop,"roughness"),
-  #                                          y = as.matrix((sel1)),buffer=resol*2, small=T,fun= mean,na.rm=T);
+  #                                          y = as.matrix((sel1)),buffer=resol*2, small=TRUE,fun= mean,na.rm=TRUE);
   #     SurfaceRoughness <-SurfaceRoughness0*(1+(SurfaceRoughness1/max(raster::res(srtm_crop))));
   #     elrouind <- raster::terrain(srtm_crop,"roughness")
   #     elrouindn <- raster::resample(elrouind,cclRaster,method="ngb")

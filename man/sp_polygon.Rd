@@ -4,7 +4,9 @@
 \name{sp_polygon}
 \alias{sp_polygon}
 \title{The rectangular shapefile used to create \code{resultrect}}
-\format{An object of class \code{SpatialPolygons} of length 1.}
+\format{
+An object of class \code{SpatialPolygons} of length 1.
+}
 \usage{
 sp_polygon
 }

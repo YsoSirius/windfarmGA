@@ -17,16 +17,22 @@ Checks whether the input for \code{\link{selection}} is given
   percentage, based on the development of the population fitness values.
 }
 \examples{
-\donttest{
+\dontrun{
   readintegerSel()
 }
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{getISO3}},
-  \code{\link{get_grids}}, \code{\link{grid_area}},
-  \code{\link{hexa_area}}, \code{\link{isSpatial}},
-  \code{\link{permutations}}, \code{\link{readinteger}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{getISO3}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }

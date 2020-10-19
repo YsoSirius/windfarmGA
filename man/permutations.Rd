@@ -26,13 +26,19 @@ Venables, Bill. "Programmers Note", R-News, Vol 1/1, Jan. 2001.
 \url{https://cran.r-project.org/doc/Rnews/}
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{getISO3}},
-  \code{\link{get_grids}}, \code{\link{grid_area}},
-  \code{\link{hexa_area}}, \code{\link{isSpatial}},
-  \code{\link{readintegerSel}}, \code{\link{readinteger}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{getISO3}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{readintegerSel}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }
 \author{
 Original versions by Bill Venables 

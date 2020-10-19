@@ -4,7 +4,9 @@
 \name{big_shape}
 \alias{big_shape}
 \title{A big shapefile}
-\format{An object of class \code{SpatialPolygons} of length 1.}
+\format{
+An object of class \code{SpatialPolygons} of length 1.
+}
 \usage{
 big_shape
 }

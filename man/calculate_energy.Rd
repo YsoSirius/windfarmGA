@@ -4,9 +4,23 @@
 \alias{calculate_energy}
 \title{Calculate Energy Outputs of Individuals}
 \usage{
-calculate_energy(sel, referenceHeight, RotorHeight, SurfaceRoughness, wnkl,
-  distanz, polygon1, resol, RotorR, dirSpeed, srtm_crop, topograp, cclRaster,
-  weibull, plotit = FALSE)
+calculate_energy(
+  sel,
+  referenceHeight,
+  RotorHeight,
+  SurfaceRoughness,
+  wnkl,
+  distanz,
+  polygon1,
+  resol,
+  RotorR,
+  dirSpeed,
+  srtm_crop,
+  topograp,
+  cclRaster,
+  weibull,
+  plotit = FALSE
+)
 }
 \arguments{
 \item{sel}{A data.frame of an individual of the current population
@@ -71,8 +85,7 @@ Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
                     c(4499991, 2669343), c(4499991, 2668272)))
 Polygon1 <- Polygons(list(Polygon1),1);
 Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- '+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 
 ## Create a uniform and unidirectional wind data.frame and plot the
@@ -125,7 +138,8 @@ resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
 
 }
 \seealso{
-Other Wind Energy Calculation Functions: \code{\link{barometric_height}},
-  \code{\link{get_dist_angles}},
-  \code{\link{turbine_influences}}
+Other Wind Energy Calculation Functions: 
+\code{\link{barometric_height}()},
+\code{\link{get_dist_angles}()},
+\code{\link{turbine_influences}()}
 }

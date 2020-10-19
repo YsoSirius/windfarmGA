@@ -4,8 +4,16 @@
 \alias{PlotWindfarmGA}
 \title{Deprecated use \code{\link[windfarmGA]{plot_windfarmGA}} instead.}
 \usage{
-PlotWindfarmGA(result, Polygon1, GridMethod = "r", whichPl = "all",
-  best = 1, plotEn = 1, Projection, weibullsrc)
+PlotWindfarmGA(
+  result,
+  Polygon1,
+  GridMethod = "r",
+  whichPl = "all",
+  best = 1,
+  plotEn = 1,
+  Projection,
+  weibullsrc
+)
 }
 \arguments{
 \item{result}{The output of \code{\link{windfarmGA}} or

@@ -32,16 +32,20 @@ Perform a random search for a single turbine, to further
   optimize the output of the wind farm layout.
 }
 \seealso{
-Other Randomization: \code{\link{plot_random_search}},
-  \code{\link{random_search}}
+Other Randomization: 
+\code{\link{plot_random_search}()},
+\code{\link{random_search}()}
 
-Other Plotting Functions: \code{\link{interpol_view}},
-  \code{\link{plot_cloud}}, \code{\link{plot_development}},
-  \code{\link{plot_evolution}},
-  \code{\link{plot_fitness_evolution}},
-  \code{\link{plot_heatmap}},
-  \code{\link{plot_parkfitness}},
-  \code{\link{plot_result}}, \code{\link{plot_viewshed}},
-  \code{\link{plot_windfarmGA}},
-  \code{\link{plot_windrose}}
+Other Plotting Functions: 
+\code{\link{interpol_view}()},
+\code{\link{plot_cloud}()},
+\code{\link{plot_development}()},
+\code{\link{plot_evolution}()},
+\code{\link{plot_fitness_evolution}()},
+\code{\link{plot_heatmap}()},
+\code{\link{plot_parkfitness}()},
+\code{\link{plot_result}()},
+\code{\link{plot_viewshed}()},
+\code{\link{plot_windfarmGA}()},
+\code{\link{plot_windrose}()}
 }

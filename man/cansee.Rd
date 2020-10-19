@@ -28,7 +28,10 @@ Check if point 1 is visible from point 2 given
   a certain elevation model
 }
 \seealso{
-Other Viewshed Analysis: \code{\link{interpol_view}},
-  \code{\link{plot_viewshed}}, \code{\link{rasterprofile}},
-  \code{\link{viewTo}}, \code{\link{viewshed}}
+Other Viewshed Analysis: 
+\code{\link{interpol_view}()},
+\code{\link{plot_viewshed}()},
+\code{\link{rasterprofile}()},
+\code{\link{viewTo}()},
+\code{\link{viewshed}()}
 }

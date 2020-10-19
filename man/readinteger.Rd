@@ -17,17 +17,23 @@ Checks whether the input for \code{\link{crossover}} is given
   partitioning.
 }
 \examples{
-\donttest{
+\dontrun{
   readinteger()
 }
 
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{getISO3}},
-  \code{\link{get_grids}}, \code{\link{grid_area}},
-  \code{\link{hexa_area}}, \code{\link{isSpatial}},
-  \code{\link{permutations}}, \code{\link{readintegerSel}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{getISO3}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{readintegerSel}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }

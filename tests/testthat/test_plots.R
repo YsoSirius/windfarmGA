@@ -216,9 +216,9 @@ test_that("Test Plotting Functions", {
   
   pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1)
   expect_true(is.recursive(pl));rm(pl)
-  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1, orderitems = F)
+  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1, orderitems = FALSE)
   expect_true(is.recursive(pl));rm(pl)
-  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1000, orderitems = F)
+  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1000, orderitems = FALSE)
   expect_true(is.recursive(pl));rm(pl)
   gr <- GridFilter(polygon, resol = 250)
   pl <- leafPlot(result = resulthex, Polygon1 = polygon, GridPol = gr[[2]])

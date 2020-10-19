@@ -4,8 +4,14 @@
 \alias{getISO3}
 \title{getISO3}
 \usage{
-getISO3(pp, crs_pp = 4326, col = "ISO3", resol = "low",
-  coords = c("LONG", "LAT"), ask = F)
+getISO3(
+  pp,
+  crs_pp = 4326,
+  col = "ISO3",
+  resol = "low",
+  coords = c("LONG", "LAT"),
+  ask = FALSE
+)
 }
 \arguments{
 \item{pp}{SpatialPoints or matrix}
@@ -30,7 +36,7 @@ Get point values from the \code{\link[rworldmap]{getMap}}
 \dontrun{
 points = cbind(c(4488182.26267016, 4488852.91748256), 
 c(2667398.93118627, 2667398.93118627))
-getISO3(pp = points, ask = T)
+getISO3(pp = points, ask = TRUE)
 getISO3(pp = points, crs_pp = 3035)
 
 points <- as.data.frame(points)
@@ -41,11 +47,17 @@ getISO3(pp = points, crs_pp = 3035)
 }
 }
 \seealso{
-Other Helper Functions: \code{\link{dup_coords}},
-  \code{\link{getDEM}}, \code{\link{get_grids}},
-  \code{\link{grid_area}}, \code{\link{hexa_area}},
-  \code{\link{isSpatial}}, \code{\link{permutations}},
-  \code{\link{readintegerSel}}, \code{\link{readinteger}},
-  \code{\link{splitAt}}, \code{\link{tess2SPdf}},
-  \code{\link{windata_format}}
+Other Helper Functions: 
+\code{\link{dup_coords}()},
+\code{\link{getDEM}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{readintegerSel}()},
+\code{\link{readinteger}()},
+\code{\link{splitAt}()},
+\code{\link{tess2SPdf}()},
+\code{\link{windata_format}()}
 }

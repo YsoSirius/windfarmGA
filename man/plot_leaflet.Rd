@@ -36,7 +36,7 @@ load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 plot_leaflet(result = resulthex, Polygon1 = polygon, which = 1)
 
 ## Plot the last wind farm (ordered by chronology).
-plot_leaflet(result = resulthex, Polygon1 = polygon, orderitems = F,
+plot_leaflet(result = resulthex, Polygon1 = polygon, orderitems = FALSE,
          which = 1)
          
 load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))

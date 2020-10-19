@@ -40,8 +40,12 @@ a==aMut
 
 }
 \seealso{
-Other Genetic Algorithm Functions: \code{\link{crossover}},
-  \code{\link{fitness}}, \code{\link{genetic_algorithm}},
-  \code{\link{init_population}}, \code{\link{selection}},
-  \code{\link{trimton}}, \code{\link{windfarmGA}}
+Other Genetic Algorithm Functions: 
+\code{\link{crossover}()},
+\code{\link{fitness}()},
+\code{\link{genetic_algorithm}()},
+\code{\link{init_population}()},
+\code{\link{selection}()},
+\code{\link{trimton}()},
+\code{\link{windfarmGA}()}
 }

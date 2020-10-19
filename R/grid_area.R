@@ -37,9 +37,8 @@
 #' c(2000, 2000), c(2000, 0)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' Projection <- "+init=epsg:3035"
+#' proj4string(Polygon1) <- Projection
 #'
 #' ## Create a Grid
 #' grid_area(Polygon1,200,1,TRUE)
@@ -51,9 +50,8 @@
 #'                           c(2000, 2000), c(3000, 0)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' Projection <- "+init=epsg:3035"
+#' proj4string(Polygon1) <- Projection
 #'
 #' ## Create a Grid
 #' grid_area(Polygon1,200,1,TRUE)
@@ -75,7 +73,11 @@ grid_area <- function(shape, resol = 500, prop = 1, plotGrid = FALSE) {
   ## Polygon to Raster, assign Resolution and Project
   grid <- raster::raster(raster::extent(shape))
   raster::res(grid) <- c(resol, resol)
-  sp::proj4string(grid) <- sp::proj4string(shape)
+  if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
+    slot(grid, "crs") <- slot(shape, "proj4string")
+  } else {
+    sp::proj4string(grid) <- sp::proj4string(shape)
+  }
 
   ## Raster to Grid (SpatialPolygonsDataFrame) and get areas
   gridpolygon <- rasterToPolygons(grid)
