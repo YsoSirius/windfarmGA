@@ -9,7 +9,7 @@
 #'
 #' @family Helper Functions
 #' @return Returns the selected crossover method (character)
-#' @examples \donttest{
+#' @examples \dontrun{
 #'   readinteger()
 #' }
 #'
@@ -41,7 +41,7 @@ readinteger        <- function(){
 #'
 #' @family Helper Functions
 #' @return Returns the selected selection method (character)
-#' @examples \donttest{
+#' @examples \dontrun{
 #'   readintegerSel()
 #' }
 readintegerSel        <- function(){
