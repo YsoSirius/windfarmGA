@@ -4,7 +4,9 @@
 \name{multi_shape}
 \alias{multi_shape}
 \title{A multi-shapefile with 3 Polygons}
-\format{An object of class \code{SpatialPolygons} of length 1.}
+\format{
+An object of class \code{SpatialPolygons} of length 1.
+}
 \usage{
 multi_shape
 }

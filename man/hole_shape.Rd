@@ -4,7 +4,9 @@
 \name{hole_shape}
 \alias{hole_shape}
 \title{A shapefile with a hole}
-\format{An object of class \code{SpatialPolygonsDataFrame} with 1 rows and 1 columns.}
+\format{
+An object of class \code{SpatialPolygonsDataFrame} with 1 rows and 1 columns.
+}
 \usage{
 hole_shape
 }
