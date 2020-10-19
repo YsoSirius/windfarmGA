@@ -225,7 +225,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
       # get Energy Output and Efficiency rate for every wind direction
       enOut <- lapply(ee, function(x){
         subset.matrix(x, 
-                      subset = c(TRUE, rep(F, length(ee[[1]][, 1]) - 1)),
+                      subset = c(TRUE, rep(FALSE, length(ee[[1]][, 1]) - 1)),
                       select = c("Windrichtung", "Energy_Output_Red", 
                                  "Parkwirkungsgrad"))})
       enOut <- do.call("rbind", enOut)

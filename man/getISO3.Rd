@@ -10,7 +10,7 @@ getISO3(
   col = "ISO3",
   resol = "low",
   coords = c("LONG", "LAT"),
-  ask = F
+  ask = FALSE
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ Get point values from the \code{\link[rworldmap]{getMap}}
 \dontrun{
 points = cbind(c(4488182.26267016, 4488852.91748256), 
 c(2667398.93118627, 2667398.93118627))
-getISO3(pp = points, ask = T)
+getISO3(pp = points, ask = TRUE)
 getISO3(pp = points, crs_pp = 3035)
 
 points <- as.data.frame(points)

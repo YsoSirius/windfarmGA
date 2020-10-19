@@ -48,9 +48,9 @@
 #' ## SELECTION
 #' ## print the amount of Individuals selected.
 #' ## Check if the amount of Turbines is as requested.
-#' selec6best <- selection(fit, Grid,2, T, 6, "VAR");
-#' selec6best <- selection(fit, Grid,2, T, 6, "FIX");
-#' selec6best <- selection(fit, Grid,4, F, 6, "FIX");
+#' selec6best <- selection(fit, Grid,2, TRUE, 6, "VAR");
+#' selec6best <- selection(fit, Grid,2, TRUE, 6, "FIX");
+#' selec6best <- selection(fit, Grid,4, FALSE, 6, "FIX");
 #'
 #' ## CROSSOVER
 #' ## u determines the amount of crossover points,

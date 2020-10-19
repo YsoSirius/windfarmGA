@@ -48,8 +48,7 @@
 #'                     c(4499991, 2669343), c(4499991, 2668272)))
 #' Polygon1 <- Polygons(list(Polygon1),1);
 #' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- '+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-#' +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+#' Projection <- "+init=epsg:3035"
 #' proj4string(Polygon1) <- CRS(Projection)
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plot the
@@ -183,7 +182,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
     elrouind <- srtm_crop[[3]]
 
     surf_rough1 <- raster::extract(x = elrouind, y = xy_individual,
-                                   small = T, fun =  mean, na.rm = FALSE)
+                                   small = TRUE, fun =  mean, na.rm = FALSE)
     surf_rough1[is.na(surf_rough1)] <- mean(surf_rough1,
                                             na.rm = TRUE)
     # maxrasres <- max(raster::res(srtm_crop))

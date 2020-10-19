@@ -20,7 +20,7 @@
 #' }
 plot_fitness_evolution <- function(result, spar = 0.1){
   # library(stats)
-  oparplotfitness <- par(ask = F, no.readonly = T)
+  oparplotfitness <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(oparplotfitness))
   par(mfrow = c(1, 1))
   

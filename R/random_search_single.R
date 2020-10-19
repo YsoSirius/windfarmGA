@@ -153,7 +153,7 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
 
 
         ## TODO - yeah somethins wrong with the whole loop.. and no docs...
-        ColRowMin <- which(pointsDist == distMin, useNames = T, arr.ind = T)
+        ColRowMin <- which(pointsDist == distMin, useNames = TRUE, arr.ind = TRUE)
 
         ## Copy the original layout (really need that? AGAIN ?)
         cordNew <- coordLay[as.numeric(turbInx), ]

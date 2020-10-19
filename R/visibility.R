@@ -77,7 +77,7 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0, reso){
   h1 = xyz[, "z"][1] + h1
   h2 = xyz[, "z"][np] + h2
   hpath = h1 + (0:np)*(h2 - h1)/np
-  invisible(!any(hpath < xyz[, "z"], na.rm = T))
+  invisible(!any(hpath < xyz[, "z"], na.rm = TRUE))
 }
 
 
@@ -237,12 +237,12 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
 #' plot_viewshed(res)
 #' 
 #' ## ... Arguments are past on to raster::plot
-#' plot_viewshed(res, legend = T, interpolate=T, colNA="black", 
+#' plot_viewshed(res, legend = TRUE, interpolate=TRUE, colNA="black", 
 #'               col = topo.colors(15))
 #' }
 plot_viewshed <- function(res, legend=FALSE, ...) {
   raster::plot(res[[4]], ...)
-  plot(sf::st_geometry(res[[3]]), add = T)
+  plot(sf::st_geometry(res[[3]]), add = TRUE)
   points(res[[2]], col="green", pch=20)
   points(res[[5]], cex=1.5, col="black", pch=20)
   if (is.matrix(res[[1]])) {
@@ -296,19 +296,19 @@ plot_viewshed <- function(res, legend=FALSE, ...) {
 #' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
 #'                 turbine_locs = turbloc,  h1=1.8, h2=50)
-#' interpol_view(res, plotDEM = T)
+#' interpol_view(res, plotDEM = TRUE)
 #' 
 #' interpol_view(res, breakseq = seq(0,max(colSums(res$Result)),1))
-#' interpol_view(res, plotDEM = F, breakform = quantile)
+#' interpol_view(res, plotDEM = FALSE, breakform = quantile)
 #' interpol_view(res, breakform = factor)
 #' 
 #' ## Different color palettes
-#' interpol_view(res, plotDEM = T, pal=topo.colors)
-#' interpol_view(res, plotDEM = T, pal=colorRampPalette(c("white","purple")))
+#' interpol_view(res, plotDEM = TRUE, pal=topo.colors)
+#' interpol_view(res, plotDEM = TRUE, pal=colorRampPalette(c("white","purple")))
 #' 
 #' ## ... Arguments are past on to the raster plot method
-#' interpol_view(res, plotDEM = T, alpha=0.5)
-#' interpol_view(res, plotDEM = F, breakseq = seq(0,10,1), colNA="black")
+#' interpol_view(res, plotDEM = TRUE, alpha=0.5)
+#' interpol_view(res, plotDEM = FALSE, breakseq = seq(0,10,1), colNA="black")
 #' 
 #' }
 interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL, 
@@ -345,8 +345,8 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
     }
     
     if (plotDEM) {
-      raster::plot(res$DEM, legend = F)
-      raster::plot(visible, breaks=breakseq, add = T, col=pal(length(breakseq)), ...)
+      raster::plot(res$DEM, legend = FALSE)
+      raster::plot(visible, breaks=breakseq, add = TRUE, col=pal(length(breakseq)), ...)
     } else {
       raster::plot(visible, breaks=breakseq, col=pal(length(breakseq)), ...)
     }
@@ -376,7 +376,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' @examples \dontrun{
 #' points = cbind(c(4488182.26267016, 4488852.91748256), 
 #' c(2667398.93118627, 2667398.93118627))
-#' getISO3(pp = points, ask = T)
+#' getISO3(pp = points, ask = TRUE)
 #' getISO3(pp = points, crs_pp = 3035)
 #' 
 #' points <- as.data.frame(points)
@@ -386,7 +386,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' getISO3(pp = points, crs_pp = 3035)
 #' }
 getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low", 
-                    coords = c("LONG", "LAT"), ask=F) {
+                    coords = c("LONG", "LAT"), ask=FALSE) {
   # pp= points; col = "ISO3"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT")
   # pp = points; col = "?"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT"); ask=T
   
@@ -449,7 +449,7 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 #' proj4string(Polygon1) <- CRS(Projection)
 #' DEM_meter <- getDEM(Polygon1)
 #' plot(DEM_meter[[1]])
-#' plot(DEM_meter[[2]], add=T)
+#' plot(DEM_meter[[2]], add=TRUE)
 #' }
 getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
   # polygon = shape; ISO3 = "AUT"

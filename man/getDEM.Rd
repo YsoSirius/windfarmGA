@@ -32,7 +32,7 @@ Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 DEM_meter <- getDEM(Polygon1)
 plot(DEM_meter[[1]])
-plot(DEM_meter[[2]], add=T)
+plot(DEM_meter[[2]], add=TRUE)
 }
 }
 \seealso{

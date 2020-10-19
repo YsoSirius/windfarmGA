@@ -55,19 +55,19 @@ DEM_meter <- getDEM(Polygon1)
 turbloc = spsample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
                 turbine_locs = turbloc,  h1=1.8, h2=50)
-interpol_view(res, plotDEM = T)
+interpol_view(res, plotDEM = TRUE)
 
 interpol_view(res, breakseq = seq(0,max(colSums(res$Result)),1))
-interpol_view(res, plotDEM = F, breakform = quantile)
+interpol_view(res, plotDEM = FALSE, breakform = quantile)
 interpol_view(res, breakform = factor)
 
 ## Different color palettes
-interpol_view(res, plotDEM = T, pal=topo.colors)
-interpol_view(res, plotDEM = T, pal=colorRampPalette(c("white","purple")))
+interpol_view(res, plotDEM = TRUE, pal=topo.colors)
+interpol_view(res, plotDEM = TRUE, pal=colorRampPalette(c("white","purple")))
 
 ## ... Arguments are past on to the raster plot method
-interpol_view(res, plotDEM = T, alpha=0.5)
-interpol_view(res, plotDEM = F, breakseq = seq(0,10,1), colNA="black")
+interpol_view(res, plotDEM = TRUE, alpha=0.5)
+interpol_view(res, plotDEM = FALSE, breakseq = seq(0,10,1), colNA="black")
 
 }
 }

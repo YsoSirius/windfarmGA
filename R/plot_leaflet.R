@@ -48,7 +48,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
 
   if (orderitems) {
     a <- sapply(result[, 2], FUN = function(i) {
-      subset.matrix(i, subset = c(T, rep(F, nrow(i) - 1)),
+      subset.matrix(i, subset = c(TRUE, rep(FALSE, nrow(i) - 1)),
                     select = "EnergyOverall")
     })
     b <- data.frame(cbind(a), stringsAsFactors = FALSE)
