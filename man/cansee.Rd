@@ -4,7 +4,7 @@
 \alias{cansee}
 \title{Calculate Visibility between 2 locations}
 \usage{
-cansee(r, xy1, xy2, h1 = 0, h2 = 0, reso)
+cansee(r, xy1, xy2, h1 = 0, h2 = 0, reso, plot = FALSE, ...)
 }
 \arguments{
 \item{r}{A DEM raster}
@@ -19,6 +19,10 @@ cansee(r, xy1, xy2, h1 = 0, h2 = 0, reso)
 
 \item{reso}{The minimal resolution of the DEM raster. It is 
 calculated in \code{viewshed} and passed along.}
+
+\item{plot}{Plot the process of assessing visibility}
+
+\item{...}{Additional arguments passed to to the raster plot}
 }
 \value{
 A boolean value, indicating if the point (xy2) is visible
@@ -26,6 +30,33 @@ A boolean value, indicating if the point (xy2) is visible
 \description{
 Check if point 1 is visible from point 2 given
   a certain elevation model
+}
+\examples{
+\dontrun{
+library(raster)
+library(windfarmGA)
+
+matrix <- matrix(abs(sin(1:100))*10, nrow=10, byrow = TRUE)
+r1 <- raster(matrix)
+shape <- as(extent(r1), "SpatialPolygons")
+locs = spsample(shape, 10, type = "random");
+
+mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
+sample_xy <- sp::coordinates(mw)
+
+Pt1 <- 3
+for (i in 1:nrow(sample_xy)) {
+  cansee(r1, 
+         xy1 = sp::coordinates(locs)[Pt1,], 
+         xy2 = sample_xy[i,], 
+         h1 = 3, 
+         h2 = 1.5, 
+         reso = min(res(r1)), 
+         plot=TRUE)
+  invisible(readline(prompt="Press [enter] to continue"))
+}
+
+}
 }
 \seealso{
 Other Viewshed Analysis: 

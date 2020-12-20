@@ -32,3 +32,4 @@ k120_100m_Lambert.tif
 ^cran-comments\.md$
 ^_pkgdown\.yaml$
 ^revdep$
+^_experiment$

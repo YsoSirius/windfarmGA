@@ -15,15 +15,15 @@ test_that("Test Viewshed Functions", {
   Polygon1 <- SpatialPolygons(list(Polygon1))
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
   +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  proj4string(Polygon1) <- CRS(Projection)
+  suppressWarnings(proj4string(Polygon1) <- CRS(Projection))
 
   ## getDEM #################
-  DEM_meter <- getDEM(Polygon1)
+  DEM_meter <- suppressWarnings(getDEM(Polygon1))
   expect_is(DEM_meter, "list")
   expect_true(class(DEM_meter[[1]]) == "RasterLayer")
   expect_true(class(DEM_meter[[2]]) == "SpatialPolygonsDataFrame")
   
-  DEM_noclip <- getDEM(Polygon1, clip = FALSE)
+  DEM_noclip <- suppressWarnings(getDEM(Polygon1, clip = FALSE))
   expect_is(DEM_noclip, "list")
   expect_true(class(DEM_noclip[[1]]) == "RasterLayer")
   expect_true(is.null(DEM_noclip[[2]]))
@@ -56,7 +56,7 @@ test_that("Test Viewshed Functions", {
   
   
   ## viewshed #################
-  turbloc <- spsample(DEM_meter[[2]], 10, type = "random")
+  turbloc <- suppressWarnings(spsample(DEM_meter[[2]], 10, type = "random"))
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   expect_is(res, "list")
@@ -69,8 +69,8 @@ test_that("Test Viewshed Functions", {
   
   turblocdf <- sp::coordinates(turbloc)
   sf_shape <- st_as_sf(DEM_meter[[2]])
-  res <- viewshed(r = DEM_meter[[1]], shape = sf_shape,
-                  turbine_locs = turblocdf,  h1 = 1.8, h2 = 50)
+  res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = sf_shape,
+                  turbine_locs = turblocdf,  h1 = 1.8, h2 = 50))
   expect_is(res, "list")
   expect_true(length(res) == 5)
   expect_true(is.logical(as.vector(res[[1]])))
@@ -79,20 +79,70 @@ test_that("Test Viewshed Functions", {
   expect_true(class(res[[4]]) == "RasterLayer")
   expect_false(anyNA(res[[5]]))
   
+  res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = sf_shape,
+                  turbine_locs = turblocdf[1:2,], 
+                  h1 = runif(nrow(turblocdf[1:2,]), 0, 100),
+                  h2 = 50, plot = TRUE))
+  expect_is(res, "list")
+  expect_true(length(res) == 5)
+  expect_true(is.logical(as.vector(res[[1]])))
+  expect_false(anyNA(res[[2]]))
+  expect_true(class(res[[3]])[[1]] == "sf")
+  expect_true(class(res[[4]]) == "RasterLayer")
+  expect_false(anyNA(res[[5]]))
+  
+  res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = sf_shape,
+                  turbine_locs = turblocdf, 
+                  h1 = runif(20, 0, 100),
+                  h2 = 50, plot = FALSE))
+  expect_is(res, "list")
+  expect_true(length(res) == 5)
+  expect_true(is.logical(as.vector(res[[1]])))
+  expect_false(anyNA(res[[2]]))
+  expect_true(class(res[[3]])[[1]] == "sf")
+  expect_true(class(res[[4]]) == "RasterLayer")
+  expect_false(anyNA(res[[5]]))
+  
+  res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = sf_shape,
+                  turbine_locs = turblocdf, 
+                  h1 = runif(4, 0, 100),
+                  h2 = 50, plot = FALSE))
+  expect_is(res, "list")
+  expect_true(length(res) == 5)
+  expect_true(is.logical(as.vector(res[[1]])))
+  expect_false(anyNA(res[[2]]))
+  expect_true(class(res[[3]])[[1]] == "sf")
+  expect_true(class(res[[4]]) == "RasterLayer")
+  expect_false(anyNA(res[[5]]))
+  
+  res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = sf_shape,
+                  turbine_locs = turblocdf, 
+                  h1 = NA,
+                  h2 = NULL,
+                  plot = FALSE))
+  expect_is(res, "list")
+  expect_true(length(res) == 5)
+  expect_true(is.logical(as.vector(res[[1]])))
+  expect_false(anyNA(res[[2]]))
+  expect_true(class(res[[3]])[[1]] == "sf")
+  expect_true(class(res[[4]]) == "RasterLayer")
+  expect_false(anyNA(res[[5]]))
+  
+  
   ## plot_viewshed #################
   plt <- plot_viewshed(res)
   expect_true(is.null(plt))
   plt <- plot_viewshed(res, legend = T)
   expect_true(is.null(plt))
   
-  turbloc <- spsample(DEM_meter[[2]], 1, type = "random")
-  res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
-                  turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
+  turbloc <- suppressWarnings(spsample(DEM_meter[[2]], 1, type = "random"))
+  res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
+                  turbine_locs = turbloc,  h1 = 1.8, h2 = 50))
   plt <- plot_viewshed(res, legend = T)
   expect_true(is.null(plt))
   
   ## rasterprofile ##################
-  sample_POI <- spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular")
+  sample_POI <- suppressWarnings(spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular"))
   sample_xy <- coordinates(sample_POI)
 
   n <- 10
@@ -124,7 +174,12 @@ test_that("Test Viewshed Functions", {
   
   ## cansee ##################
   canrs <- cansee(DEM_meter[[1]], turblocdf[1,], sample_xy[3,], 
-                  h1 = 0, h2 = 0, reso)
+                  h1 = 0, h2 = 0, reso, plot=TRUE, interpolate = TRUE)
+  expect_true(is.logical(canrs))
+  expect_true(length(canrs) == 1)
+  
+  canrs <- cansee(DEM_meter[[1]], turblocdf[2,], sample_xy[3,], 
+                  h1 = 200, h2 = 2, reso, plot=TRUE, interpolate = TRUE)
   expect_true(is.logical(canrs))
   expect_true(length(canrs) == 1)
   
@@ -135,12 +190,12 @@ test_that("Test Viewshed Functions", {
   Polygon1 <- SpatialPolygons(list(Polygon1))
   Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  proj4string(Polygon1) <- CRS(Projection)
-  r <- getDEM(polygon = Polygon1, ISO3 = "AUT", clip=T)
+  proj4string(Polygon1) <- suppressWarnings(CRS(Projection))
+  r <- suppressWarnings(getDEM(polygon = Polygon1, ISO3 = "AUT", clip=T))
   
-  xy1 <- spsample(Polygon1, 1, "random")
+  xy1 <- suppressWarnings(spsample(Polygon1, 1, "random"))
   xy1 <- as.vector(coordinates(xy1))
-  xy2 <- spsample(Polygon1, 5, "random")
+  xy2 <- suppressWarnings(spsample(Polygon1, 5, "random"))
   xy2 <- coordinates(xy2)
   a <- t(apply(xy2, 1, function(d){
     cansee(r[[1]], xy1 = xy1, xy2 = d, h1=0, h2=0, reso)}))
@@ -149,7 +204,7 @@ test_that("Test Viewshed Functions", {
   expect_false(anyNA(a))
   
   ## interpol_view ################
-  turbloc <- spsample(DEM_meter[[2]], 10, type = "random")
+  turbloc <- suppressWarnings(spsample(DEM_meter[[2]], 10, type = "random"))
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   resinpl <- interpol_view(res, plotDEM = T, alpha = 0.5)

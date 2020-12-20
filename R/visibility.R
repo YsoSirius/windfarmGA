@@ -40,7 +40,7 @@ rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
   
   if (plot) {
     points(pointsZ[,"x"], pointsZ[,"y"], pch = 20, col = "black")
-    text(pointsZ[,"x"], pointsZ[,"y"], pos = 1, pointsZ[,"z"], cex = 0.5)
+    text(pointsZ[,"x"], pointsZ[,"y"], pos = 1, round(pointsZ[,"z"], 3), cex = 0.8)
   }
   
   if (anyNA(pointsZ)) {
@@ -63,20 +63,84 @@ rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
 #' @param h2 A numeric giving the extra height offset for Point 2
 #' @param reso The minimal resolution of the DEM raster. It is 
 #'   calculated in \code{viewshed} and passed along.
+#' @param plot Plot the process of assessing visibility
+#' @param ... Additional arguments passed to to the raster plot
 #'
 #' @family Viewshed Analysis
 #' @return A boolean value, indicating if the point (xy2) is visible
 #'
-cansee <- function(r, xy1, xy2, h1=0, h2=0, reso){
+#' @examples \dontrun{
+#' library(raster)
+#' library(windfarmGA)
+#' 
+#' matrix <- matrix(abs(sin(1:100))*10, nrow=10, byrow = TRUE)
+#' r1 <- raster(matrix)
+#' shape <- as(extent(r1), "SpatialPolygons")
+#' locs = spsample(shape, 10, type = "random");
+#' 
+#' mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
+#' sample_xy <- sp::coordinates(mw)
+#' 
+#' Pt1 <- 3
+#' for (i in 1:nrow(sample_xy)) {
+#'   cansee(r1, 
+#'          xy1 = sp::coordinates(locs)[Pt1,], 
+#'          xy2 = sample_xy[i,], 
+#'          h1 = 3, 
+#'          h2 = 1.5, 
+#'          reso = min(res(r1)), 
+#'          plot=TRUE)
+#'   invisible(readline(prompt="Press [enter] to continue"))
+#' }
+#' 
+#' }
+cansee <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...){
   ### can xy1 see xy2 on DEM r?
   ### r is a DEM in same x,y, z units
   ### xy1 and xy2 are 2-length vectors of x,y coords
   ### h1 and h2 are extra height offsets
-  xyz = rasterprofile(r, xy1, xy2, reso)
-  np = length(xyz[, 1]) - 1
-  h1 = xyz[, "z"][1] + h1
-  h2 = xyz[, "z"][np] + h2
-  hpath = h1 + (0:np)*(h2 - h1)/np
+  xyz = rasterprofile(r, xy1, xy2, reso, plot=FALSE)
+  np = length(xyz[, 1])
+  if (is.null(h1) || is.na(h1)) h1 <- 0
+  if (is.null(h2) || is.na(h2)) h2 <- 0
+  h1_off = xyz[, "z"][1] + h1
+  h2_off = xyz[, "z"][np] + h2
+  hpath = h1_off + (0:(np-1))*(h2_off - h1_off)/(np-1)
+  
+  if (plot) {
+    opar <- par(no.readonly = TRUE) 
+    par(mfrow=c(2,1), mar=rep(2,4), oma=rep(1,4))
+    plot(r, ...)
+    points(xy1[1], xy1[2], pch=20, cex=2, col="blue")
+    points(xy2[1], xy2[2], pch=20, col="black", cex=2)
+    points(xyz[,1], xyz[,2], pch=20, col="red")
+    text(xyz[,1], xyz[,2], round(xyz[, "z"],1), cex = 0.6, pos = 3, col="red")
+    text(xyz[,1], xyz[,2], round(hpath,1), cex = 0.6, pos = 1)
+    title(main="Visibility of Pt1 to Pt2")
+    legend(x = "bottomleft", bty="n",
+           col = c("blue", "black", "red","black"),pch=rep(20,4), 
+           pt.cex =  c(1.5,1.5,1,1),
+           legend = c("Pt1", "Pt2", "Elevation","Line of Sight Height"))
+    
+    inc <- abs(min(c(hpath, xyz[,"z"]))/6)
+    if (inc < 1){inc <- 1}
+    titattr <- ifelse(!any(hpath < xyz[, "z"], na.rm = TRUE), " ", " not ")
+    plot(xyz[, "z"], type="b", main=paste0("Pt2 is", titattr, "visible from Pt1"), 
+         ylab = "Height", col="darkgreen", ylim = c(min(c(hpath, xyz[,"z"]))-inc,
+                                                    max(c(hpath, xyz[,"z"]))+inc))
+    lines(hpath, col="blue")
+    points(x= 1, h1_off, pch=20, col="blue", cex=2)
+    text(x= 1, round(h1_off, 1), labels="Pt1", pos=3, col="blue")
+    lines(x = c(1,1), c(xyz[, "z"][1], h1_off))
+    lines(x = rep(np,2), c(xyz[, "z"][np], h2_off))
+    points(x = np, h2_off, pch=20, cex=2)
+    text(x = np, round(h2_off, 1), labels="Pt2", pos=3)
+    legend(x = "bottomleft", bty="n", cex = 0.8,
+           legend = c(paste0("Pt1 Height: ", round(h1_off), " - (h1 Offset: ", round(h1,1), ")"), 
+                      paste0("Pt2 Height: ", round(h2_off), " - (h2 Offset: ", round(h2,1), ")")))
+    par(opar) 
+  }
+  
   invisible(!any(hpath < xyz[, "z"], na.rm = TRUE))
 }
 
@@ -93,9 +157,23 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0, reso){
 #' @return A boolean vector, indicating if \code{xy1} is visible from all
 #'   elements of \code{xy2}
 #'
-viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso){
+#' @examples \dontrun{
+#' library(raster)
+#' library(windfarmGA)
+#' 
+#' matrix <- matrix(abs(rnorm(20, mean = 10, sd = 5)), nrow=5)
+#' r1 <- raster(matrix)
+#' shape <- as(extent(r1), "SpatialPolygons")
+#' locs <- spsample(shape, 10, type = "random");
+#' mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
+#' sample_xy <- sp::coordinates(mw)
+#' 
+#' viewTo(r1, sp::coordinates(locs)[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
+#'        plot=TRUE, interpolate=TRUE, asp=0.5)
+#' }
+viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
   a <- t(apply(xy2, 1, function(d){
-    cansee(r[[1]], xy1 = xy1, xy2 = d, h1, h2, reso)}))
+    cansee(r[[1]], xy1 = xy1, xy2 = d, h1, h2, reso, plot, ...)}))
   a[is.na(a)] <- FALSE
   return(as.vector(a))
 }
@@ -108,12 +186,12 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso){
 #' @export
 #'
 #' @param r A DEM raster
-#' @param shape A SpatialPolygon of the windfarm area.
+#' @param shape A SpatialPolygon of the windfarm area
 #' @param turbine_locs Coordinates or SpatialPoint representing the wind
 #'   turbines
-#' @param h1 A numeric giving the extra height offset of Point 1
-#' @param h2 A numeric giving the extra height offset of Point 2
-#'
+#' @param h1 A numeric or numeric vector giving the extra height offsets for Point 1
+#' @inheritParams cansee
+#' 
 #' @family Viewshed Analysis
 #' @return A list of 5, containing the boolean result for every cell, the raster
 #'   cell points, a SimpleFeature Polygon of the given area and the DEM raster
@@ -129,9 +207,12 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso){
 #' DEM_meter <- getDEM(Polygon1)
 #' 
 #' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
-#' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
+#' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
+#'                 turbine_locs = turbloc[1:3,],
+#'                 h1 = sample(c(20:40), 3, TRUE),
+#'                 h2 = 50, plot = TRUE)
 #' }
-viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
+viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
   if (class(shape)[1] == "sf") {
     shape <- as(shape, "Spatial")  
   }
@@ -142,15 +223,22 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
   mw <- methods::as(r, "SpatialPixelsDataFrame")
   mw <- methods::as(mw, "SpatialPolygons")
   sample_xy <- sp::coordinates(mw)
-  rownames(sample_xy) <- NULL; colnames(sample_xy) <- c("x1","x2")
+  # rownames(sample_xy) <- NULL; colnames(sample_xy) <- c("x1","x2")
 
   ## Get minimal Raster Resolution
   reso <- min(raster::res(r))
   
-  ## xy2 is a matrix of x,y coords
-  res <- t(apply(turbine_locs, 1, function(d){
-    viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2, reso )
-  }))
+  ## Run `viewTo` function for every turbine with its offest height `h1`
+  ## Repeat `h1` to nrow turbines.
+  h1 <- rep(h1, length.out = nrow(turbine_locs))
+  res <- lapply(1:nrow(turbine_locs), function(i) {
+    viewTo(r, xy1 = turbine_locs[i,], 
+           xy2 = sample_xy, 
+           h1[[i]], 
+           h2,
+           reso, plot, ...)
+  })
+  res <- do.call(rbind, res)
   
   return(list("Result" = res, 
               "Raster_POI" = sample_xy, 
@@ -159,7 +247,8 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
               "Turbines" = turbine_locs))
 }
 
-## Geht noch nicht
+
+## Not ready
 # viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
 #   # h1=0; h2=0;
@@ -240,7 +329,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
 #' plot_viewshed(res, legend = TRUE, interpolate=TRUE, colNA="black", 
 #'               col = topo.colors(15))
 #' }
-plot_viewshed <- function(res, legend=FALSE, ...) {
+plot_viewshed <- function(res, legend = FALSE, ...) {
   raster::plot(res[[4]], ...)
   plot(sf::st_geometry(res[[3]]), add = TRUE)
   points(res[[2]], col="green", pch=20)
