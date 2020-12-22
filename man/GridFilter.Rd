@@ -7,16 +7,14 @@
 GridFilter(shape, resol = 500, prop = 1, plotGrid = FALSE)
 }
 \arguments{
-\item{shape}{Shape file of the considered area}
-
-\item{resol}{The resolution of the grid in meters. Default is 500}
+\item{shape}{Simple Feature Polygon of the considered area}
 
 \item{prop}{A factor used for grid calculation. Determines the percentage a
 grid has to overlay the considered area to be represented as grid cell.
 Default is 1.}
 
-\item{plotGrid}{Logical value indicating whether resulting grid should be
-plotted or not. Default is FALSE.}
+\item{plotGrid}{Logical value indicating whether the results should be
+plotted. Default is FALSE.}
 }
 \description{
 GridFilter is replaced by \code{\link[windfarmGA]{grid_area}}.

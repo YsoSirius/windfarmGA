@@ -23,11 +23,17 @@
 #' @return Returns a list.
 #'
 #' @examples \donttest{
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-#' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
-#' new <- random_search(resultrect, polygon, n = 20, best = 4)
-#' plot_random_search(resultRS = new, result = resultrect, Polygon1 = polygon, best = 2)
+#' new <- random_search(resultrect, Polygon1, n = 20, best = 4)
+#' plot_random_search(resultRS = new, result = resultrect, Polygon1 = Polygon1, best = 2)
 #' }
 random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist = 2.2) {
   # Order the resulting layouts with highest Energy output
@@ -93,7 +99,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid <- grid_area(shape = Polygon1, resol = resolu, prop = propu, 
+    Grid <- grid_area(shape = Polygon1, size = resolu, prop = propu, 
                        plotGrid = FALSE)
   } else {
     # Calculate a Grid with hexagonal grid cells

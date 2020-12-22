@@ -36,11 +36,17 @@ Perform a random search in the grid cells, to further optimize
 }
 \examples{
 \donttest{
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4498482, 4498482, 4499991, 4499991, 4498482),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+  crs = 3035
+))
 load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 
-new <- random_search(resultrect, polygon, n = 20, best = 4)
-plot_random_search(resultRS = new, result = resultrect, Polygon1 = polygon, best = 2)
+new <- random_search(resultrect, Polygon1, n = 20, best = 4)
+plot_random_search(resultRS = new, result = resultrect, Polygon1 = Polygon1, best = 2)
 }
 }
 \seealso{
@@ -48,3 +54,4 @@ Other Randomization:
 \code{\link{plot_random_search}()},
 \code{\link{random_search_single}()}
 }
+\concept{Randomization}

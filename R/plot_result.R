@@ -38,18 +38,24 @@
 #'
 #' @examples \donttest{
 #' ## Add some data examples from the package
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 #' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-#' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
 #' ## Plot the results of a hexagonal grid optimization
-#' Grid <- hexa_area(polygon, size = 75, FALSE)
-#' plot_result(resulthex, polygon, best = 1, plotEn = 1, topographie = FALSE,
+#' Grid <- hexa_area(Polygon1, size = 75, FALSE)
+#' plot_result(resulthex, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
 #'            Grid = Grid[[2]])
 #'
 #' ## Plot the results of a rectangular grid optimization
-#' Grid <- grid_area(polygon, resol = 150, 1, FALSE)
-#' plot_result(resultrect, polygon, best = 1, plotEn = 1, topographie = FALSE,
+#' Grid <- grid_area(Polygon1, size = 150, 1, FALSE)
+#' plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
 #'            Grid = Grid[[2]])
 #'}
 plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
@@ -67,7 +73,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   if (missing(Projection)) {
     if (PROJ6) {
-      ProjLAEA <- "+init=epsg:3035"
+      ProjLAEA <- 3035
     } else {
       ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
       +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -77,24 +83,24 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   }
   
   if (PROJ6) {
-    if (is.na(slot(Polygon1, "proj4string"))) {
+    if (is.na(st_crs(Polygon1))) {
       ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
-      slot(Polygon1, "proj4string") <- CRS(ProjLAEA)
+      st_crs(Polygon1) <- st_crs(ProjLAEA)
       # stop("Polygon is not projected.", call. = FALSE )
       message("Polygon is not projected. Same projection from result will be assumed.")
     }
-    if (suppressWarnings(!isTRUE( all.equal(wkt(Polygon1), wkt(CRS(ProjLAEA))) ))) {
-      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    if (suppressWarnings(!isTRUE( all.equal(st_crs(Polygon1), st_crs(ProjLAEA)) ))) {
+      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   } else {
-    if (is.na(sp::proj4string(Polygon1))) {
+    if (is.na(st_crs(Polygon1))) {
       ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
-      sp::proj4string(Polygon1) <- ProjLAEA
+      st_crs(Polygon1) <- st_crs(ProjLAEA)
       # stop("Polygon is not projected.", call. = FALSE )
       message("Polygon is not projected. Same projection from result will be assumed.")
     }
-    if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
-      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    if (as.character(st_crs(Polygon1)) != ProjLAEA) {
+      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   }
   if (missing(sourceCCL)) {
@@ -110,8 +116,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     weibullsrc <- NULL
     col2res <- "lightblue"
   } else {
-    PolyCrop <- sp::spTransform(Polygon1,
-                                CRSobj = sp::proj4string(weibullsrc[[1]]))
+    PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
     if (class(weibullsrc) == "list" & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
         raster::crop(x, raster::extent(PolyCrop))})
@@ -130,7 +135,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     col2res <- "transparent"
     alpha <- 0.9
     Erwartungswert <- raster::projectRaster(Erwartungswert, 
-                                            crs = CRS(ProjLAEA))
+                                            crs = st_crs(ProjLAEA))
     # plot(Erwartungswert)
   }
 
@@ -253,20 +258,27 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
         }
 
         if (1 == 1) {
-          Polygon1 <-  sp::spTransform(
-            Polygon1, 
-            CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
-          extpol <- round(Polygon1@bbox, 0)[, 2]
-          srtm <- raster::getData('SRTM', lon = extpol[1], lat = extpol[2])
+          Polygon1 <-  sf::st_transform(Polygon1, 4326)
+          # extpol <- round(Polygon1@bbox, 0)[, 2]
+          # srtm <- raster::getData('SRTM', lon = extpol[1], lat = extpol[2])
+          srtm <- tryCatch(elevatr::get_elev_raster(verbose = FALSE,
+            locations = as(Polygon1, "Spatial"), z = 11),
+            error = function(e) {
+              stop("\nCould not download SRTM for the given Polygon.",
+                   "Check the Projection of the Polygon.\n", call. = FALSE)
+            })
+          
           srtm_crop <- raster::crop(srtm, Polygon1)
           srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
-          Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA))
-          srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
+          Polygon1 <-  sf::st_transform(Polygon1, st_crs(ProjLAEA))
+          
+          srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+                                      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
 
           # Include Corine Land Cover Raster to get an estimation of Surface Roughness
           cclPoly <- raster::crop(ccl, Polygon1)
-          cclPoly1 <- raster::mask(cclPoly, Polygon1)
+          cclPoly1 <- raster::mask(cclPoly, mask = Polygon1)
 
           if (is.null(sourceCCLRoughness)) {
             path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
@@ -287,7 +299,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           orogr1 <- raster::calc(srtm_crop, function(x) {
             x / (raster::cellStats(srtm_crop, mean, na.rm = TRUE))
           })
-          orogrnum <- raster::extract(x = orogr1, y = as.matrix((sel1)), #buffer = resol * 2, 
+          orogrnum <- raster::extract(x = orogr1, y = as.matrix(sel1), #buffer = resol * 2, 
                                       small = TRUE, fun = mean, na.rm = TRUE)
           windpo <- windpo * orogrnum
           ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
@@ -295,12 +307,12 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
                                         small = TRUE, fun = max, na.rm = TRUE)
 
           par(mfrow = c(1, 2))
-          plot(srtm_crop, main = "SRTM Elevation Data")
+          raster::plot(srtm_crop, main = "SRTM Elevation Data")
           graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
                             labs = round(heightWind, 0), cex = 0.8)
           plot(polygon1, add = TRUE)
-          plot(orogr1, main = "Wind Speed Multipliers")
+          raster::plot(orogr1, main = "Wind Speed Multipliers")
           points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
                             labs = round(windpo, 3), cex = 0.8)
@@ -310,13 +322,13 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
           air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
 
-          plot(srtm_crop, main = "Normal Air Density",
+          raster::plot(srtm_crop, main = "Normal Air Density",
                col = topo.colors(10))
           points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
                             labs = rep(1.225, nrow(sel1)), cex = 0.8)
           plot(polygon1, add = TRUE)
-          plot(srtm_crop, main = "Corrected Air Density",
+          raster::plot(srtm_crop, main = "Corrected Air Density",
                col = topo.colors(10))
           points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
           calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
@@ -467,15 +479,21 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
         }
 
         if (1 == 1) {
-          Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84
-                                                                      +towgs84=0,0,0"))
-          extpol <- round(Polygon1@bbox, 0)[, 2]
-          srtm <- raster::getData('SRTM', lon = extpol[1], lat = extpol[2])
+          Polygon1 <-  sf::st_transform(Polygon1, 4326)
+          # extpol <- round(Polygon1@bbox, 0)[, 2]
+          # srtm <- raster::getData('SRTM', lon = extpol[1], lat = extpol[2])
+          srtm <- tryCatch(elevatr::get_elev_raster(
+            locations = as(Polygon1, "Spatial"), z = 11),
+            error = function(e) {
+              stop("\nCould not download SRTM for the given Polygon.",
+                   "Check the Projection of the Polygon.\n", call. = FALSE)
+            })
           srtm_crop <- raster::crop(srtm, Polygon1)
           srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
-          Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA))
-          srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
+          Polygon1 <-  sf::st_transform(Polygon1, st_crs(ProjLAEA))
+          srtm_crop <- raster::projectRaster(srtm_crop, crs = crs("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
 
           # Include Corine Land Cover Raster to get an estimation of Surface Roughness
           cclPoly <- raster::crop(ccl, Polygon1)

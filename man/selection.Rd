@@ -49,7 +49,7 @@ Projection <- "+init=epsg:3035"
 proj4string(Polygon1) <- CRS(Projection)
 
 ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
+Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1);
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
@@ -80,3 +80,4 @@ Other Genetic Algorithm Functions:
 \code{\link{trimton}()},
 \code{\link{windfarmGA}()}
 }
+\concept{Genetic Algorithm Functions}

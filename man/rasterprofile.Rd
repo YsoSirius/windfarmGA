@@ -33,3 +33,4 @@ Other Viewshed Analysis:
 \code{\link{viewTo}()},
 \code{\link{viewshed}()}
 }
+\concept{Viewshed Analysis}

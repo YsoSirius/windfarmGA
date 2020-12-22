@@ -90,7 +90,7 @@ wind <- data.frame(ws = 12, wd = 0)
 
 ## Calculate a Grid and an indexed data.frame with coordinates and
 ## grid cell IDs.
-Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
+Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1);
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
@@ -112,3 +112,4 @@ Other Genetic Algorithm Functions:
 \code{\link{trimton}()},
 \code{\link{windfarmGA}()}
 }
+\concept{Genetic Algorithm Functions}

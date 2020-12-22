@@ -80,13 +80,13 @@ Calculate the energy output and efficiency rates of an
 \examples{
 \dontrun{
 ## Create a random shapefile
-library(sp)
-Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                    c(4499991, 2669343), c(4499991, 2668272)))
-Polygon1 <- Polygons(list(Polygon1),1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- CRS(Projection)
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4498482, 4498482, 4499991, 4499991, 4498482),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+  crs = 3035
+))
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
@@ -96,7 +96,7 @@ windrosePlot <- plot_windrose(data = data.in, spd = data.in$ws,
 
 ## Assign the rotor radius and a factor of the radius for grid spacing.
 Rotor= 50; fcrR= 3
-resGrid <- grid_area(shape = Polygon1, resol = Rotor*fcrR, prop=1,
+resGrid <- grid_area(shape = Polygon1, size = Rotor*fcrR, prop=1,
                       plotGrid = TRUE)
 ## Assign the indexed data frame to new variable. Element 2 of the list
 ## is the grid, saved as SpatialPolygon.
@@ -143,3 +143,4 @@ Other Wind Energy Calculation Functions:
 \code{\link{get_dist_angles}()},
 \code{\link{turbine_influences}()}
 }
+\concept{Wind Energy Calculation Functions}

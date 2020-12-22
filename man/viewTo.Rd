@@ -35,3 +35,4 @@ Other Viewshed Analysis:
 \code{\link{rasterprofile}()},
 \code{\link{viewshed}()}
 }
+\concept{Viewshed Analysis}

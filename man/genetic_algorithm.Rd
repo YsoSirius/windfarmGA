@@ -163,13 +163,14 @@ A terrain effect model can be included in the optimization process.
 \examples{
 \donttest{
 ## Create a random rectangular shapefile
-library(sp)
-Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                          c(4499991, 2669343), c(4499991, 2668272)))
-Polygon1 <- Polygons(list(Polygon1), 1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- CRS(Projection)
+library(sf)
+
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4498482, 4498482, 4499991, 4499991, 4498482),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+  crs = 3035
+))
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
@@ -240,3 +241,4 @@ Other Genetic Algorithm Functions:
 \code{\link{trimton}()},
 \code{\link{windfarmGA}()}
 }
+\concept{Genetic Algorithm Functions}

@@ -132,18 +132,19 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso){
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
 #' }
 viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
-  if (class(shape)[1] == "sf") {
-    shape <- as(shape, "Spatial")  
+  if (inherits(shape, "Spatial")) {
+    shape <- sf::st_as_sf(shape)  
   }
-  if (class(turbine_locs)[1] == "SpatialPoints") {
-    turbine_locs <- sp::coordinates(turbine_locs)
+  if (inherits(turbine_locs, "Spatial")) {
+    turbine_locs <- sf::st_as_sf(turbine_locs)  
   }
+  turbine_locs <- st_coordinates(turbine_locs)
   
   mw <- methods::as(r, "SpatialPixelsDataFrame")
   mw <- methods::as(mw, "SpatialPolygons")
-  sample_xy <- sp::coordinates(mw)
-  rownames(sample_xy) <- NULL; colnames(sample_xy) <- c("x1","x2")
-
+  sample_xy <- sf::st_coordinates(st_as_sf(mw))
+  rownames(sample_xy) <- NULL
+  
   ## Get minimal Raster Resolution
   reso <- min(raster::res(r))
   
@@ -154,7 +155,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
   
   return(list("Result" = res, 
               "Raster_POI" = sample_xy, 
-              "Area" = sf::st_as_sf(shape), 
+              "Area" = shape, 
               "DEM" = r, 
               "Turbines" = turbine_locs))
 }
@@ -443,14 +444,14 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 #'   no polygon is given
 #' 
 #' @examples \dontrun{
-#' library(sp)
+#' library(sf)
 #' library(raster)
-#' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2667172)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4496482, 4496482, 4499991, 4499991, 4496482),
+#'     c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+#'   crs = 3035
+#' ))
 #' DEM_meter <- getDEM(Polygon1)
 #' plot(DEM_meter[[1]])
 #' plot(DEM_meter[[2]], add=TRUE)
@@ -469,17 +470,16 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
       polygon <- sf::st_as_sf(polygon)
     }
     shape <- sf::st_transform(polygon, crs = raster::projection(DEM))
-    shape_SP <- as(shape, "Spatial")
     
-    DEM <- raster::crop(x = DEM, raster::extent(shape_SP))
+    DEM <- raster::crop(x = DEM, raster::extent(as(shape, "Spatial")))
     # shape_meter <- sf::st_transform(shape, PROJ)
-    shape_SP <- sp::spTransform(shape_SP, CRSobj = crs(PROJ))
+    # shape_SP <- sp::spTransform(shape_SP, CRSobj = crs(PROJ))
   }
 
   DEM_meter <- raster::projectRaster(DEM, crs = PROJ)
 
   if (clip) {
-    return(list(DEM_meter, shape_SP))
+    return(list(DEM_meter, shape))
   } else {
     return(list(DEM_meter, NULL))
   }

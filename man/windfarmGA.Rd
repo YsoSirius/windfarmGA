@@ -178,3 +178,4 @@ Other Genetic Algorithm Functions:
 \code{\link{selection}()},
 \code{\link{trimton}()}
 }
+\concept{Genetic Algorithm Functions}

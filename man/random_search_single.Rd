@@ -49,3 +49,5 @@ Other Plotting Functions:
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()}
 }
+\concept{Plotting Functions}
+\concept{Randomization}

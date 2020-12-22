@@ -61,7 +61,7 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and indexed coordinates of all grid cell centers
-    Grid <- grid_area(shape = Polygon1, resol = resolu, 
+    Grid <- grid_area(shape = Polygon1, size = resolu, 
                        prop = propu, plotGrid = FALSE)
   } else {
     # Calculate a Grid with hexagonal grid cells

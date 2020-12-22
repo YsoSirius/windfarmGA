@@ -51,17 +51,22 @@ Plot the results of a genetic algorithm run with given inputs.
 }
 \examples{
 \donttest{
-library(sp)
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4498482, 4498482, 4499991, 4499991, 4498482),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+  crs = 3035
+))
 ## Add some data examples from the package
 load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 
 ## Plot the results of a hexagonal grid optimization
-plot_windfarmGA(resulthex, GridMethod = "h", polygon, whichPl = "all", best = 1, plotEn = 1)
+plot_windfarmGA(resulthex, GridMethod = "h", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
 ## Plot the results of a rectangular grid optimization
-plot_windfarmGA(resultrect, GridMethod = "r", polygon, whichPl = "all", best = 1, plotEn = 1)
+plot_windfarmGA(resultrect, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 }
 }
 \seealso{
@@ -78,3 +83,4 @@ Other Plotting Functions:
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}
 }
+\concept{Plotting Functions}

@@ -16,11 +16,17 @@
 #' @return NULL
 #' 
 #' @examples \donttest{
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-#' load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
 #'
-#' Res = random_search(result = resultrect, Polygon1 = polygon)
-#' plot_random_search(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
+#' Res = random_search(result = resultrect, Polygon1 = Polygon1)
+#' plot_random_search(resultRS = Res, result = resultrect, Polygon1 = Polygon1, best=2)
 #' }
 plot_random_search <- function(resultRS, result, Polygon1, best) {
 
@@ -55,7 +61,7 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
   PropG <- as.numeric(result[,"inputData"][[1]][,1]["Percentage of Polygon"])
 
   Polygon1 <- isSpatial(Polygon1)
-  Grid <- grid_area(Polygon1, resol = resolR, prop = PropG)[[2]]
+  Grid <- grid_area(Polygon1, size = resolR, prop = PropG)[[2]]
   rbPal1 <- grDevices::colorRampPalette(c("green","red"))
   col2res <- "lightblue"
 

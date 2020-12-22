@@ -48,3 +48,4 @@ Other Viewshed Analysis:
 \code{\link{rasterprofile}()},
 \code{\link{viewTo}()}
 }
+\concept{Viewshed Analysis}

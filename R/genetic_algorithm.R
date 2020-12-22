@@ -101,13 +101,14 @@
 #' 
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' 
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plot the
 #' ## resulting wind rose
@@ -236,7 +237,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   }
   if (missing(Projection)) {
     if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-      ProjLAEA <- "+init=epsg:3035"
+      ProjLAEA <- 3035
     } else {
       ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
       +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
@@ -307,29 +308,23 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       k_weibull <- raster("k120_100m_Lambert.tif")
       a_weibull <- raster("a120_100m_Lambert.tif")
       ## Project Shapefile to raster proj, Crop/Mask and project raster back
-      shape_project <- sp::spTransform(Polygon1,
-                                       CRSobj = sp::proj4string(a_weibull))
-      k_par_crop <- raster::crop(x = k_weibull,
-                                 y = raster::extent(shape_project))
-      a_par_crop <- raster::crop(x = a_weibull,
-                                 y = raster::extent(shape_project))
+      shape_project <- st_transform(Polygon1, crs = st_crs(a_weibull))
+      k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(shape_project))
+      a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(shape_project))
     } else {
       if (verbose) {
         cat("\nWeibull Information from input is used.\n")
       }
       ## Project Shapefile to raster, Crop/Mask and project raster back
-      shape_project <- sp::spTransform(Polygon1,
-                                    CRSobj = sp::proj4string(weibullsrc[[1]]))
-      k_par_crop <- raster::crop(x = weibullsrc[[1]],
-                                 y = raster::extent(shape_project))
-      a_par_crop <- raster::crop(x = weibullsrc[[2]],
-                                 y = raster::extent(shape_project))
+      shape_project <- st_transform(Polygon1, crs = st_crs(weibullsrc[[1]]))
+      k_par_crop <- raster::crop(x = weibullsrc[[1]], y = raster::extent(shape_project))
+      a_par_crop <- raster::crop(x = weibullsrc[[2]], y = raster::extent(shape_project))
     }
     weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
     weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
     estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
     estim_speed_raster <- raster::projectRaster(estim_speed_raster,
-                                                crs = proj4string(Polygon1))
+                                                crs = raster::crs(Polygon1))
   } else {
     estim_speed_raster <- FALSE
   }
@@ -375,12 +370,12 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   #######################
   ## Project Polygon ###############
   if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-    if (suppressWarnings(!isTRUE( all.equal(wkt(Polygon1), wkt(CRS(ProjLAEA))) ))) {
-      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    if (suppressWarnings(!isTRUE( all.equal(st_crs(Polygon1), st_crs(ProjLAEA)) ))) {
+      Polygon1 <- sf::st_transform(Polygon1, CRSobj = ProjLAEA)
     }
   } else {
     if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
-      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+      Polygon1 <- sf::st_transform(Polygon1, CRSobj = ProjLAEA)
     }
   }
 
@@ -391,7 +386,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid1 <- grid_area(shape = Polygon1, resol = resol2, prop = Proportionality)
+    Grid1 <- grid_area(Polygon1, resol2, Proportionality)
     Grid <- Grid1[[1]]
     grid_filtered <- Grid1[[2]]
   } else {
@@ -473,22 +468,28 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     cclPoly1 <- raster::mask(cclPoly, Polygon1)
     
     ## SRTM Daten
-    Polygon1 <-  sp::spTransform(Polygon1,
-                                 CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
-    extpol <- round(Polygon1@bbox,0)[, 2]
-    srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
-                     error = function(e) {
-                       stop("\nCould not download SRTM for the given Polygon.",
-                            "Check the Projection of the Polygon.\n", call. = FALSE)
-                     })
+    Polygon1 <-  sf::st_transform(Polygon1, st_crs(4326))
+    # extpol <- round(apply(matrix(st_bbox(Polygon1), ncol = 2), 1, mean))
+    # srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
+    #                  error = function(e) {
+    #                    stop("\nCould not download SRTM for the given Polygon.",
+    #                         "Check the Projection of the Polygon.\n", call. = FALSE)
+    #                  })
+    srtm <- tryCatch(elevatr::get_elev_raster(
+      locations = as(Polygon1, "Spatial"), z = 11),
+      error = function(e) {
+        stop("\nCould not download SRTM for the given Polygon.",
+             "Check the Projection of the Polygon.\n", call. = FALSE)
+      })
 
     srtm_crop <- raster::crop(srtm, Polygon1)
     srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
-    Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA))
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
+    Polygon1 <-  sf::st_transform(Polygon1, st_crs(ProjLAEA))
+    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
+      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
     if (plotit) {
-      plot(srtm_crop, main = "Elevation from SRTM")
+      raster::plot(srtm_crop, main = "Elevation from SRTM")
       plot(Polygon1, add = TRUE)
       plot(grid_filtered, add = TRUE)
     }
@@ -517,7 +518,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       }
     }
 
-
     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
                                    header = TRUE, sep = ";")
     cclRaster <- raster::reclassify(cclPoly1,
@@ -525,7 +525,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
                                              rauhigkeitz$Rauhigkeit_z),
                                            ncol = 2))
     if (plotit) {
-      plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
+      raster::plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
     }
   }
 
@@ -922,8 +922,9 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 #' isSpatial(df_fort, Projection)
 #'}
 isSpatial <- function(shape, proj) {
-  if (class(shape)[1] == "sf") {
-    shape <- as(shape, "Spatial")
+  if (class(shape)[1] == "sp") {
+    # shape <- as(shape, "Spatial")
+    shape <- st_as_sf(shape)
     ## This is needed for grid_area. Attribute names must have same length
     shape$names <- "layer"
   } else if (class(shape)[1] == "data.frame" |
@@ -957,17 +958,15 @@ isSpatial <- function(shape, proj) {
       col_numeric <- which(sapply(shape[1, ], is.numeric))
       pltm <- shape[, col_numeric]
     }
-
-    pltm <- Polygon(pltm)
-    pltm <- Polygons(list(pltm), 1)
-    shape <- SpatialPolygons(list(pltm))
-    if (!missing(proj)) {
-      if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-        slot(shape, "proj4string") <- CRS(SRS_string = "EPSG:3035")
-      } else {
-        sp::proj4string(shape) <- proj
-      }
-    }
+    colnames(pltm) <- c("x", "y")
+    pltm <- data.frame(pltm)
+    shape <- sf::st_sf(aggregate(
+      sf::st_as_sf(pltm, coords = c("x","y"))$geometry,
+      list(rep(1, nrow(pltm))),
+      function(g)st_cast(st_combine(g),"POLYGON")
+    ))
+    
+    if (!missing(proj)) st_crs(shape) <- 3035
   }
   return(shape)
 }

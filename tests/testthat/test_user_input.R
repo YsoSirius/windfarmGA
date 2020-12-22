@@ -1,5 +1,6 @@
 context("User Interaction")
 library(windfarmGA)
+library(sf)
 
 test_that("User Input", {
   skip_on_cran()
@@ -39,7 +40,12 @@ test_that("User Input", {
   
   ## random_search_single - Rects #############
   load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+  polygon <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   
   ##which IDs
   resldat <- do.call("rbind", resultrect[,"bestPaEn"])
@@ -52,7 +58,7 @@ test_that("User Input", {
   rotRad <- as.numeric(resultrect[bestGARun,]$inputData["Rotorradius",][1])
   propu  <- as.numeric(resultrect[bestGARun,]$inputData["Percentage of Polygon",][1])
   winddata <- resultrect[bestGARun,]$inputWind
-  Grid <- grid_area(shape = polygon, resol = resolu, 
+  Grid <- grid_area(shape = polygon, size = resolu, 
                     prop = propu, plotGrid = FALSE)
   maxFac <- rotRad * (resolu / (rotRad * 2))
   winddata <- windata_format(winddata)
@@ -106,7 +112,12 @@ test_that("User Input", {
   ## random_search_single - Hexagons ##################
   rm(list = ls())
   load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+  polygon <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   
   ##which IDs
   resldat <- do.call("rbind", resulthex[,"bestPaEn"])
@@ -148,13 +159,12 @@ test_that("User Input", {
   
   
   ## windfarmGA ###############
-
-  Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                            c(4499991, 2669343), c(4499991, 2668272)))
-  Polygon1 <- Polygons(list(Polygon1), 1)
-  Polygon1 <- SpatialPolygons(list(Polygon1))
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  proj4string(Polygon1) <- CRS(Projection)
+  polygon <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   data.in <- data.frame(ws = 12, wd = 0)
   
   ## grid spacing NOT appropriate

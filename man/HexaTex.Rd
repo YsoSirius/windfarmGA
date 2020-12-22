@@ -7,11 +7,7 @@
 HexaTex(Polygon1, size, plotTrue = FALSE)
 }
 \arguments{
-\item{Polygon1}{The SpatialPolygons object}
-
-\item{size}{The side length of an hexagon}
-
-\item{plotTrue}{Should the object be plotted}
+\item{size}{The resolution of the grid in meters. Default is 500}
 }
 \description{
 HexaTex is replaced by \code{\link[windfarmGA]{hexa_area}}.

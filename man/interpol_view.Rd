@@ -92,3 +92,5 @@ Other Plotting Functions:
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}
 }
+\concept{Plotting Functions}
+\concept{Viewshed Analysis}

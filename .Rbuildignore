@@ -14,6 +14,7 @@
 ^.*\.yaml$
 ^.*\.ini$
 ^.*\.txt$
+^clc_legend.csv$
 ^srtm*
 ^srtm*.*hdr
 ^srtm*.*tfw
@@ -32,3 +33,4 @@ release_to_cran.R
 ^pkgdown$
 ^cran-comments\.md$
 ^_pkgdown\.yaml$
+^_experiment$

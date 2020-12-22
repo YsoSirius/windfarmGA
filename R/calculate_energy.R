@@ -43,13 +43,13 @@
 #'
 #' @examples \dontrun{
 #' ## Create a random shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                     c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plot the
 #' ## resulting wind rose
@@ -59,7 +59,7 @@
 #'
 #' ## Assign the rotor radius and a factor of the radius for grid spacing.
 #' Rotor= 50; fcrR= 3
-#' resGrid <- grid_area(shape = Polygon1, resol = Rotor*fcrR, prop=1,
+#' resGrid <- grid_area(shape = Polygon1, size = Rotor*fcrR, prop=1,
 #'                       plotGrid = TRUE)
 #' ## Assign the indexed data frame to new variable. Element 2 of the list
 #' ## is the grid, saved as SpatialPolygon.
@@ -99,11 +99,11 @@
 #'                    weibull = FALSE)
 #' }
 #'
-calculate_energy       <- function(sel, referenceHeight, RotorHeight,
-                              SurfaceRoughness, wnkl, distanz,
-                              polygon1, resol, RotorR, dirSpeed,
-                              srtm_crop, topograp, cclRaster, weibull,
-                              plotit = FALSE) {
+calculate_energy <- function(sel, referenceHeight, RotorHeight,
+                             SurfaceRoughness, wnkl, distanz,
+                             polygon1, resol, RotorR, dirSpeed,
+                             srtm_crop, topograp, cclRaster, weibull,
+                             plotit = FALSE) {
 
   ## Assign constant / default values
   # cT <- 0.88;   
@@ -117,7 +117,7 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
   xy_individual <- sel[, 2:3]
 
   ## TODO - this can go in some upper level
-  pcent <- apply(sp::bbox(polygon1), 1, mean)
+  pcent <- apply(matrix(sf::st_bbox(polygon1), ncol = 2, byrow = FALSE), 1, mean)
 
   ## Create a dummy vector of 1 for the wind speeds for every turbine
   n_turbines <- length(xy_individual[, 1])
@@ -292,11 +292,12 @@ calculate_energy       <- function(sel, referenceHeight, RotorHeight,
                                # center = apply(bbox(polygon1), 1, mean))
       
       ## This code does what maptools::elide did.. a bit more code, but faster
-      cordslist <- lapply(polygon1@polygons, function(x) coordinates(x@Polygons[[1]]))
+      cordslist <- list(st_coordinates(polygon1))
       cordslist <- lapply(cordslist, function(x) {
-        Polygon(rotate_CPP(x[,1], x[,2], pcent[1], pcent[2], angle))
+        rotate_CPP(x[,1], x[,2], pcent[1], pcent[2], angle)
       })
-      poly3 <- SpatialPolygons(list(Polygons(cordslist, 1)))
+      poly3 <- sf::st_as_sf(sf::st_sfc(
+        sf::st_polygon(cordslist), crs = 3035))
       
       plot(poly3, main = c("Shape at angle:", (-1 * angle)))
       mtext(paste("Direction: ", index, "\nfrom total: ",

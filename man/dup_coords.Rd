@@ -39,10 +39,10 @@ Other Helper Functions:
 \code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
 \author{
 Paulo Justiniano Ribeiro Jr. \email{paulojus@leg.ufpr.br}
 Peter J. Diggle \email{p.diggle@lancaster.ac.uk}
 }
+\concept{Helper Functions}

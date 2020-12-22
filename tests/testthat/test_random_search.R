@@ -1,12 +1,16 @@
 context("Test Random Search")
 library(testthat)
-library(sp)
+library(sf)
 
 test_that("Test Random Search Functions", {
   ## Data ##############
-  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   resultSP <- resultrect
-  Polygon1 <- polygon
   ## RandomSearch #########################
   new <- RandomSearch(resultSP, Polygon1, n = 20, best = 3, Plot = TRUE)
   expect_is(new, "list")

@@ -9,28 +9,28 @@ test_that("Test Viewshed Functions", {
   skip_on_cran()
   
   ## Input Data #####################
-  Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-                            c(4499991, 2669343), c(4499991, 2667172)))
-  Polygon1 <- Polygons(list(Polygon1), 1)
-  Polygon1 <- SpatialPolygons(list(Polygon1))
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-  +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  proj4string(Polygon1) <- CRS(Projection)
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4496482, 4496482, 4499991, 4499991, 4496482),
+      c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+    crs = 3035
+  ))
+  # plot(Polygon1)
 
   ## getDEM #################
-  DEM_meter <- getDEM(Polygon1)
+  DEM_meter <- expect_warning(getDEM(Polygon1))
   expect_is(DEM_meter, "list")
   expect_true(class(DEM_meter[[1]]) == "RasterLayer")
-  expect_true(class(DEM_meter[[2]]) == "SpatialPolygonsDataFrame")
+  expect_true(class(DEM_meter[[2]])[[1]] == "sf")
   
-  DEM_noclip <- getDEM(Polygon1, clip = FALSE)
+  DEM_noclip <- expect_warning(getDEM(Polygon1, clip = FALSE))
   expect_is(DEM_noclip, "list")
   expect_true(class(DEM_noclip[[1]]) == "RasterLayer")
   expect_true(is.null(DEM_noclip[[2]]))
   
   ## getISO3 ###############
   points <- cbind(c(4488182.26267016, 4488852.91748256),
-  c(2667398.93118627, 2667398.93118627))
+                  c(2667398.93118627, 2667398.93118627))
   res <- getISO3(pp = points, crs_pp = 3035)
   expect_true(res == "AUT")
   expect_true(nrow(res) == 1)
@@ -56,7 +56,7 @@ test_that("Test Viewshed Functions", {
   
   
   ## viewshed #################
-  turbloc <- spsample(DEM_meter[[2]], 10, type = "random")
+  turbloc <- st_sample(DEM_meter[[2]], 10, type = "random")
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   expect_is(res, "list")
@@ -129,19 +129,18 @@ test_that("Test Viewshed Functions", {
   expect_true(length(canrs) == 1)
   
   ## Create Warning (complete.cases)
-  Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                            c(4499991, 2669343), c(4499991, 2668272)))
-  Polygon1 <- Polygons(list(Polygon1), 1)
-  Polygon1 <- SpatialPolygons(list(Polygon1))
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  proj4string(Polygon1) <- CRS(Projection)
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   r <- getDEM(polygon = Polygon1, ISO3 = "AUT", clip=T)
   
-  xy1 <- spsample(Polygon1, 1, "random")
-  xy1 <- as.vector(coordinates(xy1))
-  xy2 <- spsample(Polygon1, 5, "random")
-  xy2 <- coordinates(xy2)
+  xy1 <- st_sample(Polygon1, 1, "random")
+  xy1 <- as.vector(st_coordinates(xy1))
+  xy2 <- st_sample(Polygon1, 5, "random")
+  xy2 <- st_coordinates(xy2)
   a <- t(apply(xy2, 1, function(d){
     cansee(r[[1]], xy1 = xy1, xy2 = d, h1=0, h2=0, reso)}))
 

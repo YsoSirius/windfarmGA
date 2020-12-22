@@ -2,30 +2,30 @@
 % Please edit documentation in R/grid_area.R
 \name{grid_area}
 \alias{grid_area}
-\title{Make a grid from a Polygon}
+\title{Make a grid from a Simple Feature Polygon}
 \usage{
-grid_area(shape, resol = 500, prop = 1, plotGrid = FALSE)
+grid_area(shape, size = 500, prop = 1, plotGrid = FALSE)
 }
 \arguments{
-\item{shape}{Shape file of the considered area}
+\item{shape}{Simple Feature Polygon of the considered area}
 
-\item{resol}{The resolution of the grid in meters. Default is 500}
+\item{size}{The resolution of the grid in meters. Default is 500}
 
 \item{prop}{A factor used for grid calculation. Determines the percentage a
 grid has to overlay the considered area to be represented as grid cell.
 Default is 1.}
 
-\item{plotGrid}{Logical value indicating whether resulting grid should be
-plotted or not. Default is FALSE.}
+\item{plotGrid}{Logical value indicating whether the results should be
+plotted. Default is FALSE.}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have the grid
   cell IDS, and the X and Y coordinates of the centers of each grid cell.
-  List element 2 is the grid as SpatialPolygons, which is used for plotting
-  purposes.
+  List element 2 is the grid as Simple Feature Polygons, which is used for 
+  plotting purposes.
 }
 \description{
-Create a grid from a given polygon and with a certain resolution
+Create a grid from a given polygon with a certain resolution
   and proportionality. The center points of each grid cell represent possible
   locations for wind turbines.
 }
@@ -34,42 +34,36 @@ The grid of the genetic algorithm will have a resolution of \code{Rotor
   * fcrR}. See the arguments of \code{\link{windfarmGA}}
 }
 \examples{
-library(sp)
-library(raster)
-library(rgeos)
+library(sf)
 
 ## Exemplary input Polygon with 2km x 2km:
-Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000),
-c(2000, 2000), c(2000, 0)))
-Polygon1 <- Polygons(list(Polygon1),1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- Projection
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4498482, 4498482, 4499991, 4499991, 4498482),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+  crs = 3035
+))
 
 ## Create a Grid
-grid_area(Polygon1,200,1,TRUE)
-grid_area(Polygon1,400,1,TRUE)
-
+grid_area(Polygon1, 120, 1, TRUE)
+grid_area(Polygon1, 300, 1, TRUE)
 
 ## Examplary irregular input Polygon
-Polygon1 <- Polygon(rbind(c(0, 20), c(0, 200),
-                          c(2000, 2000), c(3000, 0)))
-Polygon1 <- Polygons(list(Polygon1),1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- Projection
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+ sf::st_polygon(list(cbind(
+   c(0, 0, 2000, 3000, 0),
+   c(20, 200, 2000, 0, 20)))),
+ crs = 3035
+))
 
 ## Create a Grid
-grid_area(Polygon1,200,1,TRUE)
-grid_area(Polygon1,200,0.5,TRUE)
-grid_area(Polygon1,200,0.1,TRUE)
-grid_area(Polygon1,400,1,TRUE)
-grid_area(Polygon1,400,0.5,TRUE)
-grid_area(Polygon1,400,0.1,TRUE)
+grid_area(Polygon1, 200, 1,   TRUE)
+grid_area(Polygon1, 200, 0.5, TRUE)
+grid_area(Polygon1, 200, 0.1, TRUE)
+grid_area(Polygon1, 400, 1,   TRUE)
+grid_area(Polygon1, 400, 0.5, TRUE)
+grid_area(Polygon1, 400, 0.1, TRUE)
 
-}
-\references{
-\url{http://rfunctions.blogspot.co.at/2014/12/gridfilter-intersect-grid-with-shape.html}
 }
 \seealso{
 Other Helper Functions: 
@@ -83,9 +77,6 @@ Other Helper Functions:
 \code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
-\author{
-Jose Hidasi (original) / Sebastian Gatscha (adapted)
-}
+\concept{Helper Functions}

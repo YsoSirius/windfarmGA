@@ -1,8 +1,8 @@
 context("Plots")
 library(testthat)
 library(windfarmGA)
-library(sp)
 library(raster)
+library(sf)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -98,10 +98,12 @@ test_that("Test Plotting Functions", {
   expect_true(is.null(respf))
   
   ## plot_result ###############
-  sp_polygonnp <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2668272)))
-  sp_polygonnp <- Polygons(list(sp_polygonnp), 1)
-  sp_polygonnp <- SpatialPolygons(list(sp_polygonnp))
+  sp_polygonnp <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   plot_res <- quiet(plot_result(resultrect[1:10,], Polygon1 = sp_polygonnp, best = 5000, 
                                 plotEn = 1))
   expect_false(anyNA(plot_res))
@@ -158,8 +160,13 @@ test_that("Test Plotting Functions", {
   expect_true(is.null(respwf))
   
   load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
-  respwf <- plot_windfarmGA(resulthex, GridMethod = "h", polygon, whichPl = "all",
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
+  respwf <- plot_windfarmGA(resulthex, GridMethod = "h", Polygon1, whichPl = "all",
                   best = 2, plotEn = 1)
   expect_true(is.null(respwf))
   
@@ -214,14 +221,14 @@ test_that("Test Plotting Functions", {
   pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon, GridPol = spnop)
   expect_true(is.recursive(pl));   rm(pl)
   
-  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1)
+  pl <- leafPlot(result = resulthex, Polygon1 = Polygon1, which = 1)
   expect_true(is.recursive(pl));rm(pl)
-  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1, orderitems = FALSE)
+  pl <- leafPlot(result = resulthex, Polygon1 = Polygon1, which = 1, orderitems = FALSE)
   expect_true(is.recursive(pl));rm(pl)
-  pl <- leafPlot(result = resulthex, Polygon1 = polygon, which = 1000, orderitems = FALSE)
+  pl <- leafPlot(result = resulthex, Polygon1 = Polygon1, which = 1000, orderitems = FALSE)
   expect_true(is.recursive(pl));rm(pl)
   gr <- GridFilter(polygon, resol = 250)
-  pl <- leafPlot(result = resulthex, Polygon1 = polygon, GridPol = gr[[2]])
+  pl <- leafPlot(result = resulthex, Polygon1 = Polygon1, GridPol = gr[[2]])
   expect_true(is.recursive(pl));rm(pl)
 
   # sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),

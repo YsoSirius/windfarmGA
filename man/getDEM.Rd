@@ -47,6 +47,6 @@ Other Helper Functions:
 \code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
+\concept{Helper Functions}
