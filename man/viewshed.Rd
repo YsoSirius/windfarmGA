@@ -4,19 +4,23 @@
 \alias{viewshed}
 \title{Calculate visibility}
 \usage{
-viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0)
+viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0, plot = FALSE, ...)
 }
 \arguments{
 \item{r}{A DEM raster}
 
-\item{shape}{A SpatialPolygon of the windfarm area.}
+\item{shape}{A SpatialPolygon of the windfarm area}
 
 \item{turbine_locs}{Coordinates or SpatialPoint representing the wind
 turbines}
 
-\item{h1}{A numeric giving the extra height offset of Point 1}
+\item{h1}{A numeric or numeric vector giving the extra height offsets for Point 1}
 
-\item{h2}{A numeric giving the extra height offset of Point 2}
+\item{h2}{A numeric giving the extra height offset for Point 2}
+
+\item{plot}{Plot the process of assessing visibility}
+
+\item{...}{Additional arguments passed to to the raster plot}
 }
 \value{
 A list of 5, containing the boolean result for every cell, the raster
@@ -37,7 +41,10 @@ proj4string(Polygon1) <- CRS(Projection)
 DEM_meter <- getDEM(Polygon1)
 
 turbloc = spsample(DEM_meter[[2]], 10, type = "random");
-res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
+res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
+                turbine_locs = turbloc[1:3,],
+                h1 = sample(c(20:40), 3, TRUE),
+                h2 = 50, plot = TRUE)
 }
 }
 \seealso{

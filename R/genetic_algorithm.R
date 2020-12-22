@@ -125,16 +125,6 @@
 #'                   Rotor = 30,
 #'                   RotorHeight = 100)
 #' plot_windfarmGA(result = result, Polygon1 = Polygon1)
-#'
-#' ## Runs the same optimization, but with parallel processing and 3 cores.
-#' result_par <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100, 
-#'                  Parallel = TRUE, numCluster = 3)
-#' plot_windfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
 #' 
 #' ## Runs the same optimization, this time with hexagonal grids.
 #' result_hex <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
