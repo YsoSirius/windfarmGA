@@ -36,9 +36,6 @@ be considered and plotted or not}
 \item{Grid}{The grid as SpatialPolygons, which is obtained from
 \code{\link{grid_area}} and used for plotting}
 
-\item{Projection}{A desired Projection can be used instead of the default
-Lambert Azimuthal Equal Area Projection}
-
 \item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
 as .csv file. Only required when terrain effect model is activated. As
 default a .csv file within this package (\file{~/extdata/clc_legend.csv})

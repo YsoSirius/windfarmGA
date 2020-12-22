@@ -3,7 +3,7 @@ library(windfarmGA)
 library(sf)
 
 test_that("User Input", {
-  skip_on_cran()
+  # skip_on_cran()
   # skip_on_appveyor()
   
   ## getISO3 ################
@@ -47,7 +47,7 @@ test_that("User Input", {
     crs = 3035
   ))
   
-  ##which IDs
+  ## which IDs
   resldat <- do.call("rbind", resultrect[,"bestPaEn"])
   maxDist <- as.numeric(resultrect[,"inputData"][[1]]['Rotorradius',]) * 2.2
   resldat <- as.data.frame(resldat[!duplicated(resldat[,'Run']),, drop=FALSE])
@@ -72,7 +72,7 @@ test_that("User Input", {
   ans <- paste(id, collapse = "\n")
   write(ans, f)
   
-  new <- RandomSearchTurb(resultrect, polygon)
+  new <- random_search_single(resultrect, polygon)
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -143,7 +143,7 @@ test_that("User Input", {
   ans <- paste(id, collapse = "\n")
   write(ans, f)
   
-  new <- RandomSearchTurb(resulthex, polygon, GridMethod = "h")
+  new <- random_search_single(resulthex, polygon, GridMethod = "h")
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -159,7 +159,7 @@ test_that("User Input", {
   
   
   ## windfarmGA ###############
-  polygon <- sf::st_as_sf(sf::st_sfc(
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
       c(2668272, 2669343, 2669343, 2668272, 2668272)))),

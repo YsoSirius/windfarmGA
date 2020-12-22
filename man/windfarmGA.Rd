@@ -14,7 +14,7 @@ windfarmGA(
   sourceCCLRoughness,
   vdirspe,
   Rotor = 30,
-  fcrR = 3,
+  fcrR = 5,
   n = 10,
   topograp = FALSE,
   iteration = 20,
@@ -46,8 +46,8 @@ drivers, dsn is a file name, but may also be a folder)}
 or coordinates as matrix/data.frame}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is "Rectangular" grid cells and hexagonal grid
-cells are computed when assigning "h" or "hexagon" to this input variable.}
+grid cells? The default is "Rectangular" grid. Hexagonal grids
+are computed when assigning "h" or "hexagon" to this input variable.}
 
 \item{Projection}{A desired Projection can be used instead of the default
 Lambert Azimuthal Equal Area Projection (EPSG:3035).}

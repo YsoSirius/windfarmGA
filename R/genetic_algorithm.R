@@ -10,8 +10,8 @@
 #' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
 #'   or coordinates as matrix/data.frame
 #' @param GridMethod Should the polygon be divided into rectangular or hexagonal
-#'   grid cells? The default is "Rectangular" grid cells and hexagonal grid
-#'   cells are computed when assigning "h" or "hexagon" to this input variable.
+#'   grid cells? The default is "Rectangular" grid. Hexagonal grids
+#'   are computed when assigning "h" or "hexagon" to this input variable.
 #' @param Rotor A numeric value that gives the rotor radius in meter
 #' @param n A numeric value indicating the required amount of turbines
 #' @param fcrR A numeric value that is used for grid spacing. Default is 5
@@ -158,7 +158,7 @@
 #' #                  weibull = TRUE, weibullsrc = weibullrasters)
 #' #plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 #'}
-genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
+genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
                               RotorHeight, SurfaceRoughness, Proportionality,
                               iteration, mutr, vdirspe, topograp, elitism, nelit,
                               selstate, crossPart1, trimForce, Projection,
@@ -229,8 +229,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
       ProjLAEA <- 3035
     } else {
-      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
     }
   } else {
     ProjLAEA <- Projection
@@ -297,19 +296,19 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       
       k_weibull <- raster("k120_100m_Lambert.tif")
       a_weibull <- raster("a120_100m_Lambert.tif")
-      ## Project Shapefile to raster proj, Crop/Mask and project raster back
-      shape_project <- st_transform(Polygon1, crs = st_crs(a_weibull))
-      k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(shape_project))
-      a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(shape_project))
     } else {
       if (verbose) {
         cat("\nWeibull Information from input is used.\n")
       }
       ## Project Shapefile to raster, Crop/Mask and project raster back
-      shape_project <- st_transform(Polygon1, crs = st_crs(weibullsrc[[1]]))
-      k_par_crop <- raster::crop(x = weibullsrc[[1]], y = raster::extent(shape_project))
-      a_par_crop <- raster::crop(x = weibullsrc[[2]], y = raster::extent(shape_project))
+      k_weibull <- weibullsrc[[1]]
+      a_weibull <- weibullsrc[[2]]
     }
+    ## Project Shapefile to raster proj, Crop/Mask and project raster back
+    shape_project <- st_transform(Polygon1, crs = st_crs(a_weibull))
+    k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(shape_project))
+    a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(shape_project))
+    
     weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
     weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
     estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
@@ -361,11 +360,11 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   ## Project Polygon ###############
   if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
     if (suppressWarnings(!isTRUE( all.equal(st_crs(Polygon1), st_crs(ProjLAEA)) ))) {
-      Polygon1 <- sf::st_transform(Polygon1, CRSobj = ProjLAEA)
+      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   } else {
     if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
-      Polygon1 <- sf::st_transform(Polygon1, CRSobj = ProjLAEA)
+      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   }
 
@@ -432,18 +431,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     }
 
     if (missing(sourceCCL)) {
-      # message("No land cover raster ('sourceCCL') was given. It will be taken from ",
-              # "the package (/data/ccl.rda).")
       message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
               "the EEA-website.\n")
       if (!file.exists("g100_06.tif")) {
-        ## download an zip CCL-tif
-        # ccl_raster_url <-
-        #   "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-        # temp <- tempfile()
-        # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-        # unzip(temp, "g100_06.tif")
-        # unlink(temp)
+        # "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
         download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
                       destfile = "clc.zip", 
                       method = "auto")
@@ -458,7 +449,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     cclPoly1 <- raster::mask(cclPoly, Polygon1)
     
     ## SRTM Daten
-    Polygon1 <-  sf::st_transform(Polygon1, st_crs(4326))
+    Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
     # extpol <- round(apply(matrix(st_bbox(Polygon1), ncol = 2), 1, mean))
     # srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
     #                  error = function(e) {
@@ -466,21 +457,18 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     #                         "Check the Projection of the Polygon.\n", call. = FALSE)
     #                  })
     srtm <- tryCatch(elevatr::get_elev_raster(
-      locations = as(Polygon1, "Spatial"), z = 11),
+      locations = as(Polygon_wgs84, "Spatial"), z = 11),
       error = function(e) {
         stop("\nCould not download SRTM for the given Polygon.",
              "Check the Projection of the Polygon.\n", call. = FALSE)
       })
+    srtm_crop <- raster::crop(srtm, Polygon_wgs84)
+    srtm_crop <- raster::mask(srtm_crop, Polygon_wgs84)
 
-    srtm_crop <- raster::crop(srtm, Polygon1)
-    srtm_crop <- raster::mask(srtm_crop, Polygon1)
-
-    Polygon1 <-  sf::st_transform(Polygon1, st_crs(ProjLAEA))
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
+    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(Polygon1))
     if (plotit) {
       raster::plot(srtm_crop, main = "Elevation from SRTM")
-      plot(Polygon1, add = TRUE)
+      plot(Polygon1, add = TRUE, color = "transparent")
       plot(grid_filtered, add = TRUE)
     }
 
@@ -625,15 +613,16 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 
     if (plotit) {
       graphics::par(mfrow = c(1, 2))
-      plot(Polygon1,
+      plot(st_geometry(Polygon1), col="lightblue",
            main = paste(i, "Round \n Best Energy Output: ", x,
                         "W/h \n Efficiency: ", y, "%"),
            sub = paste("\n Number of turbines: ", length(e)))
-      plot(grid_filtered, add = TRUE)
+      plot(grid_filtered, add=TRUE)
       graphics::points(bestPaEn[[i]][, "X"], bestPaEn[[i]][, "Y"],
                        col = Col, pch = 20, cex = 1.5)
-      plot(Polygon1, main = paste(i, "Round \n Best Efficiency Output: ",
-                                  x1, "W/h \n Efficiency: ", y1, "%"),
+      plot(st_geometry(Polygon1), col="lightblue",
+           main = paste(i, "Round \n Best Efficiency Output: ",
+                        x1, "W/h \n Efficiency: ", y1, "%"),
            sub = paste("\n Number of turbines: ", length(e1)))
       plot(grid_filtered, add = TRUE)
       graphics::points(bestPaEf[[i]][, "X"], bestPaEf[[i]][, "Y"],

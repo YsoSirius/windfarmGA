@@ -1,48 +1,31 @@
 context("Test Terrain and Weibull Effects")
-library(sp)
+library(sf)
 library(raster)
-
 
 test_that("Test Terrain and Weibull Effects", {
   skip_on_appveyor()
   # skip_on_travis()
-  skip_on_cran()
+  # skip_on_cran()
   
   ## Test Terrain Model ###################
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+  Projection <- 3035
   data.in <- data.frame(ws = 12, wd = 0)
   
-  ## Create Warning, that no terrain roughness can be calculated.
-  # sp_polygon <- Polygon(rbind(c(4498482, 2619253), c(4498482, 2619343),
-  #                             c(4499991, 2619343), c(4499991, 2619253)))
-  # sp_polygon <- Polygons(list(sp_polygon), 1)
-  # sp_polygon <- SpatialPolygons(list(sp_polygon))
-  # proj4string(sp_polygon) <- CRS(Projection)
-  # resultrect <- expect_warning(genAlgo(Polygon1 = sp_polygon,
-  #                                      n = 5, iteration = 1,
-  #                                      vdirspe = data.in,
-  #                                      Rotor = 20,
-  #                                      RotorHeight = 100,
-  #                                      topograp = TRUE, verbose = TRUE,
-  #                                      plotit = TRUE))
-  # expect_true(nrow(resultrect) == 1)
-  # expect_is(resultrect, "matrix")
-  # expect_false(any(unlist(sapply(resultrect, is.na))))
-  
   ## Normal Terrain Example
-  sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                              c(4499991, 2669343), c(4499991, 2668272)))
-  sp_polygon <- Polygons(list(sp_polygon), 1)
-  sp_polygon <- SpatialPolygons(list(sp_polygon))
-  proj4string(sp_polygon) <- CRS(Projection)
+  sp_polygon <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    crs = 3035
+  ))
 
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 1,
-                        vdirspe = data.in,
-                        Rotor = 30,
-                        RotorHeight = 100, 
-                        topograp = TRUE, verbose = TRUE, 
-                        plotit = TRUE)
+  resultrect <- genetic_algorithm(Polygon1 = sp_polygon,
+                                  n = 12, iteration = 1,
+                                  vdirspe = data.in,
+                                  Rotor = 30,
+                                  RotorHeight = 100, 
+                                  topograp = TRUE, verbose = TRUE, 
+                                  plotit = TRUE)
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
@@ -50,27 +33,32 @@ test_that("Test Terrain and Weibull Effects", {
   ## CCL-Raster should be in directory already
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
   sourceCCLRoughness <- paste0(path, "clc_legend.csv")
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
-                        n = 12, iteration = 1,
-                        vdirspe = data.in,
-                        Rotor = 30,
-                        RotorHeight = 100, 
-                        topograp = TRUE, verbose = TRUE, 
-                        plotit = TRUE, sourceCCL = "g100_06.tif", 
-                        sourceCCLRoughness = sourceCCLRoughness)
+  resultrect <- genetic_algorithm(Polygon1 = sp_polygon,
+                                  n = 12, iteration = 1,
+                                  vdirspe = data.in,
+                                  Rotor = 30,
+                                  RotorHeight = 100, 
+                                  topograp = TRUE, verbose = TRUE, 
+                                  plotit = TRUE, sourceCCL = "g100_06.tif", 
+                                  sourceCCLRoughness = sourceCCLRoughness)
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Weibull ################
   ## Weibull Params (FAKE).
-  DEM <- raster("srtm_39_03.tif")
-  sp_polygonproj <- spTransform(sp_polygon, CRS(proj4string(DEM)))
+  DEM <- elevatr::get_elev_raster(
+    locations = as(st_transform(sp_polygon, 4326), "Spatial"), z = 11)
+  
+  sp_polygonproj <- st_transform(sp_polygon, st_crs(proj4string(DEM)))
   DEMcrop <- crop(DEM, sp_polygonproj)
+  # plot(DEMcrop); plot(sp_polygonproj, add=T)
   maxval <- max(values(DEMcrop))
   a_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+1)
   k_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+6)
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
+  # plot(a_raster); plot(sp_polygonproj, add=T)
+  # plot(k_raster); plot(sp_polygonproj, add=T)
+  resultrect <- genetic_algorithm(Polygon1 = sp_polygon,
                         n = 12, iteration = 1,
                         vdirspe = data.in,
                         Rotor = 30,
@@ -81,7 +69,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Weibull-Raster from Package used (NOT WORKING!)
-  resultrect <- genAlgo(Polygon1 = sp_polygon,
+  resultrect <- genetic_algorithm(Polygon1 = sp_polygon,
                         n = 12, iteration = 1,
                         vdirspe = data.in,
                         Rotor = 30,
@@ -108,11 +96,11 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Plotting Terrain Effects #############
-  plres <- plot_result(resultrect, sp_polygon, topographie = T)
+  plres <- plot_result(resultrect, sp_polygon, topographie = TRUE)
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  plres <- plot_result(resultrect, sp_polygon, topographie = T,
+  plres <- plot_result(resultrect, sp_polygon, topographie = TRUE,
                        sourceCCLRoughness = sourceCCLRoughness, 
                        weibullsrc = list(k_raster, a_raster))
   expect_false(anyNA(plres))

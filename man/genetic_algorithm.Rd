@@ -39,8 +39,8 @@ genetic_algorithm(
 or coordinates as matrix/data.frame}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is "Rectangular" grid cells and hexagonal grid
-cells are computed when assigning "h" or "hexagon" to this input variable.}
+grid cells? The default is "Rectangular" grid. Hexagonal grids
+are computed when assigning "h" or "hexagon" to this input variable.}
 
 \item{Rotor}{A numeric value that gives the rotor radius in meter}
 

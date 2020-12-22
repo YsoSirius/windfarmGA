@@ -18,8 +18,6 @@
 #'   be considered and plotted or not
 #' @param Grid The grid as SpatialPolygons, which is obtained from
 #'   \code{\link{grid_area}} and used for plotting
-#' @param Projection A desired Projection can be used instead of the default
-#'   Lambert Azimuthal Equal Area Projection
 #' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
 #'   required, when the terrain effect model is activated
 #' @param sourceCCLRoughness The source to the adapted Corine Land Cover legend
@@ -59,48 +57,35 @@
 #'            Grid = Grid[[2]])
 #'}
 plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
-                       topographie = FALSE, Grid, Projection,
-                       sourceCCLRoughness, sourceCCL,
-                       weibullsrc){
+                        topographie = FALSE, Grid,
+                        sourceCCLRoughness, sourceCCL,
+                        weibullsrc) {
+  
+  
   parpplotRes <- par(no.readonly = TRUE)
   par(mfrow = c(1, 1), mar = c(5, 6, 4, 2) + 0.1, mgp = c(5, 1, 0))
 
   ## Check Projections and reference systems
-  Polygon1 <- windfarmGA::isSpatial(Polygon1)
+  Polygon1 <- isSpatial(Polygon1)
 
   PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
-  if (missing(Projection)) {
-    if (PROJ6) {
-      ProjLAEA <- 3035
-    } else {
-      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-    }
-  } else {
-    ProjLAEA <- Projection
+  Projection <- result[1,'inputData'][[1]]['Projection',][[1]]
+  if (PROJ6) {
+    Projection <- tryCatch(as.integer(Projection), 
+                           warning = function(e) Projection,
+                           error = function(e) Projection)
   }
   
-  if (PROJ6) {
-    if (is.na(st_crs(Polygon1))) {
-      ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
-      st_crs(Polygon1) <- st_crs(ProjLAEA)
-      # stop("Polygon is not projected.", call. = FALSE )
-      message("Polygon is not projected. Same projection from result will be assumed.")
-    }
-    if (suppressWarnings(!isTRUE( all.equal(st_crs(Polygon1), st_crs(ProjLAEA)) ))) {
-      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
-    }
-  } else {
-    if (is.na(st_crs(Polygon1))) {
-      ProjLAEA <- result[1,'inputData'][[1]]['Projection',][[1]]
-      st_crs(Polygon1) <- st_crs(ProjLAEA)
-      # stop("Polygon is not projected.", call. = FALSE )
-      message("Polygon is not projected. Same projection from result will be assumed.")
-    }
-    if (as.character(st_crs(Polygon1)) != ProjLAEA) {
-      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
+  if (is.na(st_crs(Polygon1))) {
+    message("Polygon is not projected. The spatial reference WGS 84 (EPSG:4326) is assumed.")
+    if (PROJ6) {
+      st_crs(Polygon1) <- 4326
+    } else {
+      st_crs(Polygon1) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
     }
   }
+  Polygon1 <- sf::st_transform(Polygon1, st_crs(Projection))
+  
   if (missing(sourceCCL)) {
     sourceCCL <- NULL
   }
@@ -110,6 +95,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   
 
   ## Check Weibull Rasters
+  browser()
   if (missing(weibullsrc)) {
     weibullsrc <- NULL
     col2res <- "lightblue"

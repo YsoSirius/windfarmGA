@@ -1,20 +1,19 @@
 context("Parallel")
 library(testthat)
-library(sp)
-library(windfarmGA)
+library(sf)
+# library(windfarmGA)
 
 test_that("Test Parallelisation", {
   skip_if(Sys.info()["machine"] != "x86-64")
-  skip_on_cran()
+  # skip_on_cran()
   
   ## Inputs ##################
-  Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                      c(4499991, 2669343), c(4499991, 2668272)))
-  Polygon1 <- Polygons(list(Polygon1),1)
-  Polygon1 <- SpatialPolygons(list(Polygon1))
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-  +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  proj4string(Polygon1) <- CRS(Projection)
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   wind <- data.frame(ws = 12, wd = 0)
   
   ## genetic_algorithm ####################
@@ -29,15 +28,15 @@ test_that("Test Parallelisation", {
   expect_false(any(unlist(sapply(res, is.na))))
 
   ## Too many Cluster
-  # res <- genetic_algorithm(Polygon1 = Polygon1,
-  #                          n = 12, iteration = 2,
-  #                          vdirspe = wind,
-  #                          Rotor = 30,
-  #                          RotorHeight = 100,
-  #                          Parallel = TRUE, numCluster = 10)
-  # expect_true(nrow(res) == 2)
-  # expect_is(res, "matrix")
-  # expect_false(any(unlist(sapply(res, is.na))))
+  res <- genetic_algorithm(Polygon1 = Polygon1,
+                           n = 12, iteration = 2,
+                           vdirspe = wind,
+                           Rotor = 30,
+                           RotorHeight = 100,
+                           Parallel = TRUE, numCluster = 10)
+  expect_true(nrow(res) == 2)
+  expect_is(res, "matrix")
+  expect_false(any(unlist(sapply(res, is.na))))
   
   ## windfarmGA ####################
   ## Too many Cluster
