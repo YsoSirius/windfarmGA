@@ -197,13 +197,13 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
 #'   cell points, a SimpleFeature Polygon of the given area and the DEM raster
 #' 
 #' @examples \dontrun{
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2667172)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4496482, 4496482, 4499991, 4499991, 4496482),
+#'     c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+#'   crs = 3035
+#' ))
 #' DEM_meter <- getDEM(Polygon1)
 #' 
 #' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
@@ -212,18 +212,23 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
 #'                 h1 = sample(c(20:40), 3, TRUE),
 #'                 h2 = 50, plot = TRUE)
 #' }
-viewshed <- function(r, shape, turbine_locs, h1=0, h2=0){
+viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
+  # r = DEM_meter[[1]]; shape = sf_shape; turbine_locs = turbloc
+  
+  
   if (inherits(shape, "Spatial")) {
     shape <- sf::st_as_sf(shape)  
   }
   if (inherits(turbine_locs, "Spatial")) {
-    turbine_locs <- sf::st_as_sf(turbine_locs)  
+    turbine_locs <- sf::st_as_sf(turbine_locs)
   }
-  turbine_locs <- st_coordinates(turbine_locs)
+  if (inherits(turbine_locs, "sf") || inherits(turbine_locs, "sfc")) {
+    turbine_locs <- sf::st_coordinates(turbine_locs)
+  }
   
   mw <- methods::as(r, "SpatialPixelsDataFrame")
   mw <- methods::as(mw, "SpatialPolygons")
-  sample_xy <- sf::st_coordinates(st_as_sf(mw))
+  sample_xy <- sf::st_coordinates(sf::st_centroid(sf::st_as_sf(mw)))
   rownames(sample_xy) <- NULL
   
   ## Get minimal Raster Resolution
@@ -559,9 +564,8 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
       polygon <- sf::st_as_sf(polygon)
     }
     shape <- sf::st_transform(polygon, crs = raster::projection(DEM))
-    
     DEM <- raster::crop(x = DEM, raster::extent(as(shape, "Spatial")))
-    # shape_meter <- sf::st_transform(shape, PROJ)
+    shape <- sf::st_transform(shape, PROJ)
     # shape_SP <- sp::spTransform(shape_SP, CRSobj = crs(PROJ))
   }
 

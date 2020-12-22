@@ -1,12 +1,11 @@
 context("Visibility Tests")
 library(testthat)
-library(sp)
 # library(windfarmGA)
 library(raster)
 library(sf)
 
 test_that("Test Viewshed Functions", {
-  skip_on_cran()
+  # skip_on_cran()
   
   ## Input Data #####################
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -67,8 +66,8 @@ test_that("Test Viewshed Functions", {
   expect_true(class(res[[4]]) == "RasterLayer")
   expect_false(anyNA(res[[5]]))
   
-  turblocdf <- sp::coordinates(turbloc)
-  sf_shape <- st_as_sf(DEM_meter[[2]])
+  turblocdf <- sf::st_coordinates(turbloc)
+  sf_shape <- expect_warning(as(DEM_meter[[2]], "Spatial"))
   res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = sf_shape,
                   turbine_locs = turblocdf,  h1 = 1.8, h2 = 50))
   expect_is(res, "list")
@@ -135,15 +134,15 @@ test_that("Test Viewshed Functions", {
   plt <- plot_viewshed(res, legend = T)
   expect_true(is.null(plt))
   
-  turbloc <- suppressWarnings(spsample(DEM_meter[[2]], 1, type = "random"))
+  turbloc <- suppressWarnings(sf::st_sample(DEM_meter[[2]], 1, type = "random"))
   res <- suppressWarnings(viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
-                  turbine_locs = turbloc,  h1 = 1.8, h2 = 50))
+                  turbine_locs = turbloc,  h1 = 40, h2 = 50))
   plt <- plot_viewshed(res, legend = T)
   expect_true(is.null(plt))
   
   ## rasterprofile ##################
-  sample_POI <- suppressWarnings(spsample(DEM_meter[[2]], n = ncell(DEM_meter[[1]]), type = "regular"))
-  sample_xy <- coordinates(sample_POI)
+  sample_POI <- suppressWarnings(sf::st_sample(DEM_meter[[2]], ncell(DEM_meter[[1]]), type = "regular"))
+  sample_xy <- sf::st_coordinates(sample_POI)
 
   n <- 10
   saplms <- sample(1:nrow(sample_xy), size = n, F)
@@ -190,7 +189,7 @@ test_that("Test Viewshed Functions", {
       c(2668272, 2669343, 2669343, 2668272, 2668272)))),
     crs = 3035
   ))
-  r <- getDEM(polygon = Polygon1, ISO3 = "AUT", clip=T)
+  r <- expect_warning(getDEM(polygon = Polygon1, ISO3 = "AUT", clip=T))
   
   xy1 <- st_sample(Polygon1, 1, "random")
   xy1 <- as.vector(st_coordinates(xy1))
@@ -204,7 +203,7 @@ test_that("Test Viewshed Functions", {
   expect_false(anyNA(a))
   
   ## interpol_view ################
-  turbloc <- suppressWarnings(spsample(DEM_meter[[2]], 10, type = "random"))
+  turbloc <- suppressWarnings(sf::st_sample(DEM_meter[[2]], 10, type = "random"))
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
   resinpl <- interpol_view(res, plotDEM = T, alpha = 0.5)
