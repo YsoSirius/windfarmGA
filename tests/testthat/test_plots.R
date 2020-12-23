@@ -142,13 +142,13 @@ test_that("Test Plotting Functions", {
   expect_error(quiet(plot_result(resultrect, Polygon1 = sp_polygon, plotEn = 3)))
 
   ## plot_windfarmGA ###############
-  respwf <- plot_windfarmGA(resultrect, GridMethod = "r", sp_polygon, whichPl = "all",
+  respwf <- plot_windfarmGA(resultrect, sp_polygon, whichPl = "all",
                             best = 1, plotEn = 1)
   expect_true(is.null(respwf))
-  respwf <- plot_windfarmGA(resultrect[1:3,], GridMethod = "r", sp_polygon, whichPl = "all",
+  respwf <- plot_windfarmGA(resultrect[1:3,], sp_polygon, whichPl = "all",
                             best = 1, plotEn = 1)
   expect_true(is.null(respwf))
-  respwf <- plot_windfarmGA(resultrect[1:3,], GridMethod = "r", sp_polygon, whichPl = "all",
+  respwf <- plot_windfarmGA(resultrect[1:3,], sp_polygon, whichPl = "all",
                             best = 1, plotEn = 1)
   expect_true(is.null(respwf))
   
@@ -158,7 +158,7 @@ test_that("Test Plotting Functions", {
       c(2668272, 2669343, 2669343, 2668272, 2668272)))),
     crs = 3035
   ))
-  respwf <- plot_windfarmGA(resulthex, GridMethod = "h", Polygon1, whichPl = "all",
+  respwf <- plot_windfarmGA(resulthex, Polygon1, whichPl = "all",
                   best = 2, plotEn = 1)
   expect_true(is.null(respwf))
   

@@ -20,9 +20,9 @@ cansee(r, xy1, xy2, h1 = 0, h2 = 0, reso, plot = FALSE, ...)
 \item{reso}{The minimal resolution of the DEM raster. It is 
 calculated in \code{viewshed} and passed along.}
 
-\item{plot}{Plot the process of assessing visibility}
+\item{plot}{Plot the process? Default is \code{FALSE}}
 
-\item{...}{Additional arguments passed to to the raster plot}
+\item{...}{Additional arguments passed to the raster plot}
 }
 \value{
 A boolean value, indicating if the point (xy2) is visible
@@ -63,6 +63,7 @@ Other Viewshed Analysis:
 \code{\link{plot_viewshed}()},
 \code{\link{rasterprofile}()},
 \code{\link{viewTo}()},
+\code{\link{viewshed_par}()},
 \code{\link{viewshed}()}
 }
 \concept{Viewshed Analysis}

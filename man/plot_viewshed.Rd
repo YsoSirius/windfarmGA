@@ -9,7 +9,7 @@ plot_viewshed(res, legend = FALSE, ...)
 \arguments{
 \item{res}{The resulting list from viewshed}
 
-\item{legend}{Plot a legend? Default is FALSE}
+\item{legend}{Plot a legend? Default is \code{FALSE}}
 
 \item{...}{Is passed along to \code{\link[raster]{plot}}}
 }
@@ -44,6 +44,7 @@ Other Viewshed Analysis:
 \code{\link{interpol_view}()},
 \code{\link{rasterprofile}()},
 \code{\link{viewTo}()},
+\code{\link{viewshed_par}()},
 \code{\link{viewshed}()}
 
 Other Plotting Functions: 

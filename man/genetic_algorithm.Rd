@@ -195,7 +195,7 @@ result_hex <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12, Roto
                  SurfaceRoughness = 0.3, topograp = FALSE,
                  elitism=TRUE, nelit = 7, trimForce = TRUE,
                  referenceHeight = 50,RotorHeight = 100)
-plot_windfarmGA(result = result_hex, GridMethod = "h", Polygon1 = Polygon1)
+plot_windfarmGA(result = result_hex, Polygon1 = Polygon1)
 
 ## Run an optimization with the Weibull parameters included in the package.
 result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
@@ -205,7 +205,7 @@ result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
                  elitism=TRUE, nelit = 7, trimForce = TRUE,
                  referenceHeight = 50,RotorHeight = 100,
                  weibull = TRUE)
-plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
+plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
 
 ## Run an optimization with given Weibull parameter rasters.
 #araster <- "/..pathto../a_param_raster.tif"
@@ -218,7 +218,7 @@ plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 #                  elitism=TRUE, nelit = 7, trimForce = TRUE,
 #                  referenceHeight = 50,RotorHeight = 100,
 #                  weibull = TRUE, weibullsrc = weibullrasters)
-#plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
+#plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
 }
 }
 \seealso{

@@ -16,19 +16,19 @@ interpol_view(
 )
 }
 \arguments{
-\item{res}{The result list from viewshed.}
+\item{res}{The resulting list from \code{\link{viewshed}}}
 
-\item{plot}{Should the result be plotted? Default is TRUE}
+\item{plot}{Should the result be plotted? Default is \code{TRUE}}
 
 \item{breakseq}{The breaks for value plotting. By default, 5 equal intervals
 are generated.}
 
-\item{breakform}{If 'breakseq' is missing, a sampling function to calculate
+\item{breakform}{If \code{breakseq} is missing, a sampling function to calculate
 the breaks, like \code{\link{quantile}}, fivenum, etc.}
 
-\item{plotDEM}{Plot the DEM? Default is FALSE}
+\item{plotDEM}{Plot the DEM? Default is \code{FALSE}}
 
-\item{fun}{Function used for rasterize. Default is mean}
+\item{fun}{Function used for rasterize. Default is \code{mean}}
 
 \item{pal}{A color palette}
 
@@ -77,6 +77,7 @@ Other Viewshed Analysis:
 \code{\link{plot_viewshed}()},
 \code{\link{rasterprofile}()},
 \code{\link{viewTo}()},
+\code{\link{viewshed_par}()},
 \code{\link{viewshed}()}
 
 Other Plotting Functions: 

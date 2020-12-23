@@ -9,7 +9,7 @@
 #' @param xy2 A matrix with X and Y coordinates for Points 2
 #' @param reso The minimal resolution of the DEM raster. It is 
 #'   calculated in \code{viewshed} and passed along.
-#' @param plot Plot the process? Default is FALSE
+#' @param plot Plot the process? Default is \code{FALSE}
 #'
 #' @family Viewshed Analysis
 #' @return A boolean vector, indicating if Point 1 (xy1) is visible from all
@@ -63,8 +63,8 @@ rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
 #' @param h2 A numeric giving the extra height offset for Point 2
 #' @param reso The minimal resolution of the DEM raster. It is 
 #'   calculated in \code{viewshed} and passed along.
-#' @param plot Plot the process of assessing visibility
-#' @param ... Additional arguments passed to to the raster plot
+#' @param plot Plot the process? Default is \code{FALSE}
+#' @param ... Additional arguments passed to the raster plot
 #'
 #' @family Viewshed Analysis
 #' @return A boolean value, indicating if the point (xy2) is visible
@@ -185,7 +185,6 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
 #'
 #' @export
 #'
-#' @param r A DEM raster
 #' @param shape A Simpüle Feature Polygon of the windfarm area
 #' @param turbine_locs Coordinates or SpatialPoint representing the wind
 #'   turbines
@@ -253,8 +252,15 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
 }
 
 
-## Not ready
-viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
+#' @title Calculate visibility in parallel
+#' @name viewshed_par
+#' @description Calculate visibility for given points in a given area.
+#'
+#' @inheritParams viewshed
+#' @inherit return viewshed
+#' 
+#' @family Viewshed Analysis
+viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, progress="none", ...){
   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
   # h1=0; h2=0;
   if (!requireNamespace("parallel", quietly = TRUE)) {
@@ -318,7 +324,7 @@ viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
 #' @export
 #'
 #' @param res The resulting list from viewshed
-#' @param legend Plot a legend? Default is FALSE
+#' @param legend Plot a legend? Default is \code{FALSE}
 #' @param ... Is passed along to \code{\link[raster]{plot}}
 #'
 #' @family Viewshed Analysis
@@ -372,14 +378,14 @@ plot_viewshed <- function(res, legend = FALSE, ...) {
 #'
 #' @export
 #'
-#' @param res The result list from viewshed.
-#' @param plot Should the result be plotted? Default is TRUE
+#' @param res The resulting list from \code{\link{viewshed}}
+#' @param plot Should the result be plotted? Default is \code{TRUE}
 #' @param breakseq The breaks for value plotting. By default, 5 equal intervals
 #'   are generated.
-#' @param breakform If 'breakseq' is missing, a sampling function to calculate
+#' @param breakform If \code{breakseq} is missing, a sampling function to calculate
 #'   the breaks, like \code{\link{quantile}}, fivenum, etc.
-#' @param plotDEM Plot the DEM? Default is FALSE
-#' @param fun Function used for rasterize. Default is mean
+#' @param plotDEM Plot the DEM? Default is \code{FALSE}
+#' @param fun Function used for rasterize. Default is \code{mean}
 #' @param pal A color palette
 #' @param ... Arguments passed on to \code{\link[raster]{plot}}.
 #'
@@ -468,10 +474,12 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #'
 #' @export
 #' 
-#' @param pp SpatialPoints or matrix
+#' @param pp Simple Feature Points or coordinate matrix/data.frame
 #' @param crs_pp The CRS of the points
 #' @param col Which column/s should be returned
-#' @param resol The search resolution if high accuracy is needed
+#' @param resol The search resolution. The options are "coarse","low",
+#'   "less islands","li","high". For "high" you need to install the 
+#'   package \code{rworldxtra}
 #' @param coords The column names of the point matrix
 #' @param ask A boolean, to ask which columns can be returned
 #' 
@@ -481,7 +489,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' @examples \dontrun{
 #' library(sf)
 #' points = cbind(c(4488182.26267016, 4488852.91748256), 
-#' c(2667398.93118627, 2667398.93118627))
+#'                c(2667398.93118627, 2667398.93118627))
 #' getISO3(pp = points, ask = TRUE)
 #' getISO3(pp = points, crs_pp = 3035)
 #' 
@@ -494,7 +502,6 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low", 
                     coords = c("LONG", "LAT"), ask=FALSE) {
   # pp= points; col = "ISO3"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT")
-  # pp = points; col = "?"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT"); ask=T
   
   if ("?" %in% col) {ask <- TRUE}
   
@@ -504,7 +511,6 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
     stop("The package 'rworldmap' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('rworldmap')`")
   }
-  
   
   if (ask == TRUE) {
     print(sort(names(countriesSP)))
@@ -524,12 +530,10 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   colnames(pp) <- coords
   
   pp <- st_as_sf(pp, coords = coords, crs = crs_pp)
-  pp <- st_transform(pp, crs = countriesSP@proj4string@projargs)
+  pp <- st_transform(pp, crs = st_crs(countriesSP))
   
-  pp1 <- as(pp, "Spatial")
-  
-  # use 'over' to get indices of the Polygons object containing each point 
-  worldmap_values <- sp::over(pp1, countriesSP)
+  # use 'st_intersection' to get the Polygons intersecting each point 
+  worldmap_values <- st_intersection(pp, st_as_sf(countriesSP))
   
   # return desired columns of each country
   unique(worldmap_values[, col, drop = FALSE])
@@ -567,18 +571,16 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
   # polygon = shape; ISO3 = "AUT"
   PROJ <- "+init=epsg:3035"
   
-  # DEM <- getData("SRTM", lon = st_bbox(polygon)[1], lat=st_bbox(polygon)[2])
   DEM <- raster::getData("alt", country = ISO3)
   
   if (clip) {
-    ## if data.frame / sp object ? -----------------
+    ## if data.frame / sp object -----------------
     if ( inherits(polygon, "SpatialPolygons") || inherits(polygon, "SpatialPolygonsDataFrame") ) {
       polygon <- sf::st_as_sf(polygon)
     }
     shape <- sf::st_transform(polygon, crs = raster::projection(DEM))
     DEM <- raster::crop(x = DEM, raster::extent(as(shape, "Spatial")))
     shape <- sf::st_transform(shape, PROJ)
-    # shape_SP <- sp::spTransform(shape_SP, CRSobj = crs(PROJ))
   }
 
   DEM_meter <- raster::projectRaster(DEM, crs = PROJ)
