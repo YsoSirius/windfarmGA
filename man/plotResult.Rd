@@ -11,7 +11,6 @@ plotResult(
   plotEn = 1,
   topographie = FALSE,
   Grid,
-  Projection,
   sourceCCLRoughness,
   sourceCCL,
   weibullsrc
@@ -33,8 +32,8 @@ and (plotEn==2) plots the best efficiency solutions}
 \item{topographie}{A logical value, indicating whether terrain effects should
 be considered and plotted or not}
 
-\item{Grid}{The grid as SpatialPolygons, which is obtained from
-\code{\link{grid_area}} and used for plotting}
+\item{Grid}{The grid as Simple Feature object, which is obtained from
+\code{\link{grid_area}} or \code{\link{hexa_area}}}
 
 \item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
 as .csv file. Only required when terrain effect model is activated. As

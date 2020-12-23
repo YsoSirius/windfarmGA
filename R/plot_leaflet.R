@@ -45,6 +45,11 @@
 #'          GridPol = Grid[[2]])
 #' }
 plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
+  if (!requireNamespace("leaflet", quietly = TRUE)) {
+    stop("The package 'leaflet' is required for this function, but it is not installed.\n",
+         "Please install it with `install.packages('leaflet')`")
+  }
+  
   poly1 <- isSpatial(shape = Polygon1)
 
   if (which > nrow(result)) {
@@ -67,67 +72,47 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   
   PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   if (PROJ6) {
-    proj_longlat <- CRS(SRS_string = "EPSG:4326")
+    proj_longlat <- 4326
   } else {
     proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
   }
 
   if (!missing(GridPol)) {
-    if (PROJ6) {
-      if (is.na(slot(GridPol, "proj4string"))) {
-        slot(GridPol, "proj4string") <- CRS(result[, "inputData"][[1]]["Projection", ][[1]])
-      }
-    } else {
-      if (is.na(sp::proj4string(GridPol))) {
-        sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
-      }
+    if (is.na(st_crs(GridPol))) {
+      st_crs(GridPol) <- st_crs(result[, "inputData"][[1]]["Projection", ][[1]])
     }
-    GridPol <- sp::spTransform(GridPol, CRSobj = proj_longlat)
+    GridPol <- st_transform(GridPol, st_crs(proj_longlat))
     overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
     opaycity <- 0.4
   } else {
     overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines",  "Grid")
+    browser()
     xses <- rep(poly1@bbox[1], 4); yses <- rep(poly1@bbox[4], 4)
     Sr1 <- sp::SpatialPolygons(list(sp::Polygons(list(
       sp::Polygon(cbind(xses, yses))), ID = "a")), pO = 1:1)
     GridPol <- Sr1
 
-    if (PROJ6) {
-      if (!is.na(slot(poly1, "proj4string"))) {
-        slot(GridPol, "proj4string") <- slot(poly1, "proj4string")
-      } else {
-        slot(GridPol, "proj4string") <- CRS(result[, "inputData"][[1]]["Projection", ][[1]])
-      }
+    if (!is.na(st_crs(poly1))) {
+      st_crs(GridPol) <- st_crs(poly1)
     } else {
-      if (!is.na(sp::proj4string(poly1))) {
-        sp::proj4string(GridPol) <- sp::proj4string(poly1)
-      } else {
-        sp::proj4string(GridPol) <- result[, "inputData"][[1]]["Projection", ][[1]]
-      }
+      st_crs(GridPol) <- st_crs(result[, "inputData"][[1]]["Projection", ][[1]])
     }
     
-    GridPol <- sp::spTransform(GridPol, CRSobj = proj_longlat)
+    GridPol <- st_transform(GridPol, st_crs(proj_longlat))
     opaycity <- 0
   }
 
-  if (PROJ6) {
-    if (is.na(slot(poly1, "proj4string"))) {
-      slot(poly1, "proj4string") <- CRS(result[, "inputData"][[1]]["Projection", ][[1]])
-    }
-    proj_pol <- slot(poly1, "proj4string")
-  } else {
-    if (is.na(sp::proj4string(poly1))) {
-      sp::proj4string(poly1) <- result[, "inputData"][[1]]["Projection", ][[1]]
-    }
-    proj_pol <- CRS(sp::proj4string(poly1))
+  if (is.na(st_crs(poly1))) {
+    st_crs(poly1) <- st_crs(result[, "inputData"][[1]]["Projection", ][[1]])
   }
+  proj_pol <- st_crs(poly1)
   result <- result[, "bestPaEn"][[which]]
   xysp <- sp::SpatialPoints(cbind(result[, "X"],
                                   result[, "Y"]), proj4string = proj_pol)
-  resultxy <- sp::spTransform(xysp, CRSobj = proj_longlat)
-  resultxy <- sp::coordinates(resultxy)
+  resultxy <- st_transform(xysp, proj_longlat)
+  resultxy <- st_coordinates(resultxy)
 
-  poly1 <- sp::spTransform(poly1, CRSobj = proj_longlat)
+  poly1 <- st_transform(poly1, proj_longlat)
 
   title_locat <- c(mean(raster::extent(poly1)[1:2]),
                    max(raster::extent(poly1)[4]))

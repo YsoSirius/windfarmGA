@@ -38,13 +38,13 @@
 #'
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                     c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plots the
 #' ## resulting wind rose
@@ -66,10 +66,10 @@
 #'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
 #'                Parallel = FALSE)
 #' }
-fitness           <- function(selection, referenceHeight, RotorHeight,
-                              SurfaceRoughness, Polygon, resol1,
-                              rot, dirspeed, srtm_crop, topograp, cclRaster,
-                              weibull, Parallel, numCluster) {
+fitness <- function(selection, referenceHeight, RotorHeight,
+                    SurfaceRoughness, Polygon, resol1,
+                    rot, dirspeed, srtm_crop, topograp, cclRaster,
+                    weibull, Parallel, numCluster) {
 
   ## Missing Arguments? #############
   if (missing(srtm_crop)) {

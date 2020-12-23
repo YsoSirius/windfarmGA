@@ -14,7 +14,7 @@ test_that("Test windfarmGA", {
   ))
   data.in <- data.frame(ws = 12, wd = 0)
   
-  ## SpatialPolygon Input #####################
+  ## SF-Polygon Input #####################
   options(windfarmGA.connection = stdin())
   f <- file()
   options(windfarmGA.connection = f)
@@ -42,7 +42,7 @@ test_that("Test windfarmGA", {
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
   
-  ## SpatialPolygon - Other Projection #####################
+  ## SF-Polygon - Other Projection #####################
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(0, 0, 2000, 2000, 0),
@@ -61,7 +61,7 @@ test_that("Test windfarmGA", {
 
   
   ## Errors ############
-  ## SpatialPolygon - No Projection
+  ## SF-Polygon - No Projection
   st_crs(Polygon1) <- NA
   expect_error(expect_warning(windfarmGA(Polygon1 = Polygon1,
                           n = 20, iteration = 5, Projection = 4326,

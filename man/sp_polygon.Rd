@@ -5,7 +5,7 @@
 \alias{sp_polygon}
 \title{The rectangular shapefile used to create \code{resultrect}}
 \format{
-An object of class \code{SpatialPolygons} of length 1.
+An object of class \code{sf} (inherits from \code{data.frame}) with 1 rows and 1 columns.
 }
 \usage{
 sp_polygon

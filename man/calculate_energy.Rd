@@ -99,7 +99,7 @@ Rotor= 50; fcrR= 3
 resGrid <- grid_area(shape = Polygon1, size = Rotor*fcrR, prop=1,
                       plotGrid = TRUE)
 ## Assign the indexed data frame to new variable. Element 2 of the list
-## is the grid, saved as SpatialPolygon.
+## is the grid, saved as Simple Feature Polygons.
 resGrid1 <- resGrid[[1]]
 
 ## Create an initial population with the indexed Grid, 15 turbines and

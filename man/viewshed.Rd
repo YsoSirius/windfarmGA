@@ -9,7 +9,7 @@ viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0, plot = FALSE, ...)
 \arguments{
 \item{r}{A DEM raster}
 
-\item{shape}{A SpatialPolygon of the windfarm area}
+\item{shape}{A Simpüle Feature Polygon of the windfarm area}
 
 \item{turbine_locs}{Coordinates or SpatialPoint representing the wind
 turbines}
@@ -40,7 +40,7 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 DEM_meter <- getDEM(Polygon1)
 
-turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
                 turbine_locs = turbloc[1:3,],
                 h1 = sample(c(20:40), 3, TRUE),

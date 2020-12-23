@@ -60,22 +60,22 @@ parameters. For Austria this data is already included in the package.
 ## Create an input Polygon
 - Input Polygon by source
 ```sh
+library(sf)
 dsn <- "Path to the Shapefile"
 layer <- "Name of the Shapefile"
-Polygon1 <- rgdal::readOGR(dsn = dsn, layer = layer)
+Polygon1 <- sf::st_read(dsn = dsn, layer = layer)
 plot(Polygon1, col = "blue")
 ```
 
 - Or create a random Polygon
 ```sh
-library(rgdal); library(sp); library(windfarmGA);
-Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
-                          c(4654475, 2694746), c(4654475, 2692925)))
-Polygon1 <- sp::Polygons(list(Polygon1), 1)
-Polygon1 <- sp::SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-proj4string(Polygon1) <- CRS(Projection)
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(0, 0, 2000, 2000, 0),
+    c(0, 2000, 2000, 0, 0)))),
+  crs = 3035
+))
 plot(Polygon1, col = "blue", axes = TRUE)
 ```
 
@@ -84,14 +84,14 @@ plot(Polygon1, col = "blue", axes = TRUE)
 ```sh
 wind_df <- data.frame(ws = c(12, 12), wd = c(0, 0), probab = c(25, 25))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
-                             dir = wind_df$wd, dirres=10, spdmax = 20)
+                              dir = wind_df$wd, dirres=10, spdmax = 20)
 ```
 
 - Exemplary input Wind data with *random* wind speeds and *random* wind directions
 ```sh
 wind_df <- data.frame(ws = sample(1:25, 10), wd = sample(1:260, 10)))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
-                             dir = wind_df$wd)
+                              dir = wind_df$wd)
 ```
 
 ## Grid Spacing
@@ -232,14 +232,15 @@ Unfortunately, as an optimization takes quite some time and the app is currently
 
 # Full Optimization example:
 ```sh
-library(rgdal); library(sp); library(windfarmGA)
-Polygon1 <- Polygon(rbind(c(4651704, 2692925), c(4651704, 2694746), 
-                          c(4654475, 2694746), c(4654475, 2692925)))
-Polygon1 <- sp::Polygons(list(Polygon1), 1);
-Polygon1 <- sp::SpatialPolygons(list(Polygon1))
-Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-proj4string(Polygon1) <- CRS(Projection)
+library(sf)
+library(windfarmGA)
+
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4651704, 4651704, 4654475, 4654475, 4651704),
+    c(2692925, 2694746, 2694746, 2692925, 2692925)))), 
+  crs = 3035
+))
 plot(Polygon1, col = "blue", axes = TRUE)
 
 wind_df <- data.frame(ws = 12, wd = 0)
@@ -247,7 +248,7 @@ windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd, dirres = 10, spdmax = 20)
 Rotor <- 20
 fcrR <- 9
-Grid <- grid_area(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
+Grid <- grid_area(shape = Polygon1, size = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, iteration = 10,
                      vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,

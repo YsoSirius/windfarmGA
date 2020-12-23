@@ -34,14 +34,13 @@ The grid of the genetic algorithm will have a resolution of \code{Rotor
   * fcrR}. See the arguments of \code{\link{windfarmGA}}
 }
 \examples{
-library(sf)
-
 ## Exemplary input Polygon with 2km x 2km:
+library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
-  sf::st_polygon(list(cbind(
-    c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
-  crs = 3035
+ sf::st_polygon(list(cbind(
+   c(0, 0, 2000, 2000, 0),
+   c(0, 2000, 2000, 0, 0)))),
+crs = 3035
 ))
 
 ## Create a Grid

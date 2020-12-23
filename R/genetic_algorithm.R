@@ -14,14 +14,14 @@
 #'   are computed when assigning "h" or "hexagon" to this input variable.
 #' @param Rotor A numeric value that gives the rotor radius in meter
 #' @param n A numeric value indicating the required amount of turbines
-#' @param fcrR A numeric value that is used for grid spacing. Default is 5
+#' @param fcrR A numeric value that is used for grid spacing. Default is \code{5}
 #' @param referenceHeight The height at which the incoming wind speeds were
 #'   measured. Default is the RotorHeight.
 #' @param RotorHeight The desired height of the turbine.
 #' @param SurfaceRoughness A surface roughness length of the considered area in
 #'   m.  If the terrain effect model is activated, a surface roughness will be
 #'   calculated for every grid cell with the elevation and land cover
-#'   information. Default is 0.3
+#'   information. Default is \code{0.3}
 #' @param sourceCCL The path to the Corine Land Cover raster (.tif). Only
 #'   required when the terrain effect model is activated. If nothing is assign,
 #'   it will try to download a version from the EEA-website.
@@ -31,16 +31,16 @@
 #'   was already adapted manually. To use your own .csv legend this variable has
 #'   to be assigned.
 #' @param Proportionality A numeric value used for grid calculation. Determines
-#'   the percentage a grid has to overlay. Default is 1
+#'   the percentage a grid has to overlay. Default is \code{1}
 #' @param iteration A numeric value indicating the desired amount of iterations
-#'   of the algorithm. Default is 20
+#'   of the algorithm. Default is \code{20}
 #' @param mutr A numeric mutation rate with a default value of 0.008
 #' @param vdirspe A data.frame containing the incoming wind speeds, wind
 #'   directions and probabilities
 #' @param topograp Logical value, which indicates if the terrain effect model
-#'   should be enabled or not. Default is FALSE
+#'   should be enabled or not. Default is \code{FALSE}
 #' @param elitism Boolean value, which indicates whether elitism should be
-#'   activated or not. Default is TRUE
+#'   activated or not. Default is \code{TRUE}
 #' @param nelit If \code{elitism} is TRUE, this input determines the amount 
 #'   of individuals in the elite group. Default is 7
 #' @param selstate Determines which selection method is used, "FIX" selects a
@@ -48,32 +48,32 @@
 #'   the development of the fitness values. Default is "FIX"
 #' @param crossPart1 Determines which crossover method is used, "EQU" divides
 #'   the genetic code at equal intervals and "RAN" divides the genetic code at
-#'   random locations. Default is "EQU"
-#' @param trimForce If activated (\code{trimForce == TRUE}), the algorithm will
+#'   random locations. Default is \code{"EQU"}
+#' @param trimForce If activated (\code{trimForce = TRUE}), the algorithm will
 #'   take a probabilistic approach to trim the windfarms to the desired amount
-#'   of turbines. If deactivated (\code{trimForce == FALSE}) the adjustment will
-#'   be random. Default is FALSE
+#'   of turbines. If deactivated (\code{trimForce = FALSE}) the adjustment will
+#'   be random. Default is \code{FALSE}
 #' @param Projection A desired Projection can be used instead of the default
-#'   Lambert Azimuthal Equal Area Projection (EPSG:3035).
+#'   Lambert Azimuthal Equal Area Projection (EPSG:3035)
 #' @param weibull A logical value that specifies whether to take Weibull
-#'   parameters into account. If `weibull == TRUE`, the wind speed values from
-#'   the `vdirspe` data frame are ignored. The algorithm will calculate the mean
+#'   parameters into account. If \code{weibull = TRUE}, the wind speed values 
+#'   of \code{vdirspe} are ignored. The algorithm will calculate the mean
 #'   wind speed for every wind turbine according to the Weibull parameters.
-#'   Default is FALSE
+#'   Default is \code{FALSE}
 #' @param weibullsrc A list of Weibull parameter rasters, where the first list
 #'   item must be the shape parameter raster `k` and the second item must be the
 #'   scale parameter raster `a` of the Weibull distribution. If no list is given,
 #'   then rasters included in the package are used instead, which currently only
-#'   cover Austria. This variable is only used if `weibull == TRUE`.
+#'   cover Austria. This variable is only used if \code{weibull = TRUE}.
 #' @param Parallel Boolean value, indicating whether parallel processing should
 #'   be used. The parallel and doParallel packages are used for parallel
-#'   processing. Default is FALSE
+#'   processing. Default is \code{FALSE}
 #' @param numCluster If \code{Parallel} is TRUE, this variable defines the 
 #'   number of clusters to be used
 #' @param verbose If TRUE it will print information for every generation.
-#'   Default is FALSE
+#'   Default is \code{FALSE}
 #' @param plotit If TRUE it will plot the best windfarm of every generation. 
-#'   Default is FALSE
+#'   Default is \code{FALSE}
 #' 
 #' @family Genetic Algorithm Functions
 #' @return The result is a matrix with aggregated values per generation, the
@@ -87,10 +87,10 @@
 #'   tested wind farm layouts.
 #'
 #' @details A terrain effect model can be included in the optimization process.
-#'   Therefore, an SRTM elevation model will be downloaded automatically via the
-#'   \code{raster::getData} function. A land cover raster can also be downloaded
-#'   automatically from the EEA-website, or the path to a raster file can be
-#'   passed to \code{sourceCCL}. The algorithm uses an adapted version of the
+#'   Therefore, a digital elevation model will be downloaded automatically via the
+#'   \code{elevatr::get_elev_raster} function. A land cover raster can also be 
+#'   downloaded automatically from the EEA-website, or the path to a raster file 
+#'   can be passed to \code{sourceCCL}. The algorithm uses an adapted version of the
 #'   Raster legend ("clc_legend.csv"), which is stored in the package directory
 #'   \file{~/inst/extdata}. To use other values for the land cover roughness
 #'   lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file,
@@ -249,7 +249,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   selstate <- toupper(selstate)
   crossPart1 <- toupper(crossPart1)
 
-  ## Is the Polygon Spatial / SF / coordinates - It will transform to SpatialPolygon
+  ## Is the Polygon Spatial / SF / coordinates - It will transform to sf-Polygons
   Polygon1 <- isSpatial(Polygon1, ProjLAEA)
   if (is.na(st_crs(Polygon1))) {
     stop("The input area is not projected.")
@@ -866,10 +866,10 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   return(alldata)
 }
 
-#' @title Transform to SpatialPolygons
+#' @title Transform to Simple Feature Polygons
 #' @name isSpatial
-#' @description Helper Function, which transforms SimpleFeatures or coordinates
-#'   in matrix/data.frame/data.table into a SpatialPolygon
+#' @description Helper Function, which transforms SpatialPolygons or coordinates
+#'   in matrix/data.frame - form to a Simple Feature Polygon
 #'
 #' @export
 #'
@@ -879,26 +879,25 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 #'   coordinates
 #'
 #' @family Helper Functions
-#' @return A SpatialPolygons object
+#' @return A Simple Feature Polygon
 #'
 #' @details If the columns are named, it will look for common abbreviation to
 #'   match x/y or long/lat columns. If the columns are not named, the first 2
 #'   numeric columns are taken.
 #'
 #' @examples \donttest{
-#' library(sp)
+#' library(sf)
 #' df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'             c(4499991, 2669343), c(4499991, 2668272))
 #' isSpatial(df)
 #' 
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
-#' df_fort <- ggplot2::fortify(Polygon1)
-#' isSpatial(df_fort, Projection)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+#'   crs = 3035
+#' ))
+#' isSpatial(st_coordinates(Polygon1), 3035)
 #'}
 isSpatial <- function(shape, proj) {
   if (inherits(shape, "Spatial")) {

@@ -28,6 +28,15 @@
 #' plot_heatmap(resulthex, si = 20, idistw = 10)
 #' }
 plot_heatmap <- function(result, si = 2, idistw){
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("The package 'ggplot2' is required for this function, but it is not installed.\n",
+         "Please install it with `install.packages('ggplot2')`")
+  }
+  if (!requireNamespace("gstat", quietly = TRUE)) {
+    stop("The package 'gstat' is required for this function, but it is not installed.\n",
+         "Please install it with `install.packages('gstat')`")
+  }
+  
   parheat <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parheat))
   par(mfrow = c(1, 1))

@@ -25,13 +25,14 @@
 #'   which shows all selected individuals. Element 2 represent the mean fitness
 #'   values of each parental team.
 #' @examples \dontrun{
-#' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' ## Exemplary input Polygon with 2km x 2km:
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
 #' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1);

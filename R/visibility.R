@@ -71,20 +71,20 @@ rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
 #'
 #' @examples \dontrun{
 #' library(raster)
-#' library(windfarmGA)
+#' library(sf)
 #' 
 #' matrix <- matrix(abs(sin(1:100))*10, nrow=10, byrow = TRUE)
 #' r1 <- raster(matrix)
-#' shape <- as(extent(r1), "SpatialPolygons")
-#' locs = spsample(shape, 10, type = "random");
+#' shape <- st_as_sf(as(extent(r1), "SpatialPolygons"))
+#' locs = st_sample(shape, 10, type = "random");
 #' 
 #' mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
-#' sample_xy <- sp::coordinates(mw)
+#' sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
 #' 
 #' Pt1 <- 3
 #' for (i in 1:nrow(sample_xy)) {
 #'   cansee(r1, 
-#'          xy1 = sp::coordinates(locs)[Pt1,], 
+#'          xy1 = st_coordinates(locs)[Pt1,], 
 #'          xy2 = sample_xy[i,], 
 #'          h1 = 3, 
 #'          h2 = 1.5, 
@@ -92,7 +92,6 @@ rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
 #'          plot=TRUE)
 #'   invisible(readline(prompt="Press [enter] to continue"))
 #' }
-#' 
 #' }
 cansee <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...){
   ### can xy1 see xy2 on DEM r?
@@ -159,16 +158,17 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...){
 #'
 #' @examples \dontrun{
 #' library(raster)
-#' library(windfarmGA)
+#' library(sf)
 #' 
 #' matrix <- matrix(abs(rnorm(20, mean = 10, sd = 5)), nrow=5)
 #' r1 <- raster(matrix)
-#' shape <- as(extent(r1), "SpatialPolygons")
-#' locs <- spsample(shape, 10, type = "random");
-#' mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
-#' sample_xy <- sp::coordinates(mw)
+#' shape <- st_as_sf(as(extent(r1), "SpatialPolygons"))
+#' locs = st_sample(shape, 10, type = "random");
 #' 
-#' viewTo(r1, sp::coordinates(locs)[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
+#' mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
+#' sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
+#' 
+#' viewTo(r1, sample_xy[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
 #'        plot=TRUE, interpolate=TRUE, asp=0.5)
 #' }
 viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
@@ -186,7 +186,7 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
 #' @export
 #'
 #' @param r A DEM raster
-#' @param shape A SpatialPolygon of the windfarm area
+#' @param shape A Simpüle Feature Polygon of the windfarm area
 #' @param turbine_locs Coordinates or SpatialPoint representing the wind
 #'   turbines
 #' @param h1 A numeric or numeric vector giving the extra height offsets for Point 1
@@ -206,7 +206,7 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
 #' ))
 #' DEM_meter <- getDEM(Polygon1)
 #' 
-#' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+#' turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
 #'                 turbine_locs = turbloc[1:3,],
 #'                 h1 = sample(c(20:40), 3, TRUE),
@@ -214,7 +214,6 @@ viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
 #' }
 viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
   # r = DEM_meter[[1]]; shape = sf_shape; turbine_locs = turbloc
-  
   
   if (inherits(shape, "Spatial")) {
     shape <- sf::st_as_sf(shape)  
@@ -316,17 +315,17 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
 #'
 #' @return NULL
 #' @examples \dontrun{
-#' library(sp)
 #' library(raster)
-#' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2667172)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4496482, 4496482, 4499991, 4499991, 4496482),
+#'     c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+#'   crs = 3035
+#' ))
 #' DEM_meter <- getDEM(Polygon1)
 #' 
-#' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+#' turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
 #' res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]], turbine_locs = turbloc,  
 #'                 h1 = 1.8, h2 = 50)
 #' plot_viewshed(res)
@@ -378,17 +377,17 @@ plot_viewshed <- function(res, legend = FALSE, ...) {
 #' @return An interpolated raster
 #' 
 #' @examples \dontrun{
-#' library(sp)
 #' library(raster)
-#' Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2667172)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4496482, 4496482, 4499991, 4499991, 4496482),
+#'     c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+#'   crs = 3035
+#' ))
 #' DEM_meter <- getDEM(Polygon1)
 #' 
-#' turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+#' turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
 #' res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
 #'                 turbine_locs = turbloc,  h1=1.8, h2=50)
 #' interpol_view(res, plotDEM = TRUE)
@@ -469,6 +468,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' @return A character vector
 #' 
 #' @examples \dontrun{
+#' library(sf)
 #' points = cbind(c(4488182.26267016, 4488852.91748256), 
 #' c(2667398.93118627, 2667398.93118627))
 #' getISO3(pp = points, ask = TRUE)
@@ -490,8 +490,10 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   if (requireNamespace("rworldmap", quietly = TRUE)) {
     countriesSP <- rworldmap::getMap(resolution = resol)
   } else {
-    stop("Package 'rworldmap' is required, but not installed")
+    stop("The package 'rworldmap' is required for this function, but it is not installed.\n",
+         "Please install it with `install.packages('rworldmap')`")
   }
+  
   
   if (ask == TRUE) {
     print(sort(names(countriesSP)))
@@ -534,7 +536,7 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 #' @param polygon A Spatial / SimpleFeature Polygon to crop the DEM
 #'
 #' @family Helper Functions
-#' @return A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL if
+#' @return A list with the DEM raster, and a Simple Feature Polygon or NULL if
 #'   no polygon is given
 #' 
 #' @examples \dontrun{
@@ -559,7 +561,6 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
   
   if (clip) {
     ## if data.frame / sp object ? -----------------
-    # shape <- st_as_sf(shape)
     if ( inherits(polygon, "SpatialPolygons") || inherits(polygon, "SpatialPolygonsDataFrame") ) {
       polygon <- sf::st_as_sf(polygon)
     }

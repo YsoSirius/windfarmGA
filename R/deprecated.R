@@ -313,7 +313,7 @@ plotparkfitness <- function(result, spar = 0.1) {
 #' @keywords internal
 #' @export
 plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
-                       topographie = FALSE, Grid, Projection,
+                       topographie = FALSE, Grid,
                        sourceCCLRoughness, sourceCCL,
                        weibullsrc) {
   .Deprecated(
@@ -321,7 +321,7 @@ plotResult <- function(result, Polygon1, best = 3, plotEn = 1,
     msg = "plotResult will be replaced by plot_result"
   )
   plot_result(result, Polygon1, best, plotEn,
-               topographie, Grid, Projection,
+               topographie, Grid,
                sourceCCLRoughness, sourceCCL,
                weibullsrc)
 }

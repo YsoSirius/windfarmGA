@@ -14,7 +14,7 @@ getDEM(polygon, ISO3 = "AUT", clip = TRUE)
 \item{clip}{boolean, indicating if polygon should be cropped. Default is TRUE}
 }
 \value{
-A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL if
+A list with the DEM raster, and a Simple Feature Polygon or NULL if
   no polygon is given
 }
 \description{

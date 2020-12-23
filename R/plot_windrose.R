@@ -34,6 +34,10 @@
 plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                          spdmax = 30, palette = "YlGnBu",
                          spdseq = NULL, plotit = TRUE) {
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("The package 'ggplot2' is required for this function, but it is not installed.\n",
+         "Please install it with `install.packages('ggplot2')`")
+  }
   
   if (!missing(data) && exists("data")) {
     # Assume that we've been given a data frame. Lets find the correct columns

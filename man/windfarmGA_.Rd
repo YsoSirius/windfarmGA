@@ -10,9 +10,9 @@
 A package to optimize small wind farms with irregular shapes
 using a genetic algorithm. It requires a fixed amount of turbines, a fixed
 rotor radius and an average wind speed value for each incoming wind
-direction. A terrain effect model can be included that downloads an 'SRTM'
-elevation model and loads a Corine Land Cover raster to approximate surface
-roughness. Further information can be found in the description of the
+direction. A terrain effect model can be included which downloads a digital
+elevation model and a Corine Land Cover raster to approximate surface
+roughness. Further information can be found at the description of the
 function \code{\link{windfarmGA}}.
 }
 \seealso{

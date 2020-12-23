@@ -3,6 +3,7 @@
   passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
 - The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`. Therefore, the hexagon cellsize is no longer divided by 2
   and is identical to the rectangular grid size.
+- The `grid_area` argument `resol` changed to `size`
 - The new dependency `elevatr` was added, because downloading SRTM data with the `raster::getData` didn't work anymore for me.
 - Several `dependencies` that are not essential for the algorithm were moved to `Suggests`.
 - Bugfix for the calculation of the visibility analysis. [#17](https://github.com/YsoSirius/windfarmGA/issues/17)

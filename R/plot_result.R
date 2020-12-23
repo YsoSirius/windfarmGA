@@ -16,8 +16,8 @@
 #'   and (plotEn==2) plots the best efficiency solutions
 #' @param topographie A logical value, indicating whether terrain effects should
 #'   be considered and plotted or not
-#' @param Grid The grid as SpatialPolygons, which is obtained from
-#'   \code{\link{grid_area}} and used for plotting
+#' @param Grid The grid as Simple Feature object, which is obtained from
+#'   \code{\link{grid_area}} or \code{\link{hexa_area}}
 #' @param sourceCCL The source to the Corine Land Cover raster (.tif). Only
 #'   required, when the terrain effect model is activated
 #' @param sourceCCLRoughness The source to the adapted Corine Land Cover legend

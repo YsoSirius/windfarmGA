@@ -18,19 +18,20 @@
 #' @return Returns a matrix with the distances and angles of potentially
 #'   influencing turbines
 #' @examples
-#' library(sp)
+#' library(sf)
 #' library(raster)
 #' 
 #' ## Exemplary input Polygon with 2km x 2km:
-#' polYgon <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-#' polYgon <- Polygons(list(polYgon),1)
-#' polYgon <- SpatialPolygons(list(polYgon))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(polYgon) <- CRS(Projection); plot(polYgon, axes = TRUE)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+#'   crs = 3035
+#' ))
 #' 
 #' ## Create a random windfarm with 10 turbines
-#' t <- as.matrix(cbind(x = runif(10, 0, raster::extent(polYgon)[2]),
-#'      y = runif(10, 0, raster::extent(polYgon)[4])))
+#' t <- as.matrix(cbind(x = runif(10, 0, raster::extent(Polygon1)[2]),
+#'      y = runif(10, 0, raster::extent(Polygon1)[4])))
 #' wnkl <- 20
 #' distanz <- 100000
 #' 
@@ -38,11 +39,11 @@
 #' potInfTur <- list()
 #' for (i in 1:(length(t[,1]))) {
 #'   potInfTur[[i]] <- get_dist_angles(t = t, o = i, wkl = wnkl,
-#'                    distanz = distanz, polYgon = polYgon, plotAngles = TRUE)
+#'                    distanz = distanz, polYgon = Polygon1, plotAngles = TRUE)
 #' }
 #' potInfTur
 #'
-get_dist_angles     <- function(t, o, wkl, distanz, polYgon, plotAngles) {
+get_dist_angles <- function(t, o, wkl, distanz, polYgon, plotAngles) {
   col_names <- c("Ax", "Ay", "Bx", "By", "Cx", "Cy",
                "Laenge_C", "Laenge_B", "Laenge_A",
                "alpha", "betha", "gamma")

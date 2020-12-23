@@ -12,13 +12,10 @@ Imports: Rcpp,
     raster,
     sf,
     elevatr,
-    gstat,
-    ggplot2,
     RColorBrewer,
     calibrate,
     grDevices,
     graphics,
-    leaflet,
     magrittr,
     foreach,
     parallel,
@@ -34,9 +31,10 @@ BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
-    rgdal,
+    leaflet,
+    ggplot2,
+    gstat,
     rworldmap,
-    dplyr,
     rgeos
 Encoding: UTF-8
 X-schema.org-keywords: windfarm-layout, optimization, genetic-algorithm, renewable-energy, r, rstats, r-package

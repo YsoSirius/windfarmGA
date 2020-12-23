@@ -34,16 +34,17 @@ Check if a location is visible from multiple locations
 \examples{
 \dontrun{
 library(raster)
-library(windfarmGA)
+library(sf)
 
 matrix <- matrix(abs(rnorm(20, mean = 10, sd = 5)), nrow=5)
 r1 <- raster(matrix)
-shape <- as(extent(r1), "SpatialPolygons")
-locs <- spsample(shape, 10, type = "random");
-mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
-sample_xy <- sp::coordinates(mw)
+shape <- st_as_sf(as(extent(r1), "SpatialPolygons"))
+locs = st_sample(shape, 10, type = "random");
 
-viewTo(r1, sp::coordinates(locs)[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
+mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
+sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
+
+viewTo(r1, sample_xy[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
        plot=TRUE, interpolate=TRUE, asp=0.5)
 }
 }

@@ -34,20 +34,20 @@ Check if point 1 is visible from point 2 given
 \examples{
 \dontrun{
 library(raster)
-library(windfarmGA)
+library(sf)
 
 matrix <- matrix(abs(sin(1:100))*10, nrow=10, byrow = TRUE)
 r1 <- raster(matrix)
-shape <- as(extent(r1), "SpatialPolygons")
-locs = spsample(shape, 10, type = "random");
+shape <- st_as_sf(as(extent(r1), "SpatialPolygons"))
+locs = st_sample(shape, 10, type = "random");
 
 mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
-sample_xy <- sp::coordinates(mw)
+sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
 
 Pt1 <- 3
 for (i in 1:nrow(sample_xy)) {
   cansee(r1, 
-         xy1 = sp::coordinates(locs)[Pt1,], 
+         xy1 = st_coordinates(locs)[Pt1,], 
          xy2 = sample_xy[i,], 
          h1 = 3, 
          h2 = 1.5, 
@@ -55,7 +55,6 @@ for (i in 1:nrow(sample_xy)) {
          plot=TRUE)
   invisible(readline(prompt="Press [enter] to continue"))
 }
-
 }
 }
 \seealso{
