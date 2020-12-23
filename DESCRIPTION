@@ -16,7 +16,6 @@ Imports: Rcpp,
     calibrate,
     grDevices,
     graphics,
-    magrittr,
     foreach,
     parallel,
     doParallel,
@@ -31,6 +30,7 @@ BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
+    magrittr,
     leaflet,
     ggplot2,
     gstat,

@@ -22,9 +22,6 @@ Plot the evolution of energy outputs and efficiency rates over
 }
 \examples{
 \donttest{
-## Add some data examples from the package
-load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-
 ## Plot the results of a rectangular grid optimization
 plot_evolution(resultrect, ask = TRUE, spar = 0.1)
 }

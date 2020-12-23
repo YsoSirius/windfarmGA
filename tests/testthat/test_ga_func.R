@@ -1,7 +1,5 @@
 context("GA Functions")
-library(sp)
-library(spatstat)
-# library(maptools)
+library(sf)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 

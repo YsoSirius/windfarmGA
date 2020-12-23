@@ -257,6 +257,11 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
 viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
   # h1=0; h2=0;
+  if (!requireNamespace("parallel", quietly = TRUE)) {
+    stop("The package 'parallel' is required for this function, but it is not installed.\n",
+         "Please install it with `install.packages('parallel')`")
+  }
+  
   
   if (inherits(shape, "Spatial")) {
     shape <- sf::st_as_sf(shape)
@@ -276,8 +281,6 @@ viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
   ## Get minimal Raster Resolution
   reso <- min(raster::res(r))
   
-  
-  library(parallel)
   nCore <- parallel::detectCores()
   cl <- parallel::makeCluster(nCore)
   parallel::clusterEvalQ(cl, {

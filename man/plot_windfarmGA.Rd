@@ -7,11 +7,9 @@
 plot_windfarmGA(
   result,
   Polygon1,
-  GridMethod = "r",
   whichPl = "all",
   best = 1,
   plotEn = 1,
-  Projection,
   weibullsrc
 )
 }
@@ -54,10 +52,10 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Plot the results of a hexagonal grid optimization
-plot_windfarmGA(resulthex, GridMethod = "h", Polygon1, whichPl = "all", best = 1, plotEn = 1)
+plot_windfarmGA(resulthex, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
 ## Plot the results of a rectangular grid optimization
-plot_windfarmGA(resultrect, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
+plot_windfarmGA(resultrect, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 }
 }
 \seealso{

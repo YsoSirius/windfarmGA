@@ -41,7 +41,6 @@
 #' @importFrom parallel makeCluster stopCluster detectCores
 #' @importFrom foreach foreach %dopar% 
 #' @importFrom methods as
-#' @importFrom magrittr %>% 
 #' @importFrom Rcpp sourceCpp
 #' 
 #' @useDynLib windfarmGA, .registration = TRUE

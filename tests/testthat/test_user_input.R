@@ -39,7 +39,6 @@ test_that("User Input", {
   close(f)
   
   ## random_search_single - Rects #############
-  load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
   polygon <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),

@@ -767,14 +767,14 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 #' ))
 #'
 #' ## Plot the results of a hexagonal grid optimization
-#' plot_windfarmGA(resulthex, GridMethod = "h", Polygon1, whichPl = "all", best = 1, plotEn = 1)
+#' plot_windfarmGA(resulthex, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 #'
 #' ## Plot the results of a rectangular grid optimization
-#' plot_windfarmGA(resultrect, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
+#' plot_windfarmGA(resultrect, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 #' }
-plot_windfarmGA <- function(result, Polygon1, GridMethod = "r",
-                            whichPl = "all", best = 1, plotEn = 1,
-                            Projection, weibullsrc){
+plot_windfarmGA <- function(result, Polygon1, whichPl = "all", 
+                            best = 1, plotEn = 1,
+                            weibullsrc){
   
   parpplotWindGa <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parpplotWindGa))
@@ -784,7 +784,7 @@ plot_windfarmGA <- function(result, Polygon1, GridMethod = "r",
     whichPl <- 1:6
   }
   resol <- as.numeric(result[, 'inputData'][[1]][,1]['Resolution'][[1]])
-  Polygon1 <- isSpatial(Polygon1, Projection)
+  Polygon1 <- isSpatial(Polygon1)
   GridMethod <- toupper(result[, 'inputData'][[1]]["Grid Method",][[1]])
   if (GridMethod == "HEXAGONAL" | GridMethod == "H" | GridMethod == "HEXA") {
     Grid <- hexa_area(shape = Polygon1, size = resol, plotGrid = FALSE)
@@ -886,6 +886,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
          "Please install it with `install.packages('leaflet')`")
   }
   
+  ## Check Polygon and CRS ##############
   poly1 <- isSpatial(shape = Polygon1)
   if (is.na(st_crs(poly1))) {
     projection <- result[, "inputData"][[1]]["Projection", ][[1]]
@@ -895,7 +896,8 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     st_crs(poly1) <- st_crs(projection)
   }
   proj_pol <- st_crs(poly1)
-  
+
+  ## Order Items and pick `best` ##############
   if (which > nrow(result)) {
     cat(paste("Maximum possible number for 'which': ", nrow(result)))
     which <- nrow(result)
@@ -914,6 +916,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     beste <- ""
   }
   
+  ## WGS84 Projection for old and new GDAL ##############
   PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   if (PROJ6) {
     proj_longlat <- 4326
@@ -921,6 +924,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
   }
   
+  ## Grid-Function ##############
   if (!missing(GridPol)) {
     if (is.na(st_crs(GridPol))) {
       st_crs(GridPol) <- st_crs(proj_pol)
@@ -936,59 +940,56 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     }
   }
   GridPol <- st_transform(GridPol, st_crs(proj_longlat))
-  overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
-  opaycity <- 0.4
   
+  ## Pick a Windfarm and Project to WGS84 ##############
   result <- result[, "bestPaEn"][[which]]
   xysp <- st_as_sf(data.frame(result), coords=c("X","Y"))
   st_crs(xysp) <- proj_pol
-  resultxy <- st_transform(xysp, proj_longlat)
-  resultxy <- st_coordinates(resultxy)
+  resultxy <- st_coordinates(st_transform(xysp, proj_longlat))
+  result <- data.frame(result, stringsAsFactors = FALSE)
+  result$X <- resultxy[, 1]
+  result$Y <- resultxy[, 2]
+  result$wake_radius <- round(result$AbschGesamt, 2) / 10
   
   poly1 <- st_transform(poly1, proj_longlat)
   
+  ## Get Coordinates for Title ##############
   bbx <- st_bbox(poly1)
-  title_locat <- c(mean(bbx[c(1,3)]),
-                   max(bbx[c(2,4)]))
+  title_locat <- c(mean(bbx[c(1,3)]), max(bbx[c(2,4)]))
   
+  ## Color Coding ##############
   col_cir <- grDevices::colorRampPalette(c("green", "yellow",
                                            "red", "darkred"))
-  br <- length(levels(factor(result[, "AbschGesamt"])))
+  br <- length(levels(factor(result$AbschGesamt)))
   if (br > 1) {
     color_pal <- col_cir(br)
   } else {
     color_pal <- "green"
   }
-  
-  wake_radius <- round(result[, "AbschGesamt"], 2) / 10
-  names(wake_radius) <- NULL
-  result <- data.frame(result, stringsAsFactors = FALSE)
-  result$X <- resultxy[, 1]
-  result$Y <- resultxy[, 2]
-  ## Assign sorted color palette for legend
   pal <- leaflet::colorFactor(color_pal, domain = sort(result$AbschGesamt), 
                               ordered = TRUE,
                               reverse = FALSE)
-  
-  result$wake_radius <- wake_radius
   result$farbe <- pal(result$AbschGesamt)
   
-  ## Assign turbine Icons
+  
+  ## Turbine Icons ###########
   turbine_icon <- leaflet::iconList(
     turbine_icon = leaflet::makeIcon(
       iconUrl = paste0(system.file(package = "windfarmGA"),
                        "/extdata/windturdk.png"),
-      # iconUrl = paste0(getwd(),"/inst/extdata/windturdk.png"),
       iconWidth = 30, iconHeight = 50))
   list_popup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
                       "% </dd>")
   
-  ## Start a Leaflet Map with OSM background and another Tile.
-  map <- leaflet() %>%
-    addTiles(group = "OSM") %>%
-    addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
-    addProviderTiles("Esri.WorldImagery", group = "Satellite") %>%
-    addProviderTiles("Stamen.Toner", group = "Toner") %>%
+  
+  ## Plot a Leaflet Map ###################
+  overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
+  opaycity <- 0.4
+  map <- leaflet::leaflet() %>%
+    leaflet::addTiles(group = "OSM") %>%
+    leaflet::addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
+    leaflet::addProviderTiles("Esri.WorldImagery", group = "Satellite") %>%
+    leaflet::addProviderTiles("Stamen.Toner", group = "Toner") %>%
     ## Write a Popup with the energy output
     leaflet::addPopups(title_locat[1], (title_locat[2] + 0.0002),
                        group = "Title",
@@ -996,41 +997,41 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
                                      round(as.numeric(
                                        result[, "EnergyOverall"][[1]]), 2),
                                      "kWh</b>"),
-                       options = popupOptions(
+                       options = leaflet::popupOptions(
                          closeButton = TRUE, closeOnClick = FALSE)) %>%
     ## Add the Polygon
-    addPolygons(data = poly1, group = "Polygon",
+    leaflet::addPolygons(data = poly1, group = "Polygon",
                 fill = TRUE, fillOpacity = 0.4) %>%
     
     ## Add the Genetic Algorithm Space
-    addPolygons(data = GridPol, group = "Grid", weight = 1,
+    leaflet::addPolygons(data = GridPol, group = "Grid", weight = 1,
                 opacity = opaycity,
                 fill = TRUE, fillOpacity = 0) %>%
     
     ## Create Circles in Map
-    addCircleMarkers(lng = result$X, lat = result$Y,
-                     radius = wake_radius,
+    leaflet::addCircleMarkers(lng = result$X, lat = result$Y,
+                     radius = result$wake_radius,
                      color = result$farbe,
                      stroke = TRUE, fillOpacity = 0.8,
                      group = "Wake Circles") %>%
     ## Add the turbine symbols
-    addMarkers(lng = result[, 1], lat = result[, 2],
+    leaflet::addMarkers(lng = result[, 1], lat = result[, 2],
                icon = turbine_icon[1], popup = list_popup,
                group = "Turbines") %>%
-    addLegend(position = "topleft",
+    leaflet::addLegend(position = "topleft",
               pal = pal,
               values = result$AbschGesamt,
-              labFormat = labelFormat(suffix = "%"),
+              labFormat = leaflet::labelFormat(suffix = "%"),
               opacity = 1, title = "Total Wake Effect",
               layerId = "Legend") %>%
     ## Layers control
-    addLayersControl(baseGroups = c(
+    leaflet::addLayersControl(baseGroups = c(
       "OSM",
       "Terrain",
       "Satellite",
       "Toner"),
       overlayGroups = overlay_group,
-      options = layersControlOptions(collapsed = TRUE)
+      options = leaflet::layersControlOptions(collapsed = TRUE)
     )
   
   # Plot the map
@@ -1382,9 +1383,6 @@ plot_development <- function(result){
 #' @family Plotting Functions
 #' @return NULL
 #' @examples \donttest{
-#' ## Add some data examples from the package
-#' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-#'
 #' ## Plot the results of a rectangular grid optimization
 #' plot_evolution(resultrect, ask = TRUE, spar = 0.1)
 #'}
