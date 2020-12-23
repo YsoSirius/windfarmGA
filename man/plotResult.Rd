@@ -20,14 +20,15 @@ plotResult(
 \item{result}{The output of \code{\link{windfarmGA}} or
 \code{\link{genetic_algorithm}}}
 
-\item{Polygon1}{The considered area as shapefile}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
 \item{best}{A numeric value indicating how many of the best individuals
 should be plotted}
 
 \item{plotEn}{A numeric value that indicates if the best energy or efficiency
-output should be plotted. If (plotEn==1) plots the best energy solutions
-and (plotEn==2) plots the best efficiency solutions}
+output should be plotted. \code{1} plots the best energy solutions
+and \code{2} plots the best efficiency solutions}
 
 \item{topographie}{A logical value, indicating whether terrain effects should
 be considered and plotted or not}
@@ -37,17 +38,19 @@ be considered and plotted or not}
 
 \item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
 as .csv file. Only required when terrain effect model is activated. As
-default a .csv file within this package (\file{~/extdata/clc_legend.csv})
-is taken that was already adapted manually}
+default a .csv file within this package (\file{~/extdata}) is taken that
+was already adapted manually. To use your own .csv legend this variable has
+to be assigned.}
 
-\item{sourceCCL}{The source to the Corine Land Cover raster (.tif). Only
-required, when the terrain effect model is activated}
+\item{sourceCCL}{The path to the Corine Land Cover raster (.tif). Only
+required when the terrain effect model is activated. If nothing is assign,
+it will try to download a version from the EEA-website.}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster k and the second item must be the
-scale parameter raster a of the Weibull distribution. If no list is given,
+item must be the shape parameter raster `k` and the second item must be the
+scale parameter raster `a` of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently only
-cover Austria.}
+cover Austria. This variable is only used if \code{weibull = TRUE}.}
 }
 \description{
 plotResult is replaced by

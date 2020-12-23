@@ -4,28 +4,24 @@
 \alias{random_search}
 \title{Randomize the output of the Genetic Algorithm}
 \usage{
-random_search(result, Polygon1, n, best, Plot, GridMethod, max_dist = 2.2)
+random_search(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_dist = 2.2)
 }
 \arguments{
 \item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}
 or \code{\link{windfarmGA}}}
 
-\item{Polygon1}{The Polygon for the wind farm area.}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
 \item{n}{The number of random searches to be performed. Default is 20.}
 
 \item{best}{Which best individuals should be the starting conditions for a
 random search. The default is 1.}
 
-\item{Plot}{Should the random search be plotted? Default is FALSE}
-
-\item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is rectangular grid cells and hexagonal grid cells
-are computed when assigning "h" or "hexagon" to this input variable. The
-randomly generated points might be placed outside their hexagons.}
+\item{Plot}{Should the random search be plotted? Default is \code{FALSE}}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
-collision checks. Default is 2.2}
+collision checks. Default is \code{2.2}}
 }
 \value{
 Returns a list.
@@ -36,17 +32,8 @@ Perform a random search in the grid cells, to further optimize
 }
 \examples{
 \donttest{
-library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
-  sf::st_polygon(list(cbind(
-    c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
-  crs = 3035
-))
-load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-
-new <- random_search(resultrect, Polygon1, n = 20, best = 4)
-plot_random_search(resultRS = new, result = resultrect, Polygon1 = Polygon1, best = 2)
+new <- random_search(resultrect, sp_polygon, n = 20, best = 4)
+plot_random_search(resultRS = new, result = resultrect, Polygon1 = sp_polygon, best = 2)
 }
 }
 \seealso{

@@ -10,22 +10,18 @@ RandomSearch(result, Polygon1, n, best, Plot, GridMethod, max_dist = 2.2)
 \item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}
 or \code{\link{windfarmGA}}}
 
-\item{Polygon1}{The Polygon for the wind farm area.}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
 \item{n}{The number of random searches to be performed. Default is 20.}
 
 \item{best}{Which best individuals should be the starting conditions for a
 random search. The default is 1.}
 
-\item{Plot}{Should the random search be plotted? Default is FALSE}
-
-\item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is rectangular grid cells and hexagonal grid cells
-are computed when assigning "h" or "hexagon" to this input variable. The
-randomly generated points might be placed outside their hexagons.}
+\item{Plot}{Should the random search be plotted? Default is \code{FALSE}}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
-collision checks. Default is 2.2}
+collision checks. Default is \code{2.2}}
 }
 \description{
 RandomSearch is replaced by

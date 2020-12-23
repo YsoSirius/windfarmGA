@@ -25,3 +25,4 @@ R/make_clc_legend.R
 release_to_cran.R
 docs/
 _experiment
+*.RDS

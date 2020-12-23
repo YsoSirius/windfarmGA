@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_leaflet.R
 \name{plot_leaflet}
 \alias{plot_leaflet}
-\title{Plot a Wind Farm with leaflet}
+\title{Plot a wind warm with leaflet}
 \usage{
 plot_leaflet(result, Polygon1, which = 1, orderitems = TRUE, GridPol)
 }
@@ -10,16 +10,20 @@ plot_leaflet(result, Polygon1, which = 1, orderitems = TRUE, GridPol)
 \item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}
 or \code{\link{windfarmGA}}}
 
-\item{Polygon1}{The Polygon for the wind farm area.}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
-\item{which}{A numeric value, indicating which best individual to plot. The
-default is 1 (the best resulting wind farm).}
+\item{which}{A numeric value, indicating which individual to plot. The
+default is 1. Combined with \code{orderitems = TRUE} this will show the 
+best performing wind farm.}
 
 \item{orderitems}{A logical value indicating whether the results should be
-ordered by energy values (TRUE) or chronologically (FALSE).}
+ordered by energy values \code{TRUE} or chronologically \code{FALSE}}
 
-\item{GridPol}{The output grid polygon of the \code{\link{grid_area}} or
-\code{\link{hexa_area}} functions.}
+\item{GridPol}{By default, the grid will be calculated based on the inputs 
+of \code{result} and the \code{Polygon1}. But another spatial object or the 
+output of the  \code{\link{grid_area}} or \code{\link{hexa_area}} functions 
+can also be}
 }
 \value{
 Returns a leaflet map.

@@ -6,12 +6,9 @@
 #'
 #' @export
 #'
+#' @inheritParams genetic_algorithm
 #' @param result The output of \code{\link{windfarmGA}} or
 #'   \code{\link{genetic_algorithm}}
-#' @param Polygon1 The area as shapefile.
-#' @param GridMethod Which grid spacing method was used. Default is
-#'   "rectangular". If hexagonal grid cells were used, assign any of the
-#'   following arguments: "h","hexa", "hexagonal"
 #' @param whichPl Which plots should be shown: 1-6 are possible. The default is
 #'   "all" which shows all available plots
 #' @param best A numeric value indicating how many of the best individuals
@@ -19,13 +16,6 @@
 #' @param plotEn A numeric value that indicates if the best energy or efficiency
 #'   output is plotted. If (plotEn==1) plots the best energy solutions
 #'   and (plotEn==2) plots the best efficiency solutions
-#' @param Projection A desired Projection can be used instead of the default
-#'   Lambert Azimuthal Equal Area Projection
-#' @param weibullsrc A list of Weibull parameter rasters, where the first list
-#'   item must be the shape parameter raster `k` and the second item must be the
-#'   scale parameter raster `a` of the Weibull distribution. If no list is given,
-#'   then rasters included in the package are used instead, which currently only
-#'   cover Austria.
 #'
 #' @family Plotting Functions
 #' @return NULL
@@ -45,7 +35,7 @@
 #' plot_windfarmGA(resultrect, GridMethod = "r", Polygon1, whichPl = "all", best = 1, plotEn = 1)
 #' }
 plot_windfarmGA <- function(result, Polygon1, GridMethod = "r",
-                           whichPl = "all", best = 1, plotEn = 1, 
+                           whichPl = "all", best = 1, plotEn = 1,
                            Projection, weibullsrc){
 
   parpplotWindGa <- par(ask = FALSE, no.readonly = TRUE)
@@ -56,12 +46,12 @@ plot_windfarmGA <- function(result, Polygon1, GridMethod = "r",
     whichPl <- 1:6
   }
   resol <- as.numeric(result[, 'inputData'][[1]][,1]['Resolution'][[1]])
-  prop <- as.numeric(result[, 'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
   Polygon1 <- isSpatial(Polygon1, Projection)
-  GridMethod <- toupper(GridMethod)
+  GridMethod <- toupper(result[, 'inputData'][[1]]["Grid Method",][[1]])
   if (GridMethod == "HEXAGONAL" | GridMethod == "H" | GridMethod == "HEXA") {
     Grid <- hexa_area(shape = Polygon1, size = resol, plotGrid = FALSE)
   } else {
+    prop <- as.numeric(result[, 'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
     Grid <- grid_area(shape = Polygon1, size = resol, prop = prop, plotGrid = FALSE)
   }
   if (nrow(result) < 4) {

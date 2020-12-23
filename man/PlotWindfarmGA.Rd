@@ -19,11 +19,12 @@ PlotWindfarmGA(
 \item{result}{The output of \code{\link{windfarmGA}} or
 \code{\link{genetic_algorithm}}}
 
-\item{Polygon1}{The area as shapefile.}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
-\item{GridMethod}{Which grid spacing method was used. Default is
-"rectangular". If hexagonal grid cells were used, assign any of the
-following arguments: "h","hexa", "hexagonal"}
+\item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
+grid cells? The default is "Rectangular" grid. Hexagonal grids
+are computed when assigning "h" or "hexagon" to this input variable.}
 
 \item{whichPl}{Which plots should be shown: 1-6 are possible. The default is
 "all" which shows all available plots}
@@ -36,13 +37,13 @@ output is plotted. If (plotEn==1) plots the best energy solutions
 and (plotEn==2) plots the best efficiency solutions}
 
 \item{Projection}{A desired Projection can be used instead of the default
-Lambert Azimuthal Equal Area Projection}
+Lambert Azimuthal Equal Area Projection (EPSG:3035)}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster `k` and the second item must be the
 scale parameter raster `a` of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently only
-cover Austria.}
+cover Austria. This variable is only used if \code{weibull = TRUE}.}
 }
 \description{
 PlotWindfarmGA is replaced by

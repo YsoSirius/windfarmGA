@@ -7,19 +7,15 @@
 RandomSearchTurb(result, Polygon1, n, Plot, GridMethod, max_dist = 2.2)
 }
 \arguments{
-\item{result}{The resulting matrix of the function
-\code{\link{genetic_algorithm}} or \code{\link{windfarmGA}}}
+\item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}
+or \code{\link{windfarmGA}}}
 
-\item{Polygon1}{The Polygon for the wind farm area.}
+\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame}
 
 \item{n}{The number of random searches to be performed. Default is 20.}
 
-\item{Plot}{Should the random search be plotted? Default is TRUE}
-
-\item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is rectangular grid cells and hexagonal grid cells
-are computed when assigning "h" or "hexagon" to this variable. The randomly
-generated points might be placed outside their hexagon.}
+\item{Plot}{Should the random search be plotted? Default is \code{FALSE}}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
 collision checks. Default is 2.2}

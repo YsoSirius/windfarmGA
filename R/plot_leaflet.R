@@ -1,19 +1,21 @@
-#' @title Plot a Wind Farm with leaflet
+#' @title Plot a wind warm with leaflet
 #' @name plot_leaflet
 #' @description  Plot a resulting wind farm on a leaflet map.
 #'
 #' @export
 #'
+#' @inheritParams genetic_algorithm
 #' @param result The resulting matrix of the function \code{\link{genetic_algorithm}}
 #' or \code{\link{windfarmGA}}
-#' @param Polygon1 The Polygon for the wind farm area.
-#' @param which A numeric value, indicating which best individual to plot. The
-#'   default is 1 (the best resulting wind farm)
+#' @param which A numeric value, indicating which individual to plot. The
+#'   default is 1. Combined with \code{orderitems = TRUE} this will show the 
+#'   best performing wind farm.
 #' @param orderitems A logical value indicating whether the results should be
-#'   ordered by energy values (TRUE) or chronologically (FALSE)
+#'   ordered by energy values \code{TRUE} or chronologically \code{FALSE}
 #' @param GridPol By default, the grid will be calculated based on the inputs 
-#'   and the \code{Polygon1}. But the outputs of the \code{\link{grid_area}} or
-#'   \code{\link{hexa_area}} functions can also be given
+#'  of \code{result} and the \code{Polygon1}. But another spatial object or the 
+#'  output of the  \code{\link{grid_area}} or \code{\link{hexa_area}} functions 
+#'  can also be
 #'
 #' @return Returns a leaflet map.
 #'
@@ -55,7 +57,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     cat(paste("Maximum possible number for 'which': ", nrow(result)))
     which <- nrow(result)
   }
-
+  
   if (orderitems) {
     a <- sapply(result[, 2], FUN = function(i) {
       subset.matrix(i, subset = c(TRUE, rep(FALSE, nrow(i) - 1)),
@@ -75,7 +77,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   } else {
     proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
   }
-
+  
   if (!missing(GridPol)) {
     if (is.na(st_crs(GridPol))) {
       st_crs(GridPol) <- st_crs(proj_pol)
@@ -99,13 +101,13 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   st_crs(xysp) <- proj_pol
   resultxy <- st_transform(xysp, proj_longlat)
   resultxy <- st_coordinates(resultxy)
-
+  
   poly1 <- st_transform(poly1, proj_longlat)
-
+  
   bbx <- st_bbox(poly1)
   title_locat <- c(mean(bbx[c(1,3)]),
                    max(bbx[c(2,4)]))
-
+  
   col_cir <- grDevices::colorRampPalette(c("green", "yellow",
                                            "red", "darkred"))
   br <- length(levels(factor(result[, "AbschGesamt"])))
@@ -114,7 +116,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   } else {
     color_pal <- "green"
   }
-
+  
   wake_radius <- round(result[, "AbschGesamt"], 2) / 10
   names(wake_radius) <- NULL
   result <- data.frame(result, stringsAsFactors = FALSE)
@@ -124,10 +126,10 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   pal <- leaflet::colorFactor(color_pal, domain = sort(result$AbschGesamt), 
                               ordered = TRUE,
                               reverse = FALSE)
-
+  
   result$wake_radius <- wake_radius
   result$farbe <- pal(result$AbschGesamt)
-
+  
   ## Assign turbine Icons
   turbine_icon <- leaflet::iconList(
     turbine_icon = leaflet::makeIcon(
@@ -136,7 +138,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       # iconUrl = paste0(getwd(),"/inst/extdata/windturdk.png"),
       iconWidth = 30, iconHeight = 50))
   list_popup <- paste("Total Wake Effect: ", as.character(result$AbschGesamt),
-                     "% </dd>")
+                      "% </dd>")
   
   ## Start a Leaflet Map with OSM background and another Tile.
   map <- leaflet() %>%
@@ -156,18 +158,18 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     ## Add the Polygon
     addPolygons(data = poly1, group = "Polygon",
                 fill = TRUE, fillOpacity = 0.4) %>%
-
+    
     ## Add the Genetic Algorithm Space
     addPolygons(data = GridPol, group = "Grid", weight = 1,
                 opacity = opaycity,
                 fill = TRUE, fillOpacity = 0) %>%
-
+    
     ## Create Circles in Map
     addCircleMarkers(lng = result$X, lat = result$Y,
-                              radius = wake_radius,
-                              color = result$farbe,
-                              stroke = TRUE, fillOpacity = 0.8,
-                              group = "Wake Circles") %>%
+                     radius = wake_radius,
+                     color = result$farbe,
+                     stroke = TRUE, fillOpacity = 0.8,
+                     group = "Wake Circles") %>%
     ## Add the turbine symbols
     addMarkers(lng = result[, 1], lat = result[, 2],
                icon = turbine_icon[1], popup = list_popup,
@@ -178,7 +180,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
               labFormat = labelFormat(suffix = "%"),
               opacity = 1, title = "Total Wake Effect",
               layerId = "Legend") %>%
-  ## Layers control
+    ## Layers control
     addLayersControl(baseGroups = c(
       "OSM",
       "Terrain",
@@ -187,7 +189,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       overlayGroups = overlay_group,
       options = layersControlOptions(collapsed = TRUE)
     )
-
+  
   # Plot the map
   map
 }
