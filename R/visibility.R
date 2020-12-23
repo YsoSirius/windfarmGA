@@ -490,8 +490,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' library(sf)
 #' points = cbind(c(4488182.26267016, 4488852.91748256), 
 #'                c(2667398.93118627, 2667398.93118627))
-#' getISO3(pp = points, ask = TRUE)
-#' getISO3(pp = points, crs_pp = 3035)
+#' getISO3(pp = points, ask = TRUE, crs_pp = 3035)
 #' 
 #' points <- as.data.frame(points)
 #' colnames(points) <- c("x","y")
@@ -526,17 +525,17 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
     pp <- sf::st_coordinates(pp)
   }
   
-  pp <- as.data.frame(pp)
+  pp <- as.data.frame(pp, stringsAsFactor = FALSE)
   colnames(pp) <- coords
   
   pp <- st_as_sf(pp, coords = coords, crs = crs_pp)
   pp <- st_transform(pp, crs = st_crs(countriesSP))
   
   # use 'st_intersection' to get the Polygons intersecting each point 
-  worldmap_values <- st_intersection(pp, st_as_sf(countriesSP))
+  worldmap_values <- suppressWarnings(st_intersection(pp, st_as_sf(countriesSP)))
   
   # return desired columns of each country
-  unique(worldmap_values[, col, drop = FALSE])
+  unique(worldmap_values[, col, drop = FALSE][[1]])
 }
 
 
