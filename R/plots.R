@@ -1729,9 +1729,7 @@ plot_fitness_evolution <- function(result, spar = 0.1){
 #' plot_heatmap(resulthex)
 #'
 #' ## Plot the heatmap with different settings
-#' plot_heatmap(resulthex, si = 6, idistw = 2)
-#' plot_heatmap(resulthex, si = 6, idistw = 100)
-#' plot_heatmap(resulthex, si = 20, idistw = 10)
+#' plot_heatmap(resulthex, si = 4, idistw = 2)
 #' }
 plot_heatmap <- function(result, si = 2, idistw){
   if (!requireNamespace("gstat", quietly = TRUE)) {

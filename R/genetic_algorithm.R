@@ -125,38 +125,6 @@
 #'                   Rotor = 30,
 #'                   RotorHeight = 100)
 #' plot_windfarmGA(result = result, Polygon1 = Polygon1)
-#' 
-#' ## Runs the same optimization, this time with hexagonal grids.
-#' result_hex <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100)
-#' plot_windfarmGA(result = result_hex, Polygon1 = Polygon1)
-#'
-#' ## Run an optimization with the Weibull parameters included in the package.
-#' result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100,
-#'                  weibull = TRUE)
-#' plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
-#'
-#' ## Run an optimization with given Weibull parameter rasters.
-#' #araster <- "/..pathto../a_param_raster.tif"
-#' #kraster <- "/..pathto../k_param_raster.tif"
-#' #weibullrasters <- list(raster(kraster), raster(araster))
-#' #result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#' #                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#' #                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-#' #                  SurfaceRoughness = 0.3, topograp = FALSE,
-#' #                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#' #                  referenceHeight = 50,RotorHeight = 100,
-#' #                  weibull = TRUE, weibullsrc = weibullrasters)
-#' #plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
 #'}
 genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
                               RotorHeight, SurfaceRoughness, Proportionality,

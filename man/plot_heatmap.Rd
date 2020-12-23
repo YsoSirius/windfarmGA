@@ -30,9 +30,7 @@ Plot a heatmap of selected grid cells. Green grid cells
 plot_heatmap(resulthex)
 
 ## Plot the heatmap with different settings
-plot_heatmap(resulthex, si = 6, idistw = 2)
-plot_heatmap(resulthex, si = 6, idistw = 100)
-plot_heatmap(resulthex, si = 20, idistw = 10)
+plot_heatmap(resulthex, si = 4, idistw = 2)
 }
 }
 \seealso{

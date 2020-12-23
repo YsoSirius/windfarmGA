@@ -4,16 +4,7 @@
 \alias{viewshed_par}
 \title{Calculate visibility in parallel}
 \usage{
-viewshed_par(
-  r,
-  shape,
-  turbine_locs,
-  h1 = 0,
-  h2 = 0,
-  plot = FALSE,
-  progress = "none",
-  ...
-)
+viewshed_par(r, shape, turbine_locs, h1 = 0, h2 = 0, plot = FALSE, ...)
 }
 \arguments{
 \item{r}{A DEM raster}
@@ -31,8 +22,30 @@ turbines}
 
 \item{...}{Additional arguments passed to the raster plot}
 }
+\value{
+A list of 5, containing the boolean result for every cell, the raster
+  cell points, a SimpleFeature Polygon of the given area and the DEM raster
+}
 \description{
 Calculate visibility for given points in a given area.
+}
+\examples{
+\dontrun{
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4496482, 4496482, 4499991, 4499991, 4496482),
+    c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+  crs = 3035
+))
+DEM_meter <- getDEM(Polygon1)
+
+turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
+res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
+                turbine_locs = turbloc[1:3,],
+                h1 = sample(c(20:40), 3, TRUE),
+                h2 = 50, plot = TRUE)
+}
 }
 \seealso{
 Other Viewshed Analysis: 

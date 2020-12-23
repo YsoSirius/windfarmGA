@@ -254,13 +254,11 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
 
 #' @title Calculate visibility in parallel
 #' @name viewshed_par
-#' @description Calculate visibility for given points in a given area.
 #'
-#' @inheritParams viewshed
-#' @inherit return viewshed
+#' @inherit viewshed
 #' 
 #' @family Viewshed Analysis
-viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, progress="none", ...){
+viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
   # h1=0; h2=0;
   if (!requireNamespace("parallel", quietly = TRUE)) {
@@ -295,7 +293,7 @@ viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, progres
   })
   parallel::clusterExport(cl, varlist = c("turbine_locs", "sample_xy",
                                           "viewTo", "cansee", "rasterprofile",
-                                          "r", "h1", "h2", "progress"))
+                                          "r", "h1", "h2"))
   
   res <- parallel::parApply(cl = cl, X = turbine_locs, 1, function(d){
     viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2, reso, plot, ...)

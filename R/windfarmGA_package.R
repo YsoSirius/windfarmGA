@@ -42,6 +42,7 @@
 #' @importFrom foreach foreach %dopar% 
 #' @importFrom methods as
 #' @importFrom Rcpp sourceCpp
+#' @importFrom magrittr %>% 
 #' 
 #' @useDynLib windfarmGA, .registration = TRUE
 #' @docType package

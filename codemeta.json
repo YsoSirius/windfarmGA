@@ -207,18 +207,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "magrittr",
-      "name": "magrittr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=magrittr"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "foreach",
       "name": "foreach",
       "provider": {
@@ -248,6 +236,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "magrittr",
+      "name": "magrittr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=magrittr"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
@@ -265,7 +265,7 @@
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
   "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
-  "fileSize": "4751.088KB",
+  "fileSize": "4647.866KB",
   "contIntegration": ["https://travis-ci.org/YsoSirius/windfarmGA", "https://ci.appveyor.com/project/YsoSirius/windfarmGA", "https://codecov.io/gh/YsoSirius/windfarmGA"],
   "relatedLink": ["https://ysosirius.github.io/windfarmGA/index.html", "https://CRAN.R-project.org/package=windfarmGA"],
   "developmentStatus": "https://www.tidyverse.org/lifecycle/#stable"
