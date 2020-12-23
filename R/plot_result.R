@@ -95,7 +95,6 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   
 
   ## Check Weibull Rasters
-  browser()
   if (missing(weibullsrc)) {
     weibullsrc <- NULL
     col2res <- "lightblue"
@@ -119,7 +118,8 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     col2res <- "transparent"
     alpha <- 0.9
     Erwartungswert <- raster::projectRaster(Erwartungswert, 
-                                            crs = st_crs(ProjLAEA))
+                                            crs = raster::crs(Polygon1))
+    
     # plot(Erwartungswert)
   }
 
@@ -254,7 +254,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           srtm_crop <- raster::crop(srtm, Polygon1)
           srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
-          Polygon1 <-  sf::st_transform(Polygon1, st_crs(ProjLAEA))
+          Polygon1 <-  sf::st_transform(Polygon1, st_crs(Projection))
           
           srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
                                       +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
@@ -474,7 +474,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           srtm_crop <- raster::crop(srtm, Polygon1)
           srtm_crop <- raster::mask(srtm_crop, Polygon1)
 
-          Polygon1 <-  sf::st_transform(Polygon1, st_crs(ProjLAEA))
+          Polygon1 <-  sf::st_transform(Polygon1, st_crs(Projection))
           srtm_crop <- raster::projectRaster(srtm_crop, crs = crs("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
       +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"))
 

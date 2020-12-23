@@ -1,6 +1,5 @@
 context("Test GA")
 library(sf)
-library(ggplot2)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 

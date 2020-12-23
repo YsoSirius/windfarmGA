@@ -65,7 +65,7 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
                        prop = propu, plotGrid = FALSE)
   } else {
     # Calculate a Grid with hexagonal grid cells
-    Grid <- hexa_area(Polygon1, resolu / 2)
+    Grid <- hexa_area(Polygon1, resolu)
   }
 
   ## Get max factor for alteration of coordination

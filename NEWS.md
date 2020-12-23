@@ -1,3 +1,14 @@
+# Updates 3.0.0
+- The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now Simple Features. A Shapefile Polygon can still be
+  passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
+- The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`. Therefore, the hexagon cellsize is no longer divided by 2
+  and is identical to the rectangular grid size.
+- The new dependency `elevatr` was added, because downloading SRTM data with the `raster::getData` didn't work anymore for me.
+- Several `dependencies` that are not essential for the algorithm were moved to `Suggests`.
+- Bugfix for the calculation of the visibility analysis. [#17](https://github.com/YsoSirius/windfarmGA/issues/17)
+- The `viewshed` parameter `h1` can now also be a numeric vector with different height offsets. [#18](https://github.com/YsoSirius/windfarmGA/issues/18)
+
+
 # Updates 2.3.0
 - Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:
   ```sh
@@ -75,7 +86,7 @@ being stored in the package as .rda file. I guess this never worked except on my
 - The Corine Land Cover .tif file is also stored in that repository, as the EEA webpage did restrict
 downloads sometimes, which resulted in an error.
 
-- The `plot_farm_3d` function has temporarily been removed from the package, as I was unhappy with the functionality, the installation of `rayshader` can be tedious and turbine labels can not be displayed very accurately.
+- The `plot_farm_3d` function has temporarily been removed from the package.
 
 - Most functions that required user-input previously used `readline` which is now changed to `readLines` as it allows to read from a file instead. This can be set via `options(windfarmGA.connection = file())`.
 

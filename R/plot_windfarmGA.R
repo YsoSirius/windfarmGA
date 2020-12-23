@@ -63,7 +63,7 @@ plot_windfarmGA <- function(result, Polygon1, GridMethod = "r",
   Polygon1 <- isSpatial(Polygon1, Projection)
   GridMethod <- toupper(GridMethod)
   if (GridMethod == "HEXAGONAL" | GridMethod == "H" | GridMethod == "HEXA") {
-    Grid <- hexa_area(shape = Polygon1, size = resol / 2, plotGrid = FALSE)
+    Grid <- hexa_area(shape = Polygon1, size = resol, plotGrid = FALSE)
   } else {
     Grid <- grid_area(shape = Polygon1, size = resol, prop = prop, plotGrid = FALSE)
   }

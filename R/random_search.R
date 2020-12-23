@@ -103,7 +103,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
                        plotGrid = FALSE)
   } else {
     # Calculate a Grid with hexagonal grid cells
-    Grid <- hexa_area(Polygon1, resolu / 2)
+    Grid <- hexa_area(Polygon1, resolu)
   }
 
   ## Get reference /turbine height and rotor radius of 1 individual.

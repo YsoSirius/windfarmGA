@@ -34,3 +34,4 @@ release_to_cran.R
 ^cran-comments\.md$
 ^_pkgdown\.yaml$
 ^_experiment$
+^revdep$

@@ -130,7 +130,7 @@ test_that("User Input", {
   maxDist <- as.numeric(resulthex[,"inputData"][[1]]['Rotorradius',]) * 2.2
   propu  <- as.numeric(resulthex[bestGARun,]$inputData["Percentage of Polygon",][1])
   winddata <- resulthex[bestGARun,]$inputWind
-  Grid <- hexa_area(polygon, size = resolu / 2)
+  Grid <- hexa_area(polygon, size = resolu)
   maxFac <- rotRad * (resolu / (rotRad * 2))
   winddata <- windata_format(winddata)
   probabDir <- winddata[[2]]

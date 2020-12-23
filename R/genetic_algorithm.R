@@ -369,7 +369,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   }
 
 
-  ## grid_area ###############
+  ## Make GRID ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
@@ -380,7 +380,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     grid_filtered <- Grid1[[2]]
   } else {
     # Calculate a Grid with hexagonal grid cells
-    Grid1 <- hexa_area(Polygon1, resol2 / 2)
+    Grid1 <- hexa_area(Polygon1, resol2)
     Grid <- Grid1[[1]]
     grid_filtered <- Grid1[[2]]
   }
@@ -456,7 +456,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     #                    stop("\nCould not download SRTM for the given Polygon.",
     #                         "Check the Projection of the Polygon.\n", call. = FALSE)
     #                  })
-    srtm <- tryCatch(elevatr::get_elev_raster(
+    srtm <- tryCatch(elevatr::get_elev_raster(verbose = verbose,
       locations = as(Polygon_wgs84, "Spatial"), z = 11),
       error = function(e) {
         stop("\nCould not download SRTM for the given Polygon.",

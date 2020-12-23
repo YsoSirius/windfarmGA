@@ -140,12 +140,6 @@ test_that("Test Plotting Functions", {
                                Grid = Grid[[2]]))
   expect_false(anyNA(plot_res))
   
-  projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
-                      "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-  plot_res <- quiet(plot_result(resultrect, best = 5, Polygon1 = sp_polygon, 
-                               Projection = projection))
-  expect_false(anyNA(plot_res))
-
   expect_error(quiet(plot_result(resultrect, Polygon1 = sp_polygon, plotEn = 3)))
 
   ## plot_windfarmGA ###############

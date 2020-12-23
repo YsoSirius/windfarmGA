@@ -130,7 +130,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod == "HEXAGON" | GridMethod == "H") {
     Grid <- hexa_area(shape = Polygon1, 
-                    size = (Rotor * fcrR) / 2, plotGrid = TRUE)
+                    size = (Rotor * fcrR), plotGrid = TRUE)
   } else {
     Grid <- grid_area(shape = Polygon1, size = (Rotor * fcrR), 
                        prop = Proportionality, plotGrid = TRUE)
