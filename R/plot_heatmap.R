@@ -16,9 +16,6 @@
 #' @return Invisibly returns a list with the result of the inverse distance
 #'   weighting and an aggregated dataframe of all grid cells
 #' @examples \donttest{
-#' ## Add some data examples from the package
-#' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-#'
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_heatmap(resulthex)
 #'
@@ -28,15 +25,10 @@
 #' plot_heatmap(resulthex, si = 20, idistw = 10)
 #' }
 plot_heatmap <- function(result, si = 2, idistw){
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("The package 'ggplot2' is required for this function, but it is not installed.\n",
-         "Please install it with `install.packages('ggplot2')`")
-  }
   if (!requireNamespace("gstat", quietly = TRUE)) {
     stop("The package 'gstat' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('gstat')`")
-  }
-  
+  }  
   parheat <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parheat))
   par(mfrow = c(1, 1))
@@ -63,20 +55,20 @@ plot_heatmap <- function(result, si = 2, idistw){
   bpenew <- do.call("rbind", bpenew)
   bpenew <- bpenew[-3]
   
-  polo <- sp::SpatialPoints(sp::coordinates(cbind(bpenew$X, bpenew$Y)))
+  polo <- st_as_sf(bpenew, coords=c("X","Y"))
   
   extra_margin <- 50
   x_range <-   range(bpenew$X)
   y_range <-   range(bpenew$Y)
-  grd <- expand.grid(x = seq(from = x_range[1] - extra_margin,
+  grd <- expand.grid(X = seq(from = x_range[1] - extra_margin,
                              to = x_range[2] + extra_margin, by = sizing),
-                     y = seq(from = y_range[1] - extra_margin,
+                     Y = seq(from = y_range[1] - extra_margin,
                              to = y_range[2] + extra_margin, by = sizing))
   
-  ## TODO - Need global variable for NSE-values (x,y,var1.pred,X,Y). How to avoid it?
   ## convert grid to SpatialPixel class
-  sp::coordinates(grd) <- ~ x + y
-  sp::gridded(grd) <- TRUE
+  grd <- st_as_sf(grd, coords=c("X","Y"))
+  grd <- st_make_grid(grd, offset = st_bbox(grd)[c("xmin", "ymin")],
+                          cellsize = st_distance(grd[1,], grd[2,])[[1]]) 
   
   if (missing(idistw)) {
     idistw <- sizingidw
@@ -90,21 +82,27 @@ plot_heatmap <- function(result, si = 2, idistw){
                                   idp = idistw))
   
   ## Plot heatmap
-  plot1 <- ggplot2::ggplot(data = idwout,
-                           mapping = ggplot2::aes(x = x, y = y)) +
-    ggplot2::geom_tile(data = idwout, ggplot2::aes(fill = var1.pred),
-                       show.legend = TRUE) +
-    ggplot2::labs(
-      title = "Inverse Distance Weighting for Grid Cell Selection") +
-    ggplot2::geom_point(data = bpenew, mapping = ggplot2::aes(x = X, y = Y),
-                        show.legend = TRUE, size = sqrt(sqrt(bpenew$Sum)),
-                        alpha = 0.6)
-  
-  plot1 <- plot1 +
-    ggplot2::scale_fill_gradient(low = "red", high = "green") +
-    ggplot2::coord_equal()
-  
-  print(plot1)
+  ## TODO - Need global variable for NSE-values (x,y,var1.pred,X,Y). How to avoid it?
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    warning("The package 'ggplot2' is required to plot the result, but it is not installed.\n",
+            "Please install it with `install.packages('ggplot2')`")
+  } else {
+    var1.pred=X=Y=x=y=NULL
+    
+    plot1 <- ggplot2::ggplot(data = idwout,
+                             mapping = ggplot2::aes(x = x, y = y)) +
+      ggplot2::geom_tile(data = idwout, ggplot2::aes(fill = var1.pred),
+                         show.legend = TRUE) +
+      ggplot2::labs(
+        title = "Inverse Distance Weighting for Grid Cell Selection") +
+      ggplot2::geom_point(data = bpenew, mapping = ggplot2::aes(x = X, y = Y),
+                          show.legend = TRUE, size = sqrt(sqrt(bpenew$Sum)),
+                          alpha = 0.6) +
+      ggplot2::scale_fill_gradient(low = "red", high = "green") +
+      ggplot2::coord_equal()
+    
+    print(plot1)
+  }
   
   invisible(list("idw" = idwout,
                  "GA_grids" = bpenew))

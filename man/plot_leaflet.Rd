@@ -29,31 +29,21 @@ Plot a resulting wind farm on a leaflet map.
 }
 \examples{
 \donttest{
-library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
-  sf::st_polygon(list(cbind(
-    c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
-  crs = 3035
-))
-load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-
 ## Plot the best wind farm on a leaflet map (ordered by energy values)
-plot_leaflet(result = resulthex, Polygon1 = Polygon1, which = 1)
+plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
 
 ## Plot the last wind farm (ordered by chronology).
-plot_leaflet(result = resulthex, Polygon1 = Polygon1, orderitems = FALSE,
+plot_leaflet(result = resulthex, Polygon1 = sp_polygon, orderitems = FALSE,
          which = 1)
          
-load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 ## Plot the best wind farm on a leaflet map with the rectangular Grid
-Grid <- grid_area(Polygon1, size = 150, prop = 0.4)
-plot_leaflet(result = resultrect, Polygon1 = Polygon1, which = 1, 
-         GridPol = Grid[[2]])
+Grid <- grid_area(sp_polygon, size = 150, prop = 0.4)
+plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1, 
+             GridPol = Grid[[2]])
 
 ## Plot the last wind farm with hexagonal Grid
-Grid <- hexa_area(Polygon1, size = 75)
-plot_leaflet(result = resulthex, Polygon1 = Polygon1, which = 1, 
-         GridPol = Grid[[2]])
+Grid <- hexa_area(sp_polygon, size = 75)
+plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1, 
+             GridPol = Grid[[2]])
 }
 }

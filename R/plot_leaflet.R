@@ -8,41 +8,32 @@
 #' or \code{\link{windfarmGA}}
 #' @param Polygon1 The Polygon for the wind farm area.
 #' @param which A numeric value, indicating which best individual to plot. The
-#'   default is 1 (the best resulting wind farm).
+#'   default is 1 (the best resulting wind farm)
 #' @param orderitems A logical value indicating whether the results should be
-#'   ordered by energy values (TRUE) or chronologically (FALSE).
-#' @param GridPol The output grid polygon of the \code{\link{grid_area}} or
-#'   \code{\link{hexa_area}} functions.
+#'   ordered by energy values (TRUE) or chronologically (FALSE)
+#' @param GridPol By default, the grid will be calculated based on the inputs 
+#'   and the \code{Polygon1}. But the outputs of the \code{\link{grid_area}} or
+#'   \code{\link{hexa_area}} functions can also be given
 #'
 #' @return Returns a leaflet map.
 #'
 #' @examples \donttest{
-#' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
-#'   sf::st_polygon(list(cbind(
-#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
-#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
-#'   crs = 3035
-#' ))
-#' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-#'
 #' ## Plot the best wind farm on a leaflet map (ordered by energy values)
-#' plot_leaflet(result = resulthex, Polygon1 = Polygon1, which = 1)
+#' plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
 #'
 #' ## Plot the last wind farm (ordered by chronology).
-#' plot_leaflet(result = resulthex, Polygon1 = Polygon1, orderitems = FALSE,
+#' plot_leaflet(result = resulthex, Polygon1 = sp_polygon, orderitems = FALSE,
 #'          which = 1)
 #'          
-#' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 #' ## Plot the best wind farm on a leaflet map with the rectangular Grid
-#' Grid <- grid_area(Polygon1, size = 150, prop = 0.4)
-#' plot_leaflet(result = resultrect, Polygon1 = Polygon1, which = 1, 
-#'          GridPol = Grid[[2]])
+#' Grid <- grid_area(sp_polygon, size = 150, prop = 0.4)
+#' plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1, 
+#'              GridPol = Grid[[2]])
 #'
 #' ## Plot the last wind farm with hexagonal Grid
-#' Grid <- hexa_area(Polygon1, size = 75)
-#' plot_leaflet(result = resulthex, Polygon1 = Polygon1, which = 1, 
-#'          GridPol = Grid[[2]])
+#' Grid <- hexa_area(sp_polygon, size = 75)
+#' plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1, 
+#'              GridPol = Grid[[2]])
 #' }
 plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
   if (!requireNamespace("leaflet", quietly = TRUE)) {
@@ -51,7 +42,15 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   }
   
   poly1 <- isSpatial(shape = Polygon1)
-
+  if (is.na(st_crs(poly1))) {
+    projection <- result[, "inputData"][[1]]["Projection", ][[1]]
+    projection <- tryCatch(as.numeric(projection),
+                           warning = function(e) projection,
+                           error = function(e) projection)
+    st_crs(poly1) <- st_crs(projection)
+  }
+  proj_pol <- st_crs(poly1)
+  
   if (which > nrow(result)) {
     cat(paste("Maximum possible number for 'which': ", nrow(result)))
     which <- nrow(result)
@@ -79,43 +78,33 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
 
   if (!missing(GridPol)) {
     if (is.na(st_crs(GridPol))) {
-      st_crs(GridPol) <- st_crs(result[, "inputData"][[1]]["Projection", ][[1]])
+      st_crs(GridPol) <- st_crs(proj_pol)
     }
-    GridPol <- st_transform(GridPol, st_crs(proj_longlat))
-    overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
-    opaycity <- 0.4
   } else {
-    overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines",  "Grid")
-    browser()
-    xses <- rep(poly1@bbox[1], 4); yses <- rep(poly1@bbox[4], 4)
-    Sr1 <- sp::SpatialPolygons(list(sp::Polygons(list(
-      sp::Polygon(cbind(xses, yses))), ID = "a")), pO = 1:1)
-    GridPol <- Sr1
-
-    if (!is.na(st_crs(poly1))) {
-      st_crs(GridPol) <- st_crs(poly1)
+    cellsize <- as.numeric(result[, "inputData"][[1]]["Resolution",][[1]])
+    if (result[, "inputData"][[1]]["Grid Method",][[1]] != "h") {
+      GridPol <- grid_area(poly1, cellsize, 
+                           prop = as.numeric(result[, "inputData"][[1]]["Percentage of Polygon",][[1]]),
+                           plotGrid = FALSE)[[2]]
     } else {
-      st_crs(GridPol) <- st_crs(result[, "inputData"][[1]]["Projection", ][[1]])
+      GridPol <- hexa_area(poly1, cellsize,  plotGrid = FALSE)[[2]]
     }
-    
-    GridPol <- st_transform(GridPol, st_crs(proj_longlat))
-    opaycity <- 0
   }
-
-  if (is.na(st_crs(poly1))) {
-    st_crs(poly1) <- st_crs(result[, "inputData"][[1]]["Projection", ][[1]])
-  }
-  proj_pol <- st_crs(poly1)
+  GridPol <- st_transform(GridPol, st_crs(proj_longlat))
+  overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
+  opaycity <- 0.4
+  
   result <- result[, "bestPaEn"][[which]]
-  xysp <- sp::SpatialPoints(cbind(result[, "X"],
-                                  result[, "Y"]), proj4string = proj_pol)
+  xysp <- st_as_sf(data.frame(result), coords=c("X","Y"))
+  st_crs(xysp) <- proj_pol
   resultxy <- st_transform(xysp, proj_longlat)
   resultxy <- st_coordinates(resultxy)
 
   poly1 <- st_transform(poly1, proj_longlat)
 
-  title_locat <- c(mean(raster::extent(poly1)[1:2]),
-                   max(raster::extent(poly1)[4]))
+  bbx <- st_bbox(poly1)
+  title_locat <- c(mean(bbx[c(1,3)]),
+                   max(bbx[c(2,4)]))
 
   col_cir <- grDevices::colorRampPalette(c("green", "yellow",
                                            "red", "darkred"))
@@ -171,7 +160,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     ## Add the Genetic Algorithm Space
     addPolygons(data = GridPol, group = "Grid", weight = 1,
                 opacity = opaycity,
-                fill = TRUE, fillOpacity = opaycity) %>%
+                fill = TRUE, fillOpacity = 0) %>%
 
     ## Create Circles in Map
     addCircleMarkers(lng = result$X, lat = result$Y,

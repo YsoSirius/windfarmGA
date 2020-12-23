@@ -254,49 +254,57 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
 
 
 ## Not ready
-# viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
-#   # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
-#   # h1=0; h2=0;
-#   
-#   if (class(shape)[1] == "sf") {
-#     shape <- as(shape, "Spatial")  
-#   }
-#   if (class(turbine_locs) == "SpatialPoints") {
-#     turbine_locs = sp::coordinates(turbine_locs)
-#   }
-#   
-#   sample_POI <- sp::spsample(shape, n = raster::ncell(r), type = "regular")
-#   sample_xy <- sp::coordinates(sample_POI)
-#   
-#   
-#   library(parallel)
-#   nCore <- parallel::detectCores()
-#   cl <- parallel::makeCluster(nCore)
-#   parallel::clusterEvalQ(cl, {
-#     library(plyr)
-#     library(raster)
-#   })
-#   parallel::clusterExport(cl, varlist = c("turbine_locs", "sample_xy", 
-#                                 "viewTo", "cansee", "rasterprofile", 
-#                                 "r", "h1", "h2", "progress"))
-#   
-#   res <- parallel::parApply(cl = cl, X = turbine_locs, 1, function(d){
-#     viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2, progress)
-#   })
-#   res <- t(res)
-#   
-#   parallel::stopCluster(cl)
-#   
-#   if (is.matrix(res)) {
-#     res <- res[1:nrow(res),1:nrow(sample_xy)]
-#   }
-#   if (is.logical(res)) {
-#     res[1:nrow(sample_xy)]
-#   }
-#   
-#   return(list("Result"=res, "Raster_POI" = sample_xy, 
-#               "Area" = sf::st_as_sf(shape), "DEM" = r, "Turbines" = turbine_locs))
-# }
+viewshed_par <- function(r, shape, turbine_locs, h1=0, h2=0, progress="none"){
+  # r = DEM_meter; shape=shape_meter; turbine_locs = turbloc
+  # h1=0; h2=0;
+  
+  if (inherits(shape, "Spatial")) {
+    shape <- sf::st_as_sf(shape)
+  }
+  if (inherits(turbine_locs, "Spatial")) {
+    turbine_locs <- sf::st_as_sf(turbine_locs)
+  }
+  if (inherits(turbine_locs, "sf") || inherits(turbine_locs, "sfc")) {
+    turbine_locs <- sf::st_coordinates(turbine_locs)
+  }
+  
+  mw <- methods::as(r, "SpatialPixelsDataFrame")
+  mw <- methods::as(mw, "SpatialPolygons")
+  sample_xy <- sf::st_coordinates(sf::st_centroid(sf::st_as_sf(mw)))
+  rownames(sample_xy) <- NULL
+  
+  ## Get minimal Raster Resolution
+  reso <- min(raster::res(r))
+  
+  
+  library(parallel)
+  nCore <- parallel::detectCores()
+  cl <- parallel::makeCluster(nCore)
+  parallel::clusterEvalQ(cl, {
+    library(plyr)
+    library(raster)
+  })
+  parallel::clusterExport(cl, varlist = c("turbine_locs", "sample_xy",
+                                          "viewTo", "cansee", "rasterprofile",
+                                          "r", "h1", "h2", "progress"))
+  
+  res <- parallel::parApply(cl = cl, X = turbine_locs, 1, function(d){
+    viewTo(r, xy1 = d, xy2 = sample_xy, h1, h2, reso, plot, ...)
+  })
+  res <- t(res)
+  
+  parallel::stopCluster(cl)
+  
+  if (is.matrix(res)) {
+    res <- res[1:nrow(res),1:nrow(sample_xy)]
+  }
+  if (is.logical(res)) {
+    res[1:nrow(sample_xy)]
+  }
+  
+  return(list("Result"=res, "Raster_POI" = sample_xy,
+              "Area" = shape, "DEM" = r, "Turbines" = turbine_locs))
+}
 # res <- viewshed_par(r = DEM_meter, shape=shape_meter, turbine_locs = turbloc,  h1=1.8, h2=50)
 
 

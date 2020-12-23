@@ -99,8 +99,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid <- grid_area(shape = Polygon1, size = resolu, prop = propu, 
-                       plotGrid = FALSE)
+    Grid <- grid_area(shape = Polygon1, size = resolu, prop = propu)
   } else {
     # Calculate a Grid with hexagonal grid cells
     Grid <- hexa_area(Polygon1, resolu)
@@ -157,6 +156,7 @@ random_search <- function(result, Polygon1, n, best, Plot, GridMethod, max_dist 
       coordsj <- do.call("rbind", coordLayTmp)
 
       ## Check if turbines are not colliding #####################
+      browser()
       pointsDistBl <- sp::SpatialPoints(coordsj)
       pointsDist <- sp::spDists(sp::SpatialPoints(coordsj))
       distMin <- pointsDist[which(pointsDist < maxDist & pointsDist != 0)]

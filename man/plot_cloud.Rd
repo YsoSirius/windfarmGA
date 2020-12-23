@@ -22,9 +22,6 @@ Plot the fitness, efficiency and energy outputs of all
 }
 \examples{
 \donttest{
-## Add some data examples from the package
-load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-
 ## Plot the results of a hexagonal grid optimization
 plcdf <- plot_cloud(resulthex, TRUE)
 }

@@ -19,9 +19,6 @@ Plot the evolution of fitness values and the change in the min,
 }
 \examples{
 \donttest{
-## Add some data examples from the package
-load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-
 ## Plot the results of a hexagonal grid optimization
 plot_fitness_evolution(resulthex, 0.1)
 }

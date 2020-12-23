@@ -109,9 +109,18 @@ usethis::use_data(sp_polygon, overwrite = TRUE)
 
 winddat <- data.frame(ws = 12, wd = 0)
 # plotWindrose(winddat, "ws", "wd")
-resultrect <- genAlgo(Polygon1 = sp_polygon,
-                      n = 12, iteration = 200,
-                      vdirspe = winddat,
-                      Rotor = 30,
-                      RotorHeight = 100)
+resultrect <- genetic_algorithm(Polygon1 = sp_polygon,
+                                n = 12, iteration = 200,
+                                vdirspe = winddat,
+                                Rotor = 30, RotorHeight = 100)
+# plot_windfarmGA(resultrect, sp_polygon)
 usethis::use_data(resultrect, overwrite = TRUE)
+
+
+resulthex <- genetic_algorithm(Polygon1 = sp_polygon, GridMethod ="h", 
+                               n=12, iteration=10, 
+                               vdirspe = winddat,
+                               Rotor=30, RotorHeight = 100)
+# plot_windfarmGA(resulthex, sp_polygon, GridMethod = "h")
+usethis::use_data(resulthex, overwrite = TRUE)
+

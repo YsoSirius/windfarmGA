@@ -136,6 +136,7 @@ random_search_single <- function(result, Polygon1, n, Plot, GridMethod, max_dist
     # points(coordLayRnd, col="red", pch=20)
 
     ## Check if turbines are colliding #####################
+    browser()
     pointsDistBl <- sp::SpatialPoints(coordLayRnd)
     pointsDist <- sp::spDists(sp::SpatialPoints(coordLayRnd))
     distMin <- pointsDist[which(pointsDist < maxDist & pointsDist != 0)]

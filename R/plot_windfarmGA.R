@@ -37,9 +37,6 @@
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
 #'   crs = 3035
 #' ))
-#' ## Add some data examples from the package
-#' load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-#' load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
 #'
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_windfarmGA(resulthex, GridMethod = "h", Polygon1, whichPl = "all", best = 1, plotEn = 1)

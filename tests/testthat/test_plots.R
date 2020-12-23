@@ -1,6 +1,5 @@
 context("Plots")
 library(testthat)
-# library(windfarmGA)
 library(raster)
 library(sf)
 
@@ -153,7 +152,6 @@ test_that("Test Plotting Functions", {
                             best = 1, plotEn = 1))
   expect_true(is.null(respwf))
   
-  load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
@@ -206,38 +204,53 @@ test_that("Test Plotting Functions", {
   
   
   ## plot_leaflet #######################
-  pl <- expect_warning(leafPlot(result = resultrect, Polygon1 = sp_polygon, which = 1))
-  expect_true(is.recursive(pl)); rm(pl)
+  
+  data.in <- data.frame(ws = 12, wd = 0)
+  result <- genetic_algorithm(Polygon1 = sp_polygon,
+                              n = 25,
+                              vdirspe = data.in,
+                              Rotor = 30,
+                              RotorHeight = 100)
+  ## Plot the best wind farm on a leaflet map (ordered by energy values)
+  p <- plot_leaflet(result = result, Polygon1 = sp_polygon, which = 1)
+  expect_is(p, "leaflet")
+  
+  ## Plot the best wind farm on a leaflet map (ordered by energy values)
+  p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
+  expect_is(p, "leaflet")
+  
+  ## Plot the last wind farm (ordered by chronology).
+  p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, orderitems = FALSE,
+               which = 1)
+  expect_is(p, "leaflet")
+  
+  ## Plot the best wind farm on a leaflet map with the rectangular Grid
+  Grid <- grid_area(sp_polygon, size = 150, prop = 0.4)
+  p <- plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1, 
+               GridPol = Grid[[2]])
+  expect_is(p, "leaflet")
+  
+  ## Plot the last wind farm with hexagonal Grid
+  Grid <- hexa_area(sp_polygon, size = 75)
+  p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1, 
+               GridPol = Grid[[2]])
+  expect_is(p, "leaflet")
+  
+  p <- expect_warning(leafPlot(result = resultrect, Polygon1 = sp_polygon, which = 1))
+  expect_is(p, "leaflet")
   
   gr <- expect_warning(GridFilter(st_as_sf(sp_polygon), resol = 220))
   spnop <- gr[[2]]
   st_crs(spnop) <- NA
-  pl <- leafPlot(result = resultrect, Polygon1 = sp_polygon, GridPol = spnop)
-  expect_true(is.recursive(pl));   rm(pl)
+  p <- plot_leaflet(result = resultrect, Polygon1 = sp_polygon, GridPol = spnop)
+  expect_is(p, "leaflet")
   
-  pl <- expect_warning(leafPlot(result = resulthex, Polygon1 = Polygon1, which = 1))
-  expect_true(is.recursive(pl));rm(pl)
-  pl <- expect_warning(leafPlot(result = resulthex, Polygon1 = Polygon1, which = 1, orderitems = FALSE))
-  expect_true(is.recursive(pl));rm(pl)
-  pl <- expect_warning(leafPlot(result = resulthex, Polygon1 = Polygon1, which = 1000, orderitems = FALSE))
-  expect_true(is.recursive(pl));rm(pl)
-  # gr <- expect_warning(GridFilter(polygon, resol = 250))
-  # pl <- expect_warning(leafPlot(result = resulthex, Polygon1 = Polygon1, GridPol = gr[[2]]))
-  # expect_true(is.recursive(pl));rm(pl)
-
-  # sp_polygon <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-  #                             c(4499991, 2669343), c(4499991, 2668272)))
-  # sp_polygon <- Polygons(list(sp_polygon), 1)
-  # sp_polygon <- SpatialPolygons(list(sp_polygon))
-  # projection <- paste("+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000",
-  #                     "+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-  # proj4string(sp_polygon) <- CRS(projection)
-  # winddat <- data.frame(ws = 12, wd = 0)
-  # resultrect <- genAlgo(Polygon1 = sp_polygon,
-  #                       n = 12, iteration = 60,
-  #                       vdirspe = winddat,
-  #                       Rotor = 30,
-  #                       RotorHeight = 100)
+  p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1, orderitems = FALSE)
+  expect_is(p, "leaflet")
+  
+  p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1000, orderitems = FALSE)
+  expect_is(p, "leaflet")
+  
   
   ## No Projection
   poly_nocrs <- sf::st_as_sf(sf::st_sfc(
@@ -246,13 +259,13 @@ test_that("Test Plotting Functions", {
       c(2668272, 2669343, 2669343, 2668272, 2668272))))
   ))
   
-  pl <- plot_leaflet(result = resultrect, Polygon1 = poly_nocrs)
-  expect_true(is.recursive(pl));rm(pl)
+  p <- plot_leaflet(result = resultrect, Polygon1 = poly_nocrs)
+  expect_is(p, "leaflet")
+  
   expect_error(genetic_algorithm(Polygon1 = poly_nocrs,
                        n = 12, iteration = 60,
                        vdirspe = winddat,
                        Rotor = 30,
                        RotorHeight = 100))
-  
   
 })

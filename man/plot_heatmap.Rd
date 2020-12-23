@@ -26,9 +26,6 @@ Plot a heatmap of selected grid cells. Green grid cells
 }
 \examples{
 \donttest{
-## Add some data examples from the package
-load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-
 ## Plot the results of a hexagonal grid optimization
 plot_heatmap(resulthex)
 

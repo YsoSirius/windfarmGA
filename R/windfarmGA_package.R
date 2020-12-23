@@ -27,7 +27,7 @@
 #'   cellStats terrain resample overlay cellFromXY ncell projection values wkt
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
 #'   st_make_grid st_intersection st_area sf_extSoftVersion st_centroid st_bbox
-#'   st_cast st_combine `st_crs<-`
+#'   st_cast st_combine `st_crs<-` st_distance
 #' @importFrom elevatr get_elev_raster
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics plot.new text plot par points abline title lines grid

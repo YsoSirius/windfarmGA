@@ -111,7 +111,6 @@ test_that("User Input", {
   
   ## random_search_single - Hexagons ##################
   rm(list = ls())
-  load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
   polygon <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
