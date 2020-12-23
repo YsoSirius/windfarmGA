@@ -250,11 +250,12 @@ Rotor <- 20
 fcrR <- 9
 Grid <- grid_area(shape = Polygon1, size = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 
-result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = Rotor, fcrR = fcrR, iteration = 10,
-                     vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
-                     Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-                     elitism = TRUE, nelit = 7, trimForce = TRUE,
-                     referenceHeight = 50, RotorHeight = 100)
+result <- genetic_algorithm(Polygon1 = sp_polygon, 
+                            n = 20,
+                            Rotor = Rotor, fcrR = fcrR, 
+                            iteration = 50, 
+                            vdirspe = wind_df,
+                            referenceHeight = 50, RotorHeight = 100)
 
 # The following function will execute all plotting function further below:
 plot_windfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
@@ -266,5 +267,5 @@ plot_parkfitness(result, spar = 0.1)
 plot_fitness_evolution(result)
 plot_cloud(result, pl = TRUE)
 plot_heatmap(result = result, si = 5)
-plot_leaflet(result = result, Polygon1 = polygon, which = 1)
+plot_leaflet(result = result, Polygon1 = Polygon1, which = 1)
 ```

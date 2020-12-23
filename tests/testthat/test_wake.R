@@ -86,15 +86,15 @@ test_that("Test Wake Functions", {
   ## Compare with cpp functions
 
   
-  ## Test VekWinkelCalc Function --------------
+  ## Test get_dist_angles Function --------------
   ###########################################
   distanz <- 100000
   colnms <- c("Ay","Cx","Cy","Laenge_C","Laenge_B","Laenge_A","alpha","betha","gamma")
   ## Evaluate and plot for every turbine all other potentially influencing turbines
   potInfTur <- list()
   for (i in 1:(length(t[,1]))) {
-    potInfTur[[i]] <- expect_warning(VekWinkelCalc(t = t, o = i, wkl = wnkl,
-                                    distanz = distanz, polYgon = polYgon, plotAngles = FALSE))
+    potInfTur[[i]] <- get_dist_angles(t = t, o = i, wkl = wnkl,
+                                    distanz = distanz, polYgon = polYgon, plotAngles = FALSE)
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
   dr <- do.call("rbind", potInfTur)
@@ -107,9 +107,9 @@ test_that("Test Wake Functions", {
   ## With Plotting
   potInfTur_pl <- list()
   for (i in 1:(length(t[,1]))) {
-    potInfTur_pl[[i]] <- expect_warning(VekWinkelCalc(t = t, o = i, wkl = wnkl,
+    potInfTur_pl[[i]] <- get_dist_angles(t = t, o = i, wkl = wnkl,
                                     distanz = distanz, polYgon = polYgon, 
-                                    plotAngles = TRUE))
+                                    plotAngles = TRUE)
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
   expect_true(identical(potInfTur, potInfTur_pl))
@@ -122,9 +122,9 @@ test_that("Test Wake Functions", {
 
   
   
-  ## Test InfluPoints Function --------------
+  ## Test turbine_influences Function --------------
   ###########################################
-  resInfluPoi <- expect_warning(InfluPoints(t, wnkl, dist, polYgon, dirct))
+  resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_is(resInfluPoi, "list")
   expect_output(str(resInfluPoi), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
@@ -136,7 +136,7 @@ test_that("Test Wake Functions", {
   wnkl <- 50
   t <- as.matrix(cbind(x = runif(10, 0, raster::extent(polYgon)[2]),
                        y = runif(10, 0, raster::extent(polYgon)[4])))
-  resInfluPoiWin <- expect_warning(InfluPoints(t, wnkl, dist, polYgon, dirct))
+  resInfluPoiWin <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoiWin), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoiWin, is.na))))
   df1 <- do.call("rbind", resInfluPoiWin)
@@ -148,7 +148,7 @@ test_that("Test Wake Functions", {
   ## More Points and bigger Angle
   t <- as.matrix(cbind(x = runif(20, 0, raster::extent(polYgon)[2]),
                        y = runif(20, 0, raster::extent(polYgon)[4])))
-  resInfluPoi <- expect_warning(InfluPoints(t, wnkl, dist, polYgon, dirct))
+  resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoi), "List of 20")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df1 <- do.call("rbind", resInfluPoi)
@@ -158,7 +158,7 @@ test_that("Test Wake Functions", {
   
   ## Same Points & Smaller Angle
   wnkl <- 10
-  resInfluPoi <- expect_warning(InfluPoints(t, wnkl, dist, polYgon, dirct))
+  resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoi), "List of 20")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df2 <- do.call("rbind", resInfluPoi)
@@ -171,7 +171,7 @@ test_that("Test Wake Functions", {
   expect_true(nrow(df1) > nrow(df2))
   
   
-  ## Test calculateEn Function ----------------------------
+  ## Test calculate_energy Function ----------------------------
   ###########################################
   ## Initialize a dummy wind speed raster with value 1
   windraster <- expect_warning(raster::rasterize(polYgon, raster::raster(
@@ -184,12 +184,12 @@ test_that("Test Wake Functions", {
   
   ## Assign the rotor radius and a factor of the radius for grid spacing.
   Rotor <- 50; fcrR <- 3
-  resGrid <- expect_warning(GridFilter(shape = polYgon, resol = Rotor * fcrR, prop = 1,
-                        plotGrid = FALSE))
+  resGrid <- grid_area(shape = polYgon, size = Rotor * fcrR, prop = 1,
+                        plotGrid = FALSE)
   
   ## Create an initial population with the indexed Grid, 15 turbines and
   ## 100 individuals.
-  resStartGA <- expect_warning(StartGA(Grid = resGrid[[1]], n = 15, nStart = 100))
+  resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
   # expect_true(all(sapply(resStartGA, class) == "matrix"))
   expect_true(all(sapply(resStartGA, ncol) == 4))
   expect_true(all(sapply(resStartGA, nrow) == 15 ))
@@ -198,11 +198,11 @@ test_that("Test Wake Functions", {
   
   ## Calculate the expected energy output of the first individual of the
   ## population.
-  resCalcEn <- expect_warning(calculateEn(sel = resStartGA[[1]], referenceHeight = 50,
+  resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                            RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
                            distanz = 100000, resol = 200,dirSpeed = data.in,
                            RotorR = 50, polygon1 = polYgon, 
-                           topograp = FALSE, weibull = FALSE))
+                           topograp = FALSE, weibull = FALSE)
   
   expect_output(str(resCalcEn), "List of 1")
   # expect_true(class(resCalcEn[[1]]) == "matrix")
@@ -214,11 +214,11 @@ test_that("Test Wake Functions", {
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
   expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
   
-  resCalcEn <- expect_warning(calculateEn(sel = resStartGA[[1]], referenceHeight = 50,
+  resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                            RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
                            distanz = 100000, resol = 200,dirSpeed = data.in,
                            RotorR = 50, polygon1 = polYgon, 
-                           topograp = FALSE, weibull = FALSE, plotit = TRUE))
+                           topograp = FALSE, weibull = FALSE, plotit = TRUE)
   
   expect_output(str(resCalcEn), "List of 1")
   # expect_true(class(resCalcEn[[1]]) == "matrix")
@@ -226,11 +226,11 @@ test_that("Test Wake Functions", {
   
   ## 2 Wind Directions 
   data.in <- as.data.frame(cbind(ws=c(12,12),wd=c(0,30)))
-  resCalcEn <- expect_warning(calculateEn(sel=resStartGA[[1]],referenceHeight= 50,
+  resCalcEn <- calculate_energy(sel=resStartGA[[1]],referenceHeight= 50,
                            RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
                            distanz = 100000, resol = 200,dirSpeed = data.in,
                            RotorR = 50, polygon1 = polYgon, topograp = FALSE, 
-                           weibull = FALSE))
+                           weibull = FALSE)
   
   expect_output(str(resCalcEn), "List of 2")
   # expect_true(class(resCalcEn[[1]]) == "matrix")
@@ -248,10 +248,10 @@ test_that("Test Wake Functions", {
   #   ncol = 180, nrow = 180), field = 1)
   # data.in <- data.frame(ws = c(12,12), wd = c(0,90))
   # Rotor <- 50; fcrR <- 3
-  # resGrid <- GridFilter(shape = hole_shape, resol = Rotor * fcrR, prop = 1,
+  # resGrid <- grid_area(shape = hole_shape, size = Rotor * fcrR, prop = 1,
   #                       plotGrid = FALSE)
-  # resStartGA <- StartGA(Grid = resGrid[[1]], n = 15, nStart = 100)
-  # resCalcEn <- calculateEn(sel = resStartGA[[1]], referenceHeight = 50,
+  # resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
+  # resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
   #                          RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
   #                          distanz = 100000, resol = 200,dirSpeed = data.in,
   #                          RotorR = 50, polygon1 = hole_shape, 
