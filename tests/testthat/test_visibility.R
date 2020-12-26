@@ -1,6 +1,5 @@
 context("Visibility Tests")
-library(testthat)
-# library(windfarmGA)
+# library(testthat)
 library(raster)
 library(sf)
 
@@ -28,12 +27,11 @@ test_that("Test Viewshed Functions", {
   expect_true(is.null(DEM_noclip[[2]]))
   
   ## getISO3 ###############
-  points <- cbind(c(4488182.26267016, 4488852.91748256),
-                  c(2667398.93118627, 2667398.93118627))
+  points <- cbind(4488182.262, 2667398.931)
   res <- getISO3(pp = points, crs_pp = 3035)
-  expect_true(res == "AUT")
+  expect_true(res[[1]] == "AUT")
   expect_true(nrow(res) == 1)
-  expect_true(ncol(res) == 1)
+  expect_true(nrow(res) == 1)
   expect_is(res, "data.frame")
   
   points <- as.data.frame(points)
@@ -41,16 +39,16 @@ test_that("Test Viewshed Functions", {
   points <- st_as_sf(points, coords = c("x","y"))
   st_crs(points) <- 3035
   ressf <- getISO3(pp = points, crs_pp = 3035)
-  expect_true(ressf == "AUT")
+  expect_true(ressf[[1]] == "AUT")
   expect_true(nrow(ressf) == 1)
-  expect_true(ncol(ressf) == 1)
+  expect_true(nrow(ressf) == 1)
   expect_is(ressf, "data.frame")
 
   ressf <- getISO3(pp = points, crs_pp = 3035, col = c("ABBREV", "ADMIN", "LON", "LAT"))
   expect_true("ADMIN" %in% colnames(ressf))
   expect_true(ressf$ADMIN == "Austria")
   expect_true(nrow(ressf) == 1)
-  expect_true(ncol(ressf) == 4)
+  expect_true(ncol(ressf) == 5)
   expect_is(ressf, "data.frame")
   
   

@@ -497,18 +497,15 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' getISO3(pp = points, crs_pp = 3035)
 #' }
 getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low", 
-                    coords = c("LONG", "LAT"), ask=FALSE) {
+                    coords = c("LONG", "LAT"), ask = FALSE) {
   # pp= points; col = "ISO3"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT")
-  
   if ("?" %in% col) {ask <- TRUE}
-  
   if (requireNamespace("rworldmap", quietly = TRUE)) {
     countriesSP <- rworldmap::getMap(resolution = resol)
   } else {
     stop("The package 'rworldmap' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('rworldmap')`")
   }
-  
   if (ask == TRUE) {
     print(sort(names(countriesSP)))
     cat("Enter an ISO3 code: ")
@@ -525,15 +522,14 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   
   pp <- as.data.frame(pp, stringsAsFactor = FALSE)
   colnames(pp) <- coords
-  
   pp <- st_as_sf(pp, coords = coords, crs = crs_pp)
   pp <- st_transform(pp, crs = st_crs(countriesSP))
   
   # use 'st_intersection' to get the Polygons intersecting each point 
   worldmap_values <- suppressWarnings(st_intersection(pp, st_as_sf(countriesSP)))
   
-  # return desired columns of each country
-  unique(worldmap_values[, col, drop = FALSE][[1]])
+  # return desired column of each country
+  worldmap_values[, col]
 }
 
 

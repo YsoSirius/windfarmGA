@@ -49,11 +49,11 @@ test_that("Test windfarmGA", {
       c(0, 2000, 2000, 0, 0)))),
     crs = 3857
   ))
-  resultSP <- windfarmGA(Polygon1 = Polygon1,Projection = 3857,
+  resultSP <- windfarmGA(Polygon1 = Polygon1, Projection = 3857,
                          n = 20, iteration = 5,
                          vdirspe = data.in, GridMethod = "h",
                          selstate = "FIX", crossPart1 = "EQU",
-                         Rotor = 80, Proportionality = 1,
+                         Rotor = 30, Proportionality = 1,
                          RotorHeight = 100, plotit = TRUE)
   expect_true(nrow(resultSP) == 5)
   expect_is(resultSP, "matrix")
