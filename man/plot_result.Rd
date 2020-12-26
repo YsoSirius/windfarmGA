@@ -10,7 +10,7 @@ plot_result(
   best = 3,
   plotEn = 1,
   topographie = FALSE,
-  Grid,
+  Grid = TRUE,
   sourceCCLRoughness,
   sourceCCL,
   weibullsrc
@@ -33,8 +33,7 @@ and \code{2} plots the best efficiency solutions}
 \item{topographie}{A logical value, indicating whether terrain effects should
 be considered and plotted or not}
 
-\item{Grid}{The grid as Simple Feature object, which is obtained from
-\code{\link{grid_area}} or \code{\link{hexa_area}}}
+\item{Grid}{If \code{TRUE} (default) the grid will be added to the plot.}
 
 \item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
 as .csv file. Only required when terrain effect model is activated. As
@@ -73,14 +72,10 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Plot the results of a hexagonal grid optimization
-Grid <- hexa_area(Polygon1, size = 75, FALSE)
-plot_result(resulthex, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
-           Grid = Grid[[2]])
+plot_result(resulthex, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
 
 ## Plot the results of a rectangular grid optimization
-Grid <- grid_area(Polygon1, size = 150, 1, FALSE)
-plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE,
-           Grid = Grid[[2]])
+plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
 }
 }
 \seealso{
