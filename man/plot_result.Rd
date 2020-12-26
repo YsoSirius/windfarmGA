@@ -11,8 +11,8 @@ plot_result(
   plotEn = 1,
   topographie = FALSE,
   Grid = TRUE,
-  sourceCCLRoughness,
-  sourceCCL,
+  sourceCCLRoughness = NULL,
+  sourceCCL = NULL,
   weibullsrc
 )
 }
@@ -33,7 +33,8 @@ and \code{2} plots the best efficiency solutions}
 \item{topographie}{A logical value, indicating whether terrain effects should
 be considered and plotted or not}
 
-\item{Grid}{If \code{TRUE} (default) the grid will be added to the plot.}
+\item{Grid}{If \code{TRUE} (default) the used grid will be added to the plot.
+You can also pass another Simple Feature object}
 
 \item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
 as .csv file. Only required when terrain effect model is activated. As

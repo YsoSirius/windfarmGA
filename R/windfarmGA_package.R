@@ -31,7 +31,7 @@
 #' @importFrom elevatr get_elev_raster
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics plot.new text plot par points abline title lines grid
-#'   layout axis legend mtext
+#'   layout axis legend mtext boxplot
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom calibrate textxy
 #' @importFrom stats runif smooth.spline sd aggregate median dist complete.cases

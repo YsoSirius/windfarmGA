@@ -186,7 +186,8 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #'   and \code{2} plots the best efficiency solutions
 #' @param topographie A logical value, indicating whether terrain effects should
 #'   be considered and plotted or not
-#' @param Grid If \code{TRUE} (default) the grid will be added to the plot.
+#' @param Grid If \code{TRUE} (default) the used grid will be added to the plot.
+#'   You can also pass another Simple Feature object
 #'
 #' @family Plotting Functions
 #' @return Returns a data.frame of the best (energy/efficiency) individual
@@ -210,7 +211,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #'}
 plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
                         topographie = FALSE, Grid = TRUE,
-                        sourceCCLRoughness, sourceCCL,
+                        sourceCCLRoughness = NULL, sourceCCL = NULL,
                         weibullsrc) {
   ## Check plotEn, set par() and color palette ############## 
   if (!plotEn %in% c(1,2)) {
@@ -241,14 +242,6 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     }
   }
   Polygon1 <- sf::st_transform(Polygon1, st_crs(Projection))
-  
-  ## Check Corine (CCL) arguments #########  
-  if (missing(sourceCCL)) {
-    sourceCCL <- NULL
-  }
-  if (missing(sourceCCLRoughness)) {
-    sourceCCLRoughness <- NULL
-  }
   
   ## Check Weibull Rasters #########
   if (missing(weibullsrc)) {
@@ -343,192 +336,116 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   }
   
   
-  ## Plot Best Energy Windfarm ##########
+  ## Set Argments for Best Energy/Efficiency Windfarm ##########
   if (plotEn == 1) {
-    ## Get Energy Output for every windfarm ###########
-    energy_order <- unlist(lapply(result[, 2], function(x) x[,"EnergyOverall"][[1]]))
-    energy_order <- order(energy_order, decreasing = FALSE)
-    
-    ## Order List by energy Output #########
-    result <- result[, 2][energy_order]
-    ledup <- length(result)
-
-    ## Check for Duplicates #########
-    rectid <- lapply(result, function(x) x[, 'Rect_ID'])
-    rectidt <- !duplicated(rectid)
-    result <- result[rectidt]
-    ndif <- length(result)
-    cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", 
-              (ledup - ndif)))
-    
-    ## Check for enough results #########
-    if (ndif < best) {
-      cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
-      best <- trunc(ndif / 2)
-    }
-    if (best == 0) best = 1
-    
-    ## Pick the `best` results to plot and Loop #########
-    result <- result[(length(result) - best + 1):(length(result))]
-    for (i in (1:length(result))) {
-      ## Get result ###########
-      EnergyBest <- data.frame(result[[i]])
-      EnergyBest$EnergyOverall <- round(EnergyBest[, 'EnergyOverall'], 2)
-      EnergyBest$EfficAllDir <- round(EnergyBest[, 'EfficAllDir'], 2)
-      
-      ## Color code locations #########
-      br <- length(levels(factor(EnergyBest[, 'AbschGesamt'])))
-      if (br > 1) {
-        Col <- rbPal1(br)[as.numeric(cut(as.numeric(
-          EnergyBest[, 'AbschGesamt']), breaks = br))]
-      } else {
-        Col <- "green"
-      }
-      
-      ## Plot Best Windfarm  ###########
-      cat(paste("\nPlot ", (best + 1) - i, " Best Energy Solution:\n"))
-      par(mfrow = c(1, 1), ask = FALSE)
-      plot(Polygon1, col = col2res, 
-           main = paste((best + 1) - i, "Best Energy Windfarm", "\n","Energy Output",
-                        EnergyBest$EnergyOverall[[1]], "kW", "\n", "Efficiency:",
-                        EnergyBest$EfficAllDir[[1]], "%"), cex.main = 0.8)
-      if (best > 1) {
-        if (i > 1) {
-          par(ask = TRUE)
-        }
-      }
-
-      ## Plot Weibull Data ###########      
-      if (!is.null(weibullsrc)) {
-        raster::plot(Erwartungswert, alpha = alpha, legend = TRUE, axes = FALSE,
-                     useRaster = TRUE, add = TRUE,
-                     legend.lab = "Mean Wind Speed")
-      }
-      
-      ## Plot Grid  ###########
-      if (inherits(Grid, "sf")  || inherits(Grid, "sfc")) {
-        plot(Grid, add = TRUE)
-      }
-      
-      ## Plot Turbines and additional Info ###########
-      graphics::mtext("Total Wake Effect in %", side = 2, cex = 0.8)
-      graphics::points(EnergyBest[, 'X'], EnergyBest[, 'Y'],
-                       cex = 2, pch = 20, col = Col)
-      graphics::text(EnergyBest[, 'X'], EnergyBest[, 'Y'],
-                     round(EnergyBest[, 'AbschGesamt'], 0),
-                     cex = 0.8, pos = 1, col = "black")
-      
-      distpo <- stats::dist(x = cbind(EnergyBest[, 'X'], EnergyBest[, 'Y']),
-                            method = "euclidian")
-      graphics::mtext(paste("minimal Distance", round(min(distpo), 2)),
-                      side = 1, line = 0, cex = 0.8)
-      graphics::mtext(paste("mean Distance", round(mean(distpo), 2)),
-                      side = 1, line = 1, cex = 0.8)
-      
-      ## Plot Terrain Model  ###########
-      if (topographie == TRUE) {
-        par(ask = TRUE)
-        sel1 <- EnergyBest[, 1:2]
-        plot_terrain(result_inputs, sel1, Polygon1, orogr1, srtm_crop, cclRaster)
-      }
-    }
-    ResPlotResult <- EnergyBest
+    filter_col <- "EnergyOverall"
+    listind <- 2
+    title <- "Energy"
   }
-  ## Plot Best Efficiency ###########
   if (plotEn == 2) {
-    ## Get Energy Output for every windfarm ###########
-    effici_order <- unlist(lapply(result[, 3], function(x) x[,"EfficAllDir"][[1]]))
-    effici_order <- order(effici_order, decreasing = FALSE)
-    
-    ## Order List by energy Output #########
-    result <- result[, 3][effici_order]
-    ledup <- length(result)
-    
-    ## Check for Duplicates #########
-    rectid <- lapply(result, function(x) x[,'Rect_ID'])
-    rectidt <- !duplicated(rectid)
-    result <- result[rectidt]
-    ndif <- length(result)
-    
-    ## Check for enough results #########
-    cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", (ledup - ndif)))
-    if (ndif < best) {
-      cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
-      best <- trunc(ndif / 2)
-    }
-    if (best == 0) best = 1
-    
-    ## Pick the `best` results to plot and Loop #########
-    result <- result[(length(result) - best + 1):(length(result))]
-    for (i in (1:length(result))) {
-      ## Get result ###########
-      EfficiencyBest <- data.frame(result[[i]])
-      EfficiencyBest$EnergyOverall <- round(EfficiencyBest[,'EnergyOverall'], 2)
-      EfficiencyBest$EfficAllDir <- round(EfficiencyBest[,'EfficAllDir'], 2)
-      
-      ## Color code locations #########
-      br <- length(levels(factor(EfficiencyBest[,'AbschGesamt'])))
-      if (br > 1) {
-        Col1 <- rbPal1(br)[as.numeric(cut(as.numeric(
-          EfficiencyBest[,'AbschGesamt']), breaks = br))]
-      } else {
-        Col1 <- "green"
-      }
-      
-      ## Plot Best Windfarm  ###########
-      cat(paste("\nPlot ", (best + 1) - i, " Best Efficiency Solution:\n"))
-      par(mfrow = c(1, 1), ask = FALSE)
-      raster::plot(Polygon1, col = col2res, 
-                   main = paste((best + 1) - i, "Best Efficiency Windfarm", "\n","Energy Output",
-                                EfficiencyBest[,'EnergyOverall'][[1]],"kW", "\n", "Efficiency:",
-                                EfficiencyBest[,'EfficAllDir'][[1]], "%"), cex.main = 0.8)
-      if (best > 1){
-        if (i > 1){
-          par(ask = TRUE)
-        }
-      }
-      
-      ## Plot Weibull Data ###########
-      if (!is.null(weibullsrc)) {
-        raster::plot(Erwartungswert, alpha = alpha, legend = TRUE, axes = FALSE,
-                     useRaster = TRUE, add = TRUE, legend.lab = "Mean Wind Speed")
-      }
-      ## Plot Grid  ###########
-      if (inherits(Grid, "sf")  || inherits(Grid, "sfc")) {
-        plot(Grid, add = TRUE)
-      }
-      
-      ## Plot Turbines and additional Info ###########
-      graphics::mtext("Total Wake Effect in %", side = 2, cex = 0.8)
-      graphics::points(EfficiencyBest[, 'X'], EfficiencyBest[, 'Y'], col = Col1, cex = 2, pch = 20)
-      graphics::text(EfficiencyBest[, 'X'], EfficiencyBest[, 'Y'], round(EfficiencyBest$AbschGesamt, 0),
-                     cex = 0.8, pos = 1)
-      
-      distpo <- stats::dist(x = cbind(EfficiencyBest[, 'X'], EfficiencyBest[, 'Y']), method = "euclidian")
-      graphics::mtext(paste("minimal Distance", round(min(distpo), 2)), side = 1, line = 0, cex = 0.8)
-      graphics::mtext(paste("mean Distance", round(mean(distpo), 2)), side = 1, line = 1, cex = 0.8)
-      
-      ## Plot Terrain Model  ###########
-      if (topographie == TRUE) {
-        par(ask = TRUE)
-        sel1 <- EfficiencyBest[,1:2]
-        plot_terrain(result_inputs, sel1, Polygon1, orogr1, srtm_crop, cclRaster)
-      }
-    }
-    ResPlotResult <- EfficiencyBest
+    filter_col <- "EfficAllDir"
+    listind <- 3
+    title <- "Efficiency"
   }
+  
+  ## Get Energy/Efficiency Output for every windfarm ###########
+  energy_order <- unlist(lapply(result[, listind], function(x) x[, filter_col][[1]]))
+  energy_order <- order(energy_order, decreasing = FALSE)
+  
+  ## Order List by Energy/Efficiency Output #########
+  result <- result[, listind][energy_order]
+  ledup <- length(result)
+  
+  ## Check for Duplicates #########
+  rectid <- lapply(result, function(x) x[, 'Rect_ID'])
+  rectidt <- !duplicated(rectid)
+  result <- result[rectidt]
+  ndif <- length(result)
+  cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", 
+            (ledup - ndif)))
+  
+  ## Check for enough results #########
+  if (ndif < best) {
+    cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
+    best <- trunc(ndif / 2)
+  }
+  if (best == 0) best = 1
+  
+  ## Pick the `best` results to plot and Loop over #########
+  result <- result[(length(result) - best + 1):(length(result))]
+  for (i in (1:length(result))) {
+    ## Get result ###########
+    best_result <- data.frame(result[[i]])
+    best_result$EnergyOverall <- round(best_result[, 'EnergyOverall'], 2)
+    best_result$EfficAllDir <- round(best_result[, 'EfficAllDir'], 2)
+    
+    ## Color code locations #########
+    br <- length(levels(factor(best_result[, 'AbschGesamt'])))
+    if (br > 1) {
+      Col <- rbPal1(br)[as.numeric(cut(as.numeric(
+        best_result[, 'AbschGesamt']), breaks = br))]
+    } else {
+      Col <- "green"
+    }
+    
+    ## Plot Best Windfarm  ###########
+    cat(paste("\nPlot ", (best + 1) - i, " Best ",title," Solution:\n"))
+    par(mfrow = c(1, 1), ask = FALSE)
+    plot(Polygon1, col = col2res, 
+         main = paste((best + 1) - i, "Best ", title, " Windfarm", 
+                      "\nEnergy Output", best_result$EnergyOverall[[1]], "kW",
+                      "\nEfficiency:", best_result$EfficAllDir[[1]], "%"),
+         cex.main = 0.8)
+    if (best > 1) {
+      if (i > 1) {
+        par(ask = TRUE)
+      }
+    }
+    
+    ## Plot Weibull Data ###########      
+    if (!is.null(weibullsrc)) {
+      raster::plot(Erwartungswert, alpha = alpha, legend = TRUE, axes = FALSE,
+                   useRaster = TRUE, add = TRUE,
+                   legend.lab = "Mean Wind Speed")
+    }
+    
+    ## Plot Grid  ###########
+    if (inherits(Grid, "sf")  || inherits(Grid, "sfc")) {
+      plot(Grid, add = TRUE)
+    }
+    
+    ## Plot Turbines and additional Info ###########
+    graphics::mtext("Total Wake Effect in %", side = 2, cex = 0.8)
+    graphics::points(best_result[, 'X'], best_result[, 'Y'],
+                     cex = 2, pch = 20, col = Col)
+    graphics::text(best_result[, 'X'], best_result[, 'Y'],
+                   round(best_result[, 'AbschGesamt'], 0),
+                   cex = 0.8, pos = 1, col = "black")
+    
+    distpo <- stats::dist(x = cbind(best_result[, 'X'], best_result[, 'Y']),
+                          method = "euclidian")
+    graphics::mtext(paste("minimal Distance", round(min(distpo), 2)),
+                    side = 1, line = 0, cex = 0.8)
+    graphics::mtext(paste("mean Distance", round(mean(distpo), 2)),
+                    side = 1, line = 1, cex = 0.8)
+    
+    ## Plot Terrain Model  ###########
+    if (topographie == TRUE) {
+      par(ask = TRUE)
+      sel1 <- best_result[, 1:2]
+      plot_terrain(result_inputs, sel1, Polygon1, orogr1, srtm_crop, cclRaster)
+    }
+  }
+  
   ## Reset par() and return best windfarm  ###########
   par(parpplotRes)
-  invisible(ResPlotResult)
+  invisible(best_result)
 }
-
 plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
-  # resol <- as.integer(inputs['Resolution',])
   ## Plot DEM and windspeed multiplier ############
-  windpo <- 1
   orogrnum <- raster::extract(x = orogr1, y = as.matrix(sel1),
                               small = TRUE, fun = mean, na.rm = TRUE)
-  windpo <- windpo * orogrnum
+  windpo <- 1 * orogrnum
   ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
   heightWind <- raster::extract(x = srtm_crop, y = as.matrix((sel1)), 
                                 small = TRUE, fun = max, na.rm = TRUE)
@@ -603,7 +520,6 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   plot(polygon1, add = TRUE)
 }
 
-
 #' @title Plot the results of an optimization run
 #' @name plot_windfarmGA
 #' @description  Plot the results of a genetic algorithm run with given inputs.
@@ -635,7 +551,7 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
 #' }
 plot_windfarmGA <- function(result, Polygon1, whichPl = "all", 
                             best = 1, plotEn = 1,
-                            weibullsrc){
+                            weibullsrc) {
   
   parpplotWindGa <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parpplotWindGa))
@@ -646,13 +562,6 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   }
   resol <- as.numeric(result[, 'inputData'][[1]][,1]['Resolution'][[1]])
   Polygon1 <- isSpatial(Polygon1)
-  GridMethod <- toupper(result[, 'inputData'][[1]]["Grid Method",][[1]])
-  if (GridMethod == "HEXAGONAL" | GridMethod == "H" | GridMethod == "HEXA") {
-    Grid <- hexa_area(shape = Polygon1, size = resol, plotGrid = FALSE)
-  } else {
-    prop <- as.numeric(result[, 'inputData'][[1]][,1]['Percentage of Polygon'][[1]])
-    Grid <- grid_area(shape = Polygon1, size = resol, prop = prop, plotGrid = FALSE)
-  }
   if (nrow(result) < 4) {
     if (any(2:5 %in% whichPl)) {
       cat("Cannot plot option 2,3,4,5. \n Only option 1,6 are available.")
@@ -665,7 +574,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   if (any(whichPl == 1)) {
     print("plot_result: Plot the 'best' Individuals of the GA:")
     plot_result(result = result, Polygon1 = Polygon1, best = best , plotEn = plotEn,
-                topographie = FALSE, Grid = Grid[[2]], weibullsrc = weibullsrc)
+                topographie = FALSE, Grid = TRUE, weibullsrc = weibullsrc)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 2)) {
@@ -741,7 +650,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
 #' plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1, 
 #'              GridPol = Grid[[2]])
 #' }
-plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol){
+plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol) {
   if (!requireNamespace("leaflet", quietly = TRUE)) {
     stop("The package 'leaflet' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('leaflet')`")
@@ -863,12 +772,10 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     ## Add the Polygon
     leaflet::addPolygons(data = poly1, group = "Polygon",
                 fill = TRUE, fillOpacity = 0.4) %>%
-    
     ## Add the Genetic Algorithm Space
     leaflet::addPolygons(data = GridPol, group = "Grid", weight = 1,
                 opacity = opaycity,
                 fill = TRUE, fillOpacity = 0) %>%
-    
     ## Create Circles in Map
     leaflet::addCircleMarkers(lng = result$X, lat = result$Y,
                      radius = result$wake_radius,
@@ -899,7 +806,6 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   map
 }
 
-
 #' @title Plot the genetic algorithm results
 #' @name plot_parkfitness
 #' @description Plot the evolution of fitness values with the influences of
@@ -916,8 +822,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_parkfitness(resulthex)
 #'}
-plot_parkfitness <- function(result, spar = 0.1){
-  
+plot_parkfitness <- function(result, spar = 0.1) {
   ## Data #####################
   rslt <- as.data.frame(do.call("rbind", result[, "allparkcoeff"]))
   mutres <- as.data.frame(do.call("rbind", result[, "mut_rate"]))
@@ -1182,7 +1087,6 @@ plot_parkfitness <- function(result, spar = 0.1){
   return()
 }
 
-
 #' @title Plot the progress of populations
 #' @name plot_development
 #' @description Plot the changes in mean and max fitness values to previous
@@ -1197,7 +1101,7 @@ plot_parkfitness <- function(result, spar = 0.1){
 #' @examples \donttest{
 #' plot_development(resultrect)
 #' }
-plot_development <- function(result){
+plot_development <- function(result) {
   parbeorwo <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parbeorwo))
   par(mfrow = c(2, 1))
@@ -1228,7 +1132,6 @@ plot_development <- function(result){
   return()
 }
 
-
 #' @title Plot the evolution of fitness values
 #' @name plot_evolution
 #' @description  Plot the evolution of energy outputs and efficiency rates over
@@ -1247,7 +1150,7 @@ plot_development <- function(result){
 #' ## Plot the results of a rectangular grid optimization
 #' plot_evolution(resultrect, ask = TRUE, spar = 0.1)
 #'}
-plot_evolution <- function(result, ask = TRUE, spar = 0.1){
+plot_evolution <- function(result, ask = TRUE, spar = 0.1) {
   ## Set the graphical parameters
   parevol <- par(no.readonly = TRUE)
   on.exit(par(parevol))
@@ -1256,16 +1159,15 @@ plot_evolution <- function(result, ask = TRUE, spar = 0.1){
   result1 <- as.data.frame(do.call("rbind", result[, 1]))
   
   plot(result1$minParkwirkungsg, xaxt = "n",
-       main = "Park Efficiency per Generation", xlab = "Generation",
+       main = "Park Efficiency per Generation",
+       xlab = "Generation",
        ylab = "Park Efficiency in %", cex = 0.8, cex.main = 0.8,
        col = "red", pch = 20,
        ylim = c(min(result1$minParkwirkungsg), max(result1$maxParkwirkungsg)))
   axis(1, at = 1:nrow(result1), tick = TRUE)
   grid(col = "black")
-  points(result1$meanParkwirkungsg, ylab = "MeanxParkwirkungsg", cex = 1.2,
-         col = "blue", pch = 20)
-  points(result1$maxParkwirkungsg, ylab = "maxParkwirkungsg", cex = 1.2,
-         col = "green", pch = 20)
+  points(result1$meanParkwirkungsg, cex = 1.2, col = "blue", pch = 20)
+  points(result1$maxParkwirkungsg, cex = 1.2, col = "green", pch = 20)
   x <- 1:length(result1$MaxEnergyRedu)
   
   if (nrow(result) >= 4) {
@@ -1279,16 +1181,16 @@ plot_evolution <- function(result, ask = TRUE, spar = 0.1){
   
   par(ask = ask)
   
-  plot(result1$MeanEnergyRedu, xaxt = "n", main = "Energy Yield per Generation",
-       xlab = "Generation", ylab = "Energy in kW", cex = 0.8, cex.main = 0.8,
+  plot(result1$MeanEnergyRedu, xaxt = "n",
+       main = "Energy Yield per Generation",
+       xlab = "Generation",
+       ylab = "Energy in kW", cex = 0.8, cex.main = 0.8,
        col = "blue", pch = 20,
        ylim = c(min(result1$MinEnergyRedu), max(result1$MaxEnergyRedu)))
   axis(1, at = 1:nrow(result1), tick = TRUE)
   grid(col = "black")
-  points(result1$MaxEnergyRedu, ylab = "maxParkwirkungsg", cex = 1.2,
-         col = "green", pch = 20)
-  points(result1$MinEnergyRedu, ylab = "minParkwirkungsg", cex = 1.2,
-         col = "red", pch = 20)
+  points(result1$MaxEnergyRedu, cex = 1.2, col = "green", pch = 20)
+  points(result1$MinEnergyRedu, cex = 1.2, col = "red", pch = 20)
   
   if (nrow(result) >= 4) {
     emean <- smooth.spline(x, result1$MeanEnergyRedu, spar = spar)
@@ -1301,7 +1203,6 @@ plot_evolution <- function(result, ask = TRUE, spar = 0.1){
   
   return()
 }
-
 
 #' @title Plot outputs of all generations with standard deviations
 #' @name plot_cloud
@@ -1321,10 +1222,10 @@ plot_evolution <- function(result, ask = TRUE, spar = 0.1){
 #' ## Plot the results of a hexagonal grid optimization
 #' plcdf <- plot_cloud(resulthex, TRUE)
 #'}
-plot_cloud <- function(result, pl = FALSE){
+plot_cloud <- function(result, pl = FALSE) {
   parcloud <- par(ask = FALSE, no.readonly = TRUE)
   on.exit(par(parcloud))
-
+  ## Data Aggregation ##########
   clouddata <- result[, 7]
   efficiency_cloud <- lapply(clouddata, function(x) x = x[, 1])
   energy_cloud <- lapply(clouddata, function(x) x = x[, 2])
@@ -1340,6 +1241,8 @@ plot_cloud <- function(result, pl = FALSE){
     fitness_per_gen[[i]] <- t(as.matrix(rbind(rep(i, l),
                                               fitness_cloud[[i]])))
   }
+  
+  
   efficiency_per_gen <- do.call("rbind", efficiency_per_gen)
   efficiency_per_genmax <- data.frame(efficiency_per_gen)
   max_effic_per_gen <- aggregate(efficiency_per_genmax,
@@ -1391,10 +1294,17 @@ plot_cloud <- function(result, pl = FALSE){
     "min" = min_fit_per_gen[, 3],
     "sd" = sd_fit_per_gen[, 3])
 
+  ## Plots ##########
   if (pl) {
     par(mfrow = c(2, 3))
-    graphics::plot(fitness_per_gen, main = "Fitness", xlab = "Generation",
-                   ylab = "Fitnessvalue", pch = 20, col = "red", cex = 1.3)
+    ## Fitness #######
+    df <- data.frame(fitness_per_gen)
+    colnames(df) <- c("generation", "values")
+    boxplot(values~generation, data=df, main = "Fitness",
+            xlab = "Generation",
+            ylab = "Fitnessvalue", 
+            pch = 20, col = "red", cex = 1.3)
+    
     if (length(clouddata) >= 4) {
       lf <- stats::smooth.spline(x = fitness_per_gen[, 1],
                                  y = fitness_per_gen[, 2],
@@ -1407,10 +1317,14 @@ plot_cloud <- function(result, pl = FALSE){
     graphics::points(x = fitness_per_genmax[, "X1"],
                      y = fitness_per_genmax[, "min"],
                      type = "l", col = "red")
-    graphics::plot(efficiency_per_gen, main = "Efficiency",
-                   xlab = "Generation",
-                   ylab = "Efficiency in %", pch = 20, col = "orange",
-                   cex = 1.3)
+    
+    ## Efficiency #######
+    df <- data.frame(efficiency_per_gen)
+    colnames(df) <- c("generation", "values")
+    boxplot(values~generation, data=df, main = "Efficiency",
+            xlab = "Generation",
+            ylab = "Efficiency in %",
+            pch = 20, col = "orange", cex = 1.3)
     if (length(clouddata) >= 4) {
       le <- stats::smooth.spline(x = efficiency_per_gen[, 1],
                                  y = efficiency_per_gen[, 2],
@@ -1423,8 +1337,14 @@ plot_cloud <- function(result, pl = FALSE){
     graphics::points(x = efficiency_per_genmax[, "X1"],
                      y = efficiency_per_genmax[, "min"],
                      type = "l", col = "orange")
-    graphics::plot(energy_per_gen, main = "Energy", xlab = "Generation",
-                   ylab = "Energy in kW", pch = 20, col = "blue", cex = 1.3)
+    
+    ## Energy #######
+    df <- data.frame(energy_per_gen)
+    colnames(df) <- c("generation", "values")
+    boxplot(values~generation, data=df, main = "Energy",
+            xlab = "Generation",
+            ylab = "Energy in kW",
+            pch = 20, col = "blue", cex = 1.3)
     if (length(clouddata) >= 4) {
       len <- stats::smooth.spline(x = energy_per_gen[, 1],
                                   y = energy_per_gen[, 2],
@@ -1458,14 +1378,13 @@ plot_cloud <- function(result, pl = FALSE){
                    type = "b")
   }
 
+  ## Output ##########
   clouddatafull <- cbind(Fitn = fitness_per_genmax,
                          Eff = efficiency_per_genmax,
                          Ene = energy_per_genmax)
-
   colnames(clouddatafull) <- c("FitX1", "FitMax", "FitMean", "FitMin", "FitSD",
                                "EffX1", "EffMax", "EffMean", "EffMin", "EffSD",
                                "EneX1", "EneMax", "EneMean", "EneMin", "EneSD")
-
   invisible(clouddatafull)
 }
 
@@ -1483,20 +1402,19 @@ plot_cloud <- function(result, pl = FALSE){
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_fitness_evolution(resulthex, 0.1)
 #' }
-plot_fitness_evolution <- function(result, spar = 0.1){
-  # library(stats)
-  oparplotfitness <- par(ask = FALSE, no.readonly = TRUE)
+plot_fitness_evolution <- function(result, spar = 0.1) {
+  ## Setting par() and get Result #######
+  oparplotfitness <- par(no.readonly = TRUE)
   on.exit(par(oparplotfitness))
-  par(mfrow = c(1, 1))
+  par(mfrow = c(1, 1), ask = FALSE, mar = c(4, 5, 4, 2))
+  layout(mat = matrix(c(1, 2, 3, 4, 4, 4), nrow = 2, ncol = 3, byrow = TRUE))
   
   x <- result[, 4]
   x <- x[-c(1)]
   x1 <- do.call("rbind", x)
-  par(mar = c(4, 5, 4, 2))
   result <- as.data.frame(do.call("rbind", result[, 1]))
   
-  layout(mat = matrix(c(1, 2, 3, 4, 4, 4), nrow = 2, ncol = 3, byrow = TRUE))
-  # Wenn ueber 0, dann ist die Parkfitness besser als die vorige Generation.
+  ## Minimal Fitness #########
   minge <- x1[seq(1, length(x1[,1]), 2), 1]
   minge2 <- x1[seq(2, length(x1[,2]), 2), 1]
   ming3 <- minge - minge2
@@ -1507,12 +1425,13 @@ plot_fitness_evolution <- function(result, spar = 0.1){
   ming3$farbe[ming3$ming3 > 0] <- "green"
   ming3$farbe[ming3$ming3 == 0] <- "orange"
   plot(ming3$ming3, type = "b", col = ming3$farbe, pch = 20, cex = 2,
-       xlab = "Generation", ylab = "Beter or Worse")
+       xlab = "Generation", ylab = "Change")
   title(main = "Minimal Fitness Values",sub = "compared to previous generation",
         col.main = "red")
   abline(0, 0)
   grid(col = "black")
   
+  ## Mean Fitness #########
   meange <- x1[seq(1, length(x1[, 1]), 2), 3]
   meange2 <- x1[seq(2, length(x1[, 2]), 2), 3]
   meag3 <- meange - meange2
@@ -1523,12 +1442,13 @@ plot_fitness_evolution <- function(result, spar = 0.1){
   meag3$farbe[meag3$meag3 > 0] <- "green"
   meag3$farbe[meag3$meag3 == 0] <- "orange"
   plot(meag3$meag3, type = "b", col = meag3$farbe, pch = 20, cex = 2,
-       xlab = "Generation", ylab = "Beter or Worse")
+       xlab = "Generation", ylab = "Change")
   title(main = "Mean Fitness Values", sub = "compared to previous generation",
         col.main = "orange")
   abline(0, 0)
   grid(col = "black")
   
+  ## Maximum Fitness #########
   maxge <- x1[seq(1, length(x1[, 1]), 2), 2]
   maxge2 <- x1[seq(2, length(x1[, 2]), 2), 2]
   mg3 <- maxge - maxge2
@@ -1539,12 +1459,13 @@ plot_fitness_evolution <- function(result, spar = 0.1){
   mg3$farbe[mg3$mg3 > 0] <- "green"
   mg3$farbe[mg3$mg3 == 0] <- "orange"
   plot(mg3$mg3, type = "b", col = mg3$farbe, pch = 20, cex = 2,
-       xlab = "Generation", ylab = "Beter or Worse")
+       xlab = "Generation", ylab = "Change")
   title(main = "Maximal Fitness Values", sub = "compared to previous generation",
         col.main = "darkgreen")
   abline(0, 0)
   grid(col = "black")
   
+  ## Fitness Values per Generation #########
   plot(result$minparkfitness, xaxt = "n", main = "Parkfitness per Generation",
        ylab = "Parkfitness in %", xlab = "Generation", cex = 2, col = "red",
        pch = 20, ylim = c(min(result$minparkfitness), max(result$maxparkfitness)))
@@ -1592,7 +1513,7 @@ plot_fitness_evolution <- function(result, spar = 0.1){
 #' ## Plot the heatmap with different settings
 #' plot_heatmap(resulthex, si = 4, idistw = 2)
 #' }
-plot_heatmap <- function(result, si = 2, idistw){
+plot_heatmap <- function(result, si = 2, idistw) {
   if (!requireNamespace("gstat", quietly = TRUE)) {
     stop("The package 'gstat' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('gstat')`")
@@ -1712,7 +1633,6 @@ dup_coords <- function(x, ...) {
   if (!is.null(res)) class(res) <- "duplicated.coords"
   return(res)
 }
-
 
 
 
