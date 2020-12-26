@@ -70,7 +70,6 @@ fitness <- function(selection, referenceHeight, RotorHeight,
                     SurfaceRoughness, Polygon, resol1,
                     rot, dirspeed, srtm_crop, topograp, cclRaster,
                     weibull, Parallel, numCluster) {
-
   ## Missing Arguments? #############
   if (missing(srtm_crop)) {
     srtm_crop <- NULL
@@ -84,17 +83,17 @@ fitness <- function(selection, referenceHeight, RotorHeight,
   if (missing(weibull)) {
     weibull <- FALSE
   }
-  #############
-
+  
+  ## Wind Data ###########
   probability_direction <- dirspeed[[2]]
   dirspeed <- dirspeed[[1]]
 
-  ## Get maximum angle and maximum distance
+  ## Get maximum angle and maximum distance ###########
   wnkl_max <- getOption("windfarmGA.max_angle")
   dist_max <- getOption("windfarmGA.max_distance")
   
-  # Calculate EnergyOutput for every config i and for
-  # every angle j - in Parallel
+  ## Calculate Energy Output ###########
+  # For every selection i and every angle j - in Parallel
   if (Parallel == TRUE) {
     e <- foreach::foreach(k = 1:length(selection)) %dopar% {
       windfarmGA::calculate_energy(
@@ -110,8 +109,7 @@ fitness <- function(selection, referenceHeight, RotorHeight,
   euniqu <- vector("list", length(selection))
   for (i in 1:length(selection)) {
     if (!Parallel) {
-      # Calculate EnergyOutput for every config i and for
-      # every angle j - not Parallel
+      # For every selection i and every angle j - not in Parallel
       e <- calculate_energy(
         sel = selection[[i]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,

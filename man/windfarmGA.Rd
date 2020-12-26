@@ -128,7 +128,7 @@ be used. The parallel and doParallel packages are used for parallel
 processing. Default is \code{FALSE}}
 
 \item{numCluster}{If \code{Parallel} is TRUE, this variable defines the 
-number of clusters to be used}
+number of clusters to be used. Default is \code{2}}
 
 \item{verbose}{If TRUE it will print information for every generation.
 Default is \code{FALSE}}

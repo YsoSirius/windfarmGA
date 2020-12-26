@@ -105,41 +105,38 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                              srtm_crop, topograp, cclRaster, weibull,
                              plotit = FALSE) {
 
-  ## Assign constant / default values
-  # cT <- 0.88;   
+  ## Get default values ###################
   cT <- getOption("windfarmGA.cT");   
-  # air_rh <- 1.225;   
   air_rh <- getOption("windfarmGA.air_rh")
-  # k <- 0.075
   k <- getOption("windfarmGA.k")
 
-  ## Get the Coordinates of the individual / wind farm.
+  ## Get the Coordinates of the individual / wind farm. ###################
   xy_individual <- sel[, 2:3]
 
+  ## Get Center of Polygon for rotating
   ## TODO - this can go in some upper level
   pcent <- apply(matrix(sf::st_bbox(polygon1), ncol = 2, byrow = FALSE), 1, mean)
 
-  ## Create a dummy vector of 1 for the wind speeds for every turbine
+  ## Create a dummy vector for the wind speeds for every turbine with value 1
   n_turbines <- length(xy_individual[, 1])
   windpo <- rep(1, n_turbines)
 
-  ## Terrain Effect Model:
+  ## Terrain Effect Model ###################
   ## TODO - can be matrix and all raster-methods to genetic_algorithm?
   if (topograp) {
     ## Calculates Wind multiplier. Hills will get higher values,
     ## valleys will get lower values.
-    orogr1 <- srtm_crop[[2]]
-    orogrnum <- raster::extract(x = orogr1, y = xy_individual,
-                                small = TRUE, fun = mean, na.rm = FALSE)
-    orogrnum[is.na(orogrnum)] <- mean(orogrnum, na.rm = TRUE)
-    windpo <- windpo * orogrnum
+    wind_multiplier <- srtm_crop[[2]]
+    wind_multiplier_val <- raster::extract(x = wind_multiplier, y = xy_individual,
+                                           small = TRUE, fun = mean, na.rm = FALSE)
+    wind_multiplier_val[is.na(wind_multiplier_val)] <- mean(wind_multiplier_val, na.rm = TRUE)
+    windpo <- windpo * wind_multiplier_val
 
     ## Get Elevation of Turbine Locations to estimate the air density at the
     ## resulting height
     turb_elev <- raster::extract(x = srtm_crop[[1]], y = xy_individual,
                                   small = TRUE, fun = max, na.rm = FALSE)
     turb_elev[is.na(turb_elev)] <- mean(turb_elev, na.rm = TRUE)
-
     ## Plot the elevation and the wind speed multiplier rasters
     if (plotit) {
       par(mfrow = c(2, 1))
@@ -149,7 +146,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                         labs = round(turb_elev, 0),
                         cex = 0.8)
       plot(polygon1, add = TRUE)
-      plot(orogr1, main = "Wind Speed Multipliers")
+      plot(wind_multiplier, main = "Wind Speed Multipliers")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(windpo, 3),
@@ -176,42 +173,41 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       plot(polygon1, add = TRUE)
     }
 
-    ## Corine Land Cover Surface Roughness values and Elevation Roughness
-    surf_rough0 <- raster::extract(x = cclRaster,
-                                   y = xy_individual,
-                                   small = TRUE, fun = mean, na.rm = FALSE)
-    surf_rough0[is.na(surf_rough0)] <- mean(surf_rough0,
-                                                        na.rm = TRUE)
+    ## Corine Land Cover Surface Roughness values
+    land_roughness <- raster::extract(x = cclRaster,
+                                      y = xy_individual,
+                                      small = TRUE, fun = mean, na.rm = FALSE)
+    land_roughness[is.na(land_roughness)] <- mean(land_roughness, na.rm = TRUE)
 
-    ## terrain raster
-    elrouind <- srtm_crop[[3]]
-
-    surf_rough1 <- raster::extract(x = elrouind, y = xy_individual,
+    ## Elevation Roughness values
+    elevation_roughness <- srtm_crop[[3]]
+    elevation_roughness_vals <- raster::extract(x = elevation_roughness, y = xy_individual,
                                    small = TRUE, fun =  mean, na.rm = FALSE)
-    surf_rough1[is.na(surf_rough1)] <- mean(surf_rough1,
-                                            na.rm = TRUE)
-    # maxrasres <- max(raster::res(srtm_crop))
+    elevation_roughness_vals[is.na(elevation_roughness_vals)] <- mean(elevation_roughness_vals, na.rm = TRUE)
     maxrasres <- max(raster::res(srtm_crop[[1]]))
-    SurfaceRoughness <- SurfaceRoughness * (1 + (surf_rough1 / maxrasres))
-    elrouindn <- raster::resample(elrouind, cclRaster, method = "ngb")
-    modSurf <- raster::overlay(x = cclRaster, y = elrouindn,
-                               fun = function(x, y) {
-                                 return(x * (1 + y / maxrasres))
-                                 }
-                               )
+    
+    ## Calculate modified surface Roughness
+    SurfaceRoughness <- land_roughness * (1 + (elevation_roughness_vals / maxrasres))
+    
     ## Plot the different Surface Roughness Values
     if (plotit) {
+      elevation_roughness_resample <- raster::resample(elevation_roughness, cclRaster, method = "ngb")
+      modSurf <- raster::overlay(x = cclRaster, y = elevation_roughness_resample,
+                                 fun = function(x, y) {
+                                   return(x * (1 + y / maxrasres))
+                                 })
+      
       graphics::par(mfrow = c(1, 1))
       cexa <- 0.9
       raster::plot(cclRaster, main = "Corine Land Cover Roughness")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
-                        labs = round(surf_rough0, 2), cex = cexa)
+                        labs = round(land_roughness, 2), cex = cexa)
       plot(polygon1, add = TRUE)
-      raster::plot(x = elrouind, main = "Elevation Roughness Indicator")
+      raster::plot(x = elevation_roughness, main = "Elevation Roughness Indicator")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
-                        labs = round(surf_rough1, 2), cex = cexa)
+                        labs = round(1 + (elevation_roughness_vals / maxrasres), 2), cex = cexa)
       plot(polygon1, add = TRUE)
       plot(modSurf, main = "Modified Surface Roughness")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
@@ -222,10 +218,11 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
 
     ## New Wake Decay Constant calculated with new surface roughness values
     k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
+
     ## Plot resulting Wake Decay Values
     if (plotit) {
       graphics::par(mfrow = c(1, 1))
-      plot(x = elrouind, main = "Adapted Wake Decay Values - K")
+      plot(x = elevation_roughness, main = "Adapted Wake Decay Values - K")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(k, 3), cex = cexa)
@@ -233,33 +230,31 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     }
   }
 
-  ## Weibull Wind Speed Estimator
+  ## Weibull Wind Speed Estimator ###################
   if (class(weibull)[1] == "RasterLayer") {
+    weibull_bool <- TRUE
     if (plotit) {
       par(mfrow = c(1, 1), ask = FALSE)
       plot(weibull, main = "Mean Weibull")
       plot(polygon1, add = TRUE)
     }
 
-    ## TODO Extract via raster::extract or can we do by matrix?
+    ## TODO Extract Weibul values via raster::extract or can we do by matrix?
     estim_speed <- raster::extract(weibull, xy_individual)
 
-    ## Check for NA Values..
+    ## Check and replace NA Values..
     if (anyNA(estim_speed)) {
       estim_speed[which(is.na(estim_speed))] <- mean(estim_speed, na.rm = TRUE)
     }
-
-    weibull_bool <- TRUE
     ## Multiply dummy vector `windpo` with expected wind speeds
     point_wind <- windpo * estim_speed
   } else {
     weibull_bool <- FALSE
   }
 
-  ## For every wind direction, calculate the energy output.
-  ## Do so by rotating Polygon for all angles and
-  ## analyze, which turbine is affected by another one to calculate
-  ## total energy output.
+  ## Calculate Energy for all incoming wind directions ###################
+  ## Rotate Polygon for all angles and analyze which turbine is affected by 
+  ## another one to calculate total energy output.
   alllist <- vector("list", length(dirSpeed[, 1]))
   for (index in 1:length(dirSpeed[, 2])) {
 
@@ -296,6 +291,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       cordslist <- lapply(cordslist, function(x) {
         rotate_CPP(x[,1], x[,2], pcent[1], pcent[2], angle)
       })
+      ## TODO - Projection still hardcoded
       poly3 <- sf::st_as_sf(sf::st_sfc(
         sf::st_polygon(cordslist), crs = 3035))
       
@@ -331,7 +327,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
 
     ## Create a list for every turbine
     ## Assign Windspeed to a filtered list with all turbines and add
-    ## the desired rotor radius to the data frame
+    ## the rotor radius
     tmp <- lapply(seq_len(max(df_all[, "Punkt_id"])), function(i) {
       cbind(subset.matrix(df_all, df_all[, "Punkt_id"] == i),
             "Windmean" = dat_xyspeed[, 1L][i])
@@ -340,7 +336,6 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     windlist <- windlist[, c("Punkt_id", "Ax", "Ay", "Bx", "By",
                              "Laenge_B", "Laenge_A", "alpha",
                              "Windrichtung", "Windmean"), drop = FALSE]
-    
     row.names(windlist) <- NULL
     windlist <- cbind(windlist,
                       "RotorR" = as.numeric(RotorR))

@@ -212,12 +212,12 @@ test_that("Test Genetic Algorithm with different Inputs", {
       c(1, 2000, 2000, 1, 1)))),
     crs = 3035
   ))
-  expect_error(
+  expect_error(expect_warning(
     genetic_algorithm(Polygon1 = wrong_poly,
             n = 12, iteration = 1, plotit = TRUE,
             vdirspe = data.in,
             Rotor = 30,
             RotorHeight = 100, topograp = TRUE, verbose = TRUE)
-  )
+  ))
 
 })

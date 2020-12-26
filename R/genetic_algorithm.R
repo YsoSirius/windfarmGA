@@ -69,7 +69,7 @@
 #'   be used. The parallel and doParallel packages are used for parallel
 #'   processing. Default is \code{FALSE}
 #' @param numCluster If \code{Parallel} is TRUE, this variable defines the 
-#'   number of clusters to be used
+#'   number of clusters to be used. Default is \code{2}
 #' @param verbose If TRUE it will print information for every generation.
 #'   Default is \code{FALSE}
 #' @param plotit If TRUE it will plot the best windfarm of every generation. 
@@ -234,15 +234,15 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
     ## TODO - test on Linux
-    # max_cores <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
     max_cores <- parallel::detectCores()
     if (numCluster > max_cores) {
+      warning("Maximum number of cores is: ", max_cores, 
+              "\n'numCluster' will be set to: ", max_cores-1)
       numCluster <- max_cores - 1
     }
     type_cluster <- "PSOCK"  ## TODO - should this be available as option too?
     cl <- parallel::makeCluster(numCluster, type = type_cluster)
     doParallel::registerDoParallel(cl)
-    # on.exit(parallel::stopCluster(cl))
   }
 
   ## WEIBULL ###############
@@ -352,7 +352,6 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     Grid <- Grid1[[1]]
     grid_filtered <- Grid1[[2]]
   }
-
   n_gridcells <- nrow(Grid)
 
 
@@ -393,7 +392,6 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     if (verbose) {
       cat("Topography and orography are taken into account.\n")
     }
-
     if (plotit) {
       par(mfrow = c(3, 1))
     }
@@ -427,15 +425,15 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     srtm <- tryCatch(elevatr::get_elev_raster(verbose = verbose,
       locations = as(Polygon_wgs84, "Spatial"), z = 11),
       error = function(e) {
-        stop("\nCould not download SRTM for the given Polygon.",
-             "Check the Projection of the Polygon.\n", call. = FALSE)
+        stop("\nDownloading Elevation data failed for the given Polygon.\n",
+             e, call. = FALSE)
       })
     srtm_crop <- raster::crop(srtm, Polygon_wgs84)
     srtm_crop <- raster::mask(srtm_crop, Polygon_wgs84)
 
     srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(Polygon1))
     if (plotit) {
-      raster::plot(srtm_crop, main = "Elevation from SRTM")
+      raster::plot(srtm_crop, main = "Elevation Data")
       plot(Polygon1, add = TRUE, color = "transparent")
       plot(grid_filtered, add = TRUE)
     }

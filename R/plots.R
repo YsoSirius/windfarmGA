@@ -401,13 +401,11 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           Polygon1 <-  sf::st_transform(Polygon1, 4326)
           # extpol <- round(Polygon1@bbox, 0)[, 2]
           # srtm <- raster::getData('SRTM', lon = extpol[1], lat = extpol[2])
-          srtm <- tryCatch(elevatr::get_elev_raster(verbose = FALSE,
-                                                    locations = as(Polygon1, "Spatial"), z = 11),
+          srtm <- tryCatch(elevatr::get_elev_raster(locations = as(Polygon1, "Spatial"), z = 11),
                            error = function(e) {
-                             stop("\nCould not download SRTM for the given Polygon.",
-                                  "Check the Projection of the Polygon.\n", call. = FALSE)
+                             stop("\nDownloading Elevation data failed for the given Polygon.\n",
+                                  e, call. = FALSE)
                            })
-          
           srtm_crop <- raster::crop(srtm, Polygon1)
           srtm_crop <- raster::mask(srtm_crop, Polygon1)
           
@@ -622,12 +620,11 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
           Polygon1 <-  sf::st_transform(Polygon1, 4326)
           # extpol <- round(Polygon1@bbox, 0)[, 2]
           # srtm <- raster::getData('SRTM', lon = extpol[1], lat = extpol[2])
-          srtm <- tryCatch(elevatr::get_elev_raster(
-            locations = as(Polygon1, "Spatial"), z = 11),
-            error = function(e) {
-              stop("\nCould not download SRTM for the given Polygon.",
-                   "Check the Projection of the Polygon.\n", call. = FALSE)
-            })
+          srtm <- tryCatch(elevatr::get_elev_raster(locations = as(Polygon1, "Spatial"), z = 11),
+                           error = function(e) {
+                             stop("\nDownloading Elevation data failed for the given Polygon.\n",
+                                  e, call. = FALSE)
+                           })
           srtm_crop <- raster::crop(srtm, Polygon1)
           srtm_crop <- raster::mask(srtm_crop, Polygon1)
           
