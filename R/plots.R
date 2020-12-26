@@ -428,88 +428,8 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
       ## Plot Terrain Model  ###########
       if (topographie == TRUE) {
         par(ask = TRUE)
-        resol <- as.integer(result_inputs['Resolution',])
-        polygon1 <- Polygon1
         sel1 <- EnergyBest[, 1:2]
-        windpo <- 1
-        if (1 == 1) {
-          ## Plot DEM and windspeed multiplier ############
-          orogrnum <- raster::extract(x = orogr1, y = as.matrix(sel1),
-                                      small = TRUE, fun = mean, na.rm = TRUE)
-          windpo <- windpo * orogrnum
-          ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-          heightWind <- raster::extract(x = srtm_crop, y = as.matrix((sel1)), 
-                                        small = TRUE, fun = max, na.rm = TRUE)
-          par(mfrow = c(1, 2))
-          cexa <- 0.9
-          raster::plot(srtm_crop, main = "Elevation Data")
-          graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(heightWind, 0), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          raster::plot(orogr1, main = "Wind Speed Multipliers")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(windpo, 3), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          
-          ## Get Air Density and Pressure from Height Values #########
-          HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
-          air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
-          raster::plot(srtm_crop, main = "Normal Air Density",
-                       col = topo.colors(10))
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = rep(1.225, nrow(sel1)), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          raster::plot(srtm_crop, main = "Corrected Air Density",
-                       col = topo.colors(10))
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(air_dt[, 'rh'], 2), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          
-          ## CorineLandCover Roughness values ##################
-          SurfaceRoughness0 <- raster::extract(x = cclRaster, y = as.matrix((sel1)),
-                                               small = TRUE, fun = mean, na.rm = TRUE)
-          SurfaceRoughness1 <- raster::extract(x = raster::terrain(srtm_crop, "roughness"),
-                                               y = as.matrix((sel1)),
-                                               small = TRUE, fun = mean, na.rm = TRUE)
-          SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1 / max(raster::res(srtm_crop))))
-          elrouind <- raster::terrain(srtm_crop, "roughness")
-          elrouindn <- raster::resample(elrouind, cclRaster, method = "ngb")
-          modSurf <- raster::overlay(x = cclRaster, y = elrouindn,
-                                     fun = function(x, y) {
-                                       return(x * (1 + (y / max(raster::res(srtm_crop)))))
-                                     })
-          
-          par(mfrow = c(1, 2))
-          raster::plot(cclRaster, main = "Corine Land Cover Roughness")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(SurfaceRoughness0, 2), cex = cexa)
-          plot(polygon1, add = TRUE)
-          raster::plot(x = raster::terrain(srtm_crop, "roughness", neighbors = 4),
-                       main = "Elevation Roughness Indicator")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round((SurfaceRoughness1), 2), cex = cexa)
-          plot(polygon1, add = TRUE)
-          raster::plot(modSurf, main = "Modified Surface Roughness")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round((SurfaceRoughness), 2), cex = cexa)
-          plot(polygon1, add = TRUE)
-          
-          RotorHeight <- as.integer(result_inputs['Rotor Height',])
-          k_raster <- raster::calc(modSurf, function(x) {x <- 0.5 / (log(RotorHeight / x))})
-          # New Wake Decay Constant calculated with new surface roughness values, according to CLC
-          k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
-          raster::plot(k_raster, main = "Adapted Wake Decay Constant - K")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k, 3), cex = cexa)
-          plot(polygon1, add = TRUE)
-        }
+        plot_terrain(result_inputs, sel1, Polygon1, orogr1, srtm_crop, cclRaster)
       }
     }
     ResPlotResult <- EnergyBest
@@ -591,96 +511,96 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
       ## Plot Terrain Model  ###########
       if (topographie == TRUE) {
         par(ask = TRUE)
-        resol <- as.integer(result_inputs['Resolution',])
-        polygon1 <- Polygon1
         sel1 <- EfficiencyBest[,1:2]
-        windpo <- 1
-        if (1 == 1) {
-          ## Plot DEM and windspeed multiplier ############
-          orogrnum <- raster::extract(x = orogr1, y = as.matrix(sel1),
-                                      small = TRUE, fun = mean, na.rm = TRUE)
-          windpo <- windpo * orogrnum
-          ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-          heightWind <- raster::extract(x = srtm_crop, y = as.matrix((sel1)), 
-                                        small = TRUE, fun = max, na.rm = TRUE)
-          par(mfrow = c(1, 2))
-          cexa <- 0.9
-          raster::plot(srtm_crop, main = "Elevation Data")
-          graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(heightWind, 0), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          raster::plot(orogr1, main = "Wind Speed Multipliers")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(windpo, 3), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          
-          ## Get Air Density and Pressure from Height Values #########
-          HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
-          air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
-          raster::plot(srtm_crop, main = "Normal Air Density",
-                       col = topo.colors(10))
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = rep(1.225, nrow(sel1)), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          raster::plot(srtm_crop, main = "Corrected Air Density",
-                       col = topo.colors(10))
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(air_dt[, 'rh'], 2), cex = 0.8)
-          plot(polygon1, add = TRUE)
-          
-          ## CorineLandCover Roughness values ##################
-          SurfaceRoughness0 <- raster::extract(x = cclRaster, y = as.matrix((sel1)),
-                                               small = TRUE, fun = mean, na.rm = TRUE)
-          SurfaceRoughness1 <- raster::extract(x = raster::terrain(srtm_crop, "roughness"),
-                                               y = as.matrix((sel1)),
-                                               small = TRUE, fun = mean, na.rm = TRUE)
-          SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1 / max(raster::res(srtm_crop))))
-          elrouind <- raster::terrain(srtm_crop, "roughness")
-          elrouindn <- raster::resample(elrouind, cclRaster, method = "ngb")
-          modSurf <- raster::overlay(x = cclRaster, y = elrouindn,
-                                     fun = function(x, y) {
-                                       return(x * (1 + (y / max(raster::res(srtm_crop)))))
-                                     })
-          
-          par(mfrow = c(1, 2))
-          raster::plot(cclRaster, main = "Corine Land Cover Roughness")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round(SurfaceRoughness0, 2), cex = cexa)
-          plot(polygon1, add = TRUE)
-          raster::plot(x = raster::terrain(srtm_crop, "roughness", neighbors = 4),
-                       main = "Elevation Roughness Indicator")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round((SurfaceRoughness1), 2), cex = cexa)
-          plot(polygon1, add = TRUE)
-          raster::plot(modSurf, main = "Modified Surface Roughness")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                            labs = round((SurfaceRoughness), 2), cex = cexa)
-          plot(polygon1, add = TRUE)
-          
-          RotorHeight <- as.integer(result_inputs['Rotor Height',])
-          k_raster <- raster::calc(modSurf, function(x) {x <- 0.5 / (log(RotorHeight / x))})
-          # New Wake Decay Constant calculated with new surface roughness values, according to CLC
-          k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
-          raster::plot(k_raster, main = "Adapted Wake Decay Constant - K")
-          points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-          calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k, 3), cex = cexa)
-          plot(polygon1, add = TRUE)
-        }
+        plot_terrain(result_inputs, sel1, Polygon1, orogr1, srtm_crop, cclRaster)
       }
     }
     ResPlotResult <- EfficiencyBest
   }
-  
   ## Reset par() and return best windfarm  ###########
   par(parpplotRes)
   invisible(ResPlotResult)
+}
+
+plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
+  # resol <- as.integer(inputs['Resolution',])
+  ## Plot DEM and windspeed multiplier ############
+  windpo <- 1
+  orogrnum <- raster::extract(x = orogr1, y = as.matrix(sel1),
+                              small = TRUE, fun = mean, na.rm = TRUE)
+  windpo <- windpo * orogrnum
+  ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
+  heightWind <- raster::extract(x = srtm_crop, y = as.matrix((sel1)), 
+                                small = TRUE, fun = max, na.rm = TRUE)
+  par(mfrow = c(1, 2))
+  cexa <- 0.9
+  raster::plot(srtm_crop, main = "Elevation Data")
+  graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
+                    labs = round(heightWind, 0), cex = 0.8)
+  plot(polygon1, add = TRUE)
+  raster::plot(orogr1, main = "Wind Speed Multipliers")
+  points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
+                    labs = round(windpo, 3), cex = 0.8)
+  plot(polygon1, add = TRUE)
+  
+  ## Get Air Density and Pressure from Height Values #########
+  HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
+  air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
+  raster::plot(srtm_crop, main = "Normal Air Density",
+               col = topo.colors(10))
+  points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
+                    labs = rep(1.225, nrow(sel1)), cex = 0.8)
+  plot(polygon1, add = TRUE)
+  raster::plot(srtm_crop, main = "Corrected Air Density",
+               col = topo.colors(10))
+  points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
+                    labs = round(air_dt[, 'rh'], 2), cex = 0.8)
+  plot(polygon1, add = TRUE)
+  
+  ## CorineLandCover Roughness values ##################
+  SurfaceRoughness0 <- raster::extract(x = cclRaster, y = as.matrix((sel1)),
+                                       small = TRUE, fun = mean, na.rm = TRUE)
+  SurfaceRoughness1 <- raster::extract(x = raster::terrain(srtm_crop, "roughness"),
+                                       y = as.matrix((sel1)),
+                                       small = TRUE, fun = mean, na.rm = TRUE)
+  SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1 / max(raster::res(srtm_crop))))
+  elrouind <- raster::terrain(srtm_crop, "roughness")
+  elrouindn <- raster::resample(elrouind, cclRaster, method = "ngb")
+  modSurf <- raster::overlay(x = cclRaster, y = elrouindn,
+                             fun = function(x, y) {
+                               return(x * (1 + (y / max(raster::res(srtm_crop)))))
+                             })
+  par(mfrow = c(1, 2))
+  raster::plot(cclRaster, main = "Corine Land Cover Roughness")
+  points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
+                    labs = round(SurfaceRoughness0, 2), cex = cexa)
+  plot(polygon1, add = TRUE)
+  raster::plot(x = raster::terrain(srtm_crop, "roughness", neighbors = 4),
+               main = "Elevation Roughness Indicator")
+  points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
+                    labs = round((SurfaceRoughness1), 2), cex = cexa)
+  plot(polygon1, add = TRUE)
+  raster::plot(modSurf, main = "Modified Surface Roughness")
+  points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
+                    labs = round((SurfaceRoughness), 2), cex = cexa)
+  plot(polygon1, add = TRUE)
+  
+  ## Wake Decay Constant #############
+  RotorHeight <- as.integer(inputs['Rotor Height',])
+  k_raster <- raster::calc(modSurf, function(x) {x <- 0.5 / (log(RotorHeight / x))})
+  # New Wake Decay Constant calculated with new surface roughness values, according to CLC
+  k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
+  raster::plot(k_raster, main = "Adapted Wake Decay Constant - K")
+  points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k, 3), cex = cexa)
+  plot(polygon1, add = TRUE)
 }
 
 
