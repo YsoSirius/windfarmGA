@@ -218,7 +218,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     ## Plot resulting Wake Decay Values
     if (plotit) {
       graphics::par(mfrow = c(1, 1))
-      plot(x = elevation_roughness, main = "Adapted Wake Decay Values - K")
+      raster::plot(x = terrain_rough_ras, main = "Adapted Wake Decay Values - K")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(k, 3), cex = cexa)

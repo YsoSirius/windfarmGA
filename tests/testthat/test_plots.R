@@ -110,6 +110,14 @@ test_that("Test Plotting Functions", {
   expect_false(anyNA(plot_res))
   expect_true(all(plot_res$EfficAllDir <= 100))
   
+  polywgs84 <- sp_polygonnp
+  polywgs84 <- st_transform(polywgs84, 4326)
+  st_crs(polywgs84) <- NA
+  plot_res <- quiet(plot_result(resultrect[1:10,],
+                                Polygon1 = polywgs84))
+  expect_false(anyNA(plot_res))
+  expect_true(all(plot_res$EfficAllDir <= 100))
+  
   ## Create a result with 100% Efficiency (to plot all green)
   resultrect100 <- genetic_algorithm(Polygon1 = sp_polygon,
                         n = 5, iteration = 60,
@@ -198,15 +206,8 @@ test_that("Test Plotting Functions", {
   
   
   ## plot_leaflet #######################
-  
-  data.in <- data.frame(ws = 12, wd = 0)
-  result <- genetic_algorithm(Polygon1 = sp_polygon,
-                              n = 25,
-                              vdirspe = data.in,
-                              Rotor = 30,
-                              RotorHeight = 100)
   ## Plot the best wind farm on a leaflet map (ordered by energy values)
-  p <- plot_leaflet(result = result, Polygon1 = sp_polygon, which = 1)
+  p <- plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1)
   expect_is(p, "leaflet")
   
   ## Plot the best wind farm on a leaflet map (ordered by energy values)

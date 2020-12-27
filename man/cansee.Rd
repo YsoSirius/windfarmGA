@@ -63,7 +63,6 @@ Other Viewshed Analysis:
 \code{\link{plot_viewshed}()},
 \code{\link{rasterprofile}()},
 \code{\link{viewTo}()},
-\code{\link{viewshed_par}()},
 \code{\link{viewshed}()}
 }
 \concept{Viewshed Analysis}

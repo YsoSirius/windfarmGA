@@ -1,5 +1,4 @@
 context("Test Random Search")
-library(testthat)
 library(sf)
 
 test_that("Test Random Search Functions", {
@@ -21,6 +20,14 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
   
   new <- random_search(resultrect, Polygon1, Plot = TRUE)
+  expect_is(new, "list")
+  expect_false(anyNA(unlist(new)))
+  new_df <- do.call(rbind, new)
+  expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
+  expect_true(all(new_df[, "EnergyOverall"] > 0))
+  expect_true(all(new_df[, "AbschGesamt"] >= 0))
+  
+  new <- random_search(resulthex, Polygon1, Plot = TRUE)
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -50,16 +57,8 @@ test_that("Test Random Search Functions", {
                             Polygon1 = Polygon1, best = 2)
   expect_true(is.null(res))
 
-  data.in <- data.frame(ws = 12, wd = 0)
-  result100 <- genetic_algorithm(Polygon1 = Polygon1,
-                                 n = 5, iteration = 4,
-                                 vdirspe = data.in,
-                                 Rotor = 35, Proportionality = 1,
-                                 RotorHeight = 100)
-  new10 <- random_search(result100, Polygon1, n = 20, best = 3, Plot = TRUE)
-  respl <- plot_random_search(new10, result100, Polygon1 = Polygon1)
-  expect_true(is.null(respl))
-  respl <- plot_random_search(new10, result100, Polygon1 = Polygon1, best = 1)
+  new10 <- random_search(resulthex, Polygon1, n = 20, best = 3, Plot = TRUE)
+  respl <- plot_random_search(new10, resulthex, Polygon1 = Polygon1)
   expect_true(is.null(respl))
   
   new <- random_search(resultrect, Polygon1, n = 2, best = 1)

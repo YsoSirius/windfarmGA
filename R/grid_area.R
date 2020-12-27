@@ -68,7 +68,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
   
   if (!any(indx)) {
     cat("\n################### GA ERROR MESSAGE ###################\n")
-    stop("A grid cannot be drawn. Reduce the resolution ",
+    stop("A grid cannot be drawn. Reduce the `size` argument ",
          "or define a projection in meters.")
   }
   
@@ -129,16 +129,16 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 #' plot(HexGrid[[2]])
 #'
 hexa_area <- function(shape, size, plotGrid = FALSE) {
-  
-  grid_polys <- sf::st_make_grid(shape, cellsize = size, what = "polygons", square = FALSE)
+  grid_polys <- sf::st_make_grid(shape, cellsize = size,
+                                 what = "polygons", square = FALSE)
   grid_intersect <- sf::st_intersection(st_geometry(shape), grid_polys)
   
   areadrygrid <- sf::st_area(grid_intersect)
-  indx <- as.numeric(areadrygrid) >= max(as.numeric(areadrygrid))*0.99
-  
-  if (!any(indx)) {
+  indx <- as.numeric(areadrygrid) >= (2* sqrt(3) * (size/2)^2)*0.99
+    
+  if ((!any(indx)) || (length(grid_polys)==1)) {
     cat("\n################### GA ERROR MESSAGE ###################\n")
-    stop("A grid cannot be drawn. Reduce the resolution ",
+    stop("A grid cannot be drawn. Reduce the `size` argument ",
          "or define a projection in meters.")
   }
   

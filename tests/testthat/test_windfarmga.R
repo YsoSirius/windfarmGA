@@ -9,7 +9,7 @@ quiet <- function(x) {
 }
 
 test_that("Test windfarmGA", {
-  skip("")
+  # skip("")
   skip_on_cran()
   
   ## Data ##############

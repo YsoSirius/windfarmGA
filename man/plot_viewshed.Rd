@@ -44,7 +44,6 @@ Other Viewshed Analysis:
 \code{\link{interpol_view}()},
 \code{\link{rasterprofile}()},
 \code{\link{viewTo}()},
-\code{\link{viewshed_par}()},
 \code{\link{viewshed}()}
 
 Other Plotting Functions: 

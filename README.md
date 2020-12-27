@@ -109,14 +109,14 @@ to overlay the considered area to be represented as grid cell.
 ```sh
 Rotor <- 20
 fcrR <- 9
-Grid <- grid_area(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
+Grid <- grid_area(Polygon1, size = (Rotor * fcrR), prop = 1, plotGrid = TRUE)
 str(Grid)
 ```
 ### Hexagonal Grid Cells
 ```sh
 Rotor <- 20
 fcrR <- 9
-HexGrid <- hexa_area(Polygon1, size = ((Rotor*fcrR)/2), plotTrue = TRUE)
+HexGrid <- hexa_area(Polygon1, size = (Rotor * fcrR), plotGrid = TRUE)
 str(HexGrid)
 ```
 <p align="center">
@@ -140,10 +140,10 @@ An optimization run can be initiated with the following functions:
 - without terrain effects
 ```sh
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
-             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-             elitism =TRUE, nelit = 7, trimForce = TRUE,
-             referenceHeight = 50, RotorHeight = 100)
+                     vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+                     Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+                     elitism =TRUE, nelit = 7, trimForce = TRUE,
+                     referenceHeight = 50, RotorHeight = 100)
 ```
 
 - with terrain effects
@@ -152,21 +152,21 @@ sourceCCL <- "Source of the CCL raster (TIF)"
 sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 
 result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
-             Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
-             elitism = TRUE, nelit = 7, trimForce = TRUE,
-             referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
-             sourceCCLRoughness = sourceCCLRoughness)
+                     vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+                     Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
+                     elitism = TRUE, nelit = 7, trimForce = TRUE,
+                     referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
+                     sourceCCLRoughness = sourceCCLRoughness)
 ```
 
 ###  Function calls for genetic_algorithm
 - without terrain effects
 ```sh
 result <- genetic_algorithm(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr =0.8,
-             Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-             elitism = TRUE, nelit = 7, trimForce = TRUE,
-             referenceHeight = 50, RotorHeight = 100)
+                            vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr =0.8,
+                            Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+                            elitism = TRUE, nelit = 7, trimForce = TRUE,
+                            referenceHeight = 50, RotorHeight = 100)
 ```
 
 - with terrain effects
@@ -174,11 +174,11 @@ result <- genetic_algorithm(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, i
 sourceCCL <- "Source of the CCL raster (TIF)"
 sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 result <- genetic_algorithm(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
-             vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
-             Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
-             elitism = TRUE, nelit = 7, trimForce = TRUE,
-             referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
-             sourceCCLRoughness = sourceCCLRoughness)
+                            vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+                            Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
+                            elitism = TRUE, nelit = 7, trimForce = TRUE,
+                            referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
+                            sourceCCLRoughness = sourceCCLRoughness)
 ```
 
 ```sh
@@ -191,37 +191,37 @@ araster <- "/..pathto../a_param_raster.tif"
 weibullrasters <- list(raster(kraster), raster(araster))
 
 result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
-                  fcrR=5,iteration=10, vdirspe = wind_df, crossPart1 = "EQU",
-                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-                  SurfaceRoughness = 0.3, topograp = FALSE,
-                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-                  referenceHeight = 50,RotorHeight = 100,
-                  weibull = TRUE, weibullsrc = weibullrasters)
-plot_windfarmGA(result = result_weibull, GridMethod = "h", Polygon1 = Polygon1)
+                                    fcrR=5, iteration=10, vdirspe = wind_df, crossPart1 = "EQU",
+                                    selstate="FIX", mutr=0.8, Proportionality = 1, Rotor=30,
+                                    SurfaceRoughness = 0.3, topograp = FALSE,
+                                    elitism=TRUE, nelit = 7, trimForce = TRUE,
+                                    referenceHeight = 50,RotorHeight = 100,
+                                    weibull = TRUE, weibullsrc = weibullrasters)
+plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
 ```
 The argument **GridMethod**, **weibull**, **weibullsrc** can also be given to the function `windfarmGA`.
 
 #### Plot the Results on a Leaflet Map
 ```sh
 ## Plot the best wind farm on a leaflet map (ordered by energy values)
-plot_leaflet(result = resulthex, Polygon1 = polygon, which = 1)
+plot_leaflet(result = resulthex, Polygon1, which = 1)
 
 ## Plot the last wind farm (ordered by chronology).
-plot_leaflet(result = resulthex, Polygon1 = polygon, orderitems = F, which = 1)
+plot_leaflet(result = resulthex, Polygon1, orderitems = FALSE, which = 1)
 ```
 
 ## Plotting Methods of the Genetic Algorithm 
 Several plotting functions are available:
 ```sh
- - plot_windfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
- - plot_result(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
+ - plot_windfarmGA(result, Polygon1)
+ - plot_result(result, Polygon1, best = 1)
  - plot_evolution(result, ask = TRUE, spar = 0.1)
  - plot_development(result)
  - plot_parkfitness(result, spar = 0.1)
  - plot_fitness_evolution(result)
  - plot_cloud(result, pl = TRUE)
  - plot_heatmap(result = result, si = 5)
- - plot_leaflet(result = result, Polygon1 = polygon, which = 1)
+ - plot_leaflet(result = result, Polygon1 = Polygon1, which = 1)
 ```
 
 For further information, please check the package [description and examples](https://CRAN.R-project.org/package=windfarmGA/windfarmGA.pdf).
@@ -262,7 +262,7 @@ result <- genetic_algorithm(Polygon1 = sp_polygon,
 plot_windfarmGA(result, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 
 # The plotting functions can also be called individually:
-plot_result(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE, Grid = Grid[[2]])
+plot_result(result, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
 plot_evolution(result, ask = TRUE, spar = 0.1)
 plot_parkfitness(result, spar = 0.1)
 plot_fitness_evolution(result)

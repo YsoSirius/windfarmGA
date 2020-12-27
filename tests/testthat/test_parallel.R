@@ -2,7 +2,6 @@ context("Parallel")
 library(sf)
 
 test_that("Test Parallelisation", {
-  skip("")
   skip_if(Sys.info()["machine"] != "x86-64")
   
   ## Inputs ##################
@@ -26,6 +25,7 @@ test_that("Test Parallelisation", {
   expect_false(any(unlist(sapply(res, is.na))))
 
   ## Too many Cluster
+  skip("Too many clusters")
   res <- expect_warning(
     genetic_algorithm(Polygon1 = Polygon1,
                       n = 12, iteration = 2,

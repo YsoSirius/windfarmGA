@@ -114,17 +114,13 @@ test_that("Test Genetic Algorithm Function", {
   expect_is(HexGrid[[1]], "matrix")
   expect_is(HexGrid[[2]], "sfc_POLYGON")
   expect_false(anyNA(HexGrid[[1]]))
-
+  
   HexGrid <- hexa_area(Polygon1, 400.1, FALSE)
   expect_is(HexGrid[[1]], "matrix")
   expect_is(HexGrid[[2]], "sfc_POLYGON")
   expect_false(anyNA(HexGrid[[1]]))
   
-  HexGrid <- hexa_area(Polygon1, 1000000000, FALSE)
-  expect_is(HexGrid[[1]], "matrix")
-  expect_is(HexGrid[[2]], "sfc_POLYGON")
-  expect_false(anyNA(HexGrid[[1]]))
-  rm(HexGrid)
+  quiet(expect_error(hexa_area(Polygon1, 1000000000, FALSE)))
   
   ## STARTGA ################################
   startsel <- init_population(Grid[[1]], n = 10, nStart = 20)

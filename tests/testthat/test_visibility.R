@@ -16,6 +16,11 @@ test_that("Test Viewshed Functions", {
   # plot(Polygon1)
 
   ## getDEM #################
+  DEM_meter <- expect_warning(getDEM(as(Polygon1, "Spatial")))
+  expect_is(DEM_meter, "list")
+  expect_true(class(DEM_meter[[1]]) == "RasterLayer")
+  expect_true(class(DEM_meter[[2]])[[1]] == "sf")
+  
   DEM_meter <- expect_warning(getDEM(Polygon1))
   expect_is(DEM_meter, "list")
   expect_true(class(DEM_meter[[1]]) == "RasterLayer")
@@ -56,6 +61,20 @@ test_that("Test Viewshed Functions", {
   turbloc <- st_sample(DEM_meter[[2]], 10, type = "random")
   res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
                   turbine_locs = turbloc,  h1 = 1.8, h2 = 50)
+  expect_is(res, "list")
+  expect_true(length(res) == 5)
+  expect_true(is.logical(as.vector(res[[1]])))
+  expect_false(anyNA(res[[2]]))
+  expect_true(class(res[[3]])[[1]] == "sf")
+  expect_true(class(res[[4]]) == "RasterLayer")
+  expect_false(anyNA(res[[5]]))
+  
+  
+  turbloc <- st_sample(DEM_meter[[2]], 10, type = "random")
+  res <- expect_warning(
+    viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]],
+                  turbine_locs = as(turbloc, "Spatial"),  h1 = 1.8, h2 = 50)
+  )
   expect_is(res, "list")
   expect_true(length(res) == 5)
   expect_true(is.logical(as.vector(res[[1]])))
@@ -161,6 +180,12 @@ test_that("Test Viewshed Functions", {
   expect_false(anyNA(rppl))
   expect_true(ncol(rppl) == 3)
   
+  na_raster <- DEM_meter[[1]]
+  na_raster@data@values[12:18] <- NA
+  rppl <- rasterprofile(r = na_raster, xy1 = sample_xy[10, ], 
+                        xy2 = sample_xy[26,], reso, T)
+  expect_false(anyNA(rppl))
+  expect_true(ncol(rppl) == 3)
   
   
   ## viewTo ##################
@@ -179,6 +204,25 @@ test_that("Test Viewshed Functions", {
                   h1 = 200, h2 = 2, reso, plot=TRUE, interpolate = TRUE)
   expect_true(is.logical(canrs))
   expect_true(length(canrs) == 1)
+  
+  
+  matrix <- matrix(abs(sin(1:100)), nrow=10, byrow = TRUE)
+  r1 <- raster(matrix)
+  shape <- st_as_sf(as(extent(r1), "SpatialPolygons"))
+  locs = st_sample(shape, 10, type = "random")
+  mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
+  sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
+  canrs <- cansee(r1, xy1 = st_coordinates(locs)[1,],
+                  xy2 = sample_xy[10,],
+                  h1 = 3,
+                  h2 = 1.5,
+                  reso = min(res(r1)),
+                  plot=TRUE)
+  expect_true(is.logical(canrs))
+  expect_true(length(canrs) == 1)
+  
+  
+  
   
   ## Create Warning (complete.cases)
   Polygon1 <- sf::st_as_sf(sf::st_sfc(

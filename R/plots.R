@@ -1668,6 +1668,7 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
   op <- par(no.readonly = TRUE) 
   par(mfrow = c(1, 2))
   
+  result_inputs <- result[1,'inputData'][[1]]
   resultRS1 <- do.call("rbind", cbind(resultRS))
   a <- resultRS1[,"EnergyOverall"]
   order1 <- order(a, decreasing = TRUE)
@@ -1692,11 +1693,14 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
   resultRS1 <- rev(resultRS1)
   resBest <- resBest[order(resBest[,"EnergyOverall"]),,drop=FALSE]
   
-  resolR <- as.numeric(result[,"inputData"][[1]][,1]["Resolution"])
-  PropG <- as.numeric(result[,"inputData"][[1]][,1]["Percentage of Polygon"])
-  
   Polygon1 <- isSpatial(Polygon1)
-  Grid <- grid_area(Polygon1, size = resolR, prop = PropG)[[2]]
+  cellsize <- as.numeric(result_inputs["Resolution",][[1]])
+  if (result_inputs["Grid Method",][[1]] == "Rectangular") {
+    Grid <- grid_area(Polygon1, size = cellsize,
+                      prop = as.numeric(result_inputs["Percentage of Polygon",][[1]]))[[2]]
+  } else {
+    Grid <- hexa_area(Polygon1, size = cellsize)[[2]]
+  }
   rbPal1 <- grDevices::colorRampPalette(c("green","red"))
   col2res <- "lightblue"
   
