@@ -4,8 +4,9 @@ library(raster)
 
 test_that("Test Terrain and Weibull Effects", {
   skip_on_appveyor()
-  # skip_on_travis()
-  # skip_on_cran()
+  skip_on_cran()
+  skip("")
+  # skip_if(Sys.info()["machine"] != "x86-64")
   
   ## Test Terrain Model ###################
   Projection <- 3035

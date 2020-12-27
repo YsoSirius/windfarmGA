@@ -598,7 +598,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   }
   if (any(whichPl == 6)) {
     print("plot_heatmap: Plot a Heatmap of all Grid Cells:")
-    plot_heatmap(result = result, si = 5)
+    plot_heatmap(result = result, si = 2)
     # readline(prompt = "Press [enter] to continue")
   }
   # if (any(whichPl==7)){

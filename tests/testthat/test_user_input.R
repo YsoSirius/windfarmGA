@@ -1,6 +1,12 @@
 context("User Interaction")
-library(windfarmGA)
 library(sf)
+
+## Function to suppress print/cat outputs
+quiet <- function(x) {
+  sink(tempfile()) 
+  on.exit(sink()) 
+  invisible(force(x)) 
+}
 
 test_that("User Input", {
   # skip_on_cran()
@@ -15,9 +21,8 @@ test_that("User Input", {
   points <- cbind(c(4488182.26267016, 4488852.91748256),
                  c(2667398.93118627, 2667398.93118627))
   res <- getISO3(pp = points, crs_pp = 3035, col="?")
-  expect_true(res == "Austria")
+  expect_true(res[[1]][[1]] == "Austria")
   expect_false(anyNA(res))
-  expect_true(all(dim(res) == c(1,1)))
   
   # reset connection
   options(windfarmGA.connection = stdin())
@@ -81,7 +86,7 @@ test_that("User Input", {
   rm(new, new_df)
 
   for (i in 1:40) {
-    new <- random_search_single(resultrect, polygon, max_dist = 5, Plot = TRUE)
+    new <- quiet(random_search_single(resultrect, polygon, max_dist = 5, Plot = TRUE))
     expect_is(new, "list")
     expect_false(anyNA(unlist(new)))
     new_df <- do.call(rbind, new)
@@ -141,7 +146,7 @@ test_that("User Input", {
   ans <- paste(id, collapse = "\n")
   write(ans, f)
   
-  new <- random_search_single(resulthex, polygon, GridMethod = "h")
+  new <- random_search_single(resulthex, polygon)
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -169,13 +174,13 @@ test_that("User Input", {
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(c("E","E", "F", "n"), collapse = "\n"), f)
-  expect_error(windfarmGA(
+  quiet(expect_error(windfarmGA(
     Polygon1 = Polygon1,
     n = 12, 
     vdirspe = data.in,
     Rotor = 60,
     RotorHeight = 100
-  ))
+  )))
   # reset connection / close the file
   options(windfarmGA.connection = stdin())
   close(f)
@@ -185,13 +190,13 @@ test_that("User Input", {
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(c("E","E", "F", "", ""), collapse = "\n"), f)
-  res <- windfarmGA(
+  res <- quiet(windfarmGA(
     Polygon1 = Polygon1, crossPart1 = "somethign",
     n = 12, iteration = 3,
     vdirspe = data.in,
-    Rotor = 60,
+    Rotor = 30,
     RotorHeight = 100
-  )
+  ))
   expect_true(nrow(res) == 3)
   expect_is(res, "matrix")
   expect_false(any(unlist(sapply(res, is.na))))

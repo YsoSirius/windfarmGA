@@ -1,5 +1,4 @@
 context("Plots")
-library(testthat)
 library(raster)
 library(sf)
 
@@ -11,7 +10,7 @@ quiet <- function(x) {
 }
 
 test_that("Test Plotting Functions", {
-  # skip_on_cran()
+  skip_on_cran()
   
   ## Windrose Plotting #############
   wind_test <- data.frame(x = runif(10, 10, 20), 
@@ -193,11 +192,6 @@ test_that("Test Plotting Functions", {
   expect_false(anyNA(heat_res[[2]]))
   expect_false(anyNA(heat_res[[1]][, 1:3]))
 
-  heat_res <- plot_heatmap(resultrect, idistw = 50, si = 5)
-  expect_true(class(heat_res) == "list")
-  expect_false(anyNA(heat_res[[2]]))
-  expect_false(anyNA(heat_res[[1]][, 1:3]))
-  
   ## plot_evolution ###############
   evo_res <- plot_evolution(resultrect, ask = FALSE)
   expect_true(is.null(evo_res))

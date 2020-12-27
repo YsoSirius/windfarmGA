@@ -9,7 +9,7 @@ quiet <- function(x) {
 }
 
 test_that("Test Genetic Algorithm with different Inputs", {
-  # skip_on_cran()
+  skip_on_cran()
   
   ## Data ##############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
