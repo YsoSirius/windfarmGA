@@ -57,7 +57,6 @@ reference:
     - grid_area
     - hexa_area
     - windata_format
-    - tess2SPdf
     - isSpatial
     - permutations
     - readinteger
@@ -69,14 +68,12 @@ reference:
   - title: Datasets
     desc: Results and Shapefiles included in the package. 
     contents:
-    - a_weibull
-    - k_weibull
-    - ccl
-    - big_shape
     - resultrect
+    - resulthex
+    - sp_polygon
+    - big_shape
     - hole_shape
     - multi_shape
-    - sp_polygon
 
 authors:
   Sebastian Gatscha:

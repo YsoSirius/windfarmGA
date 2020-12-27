@@ -35,3 +35,4 @@ release_to_cran.R
 ^_pkgdown\.yaml$
 ^_experiment$
 ^revdep$
+^\.github$

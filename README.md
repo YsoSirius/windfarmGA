@@ -4,15 +4,18 @@
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"/>
 </p>
 
+<!-- badges: start -->
 [![](https://www.r-pkg.org/badges/version/windfarmGA)](https://www.r-pkg.org/pkg/windfarmGA)
 [![cran checks](https://cranchecks.info/badges/worst/windfarmGA)](https://cran.r-project.org/web/checks/check_results_windfarmGA.html)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen)](https://www.r-pkg.org/pkg/windfarmGA)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://www.rpackages.io/package/windfarmGA)
 [![Build Status](https://travis-ci.org/YsoSirius/windfarmGA.svg?branch=master)](https://travis-ci.org/YsoSirius/windfarmGA)
+[![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)](https://github.com/YsoSirius/windfarmGA/actions)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/YsoSirius/windfarmGA?branch=master&svg=true)](https://ci.appveyor.com/project/YsoSirius/windfarmGA)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)](https://codecov.io/gh/YsoSirius/windfarmGA)
 
+<!-- badges: end -->
 
 
 Genetic algorithm to optimize the layout of windfarms.
@@ -106,8 +109,6 @@ to overlay the considered area to be represented as grid cell.
 ```sh
 Rotor <- 20
 fcrR <- 9
-# proj4string(Polygon1)
-# Polygon1 <- spTransform(Polygon1, CRSobj = CRS(Projection))
 Grid <- grid_area(shape = Polygon1, resol = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
 str(Grid)
 ```
