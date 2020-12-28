@@ -69,7 +69,7 @@ get_dist_angles <- function(t, o, wkl, distanz, polYgon, plotAngles) {
 
   ## TODO - optimize this part (Write the whole function get_dist_angles or even turbine_influences in C++)
   ## Are there turbines in front or not? If yes, calculate distances and
-  ## angles and check if they might have an influence or not
+  ## angles and check if they have an influence or not
   len2 <- length(turbines_ahead[,1L])
   if (len2 != 0L) {
     ## If turbines are in front of the current turbine, create a list and

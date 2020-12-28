@@ -63,31 +63,31 @@ test_that("Test Terrain and Weibull Effects", {
     locations = as(st_transform(sp_polygon, 4326), "Spatial"), z = 11))
   sp_polygonproj <- st_transform(sp_polygon, st_crs(proj4string(DEM)))
   DEMcrop <- crop(DEM, sp_polygonproj)
-  # plot(DEMcrop); plot(sp_polygonproj, add=T)
   maxval <- max(values(DEMcrop))
   a_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+1)
   k_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+6)
-  # plot(a_raster); plot(sp_polygonproj, add=T)
-  # plot(k_raster); plot(sp_polygonproj, add=T)
   resultrect <- quiet(expect_warning(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
                       vdirspe = data.in,
                       Rotor = 30,
-                      RotorHeight = 100, verbose = TRUE, 
-                      weibull=TRUE, weibullsrc = list(k_raster, a_raster))
+                      RotorHeight = 100,
+                      verbose = TRUE, 
+                      weibull = TRUE,
+                      weibullsrc = list(k_raster, a_raster))
   ))
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
-  ## Weibull-Raster from Package used (NOT WORKING!)
+  ## Weibull-Raster from Package used
   resultrect <- quiet(expect_warning(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
                       vdirspe = data.in,
                       Rotor = 30,
-                      RotorHeight = 100, verbose = TRUE,
+                      RotorHeight = 100,
+                      verbose = TRUE,
                       weibull=TRUE)
   ))
   expect_true(nrow(resultrect) == 1)
@@ -97,13 +97,15 @@ test_that("Test Terrain and Weibull Effects", {
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(rep(" ", 20), collapse = "\n"), f)
-  resultrect <- quiet(expect_warning(windfarmGA(Polygon1 = sp_polygon,
-                           selstate = "FIX", crossPart1 = "EQU",
-                        n = 12, iteration = 1,
-                        vdirspe = data.in,
-                        Rotor = 30,
-                        RotorHeight = 100, verbose = TRUE,
-                        weibull = TRUE)))
+  resultrect <- quiet(expect_warning(
+    windfarmGA(Polygon1 = sp_polygon,
+               selstate = "FIX", crossPart1 = "EQU",
+               n = 12, iteration = 1,
+               vdirspe = data.in,
+               Rotor = 30,
+               RotorHeight = 100, verbose = TRUE,
+               weibull = TRUE)
+    ))
   options(windfarmGA.connection = stdin())
   close(f)
   expect_true(nrow(resultrect) == 1)
@@ -111,52 +113,43 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Plotting Terrain Effects #############
-  plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = TRUE))
+  plres <- expect_warning(
+    plot_result(resultrect, sp_polygon,
+                topographie = TRUE,
+                plotEn = 1,
+                sourceCCLRoughness = sourceCCLRoughness, 
+                weibullsrc = list(a_raster * (gamma(1 + (1 / k_raster)))))
+    )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = TRUE,
-                       sourceCCLRoughness = sourceCCLRoughness, 
-                       weibullsrc = list(k_raster, a_raster)))
+  plres <- expect_warning(
+    plot_result(resultrect, sp_polygon,
+                weibullsrc = list(k_raster, a_raster))
+    )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  # plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2,
-  #                      sourceCCLRoughness = sourceCCLRoughness, 
-  #                      weibullsrc = list(k_raster, a_raster)))
-  # expect_false(anyNA(plres))
-  # expect_true(all(plres$EfficAllDir <= 100))
-  
-  plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2,
-                       sourceCCLRoughness = sourceCCLRoughness, 
-                       weibullsrc = list(a_raster * (gamma(1 + (1 / k_raster))))))
+  ## Weibull Single Raster for mean wind spead
+  weibullraster <- a_raster * (gamma(1 + (1 / k_raster)))
+  plres <- expect_warning(
+    plot_result(resultrect, sp_polygon,
+                plotEn = 2,
+                weibullsrc = weibullraster)
+    )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  # weibullraster <- a_raster * (gamma(1 + (1 / k_raster)))
-  # plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2,
-  #                      sourceCCLRoughness = sourceCCLRoughness, 
-  #                      weibullsrc = weibullraster))
-  # expect_false(anyNA(plres))
-  # expect_true(all(plres$EfficAllDir <= 100))
-  
-  # plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2))
-  # expect_false(anyNA(plres))
-  # expect_true(all(plres$EfficAllDir <= 100))
-  
-  # if (length(list.files(pattern = "g100_06.tif")) != 0) {
-  #   file.remove("g100_06.tif")
-  # }
-  # plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = T, plotEn = 1))
-  # expect_false(anyNA(plres))
-  # expect_true(all(plres$EfficAllDir <= 100))
-  
-  # if (length(list.files(pattern = "g100_06.tif")) != 0) {
-  #   file.remove("g100_06.tif")
-  # }
-  # plres <- expect_warning(plot_result(resultrect, sp_polygon, topographie = T, plotEn = 2))
-  # expect_false(anyNA(plres))
-  # expect_true(all(plres$EfficAllDir <= 100))
+  if (length(list.files(pattern = "g100_06.tif")) != 0) {
+    file.remove("g100_06.tif")
+  }
+  plres <- expect_warning(
+    plot_result(resultrect,
+                sp_polygon, 
+                topographie = TRUE,
+                plotEn = 1))
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
   
   ## calculate_energy with Terrain + Plots!! ##################
   ## With Terrain (+new function)
@@ -172,7 +165,8 @@ test_that("Test Terrain and Weibull Effects", {
   
   data.in <- data.frame(ws = 12, wd = 0)
   Rotor <- 50; fcrR <- 3
-  resGrid <- grid_area(shape = Polygon1, size = Rotor * fcrR, prop = 1, plotGrid = FALSE)
+  resGrid <- grid_area(shape = Polygon1, size = Rotor * fcrR,
+                       prop = 1, plotGrid = FALSE)
   resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
   
   srtm_crop <- suppressWarnings(raster::mask(srtm_crop, Polygon1))

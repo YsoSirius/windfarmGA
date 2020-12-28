@@ -1,10 +1,10 @@
 # Updates 3.0.0
-- The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now Simple Features. A Shapefile Polygon can still be
+- The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be
   passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
 - The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`. Therefore, the hexagon cellsize is no longer divided by 2
   and is identical to the rectangular grid size.
-- The `grid_area` argument `resol` changed to `size`
-- The new dependency `elevatr` was added, because downloading SRTM data with the `raster::getData` didn't work anymore for me.
+- The `grid_area` argument `resol` changed to `size`.
+- The new dependency `elevatr` has been added because it provides elevation data with a higher resolution compared to `raster::getData`.
 - Several `dependencies` that are not essential for the algorithm were moved to `Suggests`.
 - Bugfix for the calculation of the visibility analysis. [#17](https://github.com/YsoSirius/windfarmGA/issues/17)
 - The `viewshed` parameter `h1` can now also be a numeric vector with different height offsets. [#18](https://github.com/YsoSirius/windfarmGA/issues/18)

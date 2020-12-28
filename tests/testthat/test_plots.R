@@ -102,11 +102,14 @@ test_that("Test Plotting Functions", {
       c(2668272, 2669343, 2669343, 2668272, 2668272)))),
     crs = 3035
   ))
-  plot_res <- quiet(plot_result(resultrect[1:10,], Polygon1 = sp_polygonnp, best = 5000, 
+  plot_res <- quiet(plot_result(resultrect[1:10,], 
+                                Polygon1 = sp_polygonnp, best = 5000, 
                                 plotEn = 1))
   expect_false(anyNA(plot_res))
   expect_true(all(plot_res$EfficAllDir <= 100))
-  plot_res <- quiet(plot_result(resultrect[1:10,], Polygon1 = sp_polygonnp, best = 5000, plotEn = 2))
+  plot_res <- quiet(plot_result(resultrect[1:10,], 
+                                Polygon1 = sp_polygonnp, 
+                                best = 5000, plotEn = 2))
   expect_false(anyNA(plot_res))
   expect_true(all(plot_res$EfficAllDir <= 100))
   
@@ -124,29 +127,40 @@ test_that("Test Plotting Functions", {
                         vdirspe = winddat,
                         Rotor = 30, 
                         RotorHeight = 100)
-  plot_res <- quiet(plot_result(resultrect100, Polygon1 = sp_polygonnp, best = 5000, plotEn = 1))
+  plot_res <- quiet(plot_result(resultrect100, 
+                                Polygon1 = sp_polygonnp, 
+                                best = 5000, plotEn = 1))
   expect_false(anyNA(plot_res))
   expect_true(all(plot_res$EfficAllDir <= 100))
-  plot_res <- quiet(plot_result(resultrect100, Polygon1 = sp_polygonnp, best = 5000, plotEn = 2))
+  plot_res <- quiet(plot_result(resultrect100, 
+                                Polygon1 = sp_polygonnp, 
+                                best = 5000, plotEn = 2))
   expect_false(anyNA(plot_res))
   expect_true(all(plot_res$EfficAllDir <= 100))
   
-  plot_res <- quiet(plot_result(resultrect, Polygon1 = sp_polygon))
+  plot_res <- quiet(plot_result(resultrect,
+                                Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
   
-  plot_res <- quiet(plot_result(resultrect, best = 5, Polygon1 = sp_polygon))
+  plot_res <- quiet(plot_result(resultrect, best = 5, 
+                                Polygon1 = sp_polygon))
   expect_false(anyNA(plot_res))
   
   Grid <- grid_area(st_as_sf(sp_polygon), size = 150)
-  plot_res <- quiet(plot_result(resultrect, best = 5, Polygon1 = sp_polygon, 
+  plot_res <- quiet(plot_result(resultrect, best = 5, 
+                                Polygon1 = sp_polygon, 
                                Grid = Grid[[2]]))
   expect_false(anyNA(plot_res))
   
-  plot_res <- quiet(plot_result(resultrect, Polygon1 = sp_polygon, plotEn = 2, 
+  plot_res <- quiet(plot_result(resultrect, 
+                                Polygon1 = sp_polygon, 
+                                plotEn = 2, 
                                Grid = Grid[[2]]))
   expect_false(anyNA(plot_res))
   
-  expect_error(quiet(plot_result(resultrect, Polygon1 = sp_polygon, plotEn = 3)))
+  expect_error(quiet(plot_result(resultrect,
+                                 Polygon1 = sp_polygon,
+                                 plotEn = 3)))
 
   ## plot_windfarmGA ###############
   respwf <- plot_windfarmGA(resultrect, sp_polygon, whichPl = "all",

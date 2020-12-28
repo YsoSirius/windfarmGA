@@ -1,28 +1,28 @@
 #' @title Calculate Energy Outputs of Individuals
 #' @name calculate_energy
-#' @description  Calculate the energy output and efficiency rates of an
+#' @description Calculate the energy output and efficiency rates of an
 #'   individual in the current population under all given wind directions and
 #'   speeds. If the terrain effect model is activated, the main calculations to
 #'   model those effects will be done in this function.
 #'
 #' @export
 #'
-#' @param sel A data.frame of an individual of the current population
-#'   (data.frame)
+#' @param sel A matrix of an individual of the current population
+#'   (matrix)
 #' @param referenceHeight The height at which the incoming wind speeds were
 #'   measured (numeric)
-#' @param RotorHeight The desired height of the turbines
+#' @param RotorHeight The desired height of the turbines (numeric)
 #' @param SurfaceRoughness A surface roughness length of the considered area in
 #'   m. If the terrain effect model is activated, a surface roughness will be
 #'   calculated for every grid cell with the elevation and land cover
-#'   information
-#' @param wnkl Indicates the angle at which no wake influences are considered
-#'   (numeric)
-#' @param distanz Indicates the distance after which the wake effects are
-#'   considered to be eliminated
-#' @param polygon1 The considered area as shapefile
-#' @param resol The resolution of the grid in meter
-#' @param RotorR The desired rotor radius in meter
+#'   information (numeric)
+#' @param wnkl The angle from which wake influences are considered to be 
+#'   negligible (numeric)
+#' @param distanz The distance after which wake effects are considered
+#'   to be eliminated (numeric)
+#' @param polygon1 The considered area as Simple Feature Polygon
+#' @param resol The resolution of the grid in meter (numeric)
+#' @param RotorR The desired rotor radius in meter (numeric)
 #' @param dirSpeed The wind speed and direction data.frame
 #' @param topograp Logical value that indicates whether the terrain effect model
 #'   is activated (TRUE) or deactivated (FALSE)
@@ -31,7 +31,7 @@
 #' @param cclRaster A Corine Land Cover raster that has to be downloaded
 #'   previously. See also the details at \code{\link{windfarmGA}} The raster
 #'   will only be used when the terrain effect model is activated. (raster)
-#' @param weibull A raster representing the estimated wind speeds
+#' @param weibull A raster representing the estimated mean wind speeds
 #' @param plotit Logical value. If TRUE, the process will be plotted. 
 #'   Default is FALSE.
 #'
@@ -42,7 +42,7 @@
 #'   directions.
 #'
 #' @examples \dontrun{
-#' ## Create a random shapefile
+#' ## Create a random Polygon
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
@@ -302,7 +302,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     ## Get the influecing points given with incoming wind direction angle
     ## and reduce then to data frame
     tmp <- turbine_influences(t = xy_individual, wnkl = wnkl, dist = distanz,
-                       polYgon = polygon1, dirct = angle)
+                              polYgon = polygon1, dirct = angle)
     df_all <- do.call("rbind", tmp)
 
     ## Sometimes betha / gamma are NA - Set to 0.. 

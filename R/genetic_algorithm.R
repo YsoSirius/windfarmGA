@@ -233,11 +233,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
-    ## TODO - test on Linux
     max_cores <- parallel::detectCores()
     if (numCluster > max_cores) {
-      warning("Maximum number of cores is: ", max_cores, 
-              "\n'numCluster' will be set to: ", max_cores-1)
+      warning("Maximum number of cores is: ", max_cores, "\n'numCluster' will be set to: ", max_cores-1)
       numCluster <- max_cores - 1
     }
     type_cluster <- "PSOCK"  ## TODO - should this be available as option too?
@@ -353,7 +351,6 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     grid_filtered <- Grid1[[2]]
   }
   n_gridcells <- nrow(Grid)
-
 
   ## INIT VARIABLES 2 ###############
   ## Determine the amount of initial individuals and create initial population.

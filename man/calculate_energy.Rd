@@ -23,30 +23,30 @@ calculate_energy(
 )
 }
 \arguments{
-\item{sel}{A data.frame of an individual of the current population
-(data.frame)}
+\item{sel}{A matrix of an individual of the current population
+(matrix)}
 
 \item{referenceHeight}{The height at which the incoming wind speeds were
 measured (numeric)}
 
-\item{RotorHeight}{The desired height of the turbines}
+\item{RotorHeight}{The desired height of the turbines (numeric)}
 
 \item{SurfaceRoughness}{A surface roughness length of the considered area in
 m. If the terrain effect model is activated, a surface roughness will be
 calculated for every grid cell with the elevation and land cover
-information}
+information (numeric)}
 
-\item{wnkl}{Indicates the angle at which no wake influences are considered
-(numeric)}
+\item{wnkl}{The angle from which wake influences are considered to be 
+negligible (numeric)}
 
-\item{distanz}{Indicates the distance after which the wake effects are
-considered to be eliminated}
+\item{distanz}{The distance after which wake effects are considered
+to be eliminated (numeric)}
 
-\item{polygon1}{The considered area as shapefile}
+\item{polygon1}{The considered area as Simple Feature Polygon}
 
-\item{resol}{The resolution of the grid in meter}
+\item{resol}{The resolution of the grid in meter (numeric)}
 
-\item{RotorR}{The desired rotor radius in meter}
+\item{RotorR}{The desired rotor radius in meter (numeric)}
 
 \item{dirSpeed}{The wind speed and direction data.frame}
 
@@ -79,7 +79,7 @@ Calculate the energy output and efficiency rates of an
 }
 \examples{
 \dontrun{
-## Create a random shapefile
+## Create a random Polygon
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
