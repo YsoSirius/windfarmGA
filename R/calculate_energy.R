@@ -21,7 +21,6 @@
 #' @param distanz The distance after which wake effects are considered
 #'   to be eliminated (numeric)
 #' @param polygon1 The considered area as Simple Feature Polygon
-#' @param resol The resolution of the grid in meter (numeric)
 #' @param RotorR The desired rotor radius in meter (numeric)
 #' @param dirSpeed The wind speed and direction data.frame
 #' @param topograp Logical value that indicates whether the terrain effect model
@@ -76,7 +75,7 @@
 #' plot(resGrid[[2]], add = TRUE)
 #' resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
 #'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-#'                    distanz = 100000, resol = 200,dirSpeed = data.in,
+#'                    distanz = 100000, dirSpeed = data.in,
 #'                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
 #'                    weibull = FALSE)
 #' resCalcEn <- as.data.frame(resCalcEn)
@@ -94,14 +93,14 @@
 #' ## wind direction.
 #' resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
 #'                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-#'                    distanz = 100000, resol = 200,dirSpeed = data.in10,
+#'                    distanz = 100000, dirSpeed = data.in10,
 #'                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
 #'                    weibull = FALSE)
 #' }
 #'
 calculate_energy <- function(sel, referenceHeight, RotorHeight,
                              SurfaceRoughness, wnkl, distanz,
-                             polygon1, resol, RotorR, dirSpeed,
+                             polygon1, RotorR, dirSpeed,
                              srtm_crop, topograp, cclRaster, weibull,
                              plotit = FALSE) {
 

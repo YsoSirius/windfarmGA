@@ -196,7 +196,7 @@ test_that("Test Terrain and Weibull Effects", {
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                                 srtm_crop = srtm_crop, cclRaster = cclRaster,
                                 RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-                                distanz = 100000, resol = 200,dirSpeed = data.in,
+                                distanz = 100000, dirSpeed = data.in,
                                 RotorR = 50, polygon1 = Polygon1,
                                 topograp = TRUE, weibull = FALSE, plotit = TRUE)
   
@@ -218,7 +218,7 @@ test_that("Test Terrain and Weibull Effects", {
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                                 srtm_crop = srtm_crop, cclRaster = cclRaster,
                                 RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-                                distanz = 100000, resol = 200,dirSpeed = data.in,
+                                distanz = 100000, dirSpeed = data.in,
                                 RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                                 weibull = weibullraster, plotit = TRUE)
   expect_output(str(resCalcEn), "List of 1")
@@ -238,7 +238,7 @@ test_that("Test Terrain and Weibull Effects", {
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                                 srtm_crop = srtm_crop, cclRaster = cclRaster,
                                 RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-                                distanz = 100000, resol = 200,dirSpeed = data.in,
+                                distanz = 100000, dirSpeed = data.in,
                                 RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                                 weibull = weibullrastercrop, plotit = T)
   expect_output(str(resCalcEn), "List of 1")

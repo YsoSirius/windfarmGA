@@ -391,7 +391,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     ## Plot Best Windfarm  ###########
     cat(paste("\nPlot ", (best + 1) - i, " Best ",title," Solution:\n"))
     par(mfrow = c(1, 1), ask = FALSE)
-    plot(Polygon1, col = col2res, 
+    plot(st_geometry(Polygon1), col = col2res, 
          main = paste((best + 1) - i, "Best ", title, " Windfarm", 
                       "\nEnergy Output", best_result$EnergyOverall[[1]], "kW",
                       "\nEfficiency:", best_result$EfficAllDir[[1]], "%"),

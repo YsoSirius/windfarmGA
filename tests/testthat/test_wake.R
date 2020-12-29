@@ -200,7 +200,7 @@ test_that("Test Wake Functions", {
   ## population.
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                            RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-                           distanz = 100000, resol = 200,dirSpeed = data.in,
+                           distanz = 100000, dirSpeed = data.in,
                            RotorR = 50, polygon1 = polYgon, 
                            topograp = FALSE, weibull = FALSE)
   
@@ -216,7 +216,7 @@ test_that("Test Wake Functions", {
   
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                            RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-                           distanz = 100000, resol = 200,dirSpeed = data.in,
+                           distanz = 100000, dirSpeed = data.in,
                            RotorR = 50, polygon1 = polYgon, 
                            topograp = FALSE, weibull = FALSE, plotit = TRUE)
   
@@ -228,7 +228,7 @@ test_that("Test Wake Functions", {
   data.in <- as.data.frame(cbind(ws=c(12,12),wd=c(0,30)))
   resCalcEn <- calculate_energy(sel=resStartGA[[1]],referenceHeight= 50,
                            RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                           distanz = 100000, resol = 200,dirSpeed = data.in,
+                           distanz = 100000, dirSpeed = data.in,
                            RotorR = 50, polygon1 = polYgon, topograp = FALSE, 
                            weibull = FALSE)
   
@@ -253,7 +253,7 @@ test_that("Test Wake Functions", {
   # resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
   # resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
   #                          RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-  #                          distanz = 100000, resol = 200,dirSpeed = data.in,
+  #                          distanz = 100000, dirSpeed = data.in,
   #                          RotorR = 50, polygon1 = hole_shape, 
   #                          topograp = FALSE, weibull=FALSE,
   #                          plotit = TRUE)

@@ -100,7 +100,7 @@ fitness <- function(selection, referenceHeight, RotorHeight,
         sel = selection[[k]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
         wnkl = wnkl_max, distanz = dist_max,
-        polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
+        polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
         weibull = weibull)
     }
@@ -114,7 +114,7 @@ fitness <- function(selection, referenceHeight, RotorHeight,
         sel = selection[[i]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
         wnkl = wnkl_max, distanz = dist_max,
-        polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
+        polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
         weibull = weibull)
 

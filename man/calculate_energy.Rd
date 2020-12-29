@@ -12,7 +12,6 @@ calculate_energy(
   wnkl,
   distanz,
   polygon1,
-  resol,
   RotorR,
   dirSpeed,
   srtm_crop,
@@ -44,8 +43,6 @@ to be eliminated (numeric)}
 
 \item{polygon1}{The considered area as Simple Feature Polygon}
 
-\item{resol}{The resolution of the grid in meter (numeric)}
-
 \item{RotorR}{The desired rotor radius in meter (numeric)}
 
 \item{dirSpeed}{The wind speed and direction data.frame}
@@ -60,7 +57,7 @@ is activated (TRUE) or deactivated (FALSE)}
 previously. See also the details at \code{\link{windfarmGA}} The raster
 will only be used when the terrain effect model is activated. (raster)}
 
-\item{weibull}{A raster representing the estimated wind speeds}
+\item{weibull}{A raster representing the estimated mean wind speeds}
 
 \item{plotit}{Logical value. If TRUE, the process will be plotted. 
 Default is FALSE.}
@@ -113,7 +110,7 @@ plot(Polygon1); points(initpop[[1]][,'X'],initpop[[1]][,'Y'], pch=20,cex=2)
 plot(resGrid[[2]], add = TRUE)
 resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                   distanz = 100000, resol = 200,dirSpeed = data.in,
+                   distanz = 100000, dirSpeed = data.in,
                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                    weibull = FALSE)
 resCalcEn <- as.data.frame(resCalcEn)
@@ -131,7 +128,7 @@ windrosePlot <- plot_windrose(data = data.in10, spd = data.in10$ws,
 ## wind direction.
 resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
                    RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                   distanz = 100000, resol = 200,dirSpeed = data.in10,
+                   distanz = 100000, dirSpeed = data.in10,
                    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                    weibull = FALSE)
 }

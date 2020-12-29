@@ -179,7 +179,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
                                RotorHeight = rotor_height,
                                SurfaceRoughness = 0.3,
                                wnkl = max_angle, distanz = max_dist,
-                               resol = resolu, dirSpeed = winddata,
+                               dirSpeed = winddata,
                                RotorR = rotor_radius,
                                polygon1 = Polygon1, topograp = FALSE,
                                srtm_crop = NULL, cclRaster = NULL, 
@@ -428,7 +428,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
                                   referenceHeight = ref_height,
                                   RotorHeight = rotor_height,
                                   SurfaceRoughness = 0.3, wnkl = max_angle, distanz = max_dist,
-                                  resol = resolu, dirSpeed = winddata,
+                                  dirSpeed = winddata,
                                   RotorR = rotor_radius,
                                   polygon1 = Polygon1, topograp = FALSE,
                                   srtm_crop = NULL, cclRaster = NULL, weibull = FALSE)
