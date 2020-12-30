@@ -37,7 +37,6 @@ Other Helper Functions:
 \code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
 \author{
@@ -45,3 +44,4 @@ Original versions by Bill Venables
 \email{Bill.Venables@cmis.csiro.au.} Extended to handle repeats.allowed
 by Gregory R. Warnes \email{greg@warnes.net.}
 }
+\concept{Helper Functions}

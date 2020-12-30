@@ -32,23 +32,22 @@ Find all turbines that could potentially influence another
   turbine and save them to a list.
 }
 \examples{
-library(sp)
-library(raster)
 ## Exemplary input Polygon with 2km x 2km:
-polYgon <- Polygon(rbind(c(0, 0), c(0, 2000),
-c(2000, 2000), c(2000, 0)))
-polYgon <- Polygons(list(polYgon), 1)
-polYgon <- SpatialPolygons(list(polYgon))
-Projection <- "+init=epsg:3035"
-proj4string(polYgon) <- CRS(Projection)
+library(raster)
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(0, 0, 2000, 2000, 0),
+    c(0, 2000, 2000, 0, 0)))),
+  crs = 3035
+))
 
-t <- as.matrix(cbind(x = runif(10, 0, extent(polYgon)[2]),
-     y = runif(10, 0, extent(polYgon)[4])))
+t <- st_coordinates(st_sample(Polygon1, 10))
 wnkl <- 20
 dist <- 100000
 dirct <- 0
 
-res <- turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = TRUE)
+res <- turbine_influences(t, wnkl, dist, Polygon1, dirct, plotAngles = TRUE)
 
 }
 \seealso{
@@ -57,3 +56,4 @@ Other Wind Energy Calculation Functions:
 \code{\link{calculate_energy}()},
 \code{\link{get_dist_angles}()}
 }
+\concept{Wind Energy Calculation Functions}

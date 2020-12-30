@@ -1,15 +1,20 @@
 #' A resulting matrix of \code{genetic_algorithm} with 200 iterations 
-#' and a rectangular shapefile \code{sp_polygon}
+#' and a rectangular grid derived from \code{sp_polygon}
 "resultrect"
 
-#' The rectangular shapefile used to create \code{resultrect}
+#' A resulting matrix of \code{genetic_algorithm} with 10 iterations 
+#' and a hexagonal grid derived from \code{sp_polygon} 
+"resulthex"
+
+#' The rectangular POLYGON used to create \code{resultrect} & \code{resulthex}
 "sp_polygon"
 
-#' A big shapefile
+#' A POLYGON with an area of ~70 km2
 "big_shape"
 
-#' A multi-shapefile with 3 Polygons
+#' A MULTIPOLYGON with 3 Polygons
 "multi_shape"
 
-#' A shapefile with a hole
+#' A POLYGON with a hole
 "hole_shape"
+

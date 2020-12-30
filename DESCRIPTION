@@ -1,6 +1,6 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
-Version: 2.3.0
+Version: 3.0.0
 Authors@R: c(
     person("Sebastian", "Gatscha", , email="sebastian_gatscha@gmx.at", c("aut", "cre"))
     )
@@ -11,20 +11,16 @@ Depends:
 Imports: Rcpp,
     raster,
     sf,
-    sp,
-    gstat,
-    ggplot2,
+    elevatr,
     RColorBrewer,
     calibrate,
     grDevices,
     graphics,
-    leaflet,
-    magrittr,
     foreach,
     parallel,
     doParallel,
+    magrittr,
     methods,
-    spatstat,
     stats,
     utils
 LinkingTo: Rcpp
@@ -35,9 +31,9 @@ BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
-    rgdal,
-    rworldmap,
-    dplyr,
-    rgeos
+    leaflet,
+    ggplot2,
+    gstat,
+    rworldmap
 Encoding: UTF-8
 X-schema.org-keywords: windfarm-layout, optimization, genetic-algorithm, renewable-energy, r, rstats, r-package

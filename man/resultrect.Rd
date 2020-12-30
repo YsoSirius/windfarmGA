@@ -4,15 +4,15 @@
 \name{resultrect}
 \alias{resultrect}
 \title{A resulting matrix of \code{genetic_algorithm} with 200 iterations 
-and a rectangular shapefile \code{sp_polygon}}
+and a rectangular grid derived from \code{sp_polygon}}
 \format{
-An object of class \code{matrix} with 200 rows and 13 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 200 rows and 13 columns.
 }
 \usage{
 resultrect
 }
 \description{
 A resulting matrix of \code{genetic_algorithm} with 200 iterations 
-and a rectangular shapefile \code{sp_polygon}
+and a rectangular grid derived from \code{sp_polygon}
 }
 \keyword{datasets}

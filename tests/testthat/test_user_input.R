@@ -1,8 +1,15 @@
 context("User Interaction")
-library(windfarmGA)
+library(sf)
+
+## Function to suppress print/cat outputs
+quiet <- function(x) {
+  sink(tempfile()) 
+  on.exit(sink()) 
+  invisible(force(x)) 
+}
 
 test_that("User Input", {
-  skip_on_cran()
+  # skip_on_cran()
   # skip_on_appveyor()
   
   ## getISO3 ################
@@ -14,9 +21,8 @@ test_that("User Input", {
   points <- cbind(c(4488182.26267016, 4488852.91748256),
                  c(2667398.93118627, 2667398.93118627))
   res <- getISO3(pp = points, crs_pp = 3035, col="?")
-  expect_true(res == "Austria")
+  expect_true(res[[1]][[1]] == "Austria")
   expect_false(anyNA(res))
-  expect_true(all(dim(res) == c(1,1)))
   
   # reset connection
   options(windfarmGA.connection = stdin())
@@ -38,10 +44,14 @@ test_that("User Input", {
   close(f)
   
   ## random_search_single - Rects #############
-  load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
-  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+  polygon <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   
-  ##which IDs
+  ## which IDs
   resldat <- do.call("rbind", resultrect[,"bestPaEn"])
   maxDist <- as.numeric(resultrect[,"inputData"][[1]]['Rotorradius',]) * 2.2
   resldat <- as.data.frame(resldat[!duplicated(resldat[,'Run']),, drop=FALSE])
@@ -52,7 +62,7 @@ test_that("User Input", {
   rotRad <- as.numeric(resultrect[bestGARun,]$inputData["Rotorradius",][1])
   propu  <- as.numeric(resultrect[bestGARun,]$inputData["Percentage of Polygon",][1])
   winddata <- resultrect[bestGARun,]$inputWind
-  Grid <- grid_area(shape = polygon, resol = resolu, 
+  Grid <- grid_area(shape = polygon, size = resolu, 
                     prop = propu, plotGrid = FALSE)
   maxFac <- rotRad * (resolu / (rotRad * 2))
   winddata <- windata_format(winddata)
@@ -66,7 +76,7 @@ test_that("User Input", {
   ans <- paste(id, collapse = "\n")
   write(ans, f)
   
-  new <- RandomSearchTurb(resultrect, polygon)
+  new <- random_search_single(resultrect, polygon)
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -76,7 +86,7 @@ test_that("User Input", {
   rm(new, new_df)
 
   for (i in 1:40) {
-    new <- random_search_single(resultrect, polygon, max_dist = 5, Plot = TRUE)
+    new <- quiet(random_search_single(resultrect, polygon, max_dist = 5, Plot = TRUE))
     expect_is(new, "list")
     expect_false(anyNA(unlist(new)))
     new_df <- do.call(rbind, new)
@@ -105,8 +115,12 @@ test_that("User Input", {
   
   ## random_search_single - Hexagons ##################
   rm(list = ls())
-  load(file = system.file("extdata/resulthex.rda", package = "windfarmGA"))
-  load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
+  polygon <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   
   ##which IDs
   resldat <- do.call("rbind", resulthex[,"bestPaEn"])
@@ -119,7 +133,7 @@ test_that("User Input", {
   maxDist <- as.numeric(resulthex[,"inputData"][[1]]['Rotorradius',]) * 2.2
   propu  <- as.numeric(resulthex[bestGARun,]$inputData["Percentage of Polygon",][1])
   winddata <- resulthex[bestGARun,]$inputWind
-  Grid <- hexa_area(polygon, size = resolu / 2)
+  Grid <- hexa_area(polygon, size = resolu)
   maxFac <- rotRad * (resolu / (rotRad * 2))
   winddata <- windata_format(winddata)
   probabDir <- winddata[[2]]
@@ -132,7 +146,7 @@ test_that("User Input", {
   ans <- paste(id, collapse = "\n")
   write(ans, f)
   
-  new <- RandomSearchTurb(resulthex, polygon, GridMethod = "h")
+  new <- random_search_single(resulthex, polygon)
   expect_is(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -148,26 +162,25 @@ test_that("User Input", {
   
   
   ## windfarmGA ###############
-
-  Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                            c(4499991, 2669343), c(4499991, 2668272)))
-  Polygon1 <- Polygons(list(Polygon1), 1)
-  Polygon1 <- SpatialPolygons(list(Polygon1))
-  Projection <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  proj4string(Polygon1) <- CRS(Projection)
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    crs = 3035
+  ))
   data.in <- data.frame(ws = 12, wd = 0)
   
   ## grid spacing NOT appropriate
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(c("E","E", "F", "n"), collapse = "\n"), f)
-  expect_error(windfarmGA(
+  quiet(expect_error(windfarmGA(
     Polygon1 = Polygon1,
     n = 12, 
     vdirspe = data.in,
     Rotor = 60,
     RotorHeight = 100
-  ))
+  )))
   # reset connection / close the file
   options(windfarmGA.connection = stdin())
   close(f)
@@ -177,13 +190,13 @@ test_that("User Input", {
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(c("E","E", "F", "", ""), collapse = "\n"), f)
-  res <- windfarmGA(
+  res <- quiet(windfarmGA(
     Polygon1 = Polygon1, crossPart1 = "somethign",
     n = 12, iteration = 3,
     vdirspe = data.in,
-    Rotor = 60,
+    Rotor = 30,
     RotorHeight = 100
-  )
+  ))
   expect_true(nrow(res) == 3)
   expect_is(res, "matrix")
   expect_false(any(unlist(sapply(res, is.na))))

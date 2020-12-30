@@ -36,3 +36,4 @@ Other Wind Energy Calculation Functions:
 \code{\link{get_dist_angles}()},
 \code{\link{turbine_influences}()}
 }
+\concept{Wind Energy Calculation Functions}

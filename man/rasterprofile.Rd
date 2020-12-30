@@ -16,7 +16,7 @@ rasterprofile(r, xy1, xy2, reso, plot = FALSE)
 \item{reso}{The minimal resolution of the DEM raster. It is 
 calculated in \code{viewshed} and passed along.}
 
-\item{plot}{Plot the process? Default is FALSE}
+\item{plot}{Plot the process? Default is \code{FALSE}}
 }
 \value{
 A boolean vector, indicating if Point 1 (xy1) is visible from all
@@ -33,3 +33,4 @@ Other Viewshed Analysis:
 \code{\link{viewTo}()},
 \code{\link{viewshed}()}
 }
+\concept{Viewshed Analysis}

@@ -19,16 +19,16 @@
 #'   cell ID and a binary variable of 1, indicating a turbine in the grid cell.
 #'   
 #' @examples
-#' library(sp)
+#' library(sf)
 #' ## Exemplary input Polygon with 2km x 2km:
-#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000),
-#' c(2000, 2000), c(2000, 0)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+#'   crs = 3035
+#' ))
 #'
-#' Grid <- grid_area(Polygon1,200,1,"TRUE")
+#' Grid <- grid_area(Polygon1, 200, 1, TRUE)
 #'
 #' ## Create 5 individuals with 10 wind turbines each.
 #' firstPop <- init_population(Grid = Grid[[1]], n = 10, nStart = 5)

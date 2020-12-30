@@ -49,3 +49,4 @@ Other Genetic Algorithm Functions:
 \code{\link{trimton}()},
 \code{\link{windfarmGA}()}
 }
+\concept{Genetic Algorithm Functions}

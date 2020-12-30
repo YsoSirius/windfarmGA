@@ -3,14 +3,14 @@
 \docType{data}
 \name{hole_shape}
 \alias{hole_shape}
-\title{A shapefile with a hole}
+\title{A POLYGON with a hole}
 \format{
-An object of class \code{SpatialPolygonsDataFrame} with 1 rows and 1 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 1 rows and 2 columns.
 }
 \usage{
 hole_shape
 }
 \description{
-A shapefile with a hole
+A POLYGON with a hole
 }
 \keyword{datasets}

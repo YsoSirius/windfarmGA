@@ -3,14 +3,14 @@
 \docType{data}
 \name{sp_polygon}
 \alias{sp_polygon}
-\title{The rectangular shapefile used to create \code{resultrect}}
+\title{The rectangular POLYGON used to create \code{resultrect} & \code{resulthex}}
 \format{
-An object of class \code{SpatialPolygons} of length 1.
+An object of class \code{sf} (inherits from \code{data.frame}) with 1 rows and 1 columns.
 }
 \usage{
 sp_polygon
 }
 \description{
-The rectangular shapefile used to create \code{resultrect}
+The rectangular POLYGON used to create \code{resultrect} & \code{resulthex}
 }
 \keyword{datasets}
