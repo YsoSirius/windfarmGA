@@ -14,13 +14,15 @@ getISO3(
 )
 }
 \arguments{
-\item{pp}{SpatialPoints or matrix}
+\item{pp}{Simple Feature Points or coordinate matrix/data.frame}
 
 \item{crs_pp}{The CRS of the points}
 
 \item{col}{Which column/s should be returned}
 
-\item{resol}{The search resolution if high accuracy is needed}
+\item{resol}{The search resolution. The options are "coarse","low",
+"less islands","li","high". For "high" you need to install the 
+package \code{rworldxtra}}
 
 \item{coords}{The column names of the point matrix}
 
@@ -34,10 +36,10 @@ Get point values from the \code{\link[rworldmap]{getMap}}
 }
 \examples{
 \dontrun{
+library(sf)
 points = cbind(c(4488182.26267016, 4488852.91748256), 
-c(2667398.93118627, 2667398.93118627))
-getISO3(pp = points, ask = TRUE)
-getISO3(pp = points, crs_pp = 3035)
+               c(2667398.93118627, 2667398.93118627))
+getISO3(pp = points, ask = TRUE, crs_pp = 3035)
 
 points <- as.data.frame(points)
 colnames(points) <- c("x","y")
@@ -58,7 +60,6 @@ Other Helper Functions:
 \code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
 \concept{Helper Functions}

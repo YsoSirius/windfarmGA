@@ -4,19 +4,23 @@
 \alias{viewshed}
 \title{Calculate visibility}
 \usage{
-viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0)
+viewshed(r, shape, turbine_locs, h1 = 0, h2 = 0, plot = FALSE, ...)
 }
 \arguments{
 \item{r}{A DEM raster}
 
-\item{shape}{A SpatialPolygon of the windfarm area.}
+\item{shape}{A Simpüle Feature Polygon of the windfarm area}
 
 \item{turbine_locs}{Coordinates or SpatialPoint representing the wind
 turbines}
 
-\item{h1}{A numeric giving the extra height offset of Point 1}
+\item{h1}{A numeric or numeric vector giving the extra height offsets for Point 1}
 
-\item{h2}{A numeric giving the extra height offset of Point 2}
+\item{h2}{A numeric giving the extra height offset for Point 2}
+
+\item{plot}{Plot the process? Default is \code{FALSE}}
+
+\item{...}{Additional arguments passed to the raster plot}
 }
 \value{
 A list of 5, containing the boolean result for every cell, the raster
@@ -27,17 +31,20 @@ Calculate visibility for given points in a given area.
 }
 \examples{
 \dontrun{
-library(sp)
-Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-                          c(4499991, 2669343), c(4499991, 2667172)))
-Polygon1 <- Polygons(list(Polygon1), 1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- CRS(Projection)
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4496482, 4496482, 4499991, 4499991, 4496482),
+    c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+  crs = 3035
+))
 DEM_meter <- getDEM(Polygon1)
 
-turbloc = spsample(DEM_meter[[2]], 10, type = "random");
-res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], turbine_locs = turbloc,  h1=1.8, h2=50)
+turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
+res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
+                turbine_locs = turbloc[1:3,],
+                h1 = sample(c(20:40), 3, TRUE),
+                h2 = 50, plot = TRUE)
 }
 }
 \seealso{

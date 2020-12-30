@@ -9,7 +9,7 @@ plot_viewshed(res, legend = FALSE, ...)
 \arguments{
 \item{res}{The resulting list from viewshed}
 
-\item{legend}{Plot a legend? Default is FALSE}
+\item{legend}{Plot a legend? Default is \code{FALSE}}
 
 \item{...}{Is passed along to \code{\link[raster]{plot}}}
 }
@@ -18,17 +18,17 @@ Plot the result of \code{\link{viewshed}}
 }
 \examples{
 \dontrun{
-library(sp)
 library(raster)
-Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-                          c(4499991, 2669343), c(4499991, 2667172)))
-Polygon1 <- Polygons(list(Polygon1), 1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- CRS(Projection)
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4496482, 4496482, 4499991, 4499991, 4496482),
+    c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+  crs = 3035
+))
 DEM_meter <- getDEM(Polygon1)
 
-turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]], turbine_locs = turbloc,  
                 h1 = 1.8, h2 = 50)
 plot_viewshed(res)

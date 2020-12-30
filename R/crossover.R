@@ -56,7 +56,8 @@ crossover        <- function(se6, u, uplimit, crossPart, verbose, seed) {
   se6 <- se6[[1]]
   se6 <- se6[, -1]
   parid <- sample(1:length(se6))
-  z <- seq(1, length(parid), 2)
+  z <- seq.int(1, length(parid), 2)
+  
   all <- vector("list", length(z))
 
   crossPart <- toupper(crossPart)

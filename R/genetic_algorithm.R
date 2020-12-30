@@ -10,37 +10,34 @@
 #' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
 #'   or coordinates as matrix/data.frame
 #' @param GridMethod Should the polygon be divided into rectangular or hexagonal
-#'   grid cells? The default is "Rectangular" grid cells and hexagonal grid
-#'   cells are computed when assigning "h" or "hexagon" to this input variable.
-#' @param Rotor A numeric value that gives the rotor radius in meter
-#' @param n A numeric value indicating the required amount of turbines
-#' @param fcrR A numeric value that is used for grid spacing. Default is 5
+#'   grid cells? The default is "Rectangular" grid. Hexagonal grids
+#'   are computed when assigning "h" or "hexagon" to this input variable.
+#' @param Rotor The rotor radius in meter
+#' @param n The amount of turbines
+#' @param fcrR A numeric value used for grid spacing. Default is \code{5}
 #' @param referenceHeight The height at which the incoming wind speeds were
-#'   measured. Default is the RotorHeight.
-#' @param RotorHeight The desired height of the turbine.
-#' @param SurfaceRoughness A surface roughness length of the considered area in
-#'   m.  If the terrain effect model is activated, a surface roughness will be
-#'   calculated for every grid cell with the elevation and land cover
-#'   information. Default is 0.3
+#'   measured. Default is \code{RotorHeight}
+#' @param RotorHeight The height of the turbine hub
+#' @param SurfaceRoughness A surface roughness length in meters. 
+#'   With the terrain effect model, a surface roughness is calculated for every 
+#'   grid cell using the elevation and land cover data. Default is \code{0.3}
 #' @param sourceCCL The path to the Corine Land Cover raster (.tif). Only
-#'   required when the terrain effect model is activated. If nothing is assign,
-#'   it will try to download a version from the EEA-website.
+#'   required when the terrain effect model is activated.
 #' @param sourceCCLRoughness The source to the adapted Corine Land Cover legend
 #'   as .csv file. Only required when terrain effect model is activated. As
 #'   default a .csv file within this package (\file{~/extdata}) is taken that
-#'   was already adapted manually. To use your own .csv legend this variable has
-#'   to be assigned.
-#' @param Proportionality A numeric value used for grid calculation. Determines
-#'   the percentage a grid has to overlay. Default is 1
-#' @param iteration A numeric value indicating the desired amount of iterations
-#'   of the algorithm. Default is 20
-#' @param mutr A numeric mutation rate with a default value of 0.008
-#' @param vdirspe A data.frame containing the incoming wind speeds, wind
-#'   directions and probabilities
-#' @param topograp Logical value, which indicates if the terrain effect model
-#'   should be enabled or not. Default is FALSE
+#'   was already adapted manually.
+#' @param Proportionality A numeric value used for the grid calculation, as it 
+#'   determines the percentage a grid cell must overlay the area. 
+#'   Default is \code{1}
+#' @param iteration The number of iterations. Default is \code{20}
+#' @param mutr A numeric mutation rate. Default is \code{0.008}
+#' @param vdirspe A data.frame containing the wind speeds, directions and 
+#'   probabilities. See \code{\link{windata_format}}.
+#' @param topograp Boolean value, which indicates if the terrain effect model
+#'   should be enabled or not. Default is \code{FALSE}
 #' @param elitism Boolean value, which indicates whether elitism should be
-#'   activated or not. Default is TRUE
+#'   activated or not. Default is \code{TRUE}
 #' @param nelit If \code{elitism} is TRUE, this input determines the amount 
 #'   of individuals in the elite group. Default is 7
 #' @param selstate Determines which selection method is used, "FIX" selects a
@@ -48,35 +45,35 @@
 #'   the development of the fitness values. Default is "FIX"
 #' @param crossPart1 Determines which crossover method is used, "EQU" divides
 #'   the genetic code at equal intervals and "RAN" divides the genetic code at
-#'   random locations. Default is "EQU"
-#' @param trimForce If activated (\code{trimForce == TRUE}), the algorithm will
-#'   take a probabilistic approach to trim the windfarms to the desired amount
-#'   of turbines. If deactivated (\code{trimForce == FALSE}) the adjustment will
-#'   be random. Default is FALSE
-#' @param Projection A desired Projection can be used instead of the default
-#'   Lambert Azimuthal Equal Area Projection (EPSG:3035).
-#' @param weibull A logical value that specifies whether to take Weibull
-#'   parameters into account. If `weibull == TRUE`, the wind speed values from
-#'   the `vdirspe` data frame are ignored. The algorithm will calculate the mean
+#'   random locations. Default is \code{"EQU"}
+#' @param trimForce If \code{TRUE} the algorithm will use a probabilistic 
+#'   approach to correct the windfarms to the desired amount of turbines. 
+#'   If \code{FALSE} the adjustment will be random. Default is \code{FALSE}
+#' @param Projection A spatial reference system. Depending on your PROJ-version,
+#'   it should either be a numeric `EPSG-code` or a `Proj4-string`.
+#'   Default is \code{EPSG:3035}
+#' @param weibull A boolean value that specifies whether to take Weibull
+#'   parameters into account. If \code{TRUE}, the wind speed values 
+#'   of \code{vdirspe} are ignored. The algorithm will calculate the mean
 #'   wind speed for every wind turbine according to the Weibull parameters.
-#'   Default is FALSE
+#'   Default is \code{FALSE}
 #' @param weibullsrc A list of Weibull parameter rasters, where the first list
 #'   item must be the shape parameter raster `k` and the second item must be the
 #'   scale parameter raster `a` of the Weibull distribution. If no list is given,
 #'   then rasters included in the package are used instead, which currently only
-#'   cover Austria. This variable is only used if `weibull == TRUE`.
-#' @param Parallel Boolean value, indicating whether parallel processing should
-#'   be used. The parallel and doParallel packages are used for parallel
-#'   processing. Default is FALSE
+#'   cover Austria. This variable is only used if \code{weibull = TRUE}.
+#' @param Parallel A boolean value, indicating whether parallel processing should
+#'   be used. The *parallel* and *doParallel* packages are used for parallel
+#'   processing. Default is \code{FALSE}
 #' @param numCluster If \code{Parallel} is TRUE, this variable defines the 
-#'   number of clusters to be used
+#'   number of clusters to be used. Default is \code{2}
 #' @param verbose If TRUE it will print information for every generation.
-#'   Default is FALSE
+#'   Default is \code{FALSE}
 #' @param plotit If TRUE it will plot the best windfarm of every generation. 
-#'   Default is FALSE
+#'   Default is \code{FALSE}
 #' 
 #' @family Genetic Algorithm Functions
-#' @return The result is a matrix with aggregated values per generation, the
+#' @return The result is a matrix with aggregated values per generation; the
 #'   best individual regarding energy and efficiency per generation, some fuzzy
 #'   control variables per generation, a list of all fitness values per
 #'   generation, the amount of individuals after each process, a matrix of all
@@ -87,10 +84,10 @@
 #'   tested wind farm layouts.
 #'
 #' @details A terrain effect model can be included in the optimization process.
-#'   Therefore, an SRTM elevation model will be downloaded automatically via the
-#'   \code{raster::getData} function. A land cover raster can also be downloaded
-#'   automatically from the EEA-website, or the path to a raster file can be
-#'   passed to \code{sourceCCL}. The algorithm uses an adapted version of the
+#'   Therefore, a digital elevation model will be downloaded automatically via the
+#'   \code{elevatr::get_elev_raster} function. A land cover raster can also be 
+#'   downloaded automatically from the EEA-website, or the path to a raster file 
+#'   can be passed to \code{sourceCCL}. The algorithm uses an adapted version of the
 #'   Raster legend ("clc_legend.csv"), which is stored in the package directory
 #'   \file{~/inst/extdata}. To use other values for the land cover roughness
 #'   lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file,
@@ -101,13 +98,14 @@
 #' 
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' 
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plot the
 #' ## resulting wind rose
@@ -124,50 +122,8 @@
 #'                   Rotor = 30,
 #'                   RotorHeight = 100)
 #' plot_windfarmGA(result = result, Polygon1 = Polygon1)
-#'
-#' ## Runs the same optimization, but with parallel processing and 3 cores.
-#' result_par <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100, 
-#'                  Parallel = TRUE, numCluster = 3)
-#' plot_windfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
-#' 
-#' ## Runs the same optimization, this time with hexagonal grids.
-#' result_hex <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100)
-#' plot_windfarmGA(result = result_hex, GridMethod = "h", Polygon1 = Polygon1)
-#'
-#' ## Run an optimization with the Weibull parameters included in the package.
-#' result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#'                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#'                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-#'                  SurfaceRoughness = 0.3, topograp = FALSE,
-#'                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#'                  referenceHeight = 50,RotorHeight = 100,
-#'                  weibull = TRUE)
-#' plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
-#'
-#' ## Run an optimization with given Weibull parameter rasters.
-#' #araster <- "/..pathto../a_param_raster.tif"
-#' #kraster <- "/..pathto../k_param_raster.tif"
-#' #weibullrasters <- list(raster(kraster), raster(araster))
-#' #result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
-#' #                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-#' #                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,
-#' #                  SurfaceRoughness = 0.3, topograp = FALSE,
-#' #                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-#' #                  referenceHeight = 50,RotorHeight = 100,
-#' #                  weibull = TRUE, weibullsrc = weibullrasters)
-#' #plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)
 #'}
-genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
+genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
                               RotorHeight, SurfaceRoughness, Proportionality,
                               iteration, mutr, vdirspe, topograp, elitism, nelit,
                               selstate, crossPart1, trimForce, Projection,
@@ -236,10 +192,9 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   }
   if (missing(Projection)) {
     if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-      ProjLAEA <- "+init=epsg:3035"
+      ProjLAEA <- 3035
     } else {
-      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000
-      +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+      ProjLAEA <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
     }
   } else {
     ProjLAEA <- Projection
@@ -259,7 +214,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   selstate <- toupper(selstate)
   crossPart1 <- toupper(crossPart1)
 
-  ## Is the Polygon Spatial / SF / coordinates - It will transform to SpatialPolygon
+  ## Is the Polygon Spatial / SF / coordinates - It will transform to sf-Polygons
   Polygon1 <- isSpatial(Polygon1, ProjLAEA)
   if (is.na(st_crs(Polygon1))) {
     stop("The input area is not projected.")
@@ -269,21 +224,20 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   resol2 <- fcrR * Rotor
 
   ## Max Amount of individuals in the Crossover-Method
-  CrossUpLimit <- 300
+  # CrossUpLimit <- 300
+  CrossUpLimit <- getOption("windfarmGA.max_population")
 
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
-    ## TODO - test on Linux
-    # max_cores <- as.integer(Sys.getenv("NUMBER_OF_PROCESSORS"))
     max_cores <- parallel::detectCores()
     if (numCluster > max_cores) {
+      warning("Maximum number of cores is: ", max_cores, "\n'numCluster' will be set to: ", max_cores-1)
       numCluster <- max_cores - 1
     }
-    type_cluster <- "PSOCK"
+    type_cluster <- "PSOCK"  ## TODO - should this be available as option too?
     cl <- parallel::makeCluster(numCluster, type = type_cluster)
     doParallel::registerDoParallel(cl)
-    # on.exit(parallel::stopCluster(cl))
   }
 
   ## WEIBULL ###############
@@ -305,30 +259,24 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       
       k_weibull <- raster("k120_100m_Lambert.tif")
       a_weibull <- raster("a120_100m_Lambert.tif")
-      ## Project Shapefile to raster proj, Crop/Mask and project raster back
-      shape_project <- sp::spTransform(Polygon1,
-                                       CRSobj = sp::proj4string(a_weibull))
-      k_par_crop <- raster::crop(x = k_weibull,
-                                 y = raster::extent(shape_project))
-      a_par_crop <- raster::crop(x = a_weibull,
-                                 y = raster::extent(shape_project))
     } else {
       if (verbose) {
         cat("\nWeibull Information from input is used.\n")
       }
       ## Project Shapefile to raster, Crop/Mask and project raster back
-      shape_project <- sp::spTransform(Polygon1,
-                                    CRSobj = sp::proj4string(weibullsrc[[1]]))
-      k_par_crop <- raster::crop(x = weibullsrc[[1]],
-                                 y = raster::extent(shape_project))
-      a_par_crop <- raster::crop(x = weibullsrc[[2]],
-                                 y = raster::extent(shape_project))
+      k_weibull <- weibullsrc[[1]]
+      a_weibull <- weibullsrc[[2]]
     }
+    ## Project Shapefile to raster proj, Crop/Mask and project raster back
+    shape_project <- st_transform(Polygon1, crs = st_crs(a_weibull))
+    k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(shape_project))
+    a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(shape_project))
+    
     weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
     weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
     estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
     estim_speed_raster <- raster::projectRaster(estim_speed_raster,
-                                                crs = proj4string(Polygon1))
+                                                crs = raster::crs(Polygon1))
   } else {
     estim_speed_raster <- FALSE
   }
@@ -374,34 +322,32 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   #######################
   ## Project Polygon ###############
   if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-    if (suppressWarnings(!isTRUE( all.equal(wkt(Polygon1), wkt(CRS(ProjLAEA))) ))) {
-      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+    if (suppressWarnings(!isTRUE( all.equal(st_crs(Polygon1), st_crs(ProjLAEA)) ))) {
+      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   } else {
     if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
-      Polygon1 <- sp::spTransform(Polygon1, CRSobj = ProjLAEA)
+      Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   }
 
 
-  ## grid_area ###############
+  ## Make GRID ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
   if (GridMethod != "HEXAGON" & GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    Grid1 <- grid_area(shape = Polygon1, resol = resol2, prop = Proportionality)
+    Grid1 <- grid_area(Polygon1, resol2, Proportionality)
     Grid <- Grid1[[1]]
     grid_filtered <- Grid1[[2]]
   } else {
     # Calculate a Grid with hexagonal grid cells
-    Grid1 <- hexa_area(Polygon1, resol2 / 2)
+    Grid1 <- hexa_area(Polygon1, resol2)
     Grid <- Grid1[[1]]
     grid_filtered <- Grid1[[2]]
   }
-
   n_gridcells <- nrow(Grid)
-
 
   ## INIT VARIABLES 2 ###############
   ## Determine the amount of initial individuals and create initial population.
@@ -440,24 +386,15 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     if (verbose) {
       cat("Topography and orography are taken into account.\n")
     }
-
     if (plotit) {
       par(mfrow = c(3, 1))
     }
 
     if (missing(sourceCCL)) {
-      # message("No land cover raster ('sourceCCL') was given. It will be taken from ",
-              # "the package (/data/ccl.rda).")
       message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
               "the EEA-website.\n")
       if (!file.exists("g100_06.tif")) {
-        ## download an zip CCL-tif
-        # ccl_raster_url <-
-        #   "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-        # temp <- tempfile()
-        # download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
-        # unzip(temp, "g100_06.tif")
-        # unlink(temp)
+        # "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
         download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
                       destfile = "clc.zip", 
                       method = "auto")
@@ -472,23 +409,26 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     cclPoly1 <- raster::mask(cclPoly, Polygon1)
     
     ## SRTM Daten
-    Polygon1 <-  sp::spTransform(Polygon1,
-                                 CRSobj = raster::crs("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
-    extpol <- round(Polygon1@bbox,0)[, 2]
-    srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
-                     error = function(e) {
-                       stop("\nCould not download SRTM for the given Polygon.",
-                            "Check the Projection of the Polygon.\n", call. = FALSE)
-                     })
+    Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
+    # extpol <- round(apply(matrix(st_bbox(Polygon1), ncol = 2), 1, mean))
+    # srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
+    #                  error = function(e) {
+    #                    stop("\nCould not download SRTM for the given Polygon.",
+    #                         "Check the Projection of the Polygon.\n", call. = FALSE)
+    #                  })
+    srtm <- tryCatch(elevatr::get_elev_raster(verbose = verbose,
+      locations = as(Polygon_wgs84, "Spatial"), z = 11),
+      error = function(e) {
+        stop("\nDownloading Elevation data failed for the given Polygon.\n",
+             e, call. = FALSE)
+      })
+    srtm_crop <- raster::crop(srtm, Polygon_wgs84)
+    srtm_crop <- raster::mask(srtm_crop, Polygon_wgs84)
 
-    srtm_crop <- raster::crop(srtm, Polygon1)
-    srtm_crop <- raster::mask(srtm_crop, Polygon1)
-
-    Polygon1 <-  sp::spTransform(Polygon1, CRSobj = raster::crs(ProjLAEA))
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(ProjLAEA))
+    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(Polygon1))
     if (plotit) {
-      plot(srtm_crop, main = "Elevation from SRTM")
-      plot(Polygon1, add = TRUE)
+      raster::plot(srtm_crop, main = "Elevation Data")
+      plot(Polygon1, add = TRUE, color = "transparent")
       plot(grid_filtered, add = TRUE)
     }
 
@@ -516,7 +456,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       }
     }
 
-
     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
                                    header = TRUE, sep = ";")
     cclRaster <- raster::reclassify(cclPoly1,
@@ -524,7 +463,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
                                              rauhigkeitz$Rauhigkeit_z),
                                            ncol = 2))
     if (plotit) {
-      plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
+      raster::plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
     }
   }
 
@@ -630,28 +569,20 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
     x1 <- round(bestPaEf[[i]][, "EnergyOverall"][[1]], 2)
     y1 <- round(bestPaEf[[i]][, "EfficAllDir"][[1]], 2)
     e1 <- bestPaEf[[i]][, "EfficAllDir"]
-
-    # allparksNewplot <- subset.matrix(allparks,
-    #                                  select = c("Rect_ID",
-    #                                             "AbschGesamt",
-    #                                             "Parkfitness"))
-    # 
-    # allparksNewplot <- aggregate(allparksNewplot,
-    #                              list(allparksNewplot[, "Rect_ID"]), mean)
-    # allparksNewplot <- allparksNewplot[, -1]
     ##################
 
     if (plotit) {
       graphics::par(mfrow = c(1, 2))
-      plot(Polygon1,
+      plot(st_geometry(Polygon1), col="lightblue",
            main = paste(i, "Round \n Best Energy Output: ", x,
                         "W/h \n Efficiency: ", y, "%"),
            sub = paste("\n Number of turbines: ", length(e)))
-      plot(grid_filtered, add = TRUE)
+      plot(grid_filtered, add=TRUE)
       graphics::points(bestPaEn[[i]][, "X"], bestPaEn[[i]][, "Y"],
                        col = Col, pch = 20, cex = 1.5)
-      plot(Polygon1, main = paste(i, "Round \n Best Efficiency Output: ",
-                                  x1, "W/h \n Efficiency: ", y1, "%"),
+      plot(st_geometry(Polygon1), col="lightblue",
+           main = paste(i, "Round \n Best Efficiency Output: ",
+                        x1, "W/h \n Efficiency: ", y1, "%"),
            sub = paste("\n Number of turbines: ", length(e1)))
       plot(grid_filtered, add = TRUE)
       graphics::points(bestPaEf[[i]][, "X"], bestPaEf[[i]][, "Y"],
@@ -704,6 +635,7 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       u <- 1.1
       beorwor[[i]] <- cbind(0, 0)
     }
+    ## TODO - better fuzzy model and expose weights and values by options?
     if (i >= 2 && i <= iteration) {
       t0 <- subset.matrix(allparks, !duplicated(allparks[, "Run"]))
       t0 <- t0[, "Parkfitness"]
@@ -807,10 +739,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("Selection  -  Amount of Individuals: ",
                 length(selec6best_bin[1, -1]), "\n"))
     }
-    # Trus1 <- colSums(selec6best_bin)[-1] == n
-    # if (any(Trus1 == FALSE)) {
-    #   stop("Number of turbines is not as required. Trus1. Fix BUG")
-    # }
     nindivsel <- length(selec6best_bin[1, -1])
 
     ## CROSSOVER #################
@@ -861,10 +789,6 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
       cat(paste("\nTrimToN    -  Amount of Individuals: ",
                 length(mut1[1, ])))
     }
-    # Trus3 <- colSums(mut1) == n
-    # if (any(Trus3 == FALSE)) {
-    #   stop("Number of turbines is not as required. Trus3. Fix Bug.")
-    # }
 
     nindiv[[i]] <- cbind(nindivfit, nindivsel, nindivcros, nindivmut)
     if (maxParkwirkungsg == 100) {
@@ -902,10 +826,10 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
   return(alldata)
 }
 
-#' @title Transform to SpatialPolygons
+#' @title Transform to Simple Feature Polygons
 #' @name isSpatial
-#' @description Helper Function, which transforms SimpleFeatures or coordinates
-#'   in matrix/data.frame/data.table into a SpatialPolygon
+#' @description Helper Function, which transforms SpatialPolygons or coordinates
+#'   in matrix/data.frame - form to a Simple Feature Polygon
 #'
 #' @export
 #'
@@ -915,30 +839,30 @@ genetic_algorithm           <- function(Polygon1, GridMethod, Rotor, n, fcrR, re
 #'   coordinates
 #'
 #' @family Helper Functions
-#' @return A SpatialPolygons object
+#' @return A Simple Feature Polygon
 #'
 #' @details If the columns are named, it will look for common abbreviation to
 #'   match x/y or long/lat columns. If the columns are not named, the first 2
 #'   numeric columns are taken.
 #'
 #' @examples \donttest{
-#' library(sp)
+#' library(sf)
 #' df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
 #'             c(4499991, 2669343), c(4499991, 2668272))
 #' isSpatial(df)
 #' 
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                           c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1), 1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
-#' df_fort <- ggplot2::fortify(Polygon1)
-#' isSpatial(df_fort, Projection)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+#'   crs = 3035
+#' ))
+#' isSpatial(st_coordinates(Polygon1), 3035)
 #'}
 isSpatial <- function(shape, proj) {
-  if (class(shape)[1] == "sf") {
-    shape <- as(shape, "Spatial")
+  if (inherits(shape, "Spatial")) {
+    # shape <- as(shape, "Spatial")
+    shape <- st_as_sf(shape)
     ## This is needed for grid_area. Attribute names must have same length
     shape$names <- "layer"
   } else if (class(shape)[1] == "data.frame" |
@@ -972,17 +896,15 @@ isSpatial <- function(shape, proj) {
       col_numeric <- which(sapply(shape[1, ], is.numeric))
       pltm <- shape[, col_numeric]
     }
-
-    pltm <- Polygon(pltm)
-    pltm <- Polygons(list(pltm), 1)
-    shape <- SpatialPolygons(list(pltm))
-    if (!missing(proj)) {
-      if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-        slot(shape, "proj4string") <- CRS(SRS_string = "EPSG:3035")
-      } else {
-        sp::proj4string(shape) <- proj
-      }
-    }
+    colnames(pltm) <- c("x", "y")
+    pltm <- data.frame(pltm)
+    shape <- sf::st_sf(aggregate(
+      sf::st_as_sf(pltm, coords = c("x","y"))$geometry,
+      list(rep(1, nrow(pltm))),
+      function(g)st_cast(st_combine(g),"POLYGON")
+    ))
+    
+    if (!missing(proj)) st_crs(shape) <- 3035
   }
   return(shape)
 }

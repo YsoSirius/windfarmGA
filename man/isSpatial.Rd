@@ -2,7 +2,7 @@
 % Please edit documentation in R/genetic_algorithm.R
 \name{isSpatial}
 \alias{isSpatial}
-\title{Transform to SpatialPolygons}
+\title{Transform to Simple Feature Polygons}
 \usage{
 isSpatial(shape, proj)
 }
@@ -14,11 +14,11 @@ as matrix/data.frame}
 coordinates}
 }
 \value{
-A SpatialPolygons object
+A Simple Feature Polygon
 }
 \description{
-Helper Function, which transforms SimpleFeatures or coordinates
-  in matrix/data.frame/data.table into a SpatialPolygon
+Helper Function, which transforms SpatialPolygons or coordinates
+  in matrix/data.frame - form to a Simple Feature Polygon
 }
 \details{
 If the columns are named, it will look for common abbreviation to
@@ -27,19 +27,18 @@ If the columns are named, it will look for common abbreviation to
 }
 \examples{
 \donttest{
-library(sp)
+library(sf)
 df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
             c(4499991, 2669343), c(4499991, 2668272))
 isSpatial(df)
 
-Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-                          c(4499991, 2669343), c(4499991, 2668272)))
-Polygon1 <- Polygons(list(Polygon1), 1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- CRS(Projection)
-df_fort <- ggplot2::fortify(Polygon1)
-isSpatial(df_fort, Projection)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4498482, 4498482, 4499991, 4499991, 4498482),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+  crs = 3035
+))
+isSpatial(st_coordinates(Polygon1), 3035)
 }
 }
 \seealso{
@@ -54,7 +53,6 @@ Other Helper Functions:
 \code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
 \concept{Helper Functions}

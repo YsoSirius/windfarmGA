@@ -38,13 +38,13 @@
 #'
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(4498482, 2668272), c(4498482, 2669343),
-#'                     c(4499991, 2669343), c(4499991, 2668272)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(4498482, 4498482, 4499991, 4499991, 4498482),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+#'   crs = 3035
+#' ))
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plots the
 #' ## resulting wind rose
@@ -55,7 +55,7 @@
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and
 #' ## grid cell IDs.
-#' Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
+#' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1);
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
@@ -66,11 +66,10 @@
 #'                dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
 #'                Parallel = FALSE)
 #' }
-fitness           <- function(selection, referenceHeight, RotorHeight,
-                              SurfaceRoughness, Polygon, resol1,
-                              rot, dirspeed, srtm_crop, topograp, cclRaster,
-                              weibull, Parallel, numCluster) {
-
+fitness <- function(selection, referenceHeight, RotorHeight,
+                    SurfaceRoughness, Polygon, resol1,
+                    rot, dirspeed, srtm_crop, topograp, cclRaster,
+                    weibull, Parallel, numCluster) {
   ## Missing Arguments? #############
   if (missing(srtm_crop)) {
     srtm_crop <- NULL
@@ -84,45 +83,24 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   if (missing(weibull)) {
     weibull <- FALSE
   }
-  #############
-
+  
+  ## Wind Data ###########
   probability_direction <- dirspeed[[2]]
   dirspeed <- dirspeed[[1]]
 
-  ## Layout Saving 1   ###################
-  # selconfig <- sapply(selection, function(i) {paste0(i$ID, collapse = ",")})
-  # if (exists("globalparks")) {
-  #   if (verbose) {
-  #     cat("\n")
-  #     print("come in here?")
-  #     print(length(globalparks))
-  #   }
-  #   # any(duplicated(selconfig))
-  #   if (any(selconfig %in% names(globalparks)) | any(duplicated(selconfig))) {
-  #     # browser()
-  #     alr_known_ind = which(selconfig %in% names(globalparks))
-  #     gP_ind <- which(names(globalparks) %in% selconfig)
-  #     alr_known = globalparks[gP_ind]
-  #     selection = selection[-alr_known_ind]
-  #     cat("\n")
-      # cat("Some Layouts are already known. Get values from cached results
-      #     instead of recalculating")
-  #     # browser()
-  #   }
-  # }
-  # known <- TRUE
-  # if (known) {
-  ###################
-
-  # Calculate EnergyOutput for every config i and for
-  # every angle j - in Parallel
+  ## Get maximum angle and maximum distance ###########
+  wnkl_max <- getOption("windfarmGA.max_angle")
+  dist_max <- getOption("windfarmGA.max_distance")
+  
+  ## Calculate Energy Output ###########
+  # For every selection i and every angle j - in Parallel
   if (Parallel == TRUE) {
     e <- foreach::foreach(k = 1:length(selection)) %dopar% {
       windfarmGA::calculate_energy(
         sel = selection[[k]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-        wnkl = 20, distanz = 100000,
-        polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
+        wnkl = wnkl_max, distanz = dist_max,
+        polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
         weibull = weibull)
     }
@@ -131,13 +109,12 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   euniqu <- vector("list", length(selection))
   for (i in 1:length(selection)) {
     if (!Parallel) {
-      # Calculate EnergyOutput for every config i and for
-      # every angle j - not Parallel
+      # For every selection i and every angle j - not in Parallel
       e <- calculate_energy(
         sel = selection[[i]], referenceHeight = referenceHeight,
         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-        wnkl = 20, distanz = 100000,
-        polygon1 = Polygon, resol = resol1, RotorR = rot, dirSpeed = dirspeed,
+        wnkl = wnkl_max, distanz = dist_max,
+        polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
         weibull = weibull)
 
@@ -226,7 +203,6 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
 
   ## Split one from every run and select only Energy information
   maxparkeff <- do.call(rbind, lapply(euniqu, function(x) {
-    # subset.matrix(x[1,], select = "EnergyOverall")
     x[1, "EnergyOverall"]
   }))
 
@@ -238,25 +214,10 @@ fitness           <- function(selection, referenceHeight, RotorHeight,
   euniqu <- lapply(1:length(euniqu), function(i) {
       cbind(euniqu[[i]], "Parkfitness" = maxparkeff[i, ])
     })
-  # }
 
   names(euniqu) <- unlist(lapply(euniqu, function(i) {
     paste0(i[, "Rect_ID"], collapse = ",")
   }))
-  ## Layout Saving 2   ###################
-  # if (exists("globalparks")) {
-  #   if (any(selconfig %in% names(globalparks)) | any(duplicated(selconfig))) {
-  #     euniqu = c(euniqu, alr_known)
-  #   }
-  #   globalparks <- c(euniqu[!names(euniqu) %in% names(globalparks)], globalparks)
-  #   globalparks <<- globalparks[!duplicated(names(globalparks))]
-  #   if(any(duplicated(names(globalparks)))){
-  #     cat("some layouts are saved multiple times. Remove before adding to globalparks")
-  #   }
-  # } else {
-  #   globalparks <<- euniqu
-  # }
-  ###################
 
   return(euniqu)
 }

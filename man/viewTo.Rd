@@ -4,7 +4,7 @@
 \alias{viewTo}
 \title{Calculate Visibility between multiple locations}
 \usage{
-viewTo(r, xy1, xy2, h1 = 0, h2 = 0, reso)
+viewTo(r, xy1, xy2, h1 = 0, h2 = 0, reso, plot = FALSE, ...)
 }
 \arguments{
 \item{r}{A DEM raster}
@@ -19,6 +19,10 @@ viewTo(r, xy1, xy2, h1 = 0, h2 = 0, reso)
 
 \item{reso}{The minimal resolution of the DEM raster. It is 
 calculated in \code{viewshed} and passed along.}
+
+\item{plot}{Plot the process? Default is \code{FALSE}}
+
+\item{...}{Additional arguments passed to the raster plot}
 }
 \value{
 A boolean vector, indicating if \code{xy1} is visible from all
@@ -26,6 +30,23 @@ A boolean vector, indicating if \code{xy1} is visible from all
 }
 \description{
 Check if a location is visible from multiple locations
+}
+\examples{
+\dontrun{
+library(raster)
+library(sf)
+
+matrix <- matrix(abs(rnorm(20, mean = 10, sd = 5)), nrow=5)
+r1 <- raster(matrix)
+shape <- st_as_sf(as(extent(r1), "SpatialPolygons"))
+locs = st_sample(shape, 10, type = "random");
+
+mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
+sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
+
+viewTo(r1, sample_xy[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
+       plot=TRUE, interpolate=TRUE, asp=0.5)
+}
 }
 \seealso{
 Other Viewshed Analysis: 

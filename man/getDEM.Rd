@@ -14,7 +14,7 @@ getDEM(polygon, ISO3 = "AUT", clip = TRUE)
 \item{clip}{boolean, indicating if polygon should be cropped. Default is TRUE}
 }
 \value{
-A list with the DEM raster, and a SpatialPolygonsDataFrame or NULL if
+A list with the DEM raster, and a Simple Feature Polygon or NULL if
   no polygon is given
 }
 \description{
@@ -22,14 +22,14 @@ Get a DEM raster for a country based on ISO3 code
 }
 \examples{
 \dontrun{
-library(sp)
+library(sf)
 library(raster)
-Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-                          c(4499991, 2669343), c(4499991, 2667172)))
-Polygon1 <- Polygons(list(Polygon1), 1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- CRS(Projection)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4496482, 4496482, 4499991, 4499991, 4496482),
+    c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+  crs = 3035
+))
 DEM_meter <- getDEM(Polygon1)
 plot(DEM_meter[[1]])
 plot(DEM_meter[[2]], add=TRUE)
@@ -47,7 +47,6 @@ Other Helper Functions:
 \code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
 \concept{Helper Functions}

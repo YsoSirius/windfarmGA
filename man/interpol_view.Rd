@@ -16,19 +16,19 @@ interpol_view(
 )
 }
 \arguments{
-\item{res}{The result list from viewshed.}
+\item{res}{The resulting list from \code{\link{viewshed}}}
 
-\item{plot}{Should the result be plotted? Default is TRUE}
+\item{plot}{Should the result be plotted? Default is \code{TRUE}}
 
 \item{breakseq}{The breaks for value plotting. By default, 5 equal intervals
 are generated.}
 
-\item{breakform}{If 'breakseq' is missing, a sampling function to calculate
+\item{breakform}{If \code{breakseq} is missing, a sampling function to calculate
 the breaks, like \code{\link{quantile}}, fivenum, etc.}
 
-\item{plotDEM}{Plot the DEM? Default is FALSE}
+\item{plotDEM}{Plot the DEM? Default is \code{FALSE}}
 
-\item{fun}{Function used for rasterize. Default is mean}
+\item{fun}{Function used for rasterize. Default is \code{mean}}
 
 \item{pal}{A color palette}
 
@@ -42,17 +42,17 @@ Plot an interpolated view of the viewshed analysis
 }
 \examples{
 \dontrun{
-library(sp)
 library(raster)
-Polygon1 <- Polygon(rbind(c(4488182, 2667172), c(4488182, 2669343),
-                          c(4499991, 2669343), c(4499991, 2667172)))
-Polygon1 <- Polygons(list(Polygon1), 1);
-Polygon1 <- SpatialPolygons(list(Polygon1))
-Projection <- "+init=epsg:3035"
-proj4string(Polygon1) <- CRS(Projection)
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4496482, 4496482, 4499991, 4499991, 4496482),
+    c(2666272, 2669343, 2669343, 2666272, 2666272)))),
+  crs = 3035
+))
 DEM_meter <- getDEM(Polygon1)
 
-turbloc = spsample(DEM_meter[[2]], 10, type = "random");
+turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
 res <- viewshed(r = DEM_meter[[1]], shape=DEM_meter[[2]], 
                 turbine_locs = turbloc,  h1=1.8, h2=50)
 interpol_view(res, plotDEM = TRUE)

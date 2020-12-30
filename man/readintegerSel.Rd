@@ -33,7 +33,6 @@ Other Helper Functions:
 \code{\link{permutations}()},
 \code{\link{readinteger}()},
 \code{\link{splitAt}()},
-\code{\link{tess2SPdf}()},
 \code{\link{windata_format}()}
 }
 \concept{Helper Functions}

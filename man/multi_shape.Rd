@@ -3,14 +3,14 @@
 \docType{data}
 \name{multi_shape}
 \alias{multi_shape}
-\title{A multi-shapefile with 3 Polygons}
+\title{A MULTIPOLYGON with 3 Polygons}
 \format{
-An object of class \code{SpatialPolygons} of length 1.
+An object of class \code{sf} (inherits from \code{data.frame}) with 1 rows and 1 columns.
 }
 \usage{
 multi_shape
 }
 \description{
-A multi-shapefile with 3 Polygons
+A MULTIPOLYGON with 3 Polygons
 }
 \keyword{datasets}

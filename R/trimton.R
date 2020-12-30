@@ -20,12 +20,13 @@
 #'   individual
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
-#' library(sp)
-#' Polygon1 <- Polygon(rbind(c(0, 0), c(0, 2000), c(2000, 2000), c(2000, 0)))
-#' Polygon1 <- Polygons(list(Polygon1),1);
-#' Polygon1 <- SpatialPolygons(list(Polygon1))
-#' Projection <- "+init=epsg:3035"
-#' proj4string(Polygon1) <- CRS(Projection)
+#' library(sf)
+#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#'   sf::st_polygon(list(cbind(
+#'     c(0, 0, 2000, 2000, 0),
+#'     c(0, 2000, 2000, 0, 0)))),
+#'   crs = 3035
+#' ))
 #'
 #' ## Create a uniform and unidirectional wind data.frame and plots the
 #' ## resulting wind rose
@@ -33,7 +34,7 @@
 #' data.in <- as.data.frame(cbind(ws=12,wd=0))
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-#' Grid1 <- grid_area(shape = Polygon1,resol = 200,prop = 1);
+#' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1);
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
@@ -89,7 +90,6 @@ trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
   lepa <- length(mut[1,])
   mut1 <- vector("list", lepa)
   for (i in 1:lepa) {
-    # i=75
     tmp <- mut[,i]
     e <- tmp == 1
     ## How much turbines are there too many?
