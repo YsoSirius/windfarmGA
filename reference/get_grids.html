@@ -74,20 +74,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -96,7 +93,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -156,47 +153,47 @@
 <code><a href='readintegerSel.html'>readintegerSel</a>()</code>,
 <code><a href='readinteger.html'>readinteger</a>()</code>,
 <code><a href='splitAt.html'>splitAt</a>()</code>,
-<code><a href='tess2SPdf.html'>tess2SPdf</a>()</code>,
 <code><a href='windata_format.html'>windata_format</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## Create a random rectangular shapefile</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2000</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2000</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>)</span>;
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>Projection</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
+ <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>0</span><span class='op'>)</span>,
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+crs <span class='op'>=</span> <span class='fl'>3035</span>
+<span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.</span>
-<span class='va'>Grid1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span>shape <span class='op'>=</span> <span class='va'>Polygon1</span>,resol <span class='op'>=</span> <span class='fl'>200</span>,prop <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>;
+<span class='va'>Grid1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span>shape <span class='op'>=</span> <span class='va'>Polygon1</span>, size <span class='op'>=</span> <span class='fl'>200</span>, prop <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='va'>Grid1</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 <span class='va'>AmountGrids</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/ncell.html'>nrow</a></span><span class='op'>(</span><span class='va'>Grid</span><span class='op'>)</span>
 
-<span class='va'>startsel</span> <span class='op'>&lt;-</span> <span class='fu'><a href='init_population.html'>init_population</a></span><span class='op'>(</span><span class='va'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span><span class='op'>)</span>;
+<span class='va'>startsel</span> <span class='op'>&lt;-</span> <span class='fu'><a href='init_population.html'>init_population</a></span><span class='op'>(</span><span class='va'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span><span class='op'>)</span>
 <span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>ws <span class='op'>=</span> <span class='fl'>12</span>, wd <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
 <span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>wind</span>, probab <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
 <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fitness.html'>fitness</a></span><span class='op'>(</span>selection <span class='op'>=</span> <span class='va'>startsel</span>,referenceHeight <span class='op'>=</span> <span class='fl'>100</span>, RotorHeight<span class='op'>=</span><span class='fl'>100</span>,
                SurfaceRoughness<span class='op'>=</span><span class='fl'>0.3</span>,Polygon <span class='op'>=</span> <span class='va'>Polygon1</span>, resol1 <span class='op'>=</span> <span class='fl'>200</span>,rot<span class='op'>=</span><span class='fl'>20</span>,
                dirspeed <span class='op'>=</span> <span class='va'>wind</span>, srtm_crop<span class='op'>=</span><span class='st'>""</span>,topograp<span class='op'>=</span><span class='cn'>FALSE</span>,cclRaster<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>
-<span class='va'>allparks</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span><span class='op'>(</span><span class='st'>"rbind"</span>,<span class='va'>fit</span><span class='op'>)</span>;
+<span class='va'>allparks</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span><span class='op'>(</span><span class='st'>"rbind"</span>,<span class='va'>fit</span><span class='op'>)</span>
 
 <span class='co'>## SELECTION</span>
 <span class='co'>## print the amount of Individuals selected.</span>
 <span class='co'>## Check if the amount of Turbines is as requested.</span>
-<span class='va'>selec6best</span> <span class='op'>&lt;-</span> <span class='fu'><a href='selection.html'>selection</a></span><span class='op'>(</span><span class='va'>fit</span>, <span class='va'>Grid</span>,<span class='fl'>2</span>, <span class='cn'>TRUE</span>, <span class='fl'>6</span>, <span class='st'>"VAR"</span><span class='op'>)</span>;
+<span class='va'>selec6best</span> <span class='op'>&lt;-</span> <span class='fu'><a href='selection.html'>selection</a></span><span class='op'>(</span><span class='va'>fit</span>, <span class='va'>Grid</span>,<span class='fl'>2</span>, <span class='cn'>TRUE</span>, <span class='fl'>6</span>, <span class='st'>"VAR"</span><span class='op'>)</span>
 
 <span class='co'>## CROSSOVER</span>
 <span class='co'>## u determines the amount of crossover points,</span>
 <span class='co'>## crossPart determines the method used (Equal/Random),</span>
 <span class='co'>## uplimit is the maximum allowed permutations</span>
-<span class='va'>crossOut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='crossover.html'>crossover</a></span><span class='op'>(</span><span class='va'>selec6best</span>, <span class='fl'>2</span>, uplimit <span class='op'>=</span> <span class='fl'>300</span>, crossPart<span class='op'>=</span><span class='st'>"RAN"</span><span class='op'>)</span>;
+<span class='va'>crossOut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='crossover.html'>crossover</a></span><span class='op'>(</span><span class='va'>selec6best</span>, <span class='fl'>2</span>, uplimit <span class='op'>=</span> <span class='fl'>300</span>, crossPart<span class='op'>=</span><span class='st'>"RAN"</span><span class='op'>)</span>
 
 <span class='co'>## MUTATION</span>
 <span class='co'>## Variable Mutation Rate is activated if more than 2 individuals represent the</span>
 <span class='co'>## current best solution.</span>
-<span class='va'>mut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mutation.html'>mutation</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='va'>crossOut</span>, p <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span>;
+<span class='va'>mut</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mutation.html'>mutation</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='va'>crossOut</span>, p <span class='op'>=</span> <span class='fl'>0.3</span><span class='op'>)</span>
 
 <span class='co'>## TRIMTON</span>
 <span class='co'>## After Crossover and Mutation, the amount of turbines in a windpark change</span>
@@ -210,149 +207,149 @@
                SurfaceRoughness<span class='op'>=</span><span class='fl'>0.3</span>,Polygon <span class='op'>=</span> <span class='va'>Polygon1</span>, resol1 <span class='op'>=</span> <span class='fl'>200</span>,rot<span class='op'>=</span><span class='fl'>20</span>,
                dirspeed <span class='op'>=</span> <span class='va'>wind</span>, srtm_crop<span class='op'>=</span><span class='st'>""</span>,topograp<span class='op'>=</span><span class='cn'>FALSE</span>,cclRaster<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/raster/man/headtail.html'>head</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $`14,19,21,45,50,51,58,75,98,99`
-#&gt;       X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 14  700 1700    94.94135      7488.069           0   1     20      14
-#&gt; 19 1700 1700    94.94135      7488.069           0   1     20      19
-#&gt; 21  100 1500    94.94135      7488.069           0   1     20      21
-#&gt; 45  900 1100    94.94135      7488.069           0   1     20      45
-#&gt; 50 1900 1100    94.94135      7488.069           0   1     20      50
-#&gt; 51  100  900    94.94135      7488.069         100   1     20      51
-#&gt; 58 1500  900    94.94135      7488.069           0   1     20      58
-#&gt; 75  900  500    94.94135      7488.069         100   1     20      75
-#&gt; 98 1500  100    94.94135      7488.069         100   1     20      98
-#&gt; 99 1700  100    94.94135      7488.069         100   1     20      99
-#&gt;    Parkfitness
-#&gt; 14    7488.069
-#&gt; 19    7488.069
-#&gt; 21    7488.069
-#&gt; 45    7488.069
-#&gt; 50    7488.069
-#&gt; 51    7488.069
-#&gt; 58    7488.069
-#&gt; 75    7488.069
-#&gt; 98    7488.069
-#&gt; 99    7488.069
+</div><div class='output co'>#&gt; $`4,16,33,34,38,47,81,86,92,100`
+#&gt;        X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
+#&gt; 4    700  100    97.76254      7710.578         100   1     20       4
+#&gt; 16  1100  300    97.76254      7710.578         100   1     20      16
+#&gt; 33   500  700    97.76254      7710.578           0   1     20      33
+#&gt; 34   700  700    97.76254      7710.578           0   1     20      34
+#&gt; 38  1500  700    97.76254      7710.578           0   1     20      38
+#&gt; 47  1300  900    97.76254      7710.578           0   1     20      47
+#&gt; 81   100 1700    97.76254      7710.578           0   1     20      81
+#&gt; 86  1100 1700    97.76254      7710.578           0   1     20      86
+#&gt; 92   300 1900    97.76254      7710.578           0   1     20      92
+#&gt; 100 1900 1900    97.76254      7710.578           0   1     20     100
+#&gt;     Parkfitness
+#&gt; 4      7710.578
+#&gt; 16     7710.578
+#&gt; 33     7710.578
+#&gt; 34     7710.578
+#&gt; 38     7710.578
+#&gt; 47     7710.578
+#&gt; 81     7710.578
+#&gt; 86     7710.578
+#&gt; 92     7710.578
+#&gt; 100    7710.578
 #&gt; 
-#&gt; $`5,15,19,44,47,58,67,78,92,96`
+#&gt; $`14,16,32,50,72,75,79,81,88,94`
 #&gt;       X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 5   900 1900     89.2255      7037.257           0   2     20       5
-#&gt; 15  900 1700     89.2255      7037.257         100   2     20      15
-#&gt; 19 1700 1700     89.2255      7037.257           0   2     20      19
-#&gt; 44  700 1100     89.2255      7037.257           0   2     20      44
-#&gt; 47 1300 1100     89.2255      7037.257           0   2     20      47
-#&gt; 58 1500  900     89.2255      7037.257           0   2     20      58
-#&gt; 67 1300  700     89.2255      7037.257         100   2     20      67
-#&gt; 78 1500  500     89.2255      7037.257         100   2     20      78
-#&gt; 92  300  100     89.2255      7037.257           0   2     20      92
-#&gt; 96 1100  100     89.2255      7037.257           0   2     20      96
+#&gt; 14  700  300    98.42905      7763.146         100   2     20      14
+#&gt; 16 1100  300    98.42905      7763.146           0   2     20      16
+#&gt; 32  300  700    98.42905      7763.146         100   2     20      32
+#&gt; 50 1900  900    98.42905      7763.146           0   2     20      50
+#&gt; 72  300 1500    98.42905      7763.146           0   2     20      72
+#&gt; 75  900 1500    98.42905      7763.146           0   2     20      75
+#&gt; 79 1700 1500    98.42905      7763.146           0   2     20      79
+#&gt; 81  100 1700    98.42905      7763.146           0   2     20      81
+#&gt; 88 1500 1700    98.42905      7763.146           0   2     20      88
+#&gt; 94  700 1900    98.42905      7763.146           0   2     20      94
 #&gt;    Parkfitness
-#&gt; 5     7037.257
-#&gt; 15    7037.257
-#&gt; 19    7037.257
+#&gt; 14    7763.146
+#&gt; 16    7763.146
+#&gt; 32    7763.146
+#&gt; 50    7763.146
+#&gt; 72    7763.146
+#&gt; 75    7763.146
+#&gt; 79    7763.146
+#&gt; 81    7763.146
+#&gt; 88    7763.146
+#&gt; 94    7763.146
+#&gt; 
+#&gt; $`7,21,24,31,32,44,58,70,86,90`
+#&gt;       X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
+#&gt; 7  1300  100     89.2255      7037.257           0   3     20       7
+#&gt; 21  100  500     89.2255      7037.257         100   3     20      21
+#&gt; 24  700  500     89.2255      7037.257         100   3     20      24
+#&gt; 31  100  700     89.2255      7037.257           0   3     20      31
+#&gt; 32  300  700     89.2255      7037.257           0   3     20      32
+#&gt; 44  700  900     89.2255      7037.257           0   3     20      44
+#&gt; 58 1500 1100     89.2255      7037.257           0   3     20      58
+#&gt; 70 1900 1300     89.2255      7037.257         100   3     20      70
+#&gt; 86 1100 1700     89.2255      7037.257           0   3     20      86
+#&gt; 90 1900 1700     89.2255      7037.257           0   3     20      90
+#&gt;    Parkfitness
+#&gt; 7     7037.257
+#&gt; 21    7037.257
+#&gt; 24    7037.257
+#&gt; 31    7037.257
+#&gt; 32    7037.257
 #&gt; 44    7037.257
-#&gt; 47    7037.257
 #&gt; 58    7037.257
-#&gt; 67    7037.257
-#&gt; 78    7037.257
-#&gt; 92    7037.257
-#&gt; 96    7037.257
+#&gt; 70    7037.257
+#&gt; 86    7037.257
+#&gt; 90    7037.257
 #&gt; 
-#&gt; $`19,23,25,33,66,67,77,85,86,97`
+#&gt; $`3,16,36,53,59,67,71,72,77,83`
 #&gt;       X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 19 1700 1700    83.05819      6550.839           0   3     20      19
-#&gt; 23  500 1500    83.05819      6550.839           0   3     20      23
-#&gt; 25  900 1500    83.05819      6550.839           0   3     20      25
-#&gt; 33  500 1300    83.05819      6550.839         100   3     20      33
-#&gt; 66 1100  700    83.05819      6550.839           0   3     20      66
-#&gt; 67 1300  700    83.05819      6550.839           0   3     20      67
-#&gt; 77 1300  500    83.05819      6550.839         100   3     20      77
-#&gt; 85  900  300    83.05819      6550.839         100   3     20      85
-#&gt; 86 1100  300    83.05819      6550.839         100   3     20      86
-#&gt; 97 1300  100    83.05819      6550.839         200   3     20      97
+#&gt; 3   500  100    89.37569      7049.103         200   4     20       3
+#&gt; 16 1100  300    89.37569      7049.103         100   4     20      16
+#&gt; 36 1100  700    89.37569      7049.103           0   4     20      36
+#&gt; 53  500 1100    89.37569      7049.103         100   4     20      53
+#&gt; 59 1700 1100    89.37569      7049.103           0   4     20      59
+#&gt; 67 1300 1300    89.37569      7049.103         100   4     20      67
+#&gt; 71  100 1500    89.37569      7049.103           0   4     20      71
+#&gt; 72  300 1500    89.37569      7049.103           0   4     20      72
+#&gt; 77 1300 1500    89.37569      7049.103           0   4     20      77
+#&gt; 83  500 1700    89.37569      7049.103           0   4     20      83
 #&gt;    Parkfitness
-#&gt; 19    6550.839
-#&gt; 23    6550.839
-#&gt; 25    6550.839
-#&gt; 33    6550.839
-#&gt; 66    6550.839
-#&gt; 67    6550.839
-#&gt; 77    6550.839
-#&gt; 85    6550.839
-#&gt; 86    6550.839
-#&gt; 97    6550.839
+#&gt; 3     7049.103
+#&gt; 16    7049.103
+#&gt; 36    7049.103
+#&gt; 53    7049.103
+#&gt; 59    7049.103
+#&gt; 67    7049.103
+#&gt; 71    7049.103
+#&gt; 72    7049.103
+#&gt; 77    7049.103
+#&gt; 83    7049.103
 #&gt; 
-#&gt; $`5,17,23,24,29,30,32,39,50,67`
+#&gt; $`11,25,36,44,48,49,59,73,94,97`
 #&gt;       X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 5   900 1900    91.20199      7193.144           0   4     20       5
-#&gt; 17 1300 1700    91.20199      7193.144           0   4     20      17
-#&gt; 23  500 1500    91.20199      7193.144           0   4     20      23
-#&gt; 24  700 1500    91.20199      7193.144           0   4     20      24
-#&gt; 29 1700 1500    91.20199      7193.144           0   4     20      29
-#&gt; 30 1900 1500    91.20199      7193.144           0   4     20      30
-#&gt; 32  300 1300    91.20199      7193.144           0   4     20      32
-#&gt; 39 1700 1300    91.20199      7193.144         100   4     20      39
-#&gt; 50 1900 1100    91.20199      7193.144         100   4     20      50
-#&gt; 67 1300  700    91.20199      7193.144         100   4     20      67
+#&gt; 11  100  300    94.02258      7415.605           0   5     20      11
+#&gt; 25  900  500    94.02258      7415.605           0   5     20      25
+#&gt; 36 1100  700    94.02258      7415.605           0   5     20      36
+#&gt; 44  700  900    94.02258      7415.605         100   5     20      44
+#&gt; 48 1500  900    94.02258      7415.605           0   5     20      48
+#&gt; 49 1700  900    94.02258      7415.605         100   5     20      49
+#&gt; 59 1700 1100    94.02258      7415.605           0   5     20      59
+#&gt; 73  500 1500    94.02258      7415.605           0   5     20      73
+#&gt; 94  700 1900    94.02258      7415.605           0   5     20      94
+#&gt; 97 1300 1900    94.02258      7415.605           0   5     20      97
 #&gt;    Parkfitness
-#&gt; 5     7193.144
-#&gt; 17    7193.144
-#&gt; 23    7193.144
-#&gt; 24    7193.144
-#&gt; 29    7193.144
-#&gt; 30    7193.144
-#&gt; 32    7193.144
-#&gt; 39    7193.144
-#&gt; 50    7193.144
-#&gt; 67    7193.144
+#&gt; 11    7415.605
+#&gt; 25    7415.605
+#&gt; 36    7415.605
+#&gt; 44    7415.605
+#&gt; 48    7415.605
+#&gt; 49    7415.605
+#&gt; 59    7415.605
+#&gt; 73    7415.605
+#&gt; 94    7415.605
+#&gt; 97    7415.605
 #&gt; 
-#&gt; $`2,20,21,27,33,34,43,62,68,80`
-#&gt;       X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 2   300 1900    93.59812      7382.128           0   5     20       2
-#&gt; 20 1900 1700    93.59812      7382.128           0   5     20      20
-#&gt; 21  100 1500    93.59812      7382.128           0   5     20      21
-#&gt; 27 1300 1500    93.59812      7382.128           0   5     20      27
-#&gt; 33  500 1300    93.59812      7382.128           0   5     20      33
-#&gt; 34  700 1300    93.59812      7382.128           0   5     20      34
-#&gt; 43  500 1100    93.59812      7382.128         100   5     20      43
-#&gt; 62  300  700    93.59812      7382.128         100   5     20      62
-#&gt; 68 1500  700    93.59812      7382.128           0   5     20      68
-#&gt; 80 1900  500    93.59812      7382.128         100   5     20      80
-#&gt;    Parkfitness
-#&gt; 2     7382.128
-#&gt; 20    7382.128
-#&gt; 21    7382.128
-#&gt; 27    7382.128
-#&gt; 33    7382.128
-#&gt; 34    7382.128
-#&gt; 43    7382.128
-#&gt; 62    7382.128
-#&gt; 68    7382.128
-#&gt; 80    7382.128
-#&gt; 
-#&gt; $`1,2,5,6,13,27,32,33,65,77`
-#&gt;       X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
-#&gt; 1   100 1900    93.95716      7410.446           0   6     20       1
-#&gt; 2   300 1900    93.95716      7410.446           0   6     20       2
-#&gt; 5   900 1900    93.95716      7410.446           0   6     20       5
-#&gt; 6  1100 1900    93.95716      7410.446           0   6     20       6
-#&gt; 13  500 1700    93.95716      7410.446           0   6     20      13
-#&gt; 27 1300 1500    93.95716      7410.446           0   6     20      27
-#&gt; 32  300 1300    93.95716      7410.446         100   6     20      32
-#&gt; 33  500 1300    93.95716      7410.446         100   6     20      33
-#&gt; 65  900  700    93.95716      7410.446         100   6     20      65
-#&gt; 77 1300  500    93.95716      7410.446         100   6     20      77
-#&gt;    Parkfitness
-#&gt; 1     7410.446
-#&gt; 2     7410.446
-#&gt; 5     7410.446
-#&gt; 6     7410.446
-#&gt; 13    7410.446
-#&gt; 27    7410.446
-#&gt; 32    7410.446
-#&gt; 33    7410.446
-#&gt; 65    7410.446
-#&gt; 77    7410.446
+#&gt; $`2,8,31,36,62,73,84,85,90,100`
+#&gt;        X    Y EfficAllDir EnergyOverall AbschGesamt Run RotorR Rect_ID
+#&gt; 2    300  100     94.2324      7432.154         100   6     20       2
+#&gt; 8   1500  100     94.2324      7432.154           0   6     20       8
+#&gt; 31   100  700     94.2324      7432.154           0   6     20      31
+#&gt; 36  1100  700     94.2324      7432.154           0   6     20      36
+#&gt; 62   300 1300     94.2324      7432.154           0   6     20      62
+#&gt; 73   500 1500     94.2324      7432.154           0   6     20      73
+#&gt; 84   700 1700     94.2324      7432.154           0   6     20      84
+#&gt; 85   900 1700     94.2324      7432.154           0   6     20      85
+#&gt; 90  1900 1700     94.2324      7432.154         100   6     20      90
+#&gt; 100 1900 1900     94.2324      7432.154           0   6     20     100
+#&gt;     Parkfitness
+#&gt; 2      7432.154
+#&gt; 8      7432.154
+#&gt; 31     7432.154
+#&gt; 36     7432.154
+#&gt; 62     7432.154
+#&gt; 73     7432.154
+#&gt; 84     7432.154
+#&gt; 85     7432.154
+#&gt; 90     7432.154
+#&gt; 100    7432.154
 #&gt; </div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
@@ -371,7 +368,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

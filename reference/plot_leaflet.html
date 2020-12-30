@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot a Wind Farm with leaflet — plot_leaflet • windfarmGA</title>
+<title>Plot a wind warm with leaflet — plot_leaflet • windfarmGA</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Plot a Wind Farm with leaflet — plot_leaflet" />
+<meta property="og:title" content="Plot a wind warm with leaflet — plot_leaflet" />
 <meta property="og:description" content="Plot a resulting wind farm on a leaflet map." />
 
 
@@ -72,20 +72,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -94,7 +91,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -111,8 +108,8 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot a Wind Farm with leaflet</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plot_leaflet.R'><code>R/plot_leaflet.R</code></a></small>
+    <h1>Plot a wind warm with leaflet</h1>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/plots.R'><code>R/plots.R</code></a></small>
     <div class="hidden name"><code>plot_leaflet.Rd</code></div>
     </div>
 
@@ -127,27 +124,31 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>result</th>
-      <td><p>The resulting matrix of the function <code><a href='genetic_algorithm.html'>genetic_algorithm</a></code>
-or <code><a href='windfarmGA.html'>windfarmGA</a></code></p></td>
+      <td><p>The output of <code><a href='windfarmGA.html'>windfarmGA</a></code> or
+<code><a href='genetic_algorithm.html'>genetic_algorithm</a></code></p></td>
     </tr>
     <tr>
       <th>Polygon1</th>
-      <td><p>The Polygon for the wind farm area.</p></td>
+      <td><p>The considered area as SpatialPolygon, SimpleFeature Polygon
+or coordinates as matrix/data.frame</p></td>
     </tr>
     <tr>
       <th>which</th>
-      <td><p>A numeric value, indicating which best individual to plot. The
-default is 1 (the best resulting wind farm).</p></td>
+      <td><p>A numeric value, indicating which individual to plot. The
+default is 1. Combined with <code>orderitems = TRUE</code> this will show the 
+best performing wind farm.</p></td>
     </tr>
     <tr>
       <th>orderitems</th>
       <td><p>A logical value indicating whether the results should be
-ordered by energy values (TRUE) or chronologically (FALSE).</p></td>
+ordered by energy values <code>TRUE</code> or chronologically <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>GridPol</th>
-      <td><p>The output grid polygon of the <code><a href='grid_area.html'>grid_area</a></code> or
-<code><a href='hexa_area.html'>hexa_area</a></code> functions.</p></td>
+      <td><p>By default, the grid will be calculated based on the inputs 
+of <code>result</code> and the <code>Polygon1</code>. But another spatial object or the 
+output of the  <code><a href='grid_area.html'>grid_area</a></code> or <code><a href='hexa_area.html'>hexa_area</a></code> functions 
+can also be</p></td>
     </tr>
     </table>
 
@@ -157,27 +158,23 @@ ordered by energy values (TRUE) or chronologically (FALSE).</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/resulthex.rda"</span>, package <span class='op'>=</span> <span class='st'>"windfarmGA"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/polygon.rda"</span>, package <span class='op'>=</span> <span class='st'>"windfarmGA"</span><span class='op'>)</span><span class='op'>)</span>
-
 <span class='co'>## Plot the best wind farm on a leaflet map (ordered by energy values)</span>
-<span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resulthex</span>, Polygon1 <span class='op'>=</span> <span class='va'>polygon</span>, which <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'>
+<span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resulthex</span>, Polygon1 <span class='op'>=</span> <span class='va'>sp_polygon</span>, which <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+
 <span class='co'>## Plot the last wind farm (ordered by chronology).</span>
-<span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resulthex</span>, Polygon1 <span class='op'>=</span> <span class='va'>polygon</span>, orderitems <span class='op'>=</span> <span class='cn'>FALSE</span>,
+<span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resulthex</span>, Polygon1 <span class='op'>=</span> <span class='va'>sp_polygon</span>, orderitems <span class='op'>=</span> <span class='cn'>FALSE</span>,
          which <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'>         
-<span class='fu'><a href='https://rdrr.io/r/base/load.html'>load</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/resultrect.rda"</span>, package <span class='op'>=</span> <span class='st'>"windfarmGA"</span><span class='op'>)</span><span class='op'>)</span>
+         
 <span class='co'>## Plot the best wind farm on a leaflet map with the rectangular Grid</span>
-<span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span><span class='va'>polygon</span>, resol <span class='op'>=</span> <span class='fl'>150</span>, prop <span class='op'>=</span> <span class='fl'>0.4</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resultrect</span>, Polygon1 <span class='op'>=</span> <span class='va'>polygon</span>, which <span class='op'>=</span> <span class='fl'>1</span>, 
-         GridPol <span class='op'>=</span> <span class='va'>Grid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'>
+<span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span><span class='va'>sp_polygon</span>, size <span class='op'>=</span> <span class='fl'>150</span>, prop <span class='op'>=</span> <span class='fl'>0.4</span><span class='op'>)</span>
+<span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resultrect</span>, Polygon1 <span class='op'>=</span> <span class='va'>sp_polygon</span>, which <span class='op'>=</span> <span class='fl'>1</span>, 
+             GridPol <span class='op'>=</span> <span class='va'>Grid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+
 <span class='co'>## Plot the last wind farm with hexagonal Grid</span>
-<span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='hexa_area.html'>hexa_area</a></span><span class='op'>(</span><span class='va'>polygon</span>, size <span class='op'>=</span> <span class='fl'>75</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resulthex</span>, Polygon1 <span class='op'>=</span> <span class='va'>polygon</span>, which <span class='op'>=</span> <span class='fl'>1</span>, 
-         GridPol <span class='op'>=</span> <span class='va'>Grid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='output co'>#&gt; <span class='warning'>Warning: CRS object has comment, which is lost in output</span></div><div class='input'><span class='co'># }</span>
+<span class='va'>Grid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='hexa_area.html'>hexa_area</a></span><span class='op'>(</span><span class='va'>sp_polygon</span>, size <span class='op'>=</span> <span class='fl'>75</span><span class='op'>)</span>
+<span class='fu'>plot_leaflet</span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>resulthex</span>, Polygon1 <span class='op'>=</span> <span class='va'>sp_polygon</span>, which <span class='op'>=</span> <span class='fl'>1</span>, 
+             GridPol <span class='op'>=</span> <span class='va'>Grid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -194,7 +191,7 @@ ordered by energy values (TRUE) or chronologically (FALSE).</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

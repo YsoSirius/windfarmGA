@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="Polygon to Hexagonal Grid Tessellation — hexa_area" />
-<meta property="og:description" content="The function takes a Polygon and a sizing argument and creates
-  a list with an indexed matrix with coordinates and a SpatialPolygons
-  object, that consists of hexagonal grids" />
+<meta property="og:description" content="The function takes a Simple Feature Polygon and a size argument 
+  and creates a list with an indexed matrix with coordinates and a Simple Feature
+  object, that consists of hexagonal grids." />
 
 
 
@@ -74,20 +74,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -96,7 +93,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -114,39 +111,40 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Polygon to Hexagonal Grid Tessellation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/hexa_area.R'><code>R/hexa_area.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/grid_area.R'><code>R/grid_area.R</code></a></small>
     <div class="hidden name"><code>hexa_area.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The function takes a Polygon and a sizing argument and creates
-  a list with an indexed matrix with coordinates and a SpatialPolygons
-  object, that consists of hexagonal grids</p>
+    <p>The function takes a Simple Feature Polygon and a size argument 
+  and creates a list with an indexed matrix with coordinates and a Simple Feature
+  object, that consists of hexagonal grids.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hexa_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='va'>size</span>, plotTrue <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>hexa_area</span><span class='op'>(</span><span class='va'>shape</span>, <span class='va'>size</span>, plotGrid <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Polygon1</th>
-      <td><p>The SpatialPolygons object</p></td>
+      <th>shape</th>
+      <td><p>Simple Feature Polygon of the considered area</p></td>
     </tr>
     <tr>
       <th>size</th>
-      <td><p>The side length of an hexagon</p></td>
+      <td><p>The resolution of the grid in meters. Default is 500</p></td>
     </tr>
     <tr>
-      <th>plotTrue</th>
-      <td><p>Should the object be plotted</p></td>
+      <th>plotGrid</th>
+      <td><p>Logical value indicating whether the results should be
+plotted. Default is FALSE.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns a list with an indexed matrix of the point coordinates and a
-  SpatialPolygons object of the hexagons</p>
+  Simple Feature Polygon of the hexagons</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Helper Functions: 
@@ -160,31 +158,20 @@
 <code><a href='readintegerSel.html'>readintegerSel</a>()</code>,
 <code><a href='readinteger.html'>readinteger</a>()</code>,
 <code><a href='splitAt.html'>splitAt</a>()</code>,
-<code><a href='tess2SPdf.html'>tess2SPdf</a>()</code>,
 <code><a href='windata_format.html'>windata_format</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://www.spatstat.org'>spatstat</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: spatstat.data</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: nlme</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘nlme’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:raster’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    getData</span></div><div class='output co'>#&gt; <span class='message'>Loading required package: rpart</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>spatstat 1.64-1       (nickname: ‘Help you I can, yes!’) </span>
-#&gt; <span class='message'>For an introduction to spatstat, type ‘beginner’ </span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Note: spatstat version 1.64-1 is out of date by more than 5 months; we recommend upgrading to the latest version.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘spatstat’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:raster’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    area, rotate, shift</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rspatial.org/raster'>raster</a></span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2668272</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2669343</span><span class='op'>)</span>,
-                          <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2669343</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>)</span>;
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>Projection</span>
-<span class='va'>HexGrid</span> <span class='op'>&lt;-</span> <span class='fu'>hexa_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>100</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='hexa_area-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/raster/man/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>HexGrid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='img'><img src='hexa_area-2.png' alt='' width='700' height='433' /></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
+<span class='va'>Poly</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
+  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>4498482</span>, <span class='fl'>4499991</span>, <span class='fl'>4499991</span>, <span class='fl'>4498482</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2668272</span>, <span class='fl'>2669343</span>, <span class='fl'>2669343</span>, <span class='fl'>2668272</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, 
+  crs <span class='op'>=</span> <span class='fl'>3035</span>
+<span class='op'>)</span><span class='op'>)</span>
+
+<span class='va'>HexGrid</span> <span class='op'>&lt;-</span> <span class='fu'>hexa_area</span><span class='op'>(</span><span class='va'>Poly</span>, <span class='fl'>100</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='hexa_area-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='hexa_area-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>HexGrid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='img'><img src='hexa_area-3.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -201,7 +188,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

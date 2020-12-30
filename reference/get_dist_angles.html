@@ -73,20 +73,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -95,7 +92,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -168,19 +165,20 @@ angles. Default is FALSE</p></td>
 <code><a href='turbine_influences.html'>turbine_influences</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rspatial.org/raster'>raster</a></span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: sp</span></div><div class='input'>
 <span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
-<span class='va'>polYgon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2000</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2000</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>polYgon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>polYgon</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>polYgon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>polYgon</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>polYgon</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='va'>Projection</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/pkg/raster/man/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>polYgon</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='get_dist_angles-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
+  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>4498482</span>, <span class='fl'>4499991</span>, <span class='fl'>4499991</span>, <span class='fl'>4498482</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2668272</span>, <span class='fl'>2669343</span>, <span class='fl'>2669343</span>, <span class='fl'>2668272</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+  crs <span class='op'>=</span> <span class='fl'>3035</span>
+<span class='op'>)</span><span class='op'>)</span>
+
 <span class='co'>## Create a random windfarm with 10 turbines</span>
-<span class='va'>t</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>0</span>, <span class='fu'>raster</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/extent.html'>extent</a></span><span class='op'>(</span><span class='va'>polYgon</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>,
-     y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>0</span>, <span class='fu'>raster</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/extent.html'>extent</a></span><span class='op'>(</span><span class='va'>polYgon</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>t</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>0</span>, <span class='fu'>raster</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/extent.html'>extent</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>,
+     y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>0</span>, <span class='fu'>raster</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/extent.html'>extent</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>wnkl</span> <span class='op'>&lt;-</span> <span class='fl'>20</span>
 <span class='va'>distanz</span> <span class='op'>&lt;-</span> <span class='fl'>100000</span>
 
@@ -188,64 +186,48 @@ angles. Default is FALSE</p></td>
 <span class='va'>potInfTur</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='kw'>for</span> <span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>t</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='va'>potInfTur</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'>get_dist_angles</span><span class='op'>(</span>t <span class='op'>=</span> <span class='va'>t</span>, o <span class='op'>=</span> <span class='va'>i</span>, wkl <span class='op'>=</span> <span class='va'>wnkl</span>,
-                   distanz <span class='op'>=</span> <span class='va'>distanz</span>, polYgon <span class='op'>=</span> <span class='va'>polYgon</span>, plotAngles <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+                   distanz <span class='op'>=</span> <span class='va'>distanz</span>, polYgon <span class='op'>=</span> <span class='va'>Polygon1</span>, plotAngles <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='op'>}</span>
-</div><div class='img'><img src='get_dist_angles-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-8.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-10.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>potInfTur</span>
+</div><div class='img'><img src='get_dist_angles-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-4.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-8.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='get_dist_angles-10.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>potInfTur</span>
 </div><div class='output co'>#&gt; [[1]]
-#&gt;      Ax Ay       Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
-#&gt; [1,]  0  0 1801.251 1317.151  0  0        0        0        0     0     0     0
+#&gt;      Ax Ay       Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 611362.7 2220201  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[2]]
-#&gt;            Ax       Ay       Bx       By       Cx       Cy Laenge_C Laenge_B
-#&gt; [1,] 602.9025 1571.513 947.1833 247.1033 602.9025 247.1033 1368.427 1324.410
-#&gt; [2,] 963.1458 1758.062 947.1833 247.1033 963.1458 247.1033 1511.043 1510.958
-#&gt;       Laenge_A      alpha    betha gamma
-#&gt; [1,] 344.28082 14.5715487 75.42845    90
-#&gt; [2,]  15.96246  0.6052782 89.39472    90
+#&gt;      Ax Ay       Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 764753.7 234691.3  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[3]]
-#&gt;             Ax        Ay       Bx       By        Cx       Cy Laenge_C
-#&gt; [1,] 1801.2512 1317.1508 1440.636 319.2308 1801.2512 319.2308 1061.078
-#&gt; [2,] 1396.0386  895.3321 1440.636 319.2308 1396.0386 319.2308  577.825
-#&gt; [3,]  963.1458 1758.0616 1440.636 319.2308  963.1458 319.2308 1515.992
-#&gt;       Laenge_B  Laenge_A     alpha    betha gamma
-#&gt; [1,]  997.9199 360.61487 19.868156 70.13184    90
-#&gt; [2,]  576.1013  44.59778  4.426617 85.57338    90
-#&gt; [3,] 1438.8308 477.49054 18.358947 71.64105    90
+#&gt;      Ax Ay       Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 684609.9 1508891  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[4]]
-#&gt;            Ax       Ay      Bx       By       Cx       Cy Laenge_C Laenge_B
-#&gt; [1,] 1801.251 1317.151 1925.46 966.7288 1801.251 966.7288 371.7841  350.422
-#&gt;      Laenge_A   alpha   betha gamma
-#&gt; [1,] 124.2087 19.5171 70.4829    90
+#&gt;      Ax Ay      Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 2685523 801034.4  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[5]]
-#&gt;      Ax Ay       Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
-#&gt; [1,]  0  0 433.8771 1267.607  0  0        0        0        0     0     0     0
+#&gt;      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 2575185 1510646  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[6]]
-#&gt;      Ax Ay       Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
-#&gt; [1,]  0  0 602.9025 1571.513  0  0        0        0        0     0     0     0
+#&gt;      Ax Ay       Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 127600.7 2394418  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[7]]
-#&gt;      Ax Ay       Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
-#&gt; [1,]  0  0 1396.039 895.3321  0  0        0        0        0     0     0     0
+#&gt;      Ax Ay      Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 3336808 897460.8  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[8]]
-#&gt;      Ax Ay       Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
-#&gt; [1,]  0  0 963.1458 1758.062  0  0        0        0        0     0     0     0
+#&gt;      Ax Ay      Bx       By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 3929943 721907.4  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[9]]
-#&gt;            Ax       Ay       Bx       By       Cx       Cy Laenge_C Laenge_B
-#&gt; [1,] 1801.251 1317.151 1795.978 806.7497 1801.251 806.7497 510.4284 510.4011
-#&gt;      Laenge_A     alpha    betha gamma
-#&gt; [1,] 5.273682 0.5919855 89.40802    90
+#&gt;      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 1544062 1436612  0  0        0        0        0     0     0     0
 #&gt; 
 #&gt; [[10]]
-#&gt;            Ax       Ay       Bx       By       Cx       Cy Laenge_C Laenge_B
-#&gt; [1,] 1801.251 1317.151 1583.073 531.1848 1801.251 531.1848 815.6865  785.966
-#&gt;      Laenge_A    alpha    betha gamma
-#&gt; [1,] 218.1785 15.51427 74.48573    90
+#&gt;      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#&gt; [1,]  0  0 2669451 1118089  0  0        0        0        0     0     0     0
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
@@ -263,7 +245,7 @@ angles. Default is FALSE</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -75,20 +75,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -97,7 +94,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -167,65 +164,64 @@ or coordinates as matrix/data.frame</p></td>
     <tr>
       <th>GridMethod</th>
       <td><p>Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is "Rectangular" grid cells and hexagonal grid
-cells are computed when assigning "h" or "hexagon" to this input variable.</p></td>
+grid cells? The default is "Rectangular" grid. Hexagonal grids
+are computed when assigning "h" or "hexagon" to this input variable.</p></td>
     </tr>
     <tr>
       <th>Rotor</th>
-      <td><p>A numeric value that gives the rotor radius in meter</p></td>
+      <td><p>The rotor radius in meter</p></td>
     </tr>
     <tr>
       <th>n</th>
-      <td><p>A numeric value indicating the required amount of turbines</p></td>
+      <td><p>The amount of turbines</p></td>
     </tr>
     <tr>
       <th>fcrR</th>
-      <td><p>A numeric value that is used for grid spacing. Default is 5</p></td>
+      <td><p>A numeric value used for grid spacing. Default is <code>5</code></p></td>
     </tr>
     <tr>
       <th>referenceHeight</th>
       <td><p>The height at which the incoming wind speeds were
-measured. Default is the RotorHeight.</p></td>
+measured. Default is <code>RotorHeight</code></p></td>
     </tr>
     <tr>
       <th>RotorHeight</th>
-      <td><p>The desired height of the turbine.</p></td>
+      <td><p>The height of the turbine hub</p></td>
     </tr>
     <tr>
       <th>SurfaceRoughness</th>
-      <td><p>A surface roughness length of the considered area in
-m.  If the terrain effect model is activated, a surface roughness will be
-calculated for every grid cell with the elevation and land cover
-information. Default is 0.3</p></td>
+      <td><p>A surface roughness length in meters. 
+With the terrain effect model, a surface roughness is calculated for every 
+grid cell using the elevation and land cover data. Default is <code>0.3</code></p></td>
     </tr>
     <tr>
       <th>Proportionality</th>
-      <td><p>A numeric value used for grid calculation. Determines
-the percentage a grid has to overlay. Default is 1</p></td>
+      <td><p>A numeric value used for the grid calculation, as it 
+determines the percentage a grid cell must overlay the area. 
+Default is <code>1</code></p></td>
     </tr>
     <tr>
       <th>iteration</th>
-      <td><p>A numeric value indicating the desired amount of iterations
-of the algorithm. Default is 20</p></td>
+      <td><p>The number of iterations. Default is <code>20</code></p></td>
     </tr>
     <tr>
       <th>mutr</th>
-      <td><p>A numeric mutation rate with a default value of 0.008</p></td>
+      <td><p>A numeric mutation rate. Default is <code>0.008</code></p></td>
     </tr>
     <tr>
       <th>vdirspe</th>
-      <td><p>A data.frame containing the incoming wind speeds, wind
-directions and probabilities</p></td>
+      <td><p>A data.frame containing the wind speeds, directions and 
+probabilities. See <code><a href='windata_format.html'>windata_format</a></code>.</p></td>
     </tr>
     <tr>
       <th>topograp</th>
-      <td><p>Logical value, which indicates if the terrain effect model
-should be enabled or not. Default is FALSE</p></td>
+      <td><p>Boolean value, which indicates if the terrain effect model
+should be enabled or not. Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>elitism</th>
       <td><p>Boolean value, which indicates whether elitism should be
-activated or not. Default is TRUE</p></td>
+activated or not. Default is <code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>nelit</th>
@@ -242,41 +238,39 @@ the development of the fitness values. Default is "FIX"</p></td>
       <th>crossPart1</th>
       <td><p>Determines which crossover method is used, "EQU" divides
 the genetic code at equal intervals and "RAN" divides the genetic code at
-random locations. Default is "EQU"</p></td>
+random locations. Default is <code>"EQU"</code></p></td>
     </tr>
     <tr>
       <th>trimForce</th>
-      <td><p>If activated (<code>trimForce == TRUE</code>), the algorithm will
-take a probabilistic approach to trim the windfarms to the desired amount
-of turbines. If deactivated (<code>trimForce == FALSE</code>) the adjustment will
-be random. Default is FALSE</p></td>
+      <td><p>If <code>TRUE</code> the algorithm will use a probabilistic 
+approach to correct the windfarms to the desired amount of turbines. 
+If <code>FALSE</code> the adjustment will be random. Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>Projection</th>
-      <td><p>A desired Projection can be used instead of the default
-Lambert Azimuthal Equal Area Projection (EPSG:3035).</p></td>
+      <td><p>A spatial reference system. Depending on your PROJ-version,
+it should either be a numeric `EPSG-code` or a `Proj4-string`.
+Default is <code>EPSG:3035</code></p></td>
     </tr>
     <tr>
       <th>sourceCCL</th>
       <td><p>The path to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated. If nothing is assign,
-it will try to download a version from the EEA-website.</p></td>
+required when the terrain effect model is activated.</p></td>
     </tr>
     <tr>
       <th>sourceCCLRoughness</th>
       <td><p>The source to the adapted Corine Land Cover legend
 as .csv file. Only required when terrain effect model is activated. As
 default a .csv file within this package (<code class="file">~/extdata</code>) is taken that
-was already adapted manually. To use your own .csv legend this variable has
-to be assigned.</p></td>
+was already adapted manually.</p></td>
     </tr>
     <tr>
       <th>weibull</th>
-      <td><p>A logical value that specifies whether to take Weibull
-parameters into account. If `weibull == TRUE`, the wind speed values from
-the `vdirspe` data frame are ignored. The algorithm will calculate the mean
+      <td><p>A boolean value that specifies whether to take Weibull
+parameters into account. If <code>TRUE</code>, the wind speed values 
+of <code>vdirspe</code> are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
-Default is FALSE</p></td>
+Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>weibullsrc</th>
@@ -284,34 +278,34 @@ Default is FALSE</p></td>
 item must be the shape parameter raster `k` and the second item must be the
 scale parameter raster `a` of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently only
-cover Austria. This variable is only used if `weibull == TRUE`.</p></td>
+cover Austria. This variable is only used if <code>weibull = TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>Parallel</th>
-      <td><p>Boolean value, indicating whether parallel processing should
-be used. The parallel and doParallel packages are used for parallel
-processing. Default is FALSE</p></td>
+      <td><p>A boolean value, indicating whether parallel processing should
+be used. The *parallel* and *doParallel* packages are used for parallel
+processing. Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>numCluster</th>
       <td><p>If <code>Parallel</code> is TRUE, this variable defines the 
-number of clusters to be used</p></td>
+number of clusters to be used. Default is <code>2</code></p></td>
     </tr>
     <tr>
       <th>verbose</th>
       <td><p>If TRUE it will print information for every generation.
-Default is FALSE</p></td>
+Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>plotit</th>
       <td><p>If TRUE it will plot the best windfarm of every generation. 
-Default is FALSE</p></td>
+Default is <code>FALSE</code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The result is a matrix with aggregated values per generation, the
+    <p>The result is a matrix with aggregated values per generation; the
   best individual regarding energy and efficiency per generation, some fuzzy
   control variables per generation, a list of all fitness values per
   generation, the amount of individuals after each process, a matrix of all
@@ -323,10 +317,10 @@ Default is FALSE</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>A terrain effect model can be included in the optimization process.
-  Therefore, an SRTM elevation model will be downloaded automatically via the
-  <code><a href='https://rdrr.io/pkg/raster/man/getData.html'>raster::getData</a></code> function. A land cover raster can also be downloaded
-  automatically from the EEA-website, or the path to a raster file can be
-  passed to <code>sourceCCL</code>. The algorithm uses an adapted version of the
+  Therefore, a digital elevation model will be downloaded automatically via the
+  <code><a href='https://rdrr.io/pkg/elevatr/man/get_elev_raster.html'>elevatr::get_elev_raster</a></code> function. A land cover raster can also be 
+  downloaded automatically from the EEA-website, or the path to a raster file 
+  can be passed to <code>sourceCCL</code>. The algorithm uses an adapted version of the
   Raster legend ("clc_legend.csv"), which is stored in the package directory
   <code class="file">~/inst/extdata</code>. To use other values for the land cover roughness
   lengths, insert a column named <strong>"Rauhigkeit_z"</strong> to the .csv file,
@@ -348,13 +342,14 @@ Default is FALSE</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'>## Create a random rectangular shapefile</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2668272</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2669343</span><span class='op'>)</span>,
-                          <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2669343</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>)</span>;
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='va'>Projection</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
+
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
+  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>4498482</span>, <span class='fl'>4499991</span>, <span class='fl'>4499991</span>, <span class='fl'>4498482</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2668272</span>, <span class='fl'>2669343</span>, <span class='fl'>2669343</span>, <span class='fl'>2668272</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, 
+  crs <span class='op'>=</span> <span class='fl'>3035</span>
+<span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Create a uniform and unidirectional wind data.frame and plot the</span>
 <span class='co'>## resulting wind rose</span>
@@ -372,72 +367,13 @@ Default is FALSE</p></td>
                   RotorHeight <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; ....................</div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 13 
-#&gt; Amount duplicates: 7
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genetic_algorithm-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
+#&gt; N different optimal configurations: 9 
+#&gt; Amount duplicates: 11
+#&gt; Plot  1  Best  Energy  Solution:</div><div class='img'><img src='genetic_algorithm-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
 #&gt; [1] "plot_evolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='genetic_algorithm-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='genetic_algorithm-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-6.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-8.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-9.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
 #&gt; [1] "plot_fitness_evolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='genetic_algorithm-10.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_cloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='genetic_algorithm-11.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genetic_algorithm-12.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>## Runs the same optimization, but with parallel processing and 3 cores.</span>
-<span class='va'>result_par</span> <span class='op'>&lt;-</span> <span class='fu'>genetic_algorithm</span><span class='op'>(</span>Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, GridMethod <span class='op'>=</span><span class='st'>"h"</span>, n<span class='op'>=</span><span class='fl'>12</span>, Rotor<span class='op'>=</span><span class='fl'>30</span>,
-                 fcrR<span class='op'>=</span><span class='fl'>5</span>,iteration<span class='op'>=</span><span class='fl'>10</span>, vdirspe <span class='op'>=</span> <span class='va'>data.in</span>,crossPart1 <span class='op'>=</span> <span class='st'>"EQU"</span>,
-                 selstate<span class='op'>=</span><span class='st'>"FIX"</span>,mutr<span class='op'>=</span><span class='fl'>0.8</span>, Proportionality <span class='op'>=</span> <span class='fl'>1</span>,
-                 SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.3</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                 elitism<span class='op'>=</span><span class='cn'>TRUE</span>, nelit <span class='op'>=</span> <span class='fl'>7</span>, trimForce <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                 referenceHeight <span class='op'>=</span> <span class='fl'>50</span>,RotorHeight <span class='op'>=</span> <span class='fl'>100</span>, 
-                 Parallel <span class='op'>=</span> <span class='cn'>TRUE</span>, numCluster <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; .</div><div class='output co'>#&gt; <span class='error'>Error in {    windfarmGA::calculate_energy(sel = selection[[k]], referenceHeight = referenceHeight,         RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,         wnkl = 20, distanz = 1e+05, polygon1 = Polygon, resol = resol1,         RotorR = rot, dirSpeed = dirspeed, srtm_crop = srtm_crop,         topograp = topograp, cclRaster = cclRaster, weibull = weibull)}: task 1 failed - "there is no package called ‘windfarmGA’"</span></div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result_par</span>, GridMethod <span class='op'>=</span> <span class='st'>"h"</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in plot_windfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1): object 'result_par' not found</span></div><div class='input'>
-<span class='co'>## Runs the same optimization, this time with hexagonal grids.</span>
-<span class='va'>result_hex</span> <span class='op'>&lt;-</span> <span class='fu'>genetic_algorithm</span><span class='op'>(</span>Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, GridMethod <span class='op'>=</span><span class='st'>"h"</span>, n<span class='op'>=</span><span class='fl'>12</span>, Rotor<span class='op'>=</span><span class='fl'>30</span>,
-                 fcrR<span class='op'>=</span><span class='fl'>5</span>,iteration<span class='op'>=</span><span class='fl'>10</span>, vdirspe <span class='op'>=</span> <span class='va'>data.in</span>,crossPart1 <span class='op'>=</span> <span class='st'>"EQU"</span>,
-                 selstate<span class='op'>=</span><span class='st'>"FIX"</span>,mutr<span class='op'>=</span><span class='fl'>0.8</span>, Proportionality <span class='op'>=</span> <span class='fl'>1</span>,
-                 SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.3</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                 elitism<span class='op'>=</span><span class='cn'>TRUE</span>, nelit <span class='op'>=</span> <span class='fl'>7</span>, trimForce <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                 referenceHeight <span class='op'>=</span> <span class='fl'>50</span>,RotorHeight <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result_hex</span>, GridMethod <span class='op'>=</span> <span class='st'>"h"</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 10 
-#&gt; Amount duplicates: 0
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genetic_algorithm-13.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_evolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='genetic_algorithm-14.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-15.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='genetic_algorithm-16.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-17.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-18.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-19.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-20.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-21.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_fitness_evolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='genetic_algorithm-22.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_cloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='genetic_algorithm-23.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genetic_algorithm-24.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>## Run an optimization with the Weibull parameters included in the package.</span>
-<span class='va'>result_weibull</span> <span class='op'>&lt;-</span> <span class='fu'>genetic_algorithm</span><span class='op'>(</span>Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, GridMethod <span class='op'>=</span><span class='st'>"h"</span>, n<span class='op'>=</span><span class='fl'>12</span>,
-                 fcrR<span class='op'>=</span><span class='fl'>5</span>,iteration<span class='op'>=</span><span class='fl'>10</span>, vdirspe <span class='op'>=</span> <span class='va'>data.in</span>,crossPart1 <span class='op'>=</span> <span class='st'>"EQU"</span>,
-                 selstate<span class='op'>=</span><span class='st'>"FIX"</span>,mutr<span class='op'>=</span><span class='fl'>0.8</span>, Proportionality <span class='op'>=</span> <span class='fl'>1</span>, Rotor<span class='op'>=</span><span class='fl'>30</span>,
-                 SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.3</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
-                 elitism<span class='op'>=</span><span class='cn'>TRUE</span>, nelit <span class='op'>=</span> <span class='fl'>7</span>, trimForce <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                 referenceHeight <span class='op'>=</span> <span class='fl'>50</span>,RotorHeight <span class='op'>=</span> <span class='fl'>100</span>,
-                 weibull <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; ..........</div><div class='input'><span class='fu'><a href='plot_windfarmGA.html'>plot_windfarmGA</a></span><span class='op'>(</span>result <span class='op'>=</span> <span class='va'>result_weibull</span>, GridMethod<span class='op'>=</span> <span class='st'>"h"</span>, Polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "plot_result: Plot the 'best' Individuals of the GA:"
-#&gt; N different optimal configurations: 10 
-#&gt; Amount duplicates: 0
-#&gt; Plot  1  Best Energy Solution:</div><div class='img'><img src='genetic_algorithm-25.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_evolution: Plot the Evolution of the Efficiency and Energy Values:"</div><div class='img'><img src='genetic_algorithm-26.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-27.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; [1] "plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</div><div class='img'><img src='genetic_algorithm-28.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-29.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-30.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-31.png' alt='' width='700' height='433' /></div><div class='img'><img src='genetic_algorithm-32.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_fitness_evolution: Plot the Changes in Fitness Values:"</div><div class='img'><img src='genetic_algorithm-33.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_cloud: Plot all individual Values of the whole Evolution:"</div><div class='img'><img src='genetic_algorithm-34.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Press [enter] to continue
-#&gt; [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"
-#&gt; [inverse distance weighted interpolation]</div><div class='img'><img src='genetic_algorithm-35.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'>## Run an optimization with given Weibull parameter rasters.</span>
-<span class='co'>#araster &lt;- "/..pathto../a_param_raster.tif"</span>
-<span class='co'>#kraster &lt;- "/..pathto../k_param_raster.tif"</span>
-<span class='co'>#weibullrasters &lt;- list(raster(kraster), raster(araster))</span>
-<span class='co'>#result_weibull &lt;- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,</span>
-<span class='co'>#                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",</span>
-<span class='co'>#                  selstate="FIX",mutr=0.8, Proportionality = 1, Rotor=30,</span>
-<span class='co'>#                  SurfaceRoughness = 0.3, topograp = FALSE,</span>
-<span class='co'>#                  elitism=TRUE, nelit = 7, trimForce = TRUE,</span>
-<span class='co'>#                  referenceHeight = 50,RotorHeight = 100,</span>
-<span class='co'>#                  weibull = TRUE, weibullsrc = weibullrasters)</span>
-<span class='co'>#plot_windfarmGA(result = result_weibull, GridMethod= "h", Polygon1 = Polygon1)</span>
-<span class='co'># }</span>
+#&gt; [1] "plot_cloud: Plot all individual Values of the whole Evolution:"</div><div class='output co'>#&gt; Press [enter] to continue
+#&gt; [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"</div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs introduced by coercion</span></div><div class='output co'>#&gt; <span class='error'>Error in st_as_sf.data.frame(bpenew, coords = c("X", "Y")): missing values in coordinates not allowed</span></div><div class='img'><img src='genetic_algorithm-11.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -454,7 +390,7 @@ Default is FALSE</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

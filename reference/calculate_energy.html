@@ -75,20 +75,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -97,7 +94,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -134,7 +131,6 @@
   <span class='va'>wnkl</span>,
   <span class='va'>distanz</span>,
   <span class='va'>polygon1</span>,
-  <span class='va'>resol</span>,
   <span class='va'>RotorR</span>,
   <span class='va'>dirSpeed</span>,
   <span class='va'>srtm_crop</span>,
@@ -149,8 +145,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sel</th>
-      <td><p>A data.frame of an individual of the current population
-(data.frame)</p></td>
+      <td><p>A matrix of an individual of the current population
+(matrix)</p></td>
     </tr>
     <tr>
       <th>referenceHeight</th>
@@ -159,36 +155,32 @@ measured (numeric)</p></td>
     </tr>
     <tr>
       <th>RotorHeight</th>
-      <td><p>The desired height of the turbines</p></td>
+      <td><p>The desired height of the turbines (numeric)</p></td>
     </tr>
     <tr>
       <th>SurfaceRoughness</th>
       <td><p>A surface roughness length of the considered area in
 m. If the terrain effect model is activated, a surface roughness will be
 calculated for every grid cell with the elevation and land cover
-information</p></td>
+information (numeric)</p></td>
     </tr>
     <tr>
       <th>wnkl</th>
-      <td><p>Indicates the angle at which no wake influences are considered
-(numeric)</p></td>
+      <td><p>The angle from which wake influences are considered to be 
+negligible (numeric)</p></td>
     </tr>
     <tr>
       <th>distanz</th>
-      <td><p>Indicates the distance after which the wake effects are
-considered to be eliminated</p></td>
+      <td><p>The distance after which wake effects are considered
+to be eliminated (numeric)</p></td>
     </tr>
     <tr>
       <th>polygon1</th>
-      <td><p>The considered area as shapefile</p></td>
-    </tr>
-    <tr>
-      <th>resol</th>
-      <td><p>The resolution of the grid in meter</p></td>
+      <td><p>The considered area as Simple Feature Polygon</p></td>
     </tr>
     <tr>
       <th>RotorR</th>
-      <td><p>The desired rotor radius in meter</p></td>
+      <td><p>The desired rotor radius in meter (numeric)</p></td>
     </tr>
     <tr>
       <th>dirSpeed</th>
@@ -212,7 +204,7 @@ will only be used when the terrain effect model is activated. (raster)</p></td>
     </tr>
     <tr>
       <th>weibull</th>
-      <td><p>A raster representing the estimated wind speeds</p></td>
+      <td><p>A raster representing the estimated mean wind speeds</p></td>
     </tr>
     <tr>
       <th>plotit</th>
@@ -236,14 +228,14 @@ Default is FALSE.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'>## Create a random shapefile</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2668272</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>2669343</span><span class='op'>)</span>,
-                    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2669343</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4499991</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>)</span>;
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/CRS-class.html'>CRS</a></span><span class='op'>(</span><span class='va'>Projection</span><span class='op'>)</span>
+<span class='co'>## Create a random Polygon</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
+  <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>4498482</span>, <span class='fl'>4499991</span>, <span class='fl'>4499991</span>, <span class='fl'>4498482</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2668272</span>, <span class='fl'>2669343</span>, <span class='fl'>2669343</span>, <span class='fl'>2668272</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, 
+  crs <span class='op'>=</span> <span class='fl'>3035</span>
+<span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Create a uniform and unidirectional wind data.frame and plot the</span>
 <span class='co'>## resulting wind rose</span>
@@ -253,10 +245,10 @@ Default is FALSE.</p></td>
 
 <span class='co'>## Assign the rotor radius and a factor of the radius for grid spacing.</span>
 <span class='va'>Rotor</span><span class='op'>=</span> <span class='fl'>50</span>; <span class='va'>fcrR</span><span class='op'>=</span> <span class='fl'>3</span>
-<span class='va'>resGrid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span>shape <span class='op'>=</span> <span class='va'>Polygon1</span>, resol <span class='op'>=</span> <span class='va'>Rotor</span><span class='op'>*</span><span class='va'>fcrR</span>, prop<span class='op'>=</span><span class='fl'>1</span>,
+<span class='va'>resGrid</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span>shape <span class='op'>=</span> <span class='va'>Polygon1</span>, size <span class='op'>=</span> <span class='va'>Rotor</span><span class='op'>*</span><span class='va'>fcrR</span>, prop<span class='op'>=</span><span class='fl'>1</span>,
                       plotGrid <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='co'>## Assign the indexed data frame to new variable. Element 2 of the list</span>
-<span class='co'>## is the grid, saved as SpatialPolygon.</span>
+<span class='co'>## is the grid, saved as Simple Feature Polygons.</span>
 <span class='va'>resGrid1</span> <span class='op'>&lt;-</span> <span class='va'>resGrid</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 
 <span class='co'>## Create an initial population with the indexed Grid, 15 turbines and</span>
@@ -266,15 +258,15 @@ Default is FALSE.</p></td>
 <span class='co'>## Calculate the expected energy output of the first individual of the</span>
 <span class='co'>## population.</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>initpop</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span>,<span class='st'>'X'</span><span class='op'>]</span>,<span class='va'>initpop</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span>,<span class='st'>'Y'</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>20</span>,cex<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>resGrid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>; <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>initpop</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span>,<span class='st'>'X'</span><span class='op'>]</span>,<span class='va'>initpop</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span>,<span class='st'>'Y'</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>20</span>,cex<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>resGrid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>resCalcEn</span> <span class='op'>&lt;-</span> <span class='fu'>calculate_energy</span><span class='op'>(</span>sel<span class='op'>=</span><span class='va'>initpop</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>,referenceHeight<span class='op'>=</span> <span class='fl'>50</span>,
                    RotorHeight<span class='op'>=</span> <span class='fl'>50</span>, SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.14</span>,wnkl <span class='op'>=</span> <span class='fl'>20</span>,
-                   distanz <span class='op'>=</span> <span class='fl'>100000</span>, resol <span class='op'>=</span> <span class='fl'>200</span>,dirSpeed <span class='op'>=</span> <span class='va'>data.in</span>,
+                   distanz <span class='op'>=</span> <span class='fl'>100000</span>, dirSpeed <span class='op'>=</span> <span class='va'>data.in</span>,
                    RotorR <span class='op'>=</span> <span class='fl'>50</span>, polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
                    weibull <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='va'>resCalcEn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>resCalcEn</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Polygon1</span>, main <span class='op'>=</span> <span class='va'>resCalcEn</span><span class='op'>[</span>,<span class='st'>'Energy_Output_Red'</span><span class='op'>]</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>Polygon1</span>, main <span class='op'>=</span> <span class='va'>resCalcEn</span><span class='op'>[</span>,<span class='st'>'Energy_Output_Red'</span><span class='op'>]</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>resCalcEn</span><span class='op'>[</span>,<span class='st'>'Bx'</span><span class='op'>]</span>, y <span class='op'>=</span> <span class='va'>resCalcEn</span><span class='op'>[</span>,<span class='st'>'By'</span><span class='op'>]</span>, pch <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span>
 
 
@@ -288,7 +280,7 @@ Default is FALSE.</p></td>
 <span class='co'>## wind direction.</span>
 <span class='va'>resCalcEn</span> <span class='op'>&lt;-</span> <span class='fu'>calculate_energy</span><span class='op'>(</span>sel<span class='op'>=</span><span class='va'>initpop</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>,referenceHeight<span class='op'>=</span> <span class='fl'>50</span>,
                    RotorHeight<span class='op'>=</span> <span class='fl'>50</span>, SurfaceRoughness <span class='op'>=</span> <span class='fl'>0.14</span>,wnkl <span class='op'>=</span> <span class='fl'>20</span>,
-                   distanz <span class='op'>=</span> <span class='fl'>100000</span>, resol <span class='op'>=</span> <span class='fl'>200</span>,dirSpeed <span class='op'>=</span> <span class='va'>data.in10</span>,
+                   distanz <span class='op'>=</span> <span class='fl'>100000</span>, dirSpeed <span class='op'>=</span> <span class='va'>data.in10</span>,
                    RotorR <span class='op'>=</span> <span class='fl'>50</span>, polygon1 <span class='op'>=</span> <span class='va'>Polygon1</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>,
                    weibull <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='op'>}</span>
@@ -309,7 +301,7 @@ Default is FALSE.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

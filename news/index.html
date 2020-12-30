@@ -71,20 +71,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -93,7 +90,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -114,267 +111,6 @@
       <small>Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="updates-2-3-0" class="section level1">
-<h1 class="page-header" data-toc-text="2.3.0">
-<a href="#updates-2-3-0" class="anchor"></a>Updates 2.3.0<small> Unreleased </small>
-</h1>
-<ul>
-<li>
-<p>Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">Warning</span> message:</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">In</span> showSRID(uprojargs, format = <span class="st">"PROJ"</span>, multiline = <span class="st">"NO"</span>, prefer_proj = prefer_proj) <span class="bu">:</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="ex">Discarded</span> datum European_Terrestrial_Reference_System_1989 in CRS definition</a></code></pre></div>
-</li>
-</ul>
-</div>
-    <div id="updates-2-2-3" class="section level1">
-<h1 class="page-header" data-toc-text="2.2.3">
-<a href="#updates-2-2-3" class="anchor"></a>Updates 2.2.3<small> 2019-12-16 </small>
-</h1>
-<ul>
-<li>Fix tests for R 3.4.0, as class(matrix) is of length 2.</li>
-</ul>
-</div>
-    <div id="updates-2-2-2" class="section level1">
-<h1 class="page-header" data-toc-text="2.2.2">
-<a href="#updates-2-2-2" class="anchor"></a>Updates 2.2.2<small> 2019-08-27 </small>
-</h1>
-<div id="pkgdown" class="section level4">
-<h4 class="hasAnchor">
-<a href="#pkgdown" class="anchor"></a>Pkgdown</h4>
-<ul>
-<li>A <a href="https://ysosirius.github.io/windfarmGA/">pkgdown documentation</a> site is now available.</li>
-</ul>
-</div>
-<div id="renaming-functions" class="section level4">
-<h4 class="hasAnchor">
-<a href="#renaming-functions" class="anchor"></a>Renaming Functions</h4>
-<ul>
-<li>
-<p>Almost all functions have been renamed to have a consistent appearance and a clearer meaning. The old functions still exist, but are deprecated now.</p>
-<details><summary>Renaming Overview</summary><p>
-</p>
-<table>
-<thead><tr class="header">
-<th>Old names</th>
-<th><strong>New names</strong></th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>StartGA</td>
-<td><strong>init_population</strong></td>
-</tr>
-<tr class="even">
-<td>selection1</td>
-<td><strong>selection</strong></td>
-</tr>
-<tr class="odd">
-<td>crossover1</td>
-<td><strong>crossover</strong></td>
-</tr>
-<tr class="even">
-<td>VekWinkelCalc</td>
-<td><strong>get_dist_angles</strong></td>
-</tr>
-<tr class="odd">
-<td>calculateEn</td>
-<td><strong>calculate_energy</strong></td>
-</tr>
-<tr class="even">
-<td>getRects</td>
-<td><strong>get_grids</strong></td>
-</tr>
-<tr class="odd">
-<td>BaroHoehe</td>
-<td><strong>barometric_height</strong></td>
-</tr>
-<tr class="even">
-<td>GridFilter</td>
-<td><strong>grid_area</strong></td>
-</tr>
-<tr class="odd">
-<td>HexaTex</td>
-<td><strong>hexa_area</strong></td>
-</tr>
-<tr class="even">
-<td>InfluPoints</td>
-<td><strong>turbine_influences</strong></td>
-</tr>
-<tr class="odd">
-<td>genAlgo</td>
-<td><strong>genetic_algorithm</strong></td>
-</tr>
-<tr class="even">
-<td>RandomSearch</td>
-<td><strong>random_search</strong></td>
-</tr>
-<tr class="odd">
-<td>RandomSearchTurb</td>
-<td><strong>random_search_single</strong></td>
-</tr>
-<tr class="even">
-<td>RandomSearchPlot</td>
-<td><strong>plot_random_search</strong></td>
-</tr>
-<tr class="odd">
-<td>leafPlot</td>
-<td><strong>plot_leaflet</strong></td>
-</tr>
-<tr class="even">
-<td>heatmapGA</td>
-<td><strong>plot_heatmap</strong></td>
-</tr>
-<tr class="odd">
-<td>plotbeorwor</td>
-<td><strong>plot_development</strong></td>
-</tr>
-<tr class="even">
-<td>plotCloud</td>
-<td><strong>plot_cloud</strong></td>
-</tr>
-<tr class="odd">
-<td>plotEvolution</td>
-<td><strong>plot_evolution</strong></td>
-</tr>
-<tr class="even">
-<td>plotfitnessevolution</td>
-<td><strong>plot_fitness_evolution</strong></td>
-</tr>
-<tr class="odd">
-<td>plotparkfitness</td>
-<td><strong>plot_parkfitness</strong></td>
-</tr>
-<tr class="even">
-<td>plotResult</td>
-<td><strong>plot_result</strong></td>
-</tr>
-<tr class="odd">
-<td>PlotWindfarmGA</td>
-<td><strong>plot_windfarmGA</strong></td>
-</tr>
-<tr class="even">
-<td>plotWindrose</td>
-<td><strong>plot_windrose</strong></td>
-</tr>
-</tbody>
-</table></details>
-</li>
-</ul>
-</div>
-<div id="bugfixes-other-changes" class="section level4">
-<h4 class="hasAnchor">
-<a href="#bugfixes-other-changes" class="anchor"></a>Bugfixes / Other Changes</h4>
-<ul>
-<li><p>The legend of <code>plot_leaflet</code> now works correctly.</p></li>
-<li><p>Some general linting / spell checking / performance optimization was done.</p></li>
-<li><p>The Weibull Raster (for Austria) are now in a separate <a href="https://github.com/YsoSirius/windfarm_data">Github-repository</a>, instead of being stored in the package as .rda file. I guess this never worked except on my computer.</p></li>
-<li><p>The Corine Land Cover .tif file is also stored in that repository, as the EEA webpage did restrict downloads sometimes, which resulted in an error.</p></li>
-<li><p>The <code>plot_farm_3d</code> function has temporarily been removed from the package, as I was unhappy with the functionality, the installation of <code>rayshader</code> can be tedious and turbine labels can not be displayed very accurately.</p></li>
-<li><p>Most functions that required user-input previously used <code>readline</code> which is now changed to <code>readLines</code> as it allows to read from a file instead. This can be set via <code><a href="https://rdrr.io/r/base/options.html">options(windfarmGA.connection = file())</a></code>.</p></li>
-<li><p>A whole lot of tests were written.</p></li>
-</ul>
-</div>
-</div>
-    <div id="updates-2-2-1" class="section level1">
-<h1 class="page-header" data-toc-text="2.2.1">
-<a href="#updates-2-2-1" class="anchor"></a>Updates 2.2.1<small> 2019-02-18 </small>
-</h1>
-<div id="performance-tuning-restructuring" class="section level4">
-<h4 class="hasAnchor">
-<a href="#performance-tuning-restructuring" class="anchor"></a>Performance Tuning / Restructuring</h4>
-<ul>
-<li>Switch to <strong>matrices</strong> instead of data.frames and a lot of restructuring and performance optimization of the whole algorithm.</li>
-</ul>
-</div>
-<div id="viewshed-analysis" class="section level4">
-<h4 class="hasAnchor">
-<a href="#viewshed-analysis" class="anchor"></a>Viewshed Analysis</h4>
-<ul>
-<li>New set of functions, to analyze the visual impact of a wind farm.
-<ul>
-<li>
-<code>cansee</code>,</li>
-<li>
-<code>viewTo</code>,</li>
-<li>
-<code>rasterprofile</code>,</li>
-<li>
-<code>viewshed</code>,</li>
-<li>
-<code>plot_viewshed</code>,</li>
-<li>
-<code>interpol_view</code>,</li>
-<li>
-<code>getISO3</code>,</li>
-<li><code>getDEM</code></li>
-</ul>
-</li>
-</ul>
-</div>
-<div id="other-changes" class="section level4">
-<h4 class="hasAnchor">
-<a href="#other-changes" class="anchor"></a>Other Changes</h4>
-<ul>
-<li><p>The function <code>genAlgo</code>/<code>windfarmGA</code> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <strong>topograp</strong> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p></li>
-<li><p><code>plot_farm_3d</code> Experimental rayshader function</p></li>
-</ul>
-</div>
-</div>
-    <div id="updates-1-2-1" class="section level1">
-<h1 class="page-header" data-toc-text="1.2.1">
-<a href="#updates-1-2-1" class="anchor"></a>Updates 1.2.1<small> 2018-03-25 </small>
-</h1>
-<div id="randomization" class="section level4">
-<h4 class="hasAnchor">
-<a href="#randomization" class="anchor"></a>Randomization</h4>
-<p>The output of <code>genAlgo</code> or <code>windfarmGA</code> can be further randomized/optimized with the following functions:</p>
-<ul>
-<li>RandomSearch</li>
-<li>RandomSearchTurb</li>
-</ul>
-<p><strong><code>RandomSearch</code></strong> is used to randomize all turbines of the layout</p>
-<p><strong><code>RandomSearchTurb</code></strong> is used to randomize a single turbine</p>
-<p><strong><code>RandomSearchPlot</code></strong> is used to plot the output of those functions, comparing them with the original result.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/resultrect.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ex">load</span>(file = system.file(<span class="st">"extdata/polygon.rda"</span>, package = <span class="st">"windfarmGA"</span>))</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="ex">Res</span> = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="ex">RandomSearchPlot</span>(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)</a></code></pre></div>
-</div>
-</div>
-    <div id="updates-1-2" class="section level1">
-<h1 class="page-header" data-toc-text="1.2">
-<a href="#updates-1-2" class="anchor"></a>Updates 1.2<small> 2018-03-11 </small>
-</h1>
-<div id="parallel-processing" class="section level4">
-<h4 class="hasAnchor">
-<a href="#parallel-processing" class="anchor"></a>Parallel Processing</h4>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## Runs the same optimization, but with parallel processing and 3 cores.</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ex">result_par</span> <span class="op">&lt;</span>- genAlgo(Polygon1 = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">                 <span class="va">fcrR=</span>5,iteration=<span class="ex">10</span>, vdirspe = data.in,crossPart1 = <span class="st">"EQU"</span>,</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">                 <span class="va">selstate=</span><span class="st">"FIX"</span>,mutr=<span class="ex">0.8</span>, Proportionality = 1,</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">                 <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">                 <span class="va">elitism=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">                 <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">                 <span class="ex">Parallel</span> = TRUE, numCluster = 3)</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="ex">PlotWindfarmGA</span>(result = result_par, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</a></code></pre></div>
-</div>
-</div>
-    <div id="updates-1-1" class="section level1">
-<h1 class="page-header" data-toc-text="1.1">
-<a href="#updates-1-1" class="anchor"></a>Updates 1.1<small> 2017-07-09 </small>
-</h1>
-<div id="optimization-with-hexagonal-grid-cells" class="section level4">
-<h4 class="hasAnchor">
-<a href="#optimization-with-hexagonal-grid-cells" class="anchor"></a>Optimization with Hexagonal Grid Cells</h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo(Polygon1 = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">                  <span class="va">fcrR=</span>5,iteration=<span class="ex">10</span>, vdirspe = data.in,crossPart1 = <span class="st">"EQU"</span>,</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">                  <span class="va">selstate=</span><span class="st">"FIX"</span>,mutr=<span class="ex">0.8</span>, Proportionality = 1,</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">                  <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">                  <span class="va">elitism=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">                  <span class="ex">referenceHeight</span> = 50,RotorHeight = 100)</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="ex">PlotWindfarmGA</span>(result = result_hex, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1)</a></code></pre></div>
-</div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -392,7 +128,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -72,20 +72,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -94,7 +91,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -134,7 +131,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>pp</th>
-      <td><p>SpatialPoints or matrix</p></td>
+      <td><p>Simple Feature Points or coordinate matrix/data.frame</p></td>
     </tr>
     <tr>
       <th>crs_pp</th>
@@ -146,7 +143,9 @@
     </tr>
     <tr>
       <th>resol</th>
-      <td><p>The search resolution if high accuracy is needed</p></td>
+      <td><p>The search resolution. The options are "coarse","low",
+"less islands","li","high". For "high" you need to install the 
+package <code>rworldxtra</code></p></td>
     </tr>
     <tr>
       <th>coords</th>
@@ -174,20 +173,19 @@
 <code><a href='readintegerSel.html'>readintegerSel</a>()</code>,
 <code><a href='readinteger.html'>readinteger</a>()</code>,
 <code><a href='splitAt.html'>splitAt</a>()</code>,
-<code><a href='tess2SPdf.html'>tess2SPdf</a>()</code>,
 <code><a href='windata_format.html'>windata_format</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
 <span class='va'>points</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4488182.26267016</span>, <span class='fl'>4488852.91748256</span><span class='op'>)</span>, 
-<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2667398.93118627</span>, <span class='fl'>2667398.93118627</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>getISO3</span><span class='op'>(</span>pp <span class='op'>=</span> <span class='va'>points</span>, ask <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>getISO3</span><span class='op'>(</span>pp <span class='op'>=</span> <span class='va'>points</span>, crs_pp <span class='op'>=</span> <span class='fl'>3035</span><span class='op'>)</span>
+               <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2667398.93118627</span>, <span class='fl'>2667398.93118627</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>getISO3</span><span class='op'>(</span>pp <span class='op'>=</span> <span class='va'>points</span>, ask <span class='op'>=</span> <span class='cn'>TRUE</span>, crs_pp <span class='op'>=</span> <span class='fl'>3035</span><span class='op'>)</span>
 
 <span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>points</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>points</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>,<span class='st'>"y"</span><span class='op'>)</span>
-<span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>points</span>, coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>,<span class='st'>"y"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>st_crs</span><span class='op'>(</span><span class='va'>points</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fl'>3035</span>
+<span class='va'>points</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='va'>points</span>, coords <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>,<span class='st'>"y"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_crs.html'>st_crs</a></span><span class='op'>(</span><span class='va'>points</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fl'>3035</span>
 <span class='fu'>getISO3</span><span class='op'>(</span>pp <span class='op'>=</span> <span class='va'>points</span>, crs_pp <span class='op'>=</span> <span class='fl'>3035</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
@@ -206,7 +204,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make a grid from a Polygon — grid_area • windfarmGA</title>
+<title>Make a grid from a Simple Feature Polygon — grid_area • windfarmGA</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Make a grid from a Polygon — grid_area" />
-<meta property="og:description" content="Create a grid from a given polygon and with a certain resolution
+<meta property="og:title" content="Make a grid from a Simple Feature Polygon — grid_area" />
+<meta property="og:description" content="Create a grid from a given polygon with a certain resolution
   and proportionality. The center points of each grid cell represent possible
   locations for wind turbines." />
 
@@ -74,20 +74,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">windfarmGA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -96,7 +93,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/YsoSirius/windfarmGA/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -113,28 +110,28 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make a grid from a Polygon</h1>
+    <h1>Make a grid from a Simple Feature Polygon</h1>
     <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/grid_area.R'><code>R/grid_area.R</code></a></small>
     <div class="hidden name"><code>grid_area.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a grid from a given polygon and with a certain resolution
+    <p>Create a grid from a given polygon with a certain resolution
   and proportionality. The center points of each grid cell represent possible
   locations for wind turbines.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>shape</span>, resol <span class='op'>=</span> <span class='fl'>500</span>, prop <span class='op'>=</span> <span class='fl'>1</span>, plotGrid <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>shape</span>, size <span class='op'>=</span> <span class='fl'>500</span>, prop <span class='op'>=</span> <span class='fl'>1</span>, plotGrid <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>shape</th>
-      <td><p>Shape file of the considered area</p></td>
+      <td><p>Simple Feature Polygon of the considered area</p></td>
     </tr>
     <tr>
-      <th>resol</th>
+      <th>size</th>
       <td><p>The resolution of the grid in meters. Default is 500</p></td>
     </tr>
     <tr>
@@ -145,8 +142,8 @@ Default is 1.</p></td>
     </tr>
     <tr>
       <th>plotGrid</th>
-      <td><p>Logical value indicating whether resulting grid should be
-plotted or not. Default is FALSE.</p></td>
+      <td><p>Logical value indicating whether the results should be
+plotted. Default is FALSE.</p></td>
     </tr>
     </table>
 
@@ -154,15 +151,12 @@ plotted or not. Default is FALSE.</p></td>
 
     <p>Returns a list with 2 elements. List element 1 will have the grid
   cell IDS, and the X and Y coordinates of the centers of each grid cell.
-  List element 2 is the grid as SpatialPolygons, which is used for plotting
-  purposes.</p>
+  List element 2 is the grid as Simple Feature Polygons, which is used for 
+  plotting purposes.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The grid of the genetic algorithm will have a resolution of <code>Rotor
   * fcrR</code>. See the arguments of <code><a href='windfarmGA.html'>windfarmGA</a></code></p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p><a href='http://rfunctions.blogspot.co.at/2014/12/gridfilter-intersect-grid-with-shape.html'>http://rfunctions.blogspot.co.at/2014/12/gridfilter-intersect-grid-with-shape.html</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Helper Functions: 
@@ -176,48 +170,37 @@ plotted or not. Default is FALSE.</p></td>
 <code><a href='readintegerSel.html'>readintegerSel</a>()</code>,
 <code><a href='readinteger.html'>readinteger</a>()</code>,
 <code><a href='splitAt.html'>splitAt</a>()</code>,
-<code><a href='tess2SPdf.html'>tess2SPdf</a>()</code>,
 <code><a href='windata_format.html'>windata_format</a>()</code></p></div>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Jose Hidasi (original) / Sebastian Gatscha (adapted)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/edzer/sp/'>sp</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rspatial.org/raster'>raster</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-forge.r-project.org/projects/rgeos/'>rgeos</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>rgeos version: 0.5-5, (SVN revision 640)</span>
-#&gt; <span class='message'> GEOS runtime version: 3.5.0-CAPI-1.9.0 </span>
-#&gt; <span class='message'> Linking to sp version: 1.4-4 </span>
-#&gt; <span class='message'> Polygon checking: TRUE </span></div><div class='input'>
-<span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2000</span><span class='op'>)</span>,
-<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2000</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>)</span>;
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>Projection</span>
+    <pre class="examples"><div class='input'><span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
+ <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>0</span><span class='op'>)</span>,
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+crs <span class='op'>=</span> <span class='fl'>3035</span>
+<span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Create a Grid</span>
-<span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>1</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='grid_area-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>1</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>120</span>, <span class='fl'>1</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='grid_area-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>300</span>, <span class='fl'>1</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='grid_area-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-4.png' alt='' width='700' height='433' /></div><div class='input'>
-
 <span class='co'>## Examplary irregular input Polygon</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>20</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>200</span><span class='op'>)</span>,
-                          <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2000</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3000</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>Polygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>)</span>;
-<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/sp/man/SpatialPolygons.html'>SpatialPolygons</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>Projection</span> <span class='op'>&lt;-</span> <span class='st'>"+init=epsg:3035"</span>
-<span class='fu'><a href='https://rdrr.io/pkg/sp/man/is.projected.html'>proj4string</a></span><span class='op'>(</span><span class='va'>Polygon1</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>Projection</span>
+<span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
+ <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>2000</span>, <span class='fl'>3000</span>, <span class='fl'>0</span><span class='op'>)</span>,
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>200</span>, <span class='fl'>2000</span>, <span class='fl'>0</span>, <span class='fl'>20</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+ crs <span class='op'>=</span> <span class='fl'>3035</span>
+<span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Create a Grid</span>
-<span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>1</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='grid_area-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>0.5</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='grid_area-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>200</span>,<span class='fl'>0.1</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='grid_area-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-10.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>1</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='grid_area-11.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-12.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>0.5</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='grid_area-13.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-14.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>,<span class='fl'>400</span>,<span class='fl'>0.1</span>,<span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>200</span>, <span class='fl'>1</span>,   <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='grid_area-5.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-6.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>200</span>, <span class='fl'>0.5</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='grid_area-7.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-8.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>200</span>, <span class='fl'>0.1</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='grid_area-9.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-10.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>400</span>, <span class='fl'>1</span>,   <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='grid_area-11.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-12.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>400</span>, <span class='fl'>0.5</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='grid_area-13.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-14.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>grid_area</span><span class='op'>(</span><span class='va'>Polygon1</span>, <span class='fl'>400</span>, <span class='fl'>0.1</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='grid_area-15.png' alt='' width='700' height='433' /></div><div class='img'><img src='grid_area-16.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
@@ -235,7 +218,7 @@ plotted or not. Default is FALSE.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
