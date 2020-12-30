@@ -44,8 +44,8 @@ crs = 3035
 ))
 
 ## Create a Grid
-grid_area(Polygon1, 120, 1, TRUE)
-grid_area(Polygon1, 300, 1, TRUE)
+grid_area(Polygon1, 200, 1, TRUE)
+grid_area(Polygon1, 400, 1, TRUE)
 
 ## Examplary irregular input Polygon
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -57,10 +57,8 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 
 ## Create a Grid
 grid_area(Polygon1, 200, 1,   TRUE)
-grid_area(Polygon1, 200, 0.5, TRUE)
 grid_area(Polygon1, 200, 0.1, TRUE)
 grid_area(Polygon1, 400, 1,   TRUE)
-grid_area(Polygon1, 400, 0.5, TRUE)
 grid_area(Polygon1, 400, 0.1, TRUE)
 
 }

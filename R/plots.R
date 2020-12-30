@@ -1524,6 +1524,7 @@ plot_heatmap <- function(result, si = 2, idistw) {
   
   bpe <- do.call("rbind", result[, "allCoords"])
   bpe <- data.frame(bpe[, 1:2])
+  row.names(bpe) <- NULL
   
   sizingidw <- as.integer(result[, "inputData"][[1]][, 1]["Rotorradius"])
   sizing <- as.integer(result[, "inputData"][[1]][, 1]["Resolution"]) / si

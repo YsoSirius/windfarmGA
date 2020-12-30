@@ -16,76 +16,6 @@ test_that("Test Wake Functions", {
   t <- as.matrix(cbind(x = runif(10,0,raster::extent(polYgon)[2]),
                        y = runif(10,0,raster::extent(polYgon)[4])))
   
-  # PointToLine2.R -------------------------
-  # x <- c(100,100)
-  # y <- c(500,500)
-  # res <- PointToLine2(x, y, TRUE)
-  # expect_false(anyNA(res))
-  # 
-  # x <- c(100,100)
-  # y <- c(500,500)
-  # res1 <- PointToLine2(x, y, FALSE)
-  # expect_false(anyNA(res))
-  # expect_true(identical(res1, res))
-  # 
-  # x <- runif(n = 2, 0, 1000)
-  # y <- runif(n = 2, 0, 1000)
-  # res1 <- PointToLine2(x, y, FALSE)
-  # expect_false(anyNA(res1))
-  # 
-  # x <- c(0,0)
-  # y <- c(0,0)
-  # res1 <- PointToLine2(x, y, FALSE)
-  # expect_false(anyNA(res))
-  # expect_true(all(res1 == 0))
-  
-  
-  ###########################################
-  ## Test WinkelCalc Function --------------
-  ###########################################
-  # Aa <- as.numeric(cbind(1, 1))
-  # Bb <- as.numeric(cbind(10, 3))
-  # Cc <- as.numeric(cbind(10, 1))
-  # Angles <- WinkelCalc(Aa, Bb, Cc);
-  # expect_false(any(is.na(Angles)))
-  # expect_true(round(colSums(Angles)) == 180)
-  # rm(Angles)
-  # 
-  # Aa <- cbind(0, 0)
-  # Bb <- cbind(-5, 3)
-  # Cc <- cbind(10, 1)
-  # Angles <- WinkelCalc(Aa, Bb, Cc)
-  # expect_false(any(is.na(Angles)))
-  # expect_true(round(colSums(Angles)) == 180)
-  # rm(Angles)
-  # 
-  # Aa <- c(0, 0)
-  # Bb <- c(-5, 3)
-  # Cc <- c(10, 1)
-  # Angles <- WinkelCalc(Aa, Bb, Cc)
-  # expect_false(any(is.na(Angles)))
-  # expect_true(round(colSums(Angles)) == 180)
-  # rm(Angles)
-  # 
-  # ## If NA -> doe it correct to 0?
-  # Aa <- c(0, 0)
-  # Angles <- WinkelCalc(Aa, Aa, Aa)
-  # expect_false(any(is.na(Angles)))
-  # expect_true(colSums(Angles) == 0)
-  # rm(Angles)
-  # 
-  # Aa <- data.frame(cbind(0, 0))
-  # Bb <- data.frame(cbind(-50, 30.4))
-  # Cc <- data.frame(cbind(10, 44))
-  # Angles <- WinkelCalc(Aa, Bb, Cc)
-  # expect_false(any(is.na(Angles)))
-  # expect_true(round(colSums(Angles)) == 180)
-  # rm(Angles)
-  
-  ## TODO
-  ## Compare with cpp functions
-
-  
   ## Test get_dist_angles Function --------------
   ###########################################
   distanz <- 100000
@@ -174,7 +104,8 @@ test_that("Test Wake Functions", {
   ## Test calculate_energy Function ----------------------------
   ###########################################
   ## Initialize a dummy wind speed raster with value 1
-  windraster <- expect_warning(raster::rasterize(polYgon, raster::raster(
+  windraster <- suppressWarnings(
+    raster::rasterize(polYgon, raster::raster(
     raster::extent(polYgon),
     ncol = 180, nrow = 180), field = 1))
   
@@ -185,7 +116,7 @@ test_that("Test Wake Functions", {
   ## Assign the rotor radius and a factor of the radius for grid spacing.
   Rotor <- 50; fcrR <- 3
   resGrid <- grid_area(shape = polYgon, size = Rotor * fcrR, prop = 1,
-                        plotGrid = FALSE)
+                       plotGrid = FALSE)
   
   ## Create an initial population with the indexed Grid, 15 turbines and
   ## 100 individuals.

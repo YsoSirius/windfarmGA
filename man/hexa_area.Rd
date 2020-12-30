@@ -24,6 +24,7 @@ The function takes a Simple Feature Polygon and a size argument
   object, that consists of hexagonal grids.
 }
 \examples{
+library(sf)
 ## Exemplary input Polygon with 2km x 2km:
 Poly <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(

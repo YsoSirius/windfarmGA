@@ -34,8 +34,8 @@
 #' ))
 #'
 #' ## Create a Grid
-#' grid_area(Polygon1, 120, 1, TRUE)
-#' grid_area(Polygon1, 300, 1, TRUE)
+#' grid_area(Polygon1, 200, 1, TRUE)
+#' grid_area(Polygon1, 400, 1, TRUE)
 #'
 #' ## Examplary irregular input Polygon
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -47,10 +47,8 @@
 #'
 #' ## Create a Grid
 #' grid_area(Polygon1, 200, 1,   TRUE)
-#' grid_area(Polygon1, 200, 0.5, TRUE)
 #' grid_area(Polygon1, 200, 0.1, TRUE)
 #' grid_area(Polygon1, 400, 1,   TRUE)
-#' grid_area(Polygon1, 400, 0.5, TRUE)
 #' grid_area(Polygon1, 400, 0.1, TRUE)
 #'
 grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
@@ -117,6 +115,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 #'   Simple Feature Polygon of the hexagons
 #'   
 #' @examples
+#' library(sf)
 #' ## Exemplary input Polygon with 2km x 2km:
 #' Poly <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
