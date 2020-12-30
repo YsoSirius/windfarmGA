@@ -9,7 +9,6 @@
 [![cran checks](https://cranchecks.info/badges/worst/windfarmGA)](https://cran.r-project.org/web/checks/check_results_windfarmGA.html)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen)](https://www.r-pkg.org/pkg/windfarmGA)
 [![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://www.rpackages.io/package/windfarmGA)
-[![Build Status](https://travis-ci.org/YsoSirius/windfarmGA.svg?branch=master)](https://travis-ci.org/YsoSirius/windfarmGA)
 [![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)](https://github.com/YsoSirius/windfarmGA/actions)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/YsoSirius/windfarmGA?branch=master&svg=true)](https://ci.appveyor.com/project/YsoSirius/windfarmGA)
 [![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
