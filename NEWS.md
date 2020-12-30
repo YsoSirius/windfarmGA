@@ -1,8 +1,6 @@
 # Updates 3.0.0
-- The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be
-  passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
-- The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`. Therefore, the hexagon cellsize is no longer divided by 2
-  and is identical to the rectangular grid size.
+- The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
+- The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`.
 - The `grid_area` argument `resol` changed to `size`.
 - The new dependency `elevatr` has been added because it provides elevation data with a higher resolution compared to `raster::getData`.
 - Several `dependencies` that are not essential for the algorithm were moved to `Suggests`.
