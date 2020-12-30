@@ -12,32 +12,29 @@
 #' @param GridMethod Should the polygon be divided into rectangular or hexagonal
 #'   grid cells? The default is "Rectangular" grid. Hexagonal grids
 #'   are computed when assigning "h" or "hexagon" to this input variable.
-#' @param Rotor A numeric value that gives the rotor radius in meter
-#' @param n A numeric value indicating the required amount of turbines
-#' @param fcrR A numeric value that is used for grid spacing. Default is \code{5}
+#' @param Rotor The rotor radius in meter
+#' @param n The amount of turbines
+#' @param fcrR A numeric value used for grid spacing. Default is \code{5}
 #' @param referenceHeight The height at which the incoming wind speeds were
-#'   measured. Default is the RotorHeight.
-#' @param RotorHeight The desired height of the turbine.
-#' @param SurfaceRoughness A surface roughness length of the considered area in
-#'   m.  If the terrain effect model is activated, a surface roughness will be
-#'   calculated for every grid cell with the elevation and land cover
-#'   information. Default is \code{0.3}
+#'   measured. Default is \code{RotorHeight}
+#' @param RotorHeight The height of the turbine hub
+#' @param SurfaceRoughness A surface roughness length in meters. 
+#'   With the terrain effect model, a surface roughness is calculated for every 
+#'   grid cell using the elevation and land cover data. Default is \code{0.3}
 #' @param sourceCCL The path to the Corine Land Cover raster (.tif). Only
-#'   required when the terrain effect model is activated. If nothing is assign,
-#'   it will try to download a version from the EEA-website.
+#'   required when the terrain effect model is activated.
 #' @param sourceCCLRoughness The source to the adapted Corine Land Cover legend
 #'   as .csv file. Only required when terrain effect model is activated. As
 #'   default a .csv file within this package (\file{~/extdata}) is taken that
-#'   was already adapted manually. To use your own .csv legend this variable has
-#'   to be assigned.
-#' @param Proportionality A numeric value used for grid calculation. Determines
-#'   the percentage a grid has to overlay. Default is \code{1}
-#' @param iteration A numeric value indicating the desired amount of iterations
-#'   of the algorithm. Default is \code{20}
-#' @param mutr A numeric mutation rate with a default value of 0.008
-#' @param vdirspe A data.frame containing the incoming wind speeds, wind
-#'   directions and probabilities
-#' @param topograp Logical value, which indicates if the terrain effect model
+#'   was already adapted manually.
+#' @param Proportionality A numeric value used for the grid calculation, as it 
+#'   determines the percentage a grid cell must overlay the area. 
+#'   Default is \code{1}
+#' @param iteration The number of iterations. Default is \code{20}
+#' @param mutr A numeric mutation rate. Default is \code{0.008}
+#' @param vdirspe A data.frame containing the wind speeds, directions and 
+#'   probabilities. See \code{\link{windata_format}}.
+#' @param topograp Boolean value, which indicates if the terrain effect model
 #'   should be enabled or not. Default is \code{FALSE}
 #' @param elitism Boolean value, which indicates whether elitism should be
 #'   activated or not. Default is \code{TRUE}
@@ -49,14 +46,14 @@
 #' @param crossPart1 Determines which crossover method is used, "EQU" divides
 #'   the genetic code at equal intervals and "RAN" divides the genetic code at
 #'   random locations. Default is \code{"EQU"}
-#' @param trimForce If activated (\code{trimForce = TRUE}), the algorithm will
-#'   take a probabilistic approach to trim the windfarms to the desired amount
-#'   of turbines. If deactivated (\code{trimForce = FALSE}) the adjustment will
-#'   be random. Default is \code{FALSE}
-#' @param Projection A desired Projection can be used instead of the default
-#'   Lambert Azimuthal Equal Area Projection (EPSG:3035)
-#' @param weibull A logical value that specifies whether to take Weibull
-#'   parameters into account. If \code{weibull = TRUE}, the wind speed values 
+#' @param trimForce If \code{TRUE} the algorithm will use a probabilistic 
+#'   approach to correct the windfarms to the desired amount of turbines. 
+#'   If \code{FALSE} the adjustment will be random. Default is \code{FALSE}
+#' @param Projection A spatial reference system. Depending on your PROJ-version,
+#'   it should either be a numeric `EPSG-code` or a `Proj4-string`.
+#'   Default is \code{EPSG:3035}
+#' @param weibull A boolean value that specifies whether to take Weibull
+#'   parameters into account. If \code{TRUE}, the wind speed values 
 #'   of \code{vdirspe} are ignored. The algorithm will calculate the mean
 #'   wind speed for every wind turbine according to the Weibull parameters.
 #'   Default is \code{FALSE}
@@ -65,8 +62,8 @@
 #'   scale parameter raster `a` of the Weibull distribution. If no list is given,
 #'   then rasters included in the package are used instead, which currently only
 #'   cover Austria. This variable is only used if \code{weibull = TRUE}.
-#' @param Parallel Boolean value, indicating whether parallel processing should
-#'   be used. The parallel and doParallel packages are used for parallel
+#' @param Parallel A boolean value, indicating whether parallel processing should
+#'   be used. The *parallel* and *doParallel* packages are used for parallel
 #'   processing. Default is \code{FALSE}
 #' @param numCluster If \code{Parallel} is TRUE, this variable defines the 
 #'   number of clusters to be used. Default is \code{2}
@@ -76,7 +73,7 @@
 #'   Default is \code{FALSE}
 #' 
 #' @family Genetic Algorithm Functions
-#' @return The result is a matrix with aggregated values per generation, the
+#' @return The result is a matrix with aggregated values per generation; the
 #'   best individual regarding energy and efficiency per generation, some fuzzy
 #'   control variables per generation, a list of all fitness values per
 #'   generation, the amount of individuals after each process, a matrix of all

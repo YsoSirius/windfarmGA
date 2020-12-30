@@ -39,12 +39,10 @@ You can also pass another Simple Feature object}
 \item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
 as .csv file. Only required when terrain effect model is activated. As
 default a .csv file within this package (\file{~/extdata}) is taken that
-was already adapted manually. To use your own .csv legend this variable has
-to be assigned.}
+was already adapted manually.}
 
 \item{sourceCCL}{The path to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated. If nothing is assign,
-it will try to download a version from the EEA-website.}
+required when the terrain effect model is activated.}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster `k` and the second item must be the

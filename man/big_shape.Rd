@@ -3,7 +3,7 @@
 \docType{data}
 \name{big_shape}
 \alias{big_shape}
-\title{A big shapefile}
+\title{A POLYGON with an area of ~70 km2}
 \format{
 An object of class \code{sf} (inherits from \code{data.frame}) with 1 rows and 1 columns.
 }
@@ -11,6 +11,6 @@ An object of class \code{sf} (inherits from \code{data.frame}) with 1 rows and 1
 big_shape
 }
 \description{
-A big shapefile
+A POLYGON with an area of ~70 km2
 }
 \keyword{datasets}

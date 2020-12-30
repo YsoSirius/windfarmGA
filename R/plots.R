@@ -1523,7 +1523,6 @@ plot_heatmap <- function(result, si = 2, idistw) {
   par(mfrow = c(1, 1))
   
   bpe <- do.call("rbind", result[, "allCoords"])
-  rownames(bpe) <- NULL
   bpe <- data.frame(bpe[, 1:2])
   
   sizingidw <- as.integer(result[, "inputData"][[1]][, 1]["Rotorradius"])
@@ -1531,9 +1530,8 @@ plot_heatmap <- function(result, si = 2, idistw) {
   
   # dupco <- geoR::dup.coords(bpe, simplify = TRUE)
   dupco <- dup_coords(bpe, simplify = TRUE)
-  
-  bpe$Ids <- as.integer(rownames(bpe))
-  
+    
+  bpe$Ids <- seq.int(nrow(bpe))
   dupco <- lapply(dupco, function(x) as.integer(x))
   dupcosum <- lapply(dupco, function(x) length(x))
   bpenew <- vector("list", length(dupco))
@@ -1571,7 +1569,6 @@ plot_heatmap <- function(result, si = 2, idistw) {
                                   idp = idistw))
   
   ## Plot heatmap
-  ## TODO - Need global variable for NSE-values (x,y,var1.pred,X,Y). How to avoid it?
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     warning("The package 'ggplot2' is required to plot the result, but it is not installed.\n",
             "Please install it with `install.packages('ggplot2')`")
@@ -1585,7 +1582,7 @@ plot_heatmap <- function(result, si = 2, idistw) {
       ggplot2::labs(
         title = "Inverse Distance Weighting for Grid Cell Selection") +
       ggplot2::geom_point(data = bpenew, mapping = ggplot2::aes(x = X, y = Y),
-                          show.legend = TRUE, size = sqrt(sqrt(bpenew$Sum)),
+                          show.legend = TRUE, size = 5*bpenew$Sum/max(bpenew$Sum),
                           alpha = 0.6) +
       ggplot2::scale_fill_gradient(low = "red", high = "green") +
       ggplot2::coord_equal()
