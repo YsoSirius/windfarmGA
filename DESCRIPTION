@@ -33,6 +33,7 @@ Suggests:
     testthat,
     rgdal,
     rgeos,
+    stars,
     leaflet,
     ggplot2,
     gstat,

@@ -1,8 +1,6 @@
 context("Basic Functions")
 
-library(testthat)
 library(sf)
-
 
 test_that("Test Basic Functions", {
   ## splitAt #####################
@@ -25,7 +23,9 @@ test_that("Test Basic Functions", {
                      c(4499991, 2669343), c(4499991, 2668272))
   res0 <- isSpatial(xy_matrix)
   expect_true(class(res0)[1] == "sf")
+  print("st_crs(res0)"); print(st_crs(res0))
   expect_true(is.na(st_crs(res0)))
+  print("st_crs(res0)"); print(st_crs(res0))
 
   projection <- "+init=epsg:3035"
   res0 <- isSpatial(xy_matrix, projection)
