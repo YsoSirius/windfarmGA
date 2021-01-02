@@ -10,7 +10,7 @@
   "codeRepository": "https://github.com/trafficonese/windfarmGA",
   "issueTracker": "https://github.com/YsoSirius/windfarmGA/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -54,6 +54,30 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rgdal",
+      "name": "rgdal",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rgdal"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rgeos",
+      "name": "rgeos",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rgeos"
     },
     {
       "@type": "SoftwareApplication",
@@ -102,18 +126,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=rworldmap"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "rgeos",
-      "name": "rgeos",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=rgeos"
     }
   ],
   "softwareRequirements": [
@@ -265,8 +277,8 @@
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
   "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
-  "fileSize": "4647.866KB",
-  "contIntegration": ["https://travis-ci.org/YsoSirius/windfarmGA", "https://ci.appveyor.com/project/YsoSirius/windfarmGA", "https://codecov.io/gh/YsoSirius/windfarmGA"],
+  "fileSize": "4660.94KB",
+  "contIntegration": ["https://ci.appveyor.com/project/YsoSirius/windfarmGA", "https://codecov.io/gh/YsoSirius/windfarmGA"],
   "relatedLink": ["https://ysosirius.github.io/windfarmGA/index.html", "https://CRAN.R-project.org/package=windfarmGA"],
   "developmentStatus": "https://www.tidyverse.org/lifecycle/#stable"
 }

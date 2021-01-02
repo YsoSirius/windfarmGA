@@ -9,14 +9,13 @@ grid_area(shape, size = 500, prop = 1, plotGrid = FALSE)
 \arguments{
 \item{shape}{Simple Feature Polygon of the considered area}
 
-\item{size}{The resolution of the grid in meters. Default is 500}
+\item{size}{The cellsize of the grid in meters. Default is 500}
 
-\item{prop}{A factor used for grid calculation. Determines the percentage a
-grid has to overlay the considered area to be represented as grid cell.
-Default is 1.}
+\item{prop}{A factor used for grid calculation. It determines the percentage
+a grid cell must overlay the area. Default is 1}
 
 \item{plotGrid}{Logical value indicating whether the results should be
-plotted. Default is FALSE.}
+plotted. Default is \code{FALSE}}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have the grid
@@ -26,14 +25,15 @@ Returns a list with 2 elements. List element 1 will have the grid
 }
 \description{
 Create a grid from a given polygon with a certain resolution
-  and proportionality. The center points of each grid cell represent possible
-  locations for wind turbines.
+  and proportionality. The grid cell centroids represent possible
+  wind turbine locations.
 }
 \note{
 The grid of the genetic algorithm will have a resolution of \code{Rotor
   * fcrR}. See the arguments of \code{\link{windfarmGA}}
 }
 \examples{
+\dontrun{
 ## Exemplary input Polygon with 2km x 2km:
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -60,7 +60,7 @@ grid_area(Polygon1, 200, 1,   TRUE)
 grid_area(Polygon1, 200, 0.1, TRUE)
 grid_area(Polygon1, 400, 1,   TRUE)
 grid_area(Polygon1, 400, 0.1, TRUE)
-
+}
 }
 \seealso{
 Other Helper Functions: 

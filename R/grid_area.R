@@ -1,8 +1,8 @@
 #' @title Make a grid from a Simple Feature Polygon
 #' @name grid_area
 #' @description Create a grid from a given polygon with a certain resolution
-#'   and proportionality. The center points of each grid cell represent possible
-#'   locations for wind turbines.
+#'   and proportionality. The grid cell centroids represent possible
+#'   wind turbine locations.
 #'
 #' @note The grid of the genetic algorithm will have a resolution of \code{Rotor
 #'   * fcrR}. See the arguments of \code{\link{windfarmGA}}
@@ -10,12 +10,11 @@
 #' @export
 #'
 #' @param shape Simple Feature Polygon of the considered area
-#' @param size The resolution of the grid in meters. Default is 500
-#' @param prop A factor used for grid calculation. Determines the percentage a
-#'   grid has to overlay the considered area to be represented as grid cell.
-#'   Default is 1.
+#' @param size The cellsize of the grid in meters. Default is 500
+#' @param prop A factor used for grid calculation. It determines the percentage
+#'   a grid cell must overlay the area. Default is 1
 #' @param plotGrid Logical value indicating whether the results should be
-#'   plotted. Default is FALSE.
+#'   plotted. Default is \code{FALSE}
 #'
 #' @family Helper Functions
 #' @return Returns a list with 2 elements. List element 1 will have the grid
@@ -23,7 +22,7 @@
 #'   List element 2 is the grid as Simple Feature Polygons, which is used for 
 #'   plotting purposes.
 #'   
-#' @examples
+#' @examples \dontrun{
 #' ## Exemplary input Polygon with 2km x 2km:
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -50,7 +49,7 @@
 #' grid_area(Polygon1, 200, 0.1, TRUE)
 #' grid_area(Polygon1, 400, 1,   TRUE)
 #' grid_area(Polygon1, 400, 0.1, TRUE)
-#'
+#' }
 grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
   if (prop < 0.01) {
     prop <- 0.01
@@ -123,9 +122,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
 #'   crs = 3035
 #' ))
-#' 
 #' HexGrid <- hexa_area(Poly, 100, TRUE)
-#' plot(HexGrid[[2]])
 #'
 hexa_area <- function(shape, size, plotGrid = FALSE) {
   grid_polys <- sf::st_make_grid(shape, cellsize = size,

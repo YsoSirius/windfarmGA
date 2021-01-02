@@ -9,10 +9,10 @@ hexa_area(shape, size, plotGrid = FALSE)
 \arguments{
 \item{shape}{Simple Feature Polygon of the considered area}
 
-\item{size}{The resolution of the grid in meters. Default is 500}
+\item{size}{The cellsize of the grid in meters. Default is 500}
 
 \item{plotGrid}{Logical value indicating whether the results should be
-plotted. Default is FALSE.}
+plotted. Default is \code{FALSE}}
 }
 \value{
 Returns a list with an indexed matrix of the point coordinates and a
@@ -32,9 +32,7 @@ Poly <- sf::st_as_sf(sf::st_sfc(
     c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
   crs = 3035
 ))
-
 HexGrid <- hexa_area(Poly, 100, TRUE)
-plot(HexGrid[[2]])
 
 }
 \seealso{
