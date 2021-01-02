@@ -82,9 +82,9 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
     
     plot(st_geometry(shape), col="orange", 
          main = paste("Cellsize:", size, "m and prop: ", prop,
-                      "\nTotal area:", round(sum(as.numeric(sf::st_area(shape)))*0.000001, 3), "km²",
+                      "\nTotal area:", round(sum(as.numeric(sf::st_area(shape)))*0.000001, 3), "km^2",
                       "\nNumber of Grids:", length(grid_filtered),
-                      "\nGrid area:", round(sum(as.numeric(sf::st_area(grid_filtered)))*0.000001, 3), "km²"))
+                      "\nGrid area:", round(sum(as.numeric(sf::st_area(grid_filtered)))*0.000001, 3), "km^2"))
     plot(grid_filtered, col = "lightgreen", add=TRUE)
     graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
     graphics::text(centpo[, "X"], centpo[, "Y"],
@@ -152,9 +152,9 @@ hexa_area <- function(shape, size, plotGrid = FALSE) {
     
     plot(st_geometry(shape), col="orange", 
          main = paste("Cellsize:", size, "m",
-                      "\nTotal area:", round(sum(as.numeric(st_area(st_geometry(shape))))*0.000001, 3), "km²",
+                      "\nTotal area:", round(sum(as.numeric(st_area(st_geometry(shape))))*0.000001, 3), "km^2",
                       "\nNumber of Grids:", length(grid_filtered),
-                      "\nGrid area:", round(sum(as.numeric(st_area(grid_filtered)))*0.000001, 3), "km²"))
+                      "\nGrid area:", round(sum(as.numeric(st_area(grid_filtered)))*0.000001, 3), "km^2"))
     plot(grid_filtered, col = "lightgreen", add=TRUE)
     graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
     graphics::text(centpo[, "X"], centpo[, "Y"],
