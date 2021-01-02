@@ -132,12 +132,12 @@
     </tr>
     <tr>
       <th>size</th>
-      <td><p>The resolution of the grid in meters. Default is 500</p></td>
+      <td><p>The cellsize of the grid in meters. Default is 500</p></td>
     </tr>
     <tr>
       <th>plotGrid</th>
       <td><p>Logical value indicating whether the results should be
-plotted. Default is FALSE.</p></td>
+plotted. Default is <code>FALSE</code></p></td>
     </tr>
     </table>
 
@@ -161,17 +161,16 @@ plotted. Default is FALSE.</p></td>
 <code><a href='windata_format.html'>windata_format</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
+<span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
 <span class='va'>Poly</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
   <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4498482</span>, <span class='fl'>4498482</span>, <span class='fl'>4499991</span>, <span class='fl'>4499991</span>, <span class='fl'>4498482</span><span class='op'>)</span>,
     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2668272</span>, <span class='fl'>2669343</span>, <span class='fl'>2669343</span>, <span class='fl'>2668272</span>, <span class='fl'>2668272</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, 
   crs <span class='op'>=</span> <span class='fl'>3035</span>
 <span class='op'>)</span><span class='op'>)</span>
-
 <span class='va'>HexGrid</span> <span class='op'>&lt;-</span> <span class='fu'>hexa_area</span><span class='op'>(</span><span class='va'>Poly</span>, <span class='fl'>100</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='hexa_area-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='hexa_area-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>HexGrid</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='img'><img src='hexa_area-3.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='img'><img src='hexa_area-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='hexa_area-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
