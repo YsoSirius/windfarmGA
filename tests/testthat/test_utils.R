@@ -42,7 +42,9 @@ test_that("Test Basic Functions", {
   xy_dataframe <- st_coordinates(spatial_polygon)
   res1 <- isSpatial(xy_dataframe)
   expect_true(class(res1)[1] == "sf")
+  print("st_crs(res0)"); print(st_crs(res1))
   expect_true(is.na(st_crs(res1)))
+  print("st_crs(res0)"); print(st_crs(res1))
 
   res1 <- isSpatial(xy_dataframe, projection)
   expect_true(class(res1)[1] == "sf")

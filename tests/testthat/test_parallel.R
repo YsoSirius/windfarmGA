@@ -2,7 +2,8 @@ context("Parallel")
 library(sf)
 
 test_that("Test Parallelisation", {
-  skip_if(Sys.info()["machine"] != "x86-64")
+  skip_on_os("windows")
+  # skip_if(Sys.info()["machine"] != "x86-64")
   
   ## Inputs ##################
   Polygon1 <- sf::st_as_sf(sf::st_sfc(

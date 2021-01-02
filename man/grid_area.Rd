@@ -11,8 +11,8 @@ grid_area(shape, size = 500, prop = 1, plotGrid = FALSE)
 
 \item{size}{The cellsize of the grid in meters. Default is 500}
 
-\item{prop}{A factor used for grid calculation. It determines the percentage
-a grid cell must overlay the area. Default is 1}
+\item{prop}{A factor used for grid calculation. It determines the minimum 
+percentage that a grid cell must cover the area. Default is 1}
 
 \item{plotGrid}{Logical value indicating whether the results should be
 plotted. Default is \code{FALSE}}

@@ -98,11 +98,10 @@ windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
 
 ## Grid Spacing
 ### Rectangular Grid Cells
-Verify that the grid spacing is appropriate. Adapt the following input variables if desired:
-- *Rotor*: The desired rotor radius in meters.
+Verify that the grid spacing is appropriate. Adapt the following input variables if necessary:
+- *Rotor*: The rotor radius in meters.
 - *fcrR*: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter.
-- *prop*: The proportionality factor used for grid calculation. It determines the percentage a grid has 
-to overlay the considered area to be represented as grid cell.
+- *prop*: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.
 
 *Make sure that the Polygon is projected in meters.*
 ```sh
@@ -119,7 +118,7 @@ HexGrid <- hexa_area(Polygon1, size = (Rotor * fcrR), plotGrid = TRUE)
 str(HexGrid)
 ```
 <p align="center">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/hexagon.png" width="300"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="300"/>
 </p>
 
 

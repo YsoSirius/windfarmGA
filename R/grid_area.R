@@ -11,8 +11,8 @@
 #'
 #' @param shape Simple Feature Polygon of the considered area
 #' @param size The cellsize of the grid in meters. Default is 500
-#' @param prop A factor used for grid calculation. It determines the percentage
-#'   a grid cell must overlay the area. Default is 1
+#' @param prop A factor used for grid calculation. It determines the minimum 
+#'   percentage that a grid cell must cover the area. Default is 1
 #' @param plotGrid Logical value indicating whether the results should be
 #'   plotted. Default is \code{FALSE}
 #'
@@ -81,10 +81,10 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
     par(mar = c(5, 5, 5, 4), mfrow = c(1, 1))
     
     plot(st_geometry(shape), col="orange", 
-         main = paste("Resolution:", size, "m and prop: ", prop,
-                      "\n Total Area:", round(sum(as.numeric(sf::st_area(shape)))*0.000001, 3),
-                      "km^2 \n Number Grids:", length(grid_filtered),
-                      "\n Sum Grid size:", round(sum(as.numeric(sf::st_area(grid_filtered)))*0.000001, 3), "km^2"))
+         main = paste("Cellsize:", size, "m and prop: ", prop,
+                      "\nTotal area:", round(sum(as.numeric(sf::st_area(shape)))*0.000001, 3), "km²",
+                      "\nNumber of Grids:", length(grid_filtered),
+                      "\nGrid area:", round(sum(as.numeric(sf::st_area(grid_filtered)))*0.000001, 3), "km²"))
     plot(grid_filtered, col = "lightgreen", add=TRUE)
     graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
     graphics::text(centpo[, "X"], centpo[, "Y"],
@@ -151,10 +151,10 @@ hexa_area <- function(shape, size, plotGrid = FALSE) {
     par(mar = c(5, 5, 5, 4), mfrow = c(1, 1))
     
     plot(st_geometry(shape), col="orange", 
-         main = paste("Resolution:", size, "m",
-                      "\n Total Area:", round(sum(as.numeric(st_area(st_geometry(shape))))*0.000001, 3), "km^2",
-                      "\nAmount of Hexagons:", length(grid_filtered),
-                      "\nAmount of Points:", round(sum(as.numeric(st_area(grid_filtered)))*0.000001, 3), "km^2"))
+         main = paste("Cellsize:", size, "m",
+                      "\nTotal area:", round(sum(as.numeric(st_area(st_geometry(shape))))*0.000001, 3), "km²",
+                      "\nNumber of Grids:", length(grid_filtered),
+                      "\nGrid area:", round(sum(as.numeric(st_area(grid_filtered)))*0.000001, 3), "km²"))
     plot(grid_filtered, col = "lightgreen", add=TRUE)
     graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
     graphics::text(centpo[, "X"], centpo[, "Y"],
