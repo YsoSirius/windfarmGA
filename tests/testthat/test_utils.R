@@ -1,8 +1,6 @@
 context("Basic Functions")
 
-library(testthat)
 library(sf)
-
 
 test_that("Test Basic Functions", {
   ## splitAt #####################
@@ -24,15 +22,14 @@ test_that("Test Basic Functions", {
   xy_matrix <- rbind(c(4498482, 2668272), c(4498482, 2669343),
                      c(4499991, 2669343), c(4499991, 2668272))
   res0 <- isSpatial(xy_matrix)
-  expect_true(class(res0)[1] == "sf")
+  expect_true(class(res0)[1] == "sfc_POLYGON")
   expect_true(is.na(st_crs(res0)))
 
   projection <- "+init=epsg:3035"
   res0 <- isSpatial(xy_matrix, projection)
-  expect_true(class(res0)[1] == "sf")
+  expect_true(class(res0)[1] == "sfc_POLYGON")
   expect_true(st_crs(res0) == st_crs(3035))
   
-
   spatial_polygon <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
@@ -41,42 +38,41 @@ test_that("Test Basic Functions", {
   ))
   xy_dataframe <- st_coordinates(spatial_polygon)
   res1 <- isSpatial(xy_dataframe)
-  expect_true(class(res1)[1] == "sf")
+  expect_true(class(res1)[1] == "sfc_POLYGON")
   expect_true(is.na(st_crs(res1)))
 
   res1 <- isSpatial(xy_dataframe, projection)
-  expect_true(class(res1)[1] == "sf")
+  expect_true(class(res1)[1] == "sfc_POLYGON")
   expect_true(st_crs(res1) == st_crs(3035))
 
   ## Data.frame with Random column order (long, lat)
   res1 <- isSpatial(xy_dataframe[, c(3,2,1)])
-  expect_true(class(res1)[1] == "sf")
+  expect_true(class(res1)[1] == "sfc_POLYGON")
   expect_true(is.na(st_crs(res1)))
 
   res1 <- isSpatial(xy_dataframe[, c(3,2,1)], projection)
-  expect_true(class(res1)[1] == "sf")
+  expect_true(class(res1)[1] == "sfc_POLYGON")
   expect_true(st_crs(res1) == st_crs(3035))
 
   ## with y/x
   coords_df <- cbind(xy_dataframe[, 2], xy_dataframe[, 1])
   colnames(coords_df) <- c("Y_Coords", "XX_Coords")
   res12 <- isSpatial(coords_df)
-  expect_true(class(res12)[1] == "sf")
+  expect_true(class(res12)[1] == "sfc_POLYGON")
 
   coords_df <- cbind(xy_dataframe[, 1], xy_dataframe[, 2])
   colnames(coords_df) <- c("X____", "y_")
   res12 <- isSpatial(coords_df)
-  expect_true(class(res12)[1] == "sf")
+  expect_true(class(res12)[1] == "sfc_POLYGON")
   
   colnames(coords_df) <- c("asd","fasf")
   res12 <- isSpatial(coords_df)
-  expect_true(class(res12)[1] == "sf")
+  expect_true(class(res12)[1] == "sfc_POLYGON")
 
   ## Simple Feature
   simple_feature <- sf::st_as_sf(spatial_polygon)
   res2 <- isSpatial(simple_feature, projection)
-  expect_true(class(res2)[1] == "sf" |
-                class(res2)[1] == "sf")
+  expect_true(class(res2)[1] == "sf")
   expect_true(all.equal(st_crs(res2), st_crs(res0)))
   
   ## windata_format #############

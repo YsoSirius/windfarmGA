@@ -31,6 +31,9 @@ BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
+    rgdal,
+    rgeos,
+    stars,
     leaflet,
     ggplot2,
     gstat,

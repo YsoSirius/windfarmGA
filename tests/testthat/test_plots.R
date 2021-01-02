@@ -1,6 +1,7 @@
 context("Plots")
 library(raster)
 library(sf)
+library(stars)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
