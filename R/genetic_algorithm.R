@@ -898,11 +898,8 @@ isSpatial <- function(shape, proj) {
     }
     colnames(pltm) <- c("x", "y")
     pltm <- data.frame(pltm)
-    shape <- sf::st_sf(aggregate(
-      sf::st_as_sf(pltm, coords = c("x","y"))$geometry,
-      list(rep(1, nrow(pltm))),
-      function(g)st_cast(st_combine(g),"POLYGON")
-    ))
+    shape <- st_cast(st_combine(
+      sf::st_as_sf(pltm, coords = c("x","y"))$geometry), "POLYGON")
     
     if (!missing(proj)) st_crs(shape) <- 3035
   }

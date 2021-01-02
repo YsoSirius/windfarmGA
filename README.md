@@ -48,11 +48,10 @@ be used. The function `windfarmGA` checks the user inputs interactively and then
 runs the function `genetic_algorithm`. If the input parameters are already known, an 
 optimization can be run directly via `genetic_algorithm`. 
 
-<div style="display: inline-flex;">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" width="430"/>
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"  width="430"/>
+<div>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"  style="width: 49%;display: inline-block;"/>
 </div>
-<br>
 
 Since version 1.1, hexagonal grid cells are possible, with 
 their center points being possible locations for wind turbines. 
