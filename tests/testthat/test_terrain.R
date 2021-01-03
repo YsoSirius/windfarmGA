@@ -11,9 +11,8 @@ quiet <- function(x) {
 }
 
 test_that("Test Terrain and Weibull Effects", {
-  skip_on_appveyor()
   skip_on_cran()
-  skip_if(Sys.info()["machine"] != "x86-64")
+  # skip_if(Sys.info()["machine"] != "x86-64")
   
   ## Test Terrain Model ###################
   Projection <- 3035
@@ -61,7 +60,7 @@ test_that("Test Terrain and Weibull Effects", {
   ## Weibull Params (FAKE).
   DEM <- expect_warning(elevatr::get_elev_raster(verbose = FALSE,
     locations = as(st_transform(sp_polygon, 4326), "Spatial"), z = 11))
-  sp_polygonproj <- st_transform(sp_polygon, st_crs(proj4string(DEM)))
+  sp_polygonproj <- st_transform(sp_polygon, st_crs(crs(DEM)))
   DEMcrop <- crop(DEM, sp_polygonproj)
   maxval <- max(values(DEMcrop))
   a_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+1)
