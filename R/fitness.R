@@ -7,29 +7,18 @@
 #'
 #' @export
 #'
+#' @inheritParams genetic_algorithm
 #' @param selection A list containing all individuals of the current population.
-#' @param referenceHeight The height at which the incoming wind speeds were
-#'   measured.
-#' @param RotorHeight The desired height of the turbine.
-#' @param SurfaceRoughness A surface roughness length of the considered area in
-#'   m.
 #' @param Polygon The considered area as shapefile.
 #' @param resol1 The resolution of the grid in meter.
 #' @param rot The desired rotor radius in meter.
 #' @param dirspeed The wind data as list.
 #' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
 #'   and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}
-#' @param topograp Logical value that indicates whether the terrain effect model
-#'   is activated (TRUE) or deactivated (FALSE).
 #' @param cclRaster A Corine Land Cover raster, that has to be adapted
 #'   previously by hand with the surface roughness length for every land cover
 #'   type. Is only used, when the terrain effect model is activated.
 #' @param weibull A raster representing the estimated wind speeds
-#' @param Parallel Boolean value, indicating whether parallel processing should
-#'   be used. The parallel and doParallel packages are used for parallel
-#'   processing.
-#' @param numCluster If Parallel is TRUE, this variable defines the number of
-#'   clusters to be used.
 #'
 #' @family Genetic Algorithm Functions
 #' @return Returns a list with every individual, consisting of X & Y

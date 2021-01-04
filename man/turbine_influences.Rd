@@ -9,18 +9,18 @@ turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE)
 \arguments{
 \item{t}{A data.frame of the current individual with X and Y coordinates}
 
-\item{wnkl}{A numeric value indicating the angle, at which no wake influences
-are considered. Default is 20 degrees.}
+\item{wnkl}{The angle from which wake influences are considered to be 
+negligible (numeric)}
 
 \item{dist}{A numeric value indicating the distance, after which the wake
-effects are considered to be eliminated. Default is 100km.}
+effects are considered to be eliminated.}
 
 \item{polYgon}{A shapefile representing the considered area}
 
 \item{dirct}{A numeric value indicating the current wind direction}
 
 \item{plotAngles}{A logical variable, which is used to plot the distances and
-angles. Default is FALSE.}
+angles. Default is \code{FALSE}}
 }
 \value{
 Returns a list of all individuals of the current generation which
