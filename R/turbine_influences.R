@@ -137,8 +137,7 @@ get_dist_angles <- function(t, o, wnkl, dist, polYgon, plotAngles = FALSE) {
     
     ## Dismiss the ones with too high distances or big angles.
     dl <- subset.matrix(res, 
-                        subset = 
-                          res[, 'alpha'] < wnkl & res[, 'Laenge_B'] < dist)
+                        subset = res[, 'alpha'] < wnkl & res[, 'Laenge_B'] < dist)
     
     if (plotAngles) {
       points(dl[,'Ax'], dl[,'Ay'], col = "orange", pch = 20, cex = 2)
