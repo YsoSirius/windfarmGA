@@ -22,21 +22,21 @@ Mutate the genes of every chromosome or individual with low
 }
 \examples{
 ## Create 4 random individuals with binary values
-a <- cbind(bin=sample(c(0,1),20,replace=TRUE,prob = c(70,30)),
-        bin.1=sample(c(0,1),20,replace=TRUE,prob = c(30,70)),
-        bin.2=sample(c(0,1),20,replace=TRUE,prob = c(30,70)),
-        bin.3=sample(c(0,1),20,replace=TRUE,prob = c(30,70)))
+a <- cbind(bin0 = sample(c(0,1), 20, replace=TRUE, prob = c(70,30)),
+           bin1 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
+           bin2 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
+           bin3 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)))
 a
 
 ## Mutate the individuals with a low percentage
-aMut <- mutation(a,0.1, NULL)
+aMut <- mutation(a, 0.1, NULL)
 ## Check which values are not like the originals
-a==aMut
+a == aMut
 
 ## Mutate the individuals with a high percentage
-aMut <- mutation(a,0.4, NULL)
+aMut <- mutation(a, 0.4, NULL)
 ## Check which values are not like the originals
-a==aMut
+a == aMut
 
 }
 \seealso{

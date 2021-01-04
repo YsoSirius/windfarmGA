@@ -20,7 +20,7 @@
 #' data <- matrix(seq(0,5000,500));
 #' barometric_height(data)
 #' plot.ts(barometric_height(data))
-barometric_height         <- function(data, height, po = 101325, ro = 1.225) {
+barometric_height <- function(data, height, po = 101325, ro = 1.225) {
   if ( is.numeric(data) || (ncol(data)) == 1 ) {
     ## Luftdruck auf Hoehe h berechnen
     ph <- as.numeric(po * exp(-data * 0.0001252))

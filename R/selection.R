@@ -8,16 +8,10 @@
 #'   values.
 #' @export
 #'
+#' @inheritParams genetic_algorithm
 #' @param fit A list of all fitness-evaluated individuals
 #' @param Grid Is the indexed grid output from \code{\link{grid_area}}
 #' @param teil A numeric value that determines the selection percentage
-#' @param elitism Boolean value which indicates whether elitism should be
-#'   included or not.
-#' @param nelit If \code{elitism} is TRUE, then this input variable determines
-#'   the amount of individuals in the elite group.
-#' @param selstate Determines which selection method is used, "FIX" selects a
-#'   constant percentage and "VAR" selects a variable percentage, depending on
-#'   the development of the fitness values.
 #' @param verbose If TRUE, will print out further information.
 #'
 #' @family Genetic Algorithm Functions
@@ -43,7 +37,7 @@
 #' wind <- as.data.frame(cbind(ws=12,wd=0))
 #' wind <- list(wind, probab = 100)
 #' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
-#'                SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,
+#'                SurfaceRoughness=0.3, Polygon = Polygon1, resol1 = 200,
 #'                rot = 20, dirspeed = wind, 
 #'                srtm_crop = "", topograp = FALSE, cclRaster = "")
 #' allparks <- do.call("rbind",fit);
@@ -55,8 +49,7 @@
 #' selec6best <- selection(fit, Grid, 2, TRUE, 6, "FIX")
 #' selec6best <- selection(fit, Grid, 4, FALSE, 6, "FIX")
 #' }
-selection         <- function(fit, Grid, teil, elitism, nelit, 
-                               selstate, verbose) {
+selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
   if (missing(verbose)) {
     verbose <- FALSE
   }

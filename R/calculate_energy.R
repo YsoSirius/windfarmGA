@@ -7,15 +7,10 @@
 #'
 #' @export
 #'
+#' @inheritParams genetic_algorithm
+#' @inheritParams fitness
 #' @param sel A matrix of an individual of the current population
 #'   (matrix)
-#' @param referenceHeight The height at which the incoming wind speeds were
-#'   measured (numeric)
-#' @param RotorHeight The desired height of the turbines (numeric)
-#' @param SurfaceRoughness A surface roughness length of the considered area in
-#'   m. If the terrain effect model is activated, a surface roughness will be
-#'   calculated for every grid cell with the elevation and land cover
-#'   information (numeric)
 #' @param wnkl The angle from which wake influences are considered to be 
 #'   negligible (numeric)
 #' @param distanz The distance after which wake effects are considered
@@ -23,14 +18,6 @@
 #' @param polygon1 The considered area as Simple Feature Polygon
 #' @param RotorR The desired rotor radius in meter (numeric)
 #' @param dirSpeed The wind speed and direction data.frame
-#' @param topograp Logical value that indicates whether the terrain effect model
-#'   is activated (TRUE) or deactivated (FALSE)
-#' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
-#'   and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}
-#' @param cclRaster A Corine Land Cover raster that has to be downloaded
-#'   previously. See also the details at \code{\link{windfarmGA}} The raster
-#'   will only be used when the terrain effect model is activated. (raster)
-#' @param weibull A raster representing the estimated mean wind speeds
 #' @param plotit Logical value. If TRUE, the process will be plotted. 
 #'   Default is FALSE.
 #'
