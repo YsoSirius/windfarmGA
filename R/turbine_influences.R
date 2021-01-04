@@ -22,8 +22,8 @@
 #'
 #' @examples
 #' ## Exemplary input Polygon with 2km x 2km:
-#' library(raster)
 #' library(sf)
+#' 
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(0, 0, 2000, 2000, 0),
@@ -38,15 +38,15 @@
 #'
 #' res <- turbine_influences(t, wnkl, dist, Polygon1, dirct, plotAngles = TRUE)
 #'
-turbine_influences       <- function(t, wnkl, dist, polYgon, dirct,
-                              plotAngles = FALSE) {
+turbine_influences <- function(t, wnkl, dist, polYgon, dirct,
+                               plotAngles = FALSE) {
   ## For every turbine in the wind farm, find all other turbines,
   ## that stand in front, next and inside a certain angle of the
   ## incoming wind direction and assing to the list
   lapply(seq_along(t[, 1]), function(i) {
     ## Calculate the angles and distances of potentially influencing turbines
     ee11 <- get_dist_angles(t = t, o = i, wkl = wnkl, distanz = dist,
-                          polYgon = polYgon, plotAngles = plotAngles)
+                            polYgon = polYgon, plotAngles = plotAngles)
     ## Add the wind direction to the data.frame
     ## Assign the iteration as point ID of the current turbine
     ## Necessary for multiple wake effects

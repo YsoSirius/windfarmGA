@@ -33,8 +33,8 @@ Find all turbines that could potentially influence another
 }
 \examples{
 ## Exemplary input Polygon with 2km x 2km:
-library(raster)
 library(sf)
+
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),

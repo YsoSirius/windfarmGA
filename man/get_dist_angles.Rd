@@ -32,7 +32,6 @@ Calculate distances and angles for a turbine and all it's
 }
 \examples{
 library(sf)
-library(raster)
 
 ## Exemplary input Polygon with 2km x 2km:
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -43,8 +42,7 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Create a random windfarm with 10 turbines
-t <- as.matrix(cbind(x = runif(10, 0, raster::extent(Polygon1)[2]),
-     y = runif(10, 0, raster::extent(Polygon1)[4])))
+t <- st_coordinates(st_sample(Polygon1, 10))
 wnkl <- 20
 distanz <- 100000
 

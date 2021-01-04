@@ -19,7 +19,6 @@
 #'   influencing turbines
 #' @examples
 #' library(sf)
-#' library(raster)
 #' 
 #' ## Exemplary input Polygon with 2km x 2km:
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -30,8 +29,7 @@
 #' ))
 #' 
 #' ## Create a random windfarm with 10 turbines
-#' t <- as.matrix(cbind(x = runif(10, 0, raster::extent(Polygon1)[2]),
-#'      y = runif(10, 0, raster::extent(Polygon1)[4])))
+#' t <- st_coordinates(st_sample(Polygon1, 10))
 #' wnkl <- 20
 #' distanz <- 100000
 #' 
@@ -53,18 +51,25 @@ get_dist_angles <- function(t, o, wkl, distanz, polYgon, plotAngles) {
   turbines_ahead <- subset.matrix(x = t, subset = (t[o, 2L] < t[, 2L]))
 
   if (plotAngles) {
-    graphics::plot(t, xlim = raster::extent(polYgon)[1:2],
-                   ylim = raster::extent(polYgon)[3:4],
+    graphics::plot(t[,1], t[,2],
                    col.axis = "darkblue",
                    xlab = "X-Coordinates", ylab = "Y-Coordinates")
-    title(main = "Potentially Influential Points",
+    title(main = "Potentially Influential Turbines",
           sub = paste("PointNr: ", o,";","Distance: ",
                       distanz,"Meter",";", "Angle: ", wkl,"Degrees"),
           outer = FALSE, cex.main = 1, cex.sub = 1)
-    raster::plot(polYgon, add = TRUE)
+    plot(st_geometry(polYgon), add = TRUE)
     ## Plot the actual turbine in green, the ones in front in red
-    points(x = turbine_loc[1], y = turbine_loc[2], col = "green", pch = 20)
-    points(turbines_ahead[,1], y = turbines_ahead[,2], col = "red", pch = 20)
+    points(x = turbine_loc[1], y = turbine_loc[2], col = "green", pch = 20, cex = 2)
+    angles_min <- rbind(turbine_loc,
+                        cbind(turbine_loc[1]+distanz*cos((90-wkl)*pi/180),
+                              turbine_loc[2]+distanz*sin((90-wkl)*pi/180)))
+    angles_plu <- rbind(turbine_loc,
+                        cbind(turbine_loc[1]+distanz*cos((90+wkl)*pi/180),
+                              turbine_loc[2]+distanz*sin((90+wkl)*pi/180)))
+    lines(angles_min[,1],angles_min[,2])
+    lines(angles_plu[,1],angles_plu[,2])
+    points(x = turbines_ahead[,1], y = turbines_ahead[,2], col = "red", pch = 20)
   }
 
   ## TODO - optimize this part (Write the whole function get_dist_angles or even turbine_influences in C++)
