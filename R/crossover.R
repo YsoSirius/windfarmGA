@@ -167,6 +167,7 @@ crossover <- function(se6, u, uplimit, crossPart, verbose, seed) {
 #'
 #' @family Helper Functions
 #' @return Returns a list of the splitted genetic code.
+#' @export
 #'
 #' @examples
 #' splitAt(1:100,20)
