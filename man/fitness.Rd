@@ -66,10 +66,10 @@ Returns a list with every individual, consisting of X & Y
   resulting energy outputs, efficiency rates and fitness values.
 }
 \description{
-The fitness values of the individuals in the current population
-  are calculated after having evaluated their energy outputs in
+The fitness of all individuals in the current population
+  is calculated after their energy output has been evaluated in
   \code{\link{calculate_energy}}. This function reduces the resulting energy
-  outputs to a single fitness value for every individual.
+  outputs to a single fitness value for each individual.
 }
 \examples{
 \donttest{

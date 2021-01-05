@@ -22,8 +22,7 @@ calculate_energy(
 )
 }
 \arguments{
-\item{sel}{A matrix of an individual of the current population
-(matrix)}
+\item{sel}{A matrix of an individual of the current population}
 
 \item{referenceHeight}{The height at which the incoming wind speeds were
 measured. Default is \code{RotorHeight}}
@@ -35,14 +34,14 @@ With the terrain effect model, a surface roughness is calculated for every
 grid cell using the elevation and land cover data. Default is \code{0.3}}
 
 \item{wnkl}{The angle from which wake influences are considered to be 
-negligible (numeric)}
+negligible}
 
 \item{distanz}{The distance after which wake effects are considered
-to be eliminated (numeric)}
+to be eliminated}
 
 \item{polygon1}{The considered area as Simple Feature Polygon}
 
-\item{RotorR}{The desired rotor radius in meter (numeric)}
+\item{RotorR}{The desired rotor radius in meter}
 
 \item{dirSpeed}{The wind speed and direction data.frame}
 
@@ -62,14 +61,14 @@ of \code{vdirspe} are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
 Default is \code{FALSE}}
 
-\item{plotit}{Logical value. If TRUE, the process will be plotted. 
-Default is FALSE.}
+\item{plotit}{If \code{TRUE}, the process will be plotted. 
+Default is \code{FALSE}}
 }
 \value{
 Returns a list of an individual of the current generation with
   resulting wake effects, energy outputs, efficiency rates for every wind
-  direction. The length of the list will be the amount of incoming wind
-  directions.
+  direction. The length of the list corresponds to the number of different
+  wind directions.
 }
 \description{
 Calculate the energy output and efficiency rates of an

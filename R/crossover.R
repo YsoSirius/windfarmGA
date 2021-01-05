@@ -1,23 +1,20 @@
 #' @title Crossover Method
 #' @name crossover
-#' @description The crossover method of the genetic algorithm, which takes the
-#'   selected individuals after the \code{\link{selection}} function and
-#'   produces new offsprings through permutation.
+#' @description The crossover method creates new offspring with the selected 
+#'   individuals by permutating their genetic codes.
 #'
 #' @export
 #'
 #' @param se6 The selected individuals. The output of \code{\link{selection}}
-#'   (list)
-#' @param u The crossover point rate. (numeric)
-#' @param uplimit The upper limit of allowed permutations. The current algorithm
-#'   has an upper bound of 300 permutations. (numeric)
-#' @param crossPart The crossover method. Either "EQU" or "RAN". (character)
-#' @param verbose If TRUE, will print out further information.
-#' @param seed Set a seed for comparability. Default is NULL
+#' @param u The crossover point rate
+#' @param uplimit The upper limit of allowed permutations
+#' @param crossPart The crossover method. Either "EQU" or "RAN"
+#' @param verbose If \code{TRUE}, will print out further information
+#' @param seed Set a seed for comparability. Default is \code{NULL}
 #'
 #' @family Genetic Algorithm Functions
 #' @return Returns a binary coded matrix of all permutations and all grid cells,
-#'   0 indicates no turbine and 1 indicates a turbine in the grid cell. (matrix)
+#'   where 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 #'
 #' @examples
 #' ## Create two random parents with an index and random binary values
@@ -156,22 +153,21 @@ crossover <- function(se6, u, uplimit, crossPart, verbose, seed) {
   return(nI)
 }
 
-#' @title Divide matrices or integer at certain locations
+#' @title Split matrices or numeric vectors at specific indices
 #' @name splitAt
-#' @description  Required function for the crossover method to
-#' split a genetic code at random intervals. See also \code{\link{crossover}}.
-#' @param x A numeric variable representing the binary genetic code of an
-#' individual (numeric)
-#' @param pos A numeric value which shows at which position the
-#' genetic code is cut (numeric)
+#' @description The function is used by the crossover method to
+#' split a genetic code at certain intervals. See also \code{\link{crossover}}.
+#' @param x A numeric variable that represents an individual's 
+#'   binary genetic code
+#' @param pos A numeric value that indicates where to split the genetic code
 #'
 #' @family Helper Functions
-#' @return Returns a list of the splitted genetic code.
+#' @return Returns a list of the split genetic code.
 #' @export
 #'
 #' @examples
-#' splitAt(1:100,20)
-#' splitAt(as.matrix(1:100),20)
+#' splitAt(1:100, 20)
+#' splitAt(as.matrix(1:100), 20)
 #'
 splitAt <- function(x, pos) {
   unname(split(x, cumsum(seq_along(x) %in% pos)))

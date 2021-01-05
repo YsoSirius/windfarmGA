@@ -10,22 +10,21 @@
 #' @inheritParams genetic_algorithm
 #' @inheritParams fitness
 #' @param sel A matrix of an individual of the current population
-#'   (matrix)
 #' @param wnkl The angle from which wake influences are considered to be 
-#'   negligible (numeric)
+#'   negligible
 #' @param distanz The distance after which wake effects are considered
-#'   to be eliminated (numeric)
+#'   to be eliminated
 #' @param polygon1 The considered area as Simple Feature Polygon
-#' @param RotorR The desired rotor radius in meter (numeric)
+#' @param RotorR The desired rotor radius in meter
 #' @param dirSpeed The wind speed and direction data.frame
-#' @param plotit Logical value. If TRUE, the process will be plotted. 
-#'   Default is FALSE.
+#' @param plotit If \code{TRUE}, the process will be plotted. 
+#'   Default is \code{FALSE}
 #'
 #' @family Wind Energy Calculation Functions
 #' @return Returns a list of an individual of the current generation with
 #'   resulting wake effects, energy outputs, efficiency rates for every wind
-#'   direction. The length of the list will be the amount of incoming wind
-#'   directions.
+#'   direction. The length of the list corresponds to the number of different
+#'   wind directions.
 #'
 #' @examples \dontrun{
 #' ## Create a random Polygon

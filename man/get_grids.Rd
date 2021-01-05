@@ -7,7 +7,7 @@
 get_grids(trimtonOut, Grid)
 }
 \arguments{
-\item{trimtonOut}{Input matrix with binary values.}
+\item{trimtonOut}{Input matrix with binary values}
 
 \item{Grid}{Grid of the considered area}
 }
@@ -16,7 +16,7 @@ Returns a list of all individuals with X and Y coordinates and the
   grid cell ID.
 }
 \description{
-Get the grid IDs from the trimmed binary matrix, where the
+Retrieve the grid ID's from the binary matrix, where the
   binary code indicates which grid cells are used in the current wind farm
   constellation.
 }

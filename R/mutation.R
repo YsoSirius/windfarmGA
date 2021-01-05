@@ -1,13 +1,12 @@
 #' @title Mutation Method
 #' @name mutation
-#' @description  Mutate the genes of every chromosome or individual with low
-#'   probability.
+#' @description The function randomly mutates an individual's genetic code
 #'
 #' @export
 #'
-#' @param a The binary matrix of all individuals.
-#' @param p The mutation rate.
-#' @param seed Set a seed for comparability. Default is NULL
+#' @param a The binary matrix of all individuals
+#' @param p The mutation rate
+#' @param seed Set a seed for comparability. Default is \code{NULL}
 #'
 #' @family Genetic Algorithm Functions
 #' @return Returns a binary matrix with mutated genes.

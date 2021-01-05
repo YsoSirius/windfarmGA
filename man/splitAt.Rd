@@ -2,27 +2,26 @@
 % Please edit documentation in R/crossover.R
 \name{splitAt}
 \alias{splitAt}
-\title{Divide matrices or integer at certain locations}
+\title{Split matrices or numeric vectors at specific indices}
 \usage{
 splitAt(x, pos)
 }
 \arguments{
-\item{x}{A numeric variable representing the binary genetic code of an
-individual (numeric)}
+\item{x}{A numeric variable that represents an individual's 
+binary genetic code}
 
-\item{pos}{A numeric value which shows at which position the
-genetic code is cut (numeric)}
+\item{pos}{A numeric value that indicates where to split the genetic code}
 }
 \value{
-Returns a list of the splitted genetic code.
+Returns a list of the split genetic code.
 }
 \description{
-Required function for the crossover method to
-split a genetic code at random intervals. See also \code{\link{crossover}}.
+The function is used by the crossover method to
+split a genetic code at certain intervals. See also \code{\link{crossover}}.
 }
 \examples{
-splitAt(1:100,20)
-splitAt(as.matrix(1:100),20)
+splitAt(1:100, 20)
+splitAt(as.matrix(1:100), 20)
 
 }
 \seealso{

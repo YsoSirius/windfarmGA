@@ -7,18 +7,17 @@
 mutation(a, p, seed = NULL)
 }
 \arguments{
-\item{a}{The binary matrix of all individuals.}
+\item{a}{The binary matrix of all individuals}
 
-\item{p}{The mutation rate.}
+\item{p}{The mutation rate}
 
-\item{seed}{Set a seed for comparability. Default is NULL}
+\item{seed}{Set a seed for comparability. Default is \code{NULL}}
 }
 \value{
 Returns a binary matrix with mutated genes.
 }
 \description{
-Mutate the genes of every chromosome or individual with low
-  probability.
+The function randomly mutates an individual's genetic code
 }
 \examples{
 ## Create 4 random individuals with binary values

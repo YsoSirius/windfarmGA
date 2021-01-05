@@ -12,7 +12,7 @@ get_dist_angles(t, o, wnkl, dist, polYgon, plotAngles = FALSE)
 \item{o}{A numeric value indicating the index of the current turbine}
 
 \item{wnkl}{The angle from which wake influences are considered to be 
-negligible (numeric)}
+negligible}
 
 \item{dist}{A numeric value indicating the distance, after which the wake
 effects are considered to be eliminated.}

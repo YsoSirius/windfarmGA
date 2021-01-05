@@ -1,9 +1,9 @@
 #' @title Evaluate the Individual Fitness values
 #' @name fitness
-#' @description The fitness values of the individuals in the current population
-#'   are calculated after having evaluated their energy outputs in
+#' @description The fitness of all individuals in the current population
+#'   is calculated after their energy output has been evaluated in
 #'   \code{\link{calculate_energy}}. This function reduces the resulting energy
-#'   outputs to a single fitness value for every individual.
+#'   outputs to a single fitness value for each individual.
 #'
 #' @export
 #'

@@ -10,7 +10,7 @@ turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE)
 \item{t}{A data.frame of the current individual with X and Y coordinates}
 
 \item{wnkl}{The angle from which wake influences are considered to be 
-negligible (numeric)}
+negligible}
 
 \item{dist}{A numeric value indicating the distance, after which the wake
 effects are considered to be eliminated.}

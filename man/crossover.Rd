@@ -7,28 +7,25 @@
 crossover(se6, u, uplimit, crossPart, verbose, seed)
 }
 \arguments{
-\item{se6}{The selected individuals. The output of \code{\link{selection}}
-(list)}
+\item{se6}{The selected individuals. The output of \code{\link{selection}}}
 
-\item{u}{The crossover point rate. (numeric)}
+\item{u}{The crossover point rate}
 
-\item{uplimit}{The upper limit of allowed permutations. The current algorithm
-has an upper bound of 300 permutations. (numeric)}
+\item{uplimit}{The upper limit of allowed permutations}
 
-\item{crossPart}{The crossover method. Either "EQU" or "RAN". (character)}
+\item{crossPart}{The crossover method. Either "EQU" or "RAN"}
 
-\item{verbose}{If TRUE, will print out further information.}
+\item{verbose}{If \code{TRUE}, will print out further information}
 
-\item{seed}{Set a seed for comparability. Default is NULL}
+\item{seed}{Set a seed for comparability. Default is \code{NULL}}
 }
 \value{
 Returns a binary coded matrix of all permutations and all grid cells,
-  0 indicates no turbine and 1 indicates a turbine in the grid cell. (matrix)
+  where 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 }
 \description{
-The crossover method of the genetic algorithm, which takes the
-  selected individuals after the \code{\link{selection}} function and
-  produces new offsprings through permutation.
+The crossover method creates new offspring with the selected 
+  individuals by permutating their genetic codes.
 }
 \examples{
 ## Create two random parents with an index and random binary values
