@@ -4,7 +4,7 @@
 \alias{hexa_area}
 \title{Polygon to Hexagonal Grid Tessellation}
 \usage{
-hexa_area(shape, size, plotGrid = FALSE)
+hexa_area(shape, size = 500, plotGrid = FALSE)
 }
 \arguments{
 \item{shape}{Simple Feature Polygon of the considered area}
