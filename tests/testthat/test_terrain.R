@@ -112,41 +112,36 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Plotting Terrain Effects #############
-  plres <- expect_warning(
-    plot_result(resultrect, sp_polygon,
+  plres <- plot_result(resultrect, sp_polygon,
                 topographie = TRUE,
                 plotEn = 1,
                 sourceCCLRoughness = sourceCCLRoughness, 
                 weibullsrc = list(a_raster * (gamma(1 + (1 / k_raster)))))
-    )
+    
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  plres <- expect_warning(
-    plot_result(resultrect, sp_polygon,
+  plres <- plot_result(resultrect, sp_polygon,
                 weibullsrc = list(k_raster, a_raster))
-    )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
   ## Weibull Single Raster for mean wind spead
   weibullraster <- a_raster * (gamma(1 + (1 / k_raster)))
-  plres <- expect_warning(
-    plot_result(resultrect, sp_polygon,
+  plres <- plot_result(resultrect, sp_polygon,
                 plotEn = 2,
                 weibullsrc = weibullraster)
-    )
+  
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
   if (length(list.files(pattern = "g100_06.tif")) != 0) {
     file.remove("g100_06.tif")
   }
-  plres <- expect_warning(
-    plot_result(resultrect,
+  plres <- plot_result(resultrect,
                 sp_polygon, 
                 topographie = TRUE,
-                plotEn = 1))
+                plotEn = 1)
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
@@ -158,8 +153,8 @@ test_that("Test Terrain and Weibull Effects", {
       c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
     crs = 3035
   ))
-  srtm <- expect_warning(elevatr::get_elev_raster(
-    locations = as(Polygon1, "Spatial"), z = 11))
+  srtm <- elevatr::get_elev_raster(
+    locations = as(Polygon1, "Spatial"), z = 11)
   srtm_crop <- raster::crop(srtm, Polygon1)
   
   data.in <- data.frame(ws = 12, wd = 0)
@@ -181,7 +176,7 @@ test_that("Test Terrain and Weibull Effects", {
     roughness = roughrast
   )
   
-  ccl <- expect_warning(raster::raster("g100_06.tif"))
+  ccl <- raster::raster("g100_06.tif")
   ccl <- crop(ccl, Polygon1)
   ccl <- suppressWarnings(mask(ccl, Polygon1))
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
