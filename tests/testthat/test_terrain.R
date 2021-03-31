@@ -12,7 +12,7 @@ quiet <- function(x) {
 
 test_that("Test Terrain and Weibull Effects", {
   skip_on_cran()
-  # skip_if(Sys.info()["machine"] != "x86-64")
+  skip_if(Sys.info()["machine"] != "x86-64")
   
   ## Test Terrain Model ###################
   Projection <- 3035
@@ -65,7 +65,7 @@ test_that("Test Terrain and Weibull Effects", {
   maxval <- max(values(DEMcrop))
   a_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+1)
   k_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+6)
-  resultrect <- quiet(expect_warning(
+  resultrect <- quiet(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
                       vdirspe = data.in,
@@ -74,7 +74,7 @@ test_that("Test Terrain and Weibull Effects", {
                       verbose = TRUE, 
                       weibull = TRUE,
                       weibullsrc = list(k_raster, a_raster))
-  ))
+  )
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
