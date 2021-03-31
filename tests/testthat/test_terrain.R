@@ -12,7 +12,7 @@ quiet <- function(x) {
 
 test_that("Test Terrain and Weibull Effects", {
   skip_on_cran()
-  skip_if(Sys.info()["machine"] != "x86-64")
+  # skip_if(Sys.info()["machine"] != "x86-64")
   
   ## Test Terrain Model ###################
   Projection <- 3035
