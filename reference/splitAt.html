@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Divide matrices or integer at certain locations — splitAt • windfarmGA</title>
+<title>Split matrices or numeric vectors at specific indices — splitAt • windfarmGA</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,11 @@
 
 
 
-<meta property="og:title" content="Divide matrices or integer at certain locations — splitAt" />
-<meta property="og:description" content="Required function for the crossover method to
-split a genetic code at random intervals. See also crossover." />
+<meta property="og:title" content="Split matrices or numeric vectors at specific indices — splitAt" />
+<meta property="og:description" content="The function is used by the crossover method to
+split a genetic code at certain intervals. See also crossover." />
+
+
 
 
 
@@ -57,9 +59,18 @@ split a genetic code at random intervals. See also crossover." />
 
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -81,9 +92,6 @@ split a genetic code at random intervals. See also crossover." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -109,14 +117,14 @@ split a genetic code at random intervals. See also crossover." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Divide matrices or integer at certain locations</h1>
+    <h1>Split matrices or numeric vectors at specific indices</h1>
     <small class="dont-index">Source: <a href='https://github.com/YsoSirius/windfarmGA/blob/master/R/crossover.R'><code>R/crossover.R</code></a></small>
     <div class="hidden name"><code>splitAt.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Required function for the crossover method to
-split a genetic code at random intervals. See also <code><a href='crossover.html'>crossover</a></code>.</p>
+    <p>The function is used by the crossover method to
+split a genetic code at certain intervals. See also <code><a href='crossover.html'>crossover</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>splitAt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>pos</span><span class='op'>)</span></pre>
@@ -126,19 +134,18 @@ split a genetic code at random intervals. See also <code><a href='crossover.html
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A numeric variable representing the binary genetic code of an
-individual (numeric)</p></td>
+      <td><p>A numeric variable that represents an individual's 
+binary genetic code</p></td>
     </tr>
     <tr>
       <th>pos</th>
-      <td><p>A numeric value which shows at which position the
-genetic code is cut (numeric)</p></td>
+      <td><p>A numeric value that indicates where to split the genetic code</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a list of the splitted genetic code.</p>
+    <p>Returns a list of the split genetic code.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Helper Functions: 
@@ -155,7 +162,7 @@ genetic code is cut (numeric)</p></td>
 <code><a href='windata_format.html'>windata_format</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>splitAt</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>20</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'>splitAt</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>, <span class='fl'>20</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
 #&gt; 
@@ -165,7 +172,7 @@ genetic code is cut (numeric)</p></td>
 #&gt; [39]  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76
 #&gt; [58]  77  78  79  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95
 #&gt; [77]  96  97  98  99 100
-#&gt; </div><div class='input'><span class='fu'>splitAt</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span><span class='op'>)</span>,<span class='fl'>20</span><span class='op'>)</span>
+#&gt; </div><div class='input'><span class='fu'>splitAt</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span><span class='op'>)</span>, <span class='fl'>20</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
 #&gt; 
@@ -188,11 +195,11 @@ genetic code is cut (numeric)</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Sebastian Gatscha.</p>
+  <p><p>Developed by Sebastian Gatscha.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -200,6 +207,8 @@ genetic code is cut (numeric)</p></td>
 
   
 
+
+  
 
   </body>
 </html>

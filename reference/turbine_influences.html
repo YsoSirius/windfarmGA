@@ -46,6 +46,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -57,9 +59,18 @@
 
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -81,9 +92,6 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -130,13 +138,13 @@
     </tr>
     <tr>
       <th>wnkl</th>
-      <td><p>A numeric value indicating the angle, at which no wake influences
-are considered. Default is 20 degrees.</p></td>
+      <td><p>The angle from which wake influences are considered to be 
+negligible</p></td>
     </tr>
     <tr>
       <th>dist</th>
       <td><p>A numeric value indicating the distance, after which the wake
-effects are considered to be eliminated. Default is 100km.</p></td>
+effects are considered to be eliminated.</p></td>
     </tr>
     <tr>
       <th>polYgon</th>
@@ -149,7 +157,7 @@ effects are considered to be eliminated. Default is 100km.</p></td>
     <tr>
       <th>plotAngles</th>
       <td><p>A logical variable, which is used to plot the distances and
-angles. Default is FALSE.</p></td>
+angles. Default is <code>FALSE</code></p></td>
     </tr>
     </table>
 
@@ -167,8 +175,8 @@ angles. Default is FALSE.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Exemplary input Polygon with 2km x 2km:</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://rspatial.org/raster'>raster</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://r-spatial.github.io/sf/'>sf</a></span><span class='op'>)</span>
+
 <span class='va'>Polygon1</span> <span class='op'>&lt;-</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/sfc.html'>st_sfc</a></span><span class='op'>(</span>
   <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st.html'>st_polygon</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>
     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>2000</span>, <span class='fl'>2000</span>, <span class='fl'>0</span><span class='op'>)</span>,
@@ -195,11 +203,11 @@ angles. Default is FALSE.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Sebastian Gatscha.</p>
+  <p><p>Developed by Sebastian Gatscha.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -207,6 +215,8 @@ angles. Default is FALSE.</p></td>
 
   
 
+
+  
 
   </body>
 </html>

@@ -40,9 +40,10 @@
 
 
 <meta property="og:title" content="Crossover Method — crossover" />
-<meta property="og:description" content="The crossover method of the genetic algorithm, which takes the
-  selected individuals after the selection function and
-  produces new offsprings through permutation." />
+<meta property="og:description" content="The crossover method creates new offspring with the selected 
+  individuals by permutating their genetic codes." />
+
+
 
 
 
@@ -58,9 +59,18 @@
 
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -82,9 +92,6 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -116,9 +123,8 @@
     </div>
 
     <div class="ref-description">
-    <p>The crossover method of the genetic algorithm, which takes the
-  selected individuals after the <code><a href='selection.html'>selection</a></code> function and
-  produces new offsprings through permutation.</p>
+    <p>The crossover method creates new offspring with the selected 
+  individuals by permutating their genetic codes.</p>
     </div>
 
     <pre class="usage"><span class='fu'>crossover</span><span class='op'>(</span><span class='va'>se6</span>, <span class='va'>u</span>, <span class='va'>uplimit</span>, <span class='va'>crossPart</span>, <span class='va'>verbose</span>, <span class='va'>seed</span><span class='op'>)</span></pre>
@@ -128,36 +134,34 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>se6</th>
-      <td><p>The selected individuals. The output of <code><a href='selection.html'>selection</a></code>
-(list)</p></td>
+      <td><p>The selected individuals. The output of <code><a href='selection.html'>selection</a></code></p></td>
     </tr>
     <tr>
       <th>u</th>
-      <td><p>The crossover point rate. (numeric)</p></td>
+      <td><p>The crossover point rate</p></td>
     </tr>
     <tr>
       <th>uplimit</th>
-      <td><p>The upper limit of allowed permutations. The current algorithm
-has an upper bound of 300 permutations. (numeric)</p></td>
+      <td><p>The upper limit of allowed permutations</p></td>
     </tr>
     <tr>
       <th>crossPart</th>
-      <td><p>The crossover method. Either "EQU" or "RAN". (character)</p></td>
+      <td><p>The crossover method. Either "EQU" or "RAN"</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>If TRUE, will print out further information.</p></td>
+      <td><p>If <code>TRUE</code>, will print out further information</p></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>Set a seed for comparability. Default is NULL</p></td>
+      <td><p>Set a seed for comparability. Default is <code>NULL</code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns a binary coded matrix of all permutations and all grid cells,
-  0 indicates no turbine and 1 indicates a turbine in the grid cell. (matrix)</p>
+  where 0 indicates no turbine and 1 indicates a turbine in the grid cell.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Genetic Algorithm Functions: 
@@ -305,11 +309,11 @@ has an upper bound of 300 permutations. (numeric)</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Sebastian Gatscha.</p>
+  <p><p>Developed by Sebastian Gatscha.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -317,6 +321,8 @@ has an upper bound of 300 permutations. (numeric)</p></td>
 
   
 
+
+  
 
   </body>
 </html>

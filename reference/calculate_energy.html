@@ -48,6 +48,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -59,9 +61,18 @@
 
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -83,9 +94,6 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -145,34 +153,32 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sel</th>
-      <td><p>A matrix of an individual of the current population
-(matrix)</p></td>
+      <td><p>A matrix of an individual of the current population</p></td>
     </tr>
     <tr>
       <th>referenceHeight</th>
       <td><p>The height at which the incoming wind speeds were
-measured (numeric)</p></td>
+measured. Default is <code>RotorHeight</code></p></td>
     </tr>
     <tr>
       <th>RotorHeight</th>
-      <td><p>The desired height of the turbines (numeric)</p></td>
+      <td><p>The height of the turbine hub</p></td>
     </tr>
     <tr>
       <th>SurfaceRoughness</th>
-      <td><p>A surface roughness length of the considered area in
-m. If the terrain effect model is activated, a surface roughness will be
-calculated for every grid cell with the elevation and land cover
-information (numeric)</p></td>
+      <td><p>A surface roughness length in meters. 
+With the terrain effect model, a surface roughness is calculated for every 
+grid cell using the elevation and land cover data. Default is <code>0.3</code></p></td>
     </tr>
     <tr>
       <th>wnkl</th>
       <td><p>The angle from which wake influences are considered to be 
-negligible (numeric)</p></td>
+negligible</p></td>
     </tr>
     <tr>
       <th>distanz</th>
       <td><p>The distance after which wake effects are considered
-to be eliminated (numeric)</p></td>
+to be eliminated</p></td>
     </tr>
     <tr>
       <th>polygon1</th>
@@ -180,7 +186,7 @@ to be eliminated (numeric)</p></td>
     </tr>
     <tr>
       <th>RotorR</th>
-      <td><p>The desired rotor radius in meter (numeric)</p></td>
+      <td><p>The desired rotor radius in meter</p></td>
     </tr>
     <tr>
       <th>dirSpeed</th>
@@ -193,23 +199,27 @@ and 3) a terrain raster. Calculated in <code><a href='genetic_algorithm.html'>ge
     </tr>
     <tr>
       <th>topograp</th>
-      <td><p>Logical value that indicates whether the terrain effect model
-is activated (TRUE) or deactivated (FALSE)</p></td>
+      <td><p>Boolean value, which indicates if the terrain effect model
+should be enabled or not. Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>cclRaster</th>
-      <td><p>A Corine Land Cover raster that has to be downloaded
-previously. See also the details at <code><a href='windfarmGA.html'>windfarmGA</a></code> The raster
-will only be used when the terrain effect model is activated. (raster)</p></td>
+      <td><p>A Corine Land Cover raster, that has to be adapted
+previously by hand with the surface roughness length for every land cover
+type. Is only used, when the terrain effect model is activated.</p></td>
     </tr>
     <tr>
       <th>weibull</th>
-      <td><p>A raster representing the estimated mean wind speeds</p></td>
+      <td><p>A boolean value that specifies whether to take Weibull
+parameters into account. If <code>TRUE</code>, the wind speed values 
+of <code>vdirspe</code> are ignored. The algorithm will calculate the mean
+wind speed for every wind turbine according to the Weibull parameters.
+Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>plotit</th>
-      <td><p>Logical value. If TRUE, the process will be plotted. 
-Default is FALSE.</p></td>
+      <td><p>If <code>TRUE</code>, the process will be plotted. 
+Default is <code>FALSE</code></p></td>
     </tr>
     </table>
 
@@ -217,8 +227,8 @@ Default is FALSE.</p></td>
 
     <p>Returns a list of an individual of the current generation with
   resulting wake effects, energy outputs, efficiency rates for every wind
-  direction. The length of the list will be the amount of incoming wind
-  directions.</p>
+  direction. The length of the list corresponds to the number of different
+  wind directions.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Wind Energy Calculation Functions: 
@@ -297,11 +307,11 @@ Default is FALSE.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Sebastian Gatscha.</p>
+  <p><p>Developed by Sebastian Gatscha.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -309,6 +319,8 @@ Default is FALSE.</p></td>
 
   
 
+
+  
 
   </body>
 </html>

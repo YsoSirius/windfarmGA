@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -39,9 +41,6 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="articles/index.html">Articles</a>
 </li>
 <li>
   <a href="news/index.html">Changelog</a>
@@ -75,7 +74,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>Genetic algorithm to optimize the layout of windfarms. The package is hosted on <a href="https://CRAN.R-project.org/package=windfarmGA">CRAN</a></p>
+<p>Genetic algorithm to optimize the layout of windfarms. The package is hosted on <a href="https://CRAN.R-project.org/package=windfarmGA" class="external-link">CRAN</a></p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -91,7 +90,7 @@
 <p>The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction. It can include a terrain effect model, which downloads an ‘SRTM’ elevation model and a ‘Corine Land Cover’ raster automatically. The elevation model is used to find mountains and valleys and to adjust the wind speeds accordingly by ‘wind multipliers’ and to determine the air densities at rotor heights. The land cover raster with an additional elevation roughness value is used to re-evaluate the surface roughness and to individually determine the wake-decay constant for each turbine.</p>
 <p>To start an optimization, either the function <code>windfarmGA</code> or <code>genetic_algorithm</code> can be used. The function <code>windfarmGA</code> checks the user inputs interactively and then runs the function <code>genetic_algorithm</code>. If the input parameters are already known, an optimization can be run directly via <code>genetic_algorithm</code>.</p>
 <div>
-<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;">
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;"></p>
 </div>
 <p>Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. Furthermore, rasters can be included, which contain information on the Weibull parameters. For Austria this data is already included in the package.</p>
 <div id="create-an-input-polygon" class="section level2">
@@ -139,15 +138,7 @@
 <div id="rectangular-grid-cells" class="section level3">
 <h3 class="hasAnchor">
 <a href="#rectangular-grid-cells" class="anchor"></a>Rectangular Grid Cells</h3>
-<p>Verify that the grid spacing is appropriate. Adapt the following input variables if necessary:</p>
-<ul>
-<li>
-<em>Rotor</em>: The rotor radius in meters.</li>
-<li>
-<em>fcrR</em>: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter.</li>
-<li>
-<em>prop</em>: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.</li>
-</ul>
+<p>Verify that the grid spacing is appropriate. Adapt the following input variables if necessary: - <em>Rotor</em>: The rotor radius in meters. - <em>fcrR</em>: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter. - <em>prop</em>: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.</p>
 <p><em>Make sure that the Polygon is projected in meters.</em></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">Rotor</span> <span class="op">&lt;</span>- 20</span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="ex">fcrR</span> <span class="op">&lt;</span>- 9</span>
@@ -168,17 +159,13 @@
 <div id="terrain-effect-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#terrain-effect-model" class="anchor"></a>Terrain Effect Model</h2>
-<p>If the input variable <strong>topograp</strong> for the functions <code>windfarmGA</code> or <code>genetic_algorithm</code> is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( <a href="http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1">Download a CLC raster</a> ).</p>
+<p>If the input variable <strong>topograp</strong> for the functions <code>windfarmGA</code> or <code>genetic_algorithm</code> is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( <a href="http://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-1" class="external-link">Download a CLC raster</a> ).</p>
 <p>If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable <strong>sourceCCL</strong>. The algorithm uses an adapted version of the Raster legend (“clc_legend.csv”), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named <strong>Rauhigkeit_z</strong> to the .csv file. Assign a surface roughness length to all land cover types. Be sure that all rows are filled with numeric values and save the .csv file with “;” delimiter. Assign the .csv file path to the input variable <strong>sourceCCLRoughness</strong>.</p>
 </div>
 <div id="start-an-optimization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#start-an-optimization" class="anchor"></a>Start an Optimization</h2>
-<p>An optimization run can be initiated with the following functions:</p>
-<ul>
-<li>genetic_algorithm</li>
-<li>windfarmGA</li>
-</ul>
+<p>An optimization run can be initiated with the following functions: - genetic_algorithm - windfarmGA</p>
 <div id="function-calls-for-windfarmga" class="section level3">
 <h3 class="hasAnchor">
 <a href="#function-calls-for-windfarmga" class="anchor"></a>Function calls for windfarmGA</h3>
@@ -266,13 +253,13 @@
 <span id="cb15-7"><a href="#cb15-7"></a> <span class="ex">-</span> plot_cloud(result, pl = TRUE)</span>
 <span id="cb15-8"><a href="#cb15-8"></a> <span class="ex">-</span> plot_heatmap(result = result, si = 5)</span>
 <span id="cb15-9"><a href="#cb15-9"></a> <span class="ex">-</span> plot_leaflet(result = result, Polygon1 = Polygon1, which = 1)</span></code></pre></div>
-<p>For further information, please check the package <a href="https://CRAN.R-project.org/package=windfarmGA/windfarmGA.pdf">description and examples</a>. A full documentation of the genetic algorithm is given in my <a href="https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf">master thesis</a>.</p>
+<p>For further information, please check the package <a href="https://CRAN.R-project.org/package=windfarmGA/windfarmGA.pdf" class="external-link">description and examples</a>. A full documentation of the genetic algorithm is given in my <a href="https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf" class="external-link">master thesis</a>.</p>
 </div>
 </div>
 <div id="shiny-windfarm-optimization" class="section level1">
 <h1 class="hasAnchor">
 <a href="#shiny-windfarm-optimization" class="anchor"></a>Shiny Windfarm Optimization</h1>
-<p>I also made a <a href="https://windfarmga.shinyapps.io/windga_shiny/">Shiny App</a> for the Genetic Algorithm. Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time.</p>
+<p>I also made a <a href="https://windfarmga.shinyapps.io/windga_shiny/" class="external-link">Shiny App</a> for the Genetic Algorithm. Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time.</p>
 </div>
 <div id="full-optimization-example" class="section level1">
 <h1 class="hasAnchor">
@@ -319,7 +306,7 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=windfarmGA">https://​cloud.r-project.org/​package=windfarmGA</a>
 </li>
@@ -329,43 +316,49 @@
 </li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
 <a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
+
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Sebastian Gatscha <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-pkg.org/pkg/windfarmGA"><img src="https://www.r-pkg.org/badges/version/windfarmGA"></a></li>
-<li><a href="https://cran.r-project.org/web/checks/check_results_windfarmGA.html"><img src="https://cranchecks.info/badges/worst/windfarmGA" alt="cran checks"></a></li>
-<li><a href="https://www.r-pkg.org/pkg/windfarmGA"><img src="https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen" alt="CRAN RStudio mirror downloads"></a></li>
-<li><a href="https://www.rpackages.io/package/windfarmGA"><img src="http://cranlogs.r-pkg.org/badges/grand-total/windfarmGA" alt="CRAN Downloads"></a></li>
-<li><a href="https://github.com/YsoSirius/windfarmGA/actions"><img src="https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#stable"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="lifecycle"></a></li>
-<li><a href="https://codecov.io/gh/YsoSirius/windfarmGA"><img src="https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://www.r-pkg.org/pkg/windfarmGA" class="external-link"><img src="https://www.r-pkg.org/badges/version/windfarmGA"></a></li>
+<li><a href="https://cran.r-project.org/web/checks/check_results_windfarmGA.html" class="external-link"><img src="https://cranchecks.info/badges/worst/windfarmGA" alt="cran checks"></a></li>
+<li><a href="https://www.r-pkg.org/pkg/windfarmGA" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen" alt="CRAN RStudio mirror downloads"></a></li>
+<li><a href="https://www.rpackages.io/package/windfarmGA" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/windfarmGA" alt="CRAN Downloads"></a></li>
+<li><a href="https://github.com/YsoSirius/windfarmGA/actions" class="external-link"><img src="https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="lifecycle"></a></li>
+<li><a href="https://codecov.io/gh/YsoSirius/windfarmGA" class="external-link"><img src="https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg" alt="codecov"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Sebastian Gatscha.</p>
+  <p></p>
+<p>Developed by Sebastian Gatscha.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -373,6 +366,8 @@
 
   
 
+
+  
 
   </body>
 </html>

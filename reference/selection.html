@@ -50,6 +50,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -61,9 +63,18 @@
 
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -85,9 +96,6 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -146,19 +154,19 @@
     </tr>
     <tr>
       <th>elitism</th>
-      <td><p>Boolean value which indicates whether elitism should be
-included or not.</p></td>
+      <td><p>Boolean value, which indicates whether elitism should be
+activated or not. Default is <code>TRUE</code></p></td>
     </tr>
     <tr>
       <th>nelit</th>
-      <td><p>If <code>elitism</code> is TRUE, then this input variable determines
-the amount of individuals in the elite group.</p></td>
+      <td><p>If <code>elitism</code> is TRUE, this input determines the amount 
+of individuals in the elite group. Default is 7</p></td>
     </tr>
     <tr>
       <th>selstate</th>
       <td><p>Determines which selection method is used, "FIX" selects a
 constant percentage and "VAR" selects a variable percentage, depending on
-the development of the fitness values.</p></td>
+the development of the fitness values. Default is "FIX"</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -202,7 +210,7 @@ the development of the fitness values.</p></td>
 <span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>ws<span class='op'>=</span><span class='fl'>12</span>,wd<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>wind</span>, probab <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
 <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fitness.html'>fitness</a></span><span class='op'>(</span>selection <span class='op'>=</span> <span class='va'>startsel</span>, referenceHeight <span class='op'>=</span> <span class='fl'>100</span>, RotorHeight<span class='op'>=</span><span class='fl'>100</span>,
-               SurfaceRoughness<span class='op'>=</span><span class='fl'>0.3</span>,Polygon <span class='op'>=</span> <span class='va'>Polygon1</span>, resol1 <span class='op'>=</span> <span class='fl'>200</span>,
+               SurfaceRoughness<span class='op'>=</span><span class='fl'>0.3</span>, Polygon <span class='op'>=</span> <span class='va'>Polygon1</span>, resol1 <span class='op'>=</span> <span class='fl'>200</span>,
                rot <span class='op'>=</span> <span class='fl'>20</span>, dirspeed <span class='op'>=</span> <span class='va'>wind</span>, 
                srtm_crop <span class='op'>=</span> <span class='st'>""</span>, topograp <span class='op'>=</span> <span class='cn'>FALSE</span>, cclRaster <span class='op'>=</span> <span class='st'>""</span><span class='op'>)</span>
 <span class='va'>allparks</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span><span class='op'>(</span><span class='st'>"rbind"</span>,<span class='va'>fit</span><span class='op'>)</span>;
@@ -226,11 +234,11 @@ the development of the fitness values.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Sebastian Gatscha.</p>
+  <p><p>Developed by Sebastian Gatscha.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -238,6 +246,8 @@ the development of the fitness values.</p></td>
 
   
 
+
+  
 
   </body>
 </html>

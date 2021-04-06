@@ -1,8 +1,8 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1.9000
-pkgdown_sha: 6094ac3dd80a1f3f1d4e2f47d0ed4716d51362b0
+pkgdown: 1.6.1.9001
+pkgdown_sha: 7a5834b0177a78acd65e168e55674104e0931d61
 articles: {}
-last_built: 2021-01-03T17:46Z
+last_built: 2021-04-06T17:30Z
 urls:
   reference: https://YsoSirius.github.io/windfarmGA/reference
   article: https://YsoSirius.github.io/windfarmGA/articles

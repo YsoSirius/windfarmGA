@@ -46,6 +46,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -57,9 +59,18 @@
 
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -81,9 +92,6 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -143,9 +151,9 @@ generation</p></td>
     </tr>
     <tr>
       <th>trimForce</th>
-      <td><p>A boolean value which determines which adjustment method
-should be used. TRUE uses a probabilistic approach and FALSE uses a random
-approach</p></td>
+      <td><p>If <code>TRUE</code> the algorithm will use a probabilistic 
+approach to correct the windfarms to the desired amount of turbines. 
+If <code>FALSE</code> the adjustment will be random. Default is <code>FALSE</code></p></td>
     </tr>
     <tr>
       <th>seed</th>
@@ -182,7 +190,7 @@ approach</p></td>
 <span class='co'>## Create a uniform and unidirectional wind data.frame and plots the</span>
 <span class='co'>## resulting wind rose</span>
 <span class='co'>## Uniform wind speed and single wind direction</span>
-<span class='va'>data.in</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>ws<span class='op'>=</span><span class='fl'>12</span>,wd<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>data.in</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>ws<span class='op'>=</span><span class='fl'>12</span>, wd<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.</span>
 <span class='va'>Grid1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grid_area.html'>grid_area</a></span><span class='op'>(</span>shape <span class='op'>=</span> <span class='va'>Polygon1</span>, size <span class='op'>=</span> <span class='fl'>200</span>, prop <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>;
@@ -192,10 +200,10 @@ approach</p></td>
 <span class='va'>startsel</span> <span class='op'>&lt;-</span> <span class='fu'><a href='init_population.html'>init_population</a></span><span class='op'>(</span><span class='va'>Grid</span>,<span class='fl'>10</span>,<span class='fl'>20</span><span class='op'>)</span>;
 <span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/raster/man/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>ws<span class='op'>=</span><span class='fl'>12</span>,wd<span class='op'>=</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>wind</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>wind</span>, probab <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
-<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fitness.html'>fitness</a></span><span class='op'>(</span>selection <span class='op'>=</span> <span class='va'>startsel</span>,referenceHeight <span class='op'>=</span> <span class='fl'>100</span>, RotorHeight<span class='op'>=</span><span class='fl'>100</span>,
-              SurfaceRoughness<span class='op'>=</span><span class='fl'>0.3</span>,Polygon <span class='op'>=</span> <span class='va'>Polygon1</span>, resol1 <span class='op'>=</span> <span class='fl'>200</span>,rot<span class='op'>=</span><span class='fl'>20</span>, dirspeed <span class='op'>=</span> <span class='va'>wind</span>,
-              srtm_crop<span class='op'>=</span><span class='st'>""</span>,topograp<span class='op'>=</span><span class='cn'>FALSE</span>,cclRaster<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>
-<span class='va'>allparks</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span><span class='op'>(</span><span class='st'>"rbind"</span>,<span class='va'>fit</span><span class='op'>)</span>;
+<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='fitness.html'>fitness</a></span><span class='op'>(</span>selection <span class='op'>=</span> <span class='va'>startsel</span>, referenceHeight <span class='op'>=</span> <span class='fl'>100</span>, RotorHeight <span class='op'>=</span> <span class='fl'>100</span>,
+              SurfaceRoughness<span class='op'>=</span><span class='fl'>0.3</span>, Polygon <span class='op'>=</span> <span class='va'>Polygon1</span>, resol1 <span class='op'>=</span> <span class='fl'>200</span>, rot <span class='op'>=</span> <span class='fl'>20</span>, 
+              dirspeed <span class='op'>=</span> <span class='va'>wind</span>, srtm_crop<span class='op'>=</span><span class='st'>""</span>, topograp<span class='op'>=</span><span class='cn'>FALSE</span>, cclRaster<span class='op'>=</span><span class='st'>""</span><span class='op'>)</span>
+<span class='va'>allparks</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span><span class='op'>(</span><span class='st'>"rbind"</span>, <span class='va'>fit</span><span class='op'>)</span>;
 
 <span class='co'>## SELECTION</span>
 <span class='co'>## print the amount of Individuals selected.</span>
@@ -221,7 +229,7 @@ approach</p></td>
 <span class='co'>## After Crossover and Mutation, the amount of turbines in a windpark change and have to be</span>
 <span class='co'>## corrected to the required amount of turbines.</span>
 <span class='va'>mut1</span> <span class='op'>&lt;-</span> <span class='fu'>trimton</span><span class='op'>(</span>mut <span class='op'>=</span> <span class='va'>mut</span>, nturb <span class='op'>=</span> <span class='fl'>10</span>, allparks <span class='op'>=</span> <span class='va'>allparks</span>, nGrids <span class='op'>=</span> <span class='va'>AmountGrids</span>,
-                trimForce<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+                trimForce <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/pkg/raster/man/rowSums.html'>colSums</a></span><span class='op'>(</span><span class='va'>mut</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] 32 30 31 34 34 34 29 39 32 31 29 35 38 39 33 37 30 29 33 35 40 36 38 29 31
 #&gt; [26] 35 32 36 33 31 38 30 36 39 38 39 31 50 33 30 30 32 30 37 33 33 38 30 32 37
@@ -242,11 +250,11 @@ approach</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Sebastian Gatscha.</p>
+  <p><p>Developed by Sebastian Gatscha.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -254,6 +262,8 @@ approach</p></td>
 
   
 
+
+  
 
   </body>
 </html>
