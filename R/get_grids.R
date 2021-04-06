@@ -1,12 +1,12 @@
 #' @title Get the Grid-IDs from binary matrix
 #' @name get_grids
-#' @description  Get the grid IDs from the trimmed binary matrix, where the
+#' @description Retrieve the grid ID's from the binary matrix, where the
 #'   binary code indicates which grid cells are used in the current wind farm
 #'   constellation.
 #'
 #' @export
 #'
-#' @param trimtonOut Input matrix with binary values.
+#' @param trimtonOut Input matrix with binary values
 #' @param Grid Grid of the considered area
 #'
 #' @family Helper Functions
@@ -66,7 +66,7 @@
 #' head(fit)
 #'
 #'}
-get_grids          <- function(trimtonOut, Grid){
+get_grids <- function(trimtonOut, Grid) {
   len1 <- dim(trimtonOut)[2]
   childli <- childnew <- rectidli <- vector("list", len1)
   for (i in 1:len1) {

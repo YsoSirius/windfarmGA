@@ -13,15 +13,15 @@ selection(fit, Grid, teil, elitism, nelit, selstate, verbose)
 
 \item{teil}{A numeric value that determines the selection percentage}
 
-\item{elitism}{Boolean value which indicates whether elitism should be
-included or not.}
+\item{elitism}{Boolean value, which indicates whether elitism should be
+activated or not. Default is \code{TRUE}}
 
-\item{nelit}{If \code{elitism} is TRUE, then this input variable determines
-the amount of individuals in the elite group.}
+\item{nelit}{If \code{elitism} is TRUE, this input determines the amount 
+of individuals in the elite group. Default is 7}
 
 \item{selstate}{Determines which selection method is used, "FIX" selects a
 constant percentage and "VAR" selects a variable percentage, depending on
-the development of the fitness values.}
+the development of the fitness values. Default is "FIX"}
 
 \item{verbose}{If TRUE, will print out further information.}
 }
@@ -58,7 +58,7 @@ startsel <- init_population(Grid,10,20);
 wind <- as.data.frame(cbind(ws=12,wd=0))
 wind <- list(wind, probab = 100)
 fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
-               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,
+               SurfaceRoughness=0.3, Polygon = Polygon1, resol1 = 200,
                rot = 20, dirspeed = wind, 
                srtm_crop = "", topograp = FALSE, cclRaster = "")
 allparks <- do.call("rbind",fit);

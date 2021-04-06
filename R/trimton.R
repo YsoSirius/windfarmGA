@@ -5,14 +5,12 @@
 #'
 #' @export
 #'
+#' @inheritParams genetic_algorithm
 #' @param mut A binary matrix with the mutated individuals
 #' @param nturb A numeric value indicating the amount of required turbines
 #' @param allparks A data.frame consisting of all individuals of the current
 #'   generation
 #' @param nGrids A numeric value indicating the total amount of grid cells
-#' @param trimForce A boolean value which determines which adjustment method
-#'   should be used. TRUE uses a probabilistic approach and FALSE uses a random
-#'   approach
 #' @param seed Set a seed for comparability. Default is NULL
 #'
 #' @family Genetic Algorithm Functions
@@ -31,7 +29,7 @@
 #' ## Create a uniform and unidirectional wind data.frame and plots the
 #' ## resulting wind rose
 #' ## Uniform wind speed and single wind direction
-#' data.in <- as.data.frame(cbind(ws=12,wd=0))
+#' data.in <- as.data.frame(cbind(ws=12, wd=0))
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
 #' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1);
@@ -41,10 +39,10 @@
 #' startsel <- init_population(Grid,10,20);
 #' wind <- as.data.frame(cbind(ws=12,wd=0))
 #' wind <- list(wind, probab = 100)
-#' fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
-#'               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20, dirspeed = wind,
-#'               srtm_crop="",topograp=FALSE,cclRaster="")
-#' allparks <- do.call("rbind",fit);
+#' fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight = 100,
+#'               SurfaceRoughness=0.3, Polygon = Polygon1, resol1 = 200, rot = 20, 
+#'               dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="")
+#' allparks <- do.call("rbind", fit);
 #'
 #' ## SELECTION
 #' ## print the amount of Individuals selected.
@@ -70,12 +68,12 @@
 #' ## After Crossover and Mutation, the amount of turbines in a windpark change and have to be
 #' ## corrected to the required amount of turbines.
 #' mut1 <- trimton(mut = mut, nturb = 10, allparks = allparks, nGrids = AmountGrids,
-#'                 trimForce=FALSE)
+#'                 trimForce = FALSE)
 #' colSums(mut)
 #' colSums(mut1)
 #'
 #'}
-trimton           <- function(mut, nturb, allparks, nGrids, trimForce, seed){
+trimton <- function(mut, nturb, allparks, nGrids, trimForce, seed){
   if (missing(seed)) {seed <- NULL}
   k <- 0.5
   nGrids1 <- 1:nGrids

@@ -4,7 +4,7 @@
 \alias{hexa_area}
 \title{Polygon to Hexagonal Grid Tessellation}
 \usage{
-hexa_area(shape, size, plotGrid = FALSE)
+hexa_area(shape, size = 500, plotGrid = FALSE)
 }
 \arguments{
 \item{shape}{Simple Feature Polygon of the considered area}
@@ -15,8 +15,10 @@ hexa_area(shape, size, plotGrid = FALSE)
 plotted. Default is \code{FALSE}}
 }
 \value{
-Returns a list with an indexed matrix of the point coordinates and a
-  Simple Feature Polygon of the hexagons
+Returns a list with 2 elements. List element 1 will have the grid
+  cell IDS, and the X and Y coordinates of the centers of each grid cell.
+  List element 2 is the grid as Simple Feature Polygons, which is used for 
+  plotting purposes.
 }
 \description{
 The function takes a Simple Feature Polygon and a size argument 

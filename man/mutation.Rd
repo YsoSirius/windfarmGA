@@ -7,36 +7,35 @@
 mutation(a, p, seed = NULL)
 }
 \arguments{
-\item{a}{The binary matrix of all individuals.}
+\item{a}{The binary matrix of all individuals}
 
-\item{p}{The mutation rate.}
+\item{p}{The mutation rate}
 
-\item{seed}{Set a seed for comparability. Default is NULL}
+\item{seed}{Set a seed for comparability. Default is \code{NULL}}
 }
 \value{
 Returns a binary matrix with mutated genes.
 }
 \description{
-Mutate the genes of every chromosome or individual with low
-  probability.
+The function randomly mutates an individual's genetic code
 }
 \examples{
 ## Create 4 random individuals with binary values
-a <- cbind(bin=sample(c(0,1),20,replace=TRUE,prob = c(70,30)),
-        bin.1=sample(c(0,1),20,replace=TRUE,prob = c(30,70)),
-        bin.2=sample(c(0,1),20,replace=TRUE,prob = c(30,70)),
-        bin.3=sample(c(0,1),20,replace=TRUE,prob = c(30,70)))
+a <- cbind(bin0 = sample(c(0,1), 20, replace=TRUE, prob = c(70,30)),
+           bin1 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
+           bin2 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
+           bin3 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)))
 a
 
 ## Mutate the individuals with a low percentage
-aMut <- mutation(a,0.1, NULL)
+aMut <- mutation(a, 0.1, NULL)
 ## Check which values are not like the originals
-a==aMut
+a == aMut
 
 ## Mutate the individuals with a high percentage
-aMut <- mutation(a,0.4, NULL)
+aMut <- mutation(a, 0.4, NULL)
 ## Check which values are not like the originals
-a==aMut
+a == aMut
 
 }
 \seealso{

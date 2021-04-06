@@ -98,20 +98,15 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 
 
 #' @title Polygon to Hexagonal Grid Tessellation
-#'
 #' @name hexa_area
-#'
 #' @description The function takes a Simple Feature Polygon and a size argument 
 #'   and creates a list with an indexed matrix with coordinates and a Simple Feature
 #'   object, that consists of hexagonal grids.
 #'
 #' @export
-#'
 #' @inheritParams grid_area
-#'
 #' @family Helper Functions
-#' @return Returns a list with an indexed matrix of the point coordinates and a
-#'   Simple Feature Polygon of the hexagons
+#' @inherit grid_area return
 #'   
 #' @examples
 #' library(sf)
@@ -124,7 +119,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 #' ))
 #' HexGrid <- hexa_area(Poly, 100, TRUE)
 #'
-hexa_area <- function(shape, size, plotGrid = FALSE) {
+hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
   grid_polys <- sf::st_make_grid(shape, cellsize = size,
                                  what = "polygons", square = FALSE)
   grid_intersect <- sf::st_intersection(st_geometry(shape), grid_polys)
@@ -164,4 +159,3 @@ hexa_area <- function(shape, size, plotGrid = FALSE) {
   ## Return Grid Cell Matrix and Grid as Simple Feature Polygons
   invisible(list(centpo, grid_filtered))
 }
-

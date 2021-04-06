@@ -7,38 +7,24 @@
 #'
 #' @export
 #'
+#' @inheritParams genetic_algorithm
+#' @inheritParams fitness
 #' @param sel A matrix of an individual of the current population
-#'   (matrix)
-#' @param referenceHeight The height at which the incoming wind speeds were
-#'   measured (numeric)
-#' @param RotorHeight The desired height of the turbines (numeric)
-#' @param SurfaceRoughness A surface roughness length of the considered area in
-#'   m. If the terrain effect model is activated, a surface roughness will be
-#'   calculated for every grid cell with the elevation and land cover
-#'   information (numeric)
 #' @param wnkl The angle from which wake influences are considered to be 
-#'   negligible (numeric)
+#'   negligible
 #' @param distanz The distance after which wake effects are considered
-#'   to be eliminated (numeric)
+#'   to be eliminated
 #' @param polygon1 The considered area as Simple Feature Polygon
-#' @param RotorR The desired rotor radius in meter (numeric)
+#' @param RotorR The desired rotor radius in meter
 #' @param dirSpeed The wind speed and direction data.frame
-#' @param topograp Logical value that indicates whether the terrain effect model
-#'   is activated (TRUE) or deactivated (FALSE)
-#' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
-#'   and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}
-#' @param cclRaster A Corine Land Cover raster that has to be downloaded
-#'   previously. See also the details at \code{\link{windfarmGA}} The raster
-#'   will only be used when the terrain effect model is activated. (raster)
-#' @param weibull A raster representing the estimated mean wind speeds
-#' @param plotit Logical value. If TRUE, the process will be plotted. 
-#'   Default is FALSE.
+#' @param plotit If \code{TRUE}, the process will be plotted. 
+#'   Default is \code{FALSE}
 #'
 #' @family Wind Energy Calculation Functions
 #' @return Returns a list of an individual of the current generation with
 #'   resulting wake effects, energy outputs, efficiency rates for every wind
-#'   direction. The length of the list will be the amount of incoming wind
-#'   directions.
+#'   direction. The length of the list corresponds to the number of different
+#'   wind directions.
 #'
 #' @examples \dontrun{
 #' ## Create a random Polygon
@@ -141,13 +127,13 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(turb_elev, 0),
                         cex = 0.8)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
       plot(wind_multiplier, main = "Wind Speed Multipliers")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(windpo, 3),
                         cex = 0.8)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
     }
 
     ## Get Air Density and Pressure from Height Values
@@ -160,13 +146,13 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = rep(air_rh, nrow(xy_individual)), cex = 0.8)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
       raster::plot(srtm_crop[[1]], main = "Corrected Air Density",
                    col = topo.colors(10))
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(air_dt[, "rh"], 2), cex = 0.8)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
     }
 
     ## Corine Land Cover Surface Roughness values
@@ -198,17 +184,17 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(land_rough, 2), cex = cexa)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
       raster::plot(x = terrain_rough_ras, main = "Elevation Roughness Indicator")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(1 + (terrain_rough_vals / maxrasres), 2), cex = cexa)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
       plot(modified_rough, main = "Modified Surface Roughness")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(SurfaceRoughness, 2), cex = cexa)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
     }
 
     ## New Wake Decay Constant calculated with new surface roughness values
@@ -221,7 +207,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(k, 3), cex = cexa)
-      plot(polygon1, add = TRUE)
+      plot(st_geometry(polygon1), add = TRUE)
     }
   }
 
@@ -269,7 +255,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       ## Plot turbine locations with angle 0 and open a
       ## second frame for rotated turbine locations
       par(mfrow = c(1, 2))
-      plot(polygon1, main = "Shape at angle 0")
+      plot(st_geometry(polygon1), main = "Shape at angle 0")
       points(xy_individual[, 1], xy_individual[, 2], pch = 20)
       textxy(xy_individual[, 1], xy_individual[, 2],
              labs = dimnames(xy_individual)[[1]], cex = 0.8)
@@ -281,26 +267,26 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       })
       poly3 <- sf::st_as_sf(sf::st_sfc(
         sf::st_polygon(cordslist), crs = st_crs(polygon1)))
-      plot(poly3, main = c("Shape at angle:", (-1 * angle)))
+      plot(st_geometry(poly3), main = c("Shape at angle:", round(-1 * angle, 2)))
       mtext(paste("Direction: ", index, "\nfrom total: ",
                   nrow(dirSpeed)), side = 1)
     }
 
     ## Rotate Coordinates by the incoming wind direction
-    xy_individual <- rotate_CPP(xy_individual[, 1], xy_individual[, 2],
+    xy_individual_rot <- rotate_CPP(xy_individual[, 1], xy_individual[, 2],
                                 pcent[1], pcent[2], angle)
     if (plotit) {
       ## Plot the rotated turbines in red
-      points(xy_individual, col = "red", pch = 20)
+      points(xy_individual_rot[, 1], xy_individual_rot[, 2], col = "red", pch = 20)
     }
 
     ## Bind Wind Data and X/Y Coords together
-    dat_xyspeed <- cbind(point_wind, xy_individual)
+    dat_xyspeed <- cbind(point_wind, xy_individual_rot)
     colnames(dat_xyspeed) <- c("Windmittel", "X", "Y")
 
     ## Get the influecing points given with incoming wind direction angle
     ## and reduce then to data frame
-    tmp <- turbine_influences(t = xy_individual, wnkl = wnkl, dist = distanz,
+    tmp <- turbine_influences(t = xy_individual_rot, wnkl = wnkl, dist = distanz,
                               polYgon = polygon1, dirct = angle)
     df_all <- do.call("rbind", tmp)
 

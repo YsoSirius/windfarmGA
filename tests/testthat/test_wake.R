@@ -1,7 +1,6 @@
 context("Test Wake Functions")
 library(sf)
 library(raster)
-# devtools::load_all()
 
 test_that("Test Wake Functions", {
   ## Input Data ---------------------
@@ -13,8 +12,7 @@ test_that("Test Wake Functions", {
     crs = 3035
   ))
   wnkl <- 20; dist <- 100000; dirct <- 0
-  t <- as.matrix(cbind(x = runif(10,0,raster::extent(polYgon)[2]),
-                       y = runif(10,0,raster::extent(polYgon)[4])))
+  t <- st_coordinates(st_sample(polYgon, 10))
   
   ## Test get_dist_angles Function --------------
   ###########################################
@@ -23,8 +21,7 @@ test_that("Test Wake Functions", {
   ## Evaluate and plot for every turbine all other potentially influencing turbines
   potInfTur <- list()
   for (i in 1:(length(t[,1]))) {
-    potInfTur[[i]] <- get_dist_angles(t = t, o = i, wkl = wnkl,
-                                    distanz = distanz, polYgon = polYgon, plotAngles = FALSE)
+    potInfTur[[i]] <- get_dist_angles(t, i, wnkl, distanz, polYgon)
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
   dr <- do.call("rbind", potInfTur)
@@ -37,9 +34,9 @@ test_that("Test Wake Functions", {
   ## With Plotting
   potInfTur_pl <- list()
   for (i in 1:(length(t[,1]))) {
-    potInfTur_pl[[i]] <- get_dist_angles(t = t, o = i, wkl = wnkl,
-                                    distanz = distanz, polYgon = polYgon, 
-                                    plotAngles = TRUE)
+    potInfTur_pl[[i]] <- get_dist_angles(t = t, o = i, wnkl = wnkl,
+                                         dist = distanz, polYgon = polYgon,
+                                         plotAngles = TRUE)
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
   expect_true(identical(potInfTur, potInfTur_pl))
@@ -64,8 +61,7 @@ test_that("Test Wake Functions", {
   
   ## Bigger Angle
   wnkl <- 50
-  t <- as.matrix(cbind(x = runif(10, 0, raster::extent(polYgon)[2]),
-                       y = runif(10, 0, raster::extent(polYgon)[4])))
+  t <- st_coordinates(st_sample(polYgon, 10))
   resInfluPoiWin <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoiWin), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoiWin, is.na))))
@@ -76,8 +72,7 @@ test_that("Test Wake Functions", {
   rm(df1, resInfluPoi)
   
   ## More Points and bigger Angle
-  t <- as.matrix(cbind(x = runif(20, 0, raster::extent(polYgon)[2]),
-                       y = runif(20, 0, raster::extent(polYgon)[4])))
+  t <- st_coordinates(st_sample(polYgon, 20))
   resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoi), "List of 20")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))

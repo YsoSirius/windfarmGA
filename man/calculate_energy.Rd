@@ -22,51 +22,53 @@ calculate_energy(
 )
 }
 \arguments{
-\item{sel}{A matrix of an individual of the current population
-(matrix)}
+\item{sel}{A matrix of an individual of the current population}
 
 \item{referenceHeight}{The height at which the incoming wind speeds were
-measured (numeric)}
+measured. Default is \code{RotorHeight}}
 
-\item{RotorHeight}{The desired height of the turbines (numeric)}
+\item{RotorHeight}{The height of the turbine hub}
 
-\item{SurfaceRoughness}{A surface roughness length of the considered area in
-m. If the terrain effect model is activated, a surface roughness will be
-calculated for every grid cell with the elevation and land cover
-information (numeric)}
+\item{SurfaceRoughness}{A surface roughness length in meters. 
+With the terrain effect model, a surface roughness is calculated for every 
+grid cell using the elevation and land cover data. Default is \code{0.3}}
 
 \item{wnkl}{The angle from which wake influences are considered to be 
-negligible (numeric)}
+negligible}
 
 \item{distanz}{The distance after which wake effects are considered
-to be eliminated (numeric)}
+to be eliminated}
 
 \item{polygon1}{The considered area as Simple Feature Polygon}
 
-\item{RotorR}{The desired rotor radius in meter (numeric)}
+\item{RotorR}{The desired rotor radius in meter}
 
 \item{dirSpeed}{The wind speed and direction data.frame}
 
 \item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
 and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}}
 
-\item{topograp}{Logical value that indicates whether the terrain effect model
-is activated (TRUE) or deactivated (FALSE)}
+\item{topograp}{Boolean value, which indicates if the terrain effect model
+should be enabled or not. Default is \code{FALSE}}
 
-\item{cclRaster}{A Corine Land Cover raster that has to be downloaded
-previously. See also the details at \code{\link{windfarmGA}} The raster
-will only be used when the terrain effect model is activated. (raster)}
+\item{cclRaster}{A Corine Land Cover raster, that has to be adapted
+previously by hand with the surface roughness length for every land cover
+type. Is only used, when the terrain effect model is activated.}
 
-\item{weibull}{A raster representing the estimated mean wind speeds}
+\item{weibull}{A boolean value that specifies whether to take Weibull
+parameters into account. If \code{TRUE}, the wind speed values 
+of \code{vdirspe} are ignored. The algorithm will calculate the mean
+wind speed for every wind turbine according to the Weibull parameters.
+Default is \code{FALSE}}
 
-\item{plotit}{Logical value. If TRUE, the process will be plotted. 
-Default is FALSE.}
+\item{plotit}{If \code{TRUE}, the process will be plotted. 
+Default is \code{FALSE}}
 }
 \value{
 Returns a list of an individual of the current generation with
   resulting wake effects, energy outputs, efficiency rates for every wind
-  direction. The length of the list will be the amount of incoming wind
-  directions.
+  direction. The length of the list corresponds to the number of different
+  wind directions.
 }
 \description{
 Calculate the energy output and efficiency rates of an
