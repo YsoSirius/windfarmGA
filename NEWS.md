@@ -1,3 +1,6 @@
+# Updates 3.0.1
+- Fix `grid_area` and `hexa_area` functions.
+
 # Updates 3.0.0
 - The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
 - The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`.

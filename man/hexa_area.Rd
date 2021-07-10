@@ -2,7 +2,7 @@
 % Please edit documentation in R/grid_area.R
 \name{hexa_area}
 \alias{hexa_area}
-\title{Polygon to Hexagonal Grid Tessellation}
+\title{Polygon to Hexagonal Grids}
 \usage{
 hexa_area(shape, size = 500, plotGrid = FALSE)
 }
