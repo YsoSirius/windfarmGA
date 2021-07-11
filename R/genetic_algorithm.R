@@ -276,7 +276,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
     estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
     estim_speed_raster <- raster::projectRaster(estim_speed_raster,
-                                                crs = raster::crs(Polygon1))
+                                                crs = as.character(raster::crs(Polygon1)))
   } else {
     estim_speed_raster <- FALSE
   }
@@ -382,7 +382,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
     srtm_crop <- ""
     cclRaster <- ""
-  } else {
+  }
+  else {
     if (verbose) {
       cat("Topography and orography are taken into account.\n")
     }
@@ -424,8 +425,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       })
     srtm_crop <- raster::crop(srtm, Polygon_wgs84)
     srtm_crop <- raster::mask(srtm_crop, Polygon_wgs84)
-
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(Polygon1))
+    
+    srtm_crop <- raster::projectRaster(srtm_crop, crs = as.character(raster::crs(Polygon1)))
+    
     if (plotit) {
       raster::plot(srtm_crop, main = "Elevation Data")
       plot(Polygon1, add = TRUE, color = "transparent")

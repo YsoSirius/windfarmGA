@@ -1,5 +1,8 @@
 # Updates 3.0.1
-- Fix `grid_area` and `hexa_area` functions.
+- Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
+- Fix `getISO3` - only use `sf::st_is_valid` countries from `rworldmap::getMap`
+- `projectRaster` seems to require CRS as character and not as CRS object
+- supressWarnings for plot-tests
 
 # Updates 3.0.0
 - The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.

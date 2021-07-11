@@ -65,7 +65,7 @@ test_that("Test Terrain and Weibull Effects", {
   maxval <- max(values(DEMcrop))
   a_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+1)
   k_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+6)
-  resultrect <- quiet(
+  resultrect <- quiet(suppressWarnings(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
                       vdirspe = data.in,
@@ -74,13 +74,13 @@ test_that("Test Terrain and Weibull Effects", {
                       verbose = TRUE, 
                       weibull = TRUE,
                       weibullsrc = list(k_raster, a_raster))
-  )
+  ))
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Weibull-Raster from Package used
-  resultrect <- quiet(
+  resultrect <- quiet(suppressWarnings(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
                       vdirspe = data.in,
@@ -88,7 +88,7 @@ test_that("Test Terrain and Weibull Effects", {
                       RotorHeight = 100,
                       verbose = TRUE,
                       weibull=TRUE)
-  )
+  ))
   expect_true(nrow(resultrect) == 1)
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
@@ -96,7 +96,7 @@ test_that("Test Terrain and Weibull Effects", {
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(rep(" ", 20), collapse = "\n"), f)
-  resultrect <- quiet(
+  resultrect <- quiet(suppressWarnings(
     windfarmGA(Polygon1 = sp_polygon,
                selstate = "FIX", crossPart1 = "EQU",
                n = 12, iteration = 1,
@@ -104,7 +104,7 @@ test_that("Test Terrain and Weibull Effects", {
                Rotor = 30,
                RotorHeight = 100, verbose = TRUE,
                weibull = TRUE)
-    )
+    ))
   options(windfarmGA.connection = stdin())
   close(f)
   expect_true(nrow(resultrect) == 1)
@@ -112,36 +112,42 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
   ## Plotting Terrain Effects #############
-  plres <- plot_result(resultrect, sp_polygon,
+  plres <- suppressWarnings(
+    plot_result(resultrect, sp_polygon,
                 topographie = TRUE,
                 plotEn = 1,
                 sourceCCLRoughness = sourceCCLRoughness, 
                 weibullsrc = list(a_raster * (gamma(1 + (1 / k_raster)))))
-    
+  )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
-  plres <- plot_result(resultrect, sp_polygon,
+  plres <- suppressWarnings(
+    plot_result(resultrect, sp_polygon,
                 weibullsrc = list(k_raster, a_raster))
+  )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
   ## Weibull Single Raster for mean wind spead
   weibullraster <- a_raster * (gamma(1 + (1 / k_raster)))
-  plres <- plot_result(resultrect, sp_polygon,
+  plres <- suppressWarnings(
+    plot_result(resultrect, sp_polygon,
                 plotEn = 2,
                 weibullsrc = weibullraster)
-  
+  )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
   if (length(list.files(pattern = "g100_06.tif")) != 0) {
     file.remove("g100_06.tif")
   }
-  plres <- plot_result(resultrect,
+  plres <- suppressWarnings(
+    plot_result(resultrect,
                 sp_polygon, 
                 topographie = TRUE,
                 plotEn = 1)
+  )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
   
@@ -153,8 +159,10 @@ test_that("Test Terrain and Weibull Effects", {
       c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
     crs = 3035
   ))
-  srtm <- elevatr::get_elev_raster(
+  srtm <- suppressWarnings(
+    elevatr::get_elev_raster(
     locations = as(Polygon1, "Spatial"), z = 11)
+  )
   srtm_crop <- raster::crop(srtm, Polygon1)
   
   data.in <- data.frame(ws = 12, wd = 0)
@@ -176,7 +184,7 @@ test_that("Test Terrain and Weibull Effects", {
     roughness = roughrast
   )
   
-  ccl <- raster::raster("g100_06.tif")
+  ccl <- suppressWarnings(raster::raster("g100_06.tif"))
   ccl <- crop(ccl, Polygon1)
   ccl <- suppressWarnings(mask(ccl, Polygon1))
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")

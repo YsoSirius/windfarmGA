@@ -71,7 +71,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_false(any(unlist(sapply(resultSP, is.na))));
   
   ## SpatialPolygon Input #####################
-  PolygonSP <- expect_warning(as(Polygon1, "Spatial"))
+  PolygonSP <- as(Polygon1, "Spatial")
   resultSP <- genetic_algorithm(Polygon1 = PolygonSP,
                       n = 20, iteration = 1,
                       vdirspe = data.in,
