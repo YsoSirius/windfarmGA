@@ -26,7 +26,7 @@ test_that("Test Terrain and Weibull Effects", {
     crs = 3035
   ))
 
-  resultrect <- quiet(expect_warning(
+  resultrect <- quiet(suppressWarnings(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
                       vdirspe = data.in,
@@ -42,7 +42,7 @@ test_that("Test Terrain and Weibull Effects", {
   ## CCL-Raster should be in directory already
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
   sourceCCLRoughness <- paste0(path, "clc_legend.csv")
-  resultrect <- quiet(expect_warning(
+  resultrect <- quiet(suppressWarnings(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
                       vdirspe = data.in,
@@ -58,7 +58,7 @@ test_that("Test Terrain and Weibull Effects", {
   
   ## Weibull ################
   ## Weibull Params (FAKE).
-  DEM <- expect_warning(elevatr::get_elev_raster(verbose = FALSE,
+  DEM <- suppressWarnings(elevatr::get_elev_raster(verbose = FALSE,
     locations = as(st_transform(sp_polygon, 4326), "Spatial"), z = 11))
   sp_polygonproj <- st_transform(sp_polygon, st_crs(crs(DEM)))
   DEMcrop <- crop(DEM, sp_polygonproj)
