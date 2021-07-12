@@ -447,7 +447,7 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
     print(sort(names(countriesSP)))
     cat("Enter an ISO3 code: ")
     col <- readLines(n = 1, con = getOption("windfarmGA.connection"))
-    if (!col %in% sort(names(countriesSP))) {
+    if (length(col) == 0 && !col %in% sort(names(countriesSP))) {
       stop("Column not found")
     }
   }
@@ -463,7 +463,9 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
   pp <- st_transform(pp, crs = st_crs(countriesSP))
   
   # use 'st_intersection' to get the Polygons intersecting each point 
-  worldmap_values <- suppressWarnings(st_intersection(pp, st_as_sf(countriesSP)))
+  countries <- st_as_sf(countriesSP)
+  countries <- countries[st_is_valid(countries),]
+  worldmap_values <- suppressWarnings(st_intersection(pp, countries))
   
   # return desired column of each country
   worldmap_values[, col]

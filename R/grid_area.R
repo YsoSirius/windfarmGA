@@ -59,6 +59,8 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
   }
 
   grid_polys <- sf::st_make_grid(shape, cellsize = size, what = "polygons")
+  grid_intersect <- sf::st_intersects(grid_polys, shape, sparse = FALSE)
+  grid_polys <- grid_polys[grid_intersect]
   grid_intersect <- sf::st_intersection(st_geometry(shape), grid_polys)
   areadrygrid <- sf::st_area(grid_intersect)
   indx <- as.numeric((areadrygrid / size^2)) >= prop
@@ -69,7 +71,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
          "or define a projection in meters.")
   }
   
-  grid_filtered <- grid_intersect[indx, ]
+  grid_filtered <- grid_intersect[indx]
   grid_centr <- sf::st_centroid(grid_filtered)
   centpo <- st_coordinates(grid_centr)
   centpo <- cbind(ID = 1:nrow(centpo), "X" = centpo[, 1], "Y" = centpo[, 2])
@@ -88,7 +90,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
     plot(grid_filtered, col = "lightgreen", add=TRUE)
     graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
     graphics::text(centpo[, "X"], centpo[, "Y"],
-                   labels = centpo[, "ID"], pos = 2)
+                   labels = centpo[, "ID"], pos = 2, offset=0.2, cex=0.7)
   }
 
   ## Return Grid Cell Matrix and Grid as Simple Feature Polygons
@@ -97,7 +99,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 
 
 
-#' @title Polygon to Hexagonal Grid Tessellation
+#' @title Polygon to Hexagonal Grids
 #' @name hexa_area
 #' @description The function takes a Simple Feature Polygon and a size argument 
 #'   and creates a list with an indexed matrix with coordinates and a Simple Feature
@@ -122,6 +124,8 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
   grid_polys <- sf::st_make_grid(shape, cellsize = size,
                                  what = "polygons", square = FALSE)
+  grid_intersect <- sf::st_intersects(grid_polys, shape, sparse = FALSE)
+  grid_polys <- grid_polys[grid_intersect]
   grid_intersect <- sf::st_intersection(st_geometry(shape), grid_polys)
   
   areadrygrid <- sf::st_area(grid_intersect)
@@ -133,7 +137,7 @@ hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
          "or define a projection in meters.")
   }
   
-  grid_filtered <- grid_polys[indx, ]
+  grid_filtered <- grid_polys[indx]
   grid_centr <- sf::st_centroid(grid_filtered)
   
   centpo <- st_coordinates(grid_centr)
@@ -153,7 +157,7 @@ hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
     plot(grid_filtered, col = "lightgreen", add=TRUE)
     graphics::points(centpo[, "X"], centpo[, "Y"], col = "blue", pch = 20)
     graphics::text(centpo[, "X"], centpo[, "Y"],
-                   labels = centpo[, "ID"], pos = 2, cex=0.8)
+                   labels = centpo[, "ID"], pos = 2, offset=0.2, cex=0.7)
   }
   
   ## Return Grid Cell Matrix and Grid as Simple Feature Polygons

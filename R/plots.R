@@ -268,13 +268,13 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     col2res <- "transparent"
     alpha <- 0.9
     Erwartungswert <- raster::projectRaster(Erwartungswert, 
-                                            crs = raster::crs(Polygon1))
+                                            crs = as.character(raster::crs(Polygon1)))
   }
   
   ## Check & Make Grid #############
   if (isTRUE(Grid)) {
     cellsize <- as.numeric(result_inputs["Resolution",][[1]])
-    if (result_inputs["Grid Method",][[1]] == "Rectangular") {
+    if (toupper(result_inputs["Grid Method",][[1]]) == "RECTANGULAR") {
       Grid <- grid_area(Polygon1, size = cellsize,
                         prop = as.numeric(result_inputs["Percentage of Polygon",][[1]]))[[2]]
     } else {
@@ -293,7 +293,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
                      })
     srtm_crop <- raster::crop(srtm, Polygonwgs84)
     srtm_crop <- raster::mask(srtm_crop, Polygonwgs84)
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = raster::crs(Polygon1))
+    srtm_crop <- raster::projectRaster(srtm_crop, crs = as.character(raster::crs(Polygon1)))
     
     # Calculates Wind multiplier. Hills will get higher values, valleys will get lower values.
     orogr1 <- raster::calc(srtm_crop, function(x) {
@@ -1693,7 +1693,7 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
   
   Polygon1 <- isSpatial(Polygon1)
   cellsize <- as.numeric(result_inputs["Resolution",][[1]])
-  if (result_inputs["Grid Method",][[1]] == "Rectangular") {
+  if (toupper(result_inputs["Grid Method",][[1]]) == "RECTANGULAR") {
     Grid <- grid_area(Polygon1, size = cellsize,
                       prop = as.numeric(result_inputs["Percentage of Polygon",][[1]]))[[2]]
   } else {

@@ -91,7 +91,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                              plotit = FALSE) {
 
   ## Get default values ###################
-  cT <- getOption("windfarmGA.cT");   
+  cT <- getOption("windfarmGA.cT")
   air_rh <- getOption("windfarmGA.air_rh")
   k <- getOption("windfarmGA.k")
 
