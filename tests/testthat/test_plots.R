@@ -12,6 +12,7 @@ quiet <- function(x) {
 
 test_that("Test Plotting Functions", {
   skip_on_cran()
+  skip_on_os(os = "mac")
   
   ## Windrose Plotting #############
   wind_test <- data.frame(x = runif(10, 10, 20), 
