@@ -31,6 +31,7 @@ BugReports: https://github.com/YsoSirius/windfarmGA/issues
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
+    progress,
     rgdal,
     rgeos,
     stars,
