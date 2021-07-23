@@ -22,9 +22,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-release, r: '3.6'}
-          - {os: windows-release, r: 'release'}
-          - {os: macOS-latest, r: 'release'}
+          - {os: windows-latest, r: '3.6', rspm: "https://packagemanager.rstudio.com/cran/latest"}
+          - {os: windows-latest, r: 'release'}
+          - {os: macOS-latest, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/latest"}
           - {os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
           - {os: ubuntu-20.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
 
@@ -77,14 +77,17 @@ jobs:
           
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "covr", "rcmdcheck"))
-          remotes::install_deps(dependencies = TRUE)
+          install.packages(c("remotes"))
+          remotes::install_deps(dependencies = TRUE, type = "binary")
+          remotes::install_cran(c("covr", "rcmdcheck"))
         shell: Rscript {0}
 
       - name: Check
+        env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
           options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "error", check_dir = "check")
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "error", check_dir = "check")
         shell: Rscript {0}
 
       - name: Show testthat output
@@ -100,6 +103,6 @@ jobs:
           path: check
 
       - name: Test coverage
-        if: matrix.config.os == 'windows-release'
+        if: matrix.config.os == 'windows-latest'
         run: covr::codecov()
         shell: Rscript {0}
