@@ -186,9 +186,8 @@ splitAt <- function(x, pos) {
 #' @family Helper Functions
 #' @return Returns a matrix where each row contains a vector of length r.
 #'
-#' @author Original versions by Bill Venables 
-#' \email{Bill.Venables@@cmis.csiro.au.} Extended to handle repeats.allowed
-#' by Gregory R. Warnes \email{greg@@warnes.net.}
+#' @author Original versions by Bill Venables. Extended to handle repeats.allowed
+#' by Gregory R. Warnes
 #' 
 #' @references Venables, Bill. "Programmers Note", R-News, Vol 1/1, Jan. 2001.
 #' \url{https://cran.r-project.org/doc/Rnews/}
