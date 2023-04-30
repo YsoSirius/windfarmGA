@@ -1,5 +1,6 @@
 # Updates 3.0.1
 - Removed package dependencies on `rgdal` and `rgeos`
+- Replaced dependency `raster` to `terra`
 - Moved dependencies `foreach`, `parallel`, `doParallel` to Suggests
 - Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
 - Fix `getISO3` - only use `sf::st_is_valid` countries from `rworldmap::getMap`

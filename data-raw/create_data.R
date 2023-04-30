@@ -103,7 +103,7 @@ temp <- tempfile()
 download.file(ccl_raster_url, temp, method = "libcurl", mode = "wb")
 unzip(temp, "g100_06.tif")
 unlink(temp)
-ccl <- raster::raster("g100_06.tif")
+ccl <- terra::rast("g100_06.tif")
 usethis::use_data(ccl, overwrite = TRUE)
 
 ## Download Corine-Land-Cover Legend, save as .csv and add column for Rauhigkeit ###############

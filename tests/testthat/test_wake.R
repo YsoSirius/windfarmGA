@@ -99,8 +99,8 @@ test_that("Test Wake Functions", {
   ###########################################
   ## Initialize a dummy wind speed raster with value 1
   windraster <- suppressWarnings(
-    raster::rasterize(polYgon, raster::raster(
-    raster::extent(polYgon),
+    terra::rasterize(polYgon, terra::rast(
+      terra::ext(polYgon),
     ncol = 180, nrow = 180), field = 1))
   
   ## Create a uniform and unidirectional wind data.frame and plot the
@@ -168,8 +168,8 @@ test_that("Test Wake Functions", {
   
   
   ## Polygon with Holes is not plotted correctly (Hole is omitted)
-  # windraster <- raster::rasterize(hole_shape, raster::raster(
-  #   raster::extent(hole_shape),
+  # windraster <- terra::rasterize(hole_shape, terra::rast(
+  #   terra::ext(hole_shape),
   #   ncol = 180, nrow = 180), field = 1)
   # data.in <- data.frame(ws = c(12,12), wd = c(0,90))
   # Rotor <- 50; fcrR <- 3

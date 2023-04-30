@@ -110,13 +110,13 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   if (topograp) {
     ## Calculate Wind multiplier - Hills get higher values, valleys get lower values.
     wind_multiplier <- srtm_crop[[2]]
-    wind_multiplier_val <- raster::extract(x = wind_multiplier, y = xy_individual,
+    wind_multiplier_val <- terra::extract(x = wind_multiplier, y = xy_individual,
                                            small = TRUE, fun = mean, na.rm = FALSE)
     wind_multiplier_val[is.na(wind_multiplier_val)] <- mean(wind_multiplier_val, na.rm = TRUE)
     windpo <- windpo * wind_multiplier_val
 
     ## Get Elevation of Turbine Locations to estimate the air density
-    turb_elev <- raster::extract(x = srtm_crop[[1]], y = xy_individual,
+    turb_elev <- terra::extract(x = srtm_crop[[1]], y = xy_individual,
                                  small = TRUE, fun = max, na.rm = FALSE)
     turb_elev[is.na(turb_elev)] <- mean(turb_elev, na.rm = TRUE)
     ## Plot the elevation and the wind speed multiplier rasters
@@ -147,7 +147,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = rep(air_rh, nrow(xy_individual)), cex = 0.8)
       plot(st_geometry(polygon1), add = TRUE)
-      raster::plot(srtm_crop[[1]], main = "Corrected Air Density",
+      terra::plot(srtm_crop[[1]], main = "Corrected Air Density",
                    col = topo.colors(10))
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
@@ -156,36 +156,36 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     }
 
     ## Corine Land Cover Surface Roughness values
-    land_rough <- raster::extract(x = cclRaster, y = xy_individual,
+    land_rough <- terra::extract(x = cclRaster, y = xy_individual,
                                       small = TRUE, fun = mean, na.rm = FALSE)
     land_rough[is.na(land_rough)] <- mean(land_rough, na.rm = TRUE)
 
     ## Elevation Roughness values
     terrain_rough_ras <- srtm_crop[[3]]
-    terrain_rough_vals <- raster::extract(x = terrain_rough_ras, y = xy_individual,
-                                                small = TRUE, fun =  mean, na.rm = FALSE)
+    terrain_rough_vals <- terra::extract(x = terrain_rough_ras, y = xy_individual,
+                                         small = TRUE, fun =  mean, na.rm = FALSE)
     terrain_rough_vals[is.na(terrain_rough_vals)] <- mean(terrain_rough_vals, na.rm = TRUE)
-    maxrasres <- max(raster::res(terrain_rough_ras))
+    maxrasres <- max(terra::res(terrain_rough_ras))
     
     ## Calculate modified surface Roughness
     SurfaceRoughness <- land_rough * (1 + (terrain_rough_vals / maxrasres))
     
     ## Plot the different Surface Roughness Values
     if (plotit) {
-      terrain_rough_resample <- raster::resample(terrain_rough_ras, cclRaster, method = "ngb")
-      modified_rough <- raster::overlay(x = cclRaster, y = terrain_rough_resample,
+      terrain_rough_resample <- terra::resample(terrain_rough_ras, cclRaster, method = "near")
+      modified_rough <- terra::lapp(x = c(cclRaster, terrain_rough_resample),
                                  fun = function(x, y) {
                                    return(x * (1 + y / maxrasres))
                                  })
       
       graphics::par(mfrow = c(1, 1))
       cexa <- 0.9
-      raster::plot(cclRaster, main = "Corine Land Cover Roughness")
+      plot(cclRaster, main = "Corine Land Cover Roughness")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(land_rough, 2), cex = cexa)
       plot(st_geometry(polygon1), add = TRUE)
-      raster::plot(x = terrain_rough_ras, main = "Elevation Roughness Indicator")
+      plot(x = terrain_rough_ras, main = "Elevation Roughness Indicator")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(1 + (terrain_rough_vals / maxrasres), 2), cex = cexa)
@@ -203,7 +203,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     ## Plot resulting Wake Decay Values
     if (plotit) {
       graphics::par(mfrow = c(1, 1))
-      raster::plot(x = terrain_rough_ras, main = "Adapted Wake Decay Values - K")
+      plot(x = terrain_rough_ras, main = "Adapted Wake Decay Values - K")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(k, 3), cex = cexa)
@@ -220,7 +220,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       plot(polygon1, add = TRUE)
     }
     ## Extract Weibul values for turbine locations
-    estim_speed <- raster::extract(weibull, xy_individual)
+    estim_speed <- terra::extract(weibull, xy_individual)
     ## Check and replace NA Values..
     if (anyNA(estim_speed)) {
       estim_speed[which(is.na(estim_speed))] <- mean(estim_speed, na.rm = TRUE)

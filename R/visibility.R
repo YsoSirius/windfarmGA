@@ -33,8 +33,7 @@ rasterprofile <- function(r, xy1, xy2, reso, plot=FALSE){
     points(x = xc, y = yc, col = "red", pch = 20, cex = 1.4)
   }
   
-  # rasterVals <- r[raster::cellFromXY(r, cbind(xc,yc))]
-  rasterVals <- raster::extract(x = r, y = cbind(xc,yc))
+  rasterVals <- terra::extract(x = r, y = cbind(xc,yc))
   
   pointsZ <- cbind("x" = xc, "y" = yc, "z" = rasterVals)
   
@@ -168,7 +167,7 @@ cansee <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...){
 #' mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
 #' sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
 #' 
-#' viewTo(r1, sample_xy[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
+#' viewTo(r1, sample_xy[4,], sample_xy, h1=1.8, h2=3, min(terra::res(r1)),
 #'        plot=TRUE, interpolate=TRUE, asp=0.5)
 #' }
 viewTo <- function(r, xy1, xy2, h1=0, h2=0, reso, plot=FALSE, ...) {
@@ -230,7 +229,7 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
   rownames(sample_xy) <- NULL
   
   ## Get minimal Raster Resolution
-  reso <- min(raster::res(r))
+  reso <- min(terra::res(r))
   
   ## Run `viewTo` function for every turbine with its offest height `h1`
   ## Repeat `h1` to nrow turbines.
@@ -282,12 +281,12 @@ viewshed <- function(r, shape, turbine_locs, h1=0, h2=0, plot=FALSE, ...){
 #'                 h1 = 1.8, h2 = 50)
 #' plot_viewshed(res)
 #' 
-#' ## ... Arguments are past on to raster::plot
+#' ## ... Arguments are past on to terra::plot
 #' plot_viewshed(res, legend = TRUE, interpolate=TRUE, colNA="black", 
 #'               col = topo.colors(15))
 #' }
 plot_viewshed <- function(res, legend = FALSE, ...) {
-  raster::plot(res[[4]], ...)
+  terra::plot(res[[4]], ...)
   plot(sf::st_geometry(res[[3]]), add = TRUE)
   points(res[[2]], col="green", pch=20)
   points(res[[5]], cex=1.5, col="black", pch=20)
@@ -366,7 +365,7 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
     })
   }
   
-  visible = raster::rasterize(res$Raster_POI, res$DEM, 
+  visible = terra::rasterize(res$Raster_POI, res$DEM, 
                               field = res$Result, fun = fun)
   rasterpois <- cbind(res$Raster_POI, "z" = res$Result)
   
@@ -391,10 +390,10 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
     }
     
     if (plotDEM) {
-      raster::plot(res$DEM, legend = FALSE)
-      raster::plot(visible, breaks=breakseq, add = TRUE, col=pal(length(breakseq)), ...)
+      terra::plot(res$DEM, legend = FALSE)
+      terra::plot(visible, breaks=breakseq, add = TRUE, col=pal(length(breakseq)), ...)
     } else {
-      raster::plot(visible, breaks=breakseq, col=pal(length(breakseq)), ...)
+      terra::plot(visible, breaks=breakseq, col=pal(length(breakseq)), ...)
     }
     
     points(res$Turbines, pch=20, col="black", cex=1.5)
@@ -504,7 +503,7 @@ getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
   PROJ <- "+init=epsg:3035"
   
   DEM <- raster::getData("alt", country = ISO3)
-  
+    
   if (clip) {
     ## if data.frame / sp object -----------------
     if ( inherits(polygon, "SpatialPolygons") || inherits(polygon, "SpatialPolygonsDataFrame") ) {

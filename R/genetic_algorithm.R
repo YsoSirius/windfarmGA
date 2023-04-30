@@ -269,8 +269,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         unlink("weibulldata.zip")
       }
       
-      k_weibull <- raster("k120_100m_Lambert.tif")
-      a_weibull <- raster("a120_100m_Lambert.tif")
+      k_weibull <- terra::rast("k120_100m_Lambert.tif")
+      a_weibull <- terra::rast("a120_100m_Lambert.tif")
     } else {
       if (verbose) {
         cat("\nWeibull Information from input is used.\n")
@@ -281,14 +281,14 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
     ## Project Shapefile to raster proj, Crop/Mask and project raster back
     shape_project <- st_transform(Polygon1, crs = st_crs(a_weibull))
-    k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(shape_project))
-    a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(shape_project))
+    k_par_crop <- terra::crop(x = k_weibull, y = terra::ext(shape_project))
+    a_par_crop <- terra::crop(x = a_weibull, y = terra::ext(shape_project))
     
-    weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
-    weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
+    weibl_k <- terra::mask(x = k_par_crop, mask = shape_project)
+    weibl_a <- terra::mask(x = a_par_crop, mask = shape_project)
     estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
-    estim_speed_raster <- raster::projectRaster(estim_speed_raster,
-                                                crs = as.character(raster::crs(Polygon1)))
+    estim_speed_raster <- terra::project(estim_speed_raster, 
+                                         terra::crs(Polygon1))
   } else {
     estim_speed_raster <- FALSE
   }
@@ -308,7 +308,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                        "Iterations" = iteration,
                        "Mutation Rate" = mutr,
                        "Percentage of Polygon" = Proportionality,
-                       "Topographie" = topograp,
+                       "Topographie" = !isFALSE(topograp),
                        "Elitarism" = elitism,
                        "Selection Method" = selstate,
                        "Trim Force Method Used" = trimForce,
@@ -387,7 +387,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   ## TERRAIN EFFECT MODEL ###############
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
-  if (!topograp) {
+  if (isFALSE(topograp)) {
     if (verbose) {
       cat("Topography and orography are not taken into account.\n")
     }
@@ -413,49 +413,47 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
         unzip("clc.zip")
         unlink("clc.zip")
       }
-      ccl <- raster::raster("g100_06.tif")
+      ccl <- terra::rast("g100_06.tif")
     } else {
-      ccl <- raster::raster(sourceCCL)
+      ccl <- terra::rast(sourceCCL)
     }
-    cclPoly <- raster::crop(ccl, Polygon1)
-    cclPoly1 <- raster::mask(cclPoly, Polygon1)
+    cclPoly <- terra::crop(ccl, Polygon1)
+    cclPoly1 <- terra::mask(cclPoly, Polygon1)
     
     ## SRTM Daten
-    Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
-    # extpol <- round(apply(matrix(st_bbox(Polygon1), ncol = 2), 1, mean))
-    # srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
-    #                  error = function(e) {
-    #                    stop("\nCould not download SRTM for the given Polygon.",
-    #                         "Check the Projection of the Polygon.\n", call. = FALSE)
-    #                  })
-    srtm <- tryCatch(elevatr::get_elev_raster(verbose = verbose,
-      locations = as(Polygon_wgs84, "Spatial"), z = 11),
-      error = function(e) {
-        stop("\nDownloading Elevation data failed for the given Polygon.\n",
-             e, call. = FALSE)
-      })
-    srtm_crop <- raster::crop(srtm, Polygon_wgs84)
-    srtm_crop <- raster::mask(srtm_crop, Polygon_wgs84)
-    
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = as.character(raster::crs(Polygon1)))
+    if (isTRUE(topograp)) {
+      Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
+      srtm <- tryCatch(elevatr::get_elev_raster(verbose = verbose,
+        locations = as(Polygon_wgs84, "Spatial"), z = 11),
+        error = function(e) {
+          stop("\nDownloading Elevation data failed for the given Polygon.\n",
+               e, call. = FALSE)
+        })      
+    } else {
+      if (inherits(topograp, "RasterLayer") || inherits(topograp, "character")) {
+        srtm <- terra::rast(topograp)
+      } else {
+        srtm <- topograp
+      }
+    }
+    srtm <- terra::project(srtm, terra::crs(Polygon1, proj=TRUE))
+    srtm_crop <- terra::crop(srtm, Polygon1)
+    srtm_crop <- terra::mask(srtm_crop, Polygon1)
     
     if (plotit) {
-      raster::plot(srtm_crop, main = "Elevation Data")
+      terra::plot(srtm_crop, main = "Elevation Data")
       plot(Polygon1, add = TRUE, color = "transparent")
-      plot(grid_filtered, add = TRUE)
     }
-
-    roughrast <- raster::terrain(srtm_crop, "roughness")
-    if (all(is.na(raster::values(roughrast)))) {
+    
+    roughrast <- terra::terrain(srtm_crop, "roughness")
+    if (all(is.na(terra::values(roughrast)))) {
       warning("Cannot calculate a surface roughness. \nMaybe the resolution or ",
               "the area is too small. Roughness values are set to 1.\n")
-      raster::values(roughrast) <- 1
+      terra::values(roughrast) <- 1
     }
     srtm_crop <- list(
       strm_crop = srtm_crop,
-      orogr1 = raster::calc(srtm_crop, function(x) {
-        x / (raster::cellStats(srtm_crop, mean, na.rm = TRUE))
-      }),
+      orogr1 = srtm_crop / as.numeric(terra::global(srtm_crop, fun="mean", na.rm = TRUE)),
       roughness = roughrast
     )
 
@@ -471,12 +469,12 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
                                    header = TRUE, sep = ";")
-    cclRaster <- raster::reclassify(cclPoly1,
-                                    matrix(c(rauhigkeitz$GRID_CODE,
-                                             rauhigkeitz$Rauhigkeit_z),
-                                           ncol = 2))
+    cclRaster <- terra::classify(cclPoly1, matrix(c(rauhigkeitz$GRID_CODE,
+                                                    rauhigkeitz$Rauhigkeit_z),
+                                                  ncol = 2))
+    
     if (plotit) {
-      raster::plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
+      terra::plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
     }
   }
 

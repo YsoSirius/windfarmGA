@@ -98,7 +98,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
     coordLay <- layout_start[, 1:2]
 
     if (Plot) {
-      raster::plot(Grid[[2]])
+      plot(Grid[[2]])
       points(coordLay, pch = 15, col = "black")
       
       legend(x = "bottom", 
@@ -329,7 +329,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
   ## Turbine Indexing by user input (Must be plotted) ################
   ## Get the starting layout of windfarm[o]
   layout_start <- result[bestGARun,]$bestPaEn
-  raster::plot(Grid[[2]])
+  plot(Grid[[2]])
   points(x = layout_start[, "X"], y = layout_start[, "Y"], pch = 15)
   calibrate::textxy(X = layout_start[, "X"], Y = layout_start[, "Y"], 
                     labs = layout_start[, "Rect_ID"], cex = 1.5, offset = 0.75)
@@ -343,7 +343,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
   turbInx <- which(layout_start[, 'Rect_ID'] == as.numeric(turbInx))
   coordLay <- layout_start[, 1:2]
   if (Plot) {
-    raster::plot(Grid[[2]])
+    plot(Grid[[2]])
     points(coordLay, pch = 15, col = "black")
     points(coordLay[as.numeric(turbInx), ][1],
            coordLay[as.numeric(turbInx), ][2], pch = 15, col = "purple")

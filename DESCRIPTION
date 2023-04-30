@@ -9,7 +9,7 @@ Description: The genetic algorithm is designed to optimize wind farms of any sha
 Depends:
     R (>= 3.2.3)
 Imports: Rcpp,
-    raster,
+    terra,
     sf,
     elevatr,
     RColorBrewer,

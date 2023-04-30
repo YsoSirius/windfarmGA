@@ -64,8 +64,8 @@ test_that("Test Terrain and Weibull Effects", {
   sp_polygonproj <- st_transform(sp_polygon, st_crs(crs(DEM)))
   DEMcrop <- crop(DEM, sp_polygonproj)
   maxval <- max(values(DEMcrop))
-  a_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+1)
-  k_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+6)
+  a_raster <- terra::app(DEMcrop, function(x) (x / maxval)+1)
+  k_raster <- terra::app(DEMcrop, function(x) (x / maxval)+6)
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
@@ -164,7 +164,7 @@ test_that("Test Terrain and Weibull Effects", {
     elevatr::get_elev_raster(
     locations = as(Polygon1, "Spatial"), z = 11)
   )
-  srtm_crop <- raster::crop(srtm, Polygon1)
+  srtm_crop <- terra::crop(srtm, Polygon1)
   
   data.in <- data.frame(ws = 12, wd = 0)
   Rotor <- 50; fcrR <- 3
@@ -172,30 +172,27 @@ test_that("Test Terrain and Weibull Effects", {
                        prop = 1, plotGrid = FALSE)
   resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
   
-  srtm_crop <- suppressWarnings(raster::mask(srtm_crop, Polygon1))
-  roughrast <- raster::terrain(srtm_crop, "roughness")
+  srtm_crop <- suppressWarnings(terra::mask(srtm_crop, Polygon1))
+  roughrast <- terra::terrain(srtm_crop, "roughness")
   if (all(is.na(values(roughrast)))) {
     values(roughrast) <- 1
   }
   srtm_crop <- list(
     strm_crop = srtm_crop,
-    orogr1 = raster::calc(srtm_crop, function(x) {
-      x / (raster::cellStats(srtm_crop, mean, na.rm = TRUE))
-    }),
+    orogr1 = srtm_crop / as.numeric(terra::global(srtm_crop, fun="mean", na.rm = TRUE)),
     roughness = roughrast
   )
   
-  ccl <- suppressWarnings(raster::raster("g100_06.tif"))
+  ccl <- suppressWarnings(terra::rast("g100_06.tif"))
   ccl <- crop(ccl, Polygon1)
   ccl <- suppressWarnings(mask(ccl, Polygon1))
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
   sourceCCLRoughness <- paste0(path, "clc_legend.csv")
   rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
                                  header = TRUE, sep = ";")
-  cclRaster <- raster::reclassify(ccl,
-                                  matrix(c(rauhigkeitz$GRID_CODE,
-                                           rauhigkeitz$Rauhigkeit_z),
-                                         ncol = 2))
+  cclRaster <- terra::classify(ccl, matrix(c(rauhigkeitz$GRID_CODE,
+                                                  rauhigkeitz$Rauhigkeit_z),
+                                                ncol = 2))
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                                 srtm_crop = srtm_crop, cclRaster = cclRaster,
                                 RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
@@ -215,8 +212,8 @@ test_that("Test Terrain and Weibull Effects", {
   # Weibull + Plotting
   DEMcrop <- srtm_crop$orogr1
   maxval <- max(values(DEMcrop))
-  a_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+1)
-  k_raster <- raster::calc(DEMcrop, function(x) (x / maxval)+6)
+  a_raster <- terra::app(DEMcrop, function(x) (x / maxval)+1)
+  k_raster <- terra::app(DEMcrop, function(x) (x / maxval)+6)
   weibullraster <- a_raster * (gamma(1 + (1 / k_raster)))
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                                 srtm_crop = srtm_crop, cclRaster = cclRaster,
@@ -237,7 +234,7 @@ test_that("Test Terrain and Weibull Effects", {
   ## Make Hole in Weibull-Raster, so some Values are NA 
   min_y_ppt <- data.frame(resStartGA[[1]][order(resStartGA[[1]][,2])<=9,])
   min_y_ppt <- st_as_sf(min_y_ppt, coords=c("X","Y"))
-  weibullrastercrop <- crop(weibullraster, raster::extent(min_y_ppt))
+  weibullrastercrop <- crop(weibullraster, terra::ext(min_y_ppt))
   resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
                                 srtm_crop = srtm_crop, cclRaster = cclRaster,
                                 RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
