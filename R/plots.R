@@ -250,17 +250,17 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   }
   else {
     PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
-    if (class(weibullsrc) == "list" & length(weibullsrc) == 2) {
+    if (inherits(weibullsrc,"list") & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
         raster::crop(x, raster::extent(PolyCrop))})
       wblcroped <- lapply(wblcroped, function(x){
         raster::mask(x, PolyCrop)})
       Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / wblcroped[[1]])))
-    } else if (class(weibullsrc) == "list" & length(weibullsrc) == 1) {
+    } else if (inherits(weibullsrc,"list") & length(weibullsrc) == 1) {
       wblcroped <- raster::crop(weibullsrc[[1]], raster::extent(PolyCrop))
       wblcroped <- raster::mask(weibullsrc[[1]], PolyCrop)
       Erwartungswert <- wblcroped[[1]]
-    } else if (class(weibullsrc) == "RasterLayer") {
+    } else if (inherits(weibullsrc,"RasterLayer")) {
       wblcroped <- raster::crop(weibullsrc, raster::extent(PolyCrop))
       wblcroped <- raster::mask(weibullsrc, PolyCrop)
       Erwartungswert <- wblcroped
@@ -678,8 +678,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       subset.matrix(i, subset = c(TRUE, rep(FALSE, nrow(i) - 1)),
                     select = "EnergyOverall")
     })
-    b <- data.frame(cbind(a), stringsAsFactors = FALSE)
-    order1 <- order(b, decreasing = TRUE)
+    order1 <- order(a, decreasing = TRUE)
     result <- result[order1, ]
     beste <- which
   } else {

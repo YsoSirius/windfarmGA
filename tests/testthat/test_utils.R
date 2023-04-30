@@ -1,7 +1,5 @@
 context("Basic Functions")
 
-library(sf)
-
 test_that("Test Basic Functions", {
   ## splitAt #####################
   a <- splitAt(1:100,20)

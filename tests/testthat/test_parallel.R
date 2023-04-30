@@ -1,5 +1,4 @@
 context("Parallel")
-library(sf)
 
 test_that("Test Parallelisation", {
   skip_on_os("windows")

@@ -28,12 +28,10 @@ LazyData: TRUE
 License: MIT + file LICENSE
 URL: https://ysosirius.github.io/windfarmGA/index.html
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0
 Suggests: 
     testthat,
     progress,
-    rgdal,
-    rgeos,
     stars,
     leaflet,
     ggplot2,

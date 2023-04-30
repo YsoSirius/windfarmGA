@@ -1,6 +1,5 @@
 context("Plots")
 library(raster)
-library(sf)
 library(stars)
 
 ## Function to suppress print/cat outputs
@@ -12,7 +11,7 @@ quiet <- function(x) {
 
 test_that("Test Plotting Functions", {
   skip_on_cran()
-  skip_on_os(os = "mac")
+  # skip_on_os(os = "mac")
   
   ## Windrose Plotting #############
   wind_test <- data.frame(x = runif(10, 10, 20), 
@@ -278,5 +277,4 @@ test_that("Test Plotting Functions", {
                        vdirspe = winddat,
                        Rotor = 30,
                        RotorHeight = 100))
-  
 })
