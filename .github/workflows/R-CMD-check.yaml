@@ -41,17 +41,12 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install gdal proj geos
-          
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
           needs: check
-
+          
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-
-      - name: Test coverage
-        if: matrix.config.os == 'windows-latest'
-        run: covr::codecov()
-        shell: Rscript {0}
