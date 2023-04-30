@@ -1,9 +1,10 @@
 url: https://YsoSirius.github.io/windfarmGA
 template:
   bootstrap: 5
-  bootswatch: darkly
-  theme: zenburn
-
+  package: preferably
+  # params:
+  #   toggle: manual
+    
 navbar:
   title: "windfarmGA"
 
