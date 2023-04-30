@@ -22,6 +22,14 @@
       "email": "sebastian_gatscha@gmx.at"
     }
   ],
+  "copyrightHolder": [
+    {
+      "@type": "Person",
+      "givenName": "Sebastian",
+      "familyName": "Gatscha",
+      "email": "sebastian_gatscha@gmx.at"
+    }
+  ],
   "maintainer": [
     {
       "@type": "Person",
@@ -264,10 +272,10 @@
     "SystemRequirements": null
   },
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
-  "fileSize": "3392.955KB",
+  "fileSize": "3392.878KB",
   "relatedLink": "https://ysosirius.github.io/windfarmGA/index.html",
   "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
-  "contIntegration": ["https://github.com/YsoSirius/windfarmGA/actions", "https://codecov.io/gh/YsoSirius/windfarmGA"],
-  "developmentStatus": "https://www.tidyverse.org/lifecycle/#stable"
+  "contIntegration": ["https://github.com/YsoSirius/windfarmGA/actions", "https://app.codecov.io/gh/YsoSirius/windfarmGA"],
+  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html"
 }

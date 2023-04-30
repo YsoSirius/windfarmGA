@@ -2,7 +2,7 @@
 #' 
 #' 
 #' @description 
-#' \if{html}{\figure{windfarmGA.png}{options: width="25\%" align=right alt="Figure: windfarmGA.png"}} 
+#' \if{html}{\figure{windfarmGA.png}{options: width="25\%" alt="Figure: windfarmGA.png"}} 
 #' \if{latex}{\figure{windfarmGA.png}{options: width=0.2in}} 
 #' A package to optimize small wind farms with irregular shapes
 #' using a genetic algorithm. It requires a fixed amount of turbines, a fixed
