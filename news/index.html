@@ -22,7 +22,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,215 @@
       <small>Source: <a href="https://github.com/YsoSirius/windfarmGA/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
-  </main></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.1.0" id="windfarmga-310">windfarmGA 3.1.0<a class="anchor" aria-label="anchor" href="#windfarmga-310"></a></h2>
+<ul><li>Removed package dependencies on <code>rgdal</code> and <code>rgeos</code>
+</li>
+<li>Moved dependencies <code>foreach</code>, <code>parallel</code>, <code>doParallel</code> to Suggests</li>
+<li>Fix <code>grid_area</code> and <code>hexa_area</code> functions for sf-1.0 and s2</li>
+<li>Fix <code>getISO3</code> - only use <code><a href="https://r-spatial.github.io/sf/reference/valid.html" class="external-link">sf::st_is_valid</a></code> countries from <code><a href="https://rdrr.io/pkg/rworldmap/man/getMap.html" class="external-link">rworldmap::getMap</a></code>
+</li>
+<li>
+<code>projectRaster</code> seems to require CRS as character and not as CRS object</li>
+<li>supressWarnings for plot-tests</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="3.0.0" id="windfarmga-300">windfarmGA 3.0.0<a class="anchor" aria-label="anchor" href="#windfarmga-300"></a></h2><p class="text-muted">CRAN release: 2021-05-05</p>
+<ul><li>The dependencies <code>sp</code>, <code>spatstat</code> were removed and replaced by <code>sf</code>. All spatial outputs are now <strong>Simple Features</strong>. A Shapefile Polygon can still be passed as input to <code>genetic_algorithm</code> / <code>windfarmGA</code>, but more underlying functions now require the Polygon to be of type Simple Feature.</li>
+<li>The functions <code>grid_area</code> &amp; <code>hexa_area</code> are now calculated with <code><a href="https://r-spatial.github.io/sf/reference/st_make_grid.html" class="external-link">sf::st_make_grid</a></code>.</li>
+<li>The new dependency <code>elevatr</code> has been added because it provides elevation data with a higher resolution compared to <code><a href="https://rdrr.io/pkg/raster/man/getData.html" class="external-link">raster::getData</a></code>.</li>
+<li>Several <code>dependencies</code> that are not essential for the algorithm were moved to <code>Suggests</code>.</li>
+<li>Bugfix for the calculation of the visibility analysis. <a href="https://github.com/YsoSirius/windfarmGA/issues/17" class="external-link">#17</a>
+</li>
+<li>The <code>viewshed</code> parameter <code>h1</code> can now also be a numeric vector with different height offsets. <a href="https://github.com/YsoSirius/windfarmGA/issues/18" class="external-link">#18</a>
+</li>
+<li>The <code>grid_area</code> argument <code>resol</code> changed to <code>size</code>.</li>
+<li>The arguments for <code>get_dist_angles</code> have changed to match the arguments of <code>turbine_influences</code>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.3.0" id="windfarmga-230">windfarmGA 2.3.0<a class="anchor" aria-label="anchor" href="#windfarmga-230"></a></h2><p class="text-muted">CRAN release: 2020-10-20</p>
+<ul><li>
+<p>Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Warning</span> message:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">In</span> showSRID<span class="er">(</span><span class="ex">uprojargs,</span> format = <span class="st">"PROJ"</span>, multiline = <span class="st">"NO"</span>, prefer_proj = prefer_proj<span class="kw">)</span> <span class="bu">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Discarded</span> datum European_Terrestrial_Reference_System_1989 in CRS definition</span></code></pre></div>
+</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.2.3" id="windfarmga-223">windfarmGA 2.2.3<a class="anchor" aria-label="anchor" href="#windfarmga-223"></a></h2><p class="text-muted">CRAN release: 2019-12-16</p>
+<ul><li><p>Fix tests for R 3.4.0, as class(matrix) is of length 2.</p></li>
+<li>
+<p>Expose more options which can be set with <code>options(windfarmGA.cT = 0.75)</code>:</p>
+<table class="table"><colgroup><col width="58%"><col width="41%"></colgroup><thead><tr class="header"><th>Options = Default value</th>
+<th>Description</th>
+</tr></thead><tbody><tr class="odd"><td>windfarmGA.cT = 0.88</td>
+<td>Wind Turbine Thrust coefficient</td>
+</tr><tr class="even"><td>windfarmGA.air_rh = 1.225</td>
+<td>Air Density Value</td>
+</tr><tr class="odd"><td>windfarmGA.k = 0.075</td>
+<td>Wake expansion coefficient. It is assumed to be 0.075 for onshore windfarms and 0.05 for offshore windfarms</td>
+</tr><tr class="even"><td>windfarmGA.max_angle = 20</td>
+<td>Maximum angle (in degrees) to search for potential influencing turbines</td>
+</tr><tr class="odd"><td>windfarmGA.max_distance = 100000</td>
+<td>Maximum distance (in meters) to search for potential influencing turbines</td>
+</tr><tr class="even"><td>windfarmGA.max_population = 300</td>
+<td>Maximum amount of individuals per generation</td>
+</tr><tr class="odd"><td>windfarmGA.max_selection = 100</td>
+<td>Maximum amount of selected individuals</td>
+</tr></tbody></table></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.2.2" id="windfarmga-222">windfarmGA 2.2.2<a class="anchor" aria-label="anchor" href="#windfarmga-222"></a></h2><p class="text-muted">CRAN release: 2019-08-27</p>
+<div class="section level5">
+<h5 id="pkgdown-2-2-2">Pkgdown<a class="anchor" aria-label="anchor" href="#pkgdown-2-2-2"></a></h5>
+<ul><li>A <a href="https://ysosirius.github.io/windfarmGA/" class="external-link">pkgdown documentation</a> site is now available.</li>
+</ul></div>
+<div class="section level5">
+<h5 id="renaming-functions-2-2-2">Renaming Functions<a class="anchor" aria-label="anchor" href="#renaming-functions-2-2-2"></a></h5>
+<ul><li>
+<p>Almost all functions have been renamed to have a consistent appearance and a clearer meaning. The old functions still exist, but are deprecated now.</p>
+<details><summary><p>Renaming Overview</p>
+</summary><p>
+</p>
+<table class="table"><thead><tr class="header"><th>Old names</th>
+<th><strong>New names</strong></th>
+</tr></thead><tbody><tr class="odd"><td>StartGA</td>
+<td><strong>init_population</strong></td>
+</tr><tr class="even"><td>selection1</td>
+<td><strong>selection</strong></td>
+</tr><tr class="odd"><td>crossover1</td>
+<td><strong>crossover</strong></td>
+</tr><tr class="even"><td>VekWinkelCalc</td>
+<td><strong>get_dist_angles</strong></td>
+</tr><tr class="odd"><td>calculateEn</td>
+<td><strong>calculate_energy</strong></td>
+</tr><tr class="even"><td>getRects</td>
+<td><strong>get_grids</strong></td>
+</tr><tr class="odd"><td>BaroHoehe</td>
+<td><strong>barometric_height</strong></td>
+</tr><tr class="even"><td>GridFilter</td>
+<td><strong>grid_area</strong></td>
+</tr><tr class="odd"><td>HexaTex</td>
+<td><strong>hexa_area</strong></td>
+</tr><tr class="even"><td>InfluPoints</td>
+<td><strong>turbine_influences</strong></td>
+</tr><tr class="odd"><td>genAlgo</td>
+<td><strong>genetic_algorithm</strong></td>
+</tr><tr class="even"><td>RandomSearch</td>
+<td><strong>random_search</strong></td>
+</tr><tr class="odd"><td>RandomSearchTurb</td>
+<td><strong>random_search_single</strong></td>
+</tr><tr class="even"><td>RandomSearchPlot</td>
+<td><strong>plot_random_search</strong></td>
+</tr><tr class="odd"><td>leafPlot</td>
+<td><strong>plot_leaflet</strong></td>
+</tr><tr class="even"><td>heatmapGA</td>
+<td><strong>plot_heatmap</strong></td>
+</tr><tr class="odd"><td>plotbeorwor</td>
+<td><strong>plot_development</strong></td>
+</tr><tr class="even"><td>plotCloud</td>
+<td><strong>plot_cloud</strong></td>
+</tr><tr class="odd"><td>plotEvolution</td>
+<td><strong>plot_evolution</strong></td>
+</tr><tr class="even"><td>plotfitnessevolution</td>
+<td><strong>plot_fitness_evolution</strong></td>
+</tr><tr class="odd"><td>plotparkfitness</td>
+<td><strong>plot_parkfitness</strong></td>
+</tr><tr class="even"><td>plotResult</td>
+<td><strong>plot_result</strong></td>
+</tr><tr class="odd"><td>PlotWindfarmGA</td>
+<td><strong>plot_windfarmGA</strong></td>
+</tr><tr class="even"><td>plotWindrose</td>
+<td><strong>plot_windrose</strong></td>
+</tr></tbody></table></details></li>
+</ul></div>
+<div class="section level5">
+<h5 id="bugfixes--other-changes-2-2-2">Bugfixes / Other Changes<a class="anchor" aria-label="anchor" href="#bugfixes--other-changes-2-2-2"></a></h5>
+<ul><li><p>The legend of <code>plot_leaflet</code> now works correctly.</p></li>
+<li><p>Some general linting / spell checking / performance optimization was done.</p></li>
+<li><p>The Weibull Raster (for Austria) are now in a separate <a href="https://github.com/YsoSirius/windfarm_data" class="external-link">Github-repository</a>, instead of being stored in the package as .rda file. I guess this never worked except on my computer.</p></li>
+<li><p>The Corine Land Cover .tif file is also stored in that repository, as the EEA webpage did restrict downloads sometimes, which resulted in an error.</p></li>
+<li><p>The <code>plot_farm_3d</code> function has temporarily been removed from the package.</p></li>
+<li><p>Most functions that required user-input previously used <code>readline</code> which is now changed to <code>readLines</code> as it allows to read from a file instead. This can be set via <code>options(windfarmGA.connection = file())</code>.</p></li>
+<li><p>A whole lot of tests were written.</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.2.1" id="windfarmga-221">windfarmGA 2.2.1<a class="anchor" aria-label="anchor" href="#windfarmga-221"></a></h2><p class="text-muted">CRAN release: 2019-02-18</p>
+<div class="section level5">
+<h5 id="performance-tuning--restructuring-2-2-1">Performance Tuning / Restructuring<a class="anchor" aria-label="anchor" href="#performance-tuning--restructuring-2-2-1"></a></h5>
+<ul><li>Switch to <strong>matrices</strong> instead of data.frames and a lot of restructuring and performance optimization of the whole algorithm.</li>
+</ul></div>
+<div class="section level5">
+<h5 id="viewshed-analysis-2-2-1">Viewshed Analysis<a class="anchor" aria-label="anchor" href="#viewshed-analysis-2-2-1"></a></h5>
+<ul><li>New set of functions, to analyze the visual impact of a wind farm.
+<ul><li>
+<code>cansee</code>,</li>
+<li>
+<code>viewTo</code>,</li>
+<li>
+<code>rasterprofile</code>,</li>
+<li>
+<code>viewshed</code>,</li>
+<li>
+<code>plot_viewshed</code>,</li>
+<li>
+<code>interpol_view</code>,</li>
+<li>
+<code>getISO3</code>,</li>
+<li><code>getDEM</code></li>
+</ul></li>
+</ul></div>
+<div class="section level5">
+<h5 id="other-changes-2-2-1">Other Changes<a class="anchor" aria-label="anchor" href="#other-changes-2-2-1"></a></h5>
+<ul><li><p>The function <code>genAlgo</code>/<code>windfarmGA</code> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <strong>topograp</strong> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p></li>
+<li><p><code>plot_farm_3d</code> Experimental rayshader function</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.1" id="windfarmga-121">windfarmGA 1.2.1<a class="anchor" aria-label="anchor" href="#windfarmga-121"></a></h2><p class="text-muted">CRAN release: 2018-03-25</p>
+<div class="section level5">
+<h5 id="randomization-1-2-1">Randomization<a class="anchor" aria-label="anchor" href="#randomization-1-2-1"></a></h5>
+<p>The output of <code>genAlgo</code> or <code>windfarmGA</code> can be further randomized/optimized with the following functions: - RandomSearch - RandomSearchTurb</p>
+<p><strong><code>RandomSearch</code></strong> is used to randomize all turbines of the layout</p>
+<p><strong><code>RandomSearchTurb</code></strong> is used to randomize a single turbine</p>
+<p><strong><code>RandomSearchPlot</code></strong> is used to plot the output of those functions, comparing them with the original result.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">load</span><span class="er">(</span><span class="fu">file</span> = system.file<span class="er">(</span><span class="st">"extdata/resultrect.rda"</span><span class="ex">,</span> package = <span class="st">"windfarmGA"</span><span class="kw">))</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">load</span><span class="er">(</span><span class="fu">file</span> = system.file<span class="er">(</span><span class="st">"extdata/polygon.rda"</span><span class="ex">,</span> package = <span class="st">"windfarmGA"</span><span class="kw">))</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Res</span> = RandomSearchTurb<span class="er">(</span><span class="ex">result</span> = resultrect, Polygon1 = polygon, n=10<span class="kw">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">RandomSearchPlot</span><span class="er">(</span><span class="ex">resultRS</span> = Res, result = resultrect, Polygon1 = polygon, best=2<span class="kw">)</span></span></code></pre></div>
+</div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2" id="windfarmga-12">windfarmGA 1.2<a class="anchor" aria-label="anchor" href="#windfarmga-12"></a></h2><p class="text-muted">CRAN release: 2018-03-11</p>
+<div class="section level5">
+<h5 id="parallel-processing-1-2">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing-1-2"></a></h5>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Runs the same optimization, but with parallel processing and 3 cores.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">result_par</span> <span class="op">&lt;</span>- genAlgo<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                 <span class="va">fcrR</span><span class="op">=</span>5,iteration=10, <span class="ex">vdirspe</span> = data.in,crossPart1 = <span class="st">"EQU"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                 <span class="va">selstate</span><span class="op">=</span><span class="st">"FIX"</span>,mutr=0.8, <span class="ex">Proportionality</span> = 1,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                 <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                 <span class="ex">Parallel</span> = TRUE, numCluster = 3<span class="kw">)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">PlotWindfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_par, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1<span class="kw">)</span></span></code></pre></div>
+</div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1" id="windfarmga-11">windfarmGA 1.1<a class="anchor" aria-label="anchor" href="#windfarmga-11"></a></h2><p class="text-muted">CRAN release: 2017-07-09</p>
+<div class="section level5">
+<h5 id="optimization-with-hexagonal-grid-cells-1-1">Optimization with Hexagonal Grid Cells<a class="anchor" aria-label="anchor" href="#optimization-with-hexagonal-grid-cells-1-1"></a></h5>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                  <span class="va">fcrR</span><span class="op">=</span>5,iteration=10, <span class="ex">vdirspe</span> = data.in,crossPart1 = <span class="st">"EQU"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                  <span class="va">selstate</span><span class="op">=</span><span class="st">"FIX"</span>,mutr=0.8, <span class="ex">Proportionality</span> = 1,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                  <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">referenceHeight</span> = 50,RotorHeight = 100<span class="kw">)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">PlotWindfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_hex, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1<span class="kw">)</span></span></code></pre></div>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="copyright">
