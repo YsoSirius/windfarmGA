@@ -1,4 +1,76 @@
 url: https://YsoSirius.github.io/windfarmGA
-
 template:
   bootstrap: 5
+  package: preferably
+  # params:
+  #   toggle: manual
+    
+navbar:
+  title: "windfarmGA"
+
+reference:
+  - title: Package Documentation
+    contents:
+    - windfarmGA_
+  - title: Run an Optimization
+    contents:
+    - genetic_algorithm
+    - windfarmGA
+  - title: Genetic Algorithm Components
+    desc: Main components of the genetic algorithm
+    contents:
+    - init_population
+    - selection
+    - fitness
+    - crossover
+    - mutation
+    - trimton
+  - title: Wind Energy Calculation Functions
+    contents:
+    - barometric_height
+    - get_dist_angles
+    - turbine_influences
+    - calculate_energy
+  - title: Randomization
+    contents:
+    - starts_with("random", internal = TRUE)
+    - plot_random_search
+  - title: Plotting Functions
+    contents:
+    - starts_with("plot_", internal = TRUE)
+    - interpol_view
+  - title: Viewshed Analysis Functions
+    contents:
+    - cansee
+    - rasterprofile
+    - viewshed
+    - viewTo
+    - interpol_view
+    - plot_viewshed
+  - title: Helper Functions
+    contents:
+    - get_grids
+    - grid_area
+    - hexa_area
+    - windata_format
+    - isSpatial
+    - permutations
+    - readinteger
+    - readintegerSel
+    - splitAt
+    - dup_coords
+    - getDEM
+    - getISO3
+  - title: Datasets
+    desc: Results and Shapefiles included in the package. 
+    contents:
+    - resultrect
+    - resulthex
+    - sp_polygon
+    - big_shape
+    - hole_shape
+    - multi_shape
+
+authors:
+  Sebastian Gatscha:
+  href: https://github.com/YsoSirius
