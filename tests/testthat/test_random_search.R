@@ -1,5 +1,4 @@
 context("Test Random Search")
-library(sf)
 
 test_that("Test Random Search Functions", {
   ## Data ##############

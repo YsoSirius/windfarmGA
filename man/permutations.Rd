@@ -40,8 +40,7 @@ Other Helper Functions:
 \code{\link{windata_format}()}
 }
 \author{
-Original versions by Bill Venables 
-\email{Bill.Venables@cmis.csiro.au.} Extended to handle repeats.allowed
-by Gregory R. Warnes \email{greg@warnes.net.}
+Original versions by Bill Venables. Extended to handle repeats.allowed
+by Gregory R. Warnes
 }
 \concept{Helper Functions}

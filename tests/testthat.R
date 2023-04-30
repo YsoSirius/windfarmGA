@@ -1,6 +1,5 @@
 library(testthat)
+library(sf)
 library(windfarmGA)
-library(rgdal)
-library(rgeos)
 
 test_check("windfarmGA")

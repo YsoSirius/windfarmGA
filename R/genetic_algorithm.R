@@ -230,6 +230,18 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
+    if (!requireNamespace("parallel", quietly = TRUE)) {
+      stop("The package 'parallel' is required for this function, but it is not installed.\n",
+           "Please install it with `install.packages('parallel')`")
+    }
+    if (!requireNamespace("doParallel", quietly = TRUE)) {
+      stop("The package 'doParallel' is required for this function, but it is not installed.\n",
+           "Please install it with `install.packages('doParallel')`")
+    }
+    if (!requireNamespace("foreach", quietly = TRUE)) {
+      stop("The package 'foreach' is required for this function, but it is not installed.\n",
+           "Please install it with `install.packages('foreach')`")
+    }
     max_cores <- parallel::detectCores()
     if (numCluster > max_cores) {
       warning("Maximum number of cores is: ", max_cores, "\n'numCluster' will be set to: ", max_cores-1)
@@ -330,7 +342,6 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   }
-
 
   ## Make GRID ###############
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.

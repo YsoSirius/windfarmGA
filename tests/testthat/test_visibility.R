@@ -1,7 +1,5 @@
 context("Visibility Tests")
-# library(testthat)
 library(raster)
-library(sf)
 
 test_that("Test Viewshed Functions", {
   # skip_on_cran()

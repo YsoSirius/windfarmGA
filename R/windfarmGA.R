@@ -159,12 +159,12 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
   }  
   if (weibull) {
     if (!missing(weibullsrc)) {
-      if (!class(weibullsrc) == "list") {
+      if (!inherits(weibullsrc, "list")) {
         cat(paste("\nweibullsrc class: \n1 - ", class(weibullsrc), "\n"))
         stop("\n'weibullsrc' must be a list with two rasters. List item 1 should be the shape parameter (k) raster
             and list item 2 should be the scale parameter (a) raster of a weibull distribution.")
       }
-      if (!class(weibullsrc[[1]])[1] == "RasterLayer" | !class(weibullsrc[[2]])[1] == "RasterLayer" ) {
+      if (!inherits(weibullsrc[[1]], "RasterLayer") | !inherits(weibullsrc[[2]], "RasterLayer")) {
         cat(paste("\nlist item classes: \n1 - ", class(weibullsrc[[1]]), "\n2 - ", class(weibullsrc[[2]])), "\n")
         stop("\nOne of the given list items is not a raster.")
       }

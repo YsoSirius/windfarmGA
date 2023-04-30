@@ -148,7 +148,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                                                              colour = "gray96"),
                    panel.background = ggplot2::element_rect(fill = "gray96",
                                                             colour = "gray96"),
-                   panel.grid.minor.y = ggplot2::element_line(size = 2),
+                   panel.grid.minor.y = ggplot2::element_line(linewidth = 2),
                    panel.grid.major = ggplot2::element_line(colour = "gray86"),
                    panel.border = ggplot2::element_blank(),
                    plot.background = ggplot2::element_rect(fill = "gray96",
@@ -250,17 +250,17 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   }
   else {
     PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
-    if (class(weibullsrc) == "list" & length(weibullsrc) == 2) {
+    if (inherits(weibullsrc,"list") & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
         raster::crop(x, raster::extent(PolyCrop))})
       wblcroped <- lapply(wblcroped, function(x){
         raster::mask(x, PolyCrop)})
       Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / wblcroped[[1]])))
-    } else if (class(weibullsrc) == "list" & length(weibullsrc) == 1) {
+    } else if (inherits(weibullsrc,"list") & length(weibullsrc) == 1) {
       wblcroped <- raster::crop(weibullsrc[[1]], raster::extent(PolyCrop))
       wblcroped <- raster::mask(weibullsrc[[1]], PolyCrop)
       Erwartungswert <- wblcroped[[1]]
-    } else if (class(weibullsrc) == "RasterLayer") {
+    } else if (inherits(weibullsrc,"RasterLayer")) {
       wblcroped <- raster::crop(weibullsrc, raster::extent(PolyCrop))
       wblcroped <- raster::mask(weibullsrc, PolyCrop)
       Erwartungswert <- wblcroped
@@ -678,8 +678,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
       subset.matrix(i, subset = c(TRUE, rep(FALSE, nrow(i) - 1)),
                     select = "EnergyOverall")
     })
-    b <- data.frame(cbind(a), stringsAsFactors = FALSE)
-    order1 <- order(b, decreasing = TRUE)
+    order1 <- order(a, decreasing = TRUE)
     result <- result[order1, ]
     beste <- which
   } else {
@@ -1018,9 +1017,9 @@ plot_parkfitness <- function(result, spar = 0.1) {
   
   ## Plot Fitness, Selection, Crossover and Fitness Deviation #####################
   sddata <- plot_cloud(result)
-  fitsd <- sddata[, grep(pattern = "Fit", colnames(sddata))]
-  effsd <- sddata[, grep(pattern = "Eff", colnames(sddata))]
-  enesd <- sddata[, grep(pattern = "Ene", colnames(sddata))]
+  fitsd <- sddata[, grep(pattern = "Fit", colnames(sddata)), drop=FALSE]
+  effsd <- sddata[, grep(pattern = "Eff", colnames(sddata)), drop=FALSE]
+  enesd <- sddata[, grep(pattern = "Ene", colnames(sddata)), drop=FALSE]
   graphics::par(mfrow = c(4, 1))
   plot(rslt$minparkfitness, xaxt = "n", main = "Parkfitness per Generation", 
        ylab = "Parkfitness", xlab = "Generation",

@@ -1,5 +1,4 @@
 context("Test GA")
-library(sf)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
