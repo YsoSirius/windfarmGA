@@ -37,9 +37,6 @@
 #' @importFrom stats runif smooth.spline sd aggregate median dist complete.cases
 #'   quantile
 #' @importFrom utils download.file unzip read.csv globalVariables
-#' @importFrom doParallel registerDoParallel
-#' @importFrom parallel makeCluster stopCluster detectCores
-#' @importFrom foreach foreach %dopar% 
 #' @importFrom methods as
 #' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr %>% 

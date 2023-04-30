@@ -38,7 +38,8 @@
 #' ## or with random locations and 5 crossover parts
 #' crossover(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 #'
-crossover <- function(se6, u, uplimit, crossPart, verbose, seed) {
+crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed) {
+  crossPart <- match.arg(crossPart)
   if (missing(verbose)) {
     verbose <- FALSE
   }

@@ -1,6 +1,4 @@
 context("Plots")
-library(raster)
-library(stars)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -10,7 +8,10 @@ quiet <- function(x) {
 }
 
 test_that("Test Plotting Functions", {
-  skip_on_cran()
+  library(raster)
+  library(stars)
+  
+  # skip_on_cran()
   # skip_on_os(os = "mac")
   
   ## Windrose Plotting #############

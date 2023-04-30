@@ -1017,9 +1017,9 @@ plot_parkfitness <- function(result, spar = 0.1) {
   
   ## Plot Fitness, Selection, Crossover and Fitness Deviation #####################
   sddata <- plot_cloud(result)
-  fitsd <- sddata[, grep(pattern = "Fit", colnames(sddata))]
-  effsd <- sddata[, grep(pattern = "Eff", colnames(sddata))]
-  enesd <- sddata[, grep(pattern = "Ene", colnames(sddata))]
+  fitsd <- sddata[, grep(pattern = "Fit", colnames(sddata)), drop=FALSE]
+  effsd <- sddata[, grep(pattern = "Eff", colnames(sddata)), drop=FALSE]
+  enesd <- sddata[, grep(pattern = "Ene", colnames(sddata)), drop=FALSE]
   graphics::par(mfrow = c(4, 1))
   plot(rslt$minparkfitness, xaxt = "n", main = "Parkfitness per Generation", 
        ylab = "Parkfitness", xlab = "Generation",
