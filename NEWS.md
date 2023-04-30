@@ -1,4 +1,5 @@
 # Updates 3.0.1
+- Removed package dependencies on `rgdal` and `rgeos`
 - Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
 - Fix `getISO3` - only use `sf::st_is_valid` countries from `rworldmap::getMap`
 - `projectRaster` seems to require CRS as character and not as CRS object
