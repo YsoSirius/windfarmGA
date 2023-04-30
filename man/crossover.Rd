@@ -4,7 +4,7 @@
 \alias{crossover}
 \title{Crossover Method}
 \usage{
-crossover(se6, u, uplimit, crossPart, verbose, seed)
+crossover(se6, u, uplimit, crossPart = c("EQU", "RAN"), verbose, seed)
 }
 \arguments{
 \item{se6}{The selected individuals. The output of \code{\link{selection}}}

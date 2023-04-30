@@ -1,23 +1,23 @@
 # Updates 3.0.1
-- Removed package dependencies on `rgdal` and `rgeos`
-- Moved dependencies `foreach`, `parallel`, `doParallel` to Suggests
-- Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
-- Fix `getISO3` - only use `sf::st_is_valid` countries from `rworldmap::getMap`
-- `projectRaster` seems to require CRS as character and not as CRS object
-- supressWarnings for plot-tests
+* Removed package dependencies on `rgdal` and `rgeos`
+* Moved dependencies `foreach`, `parallel`, `doParallel` to Suggests
+* Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
+* Fix `getISO3` - only use `sf::st_is_valid` countries from `rworldmap::getMap`
+* `projectRaster` seems to require CRS as character and not as CRS object
+* supressWarnings for plot-tests
 
 # Updates 3.0.0
-- The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
-- The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`.
-- The new dependency `elevatr` has been added because it provides elevation data with a higher resolution compared to `raster::getData`.
-- Several `dependencies` that are not essential for the algorithm were moved to `Suggests`.
-- Bugfix for the calculation of the visibility analysis. [#17](https://github.com/YsoSirius/windfarmGA/issues/17)
-- The `viewshed` parameter `h1` can now also be a numeric vector with different height offsets. [#18](https://github.com/YsoSirius/windfarmGA/issues/18)
-- The `grid_area` argument `resol` changed to `size`.
-- The arguments for `get_dist_angles` have changed to match the arguments of `turbine_influences`.
+* The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
+* The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`.
+* The new dependency `elevatr` has been added because it provides elevation data with a higher resolution compared to `raster::getData`.
+* Several `dependencies` that are not essential for the algorithm were moved to `Suggests`.
+* Bugfix for the calculation of the visibility analysis. [#17](https://github.com/YsoSirius/windfarmGA/issues/17)
+* The `viewshed` parameter `h1` can now also be a numeric vector with different height offsets. [#18](https://github.com/YsoSirius/windfarmGA/issues/18)
+* The `grid_area` argument `resol` changed to `size`.
+* The arguments for `get_dist_angles` have changed to match the arguments of `turbine_influences`.
 
 # Updates 2.3.0
-- Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:
+* Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:
   ```sh
   Warning message:
   In showSRID(uprojargs, format = "PROJ", multiline = "NO", prefer_proj = prefer_proj) :
@@ -25,8 +25,8 @@
   ```
 
 # Updates 2.2.3
-- Fix tests for R 3.4.0, as class(matrix) is of length 2.
-- Expose more options which can be set with `options(windfarmGA.cT = 0.75)`:  
+* Fix tests for R 3.4.0, as class(matrix) is of length 2.
+* Expose more options which can be set with `options(windfarmGA.cT = 0.75)`:  
 
   Options = Default value           | Description
   ----------------------------------| ------------------------  
@@ -41,10 +41,10 @@
 # Updates 2.2.2
 
 #### Pkgdown
-- A [pkgdown documentation](https://ysosirius.github.io/windfarmGA/) site is now available.
+* A [pkgdown documentation](https://ysosirius.github.io/windfarmGA/) site is now available.
 
 #### Renaming Functions
-- Almost all functions have been renamed to have a consistent appearance and a clearer meaning.
+* Almost all functions have been renamed to have a consistent appearance and a clearer meaning.
 The old functions still exist, but are deprecated now.
 
   <details>
@@ -83,30 +83,30 @@ The old functions still exist, but are deprecated now.
   </details>
 
 #### Bugfixes / Other Changes 
-- The legend of `plot_leaflet` now works correctly.
+* The legend of `plot_leaflet` now works correctly.
 
-- Some general linting / spell checking / performance optimization was done.
+* Some general linting / spell checking / performance optimization was done.
 
-- The Weibull Raster (for Austria) are now in a separate [Github-repository](https://github.com/YsoSirius/windfarm_data), instead of
+* The Weibull Raster (for Austria) are now in a separate [Github-repository](https://github.com/YsoSirius/windfarm_data), instead of
 being stored in the package as .rda file. I guess this never worked except on my computer.
 
-- The Corine Land Cover .tif file is also stored in that repository, as the EEA webpage did restrict
+* The Corine Land Cover .tif file is also stored in that repository, as the EEA webpage did restrict
 downloads sometimes, which resulted in an error.
 
-- The `plot_farm_3d` function has temporarily been removed from the package.
+* The `plot_farm_3d` function has temporarily been removed from the package.
 
-- Most functions that required user-input previously used `readline` which is now changed to `readLines` as it allows to read from a file instead. This can be set via `options(windfarmGA.connection = file())`.
+* Most functions that required user-input previously used `readline` which is now changed to `readLines` as it allows to read from a file instead. This can be set via `options(windfarmGA.connection = file())`.
 
-- A whole lot of tests were written.
+* A whole lot of tests were written.
 
 # Updates 2.2.1
 
 #### Performance Tuning / Restructuring
-- Switch to **matrices** instead of data.frames and a lot of restructuring and 
+* Switch to **matrices** instead of data.frames and a lot of restructuring and 
 performance optimization of the whole algorithm.
 
 #### Viewshed Analysis
-- New set of functions, to analyze the visual impact of a wind farm.
+* New set of functions, to analyze the visual impact of a wind farm.
     + `cansee`,
     + `viewTo`, 
     + `rasterprofile`, 
@@ -117,9 +117,9 @@ performance optimization of the whole algorithm.
     + `getDEM`
 
 #### Other Changes 
-- The function `genAlgo`/`windfarmGA` and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting **topograp** to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.
+* The function `genAlgo`/`windfarmGA` and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting **topograp** to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.
 
-- `plot_farm_3d` Experimental rayshader function
+* `plot_farm_3d` Experimental rayshader function
 
 # Updates 1.2.1
 
