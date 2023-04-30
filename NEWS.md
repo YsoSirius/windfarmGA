@@ -1,4 +1,4 @@
-# Updates 3.0.1
+# windfarmGA 3.1.0
 * Removed package dependencies on `rgdal` and `rgeos`
 * Moved dependencies `foreach`, `parallel`, `doParallel` to Suggests
 * Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
@@ -6,7 +6,7 @@
 * `projectRaster` seems to require CRS as character and not as CRS object
 * supressWarnings for plot-tests
 
-# Updates 3.0.0
+# windfarmGA 3.0.0
 * The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
 * The functions `grid_area` & `hexa_area` are now calculated with `sf::st_make_grid`.
 * The new dependency `elevatr` has been added because it provides elevation data with a higher resolution compared to `raster::getData`.
@@ -16,7 +16,7 @@
 * The `grid_area` argument `resol` changed to `size`.
 * The arguments for `get_dist_angles` have changed to match the arguments of `turbine_influences`.
 
-# Updates 2.3.0
+# windfarmGA 2.3.0
 * Due to the changes in the PROJ 6 library and its handling of coordinate reference systems, some adjustments were necessary. Attempts were made to ensure backward compatibility. However, warnings like the following are now increasingly displayed:
   ```sh
   Warning message:
@@ -24,7 +24,7 @@
     Discarded datum European_Terrestrial_Reference_System_1989 in CRS definition
   ```
 
-# Updates 2.2.3
+# windfarmGA 2.2.3
 * Fix tests for R 3.4.0, as class(matrix) is of length 2.
 * Expose more options which can be set with `options(windfarmGA.cT = 0.75)`:  
 
@@ -38,7 +38,7 @@
   windfarmGA.max_population = 300   | Maximum amount of individuals per generation
   windfarmGA.max_selection = 100    | Maximum amount of selected individuals
 
-# Updates 2.2.2
+# windfarmGA 2.2.2
 
 #### Pkgdown
 * A [pkgdown documentation](https://ysosirius.github.io/windfarmGA/) site is now available.
@@ -99,7 +99,7 @@ downloads sometimes, which resulted in an error.
 
 * A whole lot of tests were written.
 
-# Updates 2.2.1
+# windfarmGA 2.2.1
 
 #### Performance Tuning / Restructuring
 * Switch to **matrices** instead of data.frames and a lot of restructuring and 
@@ -121,7 +121,7 @@ performance optimization of the whole algorithm.
 
 * `plot_farm_3d` Experimental rayshader function
 
-# Updates 1.2.1
+# windfarmGA 1.2.1
 
 #### Randomization
 The output of `genAlgo` or `windfarmGA` can be further randomized/optimized with the following
@@ -143,7 +143,7 @@ Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
 RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
 ```
 
-# Updates 1.2
+# windfarmGA 1.2
 #### Parallel Processing
 ```sh
 ## Runs the same optimization, but with parallel processing and 3 cores.
@@ -157,7 +157,7 @@ result_par <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
 PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
 ```
 
-# Updates 1.1
+# windfarmGA 1.1
 
 
 #### Optimization with Hexagonal Grid Cells
