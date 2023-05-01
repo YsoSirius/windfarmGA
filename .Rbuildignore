@@ -35,3 +35,4 @@ release_to_cran.R
 ^_experiment$
 ^revdep$
 ^\.github$
+^CRAN-SUBMISSION$
