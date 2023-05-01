@@ -139,6 +139,7 @@ resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
 \seealso{
 Other Wind Energy Calculation Functions: 
 \code{\link{barometric_height}()},
+\code{\link{circle_intersection}()},
 \code{\link{get_dist_angles}()},
 \code{\link{turbine_influences}()}
 }
