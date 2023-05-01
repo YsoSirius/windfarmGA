@@ -23,7 +23,7 @@ effects are considered to be eliminated.}
 angles. Default is \code{FALSE}}
 }
 \value{
-Returns a matrix with the distances and angles of potentially
+Returns a matrix with the distances, angles and heights of potentially
   influencing turbines
 }
 \description{
