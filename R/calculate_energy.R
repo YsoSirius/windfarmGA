@@ -107,6 +107,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   windpo <- rep(1, n_turbines)
 
   ## Terrain Effect Model ###################
+  turb_elev <- rep(1, nrow(xy_individual))
   if (topograp) {
     ## Calculate Wind multiplier - Hills get higher values, valleys get lower values.
     wind_multiplier <- srtm_crop[[2]]
@@ -119,6 +120,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     turb_elev <- raster::extract(x = srtm_crop[[1]], y = xy_individual,
                                  small = TRUE, fun = max, na.rm = FALSE)
     turb_elev[is.na(turb_elev)] <- mean(turb_elev, na.rm = TRUE)
+    
     ## Plot the elevation and the wind speed multiplier rasters
     if (plotit) {
       par(mfrow = c(2, 1))
@@ -145,7 +147,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       plot(srtm_crop[[1]], main = "Normal Air Density", col = topo.colors(10))
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
-                        labs = rep(air_rh, nrow(xy_individual)), cex = 0.8)
+                        labs = rep(round(air_rh,2), nrow(xy_individual)), cex = 0.8)
       plot(st_geometry(polygon1), add = TRUE)
       raster::plot(srtm_crop[[1]], main = "Corrected Air Density",
                    col = topo.colors(10))
@@ -281,8 +283,8 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     }
 
     ## Bind Wind Data and X/Y Coords together
-    dat_xyspeed <- cbind(point_wind, xy_individual_rot)
-    colnames(dat_xyspeed) <- c("Windmittel", "X", "Y")
+    dat_xyspeed <- cbind(point_wind, turb_elev ,xy_individual_rot)
+    colnames(dat_xyspeed) <- c("Windmittel", "Z", "X", "Y")
 
     ## Get the influecing points given with incoming wind direction angle
     ## and reduce then to data frame
@@ -301,12 +303,13 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     ## the rotor radius
     tmp <- lapply(seq_len(max(df_all[, "Punkt_id"])), function(i) {
       cbind(subset.matrix(df_all, df_all[, "Punkt_id"] == i),
-            "Windmean" = dat_xyspeed[, 1L][i])
+            "Windmean" = dat_xyspeed[, 1L][i],
+            "Height" = dat_xyspeed[, 2L][i])
     })
     windlist <- do.call("rbind", tmp)
     windlist <- windlist[, c("Punkt_id", "Ax", "Ay", "Bx", "By",
                              "Laenge_B", "Laenge_A", "alpha",
-                             "Windrichtung", "Windmean"), drop = FALSE]
+                             "Windrichtung", "Windmean","Height"), drop = FALSE]
     row.names(windlist) <- NULL
     windlist <- cbind(windlist,
                       "RotorR" = as.numeric(RotorR))
@@ -330,6 +333,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
 
     ## Calculate the overlapping area and the overlapping percentage.
     ## TODO make this in 3D (especially if terrain is included)
+    browser()
     tmp <- sapply(1:lnro, function(o) {
       Rotorf <- windlist[o, "RotorR"]
       leA <- windlist[o, "Laenge_A"]
