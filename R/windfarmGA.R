@@ -74,7 +74,7 @@ windfarmGA <- function(dns, layer, Polygon1, GridMethod, Projection,
       Polygon1 <- sf::st_transform(Polygon1, st_crs(Projection))
     }
   } else {
-    if (as.character(raster::crs(Polygon1)) != Projection) {
+    if (as.character(terra::crs(Polygon1)) != Projection) {
       Polygon1 <- sf::st_transform(Polygon1, st_crs(Projection))
     }
   }

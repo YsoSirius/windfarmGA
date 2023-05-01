@@ -44,7 +44,7 @@ locs = st_sample(shape, 10, type = "random");
 mw <- methods::as(methods::as(r1, "SpatialPixelsDataFrame"), "SpatialPolygons")
 sample_xy <- st_coordinates(st_centroid(st_as_sf(mw)))
 
-viewTo(r1, sample_xy[4,], sample_xy, h1=1.8, h2=3, min(raster::res(r1)),
+viewTo(r1, sample_xy[4,], sample_xy, h1=1.8, h2=3, min(terra::res(r1)),
        plot=TRUE, interpolate=TRUE, asp=0.5)
 }
 }

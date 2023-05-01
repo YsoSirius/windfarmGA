@@ -301,6 +301,10 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   if  (selstate != "FIX" & selstate != "VAR") {
     selstate <- readintegerSel()
   }
+  topgraphie_text <- topograp
+  if (inherits(topograp, "SpatRaster") || inherits(topograp, "RasterLayer")) {
+    topgraphie_text <- TRUE
+  }
   inputData <- list(
     Input_Data = rbind("Rotorradius" = Rotor,
                        "Number of turbines" = n,
@@ -308,7 +312,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                        "Iterations" = iteration,
                        "Mutation Rate" = mutr,
                        "Percentage of Polygon" = Proportionality,
-                       "Topographie" = !isFALSE(topograp),
+                       "Topographie" = topgraphie_text,
                        "Elitarism" = elitism,
                        "Selection Method" = selstate,
                        "Trim Force Method Used" = trimForce,
@@ -338,7 +342,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   } else {
-    if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
+    if (as.character(terra::crs(Polygon1)) != ProjLAEA) {
       Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   }
@@ -473,6 +477,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                                     rauhigkeitz$Rauhigkeit_z),
                                                   ncol = 2))
     
+    topograp = TRUE
     if (plotit) {
       terra::plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
     }

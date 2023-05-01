@@ -33,7 +33,7 @@ res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]], turbine_locs = turbl
                 h1 = 1.8, h2 = 50)
 plot_viewshed(res)
 
-## ... Arguments are past on to raster::plot
+## ... Arguments are past on to terra::plot
 plot_viewshed(res, legend = TRUE, interpolate=TRUE, colNA="black", 
               col = topo.colors(15))
 }

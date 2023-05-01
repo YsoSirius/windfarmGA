@@ -439,12 +439,10 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 }
 plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   ## Plot DEM and windspeed multiplier ############
-  orogrnum <- terra::extract(x = orogr1, y = as.matrix(sel1),
-                              small = TRUE, fun = mean, na.rm = TRUE)
+  orogrnum <- terra::extract(x = orogr1, y = as.matrix(sel1))
   windpo <- 1 * orogrnum
   ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-  heightWind <- terra::extract(x = srtm_crop, y = as.matrix((sel1)), 
-                                small = TRUE, fun = max, na.rm = TRUE)
+  heightWind <- terra::extract(x = srtm_crop, y = as.matrix(sel1))
   par(mfrow = c(1, 2))
   cexa <- 0.9
   terra::plot(srtm_crop, main = "Elevation Data")
@@ -475,11 +473,9 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   plot(polygon1, add = TRUE)
   
   ## CorineLandCover Roughness values ##################
-  SurfaceRoughness0 <- terra::extract(x = cclRaster, y = as.matrix((sel1)),
-                                       small = TRUE, fun = mean, na.rm = TRUE)
+  SurfaceRoughness0 <- terra::extract(x = cclRaster, y = as.matrix(sel1))
   SurfaceRoughness1 <- terra::extract(x = terra::terrain(srtm_crop, "roughness"),
-                                       y = as.matrix((sel1)),
-                                       small = TRUE, fun = mean, na.rm = TRUE)
+                                       y = as.matrix(sel1))
   SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1 / max(terra::res(srtm_crop))))
   elrouind <- terra::terrain(srtm_crop, "roughness")
   elrouindn <- terra::resample(elrouind, cclRaster, method = "near")
