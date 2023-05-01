@@ -458,6 +458,7 @@ circle_intersection <- function(r1, r2, h1, h2, dx) {
   d <- sqrt((dx^2 + (h1-h2)^2))
   
   if (d >= r2 + r1) {
+    # message("No overlap")
     return(0)
   } 
   else if (d <= abs(r1 - r2) && r1 >= r2) { 
