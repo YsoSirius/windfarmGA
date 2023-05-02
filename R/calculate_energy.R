@@ -107,6 +107,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   windpo <- rep(1, n_turbines)
 
   ## Terrain Effect Model ###################
+  turb_elev <- rep(1, nrow(xy_individual))
   if (topograp) {
     ## Calculate Wind multiplier - Hills get higher values, valleys get lower values.
     wind_multiplier <- srtm_crop[[2]]
@@ -119,6 +120,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     turb_elev <- raster::extract(x = srtm_crop[[1]], y = xy_individual,
                                  small = TRUE, fun = max, na.rm = FALSE)
     turb_elev[is.na(turb_elev)] <- mean(turb_elev, na.rm = TRUE)
+    
     ## Plot the elevation and the wind speed multiplier rasters
     if (plotit) {
       par(mfrow = c(2, 1))
@@ -145,7 +147,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       plot(srtm_crop[[1]], main = "Normal Air Density", col = topo.colors(10))
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
-                        labs = rep(air_rh, nrow(xy_individual)), cex = 0.8)
+                        labs = rep(round(air_rh,2), nrow(xy_individual)), cex = 0.8)
       plot(st_geometry(polygon1), add = TRUE)
       raster::plot(srtm_crop[[1]], main = "Corrected Air Density",
                    col = topo.colors(10))
@@ -236,15 +238,15 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   ## another one to calculate total energy output.
   alllist <- vector("list", length(dirSpeed[, 1]))
   for (index in 1:length(dirSpeed[, 2])) {
-    ## Get mean windspeed for every turbine location from windraster
+    ## Get mean windspeed for every turbine location from windraster ##################
     point_wind <- windpo * dirSpeed[index, "ws"]
 
-    ## If Weibull is active/raster, multiply wind speeds with dummy vector
+    ## If Weibull is active/raster, multiply wind speeds with dummy vector ##################
     if (weibull_bool) {
       point_wind <- windpo * estim_speed
     }
 
-    ## Calculate Windspeed according to Rotor Height using wind profile law
+    ## Calculate Windspeed according to Rotor Height using wind profile law ##################
     ## TODO MISSING: Include other laws: -log
     point_wind <- point_wind * ((RotorHeight / referenceHeight) ^ SurfaceRoughness)
     point_wind[is.na(point_wind)] <- 0
@@ -272,7 +274,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                   nrow(dirSpeed)), side = 1)
     }
 
-    ## Rotate Coordinates by the incoming wind direction
+    ## Rotate Coordinates by the incoming wind direction ##################
     xy_individual_rot <- rotate_CPP(xy_individual[, 1], xy_individual[, 2],
                                 pcent[1], pcent[2], angle)
     if (plotit) {
@@ -280,23 +282,23 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       points(xy_individual_rot[, 1], xy_individual_rot[, 2], col = "red", pch = 20)
     }
 
-    ## Bind Wind Data and X/Y Coords together
+    ## Bind Wind Data and X/Y Coords together ##################
+    xy_individual_rot <- cbind(xy_individual_rot, "Z"=turb_elev)
     dat_xyspeed <- cbind(point_wind, xy_individual_rot)
-    colnames(dat_xyspeed) <- c("Windmittel", "X", "Y")
+    colnames(dat_xyspeed) <- c("Windmittel", "X", "Y", "Z")
 
-    ## Get the influecing points given with incoming wind direction angle
+    ## Get the influecing points given with incoming wind direction angle ##################
     ## and reduce then to data frame
     tmp <- turbine_influences(t = xy_individual_rot, wnkl = wnkl, dist = distanz,
                               polYgon = polygon1, dirct = angle)
     df_all <- do.call("rbind", tmp)
 
-    ## Sometimes betha / gamma are NA - Set to 0.. 
-    ## TODO Why/When is that hapenning?
+    ## Sometimes betha / gamma are NA - Set to 0
     if (any(is.na(df_all))) {
       df_all[which(is.na(df_all))] <- 0
     }
 
-    ## Create a list for every turbine
+    ## Create a list for every turbine ##################
     ## Assign Windspeed to a filtered list with all turbines and add
     ## the rotor radius
     tmp <- lapply(seq_len(max(df_all[, "Punkt_id"])), function(i) {
@@ -306,21 +308,24 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     windlist <- do.call("rbind", tmp)
     windlist <- windlist[, c("Punkt_id", "Ax", "Ay", "Bx", "By",
                              "Laenge_B", "Laenge_A", "alpha",
-                             "Windrichtung", "Windmean"), drop = FALSE]
+                             "Windrichtung", "Windmean",
+                             "height1", "height2"), drop = FALSE]
     row.names(windlist) <- NULL
     windlist <- cbind(windlist,
                       "RotorR" = as.numeric(RotorR))
 
-    ## Change k to lenght of windlist. Repeat or Inflate vector k
+    ## Change k to lenght of windlist. Repeat or Inflate vector k ##################
     if (!topograp) {
       ## Repeat the vector k
       k1 <- rep(k, length(windlist[, 1]))
     } else {
       ## Inflate the vector k
-      k1 <- rep(k, table(windlist[, "Punkt_id"]))
+      k1 <- rep(k, times=table(windlist[, "Punkt_id"]))
+      # nmrd <- table(windlist[, "Punkt_id"])
+      # k1 <- rep(rep(k, length(nmrd)), times = as.numeric(nmrd))
     }
 
-    ## Calculate the wake Radius and the rotor area for every turbine
+    ## Calculate the wake Radius and the rotor area for every turbine ##################
     lnro <- length(windlist[, 1])
     windlist <- cbind(windlist,
                       "WakeR" = as.numeric(windlist[, "Laenge_B"] > 0) *
@@ -328,8 +333,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                            windlist[, "Laenge_B"]) / 2,
                       "Rotorflaeche" = (windlist[, "RotorR"] ^ 2) * pi )
 
-    ## Calculate the overlapping area and the overlapping percentage.
-    ## TODO make this in 3D (especially if terrain is included)
+    ## Calculate the overlapping area and the overlapping percentage. ##################
     tmp <- sapply(1:lnro, function(o) {
       Rotorf <- windlist[o, "RotorR"]
       leA <- windlist[o, "Laenge_A"]
@@ -337,17 +341,9 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       if (windlist[o, "Laenge_B"] == 0) {
         aov <- 0
       } else {
-        ## TODO - why not if-else ?
-        if ( (wakr - Rotorf) >= leA && leA >= 0) {
-          aov <- (windlist[o, "RotorR"] ^ 2) * pi
-        }
-        if ( (wakr + Rotorf) <= leA) {
-          aov <- 0
-        }
-        if ( (wakr - Rotorf) <= leA && leA <= (wakr + Rotorf))  {
-          aov <- wake_CPP(Rotorf = Rotorf,  wakr = wakr, leA = leA)
-        }
+        aov <- circle_intersection(Rotorf, wakr, windlist[o,"height1"], windlist[o,"height2"], leA)
       }
+      
       if (aov != 0) {
         absch <- ((aov / windlist[o, "Rotorflaeche"]) * 100)
       } else {
@@ -359,7 +355,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                       "A_ov" = round(tmp[1, ], 4),
                       "AbschatInProz" = round(tmp[2, ], 4))
 
-    ## Calculate the wind velocity reduction.
+    ## Calculate the wind velocity reduction. ##################
     a <- 1 - sqrt(1 - cT)
     s <- windlist[, "Laenge_B"] / windlist[, "RotorR"]
     b <- (1 + (k1 * s))^2
@@ -368,7 +364,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     windlist <- cbind(windlist,
                       "V_red" = vredu)
 
-    ## Calculate multiple wake effects, total wake influence,
+    ## Calculate multiple wake effects, total wake influence, ##################
     ## the new resulting wind velocity and add the Grid IDs.
     whichh <- windlist[, "Punkt_id"]
     windlist <- cbind(windlist,
@@ -377,26 +373,26 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                       "V_New" = 0,
                       "Rect_ID" = 0)
 
-    ## Sum up the wind speed reduction from all possible influental turbines
+    ## Sum up the wind speed reduction from all possible influental turbines ##################
     windlist[, "V_i"] <- unlist(lapply(unique(whichh), function(i) {
       sums <- sqrt(sum(windlist[whichh == i, "V_red"] ^ 2))
       rep(sums, length(windlist[whichh == i, "V_red"]))
     }))
-    ## Sum up the wake effects from all possible influental turbines
+    ## Sum up the wake effects from all possible influental turbines ##################
     windlist[, "TotAbschProz"] <- unlist(lapply(unique(whichh), function(i) {
       absch <- windlist[whichh == i, "AbschatInProz"]
       rep(sum(absch), length(absch))
     }))
-    ## Caluclate new wins speed, after reduction
+    ## Caluclate new wind speed, after reduction ##################
     windlist[, "V_New"] <- unlist(lapply(unique(whichh), function(i) {
       windlist[whichh == i, "Windmean"] - windlist[whichh == i, "V_i"]
     }))
-    ## Assign the Grid-ID to all influential turbines
+    ## Assign the Grid-ID to all influential turbines ##################
     windlist[, "Rect_ID"] <-  unlist(lapply(unique(whichh), function(i) {
       rep(sel[i, "ID"], length(windlist[whichh == i, 1]))
     }))
 
-    ## Get a reduced dataframe and split duplicated Point_id, since a
+    ## Get a reduced dataframe and split duplicated Point_id, since a ##################
     ## turbine with fixed Point_id, can have several influencing turbines
     ## and therefore several matrix rows
     windlist2 <- subset.matrix(
@@ -406,18 +402,18 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                  "Windmean", "RotorR", "WakeR", "A_ov",
                  "TotAbschProz", "V_New", "Rect_ID"))
 
-    ## Get unique turbine locations, to calculate correct energy outputs
+    ## Get unique turbine locations, to calculate correct energy outputs ##################
     windlist1 <- subset.matrix(windlist2,
                                subset = !duplicated(windlist2[, "Punkt_id"]))
 
-    ## Change air-density to length of windlist1. Repeat or inflate
+    ## Change air-density to length of windlist1. Repeat or inflate ##################
     if (!topograp) {
       airrh <- rep(air_rh, length(windlist1[, 1]))
     } else {
       airrh <- air_rh
     }
 
-    ## Calculate Full and Reduced Energy Outputs in kW and
+    ## Calculate Full and Reduced Energy Outputs in kW and ##################
     ## Park Efficienca in %.
     energy_reduced <- energy_calc_CPP(windlist1[, "V_New"],
                                  windlist1[, "RotorR"], airrh)
@@ -426,7 +422,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     efficiency <- (energy_reduced * 100) / energy_full
 
 
-    ## Assign values back to complete matrix
+    ## Assign values back to complete matrix ##################
     windlist2 <- cbind(windlist2,
                        "Energy_Output_Red" = energy_reduced,
                        "Energy_Output_Voll" = energy_full,
@@ -438,3 +434,48 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   }
   invisible(alllist)
 }
+
+#' @title Get area of intersecting circles
+#' @name circle_intersection
+#' @description Calculate the intersection area of two circles with different 
+#'   raddi and different heights
+#'
+#' @export
+#'
+#' @param r1 The radius of circle 1
+#' @param r2 The radius of circle 2
+#' @param h1 The height of the circle center 1
+#' @param h2 The height of the circle center 2
+#' @param dx The distance on the x-axis between both centers
+#'
+#' @family Wind Energy Calculation Functions
+#' @return A numeric value
+#'
+#' @examples \dontrun{
+circle_intersection <- function(r1, r2, h1, h2, dx) {
+  rr1 <- r1 * r1
+  rr2 <- r2 * r2
+  d <- sqrt((dx^2 + (h1-h2)^2))
+  
+  if (d >= r2 + r1) {
+    # message("No overlap")
+    return(0)
+  } 
+  else if (d <= abs(r1 - r2) && r1 >= r2) { 
+    # message("circle2 is fully inside circle1")
+    return(pi * rr2)
+  } 
+  else if (d <= abs(r1 - r2) && r1 < r2) {
+    # message("circle1 is fully inside circle2")
+    return(pi * rr1)
+  } else { 
+    # message("Partial Overlap")
+    phi <- (acos((rr1 + (d * d) - rr2) / (2 * r1 * d))) * 2
+    theta <- (acos((rr2 + (d * d) - rr1) / (2 * r2 * d))) * 2
+    area2 <- 0.5 * theta * rr2 - 0.5 * rr2 * sin(theta)
+    area1 <- 0.5 * phi * rr1 - 0.5 * rr1 * sin(phi)
+    return(area1 + area2)
+  }
+}
+
+

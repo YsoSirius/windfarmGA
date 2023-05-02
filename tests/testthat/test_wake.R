@@ -13,6 +13,32 @@ test_that("Test Wake Functions", {
   wnkl <- 20; dist <- 100000; dirct <- 0
   t <- st_coordinates(st_sample(polYgon, 10))
   
+  ## Test circle_intersection Function --------------
+  ###########################################
+  aov <- circle_intersection(10, 20, 10, 20, 10)
+  expect_is(aov, "numeric")
+  expect_length(aov, 1)
+  expect_gt(aov, 250)
+  expect_lt(aov, 260)
+  aov <- circle_intersection(10, 20, 10, 30, 0)
+  expect_is(aov, "numeric")
+  expect_length(aov, 1)
+  expect_gt(aov, 130)
+  expect_lt(aov, 150)
+  aov <- circle_intersection(10, 20, 10, 20, 100)
+  expect_is(aov, "numeric")
+  expect_identical(aov, 0)
+  aov <- circle_intersection(10, 20, 10, 100, 10)
+  expect_is(aov, "numeric")
+  expect_identical(aov, 0)
+  aov <- circle_intersection(10, 30, 10, 10, 0)
+  expect_is(aov, "numeric")
+  expect_identical(aov, 10^2*pi)
+  aov <- circle_intersection(40, 30, 10, 10, 0)
+  expect_is(aov, "numeric")
+  expect_identical(aov, 30^2*pi)
+  
+  
   ## Test get_dist_angles Function --------------
   ###########################################
   distanz <- 100000
