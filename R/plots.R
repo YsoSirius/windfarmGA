@@ -249,6 +249,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     col2res <- "lightblue"
   }
   else {
+    ## TODO
     browser()
     PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
     if (inherits(weibullsrc,"list") & length(weibullsrc) == 2) {
@@ -291,6 +292,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
                        stop("\nDownloading Elevation data failed for the given Polygon.\n",
                             e, call. = FALSE)
                      })
+    srtm <- terra::rast(srtm)
     srtm_crop <- terra::crop(srtm, Polygonwgs84)
     srtm_crop <- terra::mask(srtm_crop, Polygonwgs84)
     srtm_crop <- terra::project(srtm_crop, terra::crs(Polygon1))

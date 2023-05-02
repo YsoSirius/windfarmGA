@@ -302,7 +302,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     selstate <- readintegerSel()
   }
   topgraphie_text <- topograp
-  if (inherits(topograp, "SpatRaster") || inherits(topograp, "RasterLayer")) {
+  if (inherits(topograp, "SpatRaster") || inherits(topograp, "RasterLayer") || inherits(topograp, "stars")) {
     topgraphie_text <- TRUE
   }
   inputData <- list(
@@ -437,7 +437,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                e, call. = FALSE)
         })      
     } else {
-      if (inherits(topograp, "RasterLayer") || inherits(topograp, "character")) {
+      if (!inherits(topograp, "SpatRaster")) {
         srtm <- terra::rast(topograp)
       } else {
         srtm <- topograp
