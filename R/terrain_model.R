@@ -12,14 +12,12 @@
 #' @examples \donttest{
 #' }
 terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughness, plotit, verbose) {
-  
-  if (verbose) {
-    cat("Topography and orography are taken into account.\n")
-  }
+  if (verbose) cat("Topography and orography are taken into account.\n")
   if (plotit) {
     par(mfrow = c(3, 1))
   }
   
+  ## Land Cover / Surface Roughness ################
   if (missing(sourceCCL) || is.null(sourceCCL)) {
     message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
             "the EEA-website.\n")
@@ -41,8 +39,12 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
   }
   cclPoly <- terra::crop(ccl, Polygon1)
   
-  ## SRTM Daten
+  ## DEM Data ######################
   if (isTRUE(topograp)) {
+    if (!requireNamespace("elevatr", quietly = TRUE)) {
+      stop("The package 'elevatr' is required for this function, but it is not installed.\n",
+           "Please install it with `install.packages('elevatr')`")
+    }
     Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
     srtm <- tryCatch(elevatr::get_elev_raster(verbose = verbose,
                                               locations = as(Polygon_wgs84, "Spatial"), z = 11),

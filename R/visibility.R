@@ -428,6 +428,10 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
 #' plot(DEM_meter[[2]], add=TRUE)
 #' }
 getDEM <- function(polygon, clip = TRUE) {
+  if (!requireNamespace("elevatr", quietly = TRUE)) {
+    stop("The package 'elevatr' is required for this function, but it is not installed.\n",
+         "Please install it with `install.packages('elevatr')`")
+  }
   Polygon_wgs84 <-  sf::st_transform(polygon, st_crs(4326))
   PROJ <- st_crs(polygon)
   DEM <- tryCatch(elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11),
