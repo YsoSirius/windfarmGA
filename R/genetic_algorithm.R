@@ -419,10 +419,13 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       }
       ccl <- terra::rast("g100_06.tif")
     } else {
-      ccl <- terra::rast(sourceCCL)
+      if (!inherits(sourceCCL, "SpatRaster")) {
+        ccl <- terra::rast(sourceCCL)
+      } else {
+        ccl <- sourceCCL
+      }
     }
     cclPoly <- terra::crop(ccl, Polygon1)
-    cclPoly1 <- terra::mask(cclPoly, Polygon1)
     
     ## SRTM Daten
     if (isTRUE(topograp)) {
@@ -473,7 +476,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
                                    header = TRUE, sep = ";")
-    cclRaster <- terra::classify(cclPoly1, matrix(c(rauhigkeitz$GRID_CODE,
+    cclRaster <- terra::classify(cclPoly, matrix(c(rauhigkeitz$GRID_CODE,
                                                     rauhigkeitz$Rauhigkeit_z),
                                                   ncol = 2))
     
