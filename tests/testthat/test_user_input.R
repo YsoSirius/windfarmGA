@@ -11,37 +11,6 @@ quiet <- function(x) {
 test_that("User Input", {
   # skip_on_cran()
   
-  ## getISO3 ################
-  f <- file()
-  options(windfarmGA.connection = f)
-  ans <- paste("ADMIN", collapse = "\n")
-  write(ans, f)
-  
-  points <- cbind(c(4488182.26267016, 4488852.91748256),
-                 c(2667398.93118627, 2667398.93118627))
-  res <- getISO3(pp = points, crs_pp = 3035, col="?")
-  expect_true(res[[1]][[1]] == "Austria")
-  expect_false(anyNA(res))
-  
-  # reset connection
-  options(windfarmGA.connection = stdin())
-  # close the file
-  close(f)
-  
-  ## Create Error
-  f <- file()
-  options(windfarmGA.connection = f)
-  ans <- paste("notexistent", collapse = "\n")
-  write(ans, f)
-  
-  points <- cbind(c(4488182.26267016, 4488852.91748256),
-                 c(2667398.93118627, 2667398.93118627))
-  expect_error(getISO3(pp = points, crs_pp = 3035, col="?"))
-  
-  # reset connection
-  options(windfarmGA.connection = stdin())
-  close(f)
-  
   ## random_search_single - Rects #############
   polygon <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(

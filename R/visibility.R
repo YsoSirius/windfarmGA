@@ -401,85 +401,14 @@ interpol_view <- function(res, plot=TRUE, breakseq, breakform = NULL,
   return(visible)
 }
 
-
-#' @title getISO3
-#' @name getISO3
-#' @description Get point values from the \code{\link[rworldmap]{getMap}}
-#'
-#' @export
-#' 
-#' @param pp Simple Feature Points or coordinate matrix/data.frame
-#' @param crs_pp The CRS of the points
-#' @param col Which column/s should be returned
-#' @param resol The search resolution. The options are "coarse","low",
-#'   "less islands","li","high". For "high" you need to install the 
-#'   package \code{rworldxtra}
-#' @param coords The column names of the point matrix
-#' @param ask A boolean, to ask which columns can be returned
-#' 
-#' @family Helper Functions
-#' @return A character vector
-#' 
-#' @examples \dontrun{
-#' library(sf)
-#' points = cbind(c(4488182.26267016, 4488852.91748256), 
-#'                c(2667398.93118627, 2667398.93118627))
-#' getISO3(pp = points, ask = TRUE, crs_pp = 3035)
-#' 
-#' points <- as.data.frame(points)
-#' colnames(points) <- c("x","y")
-#' points <- st_as_sf(points, coords = c("x","y"))
-#' st_crs(points) <- 3035
-#' getISO3(pp = points, crs_pp = 3035)
-#' }
-getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low", 
-                    coords = c("LONG", "LAT"), ask = FALSE) {
-  # pp= points; col = "ISO3"; crs_pp = 3035; resol = "low"; coords = c("LONG", "LAT")
-  if ("?" %in% col) {ask <- TRUE}
-  if (requireNamespace("rworldmap", quietly = TRUE)) {
-    countriesSP <- rworldmap::getMap(resolution = resol)
-  } else {
-    stop("The package 'rworldmap' is required for this function, but it is not installed.\n",
-         "Please install it with `install.packages('rworldmap')`")
-  }
-  if (ask == TRUE) {
-    print(sort(names(countriesSP)))
-    cat("Enter an ISO3 code: ")
-    col <- readLines(n = 1, con = getOption("windfarmGA.connection"))
-    if (length(col) == 0 && !col %in% sort(names(countriesSP))) {
-      stop("Column not found")
-    }
-  }
-  
-  ## if sf
-  if (class(pp)[1] %in% c("sf")) { 
-    pp <- sf::st_coordinates(pp)
-  }
-  
-  pp <- as.data.frame(pp, stringsAsFactor = FALSE)
-  colnames(pp) <- coords
-  pp <- st_as_sf(pp, coords = coords, crs = crs_pp)
-  pp <- st_transform(pp, crs = st_crs(countriesSP))
-  
-  # use 'st_intersection' to get the Polygons intersecting each point 
-  countries <- st_as_sf(countriesSP)
-  countries <- countries[st_is_valid(countries),]
-  worldmap_values <- suppressWarnings(st_intersection(pp, countries))
-  
-  # return desired column of each country
-  worldmap_values[, col]
-}
-
-
 #' @title Get DEM raster
 #' @name getDEM
-#' @description Get a DEM raster for a country based on ISO3 code
+#' @description Get a DEM raster for a polygon
 #'
 #' @export
 #'
-#' @param ISO3 The ISO3 code of the country
-#' @param clip boolean, indicating if polygon should be cropped. Default is TRUE
 #' @param polygon A Spatial / SimpleFeature Polygon to crop the DEM
+#' @param clip boolean, indicating if polygon should be cropped. Default is TRUE
 #'
 #' @family Helper Functions
 #' @return A list with the DEM raster, and a Simple Feature Polygon or NULL if
@@ -498,23 +427,27 @@ getISO3 <- function(pp, crs_pp = 4326, col = "ISO3", resol = "low",
 #' plot(DEM_meter[[1]])
 #' plot(DEM_meter[[2]], add=TRUE)
 #' }
-getDEM <- function(polygon, ISO3 = "AUT", clip = TRUE) {
-  # polygon = shape; ISO3 = "AUT"
-  PROJ <- "+init=epsg:3035"
+getDEM <- function(polygon, clip = TRUE) {
+  Polygon_wgs84 <-  sf::st_transform(polygon, st_crs(4326))
+  PROJ <- st_crs(polygon)
+  DEM <- tryCatch(elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11),
+                   error = function(e) {
+                     stop("\nDownloading Elevation data failed for the given Polygon.\n",
+                          e, call. = FALSE)
+                   })      
+  DEM <- terra::rast(DEM)
   
-  DEM <- raster::getData("alt", country = ISO3)
-    
   if (clip) {
     ## if data.frame / sp object -----------------
     if ( inherits(polygon, "SpatialPolygons") || inherits(polygon, "SpatialPolygonsDataFrame") ) {
       polygon <- sf::st_as_sf(polygon)
     }
-    shape <- sf::st_transform(polygon, crs = raster::projection(DEM))
-    DEM <- raster::crop(x = DEM, raster::extent(as(shape, "Spatial")))
+    shape <- sf::st_transform(polygon, crs = 4326)
+    DEM <- terra::crop(x = DEM, shape)
     shape <- sf::st_transform(shape, PROJ)
   }
 
-  DEM_meter <- raster::projectRaster(DEM, crs = PROJ)
+  DEM_meter <- terra::project(DEM, terra::crs(polygon))
 
   if (clip) {
     return(list(DEM_meter, shape))

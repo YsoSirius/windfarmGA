@@ -59,7 +59,6 @@ reference:
     - splitAt
     - dup_coords
     - getDEM
-    - getISO3
   - title: Datasets
     desc: Results and Shapefiles included in the package. 
     contents:
