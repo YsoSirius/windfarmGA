@@ -79,14 +79,12 @@ plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
 \code{\link{plot_heatmap}()},
 \code{\link{plot_parkfitness}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}

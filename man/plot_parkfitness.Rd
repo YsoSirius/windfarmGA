@@ -13,6 +13,9 @@ plot_parkfitness(result, spar = 0.1)
 \item{spar}{A numeric value determining how exact a spline should be drawn.
 Default is 0.1}
 }
+\value{
+Returns NULL. Used for plotting
+}
 \description{
 Plot the evolution of fitness values with the influences of
   selection, crossover and mutation.
@@ -25,14 +28,12 @@ plot_parkfitness(resulthex)
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
 \code{\link{plot_heatmap}()},
 \code{\link{plot_result}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}

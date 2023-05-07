@@ -29,7 +29,6 @@ duplicated. Helper function for \code{\link{plot_heatmap}}
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{getDEM}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},

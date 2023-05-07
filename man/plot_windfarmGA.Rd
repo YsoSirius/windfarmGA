@@ -36,6 +36,9 @@ scale parameter raster `a` of the Weibull distribution. If no list is given,
 then rasters included in the package are used instead, which currently only
 cover Austria. This variable is only used if \code{weibull = TRUE}.}
 }
+\value{
+Returns NULL. Used for plotting
+}
 \description{
 Plot the results of a genetic algorithm run with given inputs.
   Several plots try to show all relevant effects and outcomes of the
@@ -60,7 +63,6 @@ plot_windfarmGA(resultrect, Polygon1, whichPl = "all", best = 1, plotEn = 1)
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
@@ -68,7 +70,6 @@ Other Plotting Functions:
 \code{\link{plot_heatmap}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_result}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}
 }

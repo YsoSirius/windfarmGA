@@ -13,6 +13,9 @@ plot_fitness_evolution(result, spar = 0.1)
 \item{spar}{A numeric value determining how exact a spline should be drawn.
 Default is 0.1}
 }
+\value{
+Returns NULL. Used for plotting
+}
 \description{
 Plot the evolution of fitness values and the change in the min,
   mean and max fitness values to the former generations.
@@ -25,14 +28,12 @@ plot_fitness_evolution(resulthex, 0.1)
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_heatmap}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_result}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}

@@ -18,6 +18,9 @@ or coordinates as matrix/data.frame}
 
 \item{best}{How many best candidates to plot. Default is 1.}
 }
+\value{
+Returns NULL. Used for plotting
+}
 \description{
 Plotting method for the results of
   \code{\link{random_search_single}} and \code{\link{random_search}}.
