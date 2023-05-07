@@ -18,7 +18,7 @@
 #' @return Returns list with 2 elements. Element 1 is the binary encoded matrix
 #'   which shows all selected individuals. Element 2 represent the mean fitness
 #'   values of each parental team.
-#' @examples \dontrun{
+#' @examples \donttest{
 #' ## Exemplary input Polygon with 2km x 2km:
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(

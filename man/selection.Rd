@@ -39,7 +39,7 @@ Select a certain amount of individuals and recombine them to
   values.
 }
 \examples{
-\dontrun{
+\donttest{
 ## Exemplary input Polygon with 2km x 2km:
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(

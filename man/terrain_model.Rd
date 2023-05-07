@@ -9,8 +9,8 @@ terrain_model(
   Polygon1,
   sourceCCL,
   sourceCCLRoughness,
-  plotit,
-  verbose
+  plotit = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -28,8 +28,7 @@ as .csv file. Only required when terrain effect model is activated. As
 default a .csv file within this package (\file{~/extdata}) is taken that
 was already adapted manually.}
 
-\item{plotit}{If TRUE it will plot the best windfarm of every generation. 
-Default is \code{FALSE}}
+\item{plotit}{Plots the elevation data}
 
 \item{verbose}{If TRUE it will print information for every generation.
 Default is \code{FALSE}}

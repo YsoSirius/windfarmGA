@@ -22,7 +22,7 @@
 #'   List element 2 is the grid as Simple Feature Polygons, which is used for 
 #'   plotting purposes.
 #'   
-#' @examples \dontrun{
+#' @examples \donttest{
 #' ## Exemplary input Polygon with 2km x 2km:
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(

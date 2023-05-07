@@ -16,15 +16,9 @@ Checks whether the input for \code{\link{selection}} is given
   refers to a fixed percentage of 50% and "V" refers to a variable
   percentage, based on the development of the population fitness values.
 }
-\examples{
-\dontrun{
-  readintegerSel()
-}
-}
 \seealso{
 Other Helper Functions: 
 \code{\link{dup_coords}()},
-\code{\link{getDEM}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},

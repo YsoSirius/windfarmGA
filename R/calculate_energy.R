@@ -10,6 +10,8 @@
 #' @inheritParams genetic_algorithm
 #' @inheritParams fitness
 #' @param sel A matrix of an individual of the current population
+#' @param srtm_crop The first element of the \code{\link{terrain_model}} resulting list
+#' @param cclRaster The second element of the \code{\link{terrain_model}} resulting list
 #' @param wnkl The angle from which wake influences are considered to be 
 #'   negligible
 #' @param distanz The distance after which wake effects are considered
@@ -26,7 +28,7 @@
 #'   direction. The length of the list corresponds to the number of different
 #'   wind directions.
 #'
-#' @examples \dontrun{
+#' @examples \donttest{
 #' ## Create a random Polygon
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -121,18 +123,19 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     turb_elev <- turb_elev[,1]
     ## Plot the elevation and the wind speed multiplier rasters
     if (plotit) {
+      cexa <- 0.7
       par(mfrow = c(2, 1))
       plot(srtm_crop[[1]], main = "SRTM Elevation Data")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(turb_elev, 0),
-                        cex = 0.5)
+                        cex = cexa)
       plot(st_geometry(polygon1), add = TRUE)
       plot(wind_multiplier, main = "Wind Speed Multipliers")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
                         labs = round(windpo, 3),
-                        cex = 0.5)
+                        cex = cexa)
       plot(st_geometry(polygon1), add = TRUE)
     }
 
@@ -145,13 +148,13 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       plot(srtm_crop[[1]], main = "Normal Air Density", col = topo.colors(10))
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
-                        labs = rep(round(air_rh, 4), nrow(xy_individual)), cex = 0.8)
+                        labs = rep(round(air_rh, 4), nrow(xy_individual)), cex = cexa)
       plot(st_geometry(polygon1), add = TRUE)
       terra::plot(srtm_crop[[1]], main = "Corrected Air Density",
                    col = topo.colors(10))
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
-                        labs = round(air_dt[, "rh"], 4), cex = 0.8)
+                        labs = round(air_dt[, "rh"], 4), cex = cexa)
       plot(st_geometry(polygon1), add = TRUE)
     }
 
@@ -179,7 +182,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                                  })
       
       graphics::par(mfrow = c(1, 1))
-      cexa <- 0.9
+      
       plot(cclRaster, main = "Corine Land Cover Roughness")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
@@ -259,7 +262,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       plot(st_geometry(polygon1), main = "Shape at angle 0")
       points(xy_individual[, 1], xy_individual[, 2], pch = 20)
       textxy(xy_individual[, 1], xy_individual[, 2],
-             labs = dimnames(xy_individual)[[1]], cex = 0.8)
+             labs = dimnames(xy_individual)[[1]], cex = cexa)
       
       ## Rotate and Plot the Polygon
       cordslist <- list(st_coordinates(polygon1))

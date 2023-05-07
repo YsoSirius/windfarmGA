@@ -5,13 +5,15 @@
 #'
 #' @export
 #' @inheritParams genetic_algorithm
+#' @param plotit Plots the elevation data
 #' 
 #' @family Terrain Model
 #' @return A list of SpatRasters
 #'
 #' @examples \donttest{
 #' }
-terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughness, plotit, verbose) {
+terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughness, 
+                          plotit=FALSE, verbose=FALSE) {
   if (verbose) cat("Topography and orography are taken into account.\n")
   if (plotit) {
     par(mfrow = c(3, 1))
@@ -51,7 +53,8 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
                      error = function(e) {
                        stop("\nDownloading Elevation data failed for the given Polygon.\n",
                             e, call. = FALSE)
-                     })      
+                     })
+    srtm <- terra::rast(srtm)
   } else {
     if (!inherits(topograp, "SpatRaster")) {
       srtm <- terra::rast(topograp)
@@ -60,8 +63,7 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
     }
   }
   srtm <- terra::project(srtm, terra::crs(Polygon1, proj=TRUE))
-  srtm_crop <- terra::crop(srtm, Polygon1)
-  srtm_crop <- terra::mask(srtm_crop, Polygon1)
+  srtm_crop <- terra::crop(srtm, Polygon1, mask = TRUE)
   
   if (plotit) {
     terra::plot(srtm_crop, main = "Elevation Data")

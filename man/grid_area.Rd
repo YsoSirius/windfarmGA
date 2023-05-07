@@ -33,7 +33,7 @@ The grid of the genetic algorithm will have a resolution of \code{Rotor
   * fcrR}. See the arguments of \code{\link{windfarmGA}}
 }
 \examples{
-\dontrun{
+\donttest{
 ## Exemplary input Polygon with 2km x 2km:
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -65,7 +65,6 @@ grid_area(Polygon1, 400, 0.1, TRUE)
 \seealso{
 Other Helper Functions: 
 \code{\link{dup_coords}()},
-\code{\link{getDEM}()},
 \code{\link{get_grids}()},
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},

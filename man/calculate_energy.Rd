@@ -45,15 +45,12 @@ to be eliminated}
 
 \item{dirSpeed}{The wind speed and direction data.frame}
 
-\item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}}
+\item{srtm_crop}{The first element of the \code{\link{terrain_model}} resulting list}
 
 \item{topograp}{Boolean value, which indicates if the terrain effect model
 should be enabled or not. Default is \code{FALSE}}
 
-\item{cclRaster}{A Corine Land Cover raster, that has to be adapted
-previously by hand with the surface roughness length for every land cover
-type. Is only used, when the terrain effect model is activated.}
+\item{cclRaster}{The second element of the \code{\link{terrain_model}} resulting list}
 
 \item{weibull}{A boolean value that specifies whether to take Weibull
 parameters into account. If \code{TRUE}, the wind speed values 
@@ -77,7 +74,7 @@ Calculate the energy output and efficiency rates of an
   model those effects will be done in this function.
 }
 \examples{
-\dontrun{
+\donttest{
 ## Create a random Polygon
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
