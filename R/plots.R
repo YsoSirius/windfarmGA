@@ -16,7 +16,7 @@
 #' @param plotit Should the windrose be plotted? Default is TRUE
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #'
 #' @examples
 #' ## Exemplary Input Wind speed and direction data frame
@@ -249,22 +249,16 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     col2res <- "lightblue"
   }
   else {
-    ## TODO
-    browser()
     PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
     if (inherits(weibullsrc,"list") & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
-        terra::crop(x, Polygon1::ext(PolyCrop))})
-      wblcroped <- lapply(wblcroped, function(x){
-        terra::mask(x, PolyCrop)})
+        terra::crop(x, Polygon1::ext(PolyCrop), mask = TRUE)})
       Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / wblcroped[[1]])))
     } else if (inherits(weibullsrc,"list") & length(weibullsrc) == 1) {
-      wblcroped <- terra::crop(weibullsrc[[1]], terra::ext(PolyCrop))
-      wblcroped <- terra::mask(weibullsrc[[1]], PolyCrop)
+      wblcroped <- terra::crop(weibullsrc[[1]], terra::ext(PolyCrop), mask = TRUE)
       Erwartungswert <- wblcroped[[1]]
     } else if (inherits(weibullsrc,"RasterLayer")) {
-      wblcroped <- terra::crop(weibullsrc, terra::ext(PolyCrop))
-      wblcroped <- terra::mask(weibullsrc, PolyCrop)
+      wblcroped <- terra::crop(weibullsrc, terra::ext(PolyCrop), mask = TRUE)
       Erwartungswert <- wblcroped
     }
     col2res <- "transparent"
@@ -286,53 +280,12 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   
   ## Check Terrain Modell #########
   if (topographie == TRUE) {
-    Polygonwgs84 <-  sf::st_transform(Polygon1, 4326)
-    srtm <- tryCatch(elevatr::get_elev_raster(locations = as(Polygonwgs84, "Spatial"), z = 11),
-                     error = function(e) {
-                       stop("\nDownloading Elevation data failed for the given Polygon.\n",
-                            e, call. = FALSE)
-                     })
-    srtm <- terra::rast(srtm)
-    srtm_crop <- terra::crop(srtm, Polygonwgs84)
-    srtm_crop <- terra::mask(srtm_crop, Polygonwgs84)
-    srtm_crop <- terra::project(srtm_crop, terra::crs(Polygon1))
-    
-    # Calculates Wind multiplier. Hills will get higher values, valleys will get lower values.
-    orogr1 <- srtm_crop / as.numeric(terra::global(srtm_crop, fun="mean", na.rm = TRUE))
-    
-    if (is.null(sourceCCL)) {
-      if (length(list.files(pattern = "g100_06.tif")) == 0) {
-        message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
-                "the EEA-website.")
-        ## download an zip CCL-tif
-        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
-                      destfile = "clc.zip", 
-                      method = "auto")
-        unzip("clc.zip")
-        unlink("clc.zip")
-        ccl <- terra::rast("g100_06.tif")
-      } else {
-        sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
-        ccl <- terra::rast(x = sourceCCL)
-      }
-    }
-    # Include Corine Land Cover Raster to get an estimation of Surface Roughness
-    cclPoly <- terra::crop(ccl, Polygon1)
-    cclPoly1 <- terra::mask(cclPoly, mask = Polygon1)
-    if (is.null(sourceCCLRoughness)) {
-      path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-      source_ccl <- paste0(path, "clc_legend.csv")
-    } else {
-      cat("\nYou are using your own Corine Land Cover legend.")
-      # readline(prompt = "\nPress <ENTER> if you want to continue")
-      source_ccl <- sourceCCLRoughness
-    }
-    rauhigkeitz <- utils::read.csv(source_ccl, header = TRUE, sep = ";")
-    cclRaster <- terra::classify(cclPoly1, matrix(c(rauhigkeitz$GRID_CODE,
-                                                    rauhigkeitz$Rauhigkeit_z),
-                                                  ncol = 2))
+    terrain_data <- terrain_model(topographie, Polygon1, sourceCCL, sourceCCLRoughness,
+                                  plotit=TRUE, verbose=FALSE)
+    cclRaster <- terrain_data$cclRaster
+    orogr1 <- terrain_data$srtm_crop$orogr1
+    srtm_crop <- terrain_data$srtm_crop$strm_crop
   }
-  
   
   ## Set Argments for Best Energy/Efficiency Windfarm ##########
   if (plotEn == 1) {
@@ -446,72 +399,69 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
   heightWind <- terra::extract(x = srtm_crop, y = as.matrix(sel1))
   par(mfrow = c(1, 2))
-  cexa <- 0.9
+  cexa <- 0.7
   terra::plot(srtm_crop, main = "Elevation Data")
   graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(heightWind, 0), cex = 0.8)
+                    labs = round(heightWind[[1]], 0), cex = cexa)
   plot(polygon1, add = TRUE)
   terra::plot(orogr1, main = "Wind Speed Multipliers")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(windpo, 3), cex = 0.8)
+                    labs = round(windpo[[1]], 3), cex = cexa)
   plot(polygon1, add = TRUE)
   
   ## Get Air Density and Pressure from Height Values #########
-  HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
+  HeighttoBaro <- matrix(heightWind[[1]]); colnames(HeighttoBaro) <- "HeighttoBaro"
   air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
   terra::plot(srtm_crop, main = "Normal Air Density",
                col = topo.colors(10))
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = rep(1.225, nrow(sel1)), cex = 0.8)
+                    labs = rep(1.225, nrow(sel1)), cex = cexa)
   plot(polygon1, add = TRUE)
   terra::plot(srtm_crop, main = "Corrected Air Density",
                col = topo.colors(10))
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(air_dt[, 'rh'], 2), cex = 0.8)
+                    labs = round(air_dt[, 'rh'], 2), cex = cexa)
   plot(polygon1, add = TRUE)
   
   ## CorineLandCover Roughness values ##################
   SurfaceRoughness0 <- terra::extract(x = cclRaster, y = as.matrix(sel1))
   SurfaceRoughness1 <- terra::extract(x = terra::terrain(srtm_crop, "roughness"),
                                        y = as.matrix(sel1))
-  SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1 / max(terra::res(srtm_crop))))
+  SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1[[1]] / max(terra::res(srtm_crop))))
   elrouind <- terra::terrain(srtm_crop, "roughness")
   elrouindn <- terra::resample(elrouind, cclRaster, method = "near")
-  modSurf <- terra::lapp(x = cclRaster, y = elrouindn,
-                             fun = function(x, y) {
-                               return(x * (1 + (y / max(terra::res(srtm_crop)))))
-                             })
+  modSurf <- cclRaster * (1 + (values(elrouindn) / max(terra::res(srtm_crop))))
   
   par(mfrow = c(1, 2))
   terra::plot(cclRaster, main = "Corine Land Cover Roughness")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(SurfaceRoughness0, 2), cex = cexa)
+                    labs = round(SurfaceRoughness0[[1]], 2), cex = cexa)
   plot(polygon1, add = TRUE)
   terra::plot(x = elrouindn,
                main = "Elevation Roughness Indicator")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round((SurfaceRoughness1), 2), cex = cexa)
+                    labs = round((SurfaceRoughness1[[1]]), 2), cex = cexa)
   plot(polygon1, add = TRUE)
   terra::plot(modSurf, main = "Modified Surface Roughness")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round((SurfaceRoughness), 2), cex = cexa)
+                    labs = round((SurfaceRoughness[[1]]), 2), cex = cexa)
   plot(polygon1, add = TRUE)
   
   ## Wake Decay Constant #############
   RotorHeight <- as.integer(inputs['Rotor Height',])
-  k_raster <- terra::app(modSurf, function(x) {x <- 0.5 / (log(RotorHeight / x))})
+  k_raster <- terra::app(modSurf, function(x) { 0.5 / (log(RotorHeight / x)) })
   # New Wake Decay Constant calculated with new surface roughness values, according to CLC
   k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
   terra::plot(k_raster, main = "Adapted Wake Decay Constant - K")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k, 3), cex = cexa)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k[[1]], 3), cex = cexa)
   plot(polygon1, add = TRUE)
 }
 
@@ -528,7 +478,7 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
 #'   "all" which shows all available plots
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -811,7 +761,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
 #'   Default is 0.1
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_parkfitness(resulthex)
@@ -1091,7 +1041,7 @@ plot_parkfitness <- function(result, spar = 0.1) {
 #' @inheritParams plot_result
 #' 
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' plot_development(resultrect)
 #' }
@@ -1139,7 +1089,7 @@ plot_development <- function(result) {
 #'   Default is 0.1
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' ## Plot the results of a rectangular grid optimization
 #' plot_evolution(resultrect, ask = TRUE, spar = 0.1)
@@ -1391,7 +1341,7 @@ plot_cloud <- function(result, pl = FALSE) {
 #' @inheritParams plot_evolution
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_fitness_evolution(resulthex, 0.1)
@@ -1641,7 +1591,7 @@ dup_coords <- function(x, ...) {
 #' @param best How many best candidates to plot. Default is 1.
 #'
 #' @family Randomization
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' 
 #' @examples \donttest{
 #' library(sf)

@@ -22,13 +22,11 @@
 #'    \item \href{https://github.com/YsoSirius/windfarmGA/issues}{Report Issues}
 #'  }
 #'
-#' @importFrom raster crs getData crop mask projectRaster reclassify extent
-#'   rasterize res rasterToPolygons plot area intersect raster calc extract
-#'   cellStats terrain resample overlay cellFromXY ncell projection values wkt
+#' @importFrom terra xyFromCell extract plot res resample lapp rast crop crs
+#'   project terrain app values global classify viewshed mosaic sprc
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
 #'   st_make_grid st_intersection st_area sf_extSoftVersion st_centroid st_bbox
 #'   st_cast st_combine `st_crs<-` st_distance st_is_valid
-#' @importFrom elevatr get_elev_raster
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics plot.new text plot par points abline title lines grid
 #'   layout axis legend mtext boxplot
