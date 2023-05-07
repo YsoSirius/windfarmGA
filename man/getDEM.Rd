@@ -4,12 +4,10 @@
 \alias{getDEM}
 \title{Get DEM raster}
 \usage{
-getDEM(polygon, ISO3 = "AUT", clip = TRUE)
+getDEM(polygon, clip = TRUE)
 }
 \arguments{
 \item{polygon}{A Spatial / SimpleFeature Polygon to crop the DEM}
-
-\item{ISO3}{The ISO3 code of the country}
 
 \item{clip}{boolean, indicating if polygon should be cropped. Default is TRUE}
 }
@@ -18,7 +16,7 @@ A list with the DEM raster, and a Simple Feature Polygon or NULL if
   no polygon is given
 }
 \description{
-Get a DEM raster for a country based on ISO3 code
+Get a DEM raster for a polygon
 }
 \examples{
 \dontrun{
@@ -38,7 +36,6 @@ plot(DEM_meter[[2]], add=TRUE)
 \seealso{
 Other Helper Functions: 
 \code{\link{dup_coords}()},
-\code{\link{getISO3}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},

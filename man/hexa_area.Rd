@@ -41,7 +41,6 @@ HexGrid <- hexa_area(Poly, 100, TRUE)
 Other Helper Functions: 
 \code{\link{dup_coords}()},
 \code{\link{getDEM}()},
-\code{\link{getISO3}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{isSpatial}()},

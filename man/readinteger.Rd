@@ -26,7 +26,6 @@ Checks whether the input for \code{\link{crossover}} is given
 Other Helper Functions: 
 \code{\link{dup_coords}()},
 \code{\link{getDEM}()},
-\code{\link{getISO3}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},
