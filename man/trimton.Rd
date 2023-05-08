@@ -96,7 +96,6 @@ Other Genetic Algorithm Functions:
 \code{\link{genetic_algorithm}()},
 \code{\link{init_population}()},
 \code{\link{mutation}()},
-\code{\link{selection}()},
-\code{\link{windfarmGA}()}
+\code{\link{selection}()}
 }
 \concept{Genetic Algorithm Functions}

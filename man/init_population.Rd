@@ -49,7 +49,6 @@ Other Genetic Algorithm Functions:
 \code{\link{genetic_algorithm}()},
 \code{\link{mutation}()},
 \code{\link{selection}()},
-\code{\link{trimton}()},
-\code{\link{windfarmGA}()}
+\code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

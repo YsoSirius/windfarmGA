@@ -57,7 +57,6 @@ Other Genetic Algorithm Functions:
 \code{\link{init_population}()},
 \code{\link{mutation}()},
 \code{\link{selection}()},
-\code{\link{trimton}()},
-\code{\link{windfarmGA}()}
+\code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}
