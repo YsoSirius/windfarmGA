@@ -317,12 +317,12 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   rectidt <- !duplicated(rectid)
   result <- result[rectidt]
   ndif <- length(result)
-  cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", 
+  message(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", 
             (ledup - ndif)))
   
   ## Check for enough results #########
   if (ndif < best) {
-    cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
+    message(paste("Not enough unique Optimas. Show first best Half of different configurations."))
     best <- trunc(ndif / 2)
   }
   if (best == 0) best = 1
@@ -345,7 +345,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     }
     
     ## Plot Best Windfarm  ###########
-    cat(paste("\nPlot ", (best + 1) - i, " Best ",title," Solution:\n"))
+    message(paste("Plot ", (best + 1) - i, " Best ",title," Solution:\n"))
     par(mfrow = c(1, 1), ask = FALSE)
     plot(st_geometry(Polygon1), col = col2res, 
          main = paste((best + 1) - i, "Best ", title, " Windfarm", 
@@ -514,7 +514,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   Polygon1 <- isSpatial(Polygon1)
   if (nrow(result) < 4) {
     if (any(2:5 %in% whichPl)) {
-      cat("Cannot plot option 2,3,4,5. \n Only option 1,6 are available.")
+      message("Cannot plot option 2,3,4,5. \n Only option 1,6 are available.")
       whichPl <- c(1, 6)
     }
   }
@@ -522,44 +522,35 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   
   ## PLOTTING OUTPUTS ####################
   if (any(whichPl == 1)) {
-    print("plot_result: Plot the 'best' Individuals of the GA:")
+    message("plot_result: Plot the 'best' Individuals of the GA:")
     plot_result(result = result, Polygon1 = Polygon1, best = best , plotEn = plotEn,
                 topographie = FALSE, Grid = TRUE, weibullsrc = weibullsrc)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 2)) {
-    print("plot_evolution: Plot the Evolution of the Efficiency and Energy Values:")
+    message("plot_evolution: Plot the Evolution of the Efficiency and Energy Values:")
     plot_evolution(result, TRUE, 0.3)
   }
   if (any(whichPl == 3)) {
-    print("plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
+    message("plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
     plot_parkfitness(result, 0.1)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 4)) {
-    print("plot_fitness_evolution: Plot the Changes in Fitness Values:")
+    message("plot_fitness_evolution: Plot the Changes in Fitness Values:")
     plot_fitness_evolution(result)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 5)) {
-    print("plot_cloud: Plot all individual Values of the whole Evolution:")
+    message("plot_cloud: Plot all individual Values of the whole Evolution:")
     plot_cloud(result, TRUE)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 6)) {
-    print("plot_heatmap: Plot a Heatmap of all Grid Cells:")
+    message("plot_heatmap: Plot a Heatmap of all Grid Cells:")
     plot_heatmap(result = result, si = 2)
     # readline(prompt = "Press [enter] to continue")
   }
-  # if (any(whichPl==7)){
-  #   print("GooglePlot: Plot the 'best' Individual with static Google Map:")
-  #   GooglePlot(result,Polygon1,best,plotEn,Projection)
-  #   readline(prompt="Press [enter] to continue")
-  # }
-  # if (any(whichPl==8)){
-  #   print("GoogleChromePlot: Plot the 'best' Individual with Leaflet with Satelitte Imagery:")
-  #   GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
-  # }
   return()
 }
 

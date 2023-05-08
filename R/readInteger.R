@@ -10,9 +10,9 @@
 #' @family Helper Functions
 #' @return Returns the selected crossover method (character)
 readinteger <- function(){
-  cat("\nSelect appropriate Method. Either 'EQU' for equal crossover parts or 'RAN' for random parts.\n")
+  message("Select appropriate Method. Either 'EQU' for equal crossover parts or 'RAN' for random parts.\n")
   # crPaInter <- readline(prompt = "Type 'R' for random and 'E' for equal parts.")
-  cat("Type 'R' for random and 'E' for equal parts.\n")
+  message("Type 'R' for random and 'E' for equal parts.\n")
   crPaInter <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   
   crPaInter <- toupper(crPaInter)
@@ -38,10 +38,10 @@ readinteger <- function(){
 #' @family Helper Functions
 #' @return Returns the selected selection method (character)
 readintegerSel <- function(){
-  cat("\nSelect appropriate Selection Method. Either 'FIX' or 'VAR' are available.\n")
+  message("Select appropriate Selection Method. Either 'FIX' or 'VAR' are available.\n")
   # selstaPr <- readline(prompt = "Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.")
   
-  cat("Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.\n")
+  message("Type 'F' for a fixed percentage of 50% and 'V' for a variable percentage.\n")
   selstaPr <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   
   selstaPr <- toupper(selstaPr)

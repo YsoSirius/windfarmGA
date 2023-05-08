@@ -255,13 +255,13 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## WEIBULL ###############
   ## Is Weibull activated? If no source is given, take values from package
   if (weibull) {
-    if (verbose) cat("\nWeibull Distribution is used.")
+    if (verbose) message("Weibull Distribution is used.")
     
     if (missing(weibullsrc)) {
       stop("No weibull data is given in `weibullsrc`.\nIt must be a list of 2 rasters:\n",
             "  - shape parameter raster\n", "  - scale parameter raster")
     } else {
-      if (verbose) cat("\nWeibull data is used.\n")
+      if (verbose) message("Weibull data is used.\n")
       
       ## Project Shapefile to raster, Crop/Mask and project raster back
       if (!inherits(weibullsrc[[1]], "SpatRaster")) {
@@ -386,7 +386,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
   if (isFALSE(topograp)) {
     if (verbose) {
-      cat("Topography and orography are not taken into account.\n")
+      message("Topography and orography are not taken into account.")
     }
     srtm_crop <- ""
     cclRaster <- ""
@@ -400,12 +400,12 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
 
   ## GENETIC ALGORITHM #################
-  if (verbose) {cat("\nStart Genetic Algorithm ...\n")}
+  if (verbose) {message("\nStart Genetic Algorithm ...")}
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   i <- 1
   while (i <= iteration) {
     if (!verbose) {
-      cat(".")
+      message(".")
     }
     ## FITNESS (+getRectV) ###############
     if (i == 1) {
@@ -455,7 +455,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                                "Parkfitness"))
 
     if (verbose) {
-      cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"))
+      message(c("\n\n", i, ": Round. Max Energy ", allparkcoeff[[i]][,"MaxEnergyRedu"], 
+                " W and Efficiency ", allparkcoeff[[i]][,"maxParkwirkungsg"], " %"))
     }
 
     ## Highest Energy Output
@@ -471,9 +472,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     afvs <- allparks[allparks[, "EnergyOverall"] == max(
       allparks[, "EnergyOverall"]), ]
     if (verbose) {
-      cat(paste("How many individuals exist: ",  length(fit) ), "\n")
-      cat(paste("How many parks are in local Optimum: ",
-                (length(afvs[, 1]) / n) ), "\n")
+      message(paste("How many individuals exist: ",  length(fit) ))
+      message(paste("How many parks are in local Optimum: ",
+                (length(afvs[, 1]) / n) ))
     }
     nindivfit <- length(fit)
 
@@ -542,8 +543,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       last7 <- besPE[i:(i - 5)]
       if (!any(last7 == maxBisher)) {
         if (verbose) {
-          cat(paste("Park with highest Fitness level to date ",
-                    "is replaced in the list.", "\n\n"))
+          message(paste("Park with highest Fitness level to date ",
+                    "is replaced in the list.", "\n"))
         }
         fit <- append(fit, BestForNo)
       }
@@ -606,42 +607,42 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
       if (teil > 5) {
         teil <- 5; u <- u + 0.09
-        if (verbose) cat("Min 20% Selected"); cat(paste("CPR is increased! CPR:", u, "SP: ", teil, "\n"))
+        if (verbose) message("Min 20% Selected"); message(paste("CPR is increased! CPR:", u, "SP: ", teil))
       }
       if (trunc(u) < 0) {
         u <- 0.5;  teil <- teil - 0.4
-        if (verbose) cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",u, "SP: ", teil, "\n"))
+        if (verbose) message(paste("Min 1 CrossPoints. Selection decreased. CPR:",u, "SP: ", teil))
       }
       if (u >= 4) {
         u <- 4;  teil <- 4
-        if (verbose) cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil, "\n"))
+        if (verbose) message(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil))
       }
       if (teil <= 4 / 3) {
         teil <- 4 / 3
-        if (verbose) cat(paste("Max 75% selected. SP: ", teil, "\n"))
+        if (verbose) message(paste("Max 75% selected. SP: ", teil))
       }
       if (length(fit) <= 20) {
         teil <- 1;  u <- u + 0.1
-        if (verbose) cat(paste("Less than 20 individuals. Select all and increase ",
-                               "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
+        if (verbose) message(paste("Less than 20 individuals. Select all and increase ",
+                               "Crossover-point rate. CPR: ", u, "SP: ", teil))
       }
       # if (length(fit) <= 10) {
       #   teil <- 1;  u <- u + 0.4
-      #   if (verbose) cat(paste("Less than 10 individuals. Select all and increase ",
-      #                          "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
+      #   if (verbose) message(paste("Less than 10 individuals. Select all and increase ",
+      #                          "Crossover-point rate. CPR: ", u, "SP: ", teil))
       # }
       # if (teil > 5) {
       #   teil <- 5
-      #   if (verbose) cat(paste("Teil is bigger than 5. Set to max 5. SP:", teil, "\n"))
+      #   if (verbose) message(paste("Teil is bigger than 5. Set to max 5. SP:", teil))
       # }
 
       u <- round(u, 2)
       teil <- round(teil, 3)
 
       if (verbose) {
-        cat(paste("Fitness of this population (", i,
+        message(paste("Fitness of this population (", i,
                   "), compared to the prior,", pri,
-                  "by", round(maxunt, 2), "W/h \n"))
+                  "by", round(maxunt, 2), "W"))
       }
       meanunt <- meant0 - meant1
       beorwor[[i]] <- cbind(maxunt, meanunt)
@@ -667,8 +668,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     selec6best_bin <- selec6best[[1]]
     if (verbose) {
-      cat(paste("Selection  -  Amount of Individuals: ",
-                length(selec6best_bin[1, -1]), "\n"))
+      message(paste("Selection  -  Amount of Individuals: ",
+                length(selec6best_bin[1, -1])))
     }
     nindivsel <- length(selec6best_bin[1, -1])
 
@@ -680,7 +681,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                            crossPart = crossPart1,
                            verbose = verbose, seed = NULL)
     if (verbose) {
-      cat(paste("Crossover  -  Amount of Individuals: ",
+      message(paste("Crossover  -  Amount of Individuals: ",
                 length(crossOut[1, ])))
     }
     nindivcros <- length(crossOut[1, ])
@@ -697,7 +698,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       mut <- mutation(a = crossOut, p = mutrn, seed = NULL)
       mut_rat <- mutrn
       if (verbose) {
-        cat(paste("\nVariable Mutation Rate is", mutrn, "\n"))
+        message(paste("Variable Mutation Rate is", mutrn))
       }
     } else {
       mut <- mutation(a = crossOut, p = mutr, seed = NULL)
@@ -705,7 +706,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
     mut_rate[[i]] <- mut_rat
     if (verbose) {
-      cat(paste("\nMutation   -  Amount of Individuals: ", length(mut[1, ])))
+      message(paste("Mutation   -  Amount of Individuals: ", length(mut[1, ])))
     }
     nindivmut <- length(mut[1, ])
 
@@ -717,7 +718,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                     seed = NULL)
 
     if (verbose) {
-      cat(paste("\nTrimToN    -  Amount of Individuals: ",
+      message(paste("TrimToN    -  Amount of Individuals: ",
                 length(mut1[1, ])))
     }
 

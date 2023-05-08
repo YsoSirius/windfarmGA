@@ -24,14 +24,14 @@
 #' }
 terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughness, 
                           plotit=FALSE, verbose=FALSE) {
-  if (verbose) cat("Topography and orography are taken into account.\n")
+  if (verbose) message("Topography and orography are taken into account.\n")
   if (plotit) {
     par(mfrow = c(3, 1))
   }
   
   ## Land Cover / Surface Roughness ################
   if (missing(sourceCCL) || is.null(sourceCCL)) {
-    message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
+    message("No land cover raster ('sourceCCL') was given. It will be downloaded from ",
             "the EEA-website.\n")
     if (!file.exists("g100_06.tif")) {
       # "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
@@ -98,7 +98,7 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
     sourceCCLRoughness <- paste0(path, "clc_legend.csv")
   } else {
     if (verbose) {
-      message("You are using your own Corine Land Cover legend.\n")
+      message("You are using your own Corine Land Cover legend.")
     }
   }
   

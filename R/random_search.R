@@ -334,9 +334,9 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
                     labs = layout_start[, "Rect_ID"], cex = 1.5, offset = 0.75)
   turbInx <- ""
   while (!turbInx %in% layout_start[,'Rect_ID']) {
-    cat("Enter the turbine number that you want to optimize.")
+    message("Enter the turbine number that you want to optimize.")
     # turbInx <- readline(prompt = "Please enter the corresponding number: ")
-    cat("Please enter the corresponding number:\n")
+    message("Please enter the corresponding number:\n")
     turbInx <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   }
   turbInx <- which(layout_start[, 'Rect_ID'] == as.numeric(turbInx))

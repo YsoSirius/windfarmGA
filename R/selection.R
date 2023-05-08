@@ -71,7 +71,7 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
       nelit <- nrow(new1)
     }
     if (verbose) {
-      cat(paste("Elitarism activated. Best", nelit, "individuals are increased\n"))
+      message(paste("Elitarism activated. Best", nelit, "individuals are increased"))
     }
     ## Increase best 'nelit' individuals by factor 10
     new1[1:nelit,'Parkfitness'] <- new1[1:nelit,'Parkfitness'] * 10
@@ -91,9 +91,9 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
     }
     nPar <- ceiling(nrow(new1) / teil)
     if (verbose) {
-      cat(paste("Selection Percentage:", round(100 / teil, 3), "\n"))
-      cat(paste("FIX: How many parental individuals are selected:", nPar, "from",  
-                nrow(new1), "with", ((1 / teil) * 100), "%\n"))
+      message(paste("Selection Percentage:", round(100 / teil, 3)))
+      message(paste("FIX: How many parental individuals are selected:", nPar, "from",  
+                nrow(new1), "with", ((1 / teil) * 100), "%"))
     }
   }
   ## Or the selection percentage is variable, depending on the development of the fitness values.
@@ -101,7 +101,7 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
     # Select a variable amount of indivs. Teil comes from the "fuzzy logic" modell
     nPar <- ceiling(nrow(new1) / teil)
     if (verbose) {
-      cat(paste("VAR: How many parental individuals are selected:", nPar, "from",
+      message(paste("VAR: How many parental individuals are selected:", nPar, "from",
                 nrow(new1), "with", ((1 / teil) * 100), "%\n"))
     }
   }
