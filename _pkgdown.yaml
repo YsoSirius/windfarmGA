@@ -33,6 +33,7 @@ reference:
     - get_dist_angles
     - turbine_influences
     - calculate_energy
+    - circle_intersection
   - title: Randomization
     contents:
     - starts_with("random", internal = TRUE)

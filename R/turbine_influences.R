@@ -64,7 +64,7 @@ turbine_influences <- function(t, wnkl, dist, polYgon, dirct,
 #' @inheritParams turbine_influences
 #'
 #' @family Wind Energy Calculation Functions
-#' @return Returns a matrix with the distances and angles of potentially
+#' @return Returns a matrix with the distances, angles and heights of potentially
 #'   influencing turbines
 #' @examples
 #' library(sf)
@@ -93,9 +93,10 @@ turbine_influences <- function(t, wnkl, dist, polYgon, dirct,
 get_dist_angles <- function(t, o, wnkl, dist, polYgon, plotAngles = FALSE) {
   col_names <- c("Ax", "Ay", "Bx", "By", "Cx", "Cy",
                  "Laenge_C", "Laenge_B", "Laenge_A",
-                 "alpha", "betha", "gamma")
+                 "alpha", "betha", "gamma", 
+                 "height1", "height2")
   ## Get coordinates of actual turbine location
-  turbine_loc <- c(x = t[o, 1L], y = t[o, 2L])
+  turbine_loc <- c(x = t[o, 1L], y = t[o, 2L], z = t[o, 3L])
   ## Find all turbines that are in front of actual turbine
   turbines_ahead <- subset.matrix(x = t, subset = (t[o, 2L] < t[, 2L]))
   
@@ -110,10 +111,11 @@ get_dist_angles <- function(t, o, wnkl, dist, polYgon, plotAngles = FALSE) {
     plot(st_geometry(polYgon), add = TRUE)
     ## Plot the actual turbine in green, the ones in front in red
     points(x = turbine_loc[1], y = turbine_loc[2], col = "green", pch = 20, cex = 2)
-    angles_min <- rbind(turbine_loc,
+    calibrate::textxy(turbine_loc[1], turbine_loc[2], "Point B")
+    angles_min <- rbind(turbine_loc[1:2],
                         cbind(turbine_loc[1]+dist*cos((90-wnkl)*pi/180),
                               turbine_loc[2]+dist*sin((90-wnkl)*pi/180)))
-    angles_plu <- rbind(turbine_loc,
+    angles_plu <- rbind(turbine_loc[1:2],
                         cbind(turbine_loc[1]+dist*cos((90+wnkl)*pi/180),
                               turbine_loc[2]+dist*sin((90+wnkl)*pi/180)))
     lines(angles_min[,1],angles_min[,2])
@@ -128,11 +130,12 @@ get_dist_angles <- function(t, o, wnkl, dist, polYgon, plotAngles = FALSE) {
     ## If turbines are in front of the current turbine, create a list and
     ## save only the ones that could possibly influence others
     datalist <- lapply(1:len2, function(i) {
-      P2LFu <- point_2_line_CPP(turbine_loc, turbines_ahead[i, ])
-      winkel <- angles_CPP(turbines_ahead[i,], turbine_loc, P2LFu[5:6])
-      c(P2LFu, winkel) 
+      turb_tmp <- turbines_ahead[i, ]
+      P2LFu <- point_2_line_CPP(turbine_loc, turb_tmp)
+      winkel <- angles_CPP(turb_tmp, turbine_loc, P2LFu[5:6])
+      c(P2LFu, winkel, "Height1" = turbine_loc[[3]], "Height2" = turb_tmp[["Z"]])
     })
-    res <- matrix(unlist(datalist), ncol = 12, byrow = TRUE)
+    res <- matrix(unlist(datalist), ncol = 14, byrow = TRUE)
     colnames(res) <- col_names
     
     ## Dismiss the ones with too high distances or big angles.
@@ -141,7 +144,11 @@ get_dist_angles <- function(t, o, wnkl, dist, polYgon, plotAngles = FALSE) {
     
     if (plotAngles) {
       points(dl[,'Ax'], dl[,'Ay'], col = "orange", pch = 20, cex = 2)
+      calibrate::textxy(dl[,'Ax'], dl[,'Ay'], rep("Points A", nrow(dl)))
+      # points(dl[,'Cx'], dl[,'Cy'], col = "black", pch = 20, cex = 2)
+      # calibrate::textxy(dl[,'Cx'], dl[,'Cy'], rep("Points C", nrow(dl)))
     }
+    
     ## Are turbines left after subsetting?
     if (nrow(dl) != 0) {
       ## If possible influencing turbines exist, save them in the variable "DataLun3"
@@ -149,13 +156,13 @@ get_dist_angles <- function(t, o, wnkl, dist, polYgon, plotAngles = FALSE) {
     } else {
       ## If no possible influencing turbines remain and the variable "dl" therefoe is empty,
       ## the variable "DataLun3" is filled with default Values of 0 for distances and angles
-      DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 8)), nrow = 1, ncol = 12)
+      DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 10)), nrow = 1, ncol = 14)
       colnames(DataLun3) <- col_names
     }
   } else {
     # If no turbines are in front, the variabel "DataLun3" is again filled with default 
     ## values of 0 for angles and distances.
-    DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 8)), nrow = 1, ncol = 12)
+    DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 10)), nrow = 1, ncol = 14)
     colnames(DataLun3) <- col_names
   }
   

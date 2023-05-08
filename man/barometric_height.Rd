@@ -33,6 +33,7 @@ plot.ts(barometric_height(data))
 \seealso{
 Other Wind Energy Calculation Functions: 
 \code{\link{calculate_energy}()},
+\code{\link{circle_intersection}()},
 \code{\link{get_dist_angles}()},
 \code{\link{turbine_influences}()}
 }

@@ -2,6 +2,7 @@
 - Removed package dependencies `rgdal` and `rgeos`
 - Replaced dependency `raster` with `terra`
 - Moved dependencies `foreach`, `parallel`, `doParallel`, `elevatr` to Suggests
+- 3D-circle intersection calculation. Especially relevant if the terrain model is activated.
 - Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
 - Removed most visibility functions in favor of `terra::viewshed`
 - Removed the function `windfarmGA`, as it was redundant and just difficult to test.

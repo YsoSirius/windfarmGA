@@ -2,6 +2,7 @@
 
 export(barometric_height)
 export(calculate_energy)
+export(circle_intersection)
 export(crossover)
 export(dup_coords)
 export(fitness)
