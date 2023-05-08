@@ -451,7 +451,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
 #' @title Get area of intersecting circles
 #' @name circle_intersection
 #' @description Calculate the intersection area of two circles with different 
-#'   raddi and different heights
+#'   radii and different heights
 #'
 #' @export
 #'
@@ -464,7 +464,6 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
 #' @family Wind Energy Calculation Functions
 #' @return A numeric value
 #'
-#' @examples \dontrun{
 circle_intersection <- function(r1, r2, h1, h2, dx) {
   rr1 <- r1 * r1
   rr2 <- r2 * r2

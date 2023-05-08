@@ -11,6 +11,7 @@ test_that("Test Wake Functions", {
   ))
   wnkl <- 20; dist <- 100000; dirct <- 0
   t <- st_coordinates(st_sample(polYgon, 10))
+  t <- cbind(t, "Z" = 1)
   
   ## Test circle_intersection Function --------------
   ###########################################
@@ -86,6 +87,7 @@ test_that("Test Wake Functions", {
   ## Bigger Angle
   wnkl <- 50
   t <- st_coordinates(st_sample(polYgon, 10))
+  t <- cbind(t, "Z" = 100)
   resInfluPoiWin <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoiWin), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoiWin, is.na))))
@@ -97,6 +99,7 @@ test_that("Test Wake Functions", {
   
   ## More Points and bigger Angle
   t <- st_coordinates(st_sample(polYgon, 20))
+  t <- cbind(t, "Z" = 1)
   resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoi), "List of 20")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))

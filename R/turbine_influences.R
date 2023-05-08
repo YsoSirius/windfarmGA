@@ -79,6 +79,7 @@ turbine_influences <- function(t, wnkl, dist, polYgon, dirct,
 #' 
 #' ## Create a random windfarm with 10 turbines
 #' t <- st_coordinates(st_sample(Polygon1, 10))
+#' t <- cbind(t, "Z" = 1)
 #' wnkl <- 20
 #' dist <- 100000
 #' 

@@ -22,7 +22,7 @@ A numeric value
 }
 \description{
 Calculate the intersection area of two circles with different 
-  raddi and different heights
+  radii and different heights
 }
 \seealso{
 Other Wind Energy Calculation Functions: 
