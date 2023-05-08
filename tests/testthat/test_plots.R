@@ -1,4 +1,6 @@
 context("Plots")
+library(terra)
+library(stars)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -8,15 +10,20 @@ quiet <- function(x) {
 }
 
 test_that("Test Plotting Functions", {
-  library(terra)
-  library(stars)
-  
   # skip_on_cran()
   # skip_on_os(os = "mac")
   
-  ## Windrose Plotting #############
   wind_test <- data.frame(x = runif(10, 10, 20), 
                           y = runif(10, 0, 360) )
+  
+  ## Windrose Plotting #############
+  ## Mock Packages not installed
+  with_mock(
+    is_ggplot2_installed = function() FALSE,
+    expect_error(
+      plot_windrose(wind_test, plotit = FALSE)
+    )
+  )
   a0 <- plot_windrose(wind_test, plotit = FALSE)
   expect_true(is.recursive(a0))
   
@@ -206,6 +213,20 @@ test_that("Test Plotting Functions", {
   expect_true(is.null(fitnes_res))
   
   ## plot_heatmap ###############
+  ## Mock Packages not installed
+  with_mock(
+    is_gstat_installed = function() FALSE,
+    expect_error(
+      plot_heatmap(resultrect)
+    )
+  )
+  with_mock(
+    is_ggplot2_installed = function() FALSE,
+    expect_error(
+      plot_heatmap(resultrect)
+    )
+  )
+  
   heat_res <- plot_heatmap(resultrect)
   expect_true(class(heat_res) == "list")
   expect_false(anyNA(heat_res[[2]]))
@@ -222,6 +243,22 @@ test_that("Test Plotting Functions", {
   
   
   ## plot_leaflet #######################
+  ## Mock Packages not installed
+  with_mock(
+    is_leaflet_installed = function() FALSE,
+    expect_error(
+      plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1)
+    )
+  )
+  
+  data.in <- data.frame(ws = 12, wd = 0)
+  resultSP <- genetic_algorithm(Polygon1 = Polygon1,
+                                n = 5, iteration = 3,
+                                vdirspe = data.in, Rotor = 35,
+                                RotorHeight = 100)
+  p <- plot_leaflet(resultSP, Polygon1 = Polygon1, which = 1)
+  expect_is(p, "leaflet")
+  
   ## Plot the best wind farm on a leaflet map (ordered by energy values)
   p <- plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1)
   expect_is(p, "leaflet")

@@ -629,7 +629,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
                     select = "EnergyOverall")
     })
     order1 <- order(a, decreasing = TRUE)
-    result <- result[order1, ]
+    result <- result[order1,, drop = FALSE]
     beste <- which
   } else {
     beste <- ""
@@ -1520,7 +1520,7 @@ plot_heatmap <- function(result, si = 2, idistw) {
   
   ## Plot heatmap
   if (!is_ggplot2_installed()) {
-    warning("The package 'ggplot2' is required to plot the result, but it is not installed.\n",
+    stop("The package 'ggplot2' is required to plot the result, but it is not installed.\n",
             "Please install it with `install.packages('ggplot2')`")
   } else {
     var1.pred=X=Y=x=y=NULL

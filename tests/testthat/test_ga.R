@@ -19,13 +19,13 @@ test_that("Test Genetic Algorithm with different Inputs", {
   ))
   data.in <- data.frame(ws = 12, wd = 0)
 
-  ## SF Polygon Input - 100 Iteration #####################
+  ## SF Polygon Input - 30 Iteration #####################
   resultSP <- quiet(genetic_algorithm(Polygon1 = Polygon1,
-                      n = 20, iteration = 5,
+                      n = 20, iteration = 30,
                       vdirspe = data.in,
                       Rotor = 35, Proportionality = 1,
                       RotorHeight = 100, verbose = TRUE))
-  expect_true(nrow(resultSP) == 5)
+  expect_true(nrow(resultSP) == 30)
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))));
   

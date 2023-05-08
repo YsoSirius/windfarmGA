@@ -187,6 +187,15 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(any(unlist(do.call("rbind", fit1)[,-c(1,2)] < 0)))
   rm(fit1)
   
+  with_mock(
+    is_foreach_installed = function() FALSE,
+    expect_error(
+      fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
+              SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+              dirspeed = wind, topograp=FALSE, Parallel = TRUE)
+    )
+  )
+  
   ## SELECTION ################################
   allparks <- do.call("rbind", fit)
   selec6best <- selection(fit, Grid[[1]], 2, TRUE, 6, "VAR")

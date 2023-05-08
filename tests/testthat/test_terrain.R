@@ -33,15 +33,6 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(res[[1]][[2]], "SpatRaster")
   expect_is(res[[1]][[3]], "SpatRaster")
   
-  res <- terrain_model(srtm, Polygon1, sourceCCL = "g100_06.tif")
-  expect_length(res, 2)
-  expect_length(res[[1]], 3)
-  expect_length(res[[2]], 1)
-  expect_is(res[[2]], "SpatRaster")
-  expect_is(res[[1]][[1]], "SpatRaster")
-  expect_is(res[[1]][[2]], "SpatRaster")
-  expect_is(res[[1]][[3]], "SpatRaster")
-  
   res <- terrain_model(terra::rast(srtm), Polygon1, sourceCCL = "g100_06.tif")
   expect_length(res, 2)
   expect_length(res[[1]], 3)
@@ -139,13 +130,67 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
+  rm(resultrect)
+  resultrect <- quiet(suppressWarnings(
+    genetic_algorithm(Polygon1 = sp_polygon,
+                      n = 12, iteration = 1,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100,
+                      weibullsrc = list(raster::raster(k_raster), a_raster))
+  ))
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+  
+  rm(resultrect)
+  resultrect <- quiet(suppressWarnings(
+    genetic_algorithm(Polygon1 = sp_polygon,
+                      n = 12, iteration = 1,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100,
+                      weibullsrc = list(k_raster, raster::raster(a_raster)))
+  ))
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+  
+  expect_error(
+    genetic_algorithm(Polygon1 = sp_polygon,
+                      n = 12, iteration = 1, vdirspe = data.in,
+                      Rotor = 30, RotorHeight = 100,
+                      weibull = TRUE)
+  )
+
+  
   ## Plotting Terrain Effects #############
   plres <- suppressWarnings(
     plot_result(resultrect, sp_polygon,
                 topographie = TRUE,
                 plotEn = 1,
                 sourceCCLRoughness = sourceCCLRoughness, 
-                weibullsrc = list(a_raster * (gamma(1 + (1 / values(k_raster))))))
+                weibullsrc = list(a_raster * (gamma(1 + (1 / values(k_raster))))) )
+  )
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
+  plres <- suppressWarnings(
+    plot_result(resultrect, sp_polygon,
+                topographie = TRUE,
+                plotEn = 1,
+                sourceCCLRoughness = sourceCCLRoughness, 
+                weibullsrc = list(raster::raster(a_raster * (gamma(1 + (1 / values(k_raster)))))) )
+  )
+  expect_false(anyNA(plres))
+  expect_true(all(plres$EfficAllDir <= 100))
+  
+  plres <- suppressWarnings(
+    plot_result(resultrect, sp_polygon,
+                topographie = TRUE,
+                plotEn = 1,
+                sourceCCLRoughness = sourceCCLRoughness, 
+                weibullsrc = raster::raster(a_raster * (gamma(1 + (1 / values(k_raster))))) )
   )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
@@ -232,8 +277,21 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
   expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
 
+  resultrect <- quiet(suppressWarnings(
+    genetic_algorithm(Polygon1 = Polygon1,
+                      n = 12, iteration = 1,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100, 
+                      topograp = srtm_crop$strm_crop, verbose = TRUE, 
+                      plotit = TRUE, sourceCCL = "g100_06.tif", 
+                      sourceCCLRoughness = sourceCCLRoughness)
+  ))
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
     
-  # Weibull + Plotting
+  ## Weibull + Plotting ##############
   DEMcrop <- srtm_crop$orogr1
   maxval <- max(values(DEMcrop))
   a_raster <- terra::app(DEMcrop, function(x) (x / maxval)+1)

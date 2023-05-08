@@ -53,7 +53,7 @@ test_that("Test Random Search Functions", {
   
   ## Plots ###################
   res <- plot_random_search(resultRS = new, result = resultrect,
-                            Polygon1 = Polygon1, best = 2)
+                            Polygon1 = Polygon1, best = 1)
   expect_true(is.null(res))
 
   new10 <- random_search(resulthex, Polygon1, n = 20, best = 3, Plot = TRUE)
@@ -64,5 +64,14 @@ test_that("Test Random Search Functions", {
   res <- plot_random_search(resultRS = new, result = resultrect,
                             Polygon1 = Polygon1, best = 100)
   expect_true(is.null(res))
-
+  
+  data.in <- data.frame(ws = 12, wd = 0)
+  resultSP <- genetic_algorithm(Polygon1 = Polygon1,
+                                n = 5, iteration = 3,
+                                vdirspe = data.in, Rotor = 35,
+                                RotorHeight = 100)
+  new <- random_search(resultSP, Polygon1, n = 2, best = 1)
+  res <- plot_random_search(resultRS = new, result = resultSP,
+                            Polygon1 = Polygon1, best = 100)
+  expect_true(is.null(res))
 })
