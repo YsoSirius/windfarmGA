@@ -8,7 +8,7 @@ quiet <- function(x) {
 }
 
 test_that("Test Plotting Functions", {
-  library(raster)
+  library(terra)
   library(stars)
   
   # skip_on_cran()

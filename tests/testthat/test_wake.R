@@ -1,5 +1,4 @@
 context("Test Wake Functions")
-library(raster)
 
 test_that("Test Wake Functions", {
   ## Input Data ---------------------

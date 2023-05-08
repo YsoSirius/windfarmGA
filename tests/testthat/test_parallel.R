@@ -1,7 +1,7 @@
 context("Parallel")
 
 test_that("Test Parallelisation", {
-  skip_on_os("windows")
+  # skip_on_os("windows")
   # skip_if(Sys.info()["machine"] != "x86-64")
   
   ## Inputs ##################

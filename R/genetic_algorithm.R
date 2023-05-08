@@ -265,16 +265,19 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       
       ## Project Shapefile to raster, Crop/Mask and project raster back
       if (!inherits(weibullsrc[[1]], "SpatRaster")) {
-        k_weibull <- terra::rast(weibullsrc[[1]])
+        weibullsrc[[1]] <- terra::rast(weibullsrc[[1]])
       }
       if (!inherits(weibullsrc[[2]], "SpatRaster")) {
-        a_weibull <- terra::rast(weibullsrc[[2]])
+        weibullsrc[[2]] <- terra::rast(weibullsrc[[2]])
       }
     }
     ## Project Shapefile to raster proj, Crop/Mask and project raster back
-    shape_project <- st_transform(Polygon1, crs = st_crs(a_weibull))
-    weibl_k <- terra::crop(x = k_weibull, y = shape_project, mask = TRUE)
-    weibl_a <- terra::crop(x = a_weibull, y = shape_project, mask = TRUE)
+    shape_project <- st_transform(Polygon1, crs = st_crs(weibullsrc[[2]]))
+    weibl_k <- terra::crop(x = weibullsrc[[1]], y = shape_project, mask = TRUE)
+    
+    a <- weibullsrc[[1]]
+    terra::crop(x = a, y = shape_project, mask = TRUE)
+    weibl_a <- terra::crop(x = weibullsrc[[2]], y = shape_project, mask = TRUE)
     
     estim_speed_raster <- weibl_a * gamma(1 + (1 / values(weibl_k)))
     estim_speed_raster <- terra::project(estim_speed_raster, 

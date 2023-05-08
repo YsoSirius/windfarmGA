@@ -23,7 +23,8 @@
 #'  }
 #'
 #' @importFrom terra xyFromCell extract plot res resample lapp rast crop crs
-#'   project terrain app values global classify viewshed mosaic sprc
+#'   project terrain app values global classify viewshed mosaic sprc 
+#'   add_legend
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
 #'   st_make_grid st_intersection st_area sf_extSoftVersion st_centroid st_bbox
 #'   st_cast st_combine `st_crs<-` st_distance st_is_valid
@@ -35,7 +36,7 @@
 #' @importFrom stats runif smooth.spline sd aggregate median dist complete.cases
 #'   quantile
 #' @importFrom utils download.file unzip read.csv globalVariables
-#' @importFrom methods as
+#' @importFrom methods as is
 #' @importFrom Rcpp sourceCpp
 #' @importFrom magrittr %>% 
 #' 

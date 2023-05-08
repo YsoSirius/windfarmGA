@@ -40,7 +40,17 @@ A list of SpatRasters
 Calculate the SpatRasters needed for the terrain model.
 }
 \examples{
-\donttest{
+\dontrun{
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4651704, 4651704, 4654475, 4654475, 4651704),
+    c(2692925, 2694746, 2694746, 2692925, 2692925)))), 
+  crs = 3035
+))
+Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
+srtm <- elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11)
+res <- terrain_model(srtm, Polygon1)
 }
 }
 \concept{Terrain Model}

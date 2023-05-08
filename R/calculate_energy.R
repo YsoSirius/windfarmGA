@@ -109,6 +109,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   windpo <- rep(1, n_turbines)
 
   ## Terrain Effect Model ###################
+  cexa <- 0.7
   if (topograp) {
     ## Calculate Wind multiplier - Hills get higher values, valleys get lower values.
     wind_multiplier <- srtm_crop[[2]]
@@ -123,7 +124,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     turb_elev <- turb_elev[,1]
     ## Plot the elevation and the wind speed multiplier rasters
     if (plotit) {
-      cexa <- 0.7
+      
       par(mfrow = c(2, 1))
       plot(srtm_crop[[1]], main = "SRTM Elevation Data")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
@@ -215,16 +216,18 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   }
 
   ## Weibull Wind Speed Estimator ###################
-  if (inherits(weibull[1], "RasterLayer") || inherits(weibull[1], "character") || inherits(weibull[1], "SpatRaster")) {
+  if (inherits(weibull, "RasterLayer") || inherits(weibull, "character") || inherits(weibull, "SpatRaster")) {
     weibull_bool <- TRUE
-    weibull[1] <- terra::rast(weibull[1])
+    if (!inherits(weibull, "SpatRaster")) {
+      weibull <- terra::rast(weibull)
+    }
     if (plotit) {
       par(mfrow = c(1, 1), ask = FALSE)
-      plot(weibull, main = "Mean Weibull")
+      plot(weibull, main = "Weibull Raster")
       plot(polygon1, add = TRUE)
     }
     ## Extract Weibul values for turbine locations
-    estim_speed <- terra::extract(weibull, xy_individual)
+    estim_speed <- terra::extract(weibull, xy_individual)[[1]]
     ## Check and replace NA Values..
     if (anyNA(estim_speed)) {
       estim_speed[which(is.na(estim_speed))] <- mean(estim_speed, na.rm = TRUE)

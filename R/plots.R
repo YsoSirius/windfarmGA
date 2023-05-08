@@ -252,13 +252,19 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
     if (inherits(weibullsrc,"list") & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
-        terra::crop(x, Polygon1::ext(PolyCrop), mask = TRUE)})
-      Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / wblcroped[[1]])))
-    } else if (inherits(weibullsrc,"list") & length(weibullsrc) == 1) {
-      wblcroped <- terra::crop(weibullsrc[[1]], terra::ext(PolyCrop), mask = TRUE)
+        if (!inherits(x, "SpatRaster")) {
+          x <- terra::rast(x)
+        }
+        terra::crop(x, PolyCrop, mask = TRUE)})
+      Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / values(wblcroped[[1]]))))
+    } else if (length(weibullsrc) == 1) {
+      if (!inherits(weibullsrc[[1]], "SpatRaster")) {
+        weibullsrc[[1]] <- terra::rast(weibullsrc[[1]])
+      }
+      wblcroped <- terra::crop(weibullsrc[[1]], PolyCrop, mask = TRUE)
       Erwartungswert <- wblcroped[[1]]
-    } else if (inherits(weibullsrc,"RasterLayer")) {
-      wblcroped <- terra::crop(weibullsrc, terra::ext(PolyCrop), mask = TRUE)
+    } else if (inherits(weibullsrc, "RasterLayer")) {
+      wblcroped <- terra::crop(terra::rast(weibullsrc), PolyCrop, mask = TRUE)
       Erwartungswert <- wblcroped
     }
     col2res <- "transparent"
