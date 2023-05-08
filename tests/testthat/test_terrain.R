@@ -57,6 +57,56 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(resultrect, "matrix")
   expect_false(any(unlist(sapply(resultrect, is.na))))
   
+  
+  ## Test Terrain_Model Function ###############
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4651704, 4651704, 4654475, 4654475, 4651704),
+      c(2692925, 2694746, 2694746, 2692925, 2692925)))),
+    crs = 3035
+  ))
+  Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
+  srtm <- elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11)
+  res <- terrain_model(srtm, Polygon1, sourceCCL = terra::rast("g100_06.tif"))
+  expect_length(res, 2)
+  expect_length(res[[1]], 3)
+  expect_length(res[[2]], 1)
+  expect_is(res[[2]], "SpatRaster")
+  expect_is(res[[1]][[1]], "SpatRaster")
+  expect_is(res[[1]][[2]], "SpatRaster")
+  expect_is(res[[1]][[3]], "SpatRaster")
+  
+  res <- terrain_model(srtm, Polygon1, sourceCCL = "g100_06.tif")
+  expect_length(res, 2)
+  expect_length(res[[1]], 3)
+  expect_length(res[[2]], 1)
+  expect_is(res[[2]], "SpatRaster")
+  expect_is(res[[1]][[1]], "SpatRaster")
+  expect_is(res[[1]][[2]], "SpatRaster")
+  expect_is(res[[1]][[3]], "SpatRaster")
+  
+  res <- terrain_model(terra::rast(srtm), Polygon1, sourceCCL = "g100_06.tif")
+  expect_length(res, 2)
+  expect_length(res[[1]], 3)
+  expect_length(res[[2]], 1)
+  expect_is(res[[2]], "SpatRaster")
+  expect_is(res[[1]][[1]], "SpatRaster")
+  expect_is(res[[1]][[2]], "SpatRaster")
+  expect_is(res[[1]][[3]], "SpatRaster")
+  
+  
+  srtm_terra <- terra::rast(srtm)
+  values(srtm_terra) <- NA
+  res <- expect_warning(terrain_model(srtm_terra, Polygon1, sourceCCL = "g100_06.tif"))
+  expect_length(res, 2)
+  expect_length(res[[1]], 3)
+  expect_length(res[[2]], 1)
+  expect_is(res[[2]], "SpatRaster")
+  expect_is(res[[1]][[1]], "SpatRaster")
+  expect_is(res[[1]][[2]], "SpatRaster")
+  expect_is(res[[1]][[3]], "SpatRaster")
+  
+  
   ## Weibull ################
   ## Weibull Params (FAKE).
   DEM <- suppressWarnings(elevatr::get_elev_raster(verbose = FALSE,
@@ -166,16 +216,15 @@ test_that("Test Terrain and Weibull Effects", {
                                 distanz = 100000, dirSpeed = data.in,
                                 RotorR = 50, polygon1 = Polygon1,
                                 topograp = TRUE, weibull = FALSE, plotit = TRUE)
-  
   expect_output(str(resCalcEn), "List of 1")
-  # expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
   expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <
                     df[df[, "TotAbschProz"] != 0, "Windmean"]))
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
   expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
-  
+
+    
   # Weibull + Plotting
   DEMcrop <- srtm_crop$orogr1
   maxval <- max(values(DEMcrop))
@@ -188,6 +237,22 @@ test_that("Test Terrain and Weibull Effects", {
                                 distanz = 100000, dirSpeed = data.in,
                                 RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
                                 weibull = weibullraster, plotit = TRUE)
+  expect_output(str(resCalcEn), "List of 1")
+  # expect_true(class(resCalcEn[[1]]) == "matrix")
+  df <- do.call(rbind, resCalcEn)
+  expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
+  expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <
+                    df[df[, "TotAbschProz"] != 0, "Windmean"]))
+  expect_false(any(unlist(sapply(resCalcEn, is.na))))
+  expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
+  
+  
+  resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
+                                srtm_crop = srtm_crop, cclRaster = cclRaster,
+                                RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
+                                distanz = 100000, dirSpeed = data.in,
+                                RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+                                weibull = raster::raster(weibullraster), plotit = TRUE)
   expect_output(str(resCalcEn), "List of 1")
   # expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
