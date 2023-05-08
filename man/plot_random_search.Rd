@@ -10,8 +10,7 @@ plot_random_search(resultRS, result, Polygon1, best)
 \item{resultRS}{The result of the random functions
 \code{\link{random_search_single}} and \code{\link{random_search}}.}
 
-\item{result}{The output of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}}
+\item{result}{The output of \code{\link{genetic_algorithm}}}
 
 \item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
 or coordinates as matrix/data.frame}

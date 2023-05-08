@@ -7,8 +7,7 @@
 plot_heatmap(result, si = 2, idistw)
 }
 \arguments{
-\item{result}{The output of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}}
+\item{result}{The output of \code{\link{genetic_algorithm}}}
 
 \item{si}{A numeric value that is used for the sizing of the resolution of
 the heatmap. Default is 2}

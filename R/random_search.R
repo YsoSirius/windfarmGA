@@ -6,7 +6,6 @@
 #' @export
 #' @inheritParams genetic_algorithm
 #' @param result The resulting matrix of the function \code{\link{genetic_algorithm}}
-#' or \code{\link{windfarmGA}}
 #' @param best Which best individuals should be the starting conditions for a
 #'   random search. The default is 1.
 #' @param n The number of random searches to be performed. Default is 20.

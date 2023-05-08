@@ -7,8 +7,7 @@
 random_search_single(result, Polygon1, n = 20, Plot = FALSE, max_dist = 2.2)
 }
 \arguments{
-\item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}
-or \code{\link{windfarmGA}}}
+\item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}}
 
 \item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
 or coordinates as matrix/data.frame}

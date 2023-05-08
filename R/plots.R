@@ -177,8 +177,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' @export
 #'
 #' @inheritParams genetic_algorithm
-#' @param result The output of \code{\link{windfarmGA}} or
-#'   \code{\link{genetic_algorithm}}
+#' @param result The output of \code{\link{genetic_algorithm}}
 #' @param best A numeric value indicating how many of the best individuals
 #'   should be plotted
 #' @param plotEn A numeric value that indicates if the best energy or efficiency

@@ -14,7 +14,6 @@ reference:
   - title: Run an Optimization
     contents:
     - genetic_algorithm
-    - windfarmGA
   - title: Genetic Algorithm Components
     desc: Main components of the genetic algorithm
     contents:
@@ -24,6 +23,9 @@ reference:
     - crossover
     - mutation
     - trimton
+  - title: Topographic Model
+    contents:
+    - terrain_model
   - title: Wind Energy Calculation Functions
     contents:
     - barometric_height

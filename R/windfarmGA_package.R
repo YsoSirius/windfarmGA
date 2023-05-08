@@ -10,7 +10,7 @@
 #' direction. A terrain effect model can be included which downloads a digital
 #' elevation model and a Corine Land Cover raster to approximate surface
 #' roughness. Further information can be found at the description of the
-#' function \code{\link{windfarmGA}}.
+#' function \code{\link{genetic_algorithm}}.
 #' 
 #' @seealso 
 #' Useful links:

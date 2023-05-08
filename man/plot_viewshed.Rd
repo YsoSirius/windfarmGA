@@ -28,7 +28,7 @@ A mosaiced SpatRaster, representing the visibility for all \code{turbine_locs}
 Calculate and plot visibility for given points in a given area.
 }
 \examples{
-\dontrun{
+\donttest{
 library(sf)
 library(terra)
 
@@ -40,7 +40,6 @@ plot(shape)
 st_crs(shape) <- 2169
 locs = st_sample(shape, 10, type = "random")
 plot_viewshed(x, locs, h1=0, h2=0, plot=TRUE)
-
 }
 }
 \concept{Viewshed Analysis}

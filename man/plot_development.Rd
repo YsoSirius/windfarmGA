@@ -7,8 +7,7 @@
 plot_development(result)
 }
 \arguments{
-\item{result}{The output of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}}
+\item{result}{The output of \code{\link{genetic_algorithm}}}
 }
 \value{
 Returns NULL. Used for plotting

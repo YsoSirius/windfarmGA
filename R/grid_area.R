@@ -5,7 +5,7 @@
 #'   wind turbine locations.
 #'
 #' @note The grid of the genetic algorithm will have a resolution of \code{Rotor
-#'   * fcrR}. See the arguments of \code{\link{windfarmGA}}
+#'   * fcrR}. See the arguments of \code{\link{genetic_algorithm}}
 #'
 #' @export
 #'

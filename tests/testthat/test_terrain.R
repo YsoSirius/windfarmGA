@@ -1,4 +1,7 @@
 context("Test Terrain and Weibull Effects")
+library(terra)
+library(elevatr)
+library(raster)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -8,13 +11,9 @@ quiet <- function(x) {
 }
 
 test_that("Test Terrain and Weibull Effects", {
-  library(sf)
-  library(terra)
-  library(elevatr)
-  library(raster)
   # skip_on_cran()
   # skip_if_offline()
-  # skip_if_not_installed("rgdal")
+  skip_if_not_installed("rgdal")
   
   ## Test Terrain Model ###################
   Projection <- 3035

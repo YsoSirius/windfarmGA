@@ -17,7 +17,7 @@
 #' @family Viewshed Analysis
 #' @return A mosaiced SpatRaster, representing the visibility for all \code{turbine_locs}
 #' 
-#' @examples \dontrun{
+#' @examples \donttest{
 #' library(sf)
 #' library(terra)
 #' 
@@ -29,7 +29,6 @@
 #' st_crs(shape) <- 2169
 #' locs = st_sample(shape, 10, type = "random")
 #' plot_viewshed(x, locs, h1=0, h2=0, plot=TRUE)
-#' 
 #' }
 plot_viewshed <- function(r, turbine_locs, h1=0, h2=0, plot=TRUE, ...) {
   if (inherits(turbine_locs, "Spatial")) {
