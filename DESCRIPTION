@@ -32,6 +32,7 @@ Suggests:
     doParallel,
     progress,
     stars,
+    raster,
     leaflet,
     elevatr,
     ggplot2,

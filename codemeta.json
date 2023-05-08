@@ -98,6 +98,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "raster",
+      "name": "raster",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=raster"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "leaflet",
       "name": "leaflet",
       "provider": {
@@ -264,7 +276,7 @@
     "SystemRequirements": null
   },
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
-  "fileSize": "262347.738KB",
+  "fileSize": "3315.818KB",
   "relatedLink": "https://ysosirius.github.io/windfarmGA/index.html",
   "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
