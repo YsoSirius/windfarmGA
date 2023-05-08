@@ -13,18 +13,6 @@ test_that("Test Parallelisation", {
   ))
   wind <- data.frame(ws = 12, wd = 0)
   
-  ## genetic_algorithm ####################
-  ## Default amount of Cluster
-  res <- genetic_algorithm(Polygon1 = Polygon1,
-                           n = 12, iteration = 2,
-                           vdirspe = wind,
-                           Rotor = 30,
-                           RotorHeight = 100, Parallel = TRUE)
-  expect_true(nrow(res) == 2)
-  expect_is(res, "matrix")
-  expect_false(any(unlist(sapply(res, is.na))))
-
-  
   ## Mock Packages not installed
   with_mock(
     is_foreach_installed = function() FALSE,
@@ -47,7 +35,7 @@ test_that("Test Parallelisation", {
     )
   )
   with_mock(
-    is_doParallel_installed = function() FALSE,
+    is_doparallel_installed = function() FALSE,
     expect_error( 
       genetic_algorithm(Polygon1 = Polygon1,
                         n = 12, iteration = 2,
@@ -56,8 +44,18 @@ test_that("Test Parallelisation", {
                         RotorHeight = 100, Parallel = TRUE)
     )
   )
-
   
+  ## genetic_algorithm ####################
+  ## Default amount of Cluster
+  res <- genetic_algorithm(Polygon1 = Polygon1,
+                           n = 12, iteration = 2,
+                           vdirspe = wind,
+                           Rotor = 30,
+                           RotorHeight = 100, Parallel = TRUE)
+  expect_true(nrow(res) == 2)
+  expect_is(res, "matrix")
+  expect_false(any(unlist(sapply(res, is.na))))
+
   ## Too many Cluster
   skip("Too many clusters")
   res <- expect_warning(

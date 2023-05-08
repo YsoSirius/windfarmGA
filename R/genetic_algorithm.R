@@ -234,7 +234,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       stop("The package 'parallel' is required for this function, but it is not installed.\n",
            "Please install it with `install.packages('parallel')`")
     }
-    if (!is_doParallel_installed()) {
+    if (!is_doparallel_installed()) {
       stop("The package 'doParallel' is required for this function, but it is not installed.\n",
            "Please install it with `install.packages('doParallel')`")
     }
