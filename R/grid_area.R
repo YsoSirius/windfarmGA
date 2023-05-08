@@ -5,7 +5,7 @@
 #'   wind turbine locations.
 #'
 #' @note The grid of the genetic algorithm will have a resolution of \code{Rotor
-#'   * fcrR}. See the arguments of \code{\link{windfarmGA}}
+#'   * fcrR}. See the arguments of \code{\link{genetic_algorithm}}
 #'
 #' @export
 #'
@@ -22,7 +22,7 @@
 #'   List element 2 is the grid as Simple Feature Polygons, which is used for 
 #'   plotting purposes.
 #'   
-#' @examples \dontrun{
+#' @examples \donttest{
 #' ## Exemplary input Polygon with 2km x 2km:
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -66,7 +66,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
   indx <- as.numeric((areadrygrid / size^2)) >= prop
   
   if (!any(indx)) {
-    cat("\n################### GA ERROR MESSAGE ###################\n")
+    message("\n################### GA ERROR MESSAGE ###################\n")
     stop("A grid cannot be drawn. Reduce the `size` argument ",
          "or define a projection in meters.")
   }
@@ -132,7 +132,7 @@ hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
   indx <- as.numeric(areadrygrid) >= (2* sqrt(3) * (size/2)^2)*0.99
     
   if ((!any(indx)) || (length(grid_polys)==1)) {
-    cat("\n################### GA ERROR MESSAGE ###################\n")
+    message("\n################### GA ERROR MESSAGE ###################\n")
     stop("A grid cannot be drawn. Reduce the `size` argument ",
          "or define a projection in meters.")
   }

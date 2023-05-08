@@ -1,10 +1,12 @@
-# windfarmGA 3.1.0
-* Removed package dependencies on `rgdal` and `rgeos`
-* Moved dependencies `foreach`, `parallel`, `doParallel` to Suggests
-* Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
-* Fix `getISO3` - only use `sf::st_is_valid` countries from `rworldmap::getMap`
-* `projectRaster` seems to require CRS as character and not as CRS object
-* supressWarnings for plot-tests
+# Updates 4.0.0
+- Removed package dependencies `rgdal` and `rgeos`
+- Replaced dependency `raster` with `terra`
+- Moved dependencies `foreach`, `parallel`, `doParallel`, `elevatr` to Suggests
+- Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
+- Removed most visibility functions in favor of `terra::viewshed`
+- Removed the function `windfarmGA`, as it was redundant and just difficult to test.
+- Changed most `cat()` and `print()` calls with `message()`
+- Reset old `par` settings
 
 # windfarmGA 3.0.0
 * The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.

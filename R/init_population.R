@@ -35,15 +35,15 @@
 #'
 init_population           <- function(Grid, n, nStart = 100) {
   if (length(Grid[,'ID']) <= n) {
-    cat("\n################### GA ERROR MESSAGE ###################\n")
-    cat(paste("##### Amount Grid-cells: ", length(Grid[,'ID']),
+    message("\n################### GA ERROR MESSAGE ###################\n")
+    message(paste("##### Amount Grid-cells: ", length(Grid[,'ID']),
               "\n##### Amount of turbines: ", n, "\n"))
     stop("The amount of Grid-cells is smaller or equal the number of turbines requested.\n",
          "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
   }
   if (length(Grid[,'ID']) < (2*n)) {
-    cat("\n################### GA ERROR MESSAGE ###################\n")
-    cat(paste("##### Amount Grid-cells: ", length(Grid[, 'ID']),
+    message("\n################### GA ERROR MESSAGE ###################\n")
+    message(paste("##### Amount Grid-cells: ", length(Grid[, 'ID']),
               "\n##### Amount of turbines: ", n, "\n"))
     stop("The amount of Grid-cells should at least be double the size of turbines requested.\n",
          "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")

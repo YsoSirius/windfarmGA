@@ -8,7 +8,7 @@ quiet <- function(x) {
 }
 
 test_that("Test Genetic Algorithm with different Inputs", {
-  skip_on_cran()
+  # skip_on_cran()
   
   ## Data ##############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -19,13 +19,34 @@ test_that("Test Genetic Algorithm with different Inputs", {
   ))
   data.in <- data.frame(ws = 12, wd = 0)
 
-  ## SF Polygon Input - 100 Iteration #####################
+  ## All Green ################
+  resultSP <- genetic_algorithm(Polygon1 = Polygon1,
+                                n = 5, iteration = 30,
+                                vdirspe = data.in,
+                                Rotor = 35, Proportionality = 1,
+                                RotorHeight = 100, verbose = FALSE, 
+                                plotit = TRUE)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))));
+  
+  
+  ## No optimization possible - Turbines in all Grid Cells ################
+  resultSP <- genetic_algorithm(Polygon1 = Polygon1,
+                                n = 5, iteration = 30,
+                                vdirspe = data.in,
+                                Rotor = 71, Proportionality = 1,
+                                RotorHeight = 100, verbose = FALSE, 
+                                plotit = TRUE)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))));
+  
+  ## SF Polygon Input - 30 Iteration #####################
   resultSP <- quiet(genetic_algorithm(Polygon1 = Polygon1,
-                      n = 20, iteration = 100,
+                      n = 20, iteration = 30,
                       vdirspe = data.in,
                       Rotor = 35, Proportionality = 1,
                       RotorHeight = 100, verbose = TRUE))
-  expect_true(nrow(resultSP) == 100)
+  expect_true(nrow(resultSP) == 30)
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))));
   
@@ -123,7 +144,6 @@ test_that("Test Genetic Algorithm with different Inputs", {
             RotorHeight = 100))
   expect_is(resultMA100, "matrix")
   expect_false(any(unlist(sapply(resultMA100, is.na))))
-  # expect_true(any(as.vector(sapply(resultMA100[,3], function(x) x[,"EfficAllDir"] == 100))))
 
   ## Test with non default arguments ####################
   colnames(PolygonMat) <- c("hor", "vert")
@@ -152,7 +172,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_false(any(unlist(sapply(resultMA[,1:13], is.na))))
 
   ## Create errors ####################
-  ## RotorHeight missing
+  ## RotorHeight is missing
   expect_error(genetic_algorithm(Polygon1 = Polygon1,
                        GridMethod = "h", plotit = TRUE,
                        vdirspe = data.in,
@@ -162,16 +182,6 @@ test_that("Test Genetic Algorithm with different Inputs", {
                        trimForce = TRUE,
                        # RotorHeight = 100,
                        Rotor = 30))
-  expect_error(genetic_algorithm(Polygon1 = Polygon1,
-                                 GridMethod = "h", 
-                                 vdirspe = data.in, 
-                                 n = 12,
-                                 elitism = F, 
-                                 selstate = "var", crossPart1 = "ran", 
-                                 trimForce = TRUE,
-                                 # ,RotorHeight = 100
-                                 Rotor = 30))
-  
   ## n is missing
   expect_error(genetic_algorithm(Polygon1 = Polygon1,
                        GridMethod = "h", plotit = TRUE,

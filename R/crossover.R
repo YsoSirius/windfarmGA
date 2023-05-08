@@ -47,7 +47,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
     seed <- NULL
   }
   if (verbose) {
-    cat(paste("crossover point rate: ", u + 1))
+    message(paste("crossover point rate: ", u + 1))
   }
 
   se6fit <- se6[[2]][1, -1]
@@ -127,8 +127,8 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
   nI <- do.call("cbind", all)
 
   if (verbose) {
-    cat(paste("\nHow many parental pairs are at hand: ", length(z)))
-    cat(paste("\nHow many permutations are possible: ", length(z) *
+    message(paste("How many parental pairs are at hand: ", length(z)))
+    message(paste("How many permutations are possible: ", length(z) *
                 (2 ^ (trunc(u) + 1))))
   }
 
@@ -136,7 +136,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
   if (partaksur >= uplimit) {
     partaksur <- uplimit
     if (verbose) {
-      cat(paste("\nPopulation max limit reached: ", uplimit))
+      message(paste("Population max limit reached: ", uplimit))
     }
   }
 
@@ -147,7 +147,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
   }
   partak <- sort(sample(1:length(nI[1, ]), partaksur, prob = fitChi))
   if (verbose) {
-    cat(paste("\nHow many permutations are selected: ", length(partak), "\n"))
+    message(paste("How many permutations are selected: ", length(partak)))
   }
 
   nI <- nI[, partak]

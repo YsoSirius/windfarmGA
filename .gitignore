@@ -19,3 +19,4 @@ docs/*
 release_to_cran.R
 _experiment
 *.RDS
+cclraster

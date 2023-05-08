@@ -16,7 +16,7 @@
 #' @param plotit Should the windrose be plotted? Default is TRUE
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #'
 #' @examples
 #' ## Exemplary Input Wind speed and direction data frame
@@ -34,7 +34,7 @@
 plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                           spdmax = 30, palette = "YlGnBu",
                           spdseq = NULL, plotit = TRUE) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  if (!is_ggplot2_installed()) {
     stop("The package 'ggplot2' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('ggplot2')`")
   }
@@ -177,8 +177,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' @export
 #'
 #' @inheritParams genetic_algorithm
-#' @param result The output of \code{\link{windfarmGA}} or
-#'   \code{\link{genetic_algorithm}}
+#' @param result The output of \code{\link{genetic_algorithm}}
 #' @param best A numeric value indicating how many of the best individuals
 #'   should be plotted
 #' @param plotEn A numeric value that indicates if the best energy or efficiency
@@ -219,7 +218,9 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
          "1 - plots the best energy output. \n",
          "2 - plots the best efficiency output.")
   }
-  parpplotRes <- par(no.readonly = TRUE)
+  ## set Graphic Params ###############
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1), mar = c(5, 6, 4, 2) + 0.1, mgp = c(5, 1, 0))
   rbPal1 <- grDevices::colorRampPalette(c('green','red'))
   result_inputs <- result[1,'inputData'][[1]]
@@ -252,23 +253,24 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
     if (inherits(weibullsrc,"list") & length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x){
-        raster::crop(x, raster::extent(PolyCrop))})
-      wblcroped <- lapply(wblcroped, function(x){
-        raster::mask(x, PolyCrop)})
-      Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / wblcroped[[1]])))
-    } else if (inherits(weibullsrc,"list") & length(weibullsrc) == 1) {
-      wblcroped <- raster::crop(weibullsrc[[1]], raster::extent(PolyCrop))
-      wblcroped <- raster::mask(weibullsrc[[1]], PolyCrop)
+        if (!inherits(x, "SpatRaster")) {
+          x <- terra::rast(x)
+        }
+        terra::crop(x, PolyCrop, mask = TRUE)})
+      Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / values(wblcroped[[1]]))))
+    } else if (length(weibullsrc) == 1) {
+      if (!inherits(weibullsrc[[1]], "SpatRaster")) {
+        weibullsrc[[1]] <- terra::rast(weibullsrc[[1]])
+      }
+      wblcroped <- terra::crop(weibullsrc[[1]], PolyCrop, mask = TRUE)
       Erwartungswert <- wblcroped[[1]]
-    } else if (inherits(weibullsrc,"RasterLayer")) {
-      wblcroped <- raster::crop(weibullsrc, raster::extent(PolyCrop))
-      wblcroped <- raster::mask(weibullsrc, PolyCrop)
+    } else if (inherits(weibullsrc, "RasterLayer")) {
+      wblcroped <- terra::crop(terra::rast(weibullsrc), PolyCrop, mask = TRUE)
       Erwartungswert <- wblcroped
     }
     col2res <- "transparent"
     alpha <- 0.9
-    Erwartungswert <- raster::projectRaster(Erwartungswert, 
-                                            crs = as.character(raster::crs(Polygon1)))
+    Erwartungswert <- terra::project(Erwartungswert, terra::crs(Polygon1))
   }
   
   ## Check & Make Grid #############
@@ -285,56 +287,12 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   
   ## Check Terrain Modell #########
   if (topographie == TRUE) {
-    Polygonwgs84 <-  sf::st_transform(Polygon1, 4326)
-    srtm <- tryCatch(elevatr::get_elev_raster(locations = as(Polygonwgs84, "Spatial"), z = 11),
-                     error = function(e) {
-                       stop("\nDownloading Elevation data failed for the given Polygon.\n",
-                            e, call. = FALSE)
-                     })
-    srtm_crop <- raster::crop(srtm, Polygonwgs84)
-    srtm_crop <- raster::mask(srtm_crop, Polygonwgs84)
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = as.character(raster::crs(Polygon1)))
-    
-    # Calculates Wind multiplier. Hills will get higher values, valleys will get lower values.
-    orogr1 <- raster::calc(srtm_crop, function(x) {
-      x / (raster::cellStats(srtm_crop, mean, na.rm = TRUE))
-    })
-    
-    
-    if (is.null(sourceCCL)) {
-      if (length(list.files(pattern = "g100_06.tif")) == 0) {
-        message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
-                "the EEA-website.")
-        ## download an zip CCL-tif
-        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
-                      destfile = "clc.zip", 
-                      method = "auto")
-        unzip("clc.zip")
-        unlink("clc.zip")
-        ccl <- raster::raster("g100_06.tif")
-      } else {
-        sourceCCL <- list.files(pattern = "g100_06.tif", full.names = TRUE)
-        ccl <- raster::raster(x = sourceCCL)
-      }
-    }
-    # Include Corine Land Cover Raster to get an estimation of Surface Roughness
-    cclPoly <- raster::crop(ccl, Polygon1)
-    cclPoly1 <- raster::mask(cclPoly, mask = Polygon1)
-    if (is.null(sourceCCLRoughness)) {
-      path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-      source_ccl <- paste0(path, "clc_legend.csv")
-    } else {
-      cat("\nYou are using your own Corine Land Cover legend.")
-      # readline(prompt = "\nPress <ENTER> if you want to continue")
-      source_ccl <- sourceCCLRoughness
-    }
-    rauhigkeitz <- utils::read.csv(source_ccl, header = TRUE, sep = ";")
-    cclRaster <- raster::reclassify(cclPoly1,
-                                    matrix(c(rauhigkeitz[,'GRID_CODE'],
-                                             rauhigkeitz[,'Rauhigkeit_z']),
-                                           ncol = 2))
+    terrain_data <- terrain_model(topographie, Polygon1, sourceCCL, sourceCCLRoughness,
+                                  plotit=TRUE, verbose=FALSE)
+    cclRaster <- terrain_data$cclRaster
+    orogr1 <- terrain_data$srtm_crop$orogr1
+    srtm_crop <- terrain_data$srtm_crop$strm_crop
   }
-  
   
   ## Set Argments for Best Energy/Efficiency Windfarm ##########
   if (plotEn == 1) {
@@ -361,12 +319,12 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   rectidt <- !duplicated(rectid)
   result <- result[rectidt]
   ndif <- length(result)
-  cat(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", 
+  message(paste("N different optimal configurations:", ndif, "\nAmount duplicates:", 
             (ledup - ndif)))
   
   ## Check for enough results #########
   if (ndif < best) {
-    cat(paste("\nNot enough unique Optimas. Show first best Half of different configurations."))
+    message(paste("Not enough unique Optimas. Show first best Half of different configurations."))
     best <- trunc(ndif / 2)
   }
   if (best == 0) best = 1
@@ -389,7 +347,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     }
     
     ## Plot Best Windfarm  ###########
-    cat(paste("\nPlot ", (best + 1) - i, " Best ",title," Solution:\n"))
+    message(paste("Plot ", (best + 1) - i, " Best ",title," Solution:\n"))
     par(mfrow = c(1, 1), ask = FALSE)
     plot(st_geometry(Polygon1), col = col2res, 
          main = paste((best + 1) - i, "Best ", title, " Windfarm", 
@@ -404,7 +362,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     
     ## Plot Weibull Data ###########      
     if (!is.null(weibullsrc)) {
-      raster::plot(Erwartungswert, alpha = alpha, legend = TRUE, axes = FALSE,
+      terra::plot(Erwartungswert, alpha = alpha, legend = TRUE, axes = FALSE,
                    useRaster = TRUE, add = TRUE,
                    legend.lab = "Mean Wind Speed")
     }
@@ -438,85 +396,81 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   }
   
   ## Reset par() and return best windfarm  ###########
-  par(parpplotRes)
   invisible(best_result)
 }
 plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   ## Plot DEM and windspeed multiplier ############
-  orogrnum <- raster::extract(x = orogr1, y = as.matrix(sel1),
-                              small = TRUE, fun = mean, na.rm = TRUE)
+  orogrnum <- terra::extract(x = orogr1, y = as.matrix(sel1))
   windpo <- 1 * orogrnum
   ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
-  heightWind <- raster::extract(x = srtm_crop, y = as.matrix((sel1)), 
-                                small = TRUE, fun = max, na.rm = TRUE)
+  heightWind <- terra::extract(x = srtm_crop, y = as.matrix(sel1))
+  ## set Graphic Params ###############
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 2))
-  cexa <- 0.9
-  raster::plot(srtm_crop, main = "Elevation Data")
+  cexa <- 0.7
+  terra::plot(srtm_crop, main = "Elevation Data")
   graphics::points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(heightWind, 0), cex = 0.8)
+                    labs = round(heightWind[[1]], 0), cex = cexa)
   plot(polygon1, add = TRUE)
-  raster::plot(orogr1, main = "Wind Speed Multipliers")
+  terra::plot(orogr1, main = "Wind Speed Multipliers")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(windpo, 3), cex = 0.8)
+                    labs = round(windpo[[1]], 3), cex = cexa)
   plot(polygon1, add = TRUE)
   
   ## Get Air Density and Pressure from Height Values #########
-  HeighttoBaro <- matrix(heightWind); colnames(HeighttoBaro) <- "HeighttoBaro"
+  HeighttoBaro <- matrix(heightWind[[1]]); colnames(HeighttoBaro) <- "HeighttoBaro"
   air_dt <- barometric_height(matrix(HeighttoBaro), HeighttoBaro)
-  raster::plot(srtm_crop, main = "Normal Air Density",
+  terra::plot(srtm_crop, main = "Normal Air Density",
                col = topo.colors(10))
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = rep(1.225, nrow(sel1)), cex = 0.8)
+                    labs = rep(1.225, nrow(sel1)), cex = cexa)
   plot(polygon1, add = TRUE)
-  raster::plot(srtm_crop, main = "Corrected Air Density",
+  terra::plot(srtm_crop, main = "Corrected Air Density",
                col = topo.colors(10))
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(air_dt[, 'rh'], 2), cex = 0.8)
+                    labs = round(air_dt[, 'rh'], 2), cex = cexa)
   plot(polygon1, add = TRUE)
   
   ## CorineLandCover Roughness values ##################
-  SurfaceRoughness0 <- raster::extract(x = cclRaster, y = as.matrix((sel1)),
-                                       small = TRUE, fun = mean, na.rm = TRUE)
-  SurfaceRoughness1 <- raster::extract(x = raster::terrain(srtm_crop, "roughness"),
-                                       y = as.matrix((sel1)),
-                                       small = TRUE, fun = mean, na.rm = TRUE)
-  SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1 / max(raster::res(srtm_crop))))
-  elrouind <- raster::terrain(srtm_crop, "roughness")
-  elrouindn <- raster::resample(elrouind, cclRaster, method = "ngb")
-  modSurf <- raster::overlay(x = cclRaster, y = elrouindn,
-                             fun = function(x, y) {
-                               return(x * (1 + (y / max(raster::res(srtm_crop)))))
-                             })
+  SurfaceRoughness0 <- terra::extract(x = cclRaster, y = as.matrix(sel1))
+  SurfaceRoughness1 <- terra::extract(x = terra::terrain(srtm_crop, "roughness"),
+                                       y = as.matrix(sel1))
+  SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1[[1]] / max(terra::res(srtm_crop))))
+  elrouind <- terra::terrain(srtm_crop, "roughness")
+  elrouindn <- terra::resample(elrouind, cclRaster, method = "near")
+  modSurf <- cclRaster * (1 + (values(elrouindn) / max(terra::res(srtm_crop))))
+  
   par(mfrow = c(1, 2))
-  raster::plot(cclRaster, main = "Corine Land Cover Roughness")
+  terra::plot(cclRaster, main = "Corine Land Cover Roughness")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round(SurfaceRoughness0, 2), cex = cexa)
+                    labs = round(SurfaceRoughness0[[1]], 2), cex = cexa)
   plot(polygon1, add = TRUE)
-  raster::plot(x = raster::terrain(srtm_crop, "roughness", neighbors = 4),
+  terra::plot(x = elrouindn,
                main = "Elevation Roughness Indicator")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round((SurfaceRoughness1), 2), cex = cexa)
+                    labs = round((SurfaceRoughness1[[1]]), 2), cex = cexa)
   plot(polygon1, add = TRUE)
-  raster::plot(modSurf, main = "Modified Surface Roughness")
+  terra::plot(modSurf, main = "Modified Surface Roughness")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
   calibrate::textxy(sel1[, 'X'], sel1[, 'Y'],
-                    labs = round((SurfaceRoughness), 2), cex = cexa)
+                    labs = round((SurfaceRoughness[[1]]), 2), cex = cexa)
   plot(polygon1, add = TRUE)
   
   ## Wake Decay Constant #############
   RotorHeight <- as.integer(inputs['Rotor Height',])
-  k_raster <- raster::calc(modSurf, function(x) {x <- 0.5 / (log(RotorHeight / x))})
+  k_raster <- terra::app(modSurf, function(x) { 0.5 / (log(RotorHeight / x)) })
   # New Wake Decay Constant calculated with new surface roughness values, according to CLC
   k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
-  raster::plot(k_raster, main = "Adapted Wake Decay Constant - K")
+  terra::plot(k_raster, main = "Adapted Wake Decay Constant - K")
   points(sel1[, 'X'], sel1[, 'Y'], pch = 20)
-  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k, 3), cex = cexa)
+  calibrate::textxy(sel1[, 'X'], sel1[, 'Y'], labs = round(k[[1]], 3), cex = cexa)
   plot(polygon1, add = TRUE)
 }
 
@@ -533,7 +487,7 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
 #'   "all" which shows all available plots
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -564,7 +518,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   Polygon1 <- isSpatial(Polygon1)
   if (nrow(result) < 4) {
     if (any(2:5 %in% whichPl)) {
-      cat("Cannot plot option 2,3,4,5. \n Only option 1,6 are available.")
+      message("Cannot plot option 2,3,4,5. \n Only option 1,6 are available.")
       whichPl <- c(1, 6)
     }
   }
@@ -572,44 +526,35 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   
   ## PLOTTING OUTPUTS ####################
   if (any(whichPl == 1)) {
-    print("plot_result: Plot the 'best' Individuals of the GA:")
+    message("plot_result: Plot the 'best' Individuals of the GA:")
     plot_result(result = result, Polygon1 = Polygon1, best = best , plotEn = plotEn,
                 topographie = FALSE, Grid = TRUE, weibullsrc = weibullsrc)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 2)) {
-    print("plot_evolution: Plot the Evolution of the Efficiency and Energy Values:")
+    message("plot_evolution: Plot the Evolution of the Efficiency and Energy Values:")
     plot_evolution(result, TRUE, 0.3)
   }
   if (any(whichPl == 3)) {
-    print("plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
+    message("plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
     plot_parkfitness(result, 0.1)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 4)) {
-    print("plot_fitness_evolution: Plot the Changes in Fitness Values:")
+    message("plot_fitness_evolution: Plot the Changes in Fitness Values:")
     plot_fitness_evolution(result)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 5)) {
-    print("plot_cloud: Plot all individual Values of the whole Evolution:")
+    message("plot_cloud: Plot all individual Values of the whole Evolution:")
     plot_cloud(result, TRUE)
     readline(prompt = "Press [enter] to continue")
   }
   if (any(whichPl == 6)) {
-    print("plot_heatmap: Plot a Heatmap of all Grid Cells:")
+    message("plot_heatmap: Plot a Heatmap of all Grid Cells:")
     plot_heatmap(result = result, si = 2)
     # readline(prompt = "Press [enter] to continue")
   }
-  # if (any(whichPl==7)){
-  #   print("GooglePlot: Plot the 'best' Individual with static Google Map:")
-  #   GooglePlot(result,Polygon1,best,plotEn,Projection)
-  #   readline(prompt="Press [enter] to continue")
-  # }
-  # if (any(whichPl==8)){
-  #   print("GoogleChromePlot: Plot the 'best' Individual with Leaflet with Satelitte Imagery:")
-  #   GoogleChromePlot(result,Polygon1,best,plotEn,Projection)
-  # }
   return()
 }
 
@@ -651,7 +596,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
 #'              GridPol = Grid[[2]])
 #' }
 plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol) {
-  if (!requireNamespace("leaflet", quietly = TRUE)) {
+  if (!is_leaflet_installed()) {
     stop("The package 'leaflet' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('leaflet')`")
   }
@@ -679,7 +624,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
                     select = "EnergyOverall")
     })
     order1 <- order(a, decreasing = TRUE)
-    result <- result[order1, ]
+    result <- result[order1,, drop = FALSE]
     beste <- which
   } else {
     beste <- ""
@@ -816,7 +761,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
 #'   Default is 0.1
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_parkfitness(resulthex)
@@ -833,9 +778,9 @@ plot_parkfitness <- function(result, spar = 0.1) {
   crossteil <- selcross[seq(1, length(selcross), 2)]
   #######################
   
-  ## Set graphics param #####################
-  parparfit <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parparfit))
+  ## set Graphic Params ###############
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   graphics::layout(matrix(c(1, 1, 1, 1, 2, 3, 4, 5), 2, 4, byrow = TRUE))
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
@@ -1096,13 +1041,14 @@ plot_parkfitness <- function(result, spar = 0.1) {
 #' @inheritParams plot_result
 #' 
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' plot_development(resultrect)
 #' }
 plot_development <- function(result) {
-  parbeorwo <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parbeorwo))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(2, 1))
   
   beorworse <- do.call("rbind", result[, 9])
@@ -1144,15 +1090,15 @@ plot_development <- function(result) {
 #'   Default is 0.1
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' ## Plot the results of a rectangular grid optimization
 #' plot_evolution(resultrect, ask = TRUE, spar = 0.1)
 #'}
 plot_evolution <- function(result, ask = TRUE, spar = 0.1) {
-  ## Set the graphical parameters
-  parevol <- par(no.readonly = TRUE)
-  on.exit(par(parevol))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1))
   
   result1 <- as.data.frame(do.call("rbind", result[, 1]))
@@ -1222,8 +1168,9 @@ plot_evolution <- function(result, ask = TRUE, spar = 0.1) {
 #' plcdf <- plot_cloud(resulthex, TRUE)
 #'}
 plot_cloud <- function(result, pl = FALSE) {
-  parcloud <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parcloud))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   ## Data Aggregation ##########
   clouddata <- result[, 7]
   efficiency_cloud <- lapply(clouddata, function(x) x = x[, 1])
@@ -1396,15 +1343,15 @@ plot_cloud <- function(result, pl = FALSE) {
 #' @inheritParams plot_evolution
 #'
 #' @family Plotting Functions
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' @examples \donttest{
 #' ## Plot the results of a hexagonal grid optimization
 #' plot_fitness_evolution(resulthex, 0.1)
 #' }
 plot_fitness_evolution <- function(result, spar = 0.1) {
-  ## Setting par() and get Result #######
-  oparplotfitness <- par(no.readonly = TRUE)
-  on.exit(par(oparplotfitness))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1), ask = FALSE, mar = c(4, 5, 4, 2))
   layout(mat = matrix(c(1, 2, 3, 4, 4, 4), nrow = 2, ncol = 3, byrow = TRUE))
   
@@ -1513,12 +1460,13 @@ plot_fitness_evolution <- function(result, spar = 0.1) {
 #' plot_heatmap(resulthex, si = 4, idistw = 2)
 #' }
 plot_heatmap <- function(result, si = 2, idistw) {
-  if (!requireNamespace("gstat", quietly = TRUE)) {
+  if (!is_gstat_installed()) {
     stop("The package 'gstat' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('gstat')`")
   }  
-  parheat <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parheat))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1))
   
   bpe <- do.call("rbind", result[, "allCoords"])
@@ -1569,8 +1517,8 @@ plot_heatmap <- function(result, si = 2, idistw) {
                                   idp = idistw))
   
   ## Plot heatmap
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    warning("The package 'ggplot2' is required to plot the result, but it is not installed.\n",
+  if (!is_ggplot2_installed()) {
+    stop("The package 'ggplot2' is required to plot the result, but it is not installed.\n",
             "Please install it with `install.packages('ggplot2')`")
   } else {
     var1.pred=X=Y=x=y=NULL
@@ -1646,7 +1594,7 @@ dup_coords <- function(x, ...) {
 #' @param best How many best candidates to plot. Default is 1.
 #'
 #' @family Randomization
-#' @return NULL
+#' @return Returns NULL. Used for plotting
 #' 
 #' @examples \donttest{
 #' library(sf)
@@ -1662,7 +1610,9 @@ dup_coords <- function(x, ...) {
 #' }
 plot_random_search <- function(resultRS, result, Polygon1, best) {
   
-  op <- par(no.readonly = TRUE) 
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 2))
   
   result_inputs <- result[1,'inputData'][[1]]
@@ -1715,11 +1665,11 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
     
     bestrestGA[,"EnergyOverall"] <- round(bestrestGA[,"EnergyOverall"], 2)
     bestrestGA[,"EfficAllDir"] <- round(bestrestGA[,"EfficAllDir"], 2)
-    raster::plot(Polygon1, col = col2res, 
+    plot(Polygon1, col = col2res, 
                  main = paste("Original - Best Energy:", (best + 1) - i, "\n","Energy Output",
                               bestrestGA[,"EnergyOverall"][[1]],"kW", "\n", "Efficiency:",
                               bestrestGA[,"EfficAllDir"][[1]]))
-    raster::plot(Grid, add = TRUE)
+    plot(Grid, add = TRUE)
     graphics::mtext("Total Wake Effect in %", side = 2)
     graphics::points(bestrestGA[,"X"],bestrestGA[,"Y"],
                      cex = 2, pch = 20, col = ColOri)
@@ -1747,13 +1697,13 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
     
     EnergyBest[,'EnergyOverall'] <- round(EnergyBest[,'EnergyOverall'], 2)
     EnergyBest[,'EfficAllDir'] <- round(EnergyBest[,'EfficAllDir'], 2)
-    raster::plot(Polygon1, col = col2res,
+    plot(Polygon1, col = col2res,
                  main = paste("Random Search - Best Energy:", (best + 1) - i, 
                               "\n","Energy Output",
                               EnergyBest[,'EnergyOverall'][[1]],"kW", "\n", "Efficiency:",
                               EnergyBest[,'EfficAllDir'][[1]]))
     
-    raster::plot(Grid, add = TRUE)
+    plot(Grid, add = TRUE)
     graphics::mtext("Total Wake Effect in %", side = 2)
     graphics::points(EnergyBest[,'X'],EnergyBest[,'Y'],
                      cex = 2, pch = 20, col = Col)
@@ -1769,7 +1719,6 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
     ################
   }
   
-  par(op)
   invisible(NULL)
 }
 

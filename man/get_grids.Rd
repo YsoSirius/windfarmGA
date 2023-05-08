@@ -78,8 +78,6 @@ head(fit)
 \seealso{
 Other Helper Functions: 
 \code{\link{dup_coords}()},
-\code{\link{getDEM}()},
-\code{\link{getISO3}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},

@@ -7,14 +7,16 @@
 plot_evolution(result, ask = TRUE, spar = 0.1)
 }
 \arguments{
-\item{result}{The output of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}}
+\item{result}{The output of \code{\link{genetic_algorithm}}}
 
 \item{ask}{Should R wait for interaction for subsequent plotting. Default is
 TRUE}
 
 \item{spar}{A numeric value determining how exact a spline should be drawn.
 Default is 0.1}
+}
+\value{
+Returns NULL. Used for plotting
 }
 \description{
 Plot the evolution of energy outputs and efficiency rates over
@@ -28,14 +30,12 @@ plot_evolution(resultrect, ask = TRUE, spar = 0.1)
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_fitness_evolution}()},
 \code{\link{plot_heatmap}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_result}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}

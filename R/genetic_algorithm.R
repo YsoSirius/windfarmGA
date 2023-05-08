@@ -230,15 +230,15 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
   if (Parallel) {
-    if (!requireNamespace("parallel", quietly = TRUE)) {
+    if (!is_parallel_installed()) {
       stop("The package 'parallel' is required for this function, but it is not installed.\n",
            "Please install it with `install.packages('parallel')`")
     }
-    if (!requireNamespace("doParallel", quietly = TRUE)) {
+    if (!is_doparallel_installed()) {
       stop("The package 'doParallel' is required for this function, but it is not installed.\n",
            "Please install it with `install.packages('doParallel')`")
     }
-    if (!requireNamespace("foreach", quietly = TRUE)) {
+    if (!is_foreach_installed()) {
       stop("The package 'foreach' is required for this function, but it is not installed.\n",
            "Please install it with `install.packages('foreach')`")
     }
@@ -255,40 +255,33 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## WEIBULL ###############
   ## Is Weibull activated? If no source is given, take values from package
   if (weibull) {
-    if (verbose) {
-      cat("\nWeibull Distribution is used.")
-    }
+    if (verbose) message("Weibull Distribution is used.")
+    
     if (missing(weibullsrc)) {
-      if (verbose) cat("\nWeibull Information from package is used.\n")
-
-      if (!file.exists("k120_100m_Lambert.tif") && !file.exists("a120_100m_Lambert.tif")) {
-        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/weibulldata.zip", 
-                      destfile = "weibulldata.zip", 
-                      method = "auto")
-        unzip("weibulldata.zip")
-        unlink("weibulldata.zip")
-      }
-      
-      k_weibull <- raster("k120_100m_Lambert.tif")
-      a_weibull <- raster("a120_100m_Lambert.tif")
+      stop("No weibull data is given in `weibullsrc`.\nIt must be a list of 2 rasters:\n",
+            "  - shape parameter raster\n", "  - scale parameter raster")
     } else {
-      if (verbose) {
-        cat("\nWeibull Information from input is used.\n")
-      }
+      if (verbose) message("Weibull data is used.\n")
+      
       ## Project Shapefile to raster, Crop/Mask and project raster back
-      k_weibull <- weibullsrc[[1]]
-      a_weibull <- weibullsrc[[2]]
+      if (!inherits(weibullsrc[[1]], "SpatRaster")) {
+        weibullsrc[[1]] <- terra::rast(weibullsrc[[1]])
+      }
+      if (!inherits(weibullsrc[[2]], "SpatRaster")) {
+        weibullsrc[[2]] <- terra::rast(weibullsrc[[2]])
+      }
     }
     ## Project Shapefile to raster proj, Crop/Mask and project raster back
-    shape_project <- st_transform(Polygon1, crs = st_crs(a_weibull))
-    k_par_crop <- raster::crop(x = k_weibull, y = raster::extent(shape_project))
-    a_par_crop <- raster::crop(x = a_weibull, y = raster::extent(shape_project))
+    shape_project <- st_transform(Polygon1, crs = st_crs(weibullsrc[[2]]))
+    weibl_k <- terra::crop(x = weibullsrc[[1]], y = shape_project, mask = TRUE)
     
-    weibl_k <- raster::mask(x = k_par_crop, mask = shape_project)
-    weibl_a <- raster::mask(x = a_par_crop, mask = shape_project)
-    estim_speed_raster <- weibl_a * (gamma(1 + (1 / weibl_k)))
-    estim_speed_raster <- raster::projectRaster(estim_speed_raster,
-                                                crs = as.character(raster::crs(Polygon1)))
+    a <- weibullsrc[[1]]
+    terra::crop(x = a, y = shape_project, mask = TRUE)
+    weibl_a <- terra::crop(x = weibullsrc[[2]], y = shape_project, mask = TRUE)
+    
+    estim_speed_raster <- weibl_a * gamma(1 + (1 / values(weibl_k)))
+    estim_speed_raster <- terra::project(estim_speed_raster, 
+                                         terra::crs(Polygon1))
   } else {
     estim_speed_raster <- FALSE
   }
@@ -301,6 +294,10 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   if  (selstate != "FIX" & selstate != "VAR") {
     selstate <- readintegerSel()
   }
+  topgraphie_text <- topograp
+  if (inherits(topograp, "SpatRaster") || inherits(topograp, "RasterLayer") || inherits(topograp, "stars")) {
+    topgraphie_text <- TRUE
+  }
   inputData <- list(
     Input_Data = rbind("Rotorradius" = Rotor,
                        "Number of turbines" = n,
@@ -308,7 +305,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                        "Iterations" = iteration,
                        "Mutation Rate" = mutr,
                        "Percentage of Polygon" = Proportionality,
-                       "Topographie" = topograp,
+                       "Topographie" = topgraphie_text,
                        "Elitarism" = elitism,
                        "Selection Method" = selstate,
                        "Trim Force Method Used" = trimForce,
@@ -338,7 +335,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   } else {
-    if (as.character(raster::crs(Polygon1)) != ProjLAEA) {
+    if (as.character(terra::crs(Polygon1)) != ProjLAEA) {
       Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   }
@@ -387,107 +384,28 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   ## TERRAIN EFFECT MODEL ###############
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
-  if (!topograp) {
+  if (isFALSE(topograp)) {
     if (verbose) {
-      cat("Topography and orography are not taken into account.\n")
+      message("Topography and orography are not taken into account.")
     }
     srtm_crop <- ""
     cclRaster <- ""
   }
   else {
-    if (verbose) {
-      cat("Topography and orography are taken into account.\n")
-    }
-    if (plotit) {
-      par(mfrow = c(3, 1))
-    }
-
-    if (missing(sourceCCL)) {
-      message("\nNo land cover raster ('sourceCCL') was given. It will be downloaded from ",
-              "the EEA-website.\n")
-      if (!file.exists("g100_06.tif")) {
-        # "https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-3/clc-2006-100m/g100_06.zip/at_download/file"
-        download.file("http://github.com/YsoSirius/windfarm_data/raw/master/clc.zip", 
-                      destfile = "clc.zip", 
-                      method = "auto")
-        unzip("clc.zip")
-        unlink("clc.zip")
-      }
-      ccl <- raster::raster("g100_06.tif")
-    } else {
-      ccl <- raster::raster(sourceCCL)
-    }
-    cclPoly <- raster::crop(ccl, Polygon1)
-    cclPoly1 <- raster::mask(cclPoly, Polygon1)
-    
-    ## SRTM Daten
-    Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
-    # extpol <- round(apply(matrix(st_bbox(Polygon1), ncol = 2), 1, mean))
-    # srtm <- tryCatch(raster::getData("SRTM", lon = extpol[1], lat = extpol[2]),
-    #                  error = function(e) {
-    #                    stop("\nCould not download SRTM for the given Polygon.",
-    #                         "Check the Projection of the Polygon.\n", call. = FALSE)
-    #                  })
-    srtm <- tryCatch(elevatr::get_elev_raster(verbose = verbose,
-      locations = as(Polygon_wgs84, "Spatial"), z = 11),
-      error = function(e) {
-        stop("\nDownloading Elevation data failed for the given Polygon.\n",
-             e, call. = FALSE)
-      })
-    srtm_crop <- raster::crop(srtm, Polygon_wgs84)
-    srtm_crop <- raster::mask(srtm_crop, Polygon_wgs84)
-    
-    srtm_crop <- raster::projectRaster(srtm_crop, crs = as.character(raster::crs(Polygon1)))
-    
-    if (plotit) {
-      raster::plot(srtm_crop, main = "Elevation Data")
-      plot(Polygon1, add = TRUE, color = "transparent")
-      plot(grid_filtered, add = TRUE)
-    }
-
-    roughrast <- raster::terrain(srtm_crop, "roughness")
-    if (all(is.na(raster::values(roughrast)))) {
-      warning("Cannot calculate a surface roughness. \nMaybe the resolution or ",
-              "the area is too small. Roughness values are set to 1.\n")
-      raster::values(roughrast) <- 1
-    }
-    srtm_crop <- list(
-      strm_crop = srtm_crop,
-      orogr1 = raster::calc(srtm_crop, function(x) {
-        x / (raster::cellStats(srtm_crop, mean, na.rm = TRUE))
-      }),
-      roughness = roughrast
-    )
-
-    # Include Corine Land Cover Raster to get an estimation of Surface Roughness
-    if (missing(sourceCCLRoughness)) {
-      path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-      sourceCCLRoughness <- paste0(path, "clc_legend.csv")
-    } else {
-      if (verbose) {
-        message("You are using your own Corine Land Cover legend.\n")
-      }
-    }
-
-    rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
-                                   header = TRUE, sep = ";")
-    cclRaster <- raster::reclassify(cclPoly1,
-                                    matrix(c(rauhigkeitz$GRID_CODE,
-                                             rauhigkeitz$Rauhigkeit_z),
-                                           ncol = 2))
-    if (plotit) {
-      raster::plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
-    }
+    terrain_data <- terrain_model(topograp, Polygon1, sourceCCL, sourceCCLRoughness, plotit, verbose)
+    srtm_crop <- terrain_data$srtm_crop
+    cclRaster <- terrain_data$cclRaster
+    topograp <- TRUE
   }
 
 
   ## GENETIC ALGORITHM #################
-  if (verbose) {cat("\nStart Genetic Algorithm ...\n")}
+  if (verbose) {message("\nStart Genetic Algorithm ...")}
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   i <- 1
   while (i <= iteration) {
     if (!verbose) {
-      cat(".")
+      message(".", appendLF = FALSE)
     }
     ## FITNESS (+getRectV) ###############
     if (i == 1) {
@@ -537,7 +455,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                                                "Parkfitness"))
 
     if (verbose) {
-      cat(c("\n\n", i, ": Round with coefficients ", allparkcoeff[[i]], "\n"))
+      message(c("\n\n", i, ": Round. Max Energy ", allparkcoeff[[i]][,"MaxEnergyRedu"], 
+                " W and Efficiency ", allparkcoeff[[i]][,"maxParkwirkungsg"], " %"))
     }
 
     ## Highest Energy Output
@@ -553,9 +472,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     afvs <- allparks[allparks[, "EnergyOverall"] == max(
       allparks[, "EnergyOverall"]), ]
     if (verbose) {
-      cat(paste("How many individuals exist: ",  length(fit) ), "\n")
-      cat(paste("How many parks are in local Optimum: ",
-                (length(afvs[, 1]) / n) ), "\n")
+      message(paste("How many individuals exist: ",  length(fit) ))
+      message(paste("How many parks are in local Optimum: ",
+                (length(afvs[, 1]) / n) ))
     }
     nindivfit <- length(fit)
 
@@ -624,8 +543,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       last7 <- besPE[i:(i - 5)]
       if (!any(last7 == maxBisher)) {
         if (verbose) {
-          cat(paste("Park with highest Fitness level to date ",
-                    "is replaced in the list.", "\n\n"))
+          message(paste("Park with highest Fitness level to date ",
+                    "is replaced in the list.", "\n"))
         }
         fit <- append(fit, BestForNo)
       }
@@ -688,42 +607,42 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
       if (teil > 5) {
         teil <- 5; u <- u + 0.09
-        if (verbose) cat("Min 20% Selected"); cat(paste("CPR is increased! CPR:", u, "SP: ", teil, "\n"))
+        if (verbose) message("Min 20% Selected"); message(paste("CPR is increased! CPR:", u, "SP: ", teil))
       }
       if (trunc(u) < 0) {
         u <- 0.5;  teil <- teil - 0.4
-        if (verbose) cat(paste("Min 1 CrossPoints. Selection decreased. CPR:",u, "SP: ", teil, "\n"))
+        if (verbose) message(paste("Min 1 CrossPoints. Selection decreased. CPR:",u, "SP: ", teil))
       }
       if (u >= 4) {
         u <- 4;  teil <- 4
-        if (verbose) cat(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil, "\n"))
+        if (verbose) message(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil))
       }
       if (teil <= 4 / 3) {
         teil <- 4 / 3
-        if (verbose) cat(paste("Max 75% selected. SP: ", teil, "\n"))
+        if (verbose) message(paste("Max 75% selected. SP: ", teil))
       }
       if (length(fit) <= 20) {
         teil <- 1;  u <- u + 0.1
-        if (verbose) cat(paste("Less than 20 individuals. Select all and increase ",
-                               "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
+        if (verbose) message(paste("Less than 20 individuals. Select all and increase ",
+                               "Crossover-point rate. CPR: ", u, "SP: ", teil))
       }
       # if (length(fit) <= 10) {
       #   teil <- 1;  u <- u + 0.4
-      #   if (verbose) cat(paste("Less than 10 individuals. Select all and increase ",
-      #                          "Crossover-point rate. CPR: ", u, "SP: ", teil, "\n"))
+      #   if (verbose) message(paste("Less than 10 individuals. Select all and increase ",
+      #                          "Crossover-point rate. CPR: ", u, "SP: ", teil))
       # }
       # if (teil > 5) {
       #   teil <- 5
-      #   if (verbose) cat(paste("Teil is bigger than 5. Set to max 5. SP:", teil, "\n"))
+      #   if (verbose) message(paste("Teil is bigger than 5. Set to max 5. SP:", teil))
       # }
 
       u <- round(u, 2)
       teil <- round(teil, 3)
 
       if (verbose) {
-        cat(paste("Fitness of this population (", i,
+        message(paste("Fitness of this population (", i,
                   "), compared to the prior,", pri,
-                  "by", round(maxunt, 2), "W/h \n"))
+                  "by", round(maxunt, 2), "W"))
       }
       meanunt <- meant0 - meant1
       beorwor[[i]] <- cbind(maxunt, meanunt)
@@ -749,8 +668,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
     selec6best_bin <- selec6best[[1]]
     if (verbose) {
-      cat(paste("Selection  -  Amount of Individuals: ",
-                length(selec6best_bin[1, -1]), "\n"))
+      message(paste("Selection  -  Amount of Individuals: ",
+                length(selec6best_bin[1, -1])))
     }
     nindivsel <- length(selec6best_bin[1, -1])
 
@@ -762,7 +681,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                            crossPart = crossPart1,
                            verbose = verbose, seed = NULL)
     if (verbose) {
-      cat(paste("Crossover  -  Amount of Individuals: ",
+      message(paste("Crossover  -  Amount of Individuals: ",
                 length(crossOut[1, ])))
     }
     nindivcros <- length(crossOut[1, ])
@@ -779,7 +698,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       mut <- mutation(a = crossOut, p = mutrn, seed = NULL)
       mut_rat <- mutrn
       if (verbose) {
-        cat(paste("\nVariable Mutation Rate is", mutrn, "\n"))
+        message(paste("Variable Mutation Rate is", mutrn))
       }
     } else {
       mut <- mutation(a = crossOut, p = mutr, seed = NULL)
@@ -787,7 +706,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     }
     mut_rate[[i]] <- mut_rat
     if (verbose) {
-      cat(paste("\nMutation   -  Amount of Individuals: ", length(mut[1, ])))
+      message(paste("Mutation   -  Amount of Individuals: ", length(mut[1, ])))
     }
     nindivmut <- length(mut[1, ])
 
@@ -799,7 +718,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
                     seed = NULL)
 
     if (verbose) {
-      cat(paste("\nTrimToN    -  Amount of Individuals: ",
+      message(paste("TrimToN    -  Amount of Individuals: ",
                 length(mut1[1, ])))
     }
 

@@ -38,6 +38,9 @@ plot_windrose(
 
 \item{plotit}{Should the windrose be plotted? Default is TRUE}
 }
+\value{
+Returns NULL. Used for plotting
+}
 \description{
 Plot a wind rose of the wind data frame.
 }
@@ -57,7 +60,6 @@ windrosePlot <- plot_windrose(data = data.in, spd = data.in$ws,
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
@@ -65,7 +67,6 @@ Other Plotting Functions:
 \code{\link{plot_heatmap}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_result}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{random_search_single}()}
 }
