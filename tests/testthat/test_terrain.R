@@ -11,6 +11,7 @@ test_that("Test Terrain and Weibull Effects", {
   library(sf)
   library(terra)
   library(elevatr)
+  library(raster)
   # skip_on_cran()
   # skip_if_offline()
   # skip_if_not_installed("rgdal")

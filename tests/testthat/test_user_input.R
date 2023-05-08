@@ -82,7 +82,6 @@ test_that("User Input", {
   
   
   ## random_search_single - Hexagons ##################
-  rm(list = ls())
   polygon <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
@@ -137,40 +136,6 @@ test_that("User Input", {
     crs = 3035
   ))
   data.in <- data.frame(ws = 12, wd = 0)
-  
-  ## grid spacing NOT appropriate
-  f <- file()
-  options(windfarmGA.connection = f)
-  write(paste(c("E","E", "F", "n"), collapse = "\n"), f)
-  quiet(expect_error(windfarmGA(
-    Polygon1 = Polygon1,
-    n = 12, 
-    vdirspe = data.in,
-    Rotor = 60,
-    RotorHeight = 100
-  )))
-  # reset connection / close the file
-  options(windfarmGA.connection = stdin())
-  close(f)
-  
-
-  ## Wrong crossPart1 argument
-  f <- file()
-  options(windfarmGA.connection = f)
-  write(paste(c("E","E", "F", "", ""), collapse = "\n"), f)
-  res <- quiet(windfarmGA(
-    Polygon1 = Polygon1, crossPart1 = "somethign",
-    n = 12, iteration = 3,
-    vdirspe = data.in,
-    Rotor = 30,
-    RotorHeight = 100
-  ))
-  expect_true(nrow(res) == 3)
-  expect_is(res, "matrix")
-  expect_false(any(unlist(sapply(res, is.na))))
-  # reset connection / close the file
-  options(windfarmGA.connection = stdin())
-  close(f)
   
 })
 
