@@ -1,6 +1,4 @@
 context("Plots")
-library(terra)
-library(stars)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) { 
@@ -10,6 +8,9 @@ quiet <- function(x) {
 }
 
 test_that("Test Plotting Functions", {
+  library(terra)
+  library(stars)
+  
   # skip_on_cran()
   # skip_on_os(os = "mac")
   

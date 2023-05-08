@@ -83,7 +83,7 @@ trimton <- function(mut, nturb, allparks, nGrids, trimForce, seed){
   indivprop <- subset.matrix(allparks, select = c("Rect_ID", "Parkfitness", "AbschGesamt"))
   # Group mean wake effect and fitness value of a grid cell.
   indivprop <- aggregate(indivprop[,2:3], by = list(indivprop[,1]), FUN = mean)
-  colnames(indivprop) <- c("Rect_ID","Parkfitness","AbschGesamt")
+  colnames(indivprop) <- c("Rect_ID", "Parkfitness", "AbschGesamt")
 
   lepa <- length(mut[1,])
   mut1 <- vector("list", lepa)
@@ -97,34 +97,34 @@ trimton <- function(mut, nturb, allparks, nGrids, trimForce, seed){
 
     propwelche <- cbind(
       RectID = welche,
-      Prop = rep(mean(indivprop[,'AbschGesamt']), length(welche)))
+      Prop = rep(mean(indivprop[, "AbschGesamt"]), length(welche)))
     if (trimForce) {
-      propexi <- indivprop[indivprop[,'Rect_ID'] %in% welche,]
-      npt  <- (1 + ((max(propexi[,'AbschGesamt']) - propexi[,'AbschGesamt']) / (1 + max(propexi[,'AbschGesamt']))))
-      npt0 <- (1 + ((max(propexi[,'Parkfitness']) - propexi[,'Parkfitness']) / (1 + max(propexi[,'Parkfitness'])))) ^ k
+      propexi <- indivprop[indivprop[, "Rect_ID"] %in% welche,]
+      npt  <- (1 + ((max(propexi[, "AbschGesamt"]) - propexi[, "AbschGesamt"]) / (1 + max(propexi[, "AbschGesamt"]))))
+      npt0 <- (1 + ((max(propexi[, "Parkfitness"]) - propexi[, "Parkfitness"]) / (1 + max(propexi[, "Parkfitness"])))) ^ k
       NewProb <- 1 / (npt / npt0)
-      propwelche[welche %in%  indivprop[,'Rect_ID'], 'Prop'] <- NewProb
+      propwelche[welche %in%  indivprop[, "Rect_ID"], "Prop"] <- NewProb
     }
 
     propwelcheN <-  cbind(
       Rect_ID = nGrids1,
-      Prop = rep(min(indivprop[,'AbschGesamt']), nGrids))
+      Prop = rep(min(indivprop[, "AbschGesamt"]), nGrids))
     if (trimForce) {
-      propexiN <- indivprop[indivprop[,'Rect_ID'] %in% nGrids1,]
-      npt1 <- (1 + ((max(propexiN[,'AbschGesamt']) - propexiN[,'AbschGesamt']) / (1 + max(propexiN[,'AbschGesamt']))))
-      npt2 <- (1 + ((max(propexiN[,'Parkfitness']) - propexiN[,'Parkfitness']) / (1 + max(propexiN[,'Parkfitness'])))) ^ k
+      propexiN <- indivprop[indivprop[, "Rect_ID"] %in% nGrids1,]
+      npt1 <- (1 + ((max(propexiN[, "AbschGesamt"]) - propexiN[, "AbschGesamt"]) / (1 + max(propexiN[, "AbschGesamt"]))))
+      npt2 <- (1 + ((max(propexiN[, "Parkfitness"]) - propexiN[, "Parkfitness"]) / (1 + max(propexiN[, "Parkfitness"])))) ^ k
       NewProb1 <- npt1 / npt2
-      propwelcheN[propwelcheN[,'Rect_ID'] %in%  indivprop[,'Rect_ID'], 'Prop'] <- NewProb1
-      if (!all(propwelcheN[,'Rect_ID'] %in%  indivprop[,'Rect_ID'] == TRUE)) {
-        propwelcheN[!propwelcheN[,'Rect_ID'] %in%  indivprop[,'Rect_ID'], 'Prop'] <- min(NewProb1)
+      propwelcheN[propwelcheN[, "Rect_ID"] %in%  indivprop[, "Rect_ID"], "Prop"] <- NewProb1
+      if (!all(propwelcheN[, "Rect_ID"] %in%  indivprop[, "Rect_ID"] == TRUE)) {
+        propwelcheN[!propwelcheN[, "Rect_ID"] %in%  indivprop[, "Rect_ID"], "Prop"] <- min(NewProb1)
       }
     }
 
-    propwelcheN <- propwelcheN[!propwelcheN[,'Rect_ID'] %in% welche,]
+    propwelcheN <- propwelcheN[!propwelcheN[, "Rect_ID"] %in% welche,,drop = FALSE]
     ## P1 - Deleting Turbines
-    prob1 <- propwelche[,'Prop']
+    prob1 <- propwelche[, "Prop"]
     ## P2 - Adding Turbines
-    prob2 <- propwelcheN[,'Prop']
+    prob2 <- propwelcheN[, "Prop"]
 
     if (zviel != 0) {
       if (zviel > 0) {
@@ -145,11 +145,11 @@ trimton <- function(mut, nturb, allparks, nGrids, trimForce, seed){
         if (trimForce) {
           # Add turbines with Probability
           if (!is.null(seed)) {set.seed(as.integer(seed))}
-          smpra <- sample(propwelcheN[,'Rect_ID'], -zviel, replace = FALSE, prob = prob2)
+          smpra <- sample(propwelcheN[, "Rect_ID"], -zviel, replace = FALSE, prob = prob2)
         } else {
           # Add turbines randomly
           if (!is.null(seed)) {set.seed(as.integer(seed))}
-          smpra <- sample(propwelcheN[,'Rect_ID'], -zviel, replace = FALSE)
+          smpra <- sample(propwelcheN[, "Rect_ID"], -zviel, replace = FALSE)
         }
         # Assign 1 to binary code. So Turbine is created here.
         tmp[smpra] <- 1

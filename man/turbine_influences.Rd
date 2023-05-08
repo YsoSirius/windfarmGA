@@ -43,6 +43,7 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 t <- st_coordinates(st_sample(Polygon1, 10))
+t <- cbind(t, "Z" = 1)
 wnkl <- 20
 dist <- 100000
 dirct <- 0
