@@ -10,19 +10,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// wake_CPP
-double wake_CPP(double Rotorf, double wakr, double leA);
-RcppExport SEXP _windfarmGA_wake_CPP(SEXP RotorfSEXP, SEXP wakrSEXP, SEXP leASEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Rotorf(RotorfSEXP);
-    Rcpp::traits::input_parameter< double >::type wakr(wakrSEXP);
-    Rcpp::traits::input_parameter< double >::type leA(leASEXP);
-    rcpp_result_gen = Rcpp::wrap(wake_CPP(Rotorf, wakr, leA));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rotate_CPP
 NumericMatrix rotate_CPP(NumericVector X1, NumericVector Y1, double Px, double Py, float angle);
 RcppExport SEXP _windfarmGA_rotate_CPP(SEXP X1SEXP, SEXP Y1SEXP, SEXP PxSEXP, SEXP PySEXP, SEXP angleSEXP) {
@@ -92,7 +79,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_windfarmGA_wake_CPP", (DL_FUNC) &_windfarmGA_wake_CPP, 3},
     {"_windfarmGA_rotate_CPP", (DL_FUNC) &_windfarmGA_rotate_CPP, 5},
     {"_windfarmGA_angles_CPP", (DL_FUNC) &_windfarmGA_angles_CPP, 3},
     {"_windfarmGA_energy_calc_CPP", (DL_FUNC) &_windfarmGA_energy_calc_CPP, 3},

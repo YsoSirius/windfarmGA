@@ -1,16 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Calculate the overlapping area of wake and rotor area
-// [[Rcpp::export]]
-double wake_CPP(double Rotorf, double wakr, double leA) {
-  double aov = pow(Rotorf,2) * acos((pow(Rotorf,2) - pow(wakr,2) + (pow(leA,2))) / (2 * leA * Rotorf)) + 
-       (pow(wakr,2) * acos((pow(wakr,2) - pow(Rotorf,2) + pow(leA,2)) / (2 * leA * wakr))) -
-       0.5 * sqrt((Rotorf + wakr + leA) * (-Rotorf + wakr + leA ) * 
-       (Rotorf - wakr + leA) * (Rotorf + wakr - leA));
-  return aov;
-}
-
 // Rotate a set of coordinates around a given center point (P)
 // [[Rcpp::export]]
 NumericMatrix rotate_CPP(NumericVector X1, NumericVector Y1, double Px, double Py, float angle) {
