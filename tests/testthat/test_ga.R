@@ -19,6 +19,27 @@ test_that("Test Genetic Algorithm with different Inputs", {
   ))
   data.in <- data.frame(ws = 12, wd = 0)
 
+  ## All Green ################
+  resultSP <- genetic_algorithm(Polygon1 = Polygon1,
+                                n = 5, iteration = 30,
+                                vdirspe = data.in,
+                                Rotor = 35, Proportionality = 1,
+                                RotorHeight = 100, verbose = FALSE, 
+                                plotit = TRUE)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))));
+  
+  
+  ## No optimization possible - Turbines in all Grid Cells ################
+  resultSP <- genetic_algorithm(Polygon1 = Polygon1,
+                                n = 5, iteration = 30,
+                                vdirspe = data.in,
+                                Rotor = 71, Proportionality = 1,
+                                RotorHeight = 100, verbose = FALSE, 
+                                plotit = TRUE)
+  expect_is(resultSP, "matrix")
+  expect_false(any(unlist(sapply(resultSP, is.na))));
+  
   ## SF Polygon Input - 30 Iteration #####################
   resultSP <- quiet(genetic_algorithm(Polygon1 = Polygon1,
                       n = 20, iteration = 30,

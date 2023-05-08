@@ -218,7 +218,9 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
          "1 - plots the best energy output. \n",
          "2 - plots the best efficiency output.")
   }
-  parpplotRes <- par(no.readonly = TRUE)
+  ## set Graphic Params ###############
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1), mar = c(5, 6, 4, 2) + 0.1, mgp = c(5, 1, 0))
   rbPal1 <- grDevices::colorRampPalette(c('green','red'))
   result_inputs <- result[1,'inputData'][[1]]
@@ -394,7 +396,6 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   }
   
   ## Reset par() and return best windfarm  ###########
-  par(parpplotRes)
   invisible(best_result)
 }
 plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
@@ -403,6 +404,9 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   windpo <- 1 * orogrnum
   ## Get Elevation of Turbine Locations to estimate the air density at the resulting height
   heightWind <- terra::extract(x = srtm_crop, y = as.matrix(sel1))
+  ## set Graphic Params ###############
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 2))
   cexa <- 0.7
   terra::plot(srtm_crop, main = "Elevation Data")
@@ -774,9 +778,9 @@ plot_parkfitness <- function(result, spar = 0.1) {
   crossteil <- selcross[seq(1, length(selcross), 2)]
   #######################
   
-  ## Set graphics param #####################
-  parparfit <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parparfit))
+  ## set Graphic Params ###############
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   graphics::layout(matrix(c(1, 1, 1, 1, 2, 3, 4, 5), 2, 4, byrow = TRUE))
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
   Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
@@ -1042,8 +1046,9 @@ plot_parkfitness <- function(result, spar = 0.1) {
 #' plot_development(resultrect)
 #' }
 plot_development <- function(result) {
-  parbeorwo <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parbeorwo))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(2, 1))
   
   beorworse <- do.call("rbind", result[, 9])
@@ -1091,9 +1096,9 @@ plot_development <- function(result) {
 #' plot_evolution(resultrect, ask = TRUE, spar = 0.1)
 #'}
 plot_evolution <- function(result, ask = TRUE, spar = 0.1) {
-  ## Set the graphical parameters
-  parevol <- par(no.readonly = TRUE)
-  on.exit(par(parevol))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1))
   
   result1 <- as.data.frame(do.call("rbind", result[, 1]))
@@ -1163,8 +1168,9 @@ plot_evolution <- function(result, ask = TRUE, spar = 0.1) {
 #' plcdf <- plot_cloud(resulthex, TRUE)
 #'}
 plot_cloud <- function(result, pl = FALSE) {
-  parcloud <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parcloud))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   ## Data Aggregation ##########
   clouddata <- result[, 7]
   efficiency_cloud <- lapply(clouddata, function(x) x = x[, 1])
@@ -1343,9 +1349,9 @@ plot_cloud <- function(result, pl = FALSE) {
 #' plot_fitness_evolution(resulthex, 0.1)
 #' }
 plot_fitness_evolution <- function(result, spar = 0.1) {
-  ## Setting par() and get Result #######
-  oparplotfitness <- par(no.readonly = TRUE)
-  on.exit(par(oparplotfitness))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1), ask = FALSE, mar = c(4, 5, 4, 2))
   layout(mat = matrix(c(1, 2, 3, 4, 4, 4), nrow = 2, ncol = 3, byrow = TRUE))
   
@@ -1458,8 +1464,9 @@ plot_heatmap <- function(result, si = 2, idistw) {
     stop("The package 'gstat' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('gstat')`")
   }  
-  parheat <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parheat))
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 1))
   
   bpe <- do.call("rbind", result[, "allCoords"])
@@ -1603,7 +1610,9 @@ dup_coords <- function(x, ...) {
 #' }
 plot_random_search <- function(resultRS, result, Polygon1, best) {
   
-  op <- par(no.readonly = TRUE) 
+  ## set Graphic Params
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(par(oldpar))
   par(mfrow = c(1, 2))
   
   result_inputs <- result[1,'inputData'][[1]]
@@ -1710,7 +1719,6 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
     ################
   }
   
-  par(op)
   invisible(NULL)
 }
 

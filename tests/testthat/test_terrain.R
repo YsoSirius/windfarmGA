@@ -116,6 +116,7 @@ test_that("Test Terrain and Weibull Effects", {
   maxval <- max(values(DEMcrop), na.rm=TRUE)
   a_raster <- terra::app(DEMcrop, function(x) (x / maxval)+1)
   k_raster <- terra::app(DEMcrop, function(x) (x / maxval)+6)
+  
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(Polygon1 = sp_polygon,
                       n = 12, iteration = 1,
@@ -137,6 +138,7 @@ test_that("Test Terrain and Weibull Effects", {
                       vdirspe = data.in,
                       Rotor = 30,
                       RotorHeight = 100,
+                      weibull = TRUE,
                       weibullsrc = list(raster::raster(k_raster), a_raster))
   ))
   expect_true(nrow(resultrect) == 1)
@@ -150,6 +152,7 @@ test_that("Test Terrain and Weibull Effects", {
                       vdirspe = data.in,
                       Rotor = 30,
                       RotorHeight = 100,
+                      weibull = TRUE,
                       weibullsrc = list(k_raster, raster::raster(a_raster)))
   ))
   expect_true(nrow(resultrect) == 1)

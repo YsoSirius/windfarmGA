@@ -108,6 +108,12 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   n_turbines <- length(xy_individual[, 1])
   windpo <- rep(1, n_turbines)
 
+  ## set Graphic Params ###############
+  if (plotit) {
+    oldpar <- graphics::par(no.readonly = TRUE)
+    on.exit(par(oldpar))
+  }
+  
   ## Terrain Effect Model ###################
   cexa <- 0.7
   if (topograp) {

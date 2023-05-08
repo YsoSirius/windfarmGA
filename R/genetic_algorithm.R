@@ -405,7 +405,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   i <- 1
   while (i <= iteration) {
     if (!verbose) {
-      message(".")
+      message(".", appendLF = FALSE)
     }
     ## FITNESS (+getRectV) ###############
     if (i == 1) {
