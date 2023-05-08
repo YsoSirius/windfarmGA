@@ -24,6 +24,40 @@ test_that("Test Parallelisation", {
   expect_is(res, "matrix")
   expect_false(any(unlist(sapply(res, is.na))))
 
+  
+  ## Mock Packages not installed
+  with_mock(
+    is_foreach_installed = function() FALSE,
+    expect_error( 
+      genetic_algorithm(Polygon1 = Polygon1,
+                        n = 12, iteration = 2,
+                        vdirspe = wind,
+                        Rotor = 30,
+                        RotorHeight = 100, Parallel = TRUE)
+    )
+  )
+  with_mock(
+    is_parallel_installed = function() FALSE,
+    expect_error( 
+      genetic_algorithm(Polygon1 = Polygon1,
+                        n = 12, iteration = 2,
+                        vdirspe = wind,
+                        Rotor = 30,
+                        RotorHeight = 100, Parallel = TRUE)
+    )
+  )
+  with_mock(
+    is_doParallel_installed = function() FALSE,
+    expect_error( 
+      genetic_algorithm(Polygon1 = Polygon1,
+                        n = 12, iteration = 2,
+                        vdirspe = wind,
+                        Rotor = 30,
+                        RotorHeight = 100, Parallel = TRUE)
+    )
+  )
+
+  
   ## Too many Cluster
   skip("Too many clusters")
   res <- expect_warning(

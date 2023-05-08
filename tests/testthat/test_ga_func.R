@@ -171,7 +171,7 @@ test_that("Test Genetic Algorithm Function", {
   ## TODO - fitness now takes a list of windata. winddata and probability?
   wind <- list(wind, probab = 100)
   fit <- fitness(selection = startsel,referenceHeight = 100, RotorHeight=100,
-                 SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
+                 SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200, rot=20,
                  dirspeed = wind, srtm_crop="",topograp=FALSE,cclRaster="")
   expect_output(str(fit), "List of 20")
   expect_true(all(sapply(fit, nrow) == 10))
@@ -190,6 +190,15 @@ test_that("Test Genetic Algorithm Function", {
   ## SELECTION ################################
   allparks <- do.call("rbind", fit)
   selec6best <- selection(fit, Grid[[1]], 2, TRUE, 6, "VAR")
+  expect_output(str(selec6best), "List of 2")
+  expect_false(any(unlist(sapply(selec6best, is.na))))
+  expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))
+  expect_true(all(selec6best[[2]][,-1] > 0))
+  rm(selec6best)
+  
+  
+  allparks <- do.call("rbind", fit)
+  selec6best <- selection(fit, Grid[[1]], 2, TRUE, 600, "VAR")
   expect_output(str(selec6best), "List of 2")
   expect_false(any(unlist(sapply(selec6best, is.na))))
   expect_true(all(unlist(selec6best[[1]][,-1]) %in% c(0,1)))

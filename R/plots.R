@@ -34,7 +34,7 @@
 plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                           spdmax = 30, palette = "YlGnBu",
                           spdseq = NULL, plotit = TRUE) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  if (!is_ggplot2_installed()) {
     stop("The package 'ggplot2' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('ggplot2')`")
   }
@@ -601,7 +601,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
 #'              GridPol = Grid[[2]])
 #' }
 plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol) {
-  if (!requireNamespace("leaflet", quietly = TRUE)) {
+  if (!is_leaflet_installed()) {
     stop("The package 'leaflet' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('leaflet')`")
   }
@@ -1463,7 +1463,7 @@ plot_fitness_evolution <- function(result, spar = 0.1) {
 #' plot_heatmap(resulthex, si = 4, idistw = 2)
 #' }
 plot_heatmap <- function(result, si = 2, idistw) {
-  if (!requireNamespace("gstat", quietly = TRUE)) {
+  if (!is_gstat_installed()) {
     stop("The package 'gstat' is required for this function, but it is not installed.\n",
          "Please install it with `install.packages('gstat')`")
   }  
@@ -1519,7 +1519,7 @@ plot_heatmap <- function(result, si = 2, idistw) {
                                   idp = idistw))
   
   ## Plot heatmap
-  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  if (!is_ggplot2_installed()) {
     warning("The package 'ggplot2' is required to plot the result, but it is not installed.\n",
             "Please install it with `install.packages('ggplot2')`")
   } else {

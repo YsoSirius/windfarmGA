@@ -84,7 +84,7 @@ fitness <- function(selection, referenceHeight, RotorHeight,
   ## Calculate Energy Output ###########
   # For every selection i and every angle j - in Parallel
   if (Parallel == TRUE) {
-    if (!requireNamespace("foreach", quietly = TRUE)) {
+    if (!is_foreach_installed()) {
       stop("The package 'foreach' is required for this function, but it is not installed.\n",
            "Please install it with `install.packages('foreach')`")
     }

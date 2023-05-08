@@ -4,7 +4,7 @@ library(elevatr)
 library(raster)
 
 ## Function to suppress print/cat outputs
-quiet <- function(x) { 
+quiet <- function(x) {
   sink(tempfile()) 
   on.exit(sink()) 
   invisible(force(x)) 
@@ -15,49 +15,6 @@ test_that("Test Terrain and Weibull Effects", {
   # skip_if_offline()
   skip_if_not_installed("rgdal")
   
-  ## Test Terrain Model ###################
-  Projection <- 3035
-  data.in <- data.frame(ws = 12, wd = 0)
-  
-  ## Normal Terrain Example
-  sp_polygon <- sf::st_as_sf(sf::st_sfc(
-    sf::st_polygon(list(cbind(
-      c(4498482, 4498482, 4499991, 4499991, 4498482),
-      c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
-    crs = 3035
-  ))
-
-  resultrect <- quiet(suppressWarnings(
-    genetic_algorithm(Polygon1 = sp_polygon,
-                      n = 12, iteration = 1,
-                      vdirspe = data.in,
-                      Rotor = 30,
-                      RotorHeight = 100, 
-                      topograp = TRUE, verbose = TRUE, 
-                      plotit = TRUE)
-  ))
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
-
-  ## CCL-Raster should be in directory already
-  path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-  sourceCCLRoughness <- paste0(path, "clc_legend.csv")
-  resultrect <- quiet(suppressWarnings(
-    genetic_algorithm(Polygon1 = sp_polygon,
-                      n = 12, iteration = 1,
-                      vdirspe = data.in,
-                      Rotor = 30,
-                      RotorHeight = 100, 
-                      topograp = TRUE, verbose = TRUE, 
-                      plotit = TRUE, sourceCCL = "g100_06.tif", 
-                      sourceCCLRoughness = sourceCCLRoughness)
-  ))
-  expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
-  expect_false(any(unlist(sapply(resultrect, is.na))))
-  
-  
   ## Test Terrain_Model Function ###############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
@@ -66,7 +23,7 @@ test_that("Test Terrain and Weibull Effects", {
     crs = 3035
   ))
   Polygon_wgs84 <-  sf::st_transform(Polygon1, st_crs(4326))
-  srtm <- elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11)
+  srtm <- suppressMessages(elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11))
   res <- terrain_model(srtm, Polygon1, sourceCCL = terra::rast("g100_06.tif"))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
@@ -105,6 +62,57 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(res[[1]][[1]], "SpatRaster")
   expect_is(res[[1]][[2]], "SpatRaster")
   expect_is(res[[1]][[3]], "SpatRaster")
+  
+  ## Mock Packages not installed
+  with_mock(
+    is_elevatr_installed = function() FALSE,
+    expect_error(
+      terrain_model(topograp = TRUE,Polygon1, sourceCCL = "g100_06.tif")
+    )
+  )
+  
+  ## Test GA with Terrain Model ###################
+  Projection <- 3035
+  data.in <- data.frame(ws = 12, wd = 0)
+  
+  ## Normal Terrain Example
+  sp_polygon <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    crs = 3035
+  ))
+  
+  resultrect <- quiet(suppressWarnings(
+    genetic_algorithm(Polygon1 = sp_polygon,
+                      n = 12, iteration = 1,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100, 
+                      topograp = TRUE, verbose = TRUE, 
+                      plotit = TRUE)
+  ))
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+
+  ## CCL-Raster should be in directory already
+  path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
+  sourceCCLRoughness <- paste0(path, "clc_legend.csv")
+  resultrect <- quiet(suppressWarnings(
+    genetic_algorithm(Polygon1 = sp_polygon,
+                      n = 12, iteration = 1,
+                      vdirspe = data.in,
+                      Rotor = 30,
+                      RotorHeight = 100, 
+                      topograp = TRUE, verbose = TRUE, 
+                      plotit = TRUE, sourceCCL = "g100_06.tif", 
+                      sourceCCLRoughness = sourceCCLRoughness)
+  ))
+  expect_true(nrow(resultrect) == 1)
+  expect_is(resultrect, "matrix")
+  expect_false(any(unlist(sapply(resultrect, is.na))))
+  
   
   
   ## Weibull ################

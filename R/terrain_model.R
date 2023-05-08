@@ -53,7 +53,7 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
   
   ## DEM Data ######################
   if (isTRUE(topograp)) {
-    if (!requireNamespace("elevatr", quietly = TRUE)) {
+    if (!is_elevatr_installed()) {
       stop("The package 'elevatr' is required for this function, but it is not installed.\n",
            "Please install it with `install.packages('elevatr')`")
     }
