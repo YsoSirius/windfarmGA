@@ -98,7 +98,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   k <- getOption("windfarmGA.k")
 
   ## Get the Coordinates of the current individual / windfarm ###################
-  xy_individual <- sel[, 2:3]
+  xy_individual <- sel[, 2:3, drop=FALSE]
 
   ## Get Center of Polygon for rotating
   ## TODO - this can go in some upper level

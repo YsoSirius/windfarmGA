@@ -462,11 +462,11 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
     ## Highest Energy Output
     xd <- max(allparks[, "EnergyOverall"])
     ind <- allparks[, "EnergyOverall"] == xd
-    bestPaEn[[i]] <- allparks[ind, ][1:n, ]
+    bestPaEn[[i]] <- allparks[ind, ][1:n,, drop = FALSE]
     ## Highest Efficiency
     xd1 <- max(allparks[, "EfficAllDir"])
     ind1 <- allparks[, "EfficAllDir"] == xd1
-    bestPaEf[[i]] <- allparks[ind1, ][1:n, ]
+    bestPaEf[[i]] <- allparks[ind1, ][1:n,, drop = FALSE]
 
     # Print out most relevant information on Generation i
     afvs <- allparks[allparks[, "EnergyOverall"] == max(

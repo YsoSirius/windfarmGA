@@ -38,7 +38,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
                                 RotorHeight = 100, verbose = FALSE, 
                                 plotit = TRUE)
   expect_is(resultSP, "matrix")
-  expect_false(any(unlist(sapply(resultSP, is.na))));
+  expect_false(any(unlist(sapply(resultSP, is.na))))
   
   ## SF Polygon Input - 30 Iteration #####################
   resultSP <- quiet(genetic_algorithm(Polygon1 = Polygon1,

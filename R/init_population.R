@@ -49,11 +49,11 @@ init_population           <- function(Grid, n, nStart = 100) {
          "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
   }
   ## Assign Binary Variable 0 to all Grid cells
-  Grid <- cbind(Grid, 'bin' = 0)
+  Grid <- cbind(Grid, "bin" = 0)
   ## Randomly sample n grid cells and assign 1 to bin column
   lapply(seq_len(nStart), function(i) {
-    res <- Grid[Grid[,'ID'] %in% sample(x = Grid[,'ID'], size = n, replace = FALSE),]
-    res[,'bin'] <- 1L
+    res <- Grid[Grid[,'ID'] %in% sample(x = Grid[,'ID'], size = n, replace = FALSE),, drop=FALSE]
+    res[, "bin"] <- 1L
     res
   })
 }

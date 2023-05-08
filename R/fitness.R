@@ -173,7 +173,7 @@ fitness <- function(selection, referenceHeight, RotorHeight,
     total_wake <- rowSums(total_wake)
 
     # Get the original X / Y - Coordinates of the selected individual
-    xy_individuals <- selection[[i]][, 2:3]
+    xy_individuals <- selection[[i]][, 2:3, drop=FALSE]
 
     # Add the Efficieny and the Energy Output of all wind directions and
     # add the total Wake Effect of every Point Location
