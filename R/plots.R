@@ -92,7 +92,8 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
       spd <- "spd"
       dir <- "dir"
     }
-  } else if (!missing(spd) && !missing(dir) && is.numeric(spd) && is.numeric(dir)) {
+  } else if (!missing(spd) && !missing(dir) &&
+    is.numeric(spd) && is.numeric(dir)) {
     # assume that we've been given vectors of the speed and direction vectors
     data <- data.frame(spd = spd, dir = dir)
     spd <- "spd"
@@ -302,7 +303,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     col2res <- "lightblue"
   } else {
     PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
-    if (inherits(weibullsrc, "list") & length(weibullsrc) == 2) {
+    if (inherits(weibullsrc, "list") && length(weibullsrc) == 2) {
       wblcroped <- lapply(weibullsrc, function(x) {
         if (!inherits(x, "SpatRaster")) {
           x <- terra::rast(x)
@@ -388,7 +389,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
 
   ## Pick the `best` results to plot and Loop over #########
   result <- result[(length(result) - best + 1):(length(result))]
-  for (i in (1:length(result))) {
+  for (i in seq_along(result)) {
     ## Get result ###########
     best_result <- data.frame(result[[i]])
     best_result$EnergyOverall <- round(best_result[, "EnergyOverall"], 2)

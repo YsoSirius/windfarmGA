@@ -3,7 +3,8 @@
 ##'
 ##' @title Is the package installed or not
 ##'
-##' @return An invisible boolean value, indicating if the package is installed or not.
+##' @return An invisible boolean value, indicating if the package is
+##'   installed or not.
 NULL
 
 ##' @rdname package_installed

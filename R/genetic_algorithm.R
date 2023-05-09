@@ -59,12 +59,13 @@
 #'   Default is \code{FALSE}
 #' @param weibullsrc A list of Weibull parameter rasters, where the first list
 #'   item must be the shape parameter raster `k` and the second item must be the
-#'   scale parameter raster `a` of the Weibull distribution. If no list is given,
-#'   then rasters included in the package are used instead, which currently only
-#'   cover Austria. This variable is only used if \code{weibull = TRUE}.
-#' @param Parallel A boolean value, indicating whether parallel processing should
-#'   be used. The *parallel* and *doParallel* packages are used for parallel
-#'   processing. Default is \code{FALSE}
+#'   scale parameter raster `a` of the Weibull distribution. If no list is
+#'   given, then rasters included in the package are used instead, which
+#'   currently only cover Austria. This variable is only used
+#'   if \code{weibull = TRUE}.
+#' @param Parallel A boolean value, indicating whether parallel processing
+#'   should be used. The *parallel* and *doParallel* packages are used for
+#'   parallel processing. Default is \code{FALSE}
 #' @param numCluster If \code{Parallel} is TRUE, this variable defines the
 #'   number of clusters to be used. Default is \code{2}
 #' @param verbose If TRUE it will print information for every generation.
@@ -80,20 +81,20 @@
 #'   energy, efficiency and fitness values per generation, the selection and
 #'   crossover parameters, a matrix with the generational difference in maximum
 #'   and mean energy output, a matrix with the given inputs, a dataframe with
-#'   the wind information, the mutation rate per generation and a matrix with all
-#'   tested wind farm layouts.
+#'   the wind information, the mutation rate per generation and a matrix with
+#'   all tested wind farm layouts.
 #'
 #' @details A terrain effect model can be included in the optimization process.
-#'   Therefore, a digital elevation model will be downloaded automatically via the
-#'   \code{elevatr::get_elev_raster} function. A land cover raster can also be
+#'   Therefore, a digital elevation model will be downloaded automatically via
+#'   the \code{elevatr::get_elev_raster} function. A land cover raster can also
 #'   downloaded automatically from the EEA-website, or the path to a raster file
-#'   can be passed to \code{sourceCCL}. The algorithm uses an adapted version of the
-#'   Raster legend ("clc_legend.csv"), which is stored in the package directory
-#'   \file{~/inst/extdata}. To use other values for the land cover roughness
-#'   lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file,
-#'   assign a surface roughness length to all land cover types. Be sure that all
-#'   rows are filled with numeric values and save the file with \strong{";"}
-#'   separation. Assign the path of the file to the input variable
+#'   can be passed to \code{sourceCCL}. The algorithm uses an adapted version of
+#'   the Raster legend ("clc_legend.csv"), which is stored in the package
+#'   directory \file{~/inst/extdata}. To use other values for the land cover
+#'   roughness lengths, insert a column named \strong{"Rauhigkeit_z"} to the
+#'   .csv file, assign a surface roughness length to all land cover types. Be
+#'   sure that all rows are filled with numeric values and save the file with
+#'   \strong{";"} separation. Assign the path of the file to the input variable
 #'   \code{sourceCCLRoughness} of this function.
 #'
 #' @examples \donttest{
@@ -128,12 +129,14 @@
 #' )
 #' plot_windfarmGA(result = result, Polygon1 = Polygon1)
 #' }
-genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHeight,
-                              RotorHeight, SurfaceRoughness, Proportionality,
-                              iteration, mutr, vdirspe, topograp, elitism, nelit,
-                              selstate, crossPart1, trimForce, Projection,
-                              sourceCCL, sourceCCLRoughness, weibull, weibullsrc,
-                              Parallel, numCluster, verbose = FALSE, plotit = FALSE) {
+genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
+                              referenceHeight, RotorHeight, SurfaceRoughness,
+                              Proportionality, iteration, mutr, vdirspe,
+                              topograp, elitism, nelit, selstate, crossPart1,
+                              trimForce, Projection, sourceCCL,
+                              sourceCCLRoughness, weibull, weibullsrc,
+                              Parallel, numCluster, verbose = FALSE,
+                              plotit = FALSE) {
 
   ## set Graphic Params ###############
   if (plotit) {
@@ -303,14 +306,16 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
 
   ## CHECK INPUTS ###############
   ## Check if Input Data is correct and prints it out.
-  if (crossPart1 != "EQU" & crossPart1 != "RAN") {
+  if (crossPart1 != "EQU" && crossPart1 != "RAN") {
     crossPart1 <- readinteger()
   }
-  if (selstate != "FIX" & selstate != "VAR") {
+  if (selstate != "FIX" && selstate != "VAR") {
     selstate <- readintegerSel()
   }
   topgraphie_text <- topograp
-  if (inherits(topograp, "SpatRaster") || inherits(topograp, "RasterLayer") || inherits(topograp, "stars")) {
+  if (inherits(topograp, "SpatRaster") ||
+    inherits(topograp, "RasterLayer") ||
+    inherits(topograp, "stars")) {
     topgraphie_text <- TRUE
   }
   inputData <- list(
@@ -349,7 +354,10 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   #######################
   ## Project Polygon ###############
   if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-    if (suppressWarnings(!isTRUE(all.equal(st_crs(Polygon1), st_crs(ProjLAEA))))) {
+    if (suppressWarnings(!isTRUE(all.equal(
+      st_crs(Polygon1),
+      st_crs(ProjLAEA)
+    )))) {
       Polygon1 <- sf::st_transform(Polygon1, ProjLAEA)
     }
   } else {
@@ -662,12 +670,20 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
       if (trunc(u) < 0) {
         u <- 0.5
         teil <- teil - 0.4
-        if (verbose) message(paste("Min 1 CrossPoints. Selection decreased. CPR:", u, "SP: ", teil))
+        if (verbose) {
+          message(
+            paste("Min 1 CrossPoints. Selection decreased. CPR:", u, "SP: ", teil)
+          )
+        }
       }
       if (u >= 4) {
         u <- 4
         teil <- 4
-        if (verbose) message(paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil))
+        if (verbose) {
+          message(
+            paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil)
+          )
+        }
       }
       if (teil <= 4 / 3) {
         teil <- 4 / 3
@@ -683,15 +699,6 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
           ))
         }
       }
-      # if (length(fit) <= 10) {
-      #   teil <- 1;  u <- u + 0.4
-      #   if (verbose) message(paste("Less than 10 individuals. Select all and increase ",
-      #                          "Crossover-point rate. CPR: ", u, "SP: ", teil))
-      # }
-      # if (teil > 5) {
-      #   teil <- 5
-      #   if (verbose) message(paste("Teil is bigger than 5. Set to max 5. SP:", teil))
-      # }
 
       u <- round(u, 2)
       teil <- round(teil, 3)
@@ -804,10 +811,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR, referenceHei
   ## Remove Parallel Cluster ###############
   if (Parallel) {
     parallel::stopCluster(cl)
-    # try(rm(cl), silent = TRUE)
   }
 
-  ## Reduce list, if algorithm didnt run all iterations. (Found Optimum) #################
+  ## Reduce list, if algorithm didnt run all iterations #################
   mut_rate <- mut_rate[lapply(mut_rate, length) != 0]
   beorwor <- beorwor[lapply(beorwor, length) != 0]
   selcross <- selcross[lapply(selcross, length) != 0]

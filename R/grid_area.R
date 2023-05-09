@@ -90,9 +90,13 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
       col = "orange",
       main = paste(
         "Cellsize:", size, "m and prop: ", prop,
-        "\nTotal area:", round(sum(as.numeric(sf::st_area(shape))) * 0.000001, 3), "km^2",
+        "\nTotal area:", round(
+          sum(as.numeric(sf::st_area(shape))) * 0.000001, 3
+        ), "km^2",
         "\nNumber of Grids:", length(grid_filtered),
-        "\nGrid area:", round(sum(as.numeric(sf::st_area(grid_filtered))) * 0.000001, 3), "km^2"
+        "\nGrid area:", round(
+          sum(as.numeric(sf::st_area(grid_filtered))) * 0.000001, 3
+        ), "km^2"
       )
     )
     plot(grid_filtered, col = "lightgreen", add = TRUE)
@@ -111,8 +115,8 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 #' @title Polygon to Hexagonal Grids
 #' @name hexa_area
 #' @description The function takes a Simple Feature Polygon and a size argument
-#'   and creates a list with an indexed matrix with coordinates and a Simple Feature
-#'   object, that consists of hexagonal grids.
+#'   and creates a list with an indexed matrix with coordinates and a
+#'   Simple Feature object, that consists of hexagonal grids.
 #'
 #' @export
 #' @inheritParams grid_area
@@ -167,9 +171,13 @@ hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
       col = "orange",
       main = paste(
         "Cellsize:", size, "m",
-        "\nTotal area:", round(sum(as.numeric(st_area(st_geometry(shape)))) * 0.000001, 3), "km^2",
+        "\nTotal area:", round(
+          sum(as.numeric(st_area(st_geometry(shape)))) * 0.000001, 3
+        ), "km^2",
         "\nNumber of Grids:", length(grid_filtered),
-        "\nGrid area:", round(sum(as.numeric(st_area(grid_filtered))) * 0.000001, 3), "km^2"
+        "\nGrid area:", round(
+          sum(as.numeric(st_area(grid_filtered))) * 0.000001, 3
+        ), "km^2"
       )
     )
     plot(grid_filtered, col = "lightgreen", add = TRUE)

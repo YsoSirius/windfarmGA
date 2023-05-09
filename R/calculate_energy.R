@@ -371,8 +371,6 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     } else {
       ## Inflate the vector k
       k1 <- rep(k, times = table(windlist[, "Punkt_id"]))
-      # nmrd <- table(windlist[, "Punkt_id"])
-      # k1 <- rep(rep(k, length(nmrd)), times = as.numeric(nmrd))
     }
 
     ## Calculate the wake Radius and the rotor area for every turbine ##################
@@ -520,16 +518,12 @@ circle_intersection <- function(r1, r2, h1, h2, dx) {
   d <- sqrt((dx^2 + (h1 - h2)^2))
 
   if (d >= r2 + r1) {
-    # message("No overlap")
     return(0)
   } else if (d <= abs(r1 - r2) && r1 >= r2) {
-    # message("circle2 is fully inside circle1")
     return(pi * rr2)
   } else if (d <= abs(r1 - r2) && r1 < r2) {
-    # message("circle1 is fully inside circle2")
     return(pi * rr1)
   } else {
-    # message("Partial Overlap")
     phi <- (acos((rr1 + (d * d) - rr2) / (2 * r1 * d))) * 2
     theta <- (acos((rr2 + (d * d) - rr1) / (2 * r2 * d))) * 2
     area2 <- 0.5 * theta * rr2 - 0.5 * rr2 * sin(theta)

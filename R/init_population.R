@@ -42,8 +42,8 @@ init_population <- function(Grid, n, nStart = 100) {
       "\n##### Amount of turbines: ", n, "\n"
     ))
     stop(
-      "The amount of Grid-cells is smaller or equal the number of turbines requested.\n",
-      "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor)."
+      "The amount of Grid-cells is smaller or equal the number of turbines.\n",
+      "Decrease Resolution (fcrR), number of turbines (n) or Rotorradius (Rotor)."
     )
   }
   if (length(Grid[, "ID"]) < (2 * n)) {
@@ -53,7 +53,7 @@ init_population <- function(Grid, n, nStart = 100) {
       "\n##### Amount of turbines: ", n, "\n"
     ))
     stop(
-      "The amount of Grid-cells should at least be double the size of turbines requested.\n",
+      "The amount of Grid-cells should at least be double the amount of turbines.\n",
       "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor)."
     )
   }
@@ -61,7 +61,12 @@ init_population <- function(Grid, n, nStart = 100) {
   Grid <- cbind(Grid, "bin" = 0)
   ## Randomly sample n grid cells and assign 1 to bin column
   lapply(seq_len(nStart), function(i) {
-    res <- Grid[Grid[, "ID"] %in% sample(x = Grid[, "ID"], size = n, replace = FALSE), , drop = FALSE]
+    res <- Grid[Grid[, "ID"] %in% sample(
+      x = Grid[, "ID"],
+      size = n, replace = FALSE
+    ), ,
+    drop = FALSE
+    ]
     res[, "bin"] <- 1L
     res
   })
