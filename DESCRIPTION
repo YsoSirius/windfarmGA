@@ -7,7 +7,7 @@ Authors@R: c(
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
 Description: The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 Depends:
-    R (>= 4.0.5)
+    R (>= 4.1.0)
 Imports: Rcpp,
     terra,
     sf,
