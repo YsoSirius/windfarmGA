@@ -182,7 +182,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.6.3"
+      "version": ">= 4.0.0"
     },
     "2": {
       "@type": "SoftwareApplication",
