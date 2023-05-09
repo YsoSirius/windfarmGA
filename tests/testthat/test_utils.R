@@ -71,6 +71,7 @@ test_that("Test Basic Functions", {
   expect_true(class(res12)[1] == "sfc_POLYGON")
 
   ## Simple Feature
+  devtools::load_all()
   simple_feature <- sf::st_as_sf(spatial_polygon)
   res2 <- isSpatial(simple_feature, projection)
   expect_true(class(res2)[1] == "sf")

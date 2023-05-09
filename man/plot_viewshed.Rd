@@ -9,7 +9,7 @@ plot_viewshed(r, turbine_locs, h1 = 0, h2 = 0, plot = TRUE, ...)
 \arguments{
 \item{r}{The elevation SpatRaster}
 
-\item{turbine_locs}{Coordinates, SpatialPoint or SimpleFeature Poiints
+\item{turbine_locs}{Coordinates, SpatialPoint or SimpleFeature Points
 representing the wind turbines}
 
 \item{h1}{A single number or numeric vector giving the extra height offsets

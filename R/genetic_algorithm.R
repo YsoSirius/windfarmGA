@@ -877,8 +877,8 @@ isSpatial <- function(shape, proj) {
     shape <- st_as_sf(shape)
     ## This is needed for grid_area. Attribute names must have same length
     shape$names <- "layer"
-  } else if (inherits(shape, "data.frame") ||
-             inherits(shape, "matrix")) {
+  } else if (class(shape)[1] == "data.frame" ||
+             class(shape)[1] == "matrix") {
     ## If coordinate names are found, take those columns,
     ## otherwise take the first 2
     if (length(colnames(shape))) {

@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @param r The elevation SpatRaster
-#' @param turbine_locs Coordinates, SpatialPoint or SimpleFeature Poiints
+#' @param turbine_locs Coordinates, SpatialPoint or SimpleFeature Points
 #'   representing the wind turbines
 #' @param h1 A single number or numeric vector giving the extra height offsets
 #'   for the \code{turbine_locs}
