@@ -9,20 +9,28 @@ quiet <- function(x) {
 
 test_that("User Input", {
 
+  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)
+    ))),
+    crs = 3035
+  ))
+  vdata <- data.frame(ws = 12, wd = 0)
+
   ## Wrong crossover Method
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(c("E","E", "F", "n"), collapse = "\n"), f)
-  vdata <- data.frame(ws = 12, wd = 0)
   res <- quiet(
-    genetic_algorithm(
-      Polygon1 = Polygon1,
-      crossPart1 = "asdasd",
-      n = 12,
-      vdirspe = vdata,
-      Rotor = 60, iteration = 1,
-      RotorHeight = 100
-    )
+      genetic_algorithm(
+        Polygon1 = Polygon1,
+        crossPart1 = "asdasd",
+        n = 16, iteration = 1,
+        vdirspe = vdata,
+        Rotor = 35, Proportionality = 1,
+        RotorHeight = 100, verbose = FALSE
+      )
   )
   # reset connection / close the file
   options(windfarmGA.connection = stdin())
@@ -35,14 +43,13 @@ test_that("User Input", {
   f <- file()
   options(windfarmGA.connection = f)
   write(paste(c("E", "F", "n"), collapse = "\n"), f)
-  vdata <- data.frame(ws = 12, wd = 0)
   res <- quiet(
     genetic_algorithm(
       Polygon1 = Polygon1,
       selstate = "asdasd",
       n = 12,
       vdirspe = vdata,
-      Rotor = 60, iteration = 1,
+      Rotor = 35, iteration = 1,
       RotorHeight = 100
     )
   )
