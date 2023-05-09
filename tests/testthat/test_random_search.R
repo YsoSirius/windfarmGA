@@ -70,11 +70,11 @@ test_that("Test Random Search Functions", {
   )
   expect_true(is.null(res))
 
-  data.in <- data.frame(ws = 12, wd = 0)
+  vdata <- data.frame(ws = 12, wd = 0)
   resultSP <- genetic_algorithm(
     Polygon1 = Polygon1,
     n = 5, iteration = 3,
-    vdirspe = data.in, Rotor = 35,
+    vdirspe = vdata, Rotor = 35,
     RotorHeight = 100
   )
   new <- random_search(resultSP, Polygon1, n = 2, best = 1)

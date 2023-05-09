@@ -177,7 +177,7 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
   lePar <- length(parentsall)
 
   ## Select the binary matrix and the fitness values of the parents and return as list
-  parents_Fitness <- parentsall[1, c(1, seq(4, lePar, 4))]
+  parentsFitness <- parentsall[1, c(1, seq(4, lePar, 4))]
   parentsall <- parentsall[, c(1, seq(3, lePar, 4))]
-  return(list(parentsall, parents_Fitness))
+  return(list(parentsall, parentsFitness))
 }

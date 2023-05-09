@@ -3,7 +3,6 @@ library(terra)
 library(sf)
 
 test_that("Test Viewshed Functions", {
-  # skip_on_cran()
 
   f <- system.file("ex/elev.tif", package = "terra")
   r <- rast(f)

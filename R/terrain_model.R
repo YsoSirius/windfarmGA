@@ -63,10 +63,10 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
         "Please install it with `install.packages('elevatr')`"
       )
     }
-    Polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
+    polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
     srtm <- tryCatch(elevatr::get_elev_raster(
       verbose = verbose,
-      locations = as(Polygon_wgs84, "Spatial"), z = 11
+      locations = as(polygon_wgs84, "Spatial"), z = 11
     ),
     error = function(e) {
       stop("\nDownloading Elevation data failed for the given Polygon.\n",
