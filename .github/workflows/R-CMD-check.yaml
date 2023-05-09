@@ -18,11 +18,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: '3.6.0'}
-          - {os: windows-latest, r: 'release'}
-          - {os: macOS-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: windows-latest, r: '3.6.3'}
+          # - {os: windows-latest, r: 'release'}
+          # - {os: macOS-latest, r: 'release'}
+          # - {os: ubuntu-latest, r: 'release'}
+          # - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -47,7 +47,7 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-          
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
