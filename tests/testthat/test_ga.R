@@ -8,7 +8,6 @@ quiet <- function(x) {
 }
 
 test_that("Test Genetic Algorithm with different Inputs", {
-  # skip_on_cran()
 
   ## Data ##############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -18,13 +17,13 @@ test_that("Test Genetic Algorithm with different Inputs", {
     ))),
     crs = 3035
   ))
-  data.in <- data.frame(ws = 12, wd = 0)
+  vdata <- data.frame(ws = 12, wd = 0)
 
   ## All Green ################
   resultSP <- genetic_algorithm(
     Polygon1 = Polygon1,
     n = 5, iteration = 30,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
     RotorHeight = 100, verbose = FALSE,
     plotit = TRUE
@@ -37,7 +36,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- genetic_algorithm(
     Polygon1 = Polygon1,
     n = 5, iteration = 30,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 71, Proportionality = 1,
     RotorHeight = 100, verbose = FALSE,
     plotit = TRUE
@@ -49,7 +48,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- quiet(genetic_algorithm(
     Polygon1 = Polygon1,
     n = 20, iteration = 30,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
     RotorHeight = 100, verbose = TRUE
   ))
@@ -61,11 +60,10 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- quiet(genetic_algorithm(
     Polygon1 = multi_shape,
     n = 20, iteration = 3,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
-    RotorHeight = 100, plotit = T
+    RotorHeight = 100, plotit = TRUE
   ))
-  # plot_result(resultSP, multi_shape, best = 1, plotEn = 1, topographie = FALSE)
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
@@ -73,9 +71,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- quiet(genetic_algorithm(
     Polygon1 = multi_shape,
     n = 20, iteration = 3, GridMethod = "h",
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
-    RotorHeight = 100, plotit = T
+    RotorHeight = 100, plotit = TRUE
   ))
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
@@ -85,11 +83,10 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- quiet(genetic_algorithm(
     Polygon1 = hole_shape,
     n = 20, iteration = 3,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
-    RotorHeight = 100, plotit = T
+    RotorHeight = 100, plotit = TRUE
   ))
-  # plot_result(resultSP, hole_shape, best = 1, plotEn = 1, topographie = FALSE)
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
@@ -97,9 +94,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- quiet(genetic_algorithm(
     Polygon1 = hole_shape,
     n = 20, iteration = 3, GridMethod = "h",
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
-    RotorHeight = 100, plotit = T
+    RotorHeight = 100, plotit = TRUE
   ))
   expect_true(nrow(resultSP) == 3)
   expect_is(resultSP, "matrix")
@@ -110,7 +107,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- genetic_algorithm(
     Polygon1 = PolygonSP,
     n = 20, iteration = 1,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
     RotorHeight = 100
   )
@@ -123,7 +120,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultSP <- genetic_algorithm(
     Polygon1 = Polygon1,
     n = 20, iteration = 1,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
     RotorHeight = 100
   )
@@ -136,11 +133,10 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultDF <- genetic_algorithm(
     Polygon1 = PolygonDF,
     n = 20, iteration = 1,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 30,
     RotorHeight = 100
   )
-  # plot_result(resultDF, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
   expect_true(nrow(resultDF) == 1)
   expect_is(resultDF, "matrix")
   expect_false(any(unlist(sapply(resultDF, is.na))))
@@ -150,7 +146,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultMA <- genetic_algorithm(
     Polygon1 = PolygonMat, plotit = TRUE,
     n = 20, iteration = 1,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 30,
     RotorHeight = 100
   )
@@ -161,9 +157,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
   ## Matrix Input - 100% #####################
   resultMA100 <- quiet(genetic_algorithm(
     Polygon1 = PolygonMat,
-    verbose = F, plotit = TRUE,
+    verbose = FALSE, plotit = TRUE,
     n = 10, iteration = 20,
-    vdirspe = data.in,
+    vdirspe = vdata,
     Rotor = 30,
     RotorHeight = 100
   ))
@@ -175,7 +171,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultMA <- genetic_algorithm(
     Polygon1 = PolygonMat,
     n = 20, iteration = 1, GridMethod = "h",
-    vdirspe = data.in, elitism = F,
+    vdirspe = vdata, elitism = FALSE,
     selstate = "var", crossPart1 = "ran",
     trimForce = TRUE,
     Rotor = 30,
@@ -188,13 +184,12 @@ test_that("Test Genetic Algorithm with different Inputs", {
   resultMA <- genetic_algorithm(
     Polygon1 = PolygonMat,
     n = 15, iteration = 1, GridMethod = "h",
-    vdirspe = data.in, elitism = T, nelit = 10000,
+    vdirspe = vdata, elitism = TRUE, nelit = 10000,
     selstate = "var", crossPart1 = "ran",
     trimForce = TRUE, mutr = 15,
     Rotor = 30,
-    # Projection = "+proj=lcc +lat_1=49 +lat_2=46 +lat_0=47.5 +lon_0=13.33333333333333 +x_0=400000 +y_0=400000 +ellps=bessel +towgs84=577.326,90.129,463.919,5.137,1.474,5.297,2.4232 +units=m +no_defs",
     Projection = 3035,
-    RotorHeight = 100, plotit = F
+    RotorHeight = 100, plotit = FALSE
   )
   expect_true(nrow(resultMA) == 1)
   expect_is(resultMA, "matrix")
@@ -205,9 +200,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_error(genetic_algorithm(
     Polygon1 = Polygon1,
     GridMethod = "h", plotit = TRUE,
-    vdirspe = data.in,
+    vdirspe = vdata,
     n = 12,
-    elitism = F,
+    elitism = FALSE,
     selstate = "var", crossPart1 = "ran",
     trimForce = TRUE,
     # RotorHeight = 100,
@@ -217,9 +212,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_error(genetic_algorithm(
     Polygon1 = Polygon1,
     GridMethod = "h", plotit = TRUE,
-    vdirspe = data.in,
+    vdirspe = vdata,
     # n = 12,
-    elitism = F,
+    elitism = FALSE,
     selstate = "var", crossPart1 = "ran",
     trimForce = TRUE,
     Rotor = 30,
@@ -229,9 +224,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_error(genetic_algorithm(
     Polygon1 = Polygon1,
     GridMethod = "h",
-    # vdirspe = data.in,
+    # vdirspe = vdata,
     n = 12,
-    elitism = F,
+    elitism = FALSE,
     selstate = "var", crossPart1 = "ran",
     trimForce = TRUE,
     Rotor = 30,
@@ -242,9 +237,9 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_error(genetic_algorithm(
     Polygon1 = Polygon1,
     GridMethod = "h",
-    vdirspe = data.in,
+    vdirspe = vdata,
     n = 12,
-    elitism = F,
+    elitism = FALSE,
     selstate = "var", crossPart1 = "ran",
     trimForce = TRUE,
     # Rotor = 30,
@@ -263,7 +258,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     genetic_algorithm(
       Polygon1 = wrong_poly,
       n = 12, iteration = 1, plotit = TRUE,
-      vdirspe = data.in,
+      vdirspe = vdata,
       Rotor = 30,
       RotorHeight = 100, topograp = TRUE, verbose = TRUE
     )

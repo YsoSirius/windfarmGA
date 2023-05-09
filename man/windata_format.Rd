@@ -19,19 +19,23 @@ Helper Function, which transforms winddata to an acceptable
 }
 \examples{
 \donttest{
-wind_df <- data.frame(ws = c(12, 30, 45), 
-                      wd = c(0, 90, 150),
-                      probab = 30:32)
-windata_format(wind_df)
-
-wind_df <- data.frame(speed = c(12, 30, 45), 
-                      direction = c(90, 90, 150)
-                      ,probab = c(10, 20, 60)
+wind_df <- data.frame(
+  ws = c(12, 30, 45),
+  wd = c(0, 90, 150),
+  probab = 30:32
 )
 windata_format(wind_df)
 
-wind_df <- data.frame(speed = c(12, 30, 45), 
-                      direction = c(400, 90, 150)
+wind_df <- data.frame(
+  speed = c(12, 30, 45),
+  direction = c(90, 90, 150),
+  probab = c(10, 20, 60)
+)
+windata_format(wind_df)
+
+wind_df <- data.frame(
+  speed = c(12, 30, 45),
+  direction = c(400, 90, 150)
 )
 windata_format(wind_df)
 }

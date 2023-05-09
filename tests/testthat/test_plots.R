@@ -11,9 +11,6 @@ test_that("Test Plotting Functions", {
   library(terra)
   library(stars)
 
-  # skip_on_cran()
-  # skip_on_os(os = "mac")
-
   wind_test <- data.frame(
     x = runif(10, 10, 20),
     y = runif(10, 0, 360)
@@ -247,12 +244,10 @@ test_that("Test Plotting Functions", {
 
   ## plot_cloud ###############
   cloud_res <- plot_cloud(resultrect, pl = FALSE)
-  # expect_true(class(cloud_res) == "matrix")
   expect_false(anyNA(cloud_res))
   expect_true(ncol(cloud_res) == 15)
 
   cloud_res <- plot_cloud(resultrect, pl = TRUE)
-  # expect_true(class(cloud_res) == "matrix")
   expect_false(anyNA(cloud_res))
   expect_true(ncol(cloud_res) == 15)
 
@@ -303,11 +298,11 @@ test_that("Test Plotting Functions", {
     )
   )
 
-  data.in <- data.frame(ws = 12, wd = 0)
+  vdata <- data.frame(ws = 12, wd = 0)
   resultSP <- genetic_algorithm(
     Polygon1 = Polygon1,
     n = 5, iteration = 3,
-    vdirspe = data.in, Rotor = 35,
+    vdirspe = vdata, Rotor = 35,
     RotorHeight = 100
   )
   p <- plot_leaflet(resultSP, Polygon1 = Polygon1, which = 1)

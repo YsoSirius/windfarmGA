@@ -11,8 +11,7 @@ quiet <- function(x) {
 }
 
 test_that("Test Terrain and Weibull Effects", {
-  # skip_on_cran()
-  # skip_if_offline()
+  skip_if_offline()
   skip_if_not_installed("rgdal")
 
   ## Test Terrain_Model Function ###############
@@ -23,8 +22,8 @@ test_that("Test Terrain and Weibull Effects", {
     ))),
     crs = 3035
   ))
-  Polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
-  srtm <- suppressMessages(elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11))
+  polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
+  srtm <- suppressMessages(elevatr::get_elev_raster(locations = as(polygon_wgs84, "Spatial"), z = 11))
   res <- terrain_model(srtm, Polygon1, sourceCCL = terra::rast("g100_06.tif"))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
@@ -65,7 +64,7 @@ test_that("Test Terrain and Weibull Effects", {
 
   ## Test GA with Terrain Model ###################
   Projection <- 3035
-  data.in <- data.frame(ws = 12, wd = 0)
+  vdata <- data.frame(ws = 12, wd = 0)
 
   ## Normal Terrain Example
   sp_polygon <- sf::st_as_sf(sf::st_sfc(
@@ -80,7 +79,7 @@ test_that("Test Terrain and Weibull Effects", {
     genetic_algorithm(
       Polygon1 = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = data.in,
+      vdirspe = vdata,
       Rotor = 30,
       RotorHeight = 100,
       topograp = TRUE, verbose = TRUE,
@@ -98,7 +97,7 @@ test_that("Test Terrain and Weibull Effects", {
     genetic_algorithm(
       Polygon1 = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = data.in,
+      vdirspe = vdata,
       Rotor = 30,
       RotorHeight = 100,
       topograp = TRUE, verbose = TRUE,
@@ -129,7 +128,7 @@ test_that("Test Terrain and Weibull Effects", {
     genetic_algorithm(
       Polygon1 = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = data.in,
+      vdirspe = vdata,
       Rotor = 30,
       RotorHeight = 100,
       verbose = TRUE,
@@ -146,7 +145,7 @@ test_that("Test Terrain and Weibull Effects", {
     genetic_algorithm(
       Polygon1 = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = data.in,
+      vdirspe = vdata,
       Rotor = 30,
       RotorHeight = 100,
       weibull = TRUE,
@@ -162,7 +161,7 @@ test_that("Test Terrain and Weibull Effects", {
     genetic_algorithm(
       Polygon1 = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = data.in,
+      vdirspe = vdata,
       Rotor = 30,
       RotorHeight = 100,
       weibull = TRUE,
@@ -176,7 +175,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_error(
     genetic_algorithm(
       Polygon1 = sp_polygon,
-      n = 12, iteration = 1, vdirspe = data.in,
+      n = 12, iteration = 1, vdirspe = vdata,
       Rotor = 30, RotorHeight = 100,
       weibull = TRUE
     )
@@ -268,7 +267,7 @@ test_that("Test Terrain and Weibull Effects", {
   )
   srtm_crop <- terra::crop(terra::rast(srtm), Polygon1)
 
-  data.in <- data.frame(ws = 12, wd = 0)
+  vdata <- data.frame(ws = 12, wd = 0)
   Rotor <- 50
   fcrR <- 3
   resGrid <- grid_area(
@@ -305,7 +304,7 @@ test_that("Test Terrain and Weibull Effects", {
     sel = resStartGA[[1]], referenceHeight = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
     RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.in,
+    distanz = 100000, dirSpeed = vdata,
     RotorR = 50, polygon1 = Polygon1,
     topograp = TRUE, weibull = FALSE, plotit = TRUE
   )
@@ -321,7 +320,7 @@ test_that("Test Terrain and Weibull Effects", {
     genetic_algorithm(
       Polygon1 = Polygon1,
       n = 12, iteration = 1,
-      vdirspe = data.in,
+      vdirspe = vdata,
       Rotor = 30,
       RotorHeight = 100,
       topograp = srtm_crop$strm_crop, verbose = TRUE,
@@ -343,12 +342,11 @@ test_that("Test Terrain and Weibull Effects", {
     sel = resStartGA[[1]], referenceHeight = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
     RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.in,
+    distanz = 100000, dirSpeed = vdata,
     RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
     weibull = weibullraster, plotit = TRUE
   )
   expect_output(str(resCalcEn), "List of 1")
-  # expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
   expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <
@@ -361,12 +359,11 @@ test_that("Test Terrain and Weibull Effects", {
     sel = resStartGA[[1]], referenceHeight = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
     RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.in,
+    distanz = 100000, dirSpeed = vdata,
     RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
     weibull = raster::raster(weibullraster), plotit = TRUE
   )
   expect_output(str(resCalcEn), "List of 1")
-  # expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
   expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <
@@ -383,12 +380,11 @@ test_that("Test Terrain and Weibull Effects", {
     sel = resStartGA[[1]], referenceHeight = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
     RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.in,
+    distanz = 100000, dirSpeed = vdata,
     RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-    weibull = weibullrastercrop, plotit = T
+    weibull = weibullrastercrop, plotit = TRUE
   )
   expect_output(str(resCalcEn), "List of 1")
-  # expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
   expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <

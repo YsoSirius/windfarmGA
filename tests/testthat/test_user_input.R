@@ -9,7 +9,6 @@ quiet <- function(x) {
 }
 
 test_that("User Input", {
-  # skip_on_cran()
 
   ## random_search_single - Rects #############
   polygon <- sf::st_as_sf(sf::st_sfc(
@@ -41,7 +40,7 @@ test_that("User Input", {
   winddata <- winddata[[1]]
   layout_start <- resultrect[bestGARun, ]$bestPaEn
 
-  id <- sample(layout_start[, "Rect_ID"], size = 100, T)
+  id <- sample(layout_start[, "Rect_ID"], size = 100, TRUE)
   f <- file()
   options(windfarmGA.connection = f)
   ans <- paste(id, collapse = "\n")
@@ -131,14 +130,4 @@ test_that("User Input", {
   # close the file
   close(f)
 
-
-  ## windfarmGA ###############
-  Polygon1 <- sf::st_as_sf(sf::st_sfc(
-    sf::st_polygon(list(cbind(
-      c(4498482, 4498482, 4499991, 4499991, 4498482),
-      c(2668272, 2669343, 2669343, 2668272, 2668272)
-    ))),
-    crs = 3035
-  ))
-  data.in <- data.frame(ws = 12, wd = 0)
 })

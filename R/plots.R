@@ -603,7 +603,6 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   if (any(whichPl == "all")) {
     whichPl <- 1:6
   }
-  resol <- as.numeric(result[, "inputData"][[1]][, 1]["Resolution"][[1]])
   Polygon1 <- isSpatial(Polygon1)
   if (nrow(result) < 4) {
     if (any(2:5 %in% whichPl)) {
@@ -644,7 +643,6 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
   if (any(whichPl == 6)) {
     message("plot_heatmap: Plot a Heatmap of all Grid Cells:")
     plot_heatmap(result = result, si = 2)
-    # readline(prompt = "Press [enter] to continue")
   }
   return()
 }
@@ -913,7 +911,7 @@ plot_parkfitness <- function(result, spar = 0.1) {
   on.exit(par(oldpar))
   graphics::layout(matrix(c(1, 1, 1, 1, 2, 3, 4, 5), 2, 4, byrow = TRUE))
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
-  Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
+  # Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
   #######################
 
   ## Plot All together (5 Plots) #####################
@@ -1760,7 +1758,6 @@ plot_heatmap <- function(result, si = 2, idistw) {
   sizingidw <- as.integer(result[, "inputData"][[1]][, 1]["Rotorradius"])
   sizing <- as.integer(result[, "inputData"][[1]][, 1]["Resolution"]) / si
 
-  # dupco <- geoR::dup.coords(bpe, simplify = TRUE)
   dupco <- dup_coords(bpe, simplify = TRUE)
 
   bpe$Ids <- seq.int(nrow(bpe))
@@ -1817,14 +1814,14 @@ plot_heatmap <- function(result, si = 2, idistw) {
       "Please install it with `install.packages('ggplot2')`"
     )
   } else {
-    var1.pred <- X <- Y <- x <- y <- NULL
+    var_pred <- X <- Y <- x <- y <- NULL
 
     plot1 <- ggplot2::ggplot(
       data = idwout,
       mapping = ggplot2::aes(x = x, y = y)
     ) +
       ggplot2::geom_tile(
-        data = idwout, ggplot2::aes(fill = var1.pred),
+        data = idwout, ggplot2::aes(fill = var_pred),
         show.legend = TRUE
       ) +
       ggplot2::labs(
@@ -1929,14 +1926,12 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
 
   if (missing(best)) best <- 1
 
-  # resBest <- resultRS1[!duplicated(resultRS1$Run) & !duplicated(resultRS1$bestGARun),]
   resBest <- resultRS1[!duplicated(resultRS1[, "Run"]), , drop = FALSE]
   if (nrow(resBest) < best) {
     best <- nrow(resBest)
   }
 
   resBest <- resBest[1:best, , drop = FALSE]
-  # resBest <- resBest[nrow(resBest):(nrow(resBest)-best),]
 
   resultRS2 <- list()
   for (nr in 1:nrow(resBest)) {
@@ -1963,11 +1958,12 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
 
   for (i in 1:length(resultRS1)) {
     ## Original GA-result ################
-    bestGAR <- resBest[, "bestGARun", drop = F][i]
+    bestGAR <- resBest[, "bestGARun", drop = FALSE][i]
     bestrestGA <- result[bestGAR, ]$bestPaEn
-    brOrig <- length(levels(factor(bestrestGA[, "AbschGesamt", drop = F])))
+    brOrig <- length(levels(factor(bestrestGA[, "AbschGesamt", drop = FALSE])))
     if (brOrig > 1) {
-      ColOri <- rbPal1(brOrig)[as.numeric(cut(as.numeric(bestrestGA[, "AbschGesamt", drop = F]),
+      ColOri <- rbPal1(brOrig)[as.numeric(cut(
+        as.numeric(bestrestGA[, "AbschGesamt", drop = FALSE]),
         breaks = brOrig
       ))]
     } else {

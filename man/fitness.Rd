@@ -29,8 +29,8 @@ measured. Default is \code{RotorHeight}}
 
 \item{RotorHeight}{The height of the turbine hub}
 
-\item{SurfaceRoughness}{A surface roughness length in meters. 
-With the terrain effect model, a surface roughness is calculated for every 
+\item{SurfaceRoughness}{A surface roughness length in meters.
+With the terrain effect model, a surface roughness is calculated for every
 grid cell using the elevation and land cover data. Default is \code{0.3}}
 
 \item{Polygon}{The considered area as shapefile.}
@@ -53,11 +53,11 @@ type. Is only used, when the terrain effect model is activated.}
 
 \item{weibull}{A raster representing the estimated wind speeds}
 
-\item{Parallel}{A boolean value, indicating whether parallel processing should
-be used. The *parallel* and *doParallel* packages are used for parallel
-processing. Default is \code{FALSE}}
+\item{Parallel}{A boolean value, indicating whether parallel processing
+should be used. The *parallel* and *doParallel* packages are used for
+parallel processing. Default is \code{FALSE}}
 
-\item{numCluster}{If \code{Parallel} is TRUE, this variable defines the 
+\item{numCluster}{If \code{Parallel} is TRUE, this variable defines the
 number of clusters to be used. Default is \code{2}}
 }
 \value{
@@ -78,7 +78,8 @@ library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 
@@ -91,16 +92,18 @@ wind <- data.frame(ws = 12, wd = 0)
 
 ## Calculate a Grid and an indexed data.frame with coordinates and
 ## grid cell IDs.
-Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1);
+Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
 wind <- list(wind, probab = 100)
-startsel <- init_population(Grid,10,20);
-fit <- fitness(selection = startsel, referenceHeight = 100, RotorHeight=100,
-               SurfaceRoughness=0.3,Polygon = Polygon1, resol1 = 200,rot=20,
-               dirspeed = wind, srtm_crop="", topograp=FALSE, cclRaster="",
-               Parallel = FALSE)
+startsel <- init_population(Grid, 10, 20)
+fit <- fitness(
+  selection = startsel, referenceHeight = 100, RotorHeight = 100,
+  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
+  dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = "",
+  Parallel = FALSE
+)
 }
 }
 \seealso{

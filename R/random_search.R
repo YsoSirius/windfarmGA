@@ -64,7 +64,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
   Polygon1 <- isSpatial(shape = Polygon1)
   GridMethod <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
   GridMethod <- toupper(GridMethod)
-  if (GridMethod != "HEXAGON" & GridMethod != "H") {
+  if (GridMethod != "HEXAGON" && GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
     propu <- as.numeric(result[bestGARunIn[1], ]$inputData["Percentage of Polygon", ][1])
     Grid <- grid_area(shape = Polygon1, size = resolu, prop = propu)
@@ -326,7 +326,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
   Polygon1 <- isSpatial(shape = Polygon1)
   GridMethod <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
   GridMethod <- toupper(GridMethod)
-  if (GridMethod != "HEXAGON" & GridMethod != "H") {
+  if (GridMethod != "HEXAGON" && GridMethod != "H") {
     # Calculate a Grid and indexed coordinates of all grid cell centers
     propu <- as.numeric(result[bestGARun, ]$inputData["Percentage of Polygon", ][1])
     Grid <- grid_area(shape = Polygon1, size = resolu, prop = propu)
@@ -363,7 +363,6 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
   turbInx <- ""
   while (!turbInx %in% layout_start[, "Rect_ID"]) {
     message("Enter the turbine number that you want to optimize.")
-    # turbInx <- readline(prompt = "Please enter the corresponding number: ")
     message("Please enter the corresponding number:\n")
     turbInx <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   }

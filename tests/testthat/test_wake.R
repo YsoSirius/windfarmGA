@@ -60,16 +60,16 @@ test_that("Test Wake Functions", {
   expect_true(all((dr[dr[, "Ax"] != 0, colnms]) != 0))
 
   ## With Plotting
-  potInfTur_pl <- list()
+  pointInfluences <- list()
   for (i in 1:(length(t[, 1]))) {
-    potInfTur_pl[[i]] <- get_dist_angles(
+    pointInfluences[[i]] <- get_dist_angles(
       t = t, o = i, wnkl = wnkl,
       dist = distanz, polYgon = polYgon,
       plotAngles = TRUE
     )
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
-  expect_true(identical(potInfTur, potInfTur_pl))
+  expect_true(identical(potInfTur, pointInfluences))
   dr <- do.call("rbind", potInfTur)
   expect_true(all((dr[dr[, "Ax"] == 0, colnms]) == 0))
   expect_true(all((dr[dr[, "Ay"] == 0, colnms]) == 0))
@@ -148,7 +148,7 @@ test_that("Test Wake Functions", {
 
   ## Create a uniform and unidirectional wind data.frame and plot the
   ## resulting wind rose
-  data.in <- data.frame(ws = 12, wd = 0)
+  vdata <- data.frame(ws = 12, wd = 0)
 
   ## Assign the rotor radius and a factor of the radius for grid spacing.
   Rotor <- 50
@@ -161,7 +161,6 @@ test_that("Test Wake Functions", {
   ## Create an initial population with the indexed Grid, 15 turbines and
   ## 100 individuals.
   resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
-  # expect_true(all(sapply(resStartGA, class) == "matrix"))
   expect_true(all(sapply(resStartGA, ncol) == 4))
   expect_true(all(sapply(resStartGA, nrow) == 15))
   expect_true(length(resStartGA) == 100)
@@ -172,13 +171,12 @@ test_that("Test Wake Functions", {
   resCalcEn <- calculate_energy(
     sel = resStartGA[[1]], referenceHeight = 50,
     RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.in,
+    distanz = 100000, dirSpeed = vdata,
     RotorR = 50, polygon1 = polYgon,
     topograp = FALSE, weibull = FALSE
   )
 
   expect_output(str(resCalcEn), "List of 1")
-  # expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
   expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <
@@ -190,27 +188,25 @@ test_that("Test Wake Functions", {
   resCalcEn <- calculate_energy(
     sel = resStartGA[[1]], referenceHeight = 50,
     RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.in,
+    distanz = 100000, dirSpeed = vdata,
     RotorR = 50, polygon1 = polYgon,
     topograp = FALSE, weibull = FALSE, plotit = TRUE
   )
 
   expect_output(str(resCalcEn), "List of 1")
-  # expect_true(class(resCalcEn[[1]]) == "matrix")
   rm(resCalcEn, df)
 
   ## 2 Wind Directions
-  data.in <- as.data.frame(cbind(ws = c(12, 12), wd = c(0, 30)))
+  vdata <- as.data.frame(cbind(ws = c(12, 12), wd = c(0, 30)))
   resCalcEn <- calculate_energy(
     sel = resStartGA[[1]], referenceHeight = 50,
     RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.in,
+    distanz = 100000, dirSpeed = vdata,
     RotorR = 50, polygon1 = polYgon, topograp = FALSE,
     weibull = FALSE
   )
 
   expect_output(str(resCalcEn), "List of 2")
-  # expect_true(class(resCalcEn[[1]]) == "matrix")
   df <- do.call(rbind, resCalcEn)
   expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
   expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] < df[df[, "TotAbschProz"] != 0, "Windmean"]))
@@ -223,14 +219,14 @@ test_that("Test Wake Functions", {
   # windraster <- terra::rasterize(hole_shape, terra::rast(
   #   terra::ext(hole_shape),
   #   ncol = 180, nrow = 180), field = 1)
-  # data.in <- data.frame(ws = c(12,12), wd = c(0,90))
+  # vdata <- data.frame(ws = c(12,12), wd = c(0,90))
   # Rotor <- 50; fcrR <- 3
   # resGrid <- grid_area(shape = hole_shape, size = Rotor * fcrR, prop = 1,
   #                       plotGrid = FALSE)
   # resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
   # resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
   #                          RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-  #                          distanz = 100000, dirSpeed = data.in,
+  #                          distanz = 100000, dirSpeed = vdata,
   #                          RotorR = 50, polygon1 = hole_shape,
   #                          topograp = FALSE, weibull=FALSE,
   #                          plotit = TRUE)

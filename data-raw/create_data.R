@@ -56,16 +56,14 @@ multi_shape <- structure(list(geometry = structure(list(structure(list(list(
 ), precision = 0, bbox = structure(c(
   xmin = 4706350.92354101,
   ymin = 2677727.24251873, xmax = 4710413.02205149, ymax = 2682407.27559588
-), class = "bbox"), crs = structure(list(
-  input = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
-  wkt = "BOUNDCRS[\n    SOURCECRS[\n        PROJCRS[\"unknown\",\n            BASEGEOGCRS[\"unknown\",\n                DATUM[\"Unknown based on GRS80 ellipsoid\",\n                    ELLIPSOID[\"GRS 1980\",6378137,298.257222101,\n                        LENGTHUNIT[\"metre\",1],\n                        ID[\"EPSG\",7019]]],\n                PRIMEM[\"Greenwich\",0,\n                    ANGLEUNIT[\"degree\",0.0174532925199433],\n                    ID[\"EPSG\",8901]]],\n            CONVERSION[\"unknown\",\n                METHOD[\"Lambert Azimuthal Equal Area\",\n                    ID[\"EPSG\",9820]],\n                PARAMETER[\"Latitude of natural origin\",52,\n                    ANGLEUNIT[\"degree\",0.0174532925199433],\n                    ID[\"EPSG\",8801]],\n                PARAMETER[\"Longitude of natural origin\",10,\n                    ANGLEUNIT[\"degree\",0.0174532925199433],\n                    ID[\"EPSG\",8802]],\n                PARAMETER[\"False easting\",4321000,\n                    LENGTHUNIT[\"metre\",1],\n                    ID[\"EPSG\",8806]],\n                PARAMETER[\"False northing\",3210000,\n                    LENGTHUNIT[\"metre\",1],\n                    ID[\"EPSG\",8807]]],\n            CS[Cartesian,2],\n                AXIS[\"(E)\",east,\n                    ORDER[1],\n                    LENGTHUNIT[\"metre\",1,\n                        ID[\"EPSG\",9001]]],\n                AXIS[\"(N)\",north,\n                    ORDER[2],\n                    LENGTHUNIT[\"metre\",1,\n                        ID[\"EPSG\",9001]]]]],\n    TARGETCRS[\n        GEOGCRS[\"WGS 84\",\n            DATUM[\"World Geodetic System 1984\",\n                ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                    LENGTHUNIT[\"metre\",1]]],\n            PRIMEM[\"Greenwich\",0,\n                ANGLEUNIT[\"degree\",0.0174532925199433]],\n            CS[ellipsoidal,2],\n                AXIS[\"latitude\",north,\n                    ORDER[1],\n                    ANGLEUNIT[\"degree\",0.0174532925199433]],\n                AXIS[\"longitude\",east,\n                    ORDER[2],\n                    ANGLEUNIT[\"degree\",0.0174532925199433]],\n            ID[\"EPSG\",4326]]],\n    ABRIDGEDTRANSFORMATION[\"Transformation from unknown to WGS84\",\n        METHOD[\"Position Vector transformation (geog2D domain)\",\n            ID[\"EPSG\",9606]],\n        PARAMETER[\"X-axis translation\",0,\n            ID[\"EPSG\",8605]],\n        PARAMETER[\"Y-axis translation\",0,\n            ID[\"EPSG\",8606]],\n        PARAMETER[\"Z-axis translation\",0,\n            ID[\"EPSG\",8607]],\n        PARAMETER[\"X-axis rotation\",0,\n            ID[\"EPSG\",8608]],\n        PARAMETER[\"Y-axis rotation\",0,\n            ID[\"EPSG\",8609]],\n        PARAMETER[\"Z-axis rotation\",0,\n            ID[\"EPSG\",8610]],\n        PARAMETER[\"Scale difference\",1,\n            ID[\"EPSG\",8611]]]]"
-), class = "crs"), n_empty = 0L)), row.names = 1L, class = c(
+), class = "bbox"), n_empty = 0L)), row.names = 1L, class = c(
   "sf",
   "data.frame"
 ), sf_column = "geometry", agr = structure(integer(0), class = "factor", .Label = c(
   "constant",
   "aggregate", "identity"
 ), .Names = character(0)))
+st_crs(multi_shape) <- Projection
 
 usethis::use_data(multi_shape, overwrite = TRUE)
 

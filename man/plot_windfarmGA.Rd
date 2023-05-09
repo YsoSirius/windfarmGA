@@ -31,9 +31,10 @@ and \code{2} plots the best efficiency solutions}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster `k` and the second item must be the
-scale parameter raster `a` of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently only
-cover Austria. This variable is only used if \code{weibull = TRUE}.}
+scale parameter raster `a` of the Weibull distribution. If no list is
+given, then rasters included in the package are used instead, which
+currently only cover Austria. This variable is only used
+if \code{weibull = TRUE}.}
 }
 \value{
 Returns NULL. Used for plotting
@@ -49,7 +50,8 @@ library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 

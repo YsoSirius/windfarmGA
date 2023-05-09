@@ -169,8 +169,6 @@ get_dist_angles <- function(t, o, wnkl, dist, polYgon, plotAngles = FALSE) {
     if (plotAngles) {
       points(dl[, "Ax"], dl[, "Ay"], col = "orange", pch = 20, cex = 2)
       calibrate::textxy(dl[, "Ax"], dl[, "Ay"], rep("Points A", nrow(dl)))
-      # points(dl[,'Cx'], dl[,'Cy'], col = "black", pch = 20, cex = 2)
-      # calibrate::textxy(dl[,'Cx'], dl[,'Cy'], rep("Points C", nrow(dl)))
     }
 
     ## Are turbines left after subsetting?

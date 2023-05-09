@@ -3,7 +3,7 @@
 \docType{data}
 \name{resulthex}
 \alias{resulthex}
-\title{A resulting matrix of \code{genetic_algorithm} with 10 iterations 
+\title{A resulting matrix of \code{genetic_algorithm} with 10 iterations
 and a hexagonal grid derived from \code{sp_polygon}}
 \format{
 An object of class \code{matrix} (inherits from \code{array}) with 10 rows and 13 columns.
@@ -12,7 +12,7 @@ An object of class \code{matrix} (inherits from \code{array}) with 10 rows and 1
 resulthex
 }
 \description{
-A resulting matrix of \code{genetic_algorithm} with 10 iterations 
+A resulting matrix of \code{genetic_algorithm} with 10 iterations
 and a hexagonal grid derived from \code{sp_polygon}
 }
 \keyword{datasets}

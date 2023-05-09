@@ -29,11 +29,11 @@ measured. Default is \code{RotorHeight}}
 
 \item{RotorHeight}{The height of the turbine hub}
 
-\item{SurfaceRoughness}{A surface roughness length in meters. 
-With the terrain effect model, a surface roughness is calculated for every 
+\item{SurfaceRoughness}{A surface roughness length in meters.
+With the terrain effect model, a surface roughness is calculated for every
 grid cell using the elevation and land cover data. Default is \code{0.3}}
 
-\item{wnkl}{The angle from which wake influences are considered to be 
+\item{wnkl}{The angle from which wake influences are considered to be
 negligible}
 
 \item{distanz}{The distance after which wake effects are considered
@@ -53,12 +53,12 @@ should be enabled or not. Default is \code{FALSE}}
 \item{cclRaster}{The second element of the \code{\link{terrain_model}} resulting list}
 
 \item{weibull}{A boolean value that specifies whether to take Weibull
-parameters into account. If \code{TRUE}, the wind speed values 
+parameters into account. If \code{TRUE}, the wind speed values
 of \code{vdirspe} are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
 Default is \code{FALSE}}
 
-\item{plotit}{If \code{TRUE}, the process will be plotted. 
+\item{plotit}{If \code{TRUE}, the process will be plotted.
 Default is \code{FALSE}}
 }
 \value{
@@ -80,20 +80,26 @@ library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
 data.in <- data.frame(ws = 12, wd = 0)
-windrosePlot <- plot_windrose(data = data.in, spd = data.in$ws,
-                dir = data.in$wd, dirres=10, spdmax=20)
+windrosePlot <- plot_windrose(
+  data = data.in, spd = data.in$ws,
+  dir = data.in$wd, dirres = 10, spdmax = 20
+)
 
 ## Assign the rotor radius and a factor of the radius for grid spacing.
-Rotor= 50; fcrR= 3
-resGrid <- grid_area(shape = Polygon1, size = Rotor*fcrR, prop=1,
-                      plotGrid = TRUE)
+Rotor <- 50
+fcrR <- 3
+resGrid <- grid_area(
+  shape = Polygon1, size = Rotor * fcrR, prop = 1,
+  plotGrid = TRUE
+)
 ## Assign the indexed data frame to new variable. Element 2 of the list
 ## is the grid, saved as Simple Feature Polygons.
 resGrid1 <- resGrid[[1]]
@@ -104,32 +110,39 @@ initpop <- init_population(Grid = resGrid1, n = 15, nStart = 100)
 
 ## Calculate the expected energy output of the first individual of the
 ## population.
-par(mfrow = c(1,2))
-plot(Polygon1); points(initpop[[1]][,'X'],initpop[[1]][,'Y'], pch=20,cex=2)
+par(mfrow = c(1, 2))
+plot(Polygon1)
+points(initpop[[1]][, "X"], initpop[[1]][, "Y"], pch = 20, cex = 2)
 plot(resGrid[[2]], add = TRUE)
-resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
-                   RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                   distanz = 100000, dirSpeed = data.in,
-                   RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-                   weibull = FALSE)
+resCalcEn <- calculate_energy(
+  sel = initpop[[1]], referenceHeight = 50,
+  RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
+  distanz = 100000, dirSpeed = data.in,
+  RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+  weibull = FALSE
+)
 resCalcEn <- as.data.frame(resCalcEn)
-plot(Polygon1, main = resCalcEn[,'Energy_Output_Red'][[1]])
-points(x = resCalcEn[,'Bx'], y = resCalcEn[,'By'], pch = 20)
+plot(Polygon1, main = resCalcEn[, "Energy_Output_Red"][[1]])
+points(x = resCalcEn[, "Bx"], y = resCalcEn[, "By"], pch = 20)
 
 
 ## Create a variable and multidirectional wind data.frame and plot the
 ## resulting wind rose
-data.in10 <- data.frame(ws = runif(10,1,25), wd = runif(10,0,360))
-windrosePlot <- plot_windrose(data = data.in10, spd = data.in10$ws,
-                dir = data.in10$wd, dirres=10, spdmax=20)
+data.in10 <- data.frame(ws = runif(10, 1, 25), wd = runif(10, 0, 360))
+windrosePlot <- plot_windrose(
+  data = data.in10, spd = data.in10$ws,
+  dir = data.in10$wd, dirres = 10, spdmax = 20
+)
 
 ## Calculate the energy outputs for the first individual with more than one
 ## wind direction.
-resCalcEn <- calculate_energy(sel=initpop[[1]],referenceHeight= 50,
-                   RotorHeight= 50, SurfaceRoughness = 0.14,wnkl = 20,
-                   distanz = 100000, dirSpeed = data.in10,
-                   RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-                   weibull = FALSE)
+resCalcEn <- calculate_energy(
+  sel = initpop[[1]], referenceHeight = 50,
+  RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
+  distanz = 100000, dirSpeed = data.in10,
+  RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+  weibull = FALSE
+)
 }
 
 }

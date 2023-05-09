@@ -21,10 +21,12 @@ The function randomly mutates an individual's genetic code
 }
 \examples{
 ## Create 4 random individuals with binary values
-a <- cbind(bin0 = sample(c(0,1), 20, replace=TRUE, prob = c(70,30)),
-           bin1 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
-           bin2 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
-           bin3 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)))
+a <- cbind(
+  bin0 = sample(c(0, 1), 20, replace = TRUE, prob = c(70, 30)),
+  bin1 = sample(c(0, 1), 20, replace = TRUE, prob = c(30, 70)),
+  bin2 = sample(c(0, 1), 20, replace = TRUE, prob = c(30, 70)),
+  bin3 = sample(c(0, 1), 20, replace = TRUE, prob = c(30, 70))
+)
 a
 
 ## Mutate the individuals with a low percentage

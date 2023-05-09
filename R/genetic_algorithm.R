@@ -232,7 +232,6 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
   resol2 <- fcrR * Rotor
 
   ## Max Amount of individuals in the Crossover-Method
-  # CrossUpLimit <- 300
   CrossUpLimit <- getOption("windfarmGA.max_population")
 
   ## Start Parallel Cluster ###############
@@ -370,7 +369,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
   ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
   GridMethod <- toupper(GridMethod)
   ## Decide if the space division should be rectangular or in hexagons.
-  if (GridMethod != "HEXAGON" & GridMethod != "H") {
+  if (GridMethod != "HEXAGON" && GridMethod != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
     Grid1 <- grid_area(Polygon1, resol2, Proportionality)
     Grid <- Grid1[[1]]
@@ -434,7 +433,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
     if (!verbose) {
       message(".", appendLF = FALSE)
     }
-    ## FITNESS (+getRectV) ###############
+    ## FITNESS (and get_grids) ###############
     if (i == 1) {
       fit <- fitness(
         selection = startsel, referenceHeight = referenceHeight,
@@ -875,12 +874,11 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
 #' }
 isSpatial <- function(shape, proj) {
   if (inherits(shape, "Spatial")) {
-    # shape <- as(shape, "Spatial")
     shape <- st_as_sf(shape)
     ## This is needed for grid_area. Attribute names must have same length
     shape$names <- "layer"
-  } else if (class(shape)[1] == "data.frame" |
-    class(shape)[1] == "matrix") {
+  } else if (inherits(shape, "data.frame") ||
+             inherits(shape, "matrix")) {
     ## If coordinate names are found, take those columns,
     ## otherwise take the first 2
     if (length(colnames(shape))) {

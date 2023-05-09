@@ -7,7 +7,7 @@
 splitAt(x, pos)
 }
 \arguments{
-\item{x}{A numeric variable that represents an individual's 
+\item{x}{A numeric variable that represents an individual's
 binary genetic code}
 
 \item{pos}{A numeric value that indicates where to split the genetic code}

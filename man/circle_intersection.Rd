@@ -21,7 +21,7 @@ circle_intersection(r1, r2, h1, h2, dx)
 A numeric value
 }
 \description{
-Calculate the intersection area of two circles with different 
+Calculate the intersection area of two circles with different
   radii and different heights
 }
 \seealso{

@@ -9,7 +9,7 @@ turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE)
 \arguments{
 \item{t}{A data.frame of the current individual with X and Y coordinates}
 
-\item{wnkl}{The angle from which wake influences are considered to be 
+\item{wnkl}{The angle from which wake influences are considered to be
 negligible}
 
 \item{dist}{A numeric value indicating the distance, after which the wake
@@ -38,7 +38,8 @@ library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),
-    c(0, 2000, 2000, 0, 0)))),
+    c(0, 2000, 2000, 0, 0)
+  ))),
   crs = 3035
 ))
 

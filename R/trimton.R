@@ -115,8 +115,10 @@ trimton <- function(mut, nturb, allparks, nGrids, trimForce, seed) {
     )
     if (trimForce) {
       propexiN <- indivprop[indivprop[, "Rect_ID"] %in% nGrids1, ]
-      npt1 <- (1 + ((max(propexiN[, "AbschGesamt"]) - propexiN[, "AbschGesamt"]) / (1 + max(propexiN[, "AbschGesamt"]))))
-      npt2 <- (1 + ((max(propexiN[, "Parkfitness"]) - propexiN[, "Parkfitness"]) / (1 + max(propexiN[, "Parkfitness"]))))^k
+      npt1 <- (1 + ((max(propexiN[, "AbschGesamt"]) - propexiN[, "AbschGesamt"]) /
+                      (1 + max(propexiN[, "AbschGesamt"]))))
+      npt2 <- (1 + ((max(propexiN[, "Parkfitness"]) - propexiN[, "Parkfitness"]) /
+                      (1 + max(propexiN[, "Parkfitness"]))))^k
       NewProb1 <- npt1 / npt2
       propwelcheN[propwelcheN[, "Rect_ID"] %in% indivprop[, "Rect_ID"], "Prop"] <- NewProb1
       if (!all(propwelcheN[, "Rect_ID"] %in% indivprop[, "Rect_ID"] == TRUE)) {
@@ -138,7 +140,6 @@ trimton <- function(mut, nturb, allparks, nGrids, trimForce, seed) {
             set.seed(as.integer(seed))
           }
           smpra <- base::sample(welche, zviel, replace = FALSE, prob = prob1)
-          # smpra <- sample(welche, zviel, replace = FALSE, prob = prob1)
         } else {
           # Delete them randomly
           if (!is.null(seed)) {

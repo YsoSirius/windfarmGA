@@ -13,15 +13,15 @@ plot_leaflet(result, Polygon1, which = 1, orderitems = TRUE, GridPol)
 or coordinates as matrix/data.frame}
 
 \item{which}{A numeric value, indicating which individual to plot. The
-default is 1. Combined with \code{orderitems = TRUE} this will show the 
+default is 1. Combined with \code{orderitems = TRUE} this will show the
 best performing wind farm.}
 
 \item{orderitems}{A logical value indicating whether the results should be
 ordered by energy values \code{TRUE} or chronologically \code{FALSE}}
 
-\item{GridPol}{By default, the grid will be calculated based on the inputs 
-of \code{result} and the \code{Polygon1}. But another spatial object or the 
-output of the  \code{\link{grid_area}} or \code{\link{hexa_area}} functions 
+\item{GridPol}{By default, the grid will be calculated based on the inputs
+of \code{result} and the \code{Polygon1}. But another spatial object or the
+output of the  \code{\link{grid_area}} or \code{\link{hexa_area}} functions
 can also be}
 }
 \value{
@@ -36,17 +36,23 @@ Plot a resulting wind farm on a leaflet map.
 plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
 
 ## Plot the last wind farm (ordered by chronology).
-plot_leaflet(result = resulthex, Polygon1 = sp_polygon, orderitems = FALSE,
-         which = 1)
-         
+plot_leaflet(
+  result = resulthex, Polygon1 = sp_polygon, orderitems = FALSE,
+  which = 1
+)
+
 ## Plot the best wind farm on a leaflet map with the rectangular Grid
 Grid <- grid_area(sp_polygon, size = 150, prop = 0.4)
-plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1, 
-             GridPol = Grid[[2]])
+plot_leaflet(
+  result = resultrect, Polygon1 = sp_polygon, which = 1,
+  GridPol = Grid[[2]]
+)
 
 ## Plot the last wind farm with hexagonal Grid
 Grid <- hexa_area(sp_polygon, size = 75)
-plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1, 
-             GridPol = Grid[[2]])
+plot_leaflet(
+  result = resulthex, Polygon1 = sp_polygon, which = 1,
+  GridPol = Grid[[2]]
+)
 }
 }

@@ -26,7 +26,8 @@ is_gstat_installed()
 is_elevatr_installed()
 }
 \value{
-An invisible boolean value, indicating if the package is installed or not.
+An invisible boolean value, indicating if the package is
+  installed or not.
 }
 \description{
 Is the package installed or not

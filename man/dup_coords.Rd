@@ -14,7 +14,7 @@ returned as an array if possible (when the number of replicates are the
 same at each replicated location)}
 }
 \value{
-Function and methods returns NULL if there are no duplicates 
+Function and methods returns NULL if there are no duplicates
 locations. Otherwise, the default method returns a list where each component
 is a vector with the positions or the rownames, if available, of the
 duplicates coordinates. The method for geodata returns a data-frame with

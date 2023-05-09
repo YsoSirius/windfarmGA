@@ -28,14 +28,17 @@ If the columns are named, it will look for common abbreviation to
 \examples{
 \donttest{
 library(sf)
-df <- rbind(c(4498482, 2668272), c(4498482, 2669343),
-            c(4499991, 2669343), c(4499991, 2668272))
+df <- rbind(
+  c(4498482, 2668272), c(4498482, 2669343),
+  c(4499991, 2669343), c(4499991, 2668272)
+)
 isSpatial(df)
 
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 isSpatial(st_coordinates(Polygon1), 3035)

@@ -78,26 +78,18 @@ test_that("Test Genetic Algorithm Function", {
   expect_is(Grid[[1]], "matrix")
   expect_is(Grid[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid[[1]]))
-  # plot(Polygon2)
-  # plot(Grid[[2]], add=T, col="red")
-  # points(Grid[[1]][,2], Grid[[1]][,3], col="blue", pch=20)
 
   Grid1 <- grid_area(shape = Polygon2, size = 300, prop = 0.1)
   expect_is(Grid1[[1]], "matrix")
   expect_is(Grid1[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid1[[1]]))
   expect_true(nrow(Grid1[[1]]) > nrow(Grid[[1]]))
-  # expect_false(identical(Grid[[2]]@bbox, Grid1[[2]]@bbox))
-  # plot(Polygon2)
-  # plot(Grid1[[2]], add=T, col="red")
-  # points(Grid1[[1]][,2], Grid1[[1]][,3], col="blue", pch=20)
 
   Grid1 <- grid_area(shape = Polygon2, size = 300, prop = -100)
   expect_is(Grid1[[1]], "matrix")
   expect_is(Grid1[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid1[[1]]))
   expect_true(nrow(Grid1[[1]]) > nrow(Grid[[1]]))
-  # expect_false(identical(Grid[[2]]@bbox, Grid1[[2]]@bbox))
   rm(Grid1, Polygon2)
 
   ## HEXATEX #################
@@ -126,7 +118,6 @@ test_that("Test Genetic Algorithm Function", {
   ## STARTGA ################################
   startsel <- init_population(Grid[[1]], n = 10, nStart = 20)
   expect_is(startsel, "list")
-  # expect_true(all(sapply(startsel, class) == "matrix"))
   expect_true(all(sapply(startsel, nrow) == 10))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 20")
@@ -138,7 +129,6 @@ test_that("Test Genetic Algorithm Function", {
 
   startsel <- init_population(Grid[[1]], n = 20, nStart = 25)
   expect_is(startsel, "list")
-  # expect_true(all(sapply(startsel, class) == "matrix"))
   expect_true(all(sapply(startsel, nrow) == 20))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 25")
@@ -146,7 +136,6 @@ test_that("Test Genetic Algorithm Function", {
 
   startsel <- init_population(Grid[[1]], n = 20, nStart = 100)
   expect_is(startsel, "list")
-  # expect_true(all(sapply(startsel, class) == "matrix"))
   expect_true(all(sapply(startsel, nrow) == 20))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 100")
@@ -154,7 +143,6 @@ test_that("Test Genetic Algorithm Function", {
 
   startsel <- init_population(Grid[[1]], n = 20, nStart = 300)
   expect_is(startsel, "list")
-  # expect_true(all(sapply(startsel, class) == "matrix"))
   expect_true(all(sapply(startsel, nrow) == 20))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 300")
@@ -162,7 +150,6 @@ test_that("Test Genetic Algorithm Function", {
 
   startsel <- init_population(Grid[[1]], n = 10, nStart = 20)
   expect_is(startsel, "list")
-  # expect_true(all(sapply(startsel, class) == "matrix"))
   expect_true(all(sapply(startsel, nrow) == 10))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 20")
@@ -170,7 +157,6 @@ test_that("Test Genetic Algorithm Function", {
 
   ## FITNESS ################################
   wind <- data.frame(ws = 12, wd = 0)
-  ## TODO - fitness now takes a list of windata. winddata and probability?
   wind <- list(wind, probab = 100)
   fit <- fitness(
     selection = startsel, referenceHeight = 100, RotorHeight = 100,
@@ -230,7 +216,6 @@ test_that("Test Genetic Algorithm Function", {
   })
   rm(a)
   expect_error(selection(fitNA, Grid[[1]], 2, TRUE, 6, "VAR"))
-
 
   selec6best <- selection(fit, Grid[[1]], teil = 1, TRUE, 6, "FIX")
   expect_output(str(selec6best), "List of 2")
@@ -311,7 +296,6 @@ test_that("Test Genetic Algorithm Function", {
     se6 = selec6best, u = 3, uplimit = 300,
     crossPart = "EQU", seed = 105
   )
-  ## TODO Why is mean difference sometimes 2?? seed not working correctly?
   expect_true(all.equal(crossOut1, crossOut2, tolerance = 2))
 
   expect_output(str(crossOut1), "num")
@@ -498,7 +482,6 @@ test_that("Test Genetic Algorithm Function", {
   ## GETRECTV #####################
   getRectV <- get_grids(mut1, Grid[[1]])
   expect_is(getRectV, "list")
-  # expect_true(all(sapply(getRectV, class) == "matrix"))
   expect_true(all(sapply(getRectV, ncol) == 3))
   expect_false(any(unlist(sapply(getRectV, is.na))))
   expect_true(all(sapply(getRectV, colnames) %in% c("ID", "X", "Y")))
