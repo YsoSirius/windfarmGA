@@ -54,7 +54,25 @@ test_that("Test Terrain and Weibull Effects", {
   expect_is(res[[1]][[2]], "SpatRaster")
   expect_is(res[[1]][[3]], "SpatRaster")
 
-  ## Mock Packages not installed
+  ## Get DEM Fail (too big) ##############
+  polygon <- structure(list(structure(
+    list(structure(c(2627705.84970268, 3015019.42206679,
+                     5354856.02640269, 5660619.11584955, 2627705.84970268,
+                     1916658.62646189, 3437763.9404084, 3370878.53767667,
+                     1834071.85234423, 1916658.62646189
+    ), dim = c(5L, 2L))), class = c("XY", "POLYGON", "sfg"))),
+    n_empty = 0L,
+    crs = structure(list(input = NA_character_, wkt = NA_character_),
+                    class = "crs"), class = c("sfc_POLYGON", "sfc"),
+    precision = 0, bbox = structure(
+      c(xmin = 2627705.84970268, ymin = 1834071.85234423,
+        xmax = 5660619.11584955, ymax = 3437763.9404084), class = "bbox"))
+  st_crs(polygon) <- 3035
+  expect_error(
+    terrain_model(topograp = TRUE, polygon, sourceCCL = "g100_06.tif")
+  )
+
+  ## Mock Packages not installed ############
   with_mock(
     is_elevatr_installed = function() FALSE,
     expect_error(

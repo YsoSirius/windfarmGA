@@ -27,6 +27,8 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
                           plotit = FALSE, verbose = FALSE) {
   if (verbose) message("Topography and orography are taken into account.\n")
   if (plotit) {
+    oldpar <- graphics::par(no.readonly = TRUE)
+    on.exit(par(oldpar))
     par(mfrow = c(3, 1))
   }
 
@@ -121,11 +123,12 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
   cclRaster <- terra::classify(cclPoly, matrix(c(
     rauhigkeitz$GRID_CODE,
     rauhigkeitz$Rauhigkeit_z
-  ),
-  ncol = 2
-  ))
+    ),
+    ncol = 2)
+  )
 
   if (plotit) {
+    terra::plot(srtm_crop$roughness, main = "Elevation Roughness")
     terra::plot(cclRaster, main = "Surface Roughness from Corine Land Cover")
   }
 
