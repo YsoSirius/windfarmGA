@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @param data A data.frame containing the height values
-#' @param height Column name of the height values 
+#' @param height Column name of the height values
 #' @param po Standardized air pressure at sea level (101325 Pa)
 #' @param ro Standardized air density at sea level (1,225 kg per m3)
 #'
@@ -17,11 +17,11 @@
 #' air pressures, air densities and temperatures in Kelvin and Celsius.
 #'
 #' @examples
-#' data <- matrix(seq(0,5000,500));
+#' data <- matrix(seq(0, 5000, 500))
 #' barometric_height(data)
 #' plot.ts(barometric_height(data))
 barometric_height <- function(data, height, po = 101325, ro = 1.225) {
-  if ( is.numeric(data) || (ncol(data)) == 1 ) {
+  if (is.numeric(data) || (ncol(data)) == 1) {
     ## Luftdruck auf Hoehe h berechnen
     ph <- as.numeric(po * exp(-data * 0.0001252))
     ## Luftdichte berechnen

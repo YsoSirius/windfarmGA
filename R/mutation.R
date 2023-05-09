@@ -13,10 +13,12 @@
 #'
 #' @examples
 #' ## Create 4 random individuals with binary values
-#' a <- cbind(bin0 = sample(c(0,1), 20, replace=TRUE, prob = c(70,30)),
-#'            bin1 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
-#'            bin2 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)),
-#'            bin3 = sample(c(0,1), 20, replace=TRUE, prob = c(30,70)))
+#' a <- cbind(
+#'   bin0 = sample(c(0, 1), 20, replace = TRUE, prob = c(70, 30)),
+#'   bin1 = sample(c(0, 1), 20, replace = TRUE, prob = c(30, 70)),
+#'   bin2 = sample(c(0, 1), 20, replace = TRUE, prob = c(30, 70)),
+#'   bin3 = sample(c(0, 1), 20, replace = TRUE, prob = c(30, 70))
+#' )
 #' a
 #'
 #' ## Mutate the individuals with a low percentage
@@ -34,7 +36,7 @@ mutation <- function(a, p, seed = NULL) {
     set.seed(as.integer(seed))
   }
   ## Probability for every gene to mutate
-  rnd <- runif(n = length(a), min = 0, max = 1) 
+  rnd <- runif(n = length(a), min = 0, max = 1)
   ## for every element in the 2 children, get a random number between 1 & 0
   ## If the random number is smaller than p, the gene is switched
   ## from 1 to 0 | from 0 to 1
