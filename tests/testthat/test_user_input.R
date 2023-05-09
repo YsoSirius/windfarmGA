@@ -1,5 +1,4 @@
 context("User Interaction")
-library(sf)
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) {
@@ -9,6 +8,51 @@ quiet <- function(x) {
 }
 
 test_that("User Input", {
+
+  ## Wrong crossover Method
+  f <- file()
+  options(windfarmGA.connection = f)
+  write(paste(c("E","E", "F", "n"), collapse = "\n"), f)
+  vdata <- data.frame(ws = 12, wd = 0)
+  res <- quiet(
+    genetic_algorithm(
+      Polygon1 = Polygon1,
+      crossPart1 = "asdasd",
+      n = 12,
+      vdirspe = vdata,
+      Rotor = 60, iteration = 1,
+      RotorHeight = 100
+    )
+  )
+  # reset connection / close the file
+  options(windfarmGA.connection = stdin())
+  close(f)
+  expect_true(nrow(res) == 1)
+  expect_is(res, "matrix")
+  expect_false(any(unlist(sapply(res, is.na))))
+
+  ## Wrong selection Method
+  f <- file()
+  options(windfarmGA.connection = f)
+  write(paste(c("E", "F", "n"), collapse = "\n"), f)
+  vdata <- data.frame(ws = 12, wd = 0)
+  res <- quiet(
+    genetic_algorithm(
+      Polygon1 = Polygon1,
+      selstate = "asdasd",
+      n = 12,
+      vdirspe = vdata,
+      Rotor = 60, iteration = 1,
+      RotorHeight = 100
+    )
+  )
+  # reset connection / close the file
+  options(windfarmGA.connection = stdin())
+  close(f)
+  expect_true(nrow(res) == 1)
+  expect_is(res, "matrix")
+  expect_false(any(unlist(sapply(res, is.na))))
+
 
   ## random_search_single - Rects #############
   polygon <- sf::st_as_sf(sf::st_sfc(
