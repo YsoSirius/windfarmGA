@@ -22,9 +22,7 @@
 #'    \item \href{https://github.com/YsoSirius/windfarmGA/issues}{Report Issues}
 #'  }
 #'
-#' @importFrom terra xyFromCell extract plot res resample lapp rast crop crs
-#'   project terrain app values global classify viewshed mosaic sprc 
-#'   add_legend
+#' @import terra
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
 #'   st_make_grid st_intersection st_area sf_extSoftVersion st_centroid st_bbox
 #'   st_cast st_combine `st_crs<-` st_distance st_is_valid

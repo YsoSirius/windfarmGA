@@ -52,11 +52,16 @@ plot_viewshed <- function(r, turbine_locs, h1=0, h2=0, plot=TRUE, ...) {
   if (plot) {
     oldpar <- par(no.readonly = TRUE)
     on.exit(par(oldpar))
-    par(mfrow = c(2, 1))
-    plot(r, main="Elevation", ...)
-    plot(res_mosaic, main="Visibility", ...)
-    points(turbine_locs[,1], turbine_locs[,2], pch=20)
-    add_legend("bottomright", legend = "Turbines", pch = 20, col="black")
+    par(mfrow = c(1, 2))
+    terra::plot(r, main="Elevation", ...)
+    terra::plot(res_mosaic, main="Visibility", ...)
+    graphics::points(turbine_locs[,1], turbine_locs[,2], pch=20, col="white", cex=2.2)
+    graphics::points(turbine_locs[,1], turbine_locs[,2], pch=20, col="black", cex=1.8)
+    # browser()
+    # a <- legend(x = "bottomright", legend = "Turbines", pch = 20, col="black")
+    # e <- unlist(terra:::get.clip())
+    # xy <- terra:::get_legxy(a$rect, e[1:4], "bottomright", NULL)
+    # graphics::legend(x = xy[1], y = xy[2], legend = "Turbines", pch = 20, col="black")
   }
   res_mosaic
 }
