@@ -182,7 +182,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 4.0.0"
+      "version": ">= 4.0.5"
     },
     "2": {
       "@type": "SoftwareApplication",
@@ -284,7 +284,7 @@
     "SystemRequirements": null
   },
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
-  "fileSize": "3298.348KB",
+  "fileSize": "3298.43KB",
   "relatedLink": "https://ysosirius.github.io/windfarmGA/index.html",
   "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
