@@ -1,4 +1,5 @@
 # Updates 4.0.0
+- Depends on R 4.1.0
 - Removed package dependencies `rgdal` and `rgeos`
 - Replaced dependency `raster` with `terra`
 - Moved dependencies `foreach`, `parallel`, `doParallel`, `elevatr` to Suggests

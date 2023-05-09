@@ -7,7 +7,7 @@
   "codeRepository": "https://github.com/trafficonese/windfarmGA",
   "issueTracker": "https://github.com/YsoSirius/windfarmGA/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
