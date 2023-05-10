@@ -646,44 +646,16 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
       fuzzycontr[[i]] <- rbind(allcoef1, allcoef2)
       colnames(fuzzycontr[[i]]) <- c("Min", "Max", "Mean")
 
-      if (maxunt < 0) {
+      if (maxunt <= 0) {
         pri <- "deteriorated"
         teil <- teil - 0.02
         u <- u - 0.06
-      } else if (maxunt == 0) {
-        pri <- "not changed"
-        teil <- teil
-        u <- u
       } else {
         pri <- "improved"
         teil <- teil + 0.017
         u <- u + 0.03
       }
 
-      if (teil > 5) {
-        teil <- 5
-        u <- u + 0.09
-        if (verbose) message("Min 20% Selected")
-        message(paste("CPR is increased! CPR:", u, "SP: ", teil))
-      }
-      if (trunc(u) < 0) {
-        u <- 0.5
-        teil <- teil - 0.4
-        if (verbose) {
-          message(
-            paste("Min 1 CrossPoints. Selection decreased. CPR:", u, "SP: ", teil)
-          )
-        }
-      }
-      if (u >= 4) {
-        u <- 4
-        teil <- 4
-        if (verbose) {
-          message(
-            paste("Max 5 CrossPoints. Select fittest 25%. SP: ", teil)
-          )
-        }
-      }
       if (teil <= 4 / 3) {
         teil <- 4 / 3
         if (verbose) message(paste("Max 75% selected. SP: ", teil))
