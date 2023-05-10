@@ -32,17 +32,16 @@ test_that("Test Genetic Algorithm with different Inputs", {
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## Replace Park with highest Fitness level ################
-  resultSP <- genetic_algorithm(
+  resultSP <- suppressMessages(
+    genetic_algorithm(
     Polygon1 = Polygon1,
     n = 16, iteration = 100,
     vdirspe = vdata,
     Rotor = 35, Proportionality = 1,
-    RotorHeight = 100, verbose = FALSE
-  )
+    RotorHeight = 100, verbose = TRUE
+  ))
   expect_is(resultSP, "matrix")
   expect_false(any(unlist(sapply(resultSP, is.na))))
-  plot_windfarmGA(result = resultSP, Polygon1 = Polygon1)
-
 
   ## No optimization possible - Turbines in all Grid Cells ################
   resultSP <- genetic_algorithm(

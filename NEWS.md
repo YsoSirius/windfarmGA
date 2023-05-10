@@ -37,10 +37,10 @@
   windfarmGA.cT = 0.88              | Wind Turbine Thrust coefficient  
   windfarmGA.air_rh = 1.225         | Air Density Value  
   windfarmGA.k = 0.075              | Wake expansion coefficient. It is assumed to be 0.075 for onshore windfarms and 0.05 for offshore windfarms
-  windfarmGA.max_angle = 20         | Maximum angle (in degrees) to search for potential influencing turbines
-  windfarmGA.max_distance = 100000  | Maximum distance (in meters) to search for potential influencing turbines
-  windfarmGA.max_population = 300   | Maximum amount of individuals per generation
-  windfarmGA.max_selection = 100    | Maximum amount of selected individuals
+  windfarmGA.max_angle = 20         | Maximum angle (in degrees) to search for potentially influencing turbines
+  windfarmGA.max_distance = 100000  | Maximum distance (in meters) to search for potentially influencing turbines
+  windfarmGA.max_population = 300   | Maximum number of individuals per generation
+  windfarmGA.max_selection = 100    | Maximum number of selected individuals
 
 # windfarmGA 2.2.2
 
