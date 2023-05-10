@@ -36,18 +36,15 @@ install.packages("windfarmGA")
 The genetic algorithm is designed to optimize wind farms of any shape.
 It requires a predefined number of turbines, a uniform rotor radius and 
 an average wind speed per wind direction.
-It can include a terrain effect model, which downloads an 
-'SRTM' elevation model and a 'Corine Land Cover' raster automatically. The elevation 
-model is used to find mountains and valleys and to adjust the 
+It can include a terrain effect model, which requires an 
+elevation raster and a surface roughness raster. The elevation 
+data is used to find mountains and valleys and to adjust the 
 wind speeds accordingly by 'wind multipliers' and to determine 
-the air densities at rotor heights. The land cover raster with an additional elevation
+the air densities at rotor heights. The surface roughness raster with an additional elevation
 roughness value is used to re-evaluate the surface roughness and to individually
 determine the wake-decay constant for each turbine.
 
-To start an optimization, either the function `windfarmGA` or `genetic_algorithm` can 
-be used. The function `windfarmGA` checks the user inputs interactively and then 
-runs the function `genetic_algorithm`. If the input parameters are already known, an 
-optimization can be run directly via `genetic_algorithm`. 
+To start an optimization use the function `genetic_algorithm`. 
 
 <div>
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"/>
