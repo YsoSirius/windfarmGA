@@ -41,7 +41,6 @@ reference:
   - title: Plotting Functions
     contents:
     - starts_with("plot_", internal = TRUE)
-    - interpol_view
   - title: Viewshed Analysis Functions
     contents:
     - plot_viewshed
