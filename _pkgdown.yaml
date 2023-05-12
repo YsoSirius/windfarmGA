@@ -4,7 +4,7 @@ template:
   package: preferably
   # params:
   #   toggle: manual
-    
+
 navbar:
   title: "windfarmGA"
 
@@ -44,11 +44,6 @@ reference:
     - interpol_view
   - title: Viewshed Analysis Functions
     contents:
-    - cansee
-    - rasterprofile
-    - viewshed
-    - viewTo
-    - interpol_view
     - plot_viewshed
   - title: Helper Functions
     contents:
@@ -64,7 +59,7 @@ reference:
     - dup_coords
     - getDEM
   - title: Datasets
-    desc: Results and Shapefiles included in the package. 
+    desc: Results and Shapefiles included in the package.
     contents:
     - resultrect
     - resulthex
