@@ -259,35 +259,9 @@ test_that("Test Plotting Functions", {
   fitnes_res <- plot_fitness_evolution(resultrect)
   expect_true(is.null(fitnes_res))
 
-  ## plot_heatmap ###############
-  ## Mock Packages not installed
-  with_mock(
-    is_gstat_installed = function() FALSE,
-    expect_error(
-      plot_heatmap(resultrect)
-    )
-  )
-  with_mock(
-    is_ggplot2_installed = function() FALSE,
-    expect_error(
-      plot_heatmap(resultrect)
-    )
-  )
-
-  heat_res <- plot_heatmap(resultrect)
-  expect_true(class(heat_res) == "list")
-  expect_false(anyNA(heat_res[[2]]))
-  expect_false(anyNA(heat_res[[1]][, 1:3]))
-
-  heat_res <- plot_heatmap(resultrect, idistw = 2)
-  expect_true(class(heat_res) == "list")
-  expect_false(anyNA(heat_res[[2]]))
-  expect_false(anyNA(heat_res[[1]][, 1:3]))
-
   ## plot_evolution ###############
   evo_res <- plot_evolution(resultrect, ask = FALSE)
   expect_true(is.null(evo_res))
-
 
   ## plot_leaflet #######################
   ## Mock Packages not installed

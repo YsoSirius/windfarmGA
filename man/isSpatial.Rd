@@ -46,7 +46,6 @@ isSpatial(st_coordinates(Polygon1), 3035)
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{dup_coords}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},
