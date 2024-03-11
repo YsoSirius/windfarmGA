@@ -55,6 +55,7 @@ reference:
     - readinteger
     - readintegerSel
     - splitAt
+    - package_installed
   - title: Datasets
     desc: Results and Shapefiles included in the package.
     contents:
