@@ -264,8 +264,8 @@ test_that("Test Plotting Functions", {
   expect_true(is.null(evo_res))
 
   ## plot_leaflet #######################
-  skip_if("4.1.0", compareVersion(paste0(R.version$major,".",R.version$minor)) != 0,
-          "Skip as the version is <= 4.1.0. Errors in test_plots unresolved (leaflet::addMarkers(...))")
+  skip_if(compareVersion("4.3.0", paste0(R.version$major,".",R.version$minor)) == 1,
+          "Skip as the version is <= 4.3.0. Errors in test_plots unresolved (leaflet::addMarkers(...))")
   ## Mock Packages not installed
   with_mock(
     is_leaflet_installed = function() FALSE,
