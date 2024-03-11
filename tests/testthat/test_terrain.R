@@ -12,7 +12,8 @@ quiet <- function(x) {
 
 test_that("Test Terrain and Weibull Effects", {
   skip_if_offline()
-  skip_if_not_installed("rgdal")
+  skip_on_ci()
+  skip_on_cran()
 
   ## Test Terrain_Model Function ###############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(

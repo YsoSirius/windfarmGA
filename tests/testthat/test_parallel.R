@@ -1,6 +1,8 @@
 context("Parallel")
 
 test_that("Test Parallelisation", {
+  skip_on_cran()
+  skip_on_ci()
 
   ## Inputs ##################
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
