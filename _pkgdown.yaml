@@ -55,8 +55,6 @@ reference:
     - readinteger
     - readintegerSel
     - splitAt
-    - dup_coords
-    - getDEM
   - title: Datasets
     desc: Results and Shapefiles included in the package.
     contents:
