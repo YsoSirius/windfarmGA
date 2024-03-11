@@ -17,14 +17,15 @@
 #' @return Returns a list of \code{nStart} initial individuals, each consisting
 #'   of \code{n} turbines. Resulting list has the x and y coordinates, the grid
 #'   cell ID and a binary variable of 1, indicating a turbine in the grid cell.
-#'   
+#'
 #' @examples
 #' library(sf)
 #' ## Exemplary input Polygon with 2km x 2km:
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(4498482, 4498482, 4499991, 4499991, 4498482),
-#'     c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+#'     c(2668272, 2669343, 2669343, 2668272, 2668272)
+#'   ))),
 #'   crs = 3035
 #' ))
 #'
@@ -33,27 +34,40 @@
 #' ## Create 5 individuals with 10 wind turbines each.
 #' firstPop <- init_population(Grid = Grid[[1]], n = 10, nStart = 5)
 #'
-init_population           <- function(Grid, n, nStart = 100) {
-  if (length(Grid[,'ID']) <= n) {
-    cat("\n################### GA ERROR MESSAGE ###################\n")
-    cat(paste("##### Amount Grid-cells: ", length(Grid[,'ID']),
-              "\n##### Amount of turbines: ", n, "\n"))
-    stop("The amount of Grid-cells is smaller or equal the number of turbines requested.\n",
-         "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
+init_population <- function(Grid, n, nStart = 100) {
+  if (length(Grid[, "ID"]) <= n) {
+    message("\n################### GA ERROR MESSAGE ###################\n")
+    message(paste(
+      "##### Amount Grid-cells: ", length(Grid[, "ID"]),
+      "\n##### Amount of turbines: ", n, "\n"
+    ))
+    stop(
+      "The amount of Grid-cells is smaller or equal the number of turbines.\n",
+      "Decrease Resolution (fcrR), number of turbines (n) or Rotorradius (Rotor)."
+    )
   }
-  if (length(Grid[,'ID']) < (2*n)) {
-    cat("\n################### GA ERROR MESSAGE ###################\n")
-    cat(paste("##### Amount Grid-cells: ", length(Grid[, 'ID']),
-              "\n##### Amount of turbines: ", n, "\n"))
-    stop("The amount of Grid-cells should at least be double the size of turbines requested.\n",
-         "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor).")
+  if (length(Grid[, "ID"]) < (2 * n)) {
+    message("\n################### GA ERROR MESSAGE ###################\n")
+    message(paste(
+      "##### Amount Grid-cells: ", length(Grid[, "ID"]),
+      "\n##### Amount of turbines: ", n, "\n"
+    ))
+    stop(
+      "The amount of Grid-cells should at least be double the amount of turbines.\n",
+      "Decrease Resolution (fcrR), number of turbines (n), or Rotorradius (Rotor)."
+    )
   }
   ## Assign Binary Variable 0 to all Grid cells
-  Grid <- cbind(Grid, 'bin' = 0)
+  Grid <- cbind(Grid, "bin" = 0)
   ## Randomly sample n grid cells and assign 1 to bin column
   lapply(seq_len(nStart), function(i) {
-    res <- Grid[Grid[,'ID'] %in% sample(x = Grid[,'ID'], size = n, replace = FALSE),]
-    res[,'bin'] <- 1L
+    res <- Grid[Grid[, "ID"] %in% sample(
+      x = Grid[, "ID"],
+      size = n, replace = FALSE
+    ), ,
+    drop = FALSE
+    ]
+    res[, "bin"] <- 1L
     res
   })
 }

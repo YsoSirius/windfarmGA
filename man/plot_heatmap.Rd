@@ -7,8 +7,7 @@
 plot_heatmap(result, si = 2, idistw)
 }
 \arguments{
-\item{result}{The output of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}}
+\item{result}{The output of \code{\link{genetic_algorithm}}}
 
 \item{si}{A numeric value that is used for the sizing of the resolution of
 the heatmap. Default is 2}
@@ -35,14 +34,12 @@ plot_heatmap(resulthex, si = 4, idistw = 2)
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_result}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
 \code{\link{random_search_single}()}

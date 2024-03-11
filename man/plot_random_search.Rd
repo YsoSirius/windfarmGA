@@ -10,13 +10,15 @@ plot_random_search(resultRS, result, Polygon1, best)
 \item{resultRS}{The result of the random functions
 \code{\link{random_search_single}} and \code{\link{random_search}}.}
 
-\item{result}{The output of \code{\link{windfarmGA}} or
-\code{\link{genetic_algorithm}}}
+\item{result}{The output of \code{\link{genetic_algorithm}}}
 
 \item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
 or coordinates as matrix/data.frame}
 
 \item{best}{How many best candidates to plot. Default is 1.}
+}
+\value{
+Returns NULL. Used for plotting
 }
 \description{
 Plotting method for the results of
@@ -28,12 +30,13 @@ library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 
-Res = random_search(result = resultrect, Polygon1 = Polygon1)
-plot_random_search(resultRS = Res, result = resultrect, Polygon1 = Polygon1, best=2)
+Res <- random_search(result = resultrect, Polygon1 = Polygon1)
+plot_random_search(resultRS = Res, result = resultrect, Polygon1 = Polygon1, best = 2)
 }
 }
 \seealso{

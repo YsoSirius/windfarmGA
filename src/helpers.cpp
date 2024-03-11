@@ -1,16 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Calculate the overlapping area of wake and rotor area
-// [[Rcpp::export]]
-double wake_CPP(double Rotorf, double wakr, double leA) {
-  double aov = pow(Rotorf,2) * acos((pow(Rotorf,2) - pow(wakr,2) + (pow(leA,2))) / (2 * leA * Rotorf)) + 
-       (pow(wakr,2) * acos((pow(wakr,2) - pow(Rotorf,2) + pow(leA,2)) / (2 * leA * wakr))) -
-       0.5 * sqrt((Rotorf + wakr + leA) * (-Rotorf + wakr + leA ) * 
-       (Rotorf - wakr + leA) * (Rotorf + wakr - leA));
-  return aov;
-}
-
 // Rotate a set of coordinates around a given center point (P)
 // [[Rcpp::export]]
 NumericMatrix rotate_CPP(NumericVector X1, NumericVector Y1, double Px, double Py, float angle) {
@@ -28,15 +18,16 @@ NumericMatrix rotate_CPP(NumericVector X1, NumericVector Y1, double Px, double P
 // Calculates all 3 angles of 3 pair of coordinates
 // [[Rcpp::export]]
 NumericVector angles_CPP(NumericVector Aa, NumericVector Bb, NumericVector Cc) {
-  NumericVector AB = Bb - Aa;
-  NumericVector AC = Cc - Aa;  
-  NumericVector BA = Aa - Bb;  
-  NumericVector BC = Cc - Bb; 
-  NumericVector CA = Aa - Cc; 
-  NumericVector CB = Bb - Cc;
-  double alpha = acos(sum(AB * AC) / (sqrt(sum(AB * AB)) * sqrt(sum(AC * AC)))) * 57.29578;
-  double betha = acos(sum(BA * BC) / (sqrt(sum(BA * BA)) * sqrt(sum(BC * BC)))) * 57.29578;
-  double gamma = acos(sum(CA * CB) / (sqrt(sum(CA * CA)) * sqrt(sum(CB * CB)))) * 57.29578;
+  // Calculate the side lengths of the triangle
+  double a = sqrt(pow(Bb[0] - Cc[0], 2) + pow(Bb[1] - Cc[1], 2));
+  double b = sqrt(pow(Aa[0] - Cc[0], 2) + pow(Aa[1] - Cc[1], 2));
+  double c = sqrt(pow(Aa[0] - Bb[0], 2) + pow(Aa[1] - Bb[1], 2));
+  
+  // Calculate the three angles using the law of cosines and Convert the angles from radians to degrees
+  double alpha = acos((b*b + c*c - a*a) / (2*b*c)) * 57.29578;
+  double betha = acos((a*a + c*c - b*b) / (2*a*c)) * 57.29578;
+  double gamma = acos((a*a + b*b - c*c) / (2*a*b)) * 57.29578;
+  
   return NumericVector::create(alpha, betha, gamma);
 }
 

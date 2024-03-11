@@ -17,13 +17,13 @@ plotted. Default is \code{FALSE}}
 \value{
 Returns a list with 2 elements. List element 1 will have the grid
   cell IDS, and the X and Y coordinates of the centers of each grid cell.
-  List element 2 is the grid as Simple Feature Polygons, which is used for 
+  List element 2 is the grid as Simple Feature Polygons, which is used for
   plotting purposes.
 }
 \description{
-The function takes a Simple Feature Polygon and a size argument 
-  and creates a list with an indexed matrix with coordinates and a Simple Feature
-  object, that consists of hexagonal grids.
+The function takes a Simple Feature Polygon and a size argument
+  and creates a list with an indexed matrix with coordinates and a
+  Simple Feature object, that consists of hexagonal grids.
 }
 \examples{
 library(sf)
@@ -31,7 +31,8 @@ library(sf)
 Poly <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 HexGrid <- hexa_area(Poly, 100, TRUE)
@@ -40,8 +41,6 @@ HexGrid <- hexa_area(Poly, 100, TRUE)
 \seealso{
 Other Helper Functions: 
 \code{\link{dup_coords}()},
-\code{\link{getDEM}()},
-\code{\link{getISO3}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{isSpatial}()},

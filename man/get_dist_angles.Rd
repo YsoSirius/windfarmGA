@@ -11,7 +11,7 @@ get_dist_angles(t, o, wnkl, dist, polYgon, plotAngles = FALSE)
 
 \item{o}{A numeric value indicating the index of the current turbine}
 
-\item{wnkl}{The angle from which wake influences are considered to be 
+\item{wnkl}{The angle from which wake influences are considered to be
 negligible}
 
 \item{dist}{A numeric value indicating the distance, after which the wake
@@ -23,7 +23,7 @@ effects are considered to be eliminated.}
 angles. Default is \code{FALSE}}
 }
 \value{
-Returns a matrix with the distances and angles of potentially
+Returns a matrix with the distances, angles and heights of potentially
   influencing turbines
 }
 \description{
@@ -37,20 +37,24 @@ library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 
 ## Create a random windfarm with 10 turbines
 t <- st_coordinates(st_sample(Polygon1, 10))
+t <- cbind(t, "Z" = 1)
 wnkl <- 20
 dist <- 100000
 
 ## Evaluate and plot for every turbine all other potentially influencing turbines
 potInfTur <- list()
-for (i in 1:(length(t[,1]))) {
-  potInfTur[[i]] <- get_dist_angles(t = t, o = i, wnkl = wnkl,
-                                    dist = dist, polYgon = Polygon1, plotAngles = TRUE)
+for (i in 1:(length(t[, 1]))) {
+  potInfTur[[i]] <- get_dist_angles(
+    t = t, o = i, wnkl = wnkl,
+    dist = dist, polYgon = Polygon1, plotAngles = TRUE
+  )
 }
 potInfTur
 
@@ -59,6 +63,7 @@ potInfTur
 Other Wind Energy Calculation Functions: 
 \code{\link{barometric_height}()},
 \code{\link{calculate_energy}()},
+\code{\link{circle_intersection}()},
 \code{\link{turbine_influences}()}
 }
 \concept{Wind Energy Calculation Functions}

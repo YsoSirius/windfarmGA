@@ -53,19 +53,19 @@ measured. Default is \code{RotorHeight}}
 
 \item{RotorHeight}{The height of the turbine hub}
 
-\item{SurfaceRoughness}{A surface roughness length in meters. 
-With the terrain effect model, a surface roughness is calculated for every 
+\item{SurfaceRoughness}{A surface roughness length in meters.
+With the terrain effect model, a surface roughness is calculated for every
 grid cell using the elevation and land cover data. Default is \code{0.3}}
 
-\item{Proportionality}{A numeric value used for the grid calculation, as it 
-determines the percentage a grid cell must overlay the area. 
+\item{Proportionality}{A numeric value used for the grid calculation, as it
+determines the percentage a grid cell must overlay the area.
 Default is \code{1}}
 
 \item{iteration}{The number of iterations. Default is \code{20}}
 
 \item{mutr}{A numeric mutation rate. Default is \code{0.008}}
 
-\item{vdirspe}{A data.frame containing the wind speeds, directions and 
+\item{vdirspe}{A data.frame containing the wind speeds, directions and
 probabilities. See \code{\link{windata_format}}.}
 
 \item{topograp}{Boolean value, which indicates if the terrain effect model
@@ -74,7 +74,7 @@ should be enabled or not. Default is \code{FALSE}}
 \item{elitism}{Boolean value, which indicates whether elitism should be
 activated or not. Default is \code{TRUE}}
 
-\item{nelit}{If \code{elitism} is TRUE, this input determines the amount 
+\item{nelit}{If \code{elitism} is TRUE, this input determines the amount
 of individuals in the elite group. Default is 7}
 
 \item{selstate}{Determines which selection method is used, "FIX" selects a
@@ -85,8 +85,8 @@ the development of the fitness values. Default is "FIX"}
 the genetic code at equal intervals and "RAN" divides the genetic code at
 random locations. Default is \code{"EQU"}}
 
-\item{trimForce}{If \code{TRUE} the algorithm will use a probabilistic 
-approach to correct the windfarms to the desired amount of turbines. 
+\item{trimForce}{If \code{TRUE} the algorithm will use a probabilistic
+approach to correct the windfarms to the desired amount of turbines.
 If \code{FALSE} the adjustment will be random. Default is \code{FALSE}}
 
 \item{Projection}{A spatial reference system. Depending on your PROJ-version,
@@ -102,28 +102,29 @@ default a .csv file within this package (\file{~/extdata}) is taken that
 was already adapted manually.}
 
 \item{weibull}{A boolean value that specifies whether to take Weibull
-parameters into account. If \code{TRUE}, the wind speed values 
+parameters into account. If \code{TRUE}, the wind speed values
 of \code{vdirspe} are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
 Default is \code{FALSE}}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster `k` and the second item must be the
-scale parameter raster `a` of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently only
-cover Austria. This variable is only used if \code{weibull = TRUE}.}
+scale parameter raster `a` of the Weibull distribution. If no list is
+given, then rasters included in the package are used instead, which
+currently only cover Austria. This variable is only used
+if \code{weibull = TRUE}.}
 
-\item{Parallel}{A boolean value, indicating whether parallel processing should
-be used. The *parallel* and *doParallel* packages are used for parallel
-processing. Default is \code{FALSE}}
+\item{Parallel}{A boolean value, indicating whether parallel processing
+should be used. The *parallel* and *doParallel* packages are used for
+parallel processing. Default is \code{FALSE}}
 
-\item{numCluster}{If \code{Parallel} is TRUE, this variable defines the 
+\item{numCluster}{If \code{Parallel} is TRUE, this variable defines the
 number of clusters to be used. Default is \code{2}}
 
 \item{verbose}{If TRUE it will print information for every generation.
 Default is \code{FALSE}}
 
-\item{plotit}{If TRUE it will plot the best windfarm of every generation. 
+\item{plotit}{If TRUE it will plot the best windfarm of every generation.
 Default is \code{FALSE}}
 }
 \value{
@@ -134,8 +135,8 @@ The result is a matrix with aggregated values per generation; the
   energy, efficiency and fitness values per generation, the selection and
   crossover parameters, a matrix with the generational difference in maximum
   and mean energy output, a matrix with the given inputs, a dataframe with
-  the wind information, the mutation rate per generation and a matrix with all
-  tested wind farm layouts.
+  the wind information, the mutation rate per generation and a matrix with
+  all tested wind farm layouts.
 }
 \description{
 Run a Genetic Algorithm to optimize the layout of wind turbines
@@ -145,16 +146,16 @@ Run a Genetic Algorithm to optimize the layout of wind turbines
 }
 \details{
 A terrain effect model can be included in the optimization process.
-  Therefore, a digital elevation model will be downloaded automatically via the
-  \code{elevatr::get_elev_raster} function. A land cover raster can also be 
-  downloaded automatically from the EEA-website, or the path to a raster file 
-  can be passed to \code{sourceCCL}. The algorithm uses an adapted version of the
-  Raster legend ("clc_legend.csv"), which is stored in the package directory
-  \file{~/inst/extdata}. To use other values for the land cover roughness
-  lengths, insert a column named \strong{"Rauhigkeit_z"} to the .csv file,
-  assign a surface roughness length to all land cover types. Be sure that all
-  rows are filled with numeric values and save the file with \strong{";"}
-  separation. Assign the path of the file to the input variable
+  Therefore, a digital elevation model will be downloaded automatically via
+  the \code{elevatr::get_elev_raster} function. A land cover raster can also
+  downloaded automatically from the EEA-website, or the path to a raster file
+  can be passed to \code{sourceCCL}. The algorithm uses an adapted version of
+  the Raster legend ("clc_legend.csv"), which is stored in the package
+  directory \file{~/inst/extdata}. To use other values for the land cover
+  roughness lengths, insert a column named \strong{"Rauhigkeit_z"} to the
+  .csv file, assign a surface roughness length to all land cover types. Be
+  sure that all rows are filled with numeric values and save the file with
+  \strong{";"} separation. Assign the path of the file to the input variable
   \code{sourceCCLRoughness} of this function.
 }
 \examples{
@@ -165,24 +166,29 @@ library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
-    c(2668272, 2669343, 2669343, 2668272, 2668272)))), 
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
   crs = 3035
 ))
 
 ## Create a uniform and unidirectional wind data.frame and plot the
 ## resulting wind rose
 data.in <- data.frame(ws = 12, wd = 0)
-windrosePlot <- plot_windrose(data = data.in, spd = data.in$ws,
-                dir = data.in$wd, dirres=10, spdmax=20)
+windrosePlot <- plot_windrose(
+  data = data.in, spd = data.in$ws,
+  dir = data.in$wd, dirres = 10, spdmax = 20
+)
 
 ## Runs an optimization run for 20 iterations with the
 ## given shapefile (Polygon1), the wind data.frame (data.in),
 ## 12 turbines (n) with rotor radii of 30m (Rotor) and rotor height of 100m.
-result <- genetic_algorithm(Polygon1 = Polygon1,
-                  n = 12,
-                  vdirspe = data.in,
-                  Rotor = 30,
-                  RotorHeight = 100)
+result <- genetic_algorithm(
+  Polygon1 = Polygon1,
+  n = 12,
+  vdirspe = data.in,
+  Rotor = 30,
+  RotorHeight = 100
+)
 plot_windfarmGA(result = result, Polygon1 = Polygon1)
 }
 }
@@ -193,7 +199,6 @@ Other Genetic Algorithm Functions:
 \code{\link{init_population}()},
 \code{\link{mutation}()},
 \code{\link{selection}()},
-\code{\link{trimton}()},
-\code{\link{windfarmGA}()}
+\code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

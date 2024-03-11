@@ -1,9 +1,9 @@
-#' A resulting matrix of \code{genetic_algorithm} with 200 iterations 
+#' A resulting matrix of \code{genetic_algorithm} with 200 iterations
 #' and a rectangular grid derived from \code{sp_polygon}
 "resultrect"
 
-#' A resulting matrix of \code{genetic_algorithm} with 10 iterations 
-#' and a hexagonal grid derived from \code{sp_polygon} 
+#' A resulting matrix of \code{genetic_algorithm} with 10 iterations
+#' and a hexagonal grid derived from \code{sp_polygon}
 "resulthex"
 
 #' The rectangular POLYGON used to create \code{resultrect} & \code{resulthex}
@@ -17,4 +17,3 @@
 
 #' A POLYGON with a hole
 "hole_shape"
-

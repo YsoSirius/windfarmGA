@@ -1,6 +1,6 @@
 #' @title Crossover Method
 #' @name crossover
-#' @description The crossover method creates new offspring with the selected 
+#' @description The crossover method creates new offspring with the selected
 #'   individuals by permutating their genetic codes.
 #'
 #' @export
@@ -20,25 +20,25 @@
 #' ## Create two random parents with an index and random binary values
 #' Parents <- data.frame(
 #'   ID = 1:20,
-#'   bin = sample(c(0,1),20, replace = TRUE, prob = c(70,30)),
-#'   bin.1 = sample(c(0,1),20, replace=TRUE,prob = c(30,70)))
-#' 
+#'   bin = sample(c(0, 1), 20, replace = TRUE, prob = c(70, 30)),
+#'   bin.1 = sample(c(0, 1), 20, replace = TRUE, prob = c(30, 70))
+#' )
+#'
 #' ## Create random Fitness values for both individuals
 #' FitParents <- data.frame(ID = 1, Fitness = 1000, Fitness.1 = 20)
-#' 
+#'
 #' ## Assign both values to a list
-#' CrossSampl <- list(Parents,FitParents);
-#' 
+#' CrossSampl <- list(Parents, FitParents)
 #' ## Cross their data at equal locations with 2 crossover parts
 #' crossover(CrossSampl, u = 1.1, uplimit = 300, crossPart = "EQU")
-#' 
+#'
 #' ## with 3 crossover parts and equal locations
 #' crossover(CrossSampl, u = 2.5, uplimit = 300, crossPart = "EQU")
-#' 
+#'
 #' ## or with random locations and 5 crossover parts
 #' crossover(CrossSampl, u = 4.9, uplimit = 300, crossPart = "RAN")
 #'
-crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed) {
+crossover <- function(se6, u, uplimit, crossPart = c("EQU", "RAN"), verbose, seed) {
   crossPart <- match.arg(crossPart)
   if (missing(verbose)) {
     verbose <- FALSE
@@ -47,7 +47,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
     seed <- NULL
   }
   if (verbose) {
-    cat(paste("crossover point rate: ", u + 1))
+    message(paste("crossover point rate: ", u + 1))
   }
 
   se6fit <- se6[[2]][1, -1]
@@ -55,7 +55,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
   se6 <- se6[, -1]
   parid <- sample(1:length(se6))
   z <- seq.int(1, length(parid), 2)
-  
+
   all <- vector("list", length(z))
 
   crossPart <- toupper(crossPart)
@@ -95,7 +95,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
     x1 <- rbind(a, b)
     perm <- permutations(n = 2, r = ncol(x1), v = 1:nrow(x1))
     # perm <- gtools::permutations(n = 2, r = ncol(x1), v = 1:nrow(x1),
-                                 # repeats.allowed = TRUE)
+    # repeats.allowed = TRUE)
 
     # for every possible permutation
     permut <- list()
@@ -127,16 +127,16 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
   nI <- do.call("cbind", all)
 
   if (verbose) {
-    cat(paste("\nHow many parental pairs are at hand: ", length(z)))
-    cat(paste("\nHow many permutations are possible: ", length(z) *
-                (2 ^ (trunc(u) + 1))))
+    message(paste("How many parental pairs are at hand: ", length(z)))
+    message(paste("How many permutations are possible: ", length(z) *
+      (2^(trunc(u) + 1))))
   }
 
   partaksur <- ncol(nI)
   if (partaksur >= uplimit) {
     partaksur <- uplimit
     if (verbose) {
-      cat(paste("\nPopulation max limit reached: ", uplimit))
+      message(paste("Population max limit reached: ", uplimit))
     }
   }
 
@@ -147,7 +147,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
   }
   partak <- sort(sample(1:length(nI[1, ]), partaksur, prob = fitChi))
   if (verbose) {
-    cat(paste("\nHow many permutations are selected: ", length(partak), "\n"))
+    message(paste("How many permutations are selected: ", length(partak)))
   }
 
   nI <- nI[, partak]
@@ -158,7 +158,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU","RAN"), verbose, seed
 #' @name splitAt
 #' @description The function is used by the crossover method to
 #' split a genetic code at certain intervals. See also \code{\link{crossover}}.
-#' @param x A numeric variable that represents an individual's 
+#' @param x A numeric variable that represents an individual's
 #'   binary genetic code
 #' @param pos A numeric value that indicates where to split the genetic code
 #'
@@ -179,7 +179,7 @@ splitAt <- function(x, pos) {
 #' @name permutations
 #' @description permutations enumerates the possible permutations. The
 #' function is forked and minified from gtools::permutations
-#' 
+#'
 #' @param n Size of the source vector
 #' @param r Size of the target vectors
 #' @param v Source vector. Defaults to 1:n
@@ -189,22 +189,24 @@ splitAt <- function(x, pos) {
 #'
 #' @author Original versions by Bill Venables. Extended to handle repeats.allowed
 #' by Gregory R. Warnes
-#' 
+#'
 #' @references Venables, Bill. "Programmers Note", R-News, Vol 1/1, Jan. 2001.
 #' \url{https://cran.r-project.org/doc/Rnews/}
-#' 
+#'
 permutations <- function(n, r, v = 1:n) {
   v <- unique(sort(v))
   sub <- function(n, r, v) {
     if (r == 1) {
       matrix(v, n, 1)
-    }
-    else {
+    } else {
       inner <- Recall(n, r - 1, v)
-      cbind(rep(v, rep(nrow(inner), n)), 
-            matrix(t(inner),
-                   ncol = ncol(inner), nrow = nrow(inner) * n,
-                   byrow = TRUE))
+      cbind(
+        rep(v, rep(nrow(inner), n)),
+        matrix(t(inner),
+          ncol = ncol(inner), nrow = nrow(inner) * n,
+          byrow = TRUE
+        )
+      )
     }
   }
   sub(n, r, v[1:n])

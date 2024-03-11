@@ -38,6 +38,9 @@ plot_windrose(
 
 \item{plotit}{Should the windrose be plotted? Default is TRUE}
 }
+\value{
+Returns NULL. Used for plotting
+}
 \description{
 Plot a wind rose of the wind data frame.
 }
@@ -45,19 +48,24 @@ Plot a wind rose of the wind data frame.
 ## Exemplary Input Wind speed and direction data frame
 # Uniform wind speed and single wind direction
 data.in <- data.frame(ws = 12, wd = 0)
-windrosePlot <- plot_windrose(data = data.in, spd = data.in$ws,
-   dir = data.in$wd)
+windrosePlot <- plot_windrose(
+  data = data.in, spd = data.in$ws,
+  dir = data.in$wd
+)
 
 # Random wind speeds and random wind directions
-data.in <- data.frame(ws = sample(1:25, 10), 
-                      wd = sample(1:260, 10))
-windrosePlot <- plot_windrose(data = data.in, spd = data.in$ws,
-   dir = data.in$wd)
+data.in <- data.frame(
+  ws = sample(1:25, 10),
+  wd = sample(1:260, 10)
+)
+windrosePlot <- plot_windrose(
+  data = data.in, spd = data.in$ws,
+  dir = data.in$wd
+)
 
 }
 \seealso{
 Other Plotting Functions: 
-\code{\link{interpol_view}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
@@ -65,7 +73,6 @@ Other Plotting Functions:
 \code{\link{plot_heatmap}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_result}()},
-\code{\link{plot_viewshed}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{random_search_single}()}
 }

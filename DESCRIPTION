@@ -1,17 +1,16 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
-Version: 3.1.0
+Version: 4.0.0
 Authors@R: c(
     person("Sebastian", "Gatscha", , email="sebastian_gatscha@gmx.at", c("aut", "cre", "cph"))
     )
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
 Description: The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 Depends:
-    R (>= 3.2.3)
+    R (>= 4.1.0)
 Imports: Rcpp,
-    raster,
+    terra,
     sf,
-    elevatr,
     RColorBrewer,
     calibrate,
     grDevices,
@@ -33,7 +32,9 @@ Suggests:
     doParallel,
     progress,
     stars,
+    raster,
     leaflet,
+    elevatr,
     ggplot2,
     gstat,
     rworldmap

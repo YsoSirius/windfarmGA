@@ -36,18 +36,15 @@ install.packages("windfarmGA")
 The genetic algorithm is designed to optimize wind farms of any shape.
 It requires a predefined number of turbines, a uniform rotor radius and 
 an average wind speed per wind direction.
-It can include a terrain effect model, which downloads an 
-'SRTM' elevation model and a 'Corine Land Cover' raster automatically. The elevation 
-model is used to find mountains and valleys and to adjust the 
+It can include a terrain effect model, which requires an 
+elevation raster and a surface roughness raster. The elevation 
+data is used to find mountains and valleys and to adjust the 
 wind speeds accordingly by 'wind multipliers' and to determine 
-the air densities at rotor heights. The land cover raster with an additional elevation
+the air densities at rotor heights. The surface roughness raster with an additional elevation
 roughness value is used to re-evaluate the surface roughness and to individually
 determine the wake-decay constant for each turbine.
 
-To start an optimization, either the function `windfarmGA` or `genetic_algorithm` can 
-be used. The function `windfarmGA` checks the user inputs interactively and then 
-runs the function `genetic_algorithm`. If the input parameters are already known, an 
-optimization can be run directly via `genetic_algorithm`. 
+To start an optimization use the function `genetic_algorithm`. 
 
 <div>
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"/>
@@ -131,18 +128,17 @@ Be sure that all rows are filled with numeric values and save the .csv file with
 
 
 ## Start an Optimization
-An optimization run can be initiated with the following functions: 
-- genetic_algorithm
-- windfarmGA
+An optimization can be initiated with the function **genetic_algorithm**
 
-### Function calls for windfarmGA
 - without terrain effects
 ```sh
-result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-                     vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
-                     Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-                     elitism =TRUE, nelit = 7, trimForce = TRUE,
-                     referenceHeight = 50, RotorHeight = 100)
+result <- genetic_algorithm(
+  Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
+  vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+  Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
+  elitism =TRUE, nelit = 7, trimForce = TRUE,
+  referenceHeight = 50, RotorHeight = 100
+  )
 ```
 
 - with terrain effects
@@ -150,35 +146,16 @@ result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteratio
 sourceCCL <- "Source of the CCL raster (TIF)"
 sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 
-result <- windfarmGA(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-                     vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
-                     Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
-                     elitism = TRUE, nelit = 7, trimForce = TRUE,
-                     referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
-                     sourceCCLRoughness = sourceCCLRoughness)
+result <- genetic_algorithm(
+  Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
+  vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
+  Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
+  elitism = TRUE, nelit = 7, trimForce = TRUE,
+  referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
+  sourceCCLRoughness = sourceCCLRoughness
+)
 ```
 
-###  Function calls for genetic_algorithm
-- without terrain effects
-```sh
-result <- genetic_algorithm(Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-                            vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr =0.8,
-                            Proportionality = 1, SurfaceRoughness = 0.3, topograp = FALSE,
-                            elitism = TRUE, nelit = 7, trimForce = TRUE,
-                            referenceHeight = 50, RotorHeight = 100)
-```
-
-- with terrain effects
-```sh
-sourceCCL <- "Source of the CCL raster (TIF)"
-sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
-result <- genetic_algorithm(Polygon1 = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,
-                            vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
-                            Proportionality = 1, SurfaceRoughness = 0.3, topograp = TRUE,
-                            elitism = TRUE, nelit = 7, trimForce = TRUE,
-                            referenceHeight = 50, RotorHeight = 100, sourceCCL = sourceCCL,
-                            sourceCCLRoughness = sourceCCLRoughness)
-```
 
 ```sh
 ## Run an optimization with your own Weibull parameter rasters. The shape and scale 
@@ -189,16 +166,16 @@ kraster <- "/..pathto../k_param_raster.tif"
 araster <- "/..pathto../a_param_raster.tif"
 weibullrasters <- list(raster(kraster), raster(araster))
 
-result_weibull <- genetic_algorithm(Polygon1 = Polygon1, GridMethod ="h", n=12,
-                                    fcrR=5, iteration=10, vdirspe = wind_df, crossPart1 = "EQU",
-                                    selstate="FIX", mutr=0.8, Proportionality = 1, Rotor=30,
-                                    SurfaceRoughness = 0.3, topograp = FALSE,
-                                    elitism=TRUE, nelit = 7, trimForce = TRUE,
-                                    referenceHeight = 50,RotorHeight = 100,
-                                    weibull = TRUE, weibullsrc = weibullrasters)
+result_weibull <- genetic_algorithm(
+  Polygon1 = Polygon1, GridMethod ="h", n=12,
+  fcrR=5, iteration=10, vdirspe = wind_df, crossPart1 = "EQU",
+  selstate="FIX", mutr=0.8, Proportionality = 1, Rotor=30,
+  SurfaceRoughness = 0.3, topograp = FALSE,
+  elitism=TRUE, nelit = 7, trimForce = TRUE,
+  referenceHeight = 50,RotorHeight = 100,
+  weibull = TRUE, weibullsrc = weibullrasters)
 plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
 ```
-The argument **GridMethod**, **weibull**, **weibullsrc** can also be given to the function `windfarmGA`.
 
 #### Plot the Results on a Leaflet Map
 ```sh

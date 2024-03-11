@@ -26,13 +26,14 @@ Calculates air density, temperature and air pressure
     standard atmosphere and the barometric height formula.
 }
 \examples{
-data <- matrix(seq(0,5000,500));
+data <- matrix(seq(0, 5000, 500))
 barometric_height(data)
 plot.ts(barometric_height(data))
 }
 \seealso{
 Other Wind Energy Calculation Functions: 
 \code{\link{calculate_energy}()},
+\code{\link{circle_intersection}()},
 \code{\link{get_dist_angles}()},
 \code{\link{turbine_influences}()}
 }

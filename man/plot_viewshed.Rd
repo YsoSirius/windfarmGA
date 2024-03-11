@@ -2,62 +2,44 @@
 % Please edit documentation in R/visibility.R
 \name{plot_viewshed}
 \alias{plot_viewshed}
-\title{Plot viewshed results}
+\title{Plot visibility}
 \usage{
-plot_viewshed(res, legend = FALSE, ...)
+plot_viewshed(r, turbine_locs, h1 = 0, h2 = 0, plot = TRUE, ...)
 }
 \arguments{
-\item{res}{The resulting list from viewshed}
+\item{r}{The elevation SpatRaster}
 
-\item{legend}{Plot a legend? Default is \code{FALSE}}
+\item{turbine_locs}{Coordinates, SpatialPoint or SimpleFeature Points
+representing the wind turbines}
 
-\item{...}{Is passed along to \code{\link[raster]{plot}}}
+\item{h1}{A single number or numeric vector giving the extra height offsets
+for the \code{turbine_locs}}
+
+\item{h2}{The height offset for Point 2}
+
+\item{plot}{Should the result be plotted. Default is \code{TRUE}}
+
+\item{...}{forwarded to \code{terra::plot}}
+}
+\value{
+A mosaiced SpatRaster, representing the visibility for all \code{turbine_locs}
 }
 \description{
-Plot the result of \code{\link{viewshed}}
+Calculate and plot visibility for given points in a given area.
 }
 \examples{
-\dontrun{
-library(raster)
+\donttest{
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
-  sf::st_polygon(list(cbind(
-    c(4496482, 4496482, 4499991, 4499991, 4496482),
-    c(2666272, 2669343, 2669343, 2666272, 2666272)))),
-  crs = 3035
-))
-DEM_meter <- getDEM(Polygon1)
+library(terra)
 
-turbloc = st_sample(DEM_meter[[2]], 10, type = "random");
-res <- viewshed(r = DEM_meter[[1]], shape = DEM_meter[[2]], turbine_locs = turbloc,  
-                h1 = 1.8, h2 = 50)
-plot_viewshed(res)
-
-## ... Arguments are past on to raster::plot
-plot_viewshed(res, legend = TRUE, interpolate=TRUE, colNA="black", 
-              col = topo.colors(15))
+f <- system.file("ex/elev.tif", package = "terra")
+r <- rast(f)
+x <- project(r, "EPSG:2169")
+shape <- sf::st_as_sf(as.polygons(terra::boundaries(x)))
+plot(shape)
+st_crs(shape) <- 2169
+locs <- st_sample(shape, 10, type = "random")
+plot_viewshed(x, locs, h1 = 0, h2 = 0, plot = TRUE)
 }
 }
-\seealso{
-Other Viewshed Analysis: 
-\code{\link{cansee}()},
-\code{\link{interpol_view}()},
-\code{\link{rasterprofile}()},
-\code{\link{viewTo}()},
-\code{\link{viewshed}()}
-
-Other Plotting Functions: 
-\code{\link{interpol_view}()},
-\code{\link{plot_cloud}()},
-\code{\link{plot_development}()},
-\code{\link{plot_evolution}()},
-\code{\link{plot_fitness_evolution}()},
-\code{\link{plot_heatmap}()},
-\code{\link{plot_parkfitness}()},
-\code{\link{plot_result}()},
-\code{\link{plot_windfarmGA}()},
-\code{\link{plot_windrose}()},
-\code{\link{random_search_single}()}
-}
-\concept{Plotting Functions}
 \concept{Viewshed Analysis}

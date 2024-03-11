@@ -1,10 +1,14 @@
-# windfarmGA 3.1.0
-* Removed package dependencies on `rgdal` and `rgeos`
-* Moved dependencies `foreach`, `parallel`, `doParallel` to Suggests
-* Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
-* Fix `getISO3` - only use `sf::st_is_valid` countries from `rworldmap::getMap`
-* `projectRaster` seems to require CRS as character and not as CRS object
-* supressWarnings for plot-tests
+# Updates 4.0.0
+- Depends on R 4.1.0
+- Removed package dependencies `rgdal` and `rgeos`
+- Replaced dependency `raster` with `terra`
+- Moved dependencies `foreach`, `parallel`, `doParallel`, `elevatr` to Suggests
+- 3D-circle intersection calculation. Especially relevant if the terrain model is activated.
+- Fix `grid_area` and `hexa_area` functions for sf-1.0 and s2
+- Removed most visibility functions in favor of `terra::viewshed`
+- Removed the function `windfarmGA`, as it was redundant and just difficult to test.
+- Changed most `cat()` and `print()` calls with `message()`
+- Reset old `par` settings
 
 # windfarmGA 3.0.0
 * The dependencies `sp`, `spatstat` were removed and replaced by `sf`. All spatial outputs are now **Simple Features**. A Shapefile Polygon can still be passed as input to `genetic_algorithm` / `windfarmGA`, but more underlying functions now require the Polygon to be of type Simple Feature.
@@ -33,10 +37,10 @@
   windfarmGA.cT = 0.88              | Wind Turbine Thrust coefficient  
   windfarmGA.air_rh = 1.225         | Air Density Value  
   windfarmGA.k = 0.075              | Wake expansion coefficient. It is assumed to be 0.075 for onshore windfarms and 0.05 for offshore windfarms
-  windfarmGA.max_angle = 20         | Maximum angle (in degrees) to search for potential influencing turbines
-  windfarmGA.max_distance = 100000  | Maximum distance (in meters) to search for potential influencing turbines
-  windfarmGA.max_population = 300   | Maximum amount of individuals per generation
-  windfarmGA.max_selection = 100    | Maximum amount of selected individuals
+  windfarmGA.max_angle = 20         | Maximum angle (in degrees) to search for potentially influencing turbines
+  windfarmGA.max_distance = 100000  | Maximum distance (in meters) to search for potentially influencing turbines
+  windfarmGA.max_population = 300   | Maximum number of individuals per generation
+  windfarmGA.max_selection = 100    | Maximum number of selected individuals
 
 # windfarmGA 2.2.2
 
