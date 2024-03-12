@@ -18,7 +18,6 @@ Checks whether the input for \code{\link{selection}} is given
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{dup_coords}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},

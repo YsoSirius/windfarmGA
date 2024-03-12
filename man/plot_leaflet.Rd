@@ -31,7 +31,7 @@ Returns a leaflet map.
 Plot a resulting wind farm on a leaflet map.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Plot the best wind farm on a leaflet map (ordered by energy values)
 plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
 

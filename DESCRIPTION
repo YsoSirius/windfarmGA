@@ -24,7 +24,7 @@ LazyData: TRUE
 License: MIT + file LICENSE
 URL: https://ysosirius.github.io/windfarmGA/index.html
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Suggests: 
     testthat,
     foreach,

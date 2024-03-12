@@ -45,7 +45,7 @@ Plot the results of a genetic algorithm run with given inputs.
   algorithm. 6 plot methods are available that can be selected individually.
 }
 \examples{
-\donttest{
+\dontrun{
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
@@ -68,7 +68,6 @@ Other Plotting Functions:
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
-\code{\link{plot_heatmap}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_result}()},
 \code{\link{plot_windrose}()},

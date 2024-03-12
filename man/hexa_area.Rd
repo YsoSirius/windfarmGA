@@ -40,7 +40,6 @@ HexGrid <- hexa_area(Poly, 100, TRUE)
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{dup_coords}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{isSpatial}()},
