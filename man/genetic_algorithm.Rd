@@ -159,7 +159,7 @@ A terrain effect model can be included in the optimization process.
   \code{sourceCCLRoughness} of this function.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Create a random rectangular shapefile
 library(sf)
 

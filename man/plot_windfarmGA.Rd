@@ -45,7 +45,7 @@ Plot the results of a genetic algorithm run with given inputs.
   algorithm. 6 plot methods are available that can be selected individually.
 }
 \examples{
-\donttest{
+\dontrun{
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(

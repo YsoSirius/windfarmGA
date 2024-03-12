@@ -241,7 +241,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' @return Returns a data.frame of the best (energy/efficiency) individual
 #'   during all iterations
 #'
-#' @examples \donttest{
+#' @examples \dontrun{
 #' ## Add some data examples from the package
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -577,7 +577,7 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
 #'
 #' @family Plotting Functions
 #' @return Returns NULL. Used for plotting
-#' @examples \donttest{
+#' @examples \dontrun{
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
@@ -662,7 +662,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
 #'
 #' @return Returns a leaflet map.
 #'
-#' @examples \donttest{
+#' @examples \dontrun{
 #' ## Plot the best wind farm on a leaflet map (ordered by energy values)
 #' plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
 #'

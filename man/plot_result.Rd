@@ -60,7 +60,7 @@ Plot the best solutions of the genetic algorithm.
   can be plotted. \code{best} indicates the amount of best solutions to plot.
 }
 \examples{
-\donttest{
+\dontrun{
 ## Add some data examples from the package
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
