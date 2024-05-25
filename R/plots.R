@@ -241,7 +241,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' @return Returns a data.frame of the best (energy/efficiency) individual
 #'   during all iterations
 #'
-#' @examples \donttest{
+#' @examples \dontrun{
 #' ## Add some data examples from the package
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -577,7 +577,7 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
 #'
 #' @family Plotting Functions
 #' @return Returns NULL. Used for plotting
-#' @examples \donttest{
+#' @examples \dontrun{
 #' library(sf)
 #' Polygon1 <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
@@ -640,10 +640,6 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
     plot_cloud(result, TRUE)
     readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl == 6)) {
-    message("plot_heatmap: Plot a Heatmap of all Grid Cells:")
-    plot_heatmap(result = result, si = 2)
-  }
   return()
 }
 
@@ -666,7 +662,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
 #'
 #' @return Returns a leaflet map.
 #'
-#' @examples \donttest{
+#' @examples \dontrun{
 #' ## Plot the best wind farm on a leaflet map (ordered by energy values)
 #' plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
 #'
@@ -1202,20 +1198,6 @@ plot_parkfitness <- function(result, spar = 0.1) {
     graphics::abline(v = timeticksd)
     graphics::mtext(mutrplval, side = 3, at = timetick, cex = 0.8)
   }
-  #######################
-
-  ## Plot Mutation influence #####################
-  graphics::par(mfrow = c(1, 1))
-  plot(fitsd[, "FitSD"],
-    type = "b", col = "red", lwd = 2, cex.main = 1, axes = TRUE,
-    bty = "n", xlab = "Generation", ylab = "",
-    pch = 20, main = "Mutation influence on Standard Deviation"
-  )
-  if (length(timeticksd) != 0) {
-    calibrate::textxy(timeticksd, sdrplval, labs = timeticksd, cex = 0.7)
-    graphics::abline(v = timeticksd)
-    graphics::mtext(mutrplval, side = 3, at = timetick, cex = 0.8)
-  }
 
   return()
 }
@@ -1714,173 +1696,6 @@ plot_fitness_evolution <- function(result, spar = 0.1) {
 
   return()
 }
-
-
-#' @title Plot a heatmap of selected grid cells
-#' @name plot_heatmap
-#' @description  Plot a heatmap of selected grid cells. Green grid cells
-#'   have been selected more often than red grid cells.
-#'
-#' @export
-#'
-#' @family Plotting Functions
-#' @inheritParams plot_result
-#' @param si A numeric value that is used for the sizing of the resolution of
-#'   the heatmap. Default is 2
-#' @param idistw The inverse distance weighting power. Default is the rotor
-#'   radius from the 'result' values
-#'
-#' @return Invisibly returns a list with the result of the inverse distance
-#'   weighting and an aggregated dataframe of all grid cells
-#' @examples \donttest{
-#' ## Plot the results of a hexagonal grid optimization
-#' plot_heatmap(resulthex)
-#'
-#' ## Plot the heatmap with different settings
-#' plot_heatmap(resulthex, si = 4, idistw = 2)
-#' }
-plot_heatmap <- function(result, si = 2, idistw) {
-  if (!is_gstat_installed()) {
-    stop(
-      "The package 'gstat' is required for this function, but it is not installed.\n",
-      "Please install it with `install.packages('gstat')`"
-    )
-  }
-  ## set Graphic Params
-  oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  par(mfrow = c(1, 1))
-
-  bpe <- do.call("rbind", result[, "allCoords"])
-  bpe <- data.frame(bpe[, 1:2])
-  row.names(bpe) <- NULL
-
-  sizingidw <- as.integer(result[, "inputData"][[1]][, 1]["Rotorradius"])
-  sizing <- as.integer(result[, "inputData"][[1]][, 1]["Resolution"]) / si
-
-  dupco <- dup_coords(bpe, simplify = TRUE)
-
-  bpe$Ids <- seq.int(nrow(bpe))
-  dupco <- lapply(dupco, function(x) as.integer(x))
-  dupcosum <- lapply(dupco, function(x) length(x))
-  bpenew <- vector("list", length(dupco))
-  for (i in 1:length(dupco)) {
-    bpenew[[i]] <- bpe[bpe$Ids == dupco[[i]][1], ]
-    bpenew[[i]]$Sum <- dupcosum[[i]][1]
-  }
-  bpenew <- do.call("rbind", bpenew)
-  bpenew <- bpenew[-3]
-
-  polo <- st_as_sf(bpenew, coords = c("X", "Y"))
-
-  extra_margin <- 50
-  x_range <- range(bpenew$X)
-  y_range <- range(bpenew$Y)
-  grd <- expand.grid(
-    X = seq(
-      from = x_range[1] - extra_margin,
-      to = x_range[2] + extra_margin, by = sizing
-    ),
-    Y = seq(
-      from = y_range[1] - extra_margin,
-      to = y_range[2] + extra_margin, by = sizing
-    )
-  )
-
-  ## convert grid to SpatialPixel class
-  grd <- st_as_sf(grd, coords = c("X", "Y"))
-  grd <- st_make_grid(grd,
-    offset = st_bbox(grd)[c("xmin", "ymin")],
-    cellsize = st_distance(grd[1, ], grd[2, ])[[1]]
-  )
-
-  if (missing(idistw)) {
-    idistw <- sizingidw
-  } else {
-    idistw <- idistw
-  }
-
-  ## Calculate IDW
-  idwout <- data.frame(gstat::idw(
-    formula = bpenew$Sum ~ 1,
-    locations = polo, newdata = grd,
-    idp = idistw
-  ))
-
-  ## Plot heatmap
-  if (!is_ggplot2_installed()) {
-    stop(
-      "The package 'ggplot2' is required to plot the result, but it is not installed.\n",
-      "Please install it with `install.packages('ggplot2')`"
-    )
-  } else {
-    var_pred <- X <- Y <- x <- y <- NULL
-
-    plot1 <- ggplot2::ggplot(
-      data = idwout,
-      mapping = ggplot2::aes(x = x, y = y)
-    ) +
-      ggplot2::geom_tile(
-        data = idwout, ggplot2::aes(fill = var_pred),
-        show.legend = TRUE
-      ) +
-      ggplot2::labs(
-        title = "Inverse Distance Weighting for Grid Cell Selection"
-      ) +
-      ggplot2::geom_point(
-        data = bpenew, mapping = ggplot2::aes(x = X, y = Y),
-        show.legend = TRUE, size = 5 * bpenew$Sum / max(bpenew$Sum),
-        alpha = 0.6
-      ) +
-      ggplot2::scale_fill_gradient(low = "red", high = "green") +
-      ggplot2::coord_equal()
-
-    print(plot1)
-  }
-
-  invisible(list(
-    "idw" = idwout,
-    "GA_grids" = bpenew
-  ))
-}
-
-
-#' @title Splits duplicated coords (copy of geoR::dup.coords)
-#' @name dup_coords
-#' @description This function takes an object with 2-D coordinates and returns
-#' the positions of the duplicated coordinates. Also sets a method for
-#' duplicated. Helper function for \code{\link{plot_heatmap}}
-#'
-#' @export
-#'
-#' @param x Two column numeric matrix or data frame
-#' @param ... passed to sapply. If simplify = TRUE (default) results are
-#' returned as an array if possible (when the number of replicates are the
-#' same at each replicated location)
-#'
-#' @family Helper Functions
-#' @return Function and methods returns NULL if there are no duplicates
-#' locations. Otherwise, the default method returns a list where each component
-#' is a vector with the positions or the rownames, if available, of the
-#' duplicates coordinates. The method for geodata returns a data-frame with
-#' rownames equals to the positions of the duplicated coordinates, the first
-#' column is a factor indicating duplicates and the remaining are output of
-#' as.data.frame.geodata.
-#'
-#' @author Paulo Justiniano Ribeiro Jr. \email{paulojus@@leg.ufpr.br}
-#' Peter J. Diggle \email{p.diggle@@lancaster.ac.uk}
-dup_coords <- function(x, ...) {
-  ap1 <- unclass(factor(paste("x", x[, 1], "y", x[, 2], sep = "")))
-  ap2 <- table(ap1)
-  ap2 <- ap2[ap2 > 1]
-  takecoords <- function(n) {
-    if (!is.null(rownames(x))) rownames(x[ap1 == n, ])
-  }
-  res <- sapply(as.numeric(names(ap2)), takecoords, ...)
-  if (!is.null(res)) class(res) <- "duplicated.coords"
-  return(res)
-}
-
 
 
 #' @title Plot the result of a randomized output.

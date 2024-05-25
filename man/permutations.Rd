@@ -27,7 +27,6 @@ Venables, Bill. "Programmers Note", R-News, Vol 1/1, Jan. 2001.
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{dup_coords}()},
 \code{\link{get_grids}()},
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},

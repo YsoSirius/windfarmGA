@@ -97,7 +97,7 @@
 #'   \strong{";"} separation. Assign the path of the file to the input variable
 #'   \code{sourceCCLRoughness} of this function.
 #'
-#' @examples \donttest{
+#' @examples \dontrun{
 #' ## Create a random rectangular shapefile
 #' library(sf)
 #'

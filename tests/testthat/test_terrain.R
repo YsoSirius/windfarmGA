@@ -3,16 +3,18 @@ library(terra)
 library(elevatr)
 library(raster)
 
-## Function to suppress print/cat outputs
-quiet <- function(x) {
+
+test_that("Test Terrain and Weibull Effects", {
+  skip_if_offline()
+  skip_on_ci()
+  skip_on_cran()
+
+  ## Function to suppress print/cat outputs
+  quiet <- function(x) {
   sink(tempfile())
   on.exit(sink())
   invisible(force(x))
 }
-
-test_that("Test Terrain and Weibull Effects", {
-  skip_if_offline()
-  skip_if_not_installed("rgdal")
 
   ## Test Terrain_Model Function ###############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
