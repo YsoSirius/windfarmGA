@@ -14,7 +14,7 @@
       "<link id=\"css\" rel=\"stylesheet\" href=\"https://bootswatch.com/5/flatly/bootstrap.css\" onload=\"document.documentElement.style.display = ''\">"
     );
   }
-</script><title>Run a Genetic Algorithm to optimize a wind farm layout — genetic_algorithm • windfarmGA</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Run a Genetic Algorithm to optimize a wind farm layout — genetic_algorithm"><meta property="og:description" content="Run a Genetic Algorithm to optimize the layout of wind turbines
+</script><title>Run a Genetic Algorithm to optimize a wind farm layout — genetic_algorithm • windfarmGA</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Run a Genetic Algorithm to optimize a wind farm layout — genetic_algorithm"><meta property="og:description" content="Run a Genetic Algorithm to optimize the layout of wind turbines
   on a given area. The algorithm works with a fixed amount of turbines, a
   fixed rotor radius and a mean wind speed value for every incoming wind
   direction."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -142,14 +142,14 @@ measured. Default is <code>RotorHeight</code></p></dd>
 
 
 <dt>SurfaceRoughness</dt>
-<dd><p>A surface roughness length in meters. 
-With the terrain effect model, a surface roughness is calculated for every 
+<dd><p>A surface roughness length in meters.
+With the terrain effect model, a surface roughness is calculated for every
 grid cell using the elevation and land cover data. Default is <code>0.3</code></p></dd>
 
 
 <dt>Proportionality</dt>
-<dd><p>A numeric value used for the grid calculation, as it 
-determines the percentage a grid cell must overlay the area. 
+<dd><p>A numeric value used for the grid calculation, as it
+determines the percentage a grid cell must overlay the area.
 Default is <code>1</code></p></dd>
 
 
@@ -162,7 +162,7 @@ Default is <code>1</code></p></dd>
 
 
 <dt>vdirspe</dt>
-<dd><p>A data.frame containing the wind speeds, directions and 
+<dd><p>A data.frame containing the wind speeds, directions and
 probabilities. See <code><a href="windata_format.html">windata_format</a></code>.</p></dd>
 
 
@@ -177,7 +177,7 @@ activated or not. Default is <code>TRUE</code></p></dd>
 
 
 <dt>nelit</dt>
-<dd><p>If <code>elitism</code> is TRUE, this input determines the amount 
+<dd><p>If <code>elitism</code> is TRUE, this input determines the amount
 of individuals in the elite group. Default is 7</p></dd>
 
 
@@ -194,8 +194,8 @@ random locations. Default is <code>"EQU"</code></p></dd>
 
 
 <dt>trimForce</dt>
-<dd><p>If <code>TRUE</code> the algorithm will use a probabilistic 
-approach to correct the windfarms to the desired amount of turbines. 
+<dd><p>If <code>TRUE</code> the algorithm will use a probabilistic
+approach to correct the windfarms to the desired amount of turbines.
 If <code>FALSE</code> the adjustment will be random. Default is <code>FALSE</code></p></dd>
 
 
@@ -219,7 +219,7 @@ was already adapted manually.</p></dd>
 
 <dt>weibull</dt>
 <dd><p>A boolean value that specifies whether to take Weibull
-parameters into account. If <code>TRUE</code>, the wind speed values 
+parameters into account. If <code>TRUE</code>, the wind speed values
 of <code>vdirspe</code> are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
 Default is <code>FALSE</code></p></dd>
@@ -228,19 +228,20 @@ Default is <code>FALSE</code></p></dd>
 <dt>weibullsrc</dt>
 <dd><p>A list of Weibull parameter rasters, where the first list
 item must be the shape parameter raster `k` and the second item must be the
-scale parameter raster `a` of the Weibull distribution. If no list is given,
-then rasters included in the package are used instead, which currently only
-cover Austria. This variable is only used if <code>weibull = TRUE</code>.</p></dd>
+scale parameter raster `a` of the Weibull distribution. If no list is
+given, then rasters included in the package are used instead, which
+currently only cover Austria. This variable is only used
+if <code>weibull = TRUE</code>.</p></dd>
 
 
 <dt>Parallel</dt>
-<dd><p>A boolean value, indicating whether parallel processing should
-be used. The *parallel* and *doParallel* packages are used for parallel
-processing. Default is <code>FALSE</code></p></dd>
+<dd><p>A boolean value, indicating whether parallel processing
+should be used. The *parallel* and *doParallel* packages are used for
+parallel processing. Default is <code>FALSE</code></p></dd>
 
 
 <dt>numCluster</dt>
-<dd><p>If <code>Parallel</code> is TRUE, this variable defines the 
+<dd><p>If <code>Parallel</code> is TRUE, this variable defines the
 number of clusters to be used. Default is <code>2</code></p></dd>
 
 
@@ -250,7 +251,7 @@ Default is <code>FALSE</code></p></dd>
 
 
 <dt>plotit</dt>
-<dd><p>If TRUE it will plot the best windfarm of every generation. 
+<dd><p>If TRUE it will plot the best windfarm of every generation.
 Default is <code>FALSE</code></p></dd>
 
 </dl></div>
@@ -265,22 +266,22 @@ Default is <code>FALSE</code></p></dd>
   energy, efficiency and fitness values per generation, the selection and
   crossover parameters, a matrix with the generational difference in maximum
   and mean energy output, a matrix with the given inputs, a dataframe with
-  the wind information, the mutation rate per generation and a matrix with all
-  tested wind farm layouts.</p>
+  the wind information, the mutation rate per generation and a matrix with
+  all tested wind farm layouts.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>A terrain effect model can be included in the optimization process.
-  Therefore, a digital elevation model will be downloaded automatically via the
-  <code><a href="https://rdrr.io/pkg/elevatr/man/get_elev_raster.html" class="external-link">elevatr::get_elev_raster</a></code> function. A land cover raster can also be 
-  downloaded automatically from the EEA-website, or the path to a raster file 
-  can be passed to <code>sourceCCL</code>. The algorithm uses an adapted version of the
-  Raster legend ("clc_legend.csv"), which is stored in the package directory
-  <code class="file">~/inst/extdata</code>. To use other values for the land cover roughness
-  lengths, insert a column named <strong>"Rauhigkeit_z"</strong> to the .csv file,
-  assign a surface roughness length to all land cover types. Be sure that all
-  rows are filled with numeric values and save the file with <strong>";"</strong>
-  separation. Assign the path of the file to the input variable
+  Therefore, a digital elevation model will be downloaded automatically via
+  the <code><a href="https://rdrr.io/pkg/elevatr/man/get_elev_raster.html" class="external-link">elevatr::get_elev_raster</a></code> function. A land cover raster can also
+  downloaded automatically from the EEA-website, or the path to a raster file
+  can be passed to <code>sourceCCL</code>. The algorithm uses an adapted version of
+  the Raster legend ("clc_legend.csv"), which is stored in the package
+  directory <code class="file">~/inst/extdata</code>. To use other values for the land cover
+  roughness lengths, insert a column named <strong>"Rauhigkeit_z"</strong> to the
+  .csv file, assign a surface roughness length to all land cover types. Be
+  sure that all rows are filled with numeric values and save the file with
+  <strong>";"</strong> separation. Assign the path of the file to the input variable
   <code>sourceCCLRoughness</code> of this function.</p>
     </div>
     <div class="section level2">
@@ -291,69 +292,43 @@ Default is <code>FALSE</code></p></dd>
 <code><a href="init_population.html">init_population</a>()</code>,
 <code><a href="mutation.html">mutation</a>()</code>,
 <code><a href="selection.html">selection</a>()</code>,
-<code><a href="trimton.html">trimton</a>()</code>,
-<code><a href="windfarmGA.html">windfarmGA</a>()</code></p></div>
+<code><a href="trimton.html">trimton</a>()</code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co">## Create a random rectangular shapefile</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">Polygon1</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4498482</span>, <span class="fl">4498482</span>, <span class="fl">4499991</span>, <span class="fl">4499991</span>, <span class="fl">4498482</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2668272</span>, <span class="fl">2669343</span>, <span class="fl">2669343</span>, <span class="fl">2668272</span>, <span class="fl">2668272</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2668272</span>, <span class="fl">2669343</span>, <span class="fl">2669343</span>, <span class="fl">2668272</span>, <span class="fl">2668272</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  crs <span class="op">=</span> <span class="fl">3035</span></span></span>
 <span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Create a uniform and unidirectional wind data.frame and plot the</span></span></span>
 <span class="r-in"><span><span class="co">## resulting wind rose</span></span></span>
 <span class="r-in"><span><span class="va">data.in</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ws <span class="op">=</span> <span class="fl">12</span>, wd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">windrosePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="plot_windrose.html">plot_windrose</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data.in</span>, spd <span class="op">=</span> <span class="va">data.in</span><span class="op">$</span><span class="va">ws</span>,</span></span>
-<span class="r-in"><span>                dir <span class="op">=</span> <span class="va">data.in</span><span class="op">$</span><span class="va">wd</span>, dirres<span class="op">=</span><span class="fl">10</span>, spdmax<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="genetic_algorithm-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">windrosePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="plot_windrose.html">plot_windrose</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">data.in</span>, spd <span class="op">=</span> <span class="va">data.in</span><span class="op">$</span><span class="va">ws</span>,</span></span>
+<span class="r-in"><span>  dir <span class="op">=</span> <span class="va">data.in</span><span class="op">$</span><span class="va">wd</span>, dirres <span class="op">=</span> <span class="fl">10</span>, spdmax <span class="op">=</span> <span class="fl">20</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Runs an optimization run for 20 iterations with the</span></span></span>
 <span class="r-in"><span><span class="co">## given shapefile (Polygon1), the wind data.frame (data.in),</span></span></span>
 <span class="r-in"><span><span class="co">## 12 turbines (n) with rotor radii of 30m (Rotor) and rotor height of 100m.</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">genetic_algorithm</span><span class="op">(</span>Polygon1 <span class="op">=</span> <span class="va">Polygon1</span>,</span></span>
-<span class="r-in"><span>                  n <span class="op">=</span> <span class="fl">12</span>,</span></span>
-<span class="r-in"><span>                  vdirspe <span class="op">=</span> <span class="va">data.in</span>,</span></span>
-<span class="r-in"><span>                  Rotor <span class="op">=</span> <span class="fl">30</span>,</span></span>
-<span class="r-in"><span>                  RotorHeight <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ....................</span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">genetic_algorithm</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  Polygon1 <span class="op">=</span> <span class="va">Polygon1</span>,</span></span>
+<span class="r-in"><span>  n <span class="op">=</span> <span class="fl">12</span>,</span></span>
+<span class="r-in"><span>  vdirspe <span class="op">=</span> <span class="va">data.in</span>,</span></span>
+<span class="r-in"><span>  Rotor <span class="op">=</span> <span class="fl">30</span>,</span></span>
+<span class="r-in"><span>  RotorHeight <span class="op">=</span> <span class="fl">100</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot_windfarmGA.html">plot_windfarmGA</a></span><span class="op">(</span>result <span class="op">=</span> <span class="va">result</span>, Polygon1 <span class="op">=</span> <span class="va">Polygon1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_result: Plot the 'best' Individuals of the GA:"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N different optimal configurations: 12 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amount duplicates: 8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plot  1  Best  Energy  Solution:</span>
-<span class="r-plt img"><img src="genetic_algorithm-2.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Press [enter] to continue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_evolution: Plot the Evolution of the Efficiency and Energy Values:"</span>
-<span class="r-plt img"><img src="genetic_algorithm-3.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="genetic_algorithm-4.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:"</span>
-<span class="r-plt img"><img src="genetic_algorithm-5.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="genetic_algorithm-6.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="genetic_algorithm-7.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="genetic_algorithm-8.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="genetic_algorithm-9.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="genetic_algorithm-10.png" alt="" width="700" height="433"></span>
-<span class="r-plt img"><img src="genetic_algorithm-11.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Press [enter] to continue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_fitness_evolution: Plot the Changes in Fitness Values:"</span>
-<span class="r-plt img"><img src="genetic_algorithm-12.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Press [enter] to continue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_cloud: Plot all individual Values of the whole Evolution:"</span>
-<span class="r-plt img"><img src="genetic_algorithm-13.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Press [enter] to continue</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "plot_heatmap: Plot a Heatmap of all Grid Cells:"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [inverse distance weighted interpolation]</span>
-<span class="r-plt img"><img src="genetic_algorithm-14.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -365,7 +340,7 @@ Default is <code>FALSE</code></p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
   <p class="preferably">Using <a href="https://preferably.amirmasoudabdol.name/?source=footer" class="external-link">preferably</a> template.</p>
 </div>
 

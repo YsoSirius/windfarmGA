@@ -21,8 +21,8 @@
   }
 </script><title>Genetic Algorithm for Wind Farm Layout Optimization • windfarmGA</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Genetic Algorithm for Wind Farm Layout Optimization">
 <meta property="og:description" content="The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an SRTM elevation model and loads a Corine Land Cover raster to approximate surface roughness.">
@@ -43,7 +43,7 @@
     
     <a class="navbar-brand me-2" href="index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,15 +95,15 @@
 <h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h1>
 <p>The latest version can be installed from GitHub with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">devtools::install_github</span><span class="er">(</span><span class="st">"YsoSirius/windfarmGA"</span><span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">devtools::install_github</span><span class="er">(</span><span class="st">"YsoSirius/windfarmGA"</span><span class="kw">)</span></span></code></pre></div>
 <p>and the CRAN-version with:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">install.packages</span><span class="er">(</span><span class="st">"windfarmGA"</span><span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">install.packages</span><span class="er">(</span><span class="st">"windfarmGA"</span><span class="kw">)</span></span></code></pre></div>
 </div>
 <div class="section level1">
 <h1 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h1>
-<p>The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction. It can include a terrain effect model, which downloads an ‘SRTM’ elevation model and a ‘Corine Land Cover’ raster automatically. The elevation model is used to find mountains and valleys and to adjust the wind speeds accordingly by ‘wind multipliers’ and to determine the air densities at rotor heights. The land cover raster with an additional elevation roughness value is used to re-evaluate the surface roughness and to individually determine the wake-decay constant for each turbine.</p>
-<p>To start an optimization, either the function <code>windfarmGA</code> or <code>genetic_algorithm</code> can be used. The function <code>windfarmGA</code> checks the user inputs interactively and then runs the function <code>genetic_algorithm</code>. If the input parameters are already known, an optimization can be run directly via <code>genetic_algorithm</code>.</p>
+<p>The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction. It can include a terrain effect model, which requires an elevation raster and a surface roughness raster. The elevation data is used to find mountains and valleys and to adjust the wind speeds accordingly by ‘wind multipliers’ and to determine the air densities at rotor heights. The surface roughness raster with an additional elevation roughness value is used to re-evaluate the surface roughness and to individually determine the wake-decay constant for each turbine.</p>
+<p>To start an optimization use the function <code>genetic_algorithm</code>.</p>
 <div>
 <p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;"></p>
 </div>
@@ -114,22 +114,22 @@
 <ul>
 <li>Input Polygon by source</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">sf</span><span class="kw">)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dsn</span> <span class="op">&lt;</span>- <span class="st">"Path to the Shapefile"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">layer</span> <span class="op">&lt;</span>- <span class="st">"Name of the Shapefile"</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Polygon1</span> <span class="op">&lt;</span>- sf::st_read<span class="er">(</span><span class="ex">dsn</span> = dsn, layer = layer<span class="kw">)</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">plot</span><span class="er">(</span><span class="ex">Polygon1,</span> col = <span class="st">"blue"</span><span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">sf</span><span class="kw">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="ex">dsn</span> <span class="op">&lt;</span>- <span class="st">"Path to the Shapefile"</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="ex">layer</span> <span class="op">&lt;</span>- <span class="st">"Name of the Shapefile"</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="ex">Polygon1</span> <span class="op">&lt;</span>- sf::st_read<span class="er">(</span><span class="ex">dsn</span> = dsn, layer = layer<span class="kw">)</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="ex">plot</span><span class="er">(</span><span class="ex">Polygon1,</span> col = <span class="st">"blue"</span><span class="kw">)</span></span></code></pre></div>
 <ul>
 <li>Or create a random Polygon</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">sf</span><span class="kw">)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Polygon1</span> <span class="op">&lt;</span>- sf::st_as_sf<span class="er">(</span><span class="ex">sf::st_sfc</span><span class="er">(</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sf::st_polygon</span><span class="er">(</span><span class="ex">list</span><span class="er">(</span><span class="ex">cbind</span><span class="er">(</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">0,</span> 0, 2000, 2000, 0<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">0,</span> 2000, 2000, 0, 0<span class="kw">))))</span><span class="ex">,</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">crs</span> = 3035</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">))</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">plot</span><span class="er">(</span><span class="ex">Polygon1,</span> col = <span class="st">"blue"</span>, axes = TRUE<span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">sf</span><span class="kw">)</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="ex">Polygon1</span> <span class="op">&lt;</span>- sf::st_as_sf<span class="er">(</span><span class="ex">sf::st_sfc</span><span class="er">(</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="ex">sf::st_polygon</span><span class="er">(</span><span class="ex">list</span><span class="er">(</span><span class="ex">cbind</span><span class="er">(</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">0,</span> 0, 2000, 2000, 0<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">0,</span> 2000, 2000, 0, 0<span class="kw">))))</span><span class="ex">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="ex">crs</span> = 3035</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="kw">))</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="ex">plot</span><span class="er">(</span><span class="ex">Polygon1,</span> col = <span class="st">"blue"</span>, axes = TRUE<span class="kw">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="create-random-wind-data">Create random Wind data<a class="anchor" aria-label="anchor" href="#create-random-wind-data"></a>
@@ -137,15 +137,15 @@
 <ul>
 <li>Exemplary input Wind data with <em>uniform</em> wind speed and <em>single</em> wind direction</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="ex">ws</span> = c<span class="er">(</span><span class="ex">12,</span> 12<span class="kw">)</span><span class="ex">,</span> wd = c<span class="er">(</span><span class="ex">0,</span> 0<span class="kw">)</span><span class="ex">,</span> probab = c<span class="er">(</span><span class="ex">25,</span> 25<span class="kw">))</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose<span class="er">(</span><span class="ex">data</span> = wind_df, spd = wind_df<span class="va">$ws</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">dir</span> = wind_df<span class="va">$wd</span>, dirres=10, spdmax = 20<span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="ex">ws</span> = c<span class="er">(</span><span class="ex">12,</span> 12<span class="kw">)</span><span class="ex">,</span> wd = c<span class="er">(</span><span class="ex">0,</span> 0<span class="kw">)</span><span class="ex">,</span> probab = c<span class="er">(</span><span class="ex">25,</span> 25<span class="kw">))</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose<span class="er">(</span><span class="ex">data</span> = wind_df, spd = wind_df<span class="va">$ws</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>                              <span class="fu">dir</span> = wind_df<span class="va">$wd</span>, dirres=10, spdmax = 20<span class="kw">)</span></span></code></pre></div>
 <ul>
 <li>Exemplary input Wind data with <em>random</em> wind speeds and <em>random</em> wind directions</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="ex">ws</span> = sample<span class="er">(</span><span class="ex">1:25,</span> 10<span class="kw">)</span><span class="ex">,</span> wd = sample<span class="er">(</span><span class="ex">1:260,</span> 10<span class="kw">))</span><span class="er">)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose<span class="er">(</span><span class="ex">data</span> = wind_df, spd = wind_df<span class="va">$ws</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">dir</span> = wind_df<span class="va">$wd</span><span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="ex">ws</span> = sample<span class="er">(</span><span class="ex">1:25,</span> 10<span class="kw">)</span><span class="ex">,</span> wd = sample<span class="er">(</span><span class="ex">1:260,</span> 10<span class="kw">))</span><span class="er">)</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose<span class="er">(</span><span class="ex">data</span> = wind_df, spd = wind_df<span class="va">$ws</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                              <span class="fu">dir</span> = wind_df<span class="va">$wd</span><span class="kw">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="grid-spacing">Grid Spacing<a class="anchor" aria-label="anchor" href="#grid-spacing"></a>
@@ -155,18 +155,18 @@
 </h3>
 <p>Verify that the grid spacing is appropriate. Adapt the following input variables if necessary: - <em>Rotor</em>: The rotor radius in meters. - <em>fcrR</em>: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter. - <em>prop</em>: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.</p>
 <p><em>Make sure that the Polygon is projected in meters.</em></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rotor</span> <span class="op">&lt;</span>- 20</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fcrR</span> <span class="op">&lt;</span>- 9</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Grid</span> <span class="op">&lt;</span>- grid_area<span class="er">(</span><span class="ex">Polygon1,</span> size = <span class="er">(</span><span class="ex">Rotor</span> <span class="pp">*</span> fcrR<span class="kw">)</span><span class="ex">,</span> prop = 1, plotGrid = TRUE<span class="kw">)</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">str</span><span class="er">(</span><span class="ex">Grid</span><span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">Rotor</span> <span class="op">&lt;</span>- 20</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">fcrR</span> <span class="op">&lt;</span>- 9</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="ex">Grid</span> <span class="op">&lt;</span>- grid_area<span class="er">(</span><span class="ex">Polygon1,</span> size = <span class="er">(</span><span class="ex">Rotor</span> <span class="pp">*</span> fcrR<span class="kw">)</span><span class="ex">,</span> prop = 1, plotGrid = TRUE<span class="kw">)</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="ex">str</span><span class="er">(</span><span class="ex">Grid</span><span class="kw">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="hexagonal-grid-cells">Hexagonal Grid Cells<a class="anchor" aria-label="anchor" href="#hexagonal-grid-cells"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Rotor</span> <span class="op">&lt;</span>- 20</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">fcrR</span> <span class="op">&lt;</span>- 9</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">HexGrid</span> <span class="op">&lt;</span>- hexa_area<span class="er">(</span><span class="ex">Polygon1,</span> size = <span class="er">(</span><span class="ex">Rotor</span> <span class="pp">*</span> fcrR<span class="kw">)</span><span class="ex">,</span> plotGrid = TRUE<span class="kw">)</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">str</span><span class="er">(</span><span class="ex">HexGrid</span><span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">Rotor</span> <span class="op">&lt;</span>- 20</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="ex">fcrR</span> <span class="op">&lt;</span>- 9</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="ex">HexGrid</span> <span class="op">&lt;</span>- hexa_area<span class="er">(</span><span class="ex">Polygon1,</span> size = <span class="er">(</span><span class="ex">Rotor</span> <span class="pp">*</span> fcrR<span class="kw">)</span><span class="ex">,</span> plotGrid = TRUE<span class="kw">)</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="ex">str</span><span class="er">(</span><span class="ex">HexGrid</span><span class="kw">)</span></span></code></pre></div>
 <p align="center">
 <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="300"></p>
 </div>
@@ -180,94 +180,71 @@
 <div class="section level2">
 <h2 id="start-an-optimization">Start an Optimization<a class="anchor" aria-label="anchor" href="#start-an-optimization"></a>
 </h2>
-<p>An optimization run can be initiated with the following functions: - genetic_algorithm - windfarmGA</p>
-<div class="section level3">
-<h3 id="function-calls-for-windfarmga">Function calls for windfarmGA<a class="anchor" aria-label="anchor" href="#function-calls-for-windfarmga"></a>
-</h3>
+<p>An optimization can be initiated with the function <strong>genetic_algorithm</strong></p>
 <ul>
 <li>without terrain effects</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- windfarmGA<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>, selstate = <span class="st">"FIX"</span>, mutr = 0.8,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">Proportionality</span> = 1, SurfaceRoughness = 0.3, topograp = FALSE,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">elitism</span> =TRUE, nelit = 7, trimForce = TRUE,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">referenceHeight</span> = 50, RotorHeight = 100<span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="ex">Polygon1</span> = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>, selstate = <span class="st">"FIX"</span>, mutr = 0.8,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="ex">Proportionality</span> = 1, SurfaceRoughness = 0.3, topograp = FALSE,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="ex">elitism</span> =TRUE, nelit = 7, trimForce = TRUE,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="ex">referenceHeight</span> = 50, RotorHeight = 100</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="kw">)</span></span></code></pre></div>
 <ul>
 <li>with terrain effects</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sourceCCL</span> <span class="op">&lt;</span>- <span class="st">"Source of the CCL raster (TIF)"</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">sourceCCLRoughness</span> <span class="op">&lt;</span>- <span class="st">"Source of the Adaped CCL legend (CSV)"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- windfarmGA<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>, selstate = <span class="st">"FIX"</span>, mutr = 0.8,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">Proportionality</span> = 1, SurfaceRoughness = 0.3, topograp = TRUE,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">elitism</span> = TRUE, nelit = 7, trimForce = TRUE,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">referenceHeight</span> = 50, RotorHeight = 100, sourceCCL = sourceCCL,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                     <span class="ex">sourceCCLRoughness</span> = sourceCCLRoughness<span class="kw">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="function-calls-for-genetic_algorithm">Function calls for genetic_algorithm<a class="anchor" aria-label="anchor" href="#function-calls-for-genetic_algorithm"></a>
-</h3>
-<ul>
-<li>without terrain effects</li>
-</ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>, selstate = <span class="st">"FIX"</span>, mutr =0.8,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">Proportionality</span> = 1, SurfaceRoughness = 0.3, topograp = FALSE,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">elitism</span> = TRUE, nelit = 7, trimForce = TRUE,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">referenceHeight</span> = 50, RotorHeight = 100<span class="kw">)</span></span></code></pre></div>
-<ul>
-<li>with terrain effects</li>
-</ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sourceCCL</span> <span class="op">&lt;</span>- <span class="st">"Source of the CCL raster (TIF)"</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">sourceCCLRoughness</span> <span class="op">&lt;</span>- <span class="st">"Source of the Adaped CCL legend (CSV)"</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, n= 12, Rotor = 20, fcrR = 9, iteration = 10,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>, selstate = <span class="st">"FIX"</span>, mutr = 0.8,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">Proportionality</span> = 1, SurfaceRoughness = 0.3, topograp = TRUE,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">elitism</span> = TRUE, nelit = 7, trimForce = TRUE,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">referenceHeight</span> = 50, RotorHeight = 100, sourceCCL = sourceCCL,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">sourceCCLRoughness</span> = sourceCCLRoughness<span class="kw">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Run an optimization with your own Weibull parameter rasters. The shape and scale </span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">## parameter rasters of the weibull distributions must be added to a list, with the first</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">## list item being the shape parameter (k) and the second list item being the scale</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">## parameter (a). Adapt the paths to your raster data and run an optimization.</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">kraster</span> <span class="op">&lt;</span>- <span class="st">"/..pathto../k_param_raster.tif"</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">araster</span> <span class="op">&lt;</span>- <span class="st">"/..pathto../a_param_raster.tif"</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">weibullrasters</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="ex">raster</span><span class="er">(</span><span class="ex">kraster</span><span class="kw">)</span><span class="ex">,</span> raster<span class="er">(</span><span class="ex">araster</span><span class="kw">))</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">result_weibull</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, GridMethod =<span class="st">"h"</span>, n=12,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="va">fcrR</span><span class="op">=</span>5, <span class="va">iteration</span><span class="op">=</span>10, <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="va">selstate</span><span class="op">=</span><span class="st">"FIX"</span>, <span class="va">mutr</span><span class="op">=</span>0.8, <span class="ex">Proportionality</span> = 1, Rotor=30,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                                    <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                                    <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                                    <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                                    <span class="ex">weibull</span> = TRUE, weibullsrc = weibullrasters<span class="kw">)</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_windfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_weibull, Polygon1 = Polygon1<span class="kw">)</span></span></code></pre></div>
-<p>The argument <strong>GridMethod</strong>, <strong>weibull</strong>, <strong>weibullsrc</strong> can also be given to the function <code>windfarmGA</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">sourceCCL</span> <span class="op">&lt;</span>- <span class="st">"Source of the CCL raster (TIF)"</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="ex">sourceCCLRoughness</span> <span class="op">&lt;</span>- <span class="st">"Source of the Adaped CCL legend (CSV)"</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="ex">Polygon1</span> = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>, selstate = <span class="st">"FIX"</span>, mutr = 0.8,</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="ex">Proportionality</span> = 1, SurfaceRoughness = 0.3, topograp = TRUE,</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>  <span class="ex">elitism</span> = TRUE, nelit = 7, trimForce = TRUE,</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>  <span class="ex">referenceHeight</span> = 50, RotorHeight = 100, sourceCCL = sourceCCL,</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>  <span class="ex">sourceCCLRoughness</span> = sourceCCLRoughness</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co">## Run an optimization with your own Weibull parameter rasters. The shape and scale </span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">## parameter rasters of the weibull distributions must be added to a list, with the first</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">## list item being the shape parameter (k) and the second list item being the scale</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">## parameter (a). Adapt the paths to your raster data and run an optimization.</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="ex">kraster</span> <span class="op">&lt;</span>- <span class="st">"/..pathto../k_param_raster.tif"</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="ex">araster</span> <span class="op">&lt;</span>- <span class="st">"/..pathto../a_param_raster.tif"</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="ex">weibullrasters</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="ex">raster</span><span class="er">(</span><span class="ex">kraster</span><span class="kw">)</span><span class="ex">,</span> raster<span class="er">(</span><span class="ex">araster</span><span class="kw">))</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="ex">result_weibull</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  <span class="ex">Polygon1</span> = Polygon1, GridMethod =<span class="st">"h"</span>, n=12,</span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="va">fcrR</span><span class="op">=</span>5, <span class="va">iteration</span><span class="op">=</span>10, <span class="ex">vdirspe</span> = wind_df, crossPart1 = <span class="st">"EQU"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  <span class="va">selstate</span><span class="op">=</span><span class="st">"FIX"</span>, <span class="va">mutr</span><span class="op">=</span>0.8, <span class="ex">Proportionality</span> = 1, Rotor=30,</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>  <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>  <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>  <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>  <span class="ex">weibull</span> = TRUE, weibullsrc = weibullrasters<span class="kw">)</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="ex">plot_windfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_weibull, Polygon1 = Polygon1<span class="kw">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="plot-the-results-on-a-leaflet-map">Plot the Results on a Leaflet Map<a class="anchor" aria-label="anchor" href="#plot-the-results-on-a-leaflet-map"></a>
 </h4>
-<div class="sourceCode" id="cb14"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Plot the best wind farm on a leaflet map (ordered by energy values)</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_leaflet</span><span class="er">(</span><span class="ex">result</span> = resulthex, Polygon1, which = 1<span class="kw">)</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Plot the last wind farm (ordered by chronology).</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_leaflet</span><span class="er">(</span><span class="ex">result</span> = resulthex, Polygon1, orderitems = FALSE, which = 1<span class="kw">)</span></span></code></pre></div>
-</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co">## Plot the best wind farm on a leaflet map (ordered by energy values)</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="ex">plot_leaflet</span><span class="er">(</span><span class="ex">result</span> = resulthex, Polygon1, which = 1<span class="kw">)</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">## Plot the last wind farm (ordered by chronology).</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="ex">plot_leaflet</span><span class="er">(</span><span class="ex">result</span> = resulthex, Polygon1, orderitems = FALSE, which = 1<span class="kw">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="plotting-methods-of-the-genetic-algorithm">Plotting Methods of the Genetic Algorithm<a class="anchor" aria-label="anchor" href="#plotting-methods-of-the-genetic-algorithm"></a>
 </h2>
 <p>Several plotting functions are available:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_windfarmGA<span class="er">(</span><span class="ex">result,</span> Polygon1<span class="kw">)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_result<span class="er">(</span><span class="ex">result,</span> Polygon1, best = 1<span class="kw">)</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_evolution<span class="er">(</span><span class="ex">result,</span> ask = TRUE, spar = 0.1<span class="kw">)</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_development<span class="er">(</span><span class="ex">result</span><span class="kw">)</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_parkfitness<span class="er">(</span><span class="ex">result,</span> spar = 0.1<span class="kw">)</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_fitness_evolution<span class="er">(</span><span class="ex">result</span><span class="kw">)</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_cloud<span class="er">(</span><span class="ex">result,</span> pl = TRUE<span class="kw">)</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_heatmap<span class="er">(</span><span class="ex">result</span> = result, si = 5<span class="kw">)</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> plot_leaflet<span class="er">(</span><span class="ex">result</span> = result, Polygon1 = Polygon1, which = 1<span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a> <span class="ex">-</span> plot_windfarmGA<span class="er">(</span><span class="ex">result,</span> Polygon1<span class="kw">)</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a> <span class="ex">-</span> plot_result<span class="er">(</span><span class="ex">result,</span> Polygon1, best = 1<span class="kw">)</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a> <span class="ex">-</span> plot_evolution<span class="er">(</span><span class="ex">result,</span> ask = TRUE, spar = 0.1<span class="kw">)</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a> <span class="ex">-</span> plot_development<span class="er">(</span><span class="ex">result</span><span class="kw">)</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a> <span class="ex">-</span> plot_parkfitness<span class="er">(</span><span class="ex">result,</span> spar = 0.1<span class="kw">)</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a> <span class="ex">-</span> plot_fitness_evolution<span class="er">(</span><span class="ex">result</span><span class="kw">)</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a> <span class="ex">-</span> plot_cloud<span class="er">(</span><span class="ex">result,</span> pl = TRUE<span class="kw">)</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a> <span class="ex">-</span> plot_heatmap<span class="er">(</span><span class="ex">result</span> = result, si = 5<span class="kw">)</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a> <span class="ex">-</span> plot_leaflet<span class="er">(</span><span class="ex">result</span> = result, Polygon1 = Polygon1, which = 1<span class="kw">)</span></span></code></pre></div>
 <p>A full documentation of the genetic algorithm is given in my <a href="https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf" class="external-link">master thesis</a>.</p>
 </div>
 </div>
@@ -279,42 +256,42 @@
 <div class="section level1">
 <h1 id="full-optimization-example">Full Optimization example:<a class="anchor" aria-label="anchor" href="#full-optimization-example"></a>
 </h1>
-<div class="sourceCode" id="cb16"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">sf</span><span class="kw">)</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">windfarmGA</span><span class="kw">)</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Polygon1</span> <span class="op">&lt;</span>- sf::st_as_sf<span class="er">(</span><span class="ex">sf::st_sfc</span><span class="er">(</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sf::st_polygon</span><span class="er">(</span><span class="ex">list</span><span class="er">(</span><span class="ex">cbind</span><span class="er">(</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">4651704,</span> 4651704, 4654475, 4654475, 4651704<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">2692925,</span> 2694746, 2694746, 2692925, 2692925<span class="kw">))))</span><span class="ex">,</span> </span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">crs</span> = 3035</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="kw">))</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="ex">plot</span><span class="er">(</span><span class="ex">Polygon1,</span> col = <span class="st">"blue"</span>, axes = TRUE<span class="kw">)</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="ex">ws</span> = 12, wd = 0<span class="kw">)</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose<span class="er">(</span><span class="ex">data</span> = wind_df, spd = wind_df<span class="va">$ws</span>,</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">dir</span> = wind_df<span class="va">$wd</span>, dirres = 10, spdmax = 20<span class="kw">)</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="ex">Rotor</span> <span class="op">&lt;</span>- 20</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="ex">fcrR</span> <span class="op">&lt;</span>- 9</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="ex">Grid</span> <span class="op">&lt;</span>- grid_area<span class="er">(</span><span class="ex">shape</span> = Polygon1, size = <span class="er">(</span><span class="ex">Rotor*fcrR</span><span class="kw">)</span><span class="ex">,</span> prop = 1, plotGrid = TRUE<span class="kw">)</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span><span class="ex">Polygon1</span> = sp_polygon, </span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">n</span> = 20,</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">Rotor</span> = Rotor, fcrR = fcrR, </span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">iteration</span> = 50, </span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">vdirspe</span> = wind_df,</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>                            <span class="ex">referenceHeight</span> = 50, RotorHeight = 100<span class="kw">)</span></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co"># The following function will execute all plotting function further below:</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_windfarmGA</span><span class="er">(</span><span class="ex">result,</span> Polygon1, whichPl = <span class="st">"all"</span>, best = 1, plotEn = 1<span class="kw">)</span></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co"># The plotting functions can also be called individually:</span></span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_result</span><span class="er">(</span><span class="ex">result,</span> Polygon1, best = 1, plotEn = 1, topographie = FALSE<span class="kw">)</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_evolution</span><span class="er">(</span><span class="ex">result,</span> ask = TRUE, spar = 0.1<span class="kw">)</span></span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_parkfitness</span><span class="er">(</span><span class="ex">result,</span> spar = 0.1<span class="kw">)</span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_fitness_evolution</span><span class="er">(</span><span class="ex">result</span><span class="kw">)</span></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_cloud</span><span class="er">(</span><span class="ex">result,</span> pl = TRUE<span class="kw">)</span></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_heatmap</span><span class="er">(</span><span class="ex">result</span> = result, si = 5<span class="kw">)</span></span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a><span class="ex">plot_leaflet</span><span class="er">(</span><span class="ex">result</span> = result, Polygon1 = Polygon1, which = 1<span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">sf</span><span class="kw">)</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">windfarmGA</span><span class="kw">)</span></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="ex">Polygon1</span> <span class="op">&lt;</span>- sf::st_as_sf<span class="er">(</span><span class="ex">sf::st_sfc</span><span class="er">(</span></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="ex">sf::st_polygon</span><span class="er">(</span><span class="ex">list</span><span class="er">(</span><span class="ex">cbind</span><span class="er">(</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">4651704,</span> 4651704, 4654475, 4654475, 4651704<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>    <span class="ex">c</span><span class="er">(</span><span class="ex">2692925,</span> 2694746, 2694746, 2692925, 2692925<span class="kw">))))</span><span class="ex">,</span> </span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="ex">crs</span> = 3035</span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="kw">))</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="ex">plot</span><span class="er">(</span><span class="ex">Polygon1,</span> col = <span class="st">"blue"</span>, axes = TRUE<span class="kw">)</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="ex">wind_df</span> <span class="op">&lt;</span>- data.frame<span class="er">(</span><span class="ex">ws</span> = 12, wd = 0<span class="kw">)</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="ex">windrosePlot</span> <span class="op">&lt;</span>- plot_windrose<span class="er">(</span><span class="ex">data</span> = wind_df, spd = wind_df<span class="va">$ws</span>,</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>                             <span class="fu">dir</span> = wind_df<span class="va">$wd</span>, dirres = 10, spdmax = 20<span class="kw">)</span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="ex">Rotor</span> <span class="op">&lt;</span>- 20</span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="ex">fcrR</span> <span class="op">&lt;</span>- 9</span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="ex">Grid</span> <span class="op">&lt;</span>- grid_area<span class="er">(</span><span class="ex">shape</span> = Polygon1, size = <span class="er">(</span><span class="ex">Rotor*fcrR</span><span class="kw">)</span><span class="ex">,</span> prop = 1, plotGrid = TRUE<span class="kw">)</span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="ex">result</span> <span class="op">&lt;</span>- genetic_algorithm<span class="er">(</span><span class="ex">Polygon1</span> = sp_polygon, </span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a>                            <span class="ex">n</span> = 20,</span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>                            <span class="ex">Rotor</span> = Rotor, fcrR = fcrR, </span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>                            <span class="ex">iteration</span> = 50, </span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a>                            <span class="ex">vdirspe</span> = wind_df,</span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>                            <span class="ex">referenceHeight</span> = 50, RotorHeight = 100<span class="kw">)</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a><span class="co"># The following function will execute all plotting function further below:</span></span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a><span class="ex">plot_windfarmGA</span><span class="er">(</span><span class="ex">result,</span> Polygon1, whichPl = <span class="st">"all"</span>, best = 1, plotEn = 1<span class="kw">)</span></span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a></span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a><span class="co"># The plotting functions can also be called individually:</span></span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a><span class="ex">plot_result</span><span class="er">(</span><span class="ex">result,</span> Polygon1, best = 1, plotEn = 1, topographie = FALSE<span class="kw">)</span></span>
+<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a><span class="ex">plot_evolution</span><span class="er">(</span><span class="ex">result,</span> ask = TRUE, spar = 0.1<span class="kw">)</span></span>
+<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a><span class="ex">plot_parkfitness</span><span class="er">(</span><span class="ex">result,</span> spar = 0.1<span class="kw">)</span></span>
+<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a><span class="ex">plot_fitness_evolution</span><span class="er">(</span><span class="ex">result</span><span class="kw">)</span></span>
+<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a><span class="ex">plot_cloud</span><span class="er">(</span><span class="ex">result,</span> pl = TRUE<span class="kw">)</span></span>
+<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a><span class="ex">plot_heatmap</span><span class="er">(</span><span class="ex">result</span> = result, si = 5<span class="kw">)</span></span>
+<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a><span class="ex">plot_leaflet</span><span class="er">(</span><span class="ex">result</span> = result, Polygon1 = Polygon1, which = 1<span class="kw">)</span></span></code></pre></div>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
@@ -371,7 +348,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
   <p class="preferably">Using <a href="https://preferably.amirmasoudabdol.name/?source=footer" class="external-link">preferably</a> template.</p>
 </div>
 

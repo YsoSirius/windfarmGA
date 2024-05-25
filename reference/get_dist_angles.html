@@ -12,7 +12,7 @@
       "<link id=\"css\" rel=\"stylesheet\" href=\"https://bootswatch.com/5/flatly/bootstrap.css\" onload=\"document.documentElement.style.display = ''\">"
     );
   }
-</script><title>Calculate distances and angles of possibly influencing turbines — get_dist_angles • windfarmGA</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate distances and angles of possibly influencing turbines — get_dist_angles"><meta property="og:description" content="Calculate distances and angles for a turbine and all it's
+</script><title>Calculate distances and angles of possibly influencing turbines — get_dist_angles • windfarmGA</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculate distances and angles of possibly influencing turbines — get_dist_angles"><meta property="og:description" content="Calculate distances and angles for a turbine and all it's
   potentially influencing turbines."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -24,7 +24,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
 
 
 <dt>wnkl</dt>
-<dd><p>The angle from which wake influences are considered to be 
+<dd><p>The angle from which wake influences are considered to be
 negligible</p></dd>
 
 
@@ -106,7 +106,7 @@ angles. Default is <code>FALSE</code></p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Returns a matrix with the distances and angles of potentially
+<p>Returns a matrix with the distances, angles and heights of potentially
   influencing turbines</p>
     </div>
     <div class="section level2">
@@ -114,6 +114,7 @@ angles. Default is <code>FALSE</code></p></dd>
     <div class="dont-index"><p>Other Wind Energy Calculation Functions: 
 <code><a href="barometric_height.html">barometric_height</a>()</code>,
 <code><a href="calculate_energy.html">calculate_energy</a>()</code>,
+<code><a href="circle_intersection.html">circle_intersection</a>()</code>,
 <code><a href="turbine_influences.html">turbine_influences</a>()</code></p></div>
     </div>
 
@@ -125,20 +126,24 @@ angles. Default is <code>FALSE</code></p></dd>
 <span class="r-in"><span><span class="va">Polygon1</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4498482</span>, <span class="fl">4498482</span>, <span class="fl">4499991</span>, <span class="fl">4499991</span>, <span class="fl">4498482</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2668272</span>, <span class="fl">2669343</span>, <span class="fl">2669343</span>, <span class="fl">2668272</span>, <span class="fl">2668272</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2668272</span>, <span class="fl">2669343</span>, <span class="fl">2669343</span>, <span class="fl">2668272</span>, <span class="fl">2668272</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  crs <span class="op">=</span> <span class="fl">3035</span></span></span>
 <span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Create a random windfarm with 10 turbines</span></span></span>
 <span class="r-in"><span><span class="va">t</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="va">Polygon1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">t</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">t</span>, <span class="st">"Z"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">wnkl</span> <span class="op">&lt;-</span> <span class="fl">20</span></span></span>
 <span class="r-in"><span><span class="va">dist</span> <span class="op">&lt;-</span> <span class="fl">100000</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Evaluate and plot for every turbine all other potentially influencing turbines</span></span></span>
 <span class="r-in"><span><span class="va">potInfTur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">t</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="va">potInfTur</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">get_dist_angles</span><span class="op">(</span>t <span class="op">=</span> <span class="va">t</span>, o <span class="op">=</span> <span class="va">i</span>, wnkl <span class="op">=</span> <span class="va">wnkl</span>,</span></span>
-<span class="r-in"><span>                                    dist <span class="op">=</span> <span class="va">dist</span>, polYgon <span class="op">=</span> <span class="va">Polygon1</span>, plotAngles <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">t</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">potInfTur</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">get_dist_angles</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    t <span class="op">=</span> <span class="va">t</span>, o <span class="op">=</span> <span class="va">i</span>, wnkl <span class="op">=</span> <span class="va">wnkl</span>,</span></span>
+<span class="r-in"><span>    dist <span class="op">=</span> <span class="va">dist</span>, polYgon <span class="op">=</span> <span class="va">Polygon1</span>, plotAngles <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="get_dist_angles-1.png" alt="" width="700" height="433"></span>
 <span class="r-plt img"><img src="get_dist_angles-2.png" alt="" width="700" height="433"></span>
@@ -152,60 +157,68 @@ angles. Default is <code>FALSE</code></p></dd>
 <span class="r-plt img"><img src="get_dist_angles-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">potInfTur</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4498553 2669065 4498633 2668712 4498553 2668712 360.9764      352       80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         alpha    betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 12.78192 77.21808    90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499324 2669115  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy  Laenge_C Laenge_B</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499590 2668836 4499425 2668316 4499590 2668316  545.7016   520.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4499599 2669307 4499425 2668316 4499599 2668316 1006.4923   991.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Laenge_A    alpha    betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    165.5 17.64306 72.35694    90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    174.5  9.97048 80.02952    90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499324 2669115 4499223 2668495 4499324 2668495 627.6793    619.5      101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4499281 2669089 4499223 2668495 4499281 2668495 596.3273    593.5       58</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 9.265732 80.73427    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 5.588172 84.41183    90       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499146 2668883  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499870 2669079 4499891 2668958 4499870 2668958 123.1414   121.25     21.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        alpha   betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 10.0502 79.9498    90       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499599 2669307 4499590 2668836 4499599 2668836 471.3359   471.25        9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        alpha    betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1.07496 88.92504    90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4498788 2669304  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499590 2668836 4499665 2668452 4499590 2668452 391.5010   384.25       75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4499599 2669307 4499665 2668452 4499599 2668452 858.0421   855.50       66</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          alpha    betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 11.006655 78.99335    90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  4.405365 85.59464    90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499281 2669089  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[6]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4498553 2669065  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499870 2669079  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[7]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499599 2669307  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499474 2668859  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[8]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy  Laenge_C Laenge_B</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499590 2668836 4499559 2668289 4499590 2668289  547.8777   547.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4499599 2669307 4499559 2668289 4499599 2668289 1019.0353  1018.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Laenge_A    alpha    betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       31 3.276379 86.72362    90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       40 2.258703 87.74130    90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4498788 2669304 4498836 2668846 4498788 2668846 460.7052   458.25     47.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 5.925308 84.07469    90       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[9]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4498900 2669188  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499324 2669115 4499316 2668523 4499324 2668523 592.5684    592.5        9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4499281 2669089 4499316 2668523 4499281 2668523 567.5194    566.5       34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.8385004 89.16150    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 3.4649097 86.53509    90       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[10]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4498855 2669112  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499870 2669079 4499853 2668944 4499870 2668944 136.5623    135.5       17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 7.15317 82.84683    90       1       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -219,7 +232,7 @@ angles. Default is <code>FALSE</code></p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
   <p class="preferably">Using <a href="https://preferably.amirmasoudabdol.name/?source=footer" class="external-link">preferably</a> template.</p>
 </div>
 
