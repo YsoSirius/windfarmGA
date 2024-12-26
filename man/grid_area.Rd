@@ -19,14 +19,14 @@ plotted. Default is \code{FALSE}}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have the grid
-  cell IDS, and the X and Y coordinates of the centers of each grid cell.
-  List element 2 is the grid as Simple Feature Polygons, which is used for
-  plotting purposes.
+cell IDS, and the X and Y coordinates of the centers of each grid cell.
+List element 2 is the grid as Simple Feature Polygons, which is used for
+plotting purposes.
 }
 \description{
 Create a grid from a given polygon with a certain resolution
-  and proportionality. The grid cell centroids represent possible
-  wind turbine locations.
+and proportionality. The grid cell centroids represent possible
+wind turbine locations.
 }
 \note{
 The grid of the genetic algorithm will have a resolution of \code{Rotor
@@ -70,8 +70,8 @@ Other Helper Functions:
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
-\code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
+\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

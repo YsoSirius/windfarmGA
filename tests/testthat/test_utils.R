@@ -1,4 +1,3 @@
-context("Basic Functions")
 
 test_that("Test Basic Functions", {
   ## splitAt #####################

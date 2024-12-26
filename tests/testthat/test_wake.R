@@ -1,4 +1,3 @@
-context("Test Wake Functions")
 
 test_that("Test Wake Functions", {
   ## Input Data ---------------------
@@ -19,26 +18,26 @@ test_that("Test Wake Functions", {
   ## Test circle_intersection Function --------------
   ###########################################
   aov <- circle_intersection(10, 20, 10, 20, 10)
-  expect_is(aov, "numeric")
+  expect_type(aov, "double")
   expect_length(aov, 1)
   expect_gt(aov, 250)
   expect_lt(aov, 260)
   aov <- circle_intersection(10, 20, 10, 30, 0)
-  expect_is(aov, "numeric")
+  expect_type(aov, "double")
   expect_length(aov, 1)
   expect_gt(aov, 130)
   expect_lt(aov, 150)
   aov <- circle_intersection(10, 20, 10, 20, 100)
-  expect_is(aov, "numeric")
+  expect_type(aov, "double")
   expect_identical(aov, 0)
   aov <- circle_intersection(10, 20, 10, 100, 10)
-  expect_is(aov, "numeric")
+  expect_type(aov, "double")
   expect_identical(aov, 0)
   aov <- circle_intersection(10, 30, 10, 10, 0)
-  expect_is(aov, "numeric")
+  expect_type(aov, "double")
   expect_identical(aov, 10^2 * pi)
   aov <- circle_intersection(40, 30, 10, 10, 0)
-  expect_is(aov, "numeric")
+  expect_type(aov, "double")
   expect_identical(aov, 30^2 * pi)
 
 
@@ -82,7 +81,7 @@ test_that("Test Wake Functions", {
   ## Test turbine_influences Function --------------
   ###########################################
   resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)
-  expect_is(resInfluPoi, "list")
+  expect_type(resInfluPoi, "list")
   expect_output(str(resInfluPoi), "List of 10")
   expect_false(any(unlist(sapply(resInfluPoi, is.na))))
   df <- do.call("rbind", resInfluPoi)
@@ -231,3 +230,4 @@ test_that("Test Wake Functions", {
   #                          topograp = FALSE, weibull=FALSE,
   #                          plotit = TRUE)
 })
+

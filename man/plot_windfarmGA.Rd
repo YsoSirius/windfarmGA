@@ -30,8 +30,8 @@ output should be plotted. \code{1} plots the best energy solutions
 and \code{2} plots the best efficiency solutions}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster `k` and the second item must be the
-scale parameter raster `a` of the Weibull distribution. If no list is
+item must be the shape parameter raster \code{k} and the second item must be the
+scale parameter raster \code{a} of the Weibull distribution. If no list is
 given, then rasters included in the package are used instead, which
 currently only cover Austria. This variable is only used
 if \code{weibull = TRUE}.}
@@ -41,8 +41,8 @@ Returns NULL. Used for plotting
 }
 \description{
 Plot the results of a genetic algorithm run with given inputs.
-  Several plots try to show all relevant effects and outcomes of the
-  algorithm. 6 plot methods are available that can be selected individually.
+Several plots try to show all relevant effects and outcomes of the
+algorithm. 6 plot methods are available that can be selected individually.
 }
 \examples{
 \dontrun{

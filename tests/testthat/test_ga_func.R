@@ -1,4 +1,3 @@
-context("GA Functions")
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) {
@@ -45,28 +44,28 @@ test_that("Test Genetic Algorithm Function", {
 
   ## GRIDFILTER ################################
   Grid <- grid_area(shape = Polygon1, size = 200, prop = 1)
-  expect_is(Grid[[1]], "matrix")
-  expect_is(Grid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid[[1]]))
 
   Grid <- grid_area(shape = Polygon1, size = 200, prop = 0.1)
-  expect_is(Grid[[1]], "matrix")
-  expect_is(Grid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid[[1]]))
 
   Grid <- grid_area(shape = Polygon1, size = 500, prop = 0.1)
-  expect_is(Grid[[1]], "matrix")
-  expect_is(Grid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid[[1]]))
 
   Grid <- grid_area(shape = Polygon1, size = 500, prop = 0)
-  expect_is(Grid[[1]], "matrix")
-  expect_is(Grid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid[[1]]))
 
   Grid <- grid_area(shape = Polygon1, size = 300, prop = 0, plotGrid = TRUE)
-  expect_is(Grid[[1]], "matrix")
-  expect_is(Grid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid[[1]]))
 
   ## too high resolution - error
@@ -75,49 +74,49 @@ test_that("Test Genetic Algorithm Function", {
   # expect_error(GridFilter(shape = Polygon1, size = 0.5, prop = -1))
 
   Grid <- grid_area(shape = Polygon2, size = 300, prop = 100)
-  expect_is(Grid[[1]], "matrix")
-  expect_is(Grid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid[[1]]))
 
   Grid1 <- grid_area(shape = Polygon2, size = 300, prop = 0.1)
-  expect_is(Grid1[[1]], "matrix")
-  expect_is(Grid1[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid1[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid1[[1]]))
   expect_true(nrow(Grid1[[1]]) > nrow(Grid[[1]]))
 
   Grid1 <- grid_area(shape = Polygon2, size = 300, prop = -100)
-  expect_is(Grid1[[1]], "matrix")
-  expect_is(Grid1[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(Grid[[1]]))
+  expect_s3_class(Grid1[[2]], "sfc_POLYGON")
   expect_false(anyNA(Grid1[[1]]))
   expect_true(nrow(Grid1[[1]]) > nrow(Grid[[1]]))
   rm(Grid1, Polygon2)
 
   ## HEXATEX #################
   HexGrid <- hexa_area(Polygon1, 100, FALSE)
-  expect_is(HexGrid[[1]], "matrix")
-  expect_is(HexGrid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(HexGrid[[1]]))
+  expect_s3_class(HexGrid[[2]], "sfc_POLYGON")
   expect_false(anyNA(HexGrid[[1]]))
 
   HexGrid <- hexa_area(Polygon1, 100, TRUE)
-  expect_is(HexGrid[[1]], "matrix")
-  expect_is(HexGrid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(HexGrid[[1]]))
+  expect_s3_class(HexGrid[[2]], "sfc_POLYGON")
   expect_false(anyNA(HexGrid[[1]]))
 
   HexGrid <- hexa_area(Polygon1, 200, FALSE)
-  expect_is(HexGrid[[1]], "matrix")
-  expect_is(HexGrid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(HexGrid[[1]]))
+  expect_s3_class(HexGrid[[2]], "sfc_POLYGON")
   expect_false(anyNA(HexGrid[[1]]))
 
   HexGrid <- hexa_area(Polygon1, 400.1, FALSE)
-  expect_is(HexGrid[[1]], "matrix")
-  expect_is(HexGrid[[2]], "sfc_POLYGON")
+  expect_true(is.matrix(HexGrid[[1]]))
+  expect_s3_class(HexGrid[[2]], "sfc_POLYGON")
   expect_false(anyNA(HexGrid[[1]]))
 
   quiet(expect_error(hexa_area(Polygon1, 1000000000, FALSE)))
 
   ## STARTGA ################################
   startsel <- init_population(Grid[[1]], n = 10, nStart = 20)
-  expect_is(startsel, "list")
+  expect_type(startsel, "list")
   expect_true(all(sapply(startsel, nrow) == 10))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 20")
@@ -128,28 +127,28 @@ test_that("Test Genetic Algorithm Function", {
   quiet(expect_error(init_population(Grid[[1]][1:10, ], n = 7, nStart = 20)))
 
   startsel <- init_population(Grid[[1]], n = 20, nStart = 25)
-  expect_is(startsel, "list")
+  expect_type(startsel, "list")
   expect_true(all(sapply(startsel, nrow) == 20))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 25")
   expect_false(any(unlist(sapply(startsel, is.na))))
 
   startsel <- init_population(Grid[[1]], n = 20, nStart = 100)
-  expect_is(startsel, "list")
+  expect_type(startsel, "list")
   expect_true(all(sapply(startsel, nrow) == 20))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 100")
   expect_false(any(unlist(sapply(startsel, is.na))))
 
   startsel <- init_population(Grid[[1]], n = 20, nStart = 300)
-  expect_is(startsel, "list")
+  expect_type(startsel, "list")
   expect_true(all(sapply(startsel, nrow) == 20))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 300")
   expect_false(any(unlist(sapply(startsel, is.na))))
 
   startsel <- init_population(Grid[[1]], n = 10, nStart = 20)
-  expect_is(startsel, "list")
+  expect_type(startsel, "list")
   expect_true(all(sapply(startsel, nrow) == 10))
   expect_true(all(sapply(startsel, ncol) == 4))
   expect_output(str(startsel), "List of 20")
@@ -179,7 +178,7 @@ test_that("Test Genetic Algorithm Function", {
   expect_false(any(unlist(do.call("rbind", fit1)[, -c(1, 2)] < 0)))
   rm(fit1)
 
-  with_mock(
+  with_mocked_bindings(
     is_foreach_installed = function() FALSE,
     expect_error(
       fitness(
@@ -481,7 +480,7 @@ test_that("Test Genetic Algorithm Function", {
 
   ## GETRECTV #####################
   getRectV <- get_grids(mut1, Grid[[1]])
-  expect_is(getRectV, "list")
+  expect_type(getRectV, "list")
   expect_true(all(sapply(getRectV, ncol) == 3))
   expect_false(any(unlist(sapply(getRectV, is.na))))
   expect_true(all(sapply(getRectV, colnames) %in% c("ID", "X", "Y")))
@@ -493,7 +492,7 @@ test_that("Test Genetic Algorithm Function", {
     SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
     dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
   )
-  expect_is(fit, "list")
+  expect_type(fit, "list")
   expect_true(length(fit) == length(getRectV))
   expect_false(any(unlist(sapply(fit, is.na))))
   expect_false(any(unlist(do.call("rbind", fit)[, -c(1, 2)] < 0)))

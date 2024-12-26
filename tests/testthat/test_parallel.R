@@ -1,4 +1,3 @@
-context("Parallel")
 
 test_that("Test Parallelisation", {
   skip_on_cran()
@@ -15,7 +14,7 @@ test_that("Test Parallelisation", {
   wind <- data.frame(ws = 12, wd = 0)
 
   ## Mock Packages not installed ###########
-  with_mock(
+  with_mocked_bindings(
     is_foreach_installed = function() FALSE,
     expect_error(
       genetic_algorithm(
@@ -27,7 +26,7 @@ test_that("Test Parallelisation", {
       )
     )
   )
-  with_mock(
+  with_mocked_bindings(
     is_parallel_installed = function() FALSE,
     expect_error(
       genetic_algorithm(
@@ -39,7 +38,7 @@ test_that("Test Parallelisation", {
       )
     )
   )
-  with_mock(
+  with_mocked_bindings(
     is_doparallel_installed = function() FALSE,
     expect_error(
       genetic_algorithm(
@@ -62,11 +61,10 @@ test_that("Test Parallelisation", {
     RotorHeight = 100, Parallel = TRUE
   )
   expect_true(nrow(res) == 2)
-  expect_is(res, "matrix")
+  expect_true(is.matrix(res))
   expect_false(any(unlist(sapply(res, is.na))))
 
   ## Too many Cluster
-  skip_on_cran()
   # skip("Too many clusters")
   res <- expect_warning(
     genetic_algorithm(
@@ -78,7 +76,17 @@ test_that("Test Parallelisation", {
       Parallel = TRUE, numCluster = 100
     )
   )
+  res <- suppressWarnings(
+    genetic_algorithm(
+      Polygon1 = Polygon1,
+      n = 12, iteration = 2,
+      vdirspe = wind,
+      Rotor = 30,
+      RotorHeight = 100,
+      Parallel = TRUE, numCluster = 100
+    )
+  )
   expect_true(nrow(res) == 2)
-  expect_is(res, "matrix")
+  expect_true(is.matrix(res))
   expect_false(any(unlist(sapply(res, is.na))))
 })

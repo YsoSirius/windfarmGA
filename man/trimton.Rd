@@ -24,11 +24,11 @@ If \code{FALSE} the adjustment will be random. Default is \code{FALSE}}
 }
 \value{
 Returns a binary matrix with the correct amount of turbines per
-  individual
+individual
 }
 \description{
 Adjust the mutated individuals to the required amount of
-  turbines.
+turbines.
 }
 \examples{
 \donttest{

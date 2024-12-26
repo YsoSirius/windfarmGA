@@ -39,8 +39,8 @@ genetic_algorithm(
 or coordinates as matrix/data.frame}
 
 \item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is "Rectangular" grid. Hexagonal grids
-are computed when assigning "h" or "hexagon" to this input variable.}
+grid cells? The default is \code{Rectangular} grid. Hexagonal grids
+are computed when assigning \code{h} or \code{hexagon} to this input variable.}
 
 \item{Rotor}{The rotor radius in meter}
 
@@ -90,7 +90,7 @@ approach to correct the windfarms to the desired amount of turbines.
 If \code{FALSE} the adjustment will be random. Default is \code{FALSE}}
 
 \item{Projection}{A spatial reference system. Depending on your PROJ-version,
-it should either be a numeric `EPSG-code` or a `Proj4-string`.
+it should either be a numeric \code{EPSG-code} or a \code{Proj4-string}.
 Default is \code{EPSG:3035}}
 
 \item{sourceCCL}{The path to the Corine Land Cover raster (.tif). Only
@@ -108,14 +108,14 @@ wind speed for every wind turbine according to the Weibull parameters.
 Default is \code{FALSE}}
 
 \item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster `k` and the second item must be the
-scale parameter raster `a` of the Weibull distribution. If no list is
+item must be the shape parameter raster \code{k} and the second item must be the
+scale parameter raster \code{a} of the Weibull distribution. If no list is
 given, then rasters included in the package are used instead, which
 currently only cover Austria. This variable is only used
 if \code{weibull = TRUE}.}
 
 \item{Parallel}{A boolean value, indicating whether parallel processing
-should be used. The *parallel* and *doParallel* packages are used for
+should be used. The \emph{parallel} and \emph{doParallel} packages are used for
 parallel processing. Default is \code{FALSE}}
 
 \item{numCluster}{If \code{Parallel} is TRUE, this variable defines the
@@ -129,34 +129,34 @@ Default is \code{FALSE}}
 }
 \value{
 The result is a matrix with aggregated values per generation; the
-  best individual regarding energy and efficiency per generation, some fuzzy
-  control variables per generation, a list of all fitness values per
-  generation, the amount of individuals after each process, a matrix of all
-  energy, efficiency and fitness values per generation, the selection and
-  crossover parameters, a matrix with the generational difference in maximum
-  and mean energy output, a matrix with the given inputs, a dataframe with
-  the wind information, the mutation rate per generation and a matrix with
-  all tested wind farm layouts.
+best individual regarding energy and efficiency per generation, some fuzzy
+control variables per generation, a list of all fitness values per
+generation, the amount of individuals after each process, a matrix of all
+energy, efficiency and fitness values per generation, the selection and
+crossover parameters, a matrix with the generational difference in maximum
+and mean energy output, a matrix with the given inputs, a dataframe with
+the wind information, the mutation rate per generation and a matrix with
+all tested wind farm layouts.
 }
 \description{
 Run a Genetic Algorithm to optimize the layout of wind turbines
-  on a given area. The algorithm works with a fixed amount of turbines, a
-  fixed rotor radius and a mean wind speed value for every incoming wind
-  direction.
+on a given area. The algorithm works with a fixed amount of turbines, a
+fixed rotor radius and a mean wind speed value for every incoming wind
+direction.
 }
 \details{
 A terrain effect model can be included in the optimization process.
-  Therefore, a digital elevation model will be downloaded automatically via
-  the \code{elevatr::get_elev_raster} function. A land cover raster can also
-  downloaded automatically from the EEA-website, or the path to a raster file
-  can be passed to \code{sourceCCL}. The algorithm uses an adapted version of
-  the Raster legend ("clc_legend.csv"), which is stored in the package
-  directory \file{~/inst/extdata}. To use other values for the land cover
-  roughness lengths, insert a column named \strong{"Rauhigkeit_z"} to the
-  .csv file, assign a surface roughness length to all land cover types. Be
-  sure that all rows are filled with numeric values and save the file with
-  \strong{";"} separation. Assign the path of the file to the input variable
-  \code{sourceCCLRoughness} of this function.
+Therefore, a digital elevation model will be downloaded automatically via
+the \code{elevatr::get_elev_raster} function. A land cover raster can also
+downloaded automatically from the EEA-website, or the path to a raster file
+can be passed to \code{sourceCCL}. The algorithm uses an adapted version of
+the Raster legend ("clc_legend.csv"), which is stored in the package
+directory \file{~/inst/extdata}. To use other values for the land cover
+roughness lengths, insert a column named \strong{"Rauhigkeit_z"} to the
+.csv file, assign a surface roughness length to all land cover types. Be
+sure that all rows are filled with numeric values and save the file with
+\strong{";"} separation. Assign the path of the file to the input variable
+\code{sourceCCLRoughness} of this function.
 }
 \examples{
 \dontrun{

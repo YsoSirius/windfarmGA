@@ -21,11 +21,11 @@ crossover(se6, u, uplimit, crossPart = c("EQU", "RAN"), verbose, seed)
 }
 \value{
 Returns a binary coded matrix of all permutations and all grid cells,
-  where 0 indicates no turbine and 1 indicates a turbine in the grid cell.
+where 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 }
 \description{
 The crossover method creates new offspring with the selected
-  individuals by permutating their genetic codes.
+individuals by permutating their genetic codes.
 }
 \examples{
 ## Create two random parents with an index and random binary values

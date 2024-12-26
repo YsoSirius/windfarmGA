@@ -27,7 +27,7 @@ is_elevatr_installed()
 }
 \value{
 An invisible boolean value, indicating if the package is
-  installed or not.
+installed or not.
 }
 \description{
 Is the package installed or not

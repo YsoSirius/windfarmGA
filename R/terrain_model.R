@@ -20,7 +20,7 @@
 #'   crs = 3035
 #' ))
 #' Polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
-#' srtm <- elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11)
+#' srtm <- elevatr::get_elev_raster(locations = Polygon_wgs84, z = 11)
 #' res <- terrain_model(srtm, Polygon1)
 #' }
 terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughness,
@@ -68,7 +68,7 @@ terrain_model <- function(topograp = TRUE, Polygon1, sourceCCL, sourceCCLRoughne
     polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
     srtm <- tryCatch(elevatr::get_elev_raster(
       verbose = verbose,
-      locations = as(polygon_wgs84, "Spatial"), z = 11
+      locations = polygon_wgs84, z = 11
     ),
     error = function(e) {
       stop("\nDownloading Elevation data failed for the given Polygon.\n",

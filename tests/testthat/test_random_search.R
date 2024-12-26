@@ -1,4 +1,3 @@
-context("Test Random Search")
 
 test_that("Test Random Search Functions", {
   ## Data ##############
@@ -12,7 +11,7 @@ test_that("Test Random Search Functions", {
 
   ## RandomSearch #########################
   new <- random_search(resultrect, Polygon1, n = 20, best = 3, Plot = TRUE)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -20,7 +19,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
   new <- random_search(resultrect, Polygon1, Plot = TRUE)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -28,7 +27,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
   new <- random_search(resulthex, Polygon1, Plot = TRUE)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -36,7 +35,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
   new <- random_search(resultrect[1:30, ], Polygon1, best = 10000)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -45,7 +44,7 @@ test_that("Test Random Search Functions", {
 
   ## Test Plots with Hexagons
   new <- random_search(resultrect, Polygon1, n = 10, best = 1)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))

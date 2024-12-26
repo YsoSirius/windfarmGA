@@ -54,7 +54,7 @@ type. Is only used, when the terrain effect model is activated.}
 \item{weibull}{A raster representing the estimated wind speeds}
 
 \item{Parallel}{A boolean value, indicating whether parallel processing
-should be used. The *parallel* and *doParallel* packages are used for
+should be used. The \emph{parallel} and \emph{doParallel} packages are used for
 parallel processing. Default is \code{FALSE}}
 
 \item{numCluster}{If \code{Parallel} is TRUE, this variable defines the
@@ -62,14 +62,14 @@ number of clusters to be used. Default is \code{2}}
 }
 \value{
 Returns a list with every individual, consisting of X & Y
-  coordinates, rotor radii, the runs and the selected grid cell IDs, and the
-  resulting energy outputs, efficiency rates and fitness values.
+coordinates, rotor radii, the runs and the selected grid cell IDs, and the
+resulting energy outputs, efficiency rates and fitness values.
 }
 \description{
 The fitness of all individuals in the current population
-  is calculated after their energy output has been evaluated in
-  \code{\link{calculate_energy}}. This function reduces the resulting energy
-  outputs to a single fitness value for each individual.
+is calculated after their energy output has been evaluated in
+\code{\link{calculate_energy}}. This function reduces the resulting energy
+outputs to a single fitness value for each individual.
 }
 \examples{
 \donttest{

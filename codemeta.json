@@ -13,7 +13,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.2.0 (2022-04-22 ucrt)",
+  "runtimePlatform": "R version 4.4.0 Patched (2024-05-26 r86642 ucrt)",
   "author": [
     {
       "@type": "Person",
@@ -43,6 +43,7 @@
       "@type": "SoftwareApplication",
       "identifier": "testthat",
       "name": "testthat",
+      "version": ">= 3.0.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -132,6 +133,7 @@
       "@type": "SoftwareApplication",
       "identifier": "elevatr",
       "name": "elevatr",
+      "version": ">= 0.99.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -284,7 +286,7 @@
     "SystemRequirements": null
   },
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
-  "fileSize": "3298.43KB",
+  "fileSize": "5158.331KB",
   "relatedLink": "https://ysosirius.github.io/windfarmGA/index.html",
   "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",

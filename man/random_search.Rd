@@ -27,7 +27,7 @@ Returns a list.
 }
 \description{
 Perform a random search in the grid cells, to further optimize
-  the output of the wind farm layout.
+the output of the wind farm layout.
 }
 \examples{
 \donttest{

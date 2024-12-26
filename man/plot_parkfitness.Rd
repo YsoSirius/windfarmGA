@@ -17,7 +17,7 @@ Returns NULL. Used for plotting
 }
 \description{
 Plot the evolution of fitness values with the influences of
-  selection, crossover and mutation.
+selection, crossover and mutation.
 }
 \examples{
 \donttest{

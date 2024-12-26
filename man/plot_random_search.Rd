@@ -22,7 +22,7 @@ Returns NULL. Used for plotting
 }
 \description{
 Plotting method for the results of
-  \code{\link{random_search_single}} and \code{\link{random_search}}.
+\code{\link{random_search_single}} and \code{\link{random_search}}.
 }
 \examples{
 \donttest{
@@ -41,7 +41,7 @@ plot_random_search(resultRS = Res, result = resultrect, Polygon1 = Polygon1, bes
 }
 \seealso{
 Other Randomization: 
-\code{\link{random_search_single}()},
-\code{\link{random_search}()}
+\code{\link{random_search}()},
+\code{\link{random_search_single}()}
 }
 \concept{Randomization}

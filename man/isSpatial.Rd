@@ -18,12 +18,12 @@ A Simple Feature Polygon
 }
 \description{
 Helper Function, which transforms SpatialPolygons or coordinates
-  in matrix/data.frame - form to a Simple Feature Polygon
+in matrix/data.frame - form to a Simple Feature Polygon
 }
 \details{
 If the columns are named, it will look for common abbreviation to
-  match x/y or long/lat columns. If the columns are not named, the first 2
-  numeric columns are taken.
+match x/y or long/lat columns. If the columns are not named, the first 2
+numeric columns are taken.
 }
 \examples{
 \donttest{
@@ -50,8 +50,8 @@ Other Helper Functions:
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},
 \code{\link{permutations}()},
-\code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
+\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

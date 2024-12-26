@@ -1,8 +1,6 @@
 # windfarmGA
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" width="150"/>
-</p>
+<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"/>
 
 <!-- badges: start -->
 [![](https://www.r-pkg.org/badges/version/windfarmGA)](https://www.r-pkg.org/pkg/windfarmGA)

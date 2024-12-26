@@ -24,12 +24,12 @@ angles. Default is \code{FALSE}}
 }
 \value{
 Returns a list of all individuals of the current generation which
-  could potentially influence other turbines. List includes the relevant
-  coordinates, the distances and angles in between and assigns the Point ID.
+could potentially influence other turbines. List includes the relevant
+coordinates, the distances and angles in between and assigns the Point ID.
 }
 \description{
 Find all turbines that could potentially influence another
-  turbine and save them to a list.
+turbine and save them to a list.
 }
 \examples{
 ## Exemplary input Polygon with 2km x 2km:
