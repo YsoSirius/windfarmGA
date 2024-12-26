@@ -39,12 +39,6 @@ is_leaflet_installed <- function() {
 
 ##' @rdname package_installed
 ##' @export
-is_gstat_installed <- function() {
-  requireNamespace("gstat", quietly = TRUE)
-}
-
-##' @rdname package_installed
-##' @export
 is_elevatr_installed <- function() {
   requireNamespace("elevatr", quietly = TRUE)
 }
