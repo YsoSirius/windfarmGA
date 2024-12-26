@@ -16,14 +16,14 @@ plotted. Default is \code{FALSE}}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have the grid
-  cell IDS, and the X and Y coordinates of the centers of each grid cell.
-  List element 2 is the grid as Simple Feature Polygons, which is used for
-  plotting purposes.
+cell IDS, and the X and Y coordinates of the centers of each grid cell.
+List element 2 is the grid as Simple Feature Polygons, which is used for
+plotting purposes.
 }
 \description{
 The function takes a Simple Feature Polygon and a size argument
-  and creates a list with an indexed matrix with coordinates and a
-  Simple Feature object, that consists of hexagonal grids.
+and creates a list with an indexed matrix with coordinates and a
+Simple Feature object, that consists of hexagonal grids.
 }
 \examples{
 library(sf)
@@ -44,8 +44,8 @@ Other Helper Functions:
 \code{\link{grid_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
-\code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
+\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

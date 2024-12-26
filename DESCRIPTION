@@ -24,9 +24,11 @@ LazyData: TRUE
 License: MIT + file LICENSE
 URL: https://ysosirius.github.io/windfarmGA/index.html
 BugReports: https://github.com/YsoSirius/windfarmGA/issues
-RoxygenNote: 7.2.3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
 Suggests: 
-    testthat,
+    testthat (>= 3.0.0),
     foreach,
     parallel,
     doParallel,
@@ -34,9 +36,11 @@ Suggests:
     stars,
     raster,
     leaflet,
-    elevatr,
+    elevatr (>= 0.99.0),
     ggplot2,
     gstat,
     rworldmap
-Encoding: UTF-8
 X-schema.org-keywords: windfarm-layout, optimization, genetic-algorithm, renewable-energy, r, rstats, r-package
+Config/testthat/edition: 3
+Config/testthat/parallel: true
+

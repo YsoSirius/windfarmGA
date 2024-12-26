@@ -24,7 +24,7 @@ Returns a list
 }
 \description{
 Perform a random search for a single turbine, to further
-  optimize the output of the wind farm layout.
+optimize the output of the wind farm layout.
 }
 \seealso{
 Other Randomization: 

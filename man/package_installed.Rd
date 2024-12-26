@@ -7,7 +7,6 @@
 \alias{is_doparallel_installed}
 \alias{is_ggplot2_installed}
 \alias{is_leaflet_installed}
-\alias{is_gstat_installed}
 \alias{is_elevatr_installed}
 \title{Is the package installed or not}
 \usage{
@@ -21,13 +20,11 @@ is_ggplot2_installed()
 
 is_leaflet_installed()
 
-is_gstat_installed()
-
 is_elevatr_installed()
 }
 \value{
 An invisible boolean value, indicating if the package is
-  installed or not.
+installed or not.
 }
 \description{
 Is the package installed or not

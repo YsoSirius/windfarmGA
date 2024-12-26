@@ -1,7 +1,27 @@
-#' windfarmGA
 #'
+#' @importFrom terra xyFromCell extract plot res resample lapp rast crop crs
+#'   project terrain app values global classify mosaic viewshed sprc add_legend
+#' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
+#'   st_make_grid st_intersection st_area sf_extSoftVersion st_centroid st_bbox
+#'   st_cast st_combine `st_crs<-` st_distance st_is_valid
+#' @importFrom grDevices colorRampPalette topo.colors
+#' @importFrom graphics plot.new text plot par points abline title lines grid
+#'   layout axis legend mtext boxplot
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom calibrate textxy
+#' @importFrom stats runif smooth.spline sd aggregate median dist complete.cases
+#'   quantile
+#' @importFrom utils download.file unzip read.csv globalVariables
+#' @importFrom methods as is
+#' @importFrom Rcpp sourceCpp
+#' @importFrom magrittr %>%
+NULL
+
+#' @useDynLib windfarmGA, .registration = TRUE
+#' @author \strong{Maintainer}: Sebastian Gatscha \email{sebastian_gatscha@@gmx.at}
+#' @details
+#' `r lifecycle::badge("stable")`
 #'
-#' @description
 #' \if{html}{\figure{windfarmGA.png}{options: width="25\%" alt="Figure: windfarmGA.png"}}
 #' \if{latex}{\figure{windfarmGA.png}{options: width=0.2in}}
 #' A package to optimize small wind farms with irregular shapes
@@ -21,26 +41,4 @@
 #'    \item \href{https://windfarmga.shinyapps.io/windga_shiny}{Shiny App}
 #'    \item \href{https://github.com/YsoSirius/windfarmGA/issues}{Report Issues}
 #'  }
-#'
-#' @importFrom terra xyFromCell extract plot res resample lapp rast crop crs
-#'   project terrain app values global classify mosaic viewshed sprc add_legend
-#' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
-#'   st_make_grid st_intersection st_area sf_extSoftVersion st_centroid st_bbox
-#'   st_cast st_combine `st_crs<-` st_distance st_is_valid
-#' @importFrom grDevices colorRampPalette topo.colors
-#' @importFrom graphics plot.new text plot par points abline title lines grid
-#'   layout axis legend mtext boxplot
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom calibrate textxy
-#' @importFrom stats runif smooth.spline sd aggregate median dist complete.cases
-#'   quantile
-#' @importFrom utils download.file unzip read.csv globalVariables
-#' @importFrom methods as is
-#' @importFrom Rcpp sourceCpp
-#' @importFrom magrittr %>%
-#'
-#' @useDynLib windfarmGA, .registration = TRUE
-#' @docType package
-#' @name windfarmGA_
-#' @author \strong{Maintainer}: Sebastian Gatscha \email{sebastian_gatscha@@gmx.at}
-NULL
+"_PACKAGE"

@@ -17,7 +17,7 @@ Returns NULL. Used for plotting
 }
 \description{
 Plot the evolution of fitness values and the change in the min,
-  mean and max fitness values to the former generations.
+mean and max fitness values to the former generations.
 }
 \examples{
 \donttest{

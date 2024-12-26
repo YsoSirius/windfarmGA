@@ -10,8 +10,8 @@
 #' @param Polygon1 The considered area as SpatialPolygon, SimpleFeature Polygon
 #'   or coordinates as matrix/data.frame
 #' @param GridMethod Should the polygon be divided into rectangular or hexagonal
-#'   grid cells? The default is "Rectangular" grid. Hexagonal grids
-#'   are computed when assigning "h" or "hexagon" to this input variable.
+#'   grid cells? The default is `Rectangular` grid. Hexagonal grids
+#'   are computed when assigning `h` or `hexagon` to this input variable.
 #' @param Rotor The rotor radius in meter
 #' @param n The amount of turbines
 #' @param fcrR A numeric value used for grid spacing. Default is \code{5}
@@ -256,7 +256,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
       )
     }
     max_cores <- parallel::detectCores()
+    print("max_cores"); print(max_cores)
     if (numCluster > max_cores) {
+      print(paste0("Maximum number of cores is: ", max_cores, "\n'numCluster' will be set to: ", max_cores - 1))
       warning("Maximum number of cores is: ", max_cores, "\n'numCluster' will be set to: ", max_cores - 1)
       numCluster <- max_cores - 1
     }

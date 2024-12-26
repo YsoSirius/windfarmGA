@@ -50,7 +50,7 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
   crs = 3035
 ))
 Polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
-srtm <- elevatr::get_elev_raster(locations = as(Polygon_wgs84, "Spatial"), z = 11)
+srtm <- elevatr::get_elev_raster(locations = Polygon_wgs84, z = 11)
 res <- terrain_model(srtm, Polygon1)
 }
 }

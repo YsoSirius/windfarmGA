@@ -806,11 +806,10 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   ## Plot a Leaflet Map ###################
   overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
   opaycity <- 0.4
-  map <- leaflet::leaflet() %>%
+  map <-
+    leaflet::leaflet() %>%
     leaflet::addTiles(group = "OSM") %>%
-    leaflet::addProviderTiles("Stamen.Terrain", group = "Terrain") %>%
     leaflet::addProviderTiles("Esri.WorldImagery", group = "Satellite") %>%
-    leaflet::addProviderTiles("Stamen.Toner", group = "Toner") %>%
     ## Write a Popup with the energy output
     leaflet::addPopups(title_locat[1], (title_locat[2] + 0.0002),
       group = "Title",
@@ -862,9 +861,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     leaflet::addLayersControl(
       baseGroups = c(
         "OSM",
-        "Terrain",
-        "Satellite",
-        "Toner"
+        "Satellite"
       ),
       overlayGroups = overlay_group,
       options = leaflet::layersControlOptions(collapsed = TRUE)

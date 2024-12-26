@@ -1,4 +1,3 @@
-context("Test GA")
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) {
@@ -28,7 +27,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, verbose = FALSE,
     plotit = TRUE
   )
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## Replace Park with highest Fitness level ################
@@ -40,7 +39,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     Rotor = 35, Proportionality = 1,
     RotorHeight = 100, verbose = TRUE
   ))
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## No optimization possible - Turbines in all Grid Cells ################
@@ -52,7 +51,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, verbose = FALSE,
     plotit = TRUE
   )
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## SF Polygon Input - 30 Iteration #####################
@@ -64,7 +63,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, verbose = TRUE
   ))
   expect_true(nrow(resultSP) == 30)
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## Multi Polygon ###########################
@@ -76,7 +75,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, plotit = TRUE
   ))
   expect_true(nrow(resultSP) == 3)
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   resultSP <- quiet(genetic_algorithm(
@@ -87,7 +86,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, plotit = TRUE
   ))
   expect_true(nrow(resultSP) == 3)
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## Hole Polygon ###########################
@@ -99,7 +98,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, plotit = TRUE
   ))
   expect_true(nrow(resultSP) == 3)
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   resultSP <- quiet(genetic_algorithm(
@@ -110,7 +109,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, plotit = TRUE
   ))
   expect_true(nrow(resultSP) == 3)
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## SpatialPolygon Input #####################
@@ -123,7 +122,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100
   )
   expect_true(nrow(resultSP) == 1)
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
 
@@ -136,7 +135,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100
   )
   expect_true(nrow(resultSP) == 1)
-  expect_is(resultSP, "matrix")
+  expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))
 
   ## Data.Frame Input #####################
@@ -149,7 +148,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100
   )
   expect_true(nrow(resultDF) == 1)
-  expect_is(resultDF, "matrix")
+  expect_true(is.matrix(resultDF))
   expect_false(any(unlist(sapply(resultDF, is.na))))
 
   ## Matrix Input #####################
@@ -162,7 +161,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100
   )
   expect_true(nrow(resultMA) == 1)
-  expect_is(resultMA, "matrix")
+  expect_true(is.matrix(resultMA))
   expect_false(any(unlist(sapply(resultMA, is.na))))
 
   ## Matrix Input - 100% #####################
@@ -174,7 +173,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     Rotor = 30,
     RotorHeight = 100
   ))
-  expect_is(resultMA100, "matrix")
+  expect_true(is.matrix(resultMA100))
   expect_false(any(unlist(sapply(resultMA100, is.na))))
 
   ## Test with non default arguments ####################
@@ -189,7 +188,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100
   )
   expect_true(nrow(resultMA) == 1)
-  expect_is(resultMA, "matrix")
+  expect_true(is.matrix(resultMA))
   expect_false(any(unlist(sapply(resultMA, is.na))))
 
   resultMA <- genetic_algorithm(
@@ -203,7 +202,7 @@ test_that("Test Genetic Algorithm with different Inputs", {
     RotorHeight = 100, plotit = FALSE
   )
   expect_true(nrow(resultMA) == 1)
-  expect_is(resultMA, "matrix")
+  expect_true(is.matrix(resultMA))
   expect_false(any(unlist(sapply(resultMA[, 1:13], is.na))))
 
   ## Create errors ####################

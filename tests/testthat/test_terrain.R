@@ -1,20 +1,20 @@
-context("Test Terrain and Weibull Effects")
 library(terra)
 library(elevatr)
 library(raster)
 
 
 test_that("Test Terrain and Weibull Effects", {
+  # skip()
   skip_if_offline()
   skip_on_ci()
   skip_on_cran()
 
   ## Function to suppress print/cat outputs
   quiet <- function(x) {
-  sink(tempfile())
-  on.exit(sink())
-  invisible(force(x))
-}
+    sink(tempfile())
+    on.exit(sink())
+    invisible(force(x))
+  }
 
   ## Test Terrain_Model Function ###############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -25,36 +25,37 @@ test_that("Test Terrain and Weibull Effects", {
     crs = 3035
   ))
   polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
-  srtm <- suppressMessages(elevatr::get_elev_raster(locations = as(polygon_wgs84, "Spatial"), z = 11))
+  srtm <- suppressMessages(elevatr::get_elev_raster(locations = polygon_wgs84, z = 11))
   res <- terrain_model(srtm, Polygon1, sourceCCL = terra::rast("g100_06.tif"))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
-  expect_is(res[[2]], "SpatRaster")
-  expect_is(res[[1]][[1]], "SpatRaster")
-  expect_is(res[[1]][[2]], "SpatRaster")
-  expect_is(res[[1]][[3]], "SpatRaster")
+  expect_s4_class(res[[2]], "SpatRaster")
+  expect_s4_class(res[[1]][[1]], "SpatRaster")
+  expect_s4_class(res[[1]][[2]], "SpatRaster")
+  expect_s4_class(res[[1]][[3]], "SpatRaster")
 
   res <- terrain_model(terra::rast(srtm), Polygon1, sourceCCL = "g100_06.tif")
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
-  expect_is(res[[2]], "SpatRaster")
-  expect_is(res[[1]][[1]], "SpatRaster")
-  expect_is(res[[1]][[2]], "SpatRaster")
-  expect_is(res[[1]][[3]], "SpatRaster")
+  expect_s4_class(res[[2]], "SpatRaster")
+  expect_s4_class(res[[1]][[1]], "SpatRaster")
+  expect_s4_class(res[[1]][[2]], "SpatRaster")
+  expect_s4_class(res[[1]][[3]], "SpatRaster")
 
 
   srtm_terra <- terra::rast(srtm)
   values(srtm_terra) <- NA
   res <- expect_warning(terrain_model(srtm_terra, Polygon1, sourceCCL = "g100_06.tif"))
+  res <- suppressWarnings(terrain_model(srtm_terra, Polygon1, sourceCCL = "g100_06.tif"))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
-  expect_is(res[[2]], "SpatRaster")
-  expect_is(res[[1]][[1]], "SpatRaster")
-  expect_is(res[[1]][[2]], "SpatRaster")
-  expect_is(res[[1]][[3]], "SpatRaster")
+  expect_s4_class(res[[2]], "SpatRaster")
+  expect_s4_class(res[[1]][[1]], "SpatRaster")
+  expect_s4_class(res[[1]][[2]], "SpatRaster")
+  expect_s4_class(res[[1]][[3]], "SpatRaster")
 
   ## Get DEM Fail (too big) ##############
   polygon <- structure(list(structure(
@@ -75,7 +76,7 @@ test_that("Test Terrain and Weibull Effects", {
   )
 
   ## Mock Packages not installed ############
-  with_mock(
+  with_mocked_bindings(
     is_elevatr_installed = function() FALSE,
     expect_error(
       terrain_model(topograp = TRUE, Polygon1, sourceCCL = "g100_06.tif")
@@ -107,7 +108,7 @@ test_that("Test Terrain and Weibull Effects", {
     )
   ))
   expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
+  expect_true(is.matrix(resultrect))
   expect_false(any(unlist(sapply(resultrect, is.na))))
 
   ## CCL-Raster should be in directory already
@@ -126,16 +127,15 @@ test_that("Test Terrain and Weibull Effects", {
     )
   ))
   expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
+  expect_true(is.matrix(resultrect))
   expect_false(any(unlist(sapply(resultrect, is.na))))
-
 
 
   ## Weibull ################
   ## Weibull Params (FAKE).
   DEM <- suppressWarnings(elevatr::get_elev_raster(
     verbose = FALSE,
-    locations = as(st_transform(sp_polygon, 4326), "Spatial"), z = 11
+    locations = st_transform(sp_polygon, 4326), z = 11
   ))
   sp_polygonproj <- st_transform(sp_polygon, st_crs(DEM))
   DEM <- terra::rast(DEM)
@@ -157,7 +157,7 @@ test_that("Test Terrain and Weibull Effects", {
     )
   ))
   expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
+  expect_true(is.matrix(resultrect))
   expect_false(any(unlist(sapply(resultrect, is.na))))
 
   rm(resultrect)
@@ -173,7 +173,7 @@ test_that("Test Terrain and Weibull Effects", {
     )
   ))
   expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
+  expect_true(is.matrix(resultrect))
   expect_false(any(unlist(sapply(resultrect, is.na))))
 
   rm(resultrect)
@@ -189,7 +189,7 @@ test_that("Test Terrain and Weibull Effects", {
     )
   ))
   expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
+  expect_true(is.matrix(resultrect))
   expect_false(any(unlist(sapply(resultrect, is.na))))
 
   expect_error(
@@ -200,7 +200,6 @@ test_that("Test Terrain and Weibull Effects", {
       weibull = TRUE
     )
   )
-
 
   ## Plotting Terrain Effects #############
   plres <- suppressWarnings(
@@ -282,7 +281,7 @@ test_that("Test Terrain and Weibull Effects", {
   ))
   srtm <- suppressWarnings(
     elevatr::get_elev_raster(
-      locations = as(Polygon1, "Spatial"), z = 11
+      locations = Polygon1, z = 11
     )
   )
   srtm_crop <- terra::crop(terra::rast(srtm), Polygon1)
@@ -349,7 +348,7 @@ test_that("Test Terrain and Weibull Effects", {
     )
   ))
   expect_true(nrow(resultrect) == 1)
-  expect_is(resultrect, "matrix")
+  expect_true(is.matrix(resultrect))
   expect_false(any(unlist(sapply(resultrect, is.na))))
 
   ## Weibull + Plotting ##############

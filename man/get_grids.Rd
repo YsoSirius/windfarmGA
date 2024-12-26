@@ -13,12 +13,12 @@ get_grids(trimtonOut, Grid)
 }
 \value{
 Returns a list of all individuals with X and Y coordinates and the
-  grid cell ID.
+grid cell ID.
 }
 \description{
 Retrieve the grid ID's from the binary matrix, where the
-  binary code indicates which grid cells are used in the current wind farm
-  constellation.
+binary code indicates which grid cells are used in the current wind farm
+constellation.
 }
 \examples{
 \donttest{
@@ -88,8 +88,8 @@ Other Helper Functions:
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
-\code{\link{readintegerSel}()},
 \code{\link{readinteger}()},
+\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

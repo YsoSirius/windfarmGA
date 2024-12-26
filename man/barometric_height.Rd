@@ -22,8 +22,8 @@ air pressures, air densities and temperatures in Kelvin and Celsius.
 }
 \description{
 Calculates air density, temperature and air pressure
-    respective to certain heights according to the International
-    standard atmosphere and the barometric height formula.
+respective to certain heights according to the International
+standard atmosphere and the barometric height formula.
 }
 \examples{
 data <- matrix(seq(0, 5000, 500))

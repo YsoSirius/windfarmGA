@@ -24,11 +24,11 @@ angles. Default is \code{FALSE}}
 }
 \value{
 Returns a matrix with the distances, angles and heights of potentially
-  influencing turbines
+influencing turbines
 }
 \description{
 Calculate distances and angles for a turbine and all it's
-  potentially influencing turbines.
+potentially influencing turbines.
 }
 \examples{
 library(sf)

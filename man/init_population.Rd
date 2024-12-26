@@ -17,14 +17,14 @@ individuals. Default is 100.}
 }
 \value{
 Returns a list of \code{nStart} initial individuals, each consisting
-  of \code{n} turbines. Resulting list has the x and y coordinates, the grid
-  cell ID and a binary variable of 1, indicating a turbine in the grid cell.
+of \code{n} turbines. Resulting list has the x and y coordinates, the grid
+cell ID and a binary variable of 1, indicating a turbine in the grid cell.
 }
 \description{
 Create \code{nStart} random sub-selections from the indexed
-  grid and assign binary variable 1 to selected grids. This function
-  initiates the genetic algorithm with a first random population and will
-  only be needed in the first iteration.
+grid and assign binary variable 1 to selected grids. This function
+initiates the genetic algorithm with a first random population and will
+only be needed in the first iteration.
 }
 \examples{
 library(sf)

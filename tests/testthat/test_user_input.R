@@ -1,4 +1,3 @@
-context("User Interaction")
 
 ## Function to suppress print/cat outputs
 quiet <- function(x) {
@@ -36,7 +35,7 @@ test_that("User Input", {
   options(windfarmGA.connection = stdin())
   close(f)
   expect_true(nrow(res) == 1)
-  expect_is(res, "matrix")
+  expect_true(is.matrix(res))
   expect_false(any(unlist(sapply(res, is.na))))
 
   ## Wrong selection Method
@@ -57,7 +56,7 @@ test_that("User Input", {
   options(windfarmGA.connection = stdin())
   close(f)
   expect_true(nrow(res) == 1)
-  expect_is(res, "matrix")
+  expect_true(is.matrix(res))
   expect_false(any(unlist(sapply(res, is.na))))
 
 
@@ -98,7 +97,7 @@ test_that("User Input", {
   write(ans, f)
 
   new <- random_search_single(resultrect, polygon)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -108,7 +107,7 @@ test_that("User Input", {
 
   for (i in 1:40) {
     new <- quiet(random_search_single(resultrect, polygon, max_dist = 5, Plot = TRUE))
-    expect_is(new, "list")
+    expect_type(new, "list")
     expect_false(anyNA(unlist(new)))
     new_df <- do.call(rbind, new)
     expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -118,7 +117,7 @@ test_that("User Input", {
   }
 
   new <- random_search_single(resultrect, polygon)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -168,7 +167,7 @@ test_that("User Input", {
   write(ans, f)
 
   new <- random_search_single(resulthex, polygon)
-  expect_is(new, "list")
+  expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
   expect_true(all(new_df[, "EfficAllDir"] <= 100 & new_df[, "EfficAllDir"] > 0))
@@ -182,3 +181,4 @@ test_that("User Input", {
   close(f)
 
 })
+

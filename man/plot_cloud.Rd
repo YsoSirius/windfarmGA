@@ -13,11 +13,11 @@ plot_cloud(result, pl = FALSE)
 }
 \value{
 Returns a data.frame with the values for fitness, efficiency and
-  energy for all evaluated individuals
+energy for all evaluated individuals
 }
 \description{
 Plot the fitness, efficiency and energy outputs of all
-  generations and the corresponding standard deviations.
+generations and the corresponding standard deviations.
 }
 \examples{
 \donttest{

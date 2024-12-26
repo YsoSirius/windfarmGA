@@ -27,16 +27,16 @@ the development of the fitness values. Default is "FIX"}
 }
 \value{
 Returns list with 2 elements. Element 1 is the binary encoded matrix
-  which shows all selected individuals. Element 2 represent the mean fitness
-  values of each parental team.
+which shows all selected individuals. Element 2 represent the mean fitness
+values of each parental team.
 }
 \description{
 Select a certain amount of individuals and recombine them to
-  parental teams. Add the mean fitness value of both parents to the parental
-  team. Depending on the selected \code{selstate}, the algorithm will either
-  take always 50 percent or a variable percentage of the current population.
-  The variable percentage depends on the evolution of the populations fitness
-  values.
+parental teams. Add the mean fitness value of both parents to the parental
+team. Depending on the selected \code{selstate}, the algorithm will either
+take always 50 percent or a variable percentage of the current population.
+The variable percentage depends on the evolution of the populations fitness
+values.
 }
 \examples{
 \donttest{

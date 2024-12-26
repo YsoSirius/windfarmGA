@@ -63,15 +63,15 @@ Default is \code{FALSE}}
 }
 \value{
 Returns a list of an individual of the current generation with
-  resulting wake effects, energy outputs, efficiency rates for every wind
-  direction. The length of the list corresponds to the number of different
-  wind directions.
+resulting wake effects, energy outputs, efficiency rates for every wind
+direction. The length of the list corresponds to the number of different
+wind directions.
 }
 \description{
 Calculate the energy output and efficiency rates of an
-  individual in the current population under all given wind directions and
-  speeds. If the terrain effect model is activated, the main calculations to
-  model those effects will be done in this function.
+individual in the current population under all given wind directions and
+speeds. If the terrain effect model is activated, the main calculations to
+model those effects will be done in this function.
 }
 \examples{
 \donttest{

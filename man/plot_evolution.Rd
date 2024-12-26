@@ -20,7 +20,7 @@ Returns NULL. Used for plotting
 }
 \description{
 Plot the evolution of energy outputs and efficiency rates over
-  the whole generations. Plots min, mean and max values.
+the whole generations. Plots min, mean and max values.
 }
 \examples{
 \donttest{

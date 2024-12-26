@@ -1,4 +1,3 @@
-context("Plots")
 
 test_that("Test Plotting Functions", {
   library(terra)
@@ -18,7 +17,7 @@ test_that("Test Plotting Functions", {
 
   ## Windrose Plotting #############
   ## Mock Packages not installed
-  with_mock(
+  with_mocked_bindings(
     is_ggplot2_installed = function() FALSE,
     expect_error(
       plot_windrose(wind_test, plotit = FALSE)
@@ -267,7 +266,7 @@ test_that("Test Plotting Functions", {
   skip_if(compareVersion("4.3.0", paste0(R.version$major,".",R.version$minor)) == 1,
           "Skip as the version is <= 4.3.0. Errors in test_plots unresolved (leaflet::addMarkers(...))")
   ## Mock Packages not installed
-  with_mock(
+  with_mocked_bindings(
     is_leaflet_installed = function() FALSE,
     expect_error(
       plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1)
@@ -282,22 +281,22 @@ test_that("Test Plotting Functions", {
     RotorHeight = 100
   )
   p <- plot_leaflet(resultSP, Polygon1 = Polygon1, which = 1)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   ## Plot the best wind farm on a leaflet map (ordered by energy values)
   p <- plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   ## Plot the best wind farm on a leaflet map (ordered by energy values)
   p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   ## Plot the last wind farm (ordered by chronology).
   p <- plot_leaflet(
     result = resulthex, Polygon1 = sp_polygon, orderitems = FALSE,
     which = 1
   )
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   ## Plot the best wind farm on a leaflet map with the rectangular Grid
   Grid <- grid_area(sp_polygon, size = 150, prop = 0.4)
@@ -305,7 +304,7 @@ test_that("Test Plotting Functions", {
     result = resultrect, Polygon1 = sp_polygon, which = 1,
     GridPol = Grid[[2]]
   )
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   ## Plot the last wind farm with hexagonal Grid
   Grid <- hexa_area(sp_polygon, size = 75)
@@ -313,22 +312,22 @@ test_that("Test Plotting Functions", {
     result = resulthex, Polygon1 = sp_polygon, which = 1,
     GridPol = Grid[[2]]
   )
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   p <- plot_leaflet(result = resultrect, Polygon1 = sp_polygon, which = 1)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   gr <- grid_area(st_as_sf(sp_polygon), size = 220)
   spnop <- gr[[2]]
   st_crs(spnop) <- NA
   p <- plot_leaflet(result = resultrect, Polygon1 = sp_polygon, GridPol = spnop)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1, orderitems = FALSE)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   p <- plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1000, orderitems = FALSE)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
 
   ## No Projection
@@ -340,7 +339,7 @@ test_that("Test Plotting Functions", {
   ))
 
   p <- plot_leaflet(result = resultrect, Polygon1 = poly_nocrs)
-  expect_is(p, "leaflet")
+  expect_s3_class(p, "leaflet")
 
   expect_error(genetic_algorithm(
     Polygon1 = poly_nocrs,
