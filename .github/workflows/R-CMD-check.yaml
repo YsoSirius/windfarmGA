@@ -28,7 +28,6 @@ jobs:
           - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
-      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
 
@@ -43,11 +42,6 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: "[Custom block] [macOS] Install spatial libraries"
-        if: runner.os == 'macOS'
-        run: |
-          brew install gdal proj geos
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
@@ -55,5 +49,6 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
+          args: 'c("--no-manual", "--as-cran")'
           upload-snapshots: true
           build_args: 'c("--no-manual")'
