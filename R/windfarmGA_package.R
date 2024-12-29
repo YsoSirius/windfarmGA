@@ -20,7 +20,6 @@ NULL
 #' @useDynLib windfarmGA, .registration = TRUE
 #' @author \strong{Maintainer}: Sebastian Gatscha \email{sebastian_gatscha@@gmx.at}
 #' @details
-#' `r lifecycle::badge("stable")`
 #'
 #' \if{html}{\figure{windfarmGA.png}{options: width="25\%" alt="Figure: windfarmGA.png"}}
 #' \if{latex}{\figure{windfarmGA.png}{options: width=0.2in}}
