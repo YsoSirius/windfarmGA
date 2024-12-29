@@ -11,7 +11,7 @@ navbar:
 reference:
   - title: Package Documentation
     contents:
-    - windfarmGA_
+    - windfarmGA-package
   - title: Run an Optimization
     contents:
     - genetic_algorithm

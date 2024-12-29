@@ -4,3 +4,4 @@
 
 * This is a new major release.
 The previous errors are fixed as the package now depends on terra and sf instead of raster and rgdal
+Moved Tests to v 3
