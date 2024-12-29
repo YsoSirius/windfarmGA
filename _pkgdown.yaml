@@ -1,7 +1,7 @@
 url: https://YsoSirius.github.io/windfarmGA
 template:
   bootstrap: 5
-  package: preferably
+  # package: preferably
   # params:
   #   toggle: manual
 
