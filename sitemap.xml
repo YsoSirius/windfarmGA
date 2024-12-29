@@ -1,150 +1,52 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/404.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/index.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/barometric_height.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/big_shape.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/calculate_energy.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/circle_intersection.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/crossover.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/fitness.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/get_dist_angles.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/get_grids.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/grid_area.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/hexa_area.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/hole_shape.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/init_population.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/isSpatial.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/multi_shape.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/mutation.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/package_installed.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/permutations.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_cloud.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_development.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_leaflet.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_random_search.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_result.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_viewshed.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_windfarmGA.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/random_search.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/random_search_single.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/readinteger.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/resulthex.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/resultrect.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/selection.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/sp_polygon.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/splitAt.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/terrain_model.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/trimton.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/windata_format.html</loc>
-  </url>
-  <url>
-    <loc>https://YsoSirius.github.io/windfarmGA/reference/windfarmGA_.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://YsoSirius.github.io/windfarmGA/404.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/LICENSE-text.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/authors.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/index.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/news/index.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/barometric_height.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/big_shape.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/calculate_energy.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/circle_intersection.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/crossover.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/fitness.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/get_dist_angles.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/get_grids.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/grid_area.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/hexa_area.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/hole_shape.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/index.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/init_population.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/isSpatial.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/multi_shape.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/mutation.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/package_installed.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/permutations.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_cloud.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_development.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_leaflet.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_random_search.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_result.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_viewshed.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_windfarmGA.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/random_search.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/random_search_single.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/readinteger.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/resulthex.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/resultrect.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/selection.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/sp_polygon.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/splitAt.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/terrain_model.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/trimton.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/windata_format.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/windfarmGA-package.html</loc></url>
 </urlset>
+
