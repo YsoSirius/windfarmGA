@@ -4,7 +4,7 @@
   "identifier": "windfarmGA",
   "description": "The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.",
   "name": "windfarmGA: Genetic Algorithm for Wind Farm Layout Optimization",
-  "codeRepository": "https://github.com/trafficonese/windfarmGA",
+  "codeRepository": "https://github.com/YsoSirius/windfarmGA",
   "issueTracker": "https://github.com/YsoSirius/windfarmGA/issues",
   "license": "https://spdx.org/licenses/MIT",
   "version": "4.0.0",
@@ -286,10 +286,10 @@
     "SystemRequirements": null
   },
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
-  "fileSize": "5158.331KB",
+  "fileSize": "5158.004KB",
   "relatedLink": "https://ysosirius.github.io/windfarmGA/index.html",
-  "releaseNotes": "https://github.com/trafficonese/windfarmGA/blob/master/NEWS.md",
-  "readme": "https://github.com/trafficonese/windfarmGA/blob/master/README.md",
+  "releaseNotes": "https://github.com/YsoSirius/windfarmGA/blob/master/NEWS.md",
+  "readme": "https://github.com/YsoSirius/windfarmGA/blob/master/README.md",
   "contIntegration": ["https://github.com/YsoSirius/windfarmGA/actions", "https://app.codecov.io/gh/YsoSirius/windfarmGA"],
   "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html"
 }
