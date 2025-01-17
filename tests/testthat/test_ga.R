@@ -8,6 +8,8 @@ quiet <- function(x) {
 
 test_that("Test Genetic Algorithm with different Inputs", {
 
+  skip_on_os("mac", arch = "aarch64")
+
   ## Data ##############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(

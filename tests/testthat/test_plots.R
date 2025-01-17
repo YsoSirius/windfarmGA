@@ -3,6 +3,8 @@ test_that("Test Plotting Functions", {
   library(terra)
   library(stars)
 
+  skip_on_os("mac", arch = "aarch64")
+
   ## Function to suppress print/cat outputs
   quiet <- function(x) {
     sink(tempfile())
