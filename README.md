@@ -2,31 +2,26 @@
 
 <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"/>
 
+
+
 <!-- badges: start -->
-[![](https://www.r-pkg.org/badges/version/windfarmGA)](https://www.r-pkg.org/pkg/windfarmGA)
-[![cran checks](https://badges.cranchecks.info/worst/windfarmGA.svg)](https://cran.r-project.org/web/checks/check_results_windfarmGA.html)
-[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/windfarmGA?color=brightgreen)](https://www.r-pkg.org/pkg/windfarmGA)
-[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://www.rpackages.io/package/windfarmGA)
-<!-- 
- -->
 [![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)](https://github.com/YsoSirius/windfarmGA/actions)
-[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![CRAN status](https://www.r-pkg.org/badges/version/windfarmGA)](https://CRAN.R-project.org/package=windfarmGA)
+[![CRAN checks](https://badges.cranchecks.info/summary/windfarmGA.svg)](https://cran.r-project.org/web/checks/check_results/windfarmGA.html)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://cran.r-project.org/package=windfarmGA)
+[![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)](https://cran.r-project.org/package=windfarmGA)
 [![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)](https://app.codecov.io/gh/YsoSirius/windfarmGA)
 
 <!-- badges: end -->
 
 
-Genetic algorithm to optimize the layout of windfarms.
-The package is hosted on [CRAN](https://CRAN.R-project.org/package=windfarmGA)
+A genetic algorithm to optimize the layout of wind farms.
+
 
 # Installation
 The latest version can be installed from GitHub with:
-```sh
+```R
 devtools::install_github("YsoSirius/windfarmGA")
-```
-
-and the CRAN-version with:
-```sh
 install.packages("windfarmGA")
 ```
 
@@ -56,7 +51,7 @@ parameters. For Austria this data is already included in the package.
     
 ## Create an input Polygon
 - Input Polygon by source
-```sh
+```R
 library(sf)
 dsn <- "Path to the Shapefile"
 layer <- "Name of the Shapefile"
@@ -65,7 +60,7 @@ plot(Polygon1, col = "blue")
 ```
 
 - Or create a random Polygon
-```sh
+```R
 library(sf)
 Polygon1 <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
@@ -78,14 +73,14 @@ plot(Polygon1, col = "blue", axes = TRUE)
 
 ## Create random Wind data 
 - Exemplary input Wind data with *uniform* wind speed and *single* wind direction
-```sh
+```R
 wind_df <- data.frame(ws = c(12, 12), wd = c(0, 0), probab = c(25, 25))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                               dir = wind_df$wd, dirres=10, spdmax = 20)
 ```
 
 - Exemplary input Wind data with *random* wind speeds and *random* wind directions
-```sh
+```R
 wind_df <- data.frame(ws = sample(1:25, 10), wd = sample(1:260, 10)))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                               dir = wind_df$wd)
@@ -99,14 +94,14 @@ Verify that the grid spacing is appropriate. Adapt the following input variables
 - *prop*: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.
 
 *Make sure that the Polygon is projected in meters.*
-```sh
+```R
 Rotor <- 20
 fcrR <- 9
 Grid <- grid_area(Polygon1, size = (Rotor * fcrR), prop = 1, plotGrid = TRUE)
 str(Grid)
 ```
 ### Hexagonal Grid Cells
-```sh
+```R
 Rotor <- 20
 fcrR <- 9
 HexGrid <- hexa_area(Polygon1, size = (Rotor * fcrR), plotGrid = TRUE)
@@ -129,7 +124,7 @@ Be sure that all rows are filled with numeric values and save the .csv file with
 An optimization can be initiated with the function **genetic_algorithm**
 
 - without terrain effects
-```sh
+```R
 result <- genetic_algorithm(
   Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
   vdirspe = wind_df, crossPart1 = "EQU", selstate = "FIX", mutr = 0.8,
@@ -140,7 +135,7 @@ result <- genetic_algorithm(
 ```
 
 - with terrain effects
-```sh
+```R
 sourceCCL <- "Source of the CCL raster (TIF)"
 sourceCCLRoughness <- "Source of the Adaped CCL legend (CSV)"
 
@@ -155,7 +150,7 @@ result <- genetic_algorithm(
 ```
 
 
-```sh
+```R
 ## Run an optimization with your own Weibull parameter rasters. The shape and scale 
 ## parameter rasters of the weibull distributions must be added to a list, with the first
 ## list item being the shape parameter (k) and the second list item being the scale
@@ -176,7 +171,7 @@ plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
 ```
 
 #### Plot the Results on a Leaflet Map
-```sh
+```R
 ## Plot the best wind farm on a leaflet map (ordered by energy values)
 plot_leaflet(result = resulthex, Polygon1, which = 1)
 
@@ -186,7 +181,7 @@ plot_leaflet(result = resulthex, Polygon1, orderitems = FALSE, which = 1)
 
 ## Plotting Methods of the Genetic Algorithm 
 Several plotting functions are available:
-```sh
+```R
  - plot_windfarmGA(result, Polygon1)
  - plot_result(result, Polygon1, best = 1)
  - plot_evolution(result, ask = TRUE, spar = 0.1)
@@ -205,7 +200,7 @@ I also made a [Shiny App](https://windfarmga.shinyapps.io/windga_shiny/) for the
 Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time. 
 
 # Full Optimization example:
-```sh
+```R
 library(sf)
 library(windfarmGA)
 
