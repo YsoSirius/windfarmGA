@@ -1,3 +1,5 @@
+# windfarmGA (development version)
+
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
 - Removed package dependencies `rgdal` and `rgeos`
