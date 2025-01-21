@@ -7,7 +7,7 @@
 <!-- badges: start -->
 [![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)](https://github.com/YsoSirius/windfarmGA/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/windfarmGA)](https://CRAN.R-project.org/package=windfarmGA)
-[![CRAN checks](https://badges.cranchecks.info/summary/windfarmGA.svg)](https://cran.r-project.org/web/checks/check_results/windfarmGA.html)
+[![CRAN checks](https://badges.cranchecks.info/summary/windfarmGA.svg)](https://cran.r-project.org/web/checks/check_results_windfarmGA.html)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://cran.r-project.org/package=windfarmGA)
 [![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)](https://cran.r-project.org/package=windfarmGA)
 [![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)](https://app.codecov.io/gh/YsoSirius/windfarmGA)
