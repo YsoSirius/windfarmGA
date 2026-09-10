@@ -1,0 +1,103 @@
+# Selection Method
+
+Select a certain amount of individuals and recombine them to parental
+teams. Add the mean fitness value of both parents to the parental team.
+Depending on the selected `selstate`, the algorithm will either take
+always 50 percent or a variable percentage of the current population.
+The variable percentage depends on the evolution of the populations
+fitness values.
+
+## Usage
+
+``` r
+selection(fit, Grid, teil, elitism, nelit, selstate, verbose)
+```
+
+## Arguments
+
+- fit:
+
+  A list of all fitness-evaluated individuals
+
+- Grid:
+
+  Is the indexed grid output from
+  [`grid_area`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md)
+
+- teil:
+
+  A numeric value that determines the selection percentage
+
+- elitism:
+
+  Boolean value, which indicates whether elitism should be activated or
+  not. Default is `TRUE`
+
+- nelit:
+
+  If `elitism` is TRUE, this input determines the amount of individuals
+  in the elite group. Default is 7
+
+- selstate:
+
+  Determines which selection method is used, "FIX" selects a constant
+  percentage and "VAR" selects a variable percentage, depending on the
+  development of the fitness values. Default is "FIX"
+
+- verbose:
+
+  If TRUE, will print out further information.
+
+## Value
+
+Returns list with 2 elements. Element 1 is the binary encoded matrix
+which shows all selected individuals. Element 2 represent the mean
+fitness values of each parental team.
+
+## See also
+
+Other Genetic Algorithm Functions:
+[`crossover()`](https://YsoSirius.github.io/windfarmGA/reference/crossover.md),
+[`fitness()`](https://YsoSirius.github.io/windfarmGA/reference/fitness.md),
+[`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md),
+[`init_population()`](https://YsoSirius.github.io/windfarmGA/reference/init_population.md),
+[`mutation()`](https://YsoSirius.github.io/windfarmGA/reference/mutation.md),
+[`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
+
+## Examples
+
+``` r
+# \donttest{
+## Exemplary input Polygon with 2km x 2km:
+library(sf)
+Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  sf::st_polygon(list(cbind(
+    c(4498482, 4498482, 4499991, 4499991, 4498482),
+    c(2668272, 2669343, 2669343, 2668272, 2668272)
+  ))),
+  crs = 3035
+))
+
+## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
+Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+Grid <- Grid1[[1]]
+AmountGrids <- nrow(Grid)
+
+startsel <- init_population(Grid, 10, 20)
+wind <- as.data.frame(cbind(ws = 12, wd = 0))
+wind <- list(wind, probab = 100)
+fit <- fitness(
+  selection = startsel, referenceHeight = 100, RotorHeight = 100,
+  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200,
+  rot = 20, dirspeed = wind,
+  srtm_crop = "", topograp = FALSE, cclRaster = ""
+)
+allparks <- do.call("rbind", fit)
+## SELECTION
+## print the amount of Individuals selected. Check if the amount
+## of Turbines is as requested.
+selec6best <- selection(fit, Grid, 2, TRUE, 6, "VAR")
+selec6best <- selection(fit, Grid, 2, TRUE, 6, "FIX")
+selec6best <- selection(fit, Grid, 4, FALSE, 6, "FIX")
+# }
+```
