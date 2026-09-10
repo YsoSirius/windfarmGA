@@ -26,7 +26,7 @@ test_that("Test Plotting Functions", {
     )
   )
   a0 <- plot_windrose(wind_test, plotit = FALSE)
-  expect_true(is.recursive(a0))
+  expect_true(inherits(a0, c("ggplot", "ggplot2::ggplot")))
 
   wind_test <- data.frame(
     ws = runif(10, 10, 20),
@@ -123,7 +123,7 @@ test_that("Test Plotting Functions", {
     wd = 0
   )
   windr_res <- plot_windrose(winddat, "ws", "wd")
-  expect_true(class(windr_res)[1] == "gg")
+  expect_true(inherits(windr_res, c("ggplot", "ggplot2::ggplot")))
 
 
   ## plot_parkfitness ###############

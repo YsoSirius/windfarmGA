@@ -1,4 +1,21 @@
-# windfarmGA (development version)
+# windfarmGA 4.0.1
+
+## Fixes
+* CRAN tests for `plot_windrose()` failed on r-devel with ggplot2 >= 4.0.0.
+  ggplot2 4.0 uses S7 plot objects, so they are no longer recursive lists and
+  `class(.)[1]` is no longer `"gg"`. Checks now use
+  `inherits(., c("ggplot", "ggplot2::ggplot"))`, which works with ggplot2 3.x
+  and 4.x.
+
+## Open / Todos
+* Resubmit 4.0.1 to CRAN after the ggplot2 4.0 test failures.
+* Parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
+* Consider splitting the large `test_plots.R` block so a single assertion
+  failure does not hide later plot checks.
+
+## Ideas
+* Pin or document ggplot2 compatibility in `Suggests` if further S7 class
+  cleanup removes the legacy `"ggplot"` S3 class.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0

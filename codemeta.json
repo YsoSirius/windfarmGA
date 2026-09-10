@@ -7,7 +7,7 @@
   "codeRepository": "https://github.com/YsoSirius/windfarmGA",
   "issueTracker": "https://github.com/YsoSirius/windfarmGA/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -286,10 +286,9 @@
     "SystemRequirements": null
   },
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
-  "fileSize": "5158.004KB",
+  "fileSize": "5158.121KB",
   "relatedLink": "https://ysosirius.github.io/windfarmGA/index.html",
   "releaseNotes": "https://github.com/YsoSirius/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/YsoSirius/windfarmGA/blob/master/README.md",
-  "contIntegration": ["https://github.com/YsoSirius/windfarmGA/actions", "https://app.codecov.io/gh/YsoSirius/windfarmGA"],
-  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html"
+  "contIntegration": ["https://github.com/YsoSirius/windfarmGA/actions", "https://app.codecov.io/gh/YsoSirius/windfarmGA"]
 }

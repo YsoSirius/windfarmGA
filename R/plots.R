@@ -16,7 +16,7 @@
 #' @param plotit Should the windrose be plotted? Default is TRUE
 #'
 #' @family Plotting Functions
-#' @return Returns NULL. Used for plotting
+#' @return A ggplot2 wind rose plot, returned invisibly.
 #'
 #' @examples
 #' ## Exemplary Input Wind speed and direction data frame

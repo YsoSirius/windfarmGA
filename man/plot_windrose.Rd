@@ -39,7 +39,7 @@ plot_windrose(
 \item{plotit}{Should the windrose be plotted? Default is TRUE}
 }
 \value{
-Returns NULL. Used for plotting
+A ggplot2 wind rose plot, returned invisibly.
 }
 \description{
 Plot a wind rose of the wind data frame.
