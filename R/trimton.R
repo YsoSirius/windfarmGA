@@ -80,10 +80,8 @@ trimton <- function(mut, nturb, allparks, nGrids, trimForce, seed) {
   k <- 0.5
   nGrids1 <- 1:nGrids
 
-  ## TODO Does it have to be in for-loop????
-  # Calculate probability, that Turbine is selected to be eliminated.
+  # Probability that a turbine is selected to be eliminated / added.
   indivprop <- subset.matrix(allparks, select = c("Rect_ID", "Parkfitness", "AbschGesamt"))
-  # Group mean wake effect and fitness value of a grid cell.
   indivprop <- aggregate(indivprop[, 2:3], by = list(indivprop[, 1]), FUN = mean)
   colnames(indivprop) <- c("Rect_ID", "Parkfitness", "AbschGesamt")
 

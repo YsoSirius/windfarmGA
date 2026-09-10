@@ -19,6 +19,8 @@
 #' @param polygon1 The considered area as Simple Feature Polygon
 #' @param RotorR The desired rotor radius in meter
 #' @param dirSpeed The wind speed and direction data.frame
+#' @param park_center Optional numeric of length 2 (`x`, `y`) used as rotation
+#'   origin. Computed from the polygon bounding box when missing.
 #' @param plotit If \code{TRUE}, the process will be plotted.
 #'   Default is \code{FALSE}
 #'
@@ -103,19 +105,27 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
                              SurfaceRoughness, wnkl, distanz,
                              polygon1, RotorR, dirSpeed,
                              srtm_crop, topograp, cclRaster, weibull,
-                             plotit = FALSE) {
+                             park_center = NULL, plotit = FALSE) {
 
   ## Get default values ###################
-  cT <- getOption("windfarmGA.cT")
-  air_rh <- getOption("windfarmGA.air_rh")
-  k <- getOption("windfarmGA.k")
+  cT <- getOption("windfarmGA.cT", 0.88)
+  air_rh <- getOption("windfarmGA.air_rh", 1.225)
+  k <- getOption("windfarmGA.k", 0.075)
+  cp <- getOption("windfarmGA.Cp", 0.45)
+  cut_in <- getOption("windfarmGA.cut_in", 0)
+  rated_ws <- getOption("windfarmGA.rated_ws", Inf)
+  cut_out <- getOption("windfarmGA.cut_out", Inf)
 
   ## Get the Coordinates of the current individual / windfarm ###################
   xy_individual <- sel[, 2:3, drop = FALSE]
 
   ## Get Center of Polygon for rotating
-  ## TODO - this can go in some upper level
-  pcent <- apply(matrix(sf::st_bbox(polygon1), ncol = 2, byrow = FALSE), 1, mean)
+  if (is.null(park_center)) {
+    park_center <- apply(
+      matrix(sf::st_bbox(polygon1), ncol = 2, byrow = FALSE), 1, mean
+    )
+  }
+  pcent <- park_center
 
   ## Create a dummy vector for the wind speeds for every turbine with value 1
   n_turbines <- length(xy_individual[, 1])
@@ -283,9 +293,11 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       point_wind <- windpo * estim_speed
     }
 
-    ## Calculate Windspeed according to Rotor Height using wind profile law ##################
-    ## TODO MISSING: Include other laws: -log
-    point_wind <- point_wind * ((RotorHeight / referenceHeight)^SurfaceRoughness)
+    ## Calculate Windspeed according to Rotor Height using the log profile
+    ## (or the legacy power law if options(windfarmGA.wind_profile = "power"))
+    point_wind <- point_wind * wind_shear_factor(
+      RotorHeight, referenceHeight, SurfaceRoughness
+    )
     point_wind[is.na(point_wind)] <- 0
 
     ## Get the current incoming wind direction and assign to "angle"
@@ -470,16 +482,18 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     }
 
     ## Calculate Full and Reduced Energy Outputs in kW and ##################
-    ## Park Efficienca in %.
+    ## Park Efficiency in %.
+    v_red <- apply_power_curve(windlist1[, "V_New"], cut_in, rated_ws, cut_out)
+    v_full <- apply_power_curve(windlist1[, "Windmean"], cut_in, rated_ws, cut_out)
     energy_reduced <- energy_calc_CPP(
-      windlist1[, "V_New"],
+      v_red,
       windlist1[, "RotorR"], airrh
-    )
+    ) * (cp / 0.593)
     energy_full <- energy_calc_CPP(
-      windlist1[, "Windmean"],
+      v_full,
       windlist1[, "RotorR"], airrh
-    )
-    efficiency <- (energy_reduced * 100) / energy_full
+    ) * (cp / 0.593)
+    efficiency <- ifelse(energy_full > 0, (energy_reduced * 100) / energy_full, 0)
 
 
     ## Assign values back to complete matrix ##################
@@ -530,4 +544,23 @@ circle_intersection <- function(r1, r2, h1, h2, dx) {
     area1 <- 0.5 * phi * rr1 - 0.5 * rr1 * sin(phi)
     return(area1 + area2)
   }
+}
+
+wind_shear_factor <- function(hub, ref, z0) {
+  if (abs(hub - ref) < 1e-9) {
+    return(1)
+  }
+  method <- getOption("windfarmGA.wind_profile", "log")
+  if (identical(method, "power")) {
+    return((hub / ref)^z0)
+  }
+  z0_cap <- pmin(z0, 0.99 * min(hub, ref))
+  z0_cap <- pmax(z0_cap, 1e-6)
+  log(hub / z0_cap) / log(ref / z0_cap)
+}
+
+apply_power_curve <- function(v, cut_in, rated_ws, cut_out) {
+  v_out <- pmin(v, rated_ws)
+  v_out[v < cut_in | v >= cut_out] <- 0
+  v_out
 }

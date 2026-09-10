@@ -83,6 +83,8 @@ fitness <- function(selection, referenceHeight, RotorHeight,
   ## Get maximum angle and maximum distance ###########
   wnkl_max <- getOption("windfarmGA.max_angle")
   dist_max <- getOption("windfarmGA.max_distance")
+  bbox_m <- matrix(sf::st_bbox(Polygon), ncol = 2, byrow = FALSE)
+  park_center <- apply(bbox_m, 1, mean)
 
   ## Calculate Energy Output ###########
   # For every selection i and every angle j - in Parallel
@@ -101,7 +103,7 @@ fitness <- function(selection, referenceHeight, RotorHeight,
         wnkl = wnkl_max, distanz = dist_max,
         polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
-        weibull = weibull
+        weibull = weibull, park_center = park_center
       )
     }
   }
@@ -116,7 +118,7 @@ fitness <- function(selection, referenceHeight, RotorHeight,
         wnkl = wnkl_max, distanz = dist_max,
         polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
         srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
-        weibull = weibull
+        weibull = weibull, park_center = park_center
       )
 
       ee <- lapply(e, function(x) {
@@ -212,17 +214,16 @@ fitness <- function(selection, referenceHeight, RotorHeight,
   }
 
   ## Split one from every run and select only Energy information
-  maxparkeff <- do.call(rbind, lapply(euniqu, function(x) {
-    x[1, "EnergyOverall"]
-  }))
-
-  ## TODO - Get a better Fitness Function!!!!!
-  ## Save as Fitness (Its just a copy of overall Energy Output right now).
-  colnames(maxparkeff) <- "Parkfitness"
+  maxparkeff <- vapply(euniqu, function(x) {
+    energy <- x[1, "EnergyOverall"]
+    effic <- x[1, "EfficAllDir"]
+    w <- getOption("windfarmGA.fitness_efficiency_weight", 1)
+    energy * ((effic / 100)^w)
+  }, numeric(1))
 
   ## Assign every park constellation the Parkfitness Value
   euniqu <- lapply(1:length(euniqu), function(i) {
-    cbind(euniqu[[i]], "Parkfitness" = maxparkeff[i, ])
+    cbind(euniqu[[i]], "Parkfitness" = maxparkeff[i])
   })
 
   names(euniqu) <- unlist(lapply(euniqu, function(i) {

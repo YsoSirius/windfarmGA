@@ -18,6 +18,7 @@ calculate_energy(
   topograp,
   cclRaster,
   weibull,
+  park_center = NULL,
   plotit = FALSE
 )
 }
@@ -57,6 +58,9 @@ parameters into account. If \code{TRUE}, the wind speed values
 of \code{vdirspe} are ignored. The algorithm will calculate the mean
 wind speed for every wind turbine according to the Weibull parameters.
 Default is \code{FALSE}}
+
+\item{park_center}{Optional numeric of length 2 (\code{x}, \code{y}) used as rotation
+origin. Computed from the polygon bounding box when missing.}
 
 \item{plotit}{If \code{TRUE}, the process will be plotted.
 Default is \code{FALSE}}

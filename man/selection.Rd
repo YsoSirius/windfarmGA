@@ -14,7 +14,8 @@ selection(fit, Grid, teil, elitism, nelit, selstate, verbose)
 \item{teil}{A numeric value that determines the selection percentage}
 
 \item{elitism}{Boolean value, which indicates whether elitism should be
-activated or not. Default is \code{TRUE}}
+activated or not. If \code{TRUE}, the best \code{nelit} layouts are copied
+unchanged into the next generation. Default is \code{TRUE}}
 
 \item{nelit}{If \code{elitism} is TRUE, this input determines the amount
 of individuals in the elite group. Default is 7}
@@ -36,7 +37,8 @@ parental teams. Add the mean fitness value of both parents to the parental
 team. Depending on the selected \code{selstate}, the algorithm will either
 take always 50 percent or a variable percentage of the current population.
 The variable percentage depends on the evolution of the populations fitness
-values.
+values. With \code{elitism = TRUE} the best individuals are always included
+in the mating pool.
 }
 \examples{
 \donttest{

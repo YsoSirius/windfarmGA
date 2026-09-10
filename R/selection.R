@@ -5,7 +5,8 @@
 #'   team. Depending on the selected \code{selstate}, the algorithm will either
 #'   take always 50 percent or a variable percentage of the current population.
 #'   The variable percentage depends on the evolution of the populations fitness
-#'   values.
+#'   values. With \code{elitism = TRUE} the best individuals are always included
+#'   in the mating pool.
 #' @export
 #'
 #' @inheritParams genetic_algorithm
@@ -69,16 +70,16 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
   new1 <- new1[order(new1[, "Parkfitness"], decreasing = TRUE), ]
   row.names(new1) <- NULL
 
-  ## Elitarism - A certain amount of individuals will get their fitness values increased
+  ## Elitism: keep the best individuals in the mating pool (no fitness scaling)
+  elite_runs <- integer(0)
   if (elitism) {
     if (nrow(new1) < nelit) {
       nelit <- nrow(new1)
     }
     if (verbose) {
-      message(paste("Elitarism activated. Best", nelit, "individuals are increased"))
+      message(paste("Elitism activated. Best", nelit, "individuals are kept"))
     }
-    ## Increase best 'nelit' individuals by factor 10
-    new1[1:nelit, "Parkfitness"] <- new1[1:nelit, "Parkfitness"] * 10
+    elite_runs <- new1[seq_len(nelit), "Run"]
   }
 
   ## Delete some of the worst individuals, if there are more than 10
@@ -119,12 +120,29 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
   if (nPar > max_selec) {
     nPar <- max_selec
   }
+  if (nPar > 1 && (nPar %% 2 == 1)) {
+    nPar <- nPar - 1
+  }
 
-  ## Randomly sample some individuals, based on their fitness value
-  childsRunID <- sample(new1[, 1], nPar,
-    prob = new1[, "Parkfitness"],
-    replace = FALSE
-  )
+  ## Randomly sample some individuals, based on their fitness value.
+  ## Elites are always included in the mating pool.
+  if (length(elite_runs)) {
+    n_rest <- max(0, nPar - length(elite_runs))
+    pool <- new1[!new1[, "Run"] %in% elite_runs, , drop = FALSE]
+    if (n_rest > 0 && nrow(pool) > 0) {
+      n_rest <- min(n_rest, nrow(pool))
+      extra <- sample(pool[, "Run"], n_rest,
+                      prob = pool[, "Parkfitness"], replace = FALSE)
+      childsRunID <- c(elite_runs, extra)
+    } else {
+      childsRunID <- elite_runs[seq_len(min(nPar, length(elite_runs)))]
+    }
+  } else {
+    childsRunID <- sample(new1[, 1], nPar,
+      prob = new1[, "Parkfitness"],
+      replace = FALSE
+    )
+  }
 
   ## Pick the parks with those list indeces.
   ## (park with all config) and return Run and Rect_ID

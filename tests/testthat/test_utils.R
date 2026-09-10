@@ -29,6 +29,9 @@ test_that("Test Basic Functions", {
   expect_true(class(res0)[1] == "sfc_POLYGON")
   expect_true(st_crs(res0) == st_crs(3035))
 
+  res_3857 <- isSpatial(xy_matrix, 3857)
+  expect_equal(sf::st_crs(res_3857)$epsg, 3857)
+
   spatial_polygon <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),

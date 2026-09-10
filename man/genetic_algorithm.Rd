@@ -72,7 +72,8 @@ probabilities. See \code{\link{windata_format}}.}
 should be enabled or not. Default is \code{FALSE}}
 
 \item{elitism}{Boolean value, which indicates whether elitism should be
-activated or not. Default is \code{TRUE}}
+activated or not. If \code{TRUE}, the best \code{nelit} layouts are copied
+unchanged into the next generation. Default is \code{TRUE}}
 
 \item{nelit}{If \code{elitism} is TRUE, this input determines the amount
 of individuals in the elite group. Default is 7}
@@ -157,6 +158,13 @@ roughness lengths, insert a column named \strong{"Rauhigkeit_z"} to the
 sure that all rows are filled with numeric values and save the file with
 \strong{";"} separation. Assign the path of the file to the input variable
 \code{sourceCCLRoughness} of this function.
+
+Fitness is \eqn{EnergyOverall \times (EfficAllDir/100)^w} with
+\code{w = getOption("windfarmGA.fitness_efficiency_weight")}. Hub-height
+wind speeds use a logarithmic profile unless
+\code{options(windfarmGA.wind_profile = "power")} restores the legacy
+power law. Power uses \code{options(windfarmGA.Cp)} (default 0.45) and
+optional cut-in / rated / cut-out speeds.
 }
 \examples{
 \dontrun{

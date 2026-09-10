@@ -6,16 +6,32 @@
   `class(.)[1]` is no longer `"gg"`. Checks now use
   `inherits(., c("ggplot", "ggplot2::ggplot"))`, which works with ggplot2 3.x
   and 4.x.
+* `crossover`: parent fitness is now `(a + b) / 2` (operator precedence bug).
+* `isSpatial`: assigned CRS is the given `proj`, not hardcoded EPSG:3035.
+* Fitness is `EnergyOverall * (EfficAllDir/100)^w` with
+  `options(windfarmGA.fitness_efficiency_weight)` (default 1).
+* Elitism copies the best layouts into the next generation instead of
+  multiplying their fitness by 10.
+* Duplicate layouts after crossover/mutation/repair are dropped.
+* Logarithmic hub-height wind profile (legacy power law via
+  `options(windfarmGA.wind_profile = "power")`).
+* Power coefficient `options(windfarmGA.Cp)` defaults to 0.45; optional
+  cut-in / rated / cut-out speeds.
+* Parallel clusters are always stopped via `on.exit`; dead Weibull crop
+  call removed.
 
 ## Open / Todos
 * Resubmit 4.0.1 to CRAN after the ggplot2 4.0 test failures.
 * Parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
 * Consider splitting the large `test_plots.R` block so a single assertion
   failure does not hide later plot checks.
+* Combinatorial genome (n unique cell IDs instead of binary + `trimton`)
+  is still open.
 
 ## Ideas
 * Pin or document ggplot2 compatibility in `Suggests` if further S7 class
   cleanup removes the legacy `"ggplot"` S3 class.
+* Full manufacturer power curve as input, not only cut-in / rated / cut-out.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0

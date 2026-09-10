@@ -166,6 +166,12 @@ test_that("Test Genetic Algorithm Function", {
   expect_true(all(sapply(fit, nrow) == 10))
   expect_false(any(unlist(sapply(fit, is.na))))
   expect_false(any(unlist(do.call("rbind", fit)[, -c(1, 2)] < 0)))
+  one <- do.call("rbind", lapply(fit, function(x) x[1, , drop = FALSE]))
+  expect_equal(
+    as.numeric(one[, "Parkfitness"]),
+    as.numeric(one[, "EnergyOverall"] * (one[, "EfficAllDir"] / 100)),
+    tolerance = 1e-8
+  )
 
   fit1 <- fitness(
     selection = startsel, referenceHeight = 100, RotorHeight = 100,

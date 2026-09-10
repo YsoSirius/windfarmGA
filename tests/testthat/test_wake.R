@@ -12,7 +12,7 @@ test_that("Test Wake Functions", {
   wnkl <- 20
   dist <- 100000
   dirct <- 0
-  t <- st_coordinates(st_sample(polYgon, 10))
+  t <- sf::st_coordinates(sf::st_sample(polYgon, 10))
   t <- cbind(t, "Z" = 1)
 
   ## Test circle_intersection Function --------------
@@ -90,7 +90,7 @@ test_that("Test Wake Functions", {
 
   ## Bigger Angle
   wnkl <- 50
-  t <- st_coordinates(st_sample(polYgon, 10))
+  t <- sf::st_coordinates(sf::st_sample(polYgon, 10))
   t <- cbind(t, "Z" = 100)
   resInfluPoiWin <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoiWin), "List of 10")
@@ -102,7 +102,7 @@ test_that("Test Wake Functions", {
   rm(df1, resInfluPoi)
 
   ## More Points and bigger Angle
-  t <- st_coordinates(st_sample(polYgon, 20))
+  t <- sf::st_coordinates(sf::st_sample(polYgon, 20))
   t <- cbind(t, "Z" = 1)
   resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)
   expect_output(str(resInfluPoi), "List of 20")
@@ -183,6 +183,38 @@ test_that("Test Wake Functions", {
 
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
   expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
+
+  ## Logarithmic wind profile: hub above reference height increases wind speed
+  resEq <- calculate_energy(
+    sel = resStartGA[[1]], referenceHeight = 50,
+    RotorHeight = 50, SurfaceRoughness = 0.03, wnkl = 20,
+    distanz = 100000, dirSpeed = vdata,
+    RotorR = 50, polygon1 = polYgon,
+    topograp = FALSE, weibull = FALSE
+  )
+  resHub <- calculate_energy(
+    sel = resStartGA[[1]], referenceHeight = 50,
+    RotorHeight = 100, SurfaceRoughness = 0.03, wnkl = 20,
+    distanz = 100000, dirSpeed = vdata,
+    RotorR = 50, polygon1 = polYgon,
+    topograp = FALSE, weibull = FALSE
+  )
+  expect_gt(
+    mean(do.call(rbind, resHub)[, "Windmean"]),
+    mean(do.call(rbind, resEq)[, "Windmean"])
+  )
+
+  ## Cut-in: speeds below the threshold contribute no power
+  old_cut <- options(windfarmGA.cut_in = 20)
+  resCut <- calculate_energy(
+    sel = resStartGA[[1]], referenceHeight = 50,
+    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
+    distanz = 100000, dirSpeed = data.frame(ws = 12, wd = 0),
+    RotorR = 50, polygon1 = polYgon,
+    topograp = FALSE, weibull = FALSE
+  )
+  options(old_cut)
+  expect_equal(unname(do.call(rbind, resCut)[1, "Energy_Output_Red"]), 0)
 
   resCalcEn <- calculate_energy(
     sel = resStartGA[[1]], referenceHeight = 50,

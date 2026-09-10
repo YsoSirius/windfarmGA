@@ -32,7 +32,7 @@ NumericVector angles_CPP(NumericVector Aa, NumericVector Bb, NumericVector Cc) {
 }
 
 // Calculates the energy output. (This is used for the reduced energy output with wake effects and for the full output)
-// NOTE: 0.2965 = 0.593 * 0.5
+// NOTE: 0.2965 = 0.593 * 0.5  (Betz Cp). Callers scale by Cp / 0.593.
 // [[Rcpp::export]]
 double energy_calc_CPP(NumericVector wind_speed, NumericVector rotor_radius, NumericVector air_rh) {
   return sum(0.2965 * air_rh * pow(wind_speed, 3) * (pow(rotor_radius, 2) * 3.141593)) / 1000;

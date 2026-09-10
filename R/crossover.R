@@ -69,7 +69,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU", "RAN"), verbose, see
 
     senefit <- se6fit[, parid[r]]
     sene1fit <- se6fit[, parid[r + 1]]
-    sene2fit[[e]] <- senefit + sene1fit / 2
+    sene2fit[[e]] <- (senefit + sene1fit) / 2
 
     if (crossPart == "EQU") {
       ## Equal Parts

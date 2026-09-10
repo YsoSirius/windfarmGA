@@ -37,7 +37,8 @@
 #' @param topograp Boolean value, which indicates if the terrain effect model
 #'   should be enabled or not. Default is \code{FALSE}
 #' @param elitism Boolean value, which indicates whether elitism should be
-#'   activated or not. Default is \code{TRUE}
+#'   activated or not. If \code{TRUE}, the best \code{nelit} layouts are copied
+#'   unchanged into the next generation. Default is \code{TRUE}
 #' @param nelit If \code{elitism} is TRUE, this input determines the amount
 #'   of individuals in the elite group. Default is 7
 #' @param selstate Determines which selection method is used, "FIX" selects a
@@ -96,6 +97,13 @@
 #'   sure that all rows are filled with numeric values and save the file with
 #'   \strong{";"} separation. Assign the path of the file to the input variable
 #'   \code{sourceCCLRoughness} of this function.
+#'
+#'   Fitness is \eqn{EnergyOverall \times (EfficAllDir/100)^w} with
+#'   \code{w = getOption("windfarmGA.fitness_efficiency_weight")}. Hub-height
+#'   wind speeds use a logarithmic profile unless
+#'   \code{options(windfarmGA.wind_profile = "power")} restores the legacy
+#'   power law. Power uses \code{options(windfarmGA.Cp)} (default 0.45) and
+#'   optional cut-in / rated / cut-out speeds.
 #'
 #' @examples \dontrun{
 #' ## Create a random rectangular shapefile
@@ -182,9 +190,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
   }
   if (missing(elitism)) {
     elitism <- TRUE
-    if (missing(nelit)) {
-      nelit <- 7
-    }
+  }
+  if (missing(nelit)) {
+    nelit <- 7
   }
   if (missing(trimForce)) {
     trimForce <- FALSE
@@ -256,15 +264,14 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
       )
     }
     max_cores <- parallel::detectCores()
-    print("max_cores"); print(max_cores)
     if (numCluster > max_cores) {
-      print(paste0("Maximum number of cores is: ", max_cores, "\n'numCluster' will be set to: ", max_cores - 1))
       warning("Maximum number of cores is: ", max_cores, "\n'numCluster' will be set to: ", max_cores - 1)
       numCluster <- max_cores - 1
     }
-    type_cluster <- "PSOCK" ## TODO - should this be available as option too?
+    type_cluster <- "PSOCK"
     cl <- parallel::makeCluster(numCluster, type = type_cluster)
     doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl), add = TRUE)
   }
 
   ## WEIBULL ###############
@@ -288,13 +295,10 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
         weibullsrc[[2]] <- terra::rast(weibullsrc[[2]])
       }
     }
-    ## Project Shapefile to raster proj, Crop/Mask and project raster back
-    shape_project <- st_transform(Polygon1, crs = st_crs(weibullsrc[[2]]))
-    weibl_k <- terra::crop(x = weibullsrc[[1]], y = shape_project, mask = TRUE)
-
-    a <- weibullsrc[[1]]
-    terra::crop(x = a, y = shape_project, mask = TRUE)
-    weibl_a <- terra::crop(x = weibullsrc[[2]], y = shape_project, mask = TRUE)
+      ## Project shapefile to raster CRS, then crop/mask both Weibull rasters
+      shape_project <- st_transform(Polygon1, crs = st_crs(weibullsrc[[2]]))
+      weibl_k <- terra::crop(x = weibullsrc[[1]], y = shape_project, mask = TRUE)
+      weibl_a <- terra::crop(x = weibullsrc[[2]], y = shape_project, mask = TRUE)
 
     estim_speed_raster <- weibl_a * gamma(1 + (1 / values(weibl_k)))
     estim_speed_raster <- terra::project(
@@ -766,10 +770,26 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
       seed = NULL
     )
 
+    ## Keep the current best layouts unchanged for the next generation
+    if (elitism) {
+      n_elite <- min(nelit, length(fit))
+      fit_order <- order(vapply(fit, function(x) x[1, "Parkfitness"], 1),
+                         decreasing = TRUE)
+      elite_bin <- do.call(cbind, lapply(fit_order[seq_len(n_elite)], function(idx) {
+        bin <- integer(n_gridcells)
+        bin[fit[[idx]][, "Rect_ID"]] <- 1L
+        bin
+      }))
+      mut1 <- cbind(mut1, elite_bin)
+    }
+    if (ncol(mut1) > 1) {
+      mut1 <- mut1[, !duplicated(t(mut1)), drop = FALSE]
+    }
+
     if (verbose) {
       message(paste(
         "TrimToN    -  Amount of Individuals: ",
-        length(mut1[1, ])
+        ncol(mut1)
       ))
     }
 
@@ -779,11 +799,6 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
     } else {
       i <- i + 1
     }
-  }
-
-  ## Remove Parallel Cluster ###############
-  if (Parallel) {
-    parallel::stopCluster(cl)
   }
 
   ## Reduce list, if algorithm didnt run all iterations #################
@@ -896,7 +911,17 @@ isSpatial <- function(shape, proj) {
       sf::st_as_sf(pltm, coords = c("x", "y"))$geometry
     ), "POLYGON")
 
-    if (!missing(proj)) st_crs(shape) <- 3035
+    if (!missing(proj)) {
+      if (is.character(proj)) {
+        epsg_match <- regmatches(
+          proj, regexpr("(?i)epsg:([0-9]+)", proj, perl = TRUE)
+        )
+        if (length(epsg_match) && nzchar(epsg_match)) {
+          proj <- as.integer(sub("(?i)epsg:", "", epsg_match, perl = TRUE))
+        }
+      }
+      st_crs(shape) <- proj
+    }
   }
   return(shape)
 }
