@@ -52,8 +52,6 @@ reference:
     - windata_format
     - isSpatial
     - permutations
-    - readinteger
-    - readintegerSel
     - splitAt
     - package_installed
   - title: Datasets

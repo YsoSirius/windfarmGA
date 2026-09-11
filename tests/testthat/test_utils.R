@@ -202,3 +202,20 @@ test_that("Test Basic Functions", {
   expect_false(any(duplicated(a[[1]][, "wd"])))
   expect_true(sum(a[[2]]) == 100)
 })
+
+test_that("explore_result click maps New max to a generation", {
+  expect_null(explore_click_generation(NULL, 1:3))
+  expect_null(explore_click_generation(data.frame(), 1:3))
+  expect_equal(
+    explore_click_generation(data.frame(customdata = 12L, x = 12), 12L),
+    12L
+  )
+  expect_equal(
+    explore_click_generation(data.frame(x = 7), c(3L, 7L, 11L)),
+    7L
+  )
+  expect_null(explore_click_generation(data.frame(x = 4), c(3L, 7L)))
+  sh <- explore_gen_shape(9)
+  expect_equal(sh[[1]]$x0, 9)
+  expect_equal(sh[[1]]$yref, "paper")
+})

@@ -4,23 +4,19 @@
 \alias{get_dist_angles}
 \title{Calculate distances and angles of possibly influencing turbines}
 \usage{
-get_dist_angles(t, o, wnkl, dist, polYgon, plotAngles = FALSE)
+get_dist_angles(t, o, wnkl, dist, area, plot_angles = FALSE)
 }
 \arguments{
 \item{t}{A data.frame of the current individual with X and Y coordinates}
 
 \item{o}{A numeric value indicating the index of the current turbine}
 
-\item{wnkl}{The angle from which wake influences are considered to be
-negligible}
-
 \item{dist}{A numeric value indicating the distance, after which the wake
 effects are considered to be eliminated.}
 
-\item{polYgon}{A shapefile representing the considered area}
+\item{area}{Site polygon}
 
-\item{plotAngles}{A logical variable, which is used to plot the distances and
-angles. Default is \code{FALSE}}
+\item{plot_angles}{Plot distances and angles}
 }
 \value{
 Returns a matrix with the distances, angles and heights of potentially
@@ -34,7 +30,7 @@ potentially influencing turbines.
 library(sf)
 
 ## Exemplary input Polygon with 2km x 2km:
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -43,7 +39,7 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Create a random windfarm with 10 turbines
-t <- st_coordinates(st_sample(Polygon1, 10))
+t <- st_coordinates(st_sample(area, 10))
 t <- cbind(t, "Z" = 1)
 wnkl <- 20
 dist <- 100000
@@ -53,7 +49,7 @@ potInfTur <- list()
 for (i in 1:(length(t[, 1]))) {
   potInfTur[[i]] <- get_dist_angles(
     t = t, o = i, wnkl = wnkl,
-    dist = dist, polYgon = Polygon1, plotAngles = TRUE
+    dist = dist, area = area, plot_angles = TRUE
   )
 }
 potInfTur

@@ -17,16 +17,16 @@ test_that("Test Terrain and Weibull Effects", {
   }
 
   ## Test Terrain_Model Function ###############
-  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  area <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4651704, 4651704, 4654475, 4654475, 4651704),
       c(2692925, 2694746, 2694746, 2692925, 2692925)
     ))),
     crs = 3035
   ))
-  polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
+  polygon_wgs84 <- sf::st_transform(area, st_crs(4326))
   srtm <- suppressMessages(elevatr::get_elev_raster(locations = polygon_wgs84, z = 11))
-  res <- terrain_model(srtm, Polygon1, sourceCCL = terra::rast("g100_06.tif"))
+  res <- terrain_model(srtm, area, ccl = terra::rast("g100_06.tif"))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
@@ -35,7 +35,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_s4_class(res[[1]][[2]], "SpatRaster")
   expect_s4_class(res[[1]][[3]], "SpatRaster")
 
-  res <- terrain_model(terra::rast(srtm), Polygon1, sourceCCL = "g100_06.tif")
+  res <- terrain_model(terra::rast(srtm), area, ccl = "g100_06.tif")
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
@@ -47,8 +47,8 @@ test_that("Test Terrain and Weibull Effects", {
 
   srtm_terra <- terra::rast(srtm)
   values(srtm_terra) <- NA
-  res <- expect_warning(terrain_model(srtm_terra, Polygon1, sourceCCL = "g100_06.tif"))
-  res <- suppressWarnings(terrain_model(srtm_terra, Polygon1, sourceCCL = "g100_06.tif"))
+  res <- expect_warning(terrain_model(srtm_terra, area, ccl = "g100_06.tif"))
+  res <- suppressWarnings(terrain_model(srtm_terra, area, ccl = "g100_06.tif"))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
@@ -72,14 +72,14 @@ test_that("Test Terrain and Weibull Effects", {
         xmax = 5660619.11584955, ymax = 3437763.9404084), class = "bbox"))
   st_crs(polygon) <- 3035
   expect_error(
-    terrain_model(topograp = TRUE, polygon, sourceCCL = "g100_06.tif")
+    terrain_model(terrain = TRUE, polygon, ccl = "g100_06.tif")
   )
 
   ## Mock Packages not installed ############
   with_mocked_bindings(
     is_elevatr_installed = function() FALSE,
     expect_error(
-      terrain_model(topograp = TRUE, Polygon1, sourceCCL = "g100_06.tif")
+      terrain_model(terrain = TRUE, area, ccl = "g100_06.tif")
     )
   )
 
@@ -98,13 +98,13 @@ test_that("Test Terrain and Weibull Effects", {
 
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(
-      Polygon1 = sp_polygon,
+      area = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = vdata,
-      Rotor = 30,
-      RotorHeight = 100,
-      topograp = TRUE, verbose = TRUE,
-      plotit = TRUE
+      wind = vdata,
+      rotor = 30,
+      rotor_height = 100,
+      terrain = TRUE, verbose = TRUE,
+      plot = TRUE
     )
   ))
   expect_true(nrow(resultrect) == 1)
@@ -113,17 +113,17 @@ test_that("Test Terrain and Weibull Effects", {
 
   ## CCL-Raster should be in directory already
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-  sourceCCLRoughness <- paste0(path, "clc_legend.csv")
+  ccl_roughness <- paste0(path, "clc_legend.csv")
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(
-      Polygon1 = sp_polygon,
+      area = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = vdata,
-      Rotor = 30,
-      RotorHeight = 100,
-      topograp = TRUE, verbose = TRUE,
-      plotit = TRUE, sourceCCL = "g100_06.tif",
-      sourceCCLRoughness = sourceCCLRoughness
+      wind = vdata,
+      rotor = 30,
+      rotor_height = 100,
+      terrain = TRUE, verbose = TRUE,
+      plot = TRUE, ccl = "g100_06.tif",
+      ccl_roughness = ccl_roughness
     )
   ))
   expect_true(nrow(resultrect) == 1)
@@ -146,14 +146,14 @@ test_that("Test Terrain and Weibull Effects", {
 
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(
-      Polygon1 = sp_polygon,
+      area = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = vdata,
-      Rotor = 30,
-      RotorHeight = 100,
+      wind = vdata,
+      rotor = 30,
+      rotor_height = 100,
       verbose = TRUE,
       weibull = TRUE,
-      weibullsrc = list(k_raster, a_raster)
+      weibull_src = list(k_raster, a_raster)
     )
   ))
   expect_true(nrow(resultrect) == 1)
@@ -163,13 +163,13 @@ test_that("Test Terrain and Weibull Effects", {
   rm(resultrect)
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(
-      Polygon1 = sp_polygon,
+      area = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = vdata,
-      Rotor = 30,
-      RotorHeight = 100,
+      wind = vdata,
+      rotor = 30,
+      rotor_height = 100,
       weibull = TRUE,
-      weibullsrc = list(raster::raster(k_raster), a_raster)
+      weibull_src = list(raster::raster(k_raster), a_raster)
     )
   ))
   expect_true(nrow(resultrect) == 1)
@@ -179,13 +179,13 @@ test_that("Test Terrain and Weibull Effects", {
   rm(resultrect)
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(
-      Polygon1 = sp_polygon,
+      area = sp_polygon,
       n = 12, iteration = 1,
-      vdirspe = vdata,
-      Rotor = 30,
-      RotorHeight = 100,
+      wind = vdata,
+      rotor = 30,
+      rotor_height = 100,
       weibull = TRUE,
-      weibullsrc = list(k_raster, raster::raster(a_raster))
+      weibull_src = list(k_raster, raster::raster(a_raster))
     )
   ))
   expect_true(nrow(resultrect) == 1)
@@ -194,9 +194,9 @@ test_that("Test Terrain and Weibull Effects", {
 
   expect_error(
     genetic_algorithm(
-      Polygon1 = sp_polygon,
-      n = 12, iteration = 1, vdirspe = vdata,
-      Rotor = 30, RotorHeight = 100,
+      area = sp_polygon,
+      n = 12, iteration = 1, wind = vdata,
+      rotor = 30, rotor_height = 100,
       weibull = TRUE
     )
   )
@@ -204,10 +204,10 @@ test_that("Test Terrain and Weibull Effects", {
   ## Plotting Terrain Effects #############
   plres <- suppressWarnings(
     plot_result(resultrect, sp_polygon,
-      topographie = TRUE,
-      plotEn = 1,
-      sourceCCLRoughness = sourceCCLRoughness,
-      weibullsrc = list(a_raster * (gamma(1 + (1 / values(k_raster)))))
+      terrain = TRUE,
+      plot_en = 1,
+      ccl_roughness = ccl_roughness,
+      weibull_src = list(a_raster * (gamma(1 + (1 / values(k_raster)))))
     )
   )
   expect_false(anyNA(plres))
@@ -215,10 +215,10 @@ test_that("Test Terrain and Weibull Effects", {
 
   plres <- suppressWarnings(
     plot_result(resultrect, sp_polygon,
-      topographie = TRUE,
-      plotEn = 1,
-      sourceCCLRoughness = sourceCCLRoughness,
-      weibullsrc = list(raster::raster(a_raster * (gamma(1 + (1 / values(k_raster))))))
+      terrain = TRUE,
+      plot_en = 1,
+      ccl_roughness = ccl_roughness,
+      weibull_src = list(raster::raster(a_raster * (gamma(1 + (1 / values(k_raster))))))
     )
   )
   expect_false(anyNA(plres))
@@ -226,23 +226,23 @@ test_that("Test Terrain and Weibull Effects", {
 
   plres <- suppressWarnings(
     plot_result(resultrect, sp_polygon,
-      topographie = TRUE,
-      plotEn = 1,
-      sourceCCLRoughness = sourceCCLRoughness,
-      weibullsrc = raster::raster(a_raster * (gamma(1 + (1 / values(k_raster)))))
+      terrain = TRUE,
+      plot_en = 1,
+      ccl_roughness = ccl_roughness,
+      weibull_src = raster::raster(a_raster * (gamma(1 + (1 / values(k_raster)))))
     )
   )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
 
   plres <- plot_result(resultrect, sp_polygon,
-    weibullsrc = list(k_raster, a_raster)
+    weibull_src = list(k_raster, a_raster)
   )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
 
   plres <- plot_result(resultrect, sp_polygon,
-    weibullsrc = list(
+    weibull_src = list(
       raster::raster(k_raster),
       raster::raster(a_raster)
     )
@@ -253,8 +253,8 @@ test_that("Test Terrain and Weibull Effects", {
   ## Weibull Single Raster for mean wind spead
   weibullraster <- a_raster * (gamma(1 + (1 / values(k_raster))))
   plres <- plot_result(resultrect, sp_polygon,
-    plotEn = 2,
-    weibullsrc = weibullraster
+    plot_en = 2,
+    weibull_src = weibullraster
   )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
@@ -264,15 +264,15 @@ test_that("Test Terrain and Weibull Effects", {
   }
   plres <- plot_result(resultrect,
     sp_polygon,
-    topographie = TRUE,
-    plotEn = 1
+    terrain = TRUE,
+    plot_en = 1
   )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
 
   ## calculate_energy with Terrain + Plots!! ##################
   ## With Terrain (+new function)
-  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  area <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
       c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -281,21 +281,21 @@ test_that("Test Terrain and Weibull Effects", {
   ))
   srtm <- suppressWarnings(
     elevatr::get_elev_raster(
-      locations = Polygon1, z = 11
+      locations = area, z = 11
     )
   )
-  srtm_crop <- terra::crop(terra::rast(srtm), Polygon1)
+  srtm_crop <- terra::crop(terra::rast(srtm), area)
 
   vdata <- data.frame(ws = 12, wd = 0)
   Rotor <- 50
-  fcrR <- 3
+  fcr <- 3
   resGrid <- grid_area(
-    shape = Polygon1, size = Rotor * fcrR,
-    prop = 1, plotGrid = FALSE
+    area = area, size = Rotor * fcr,
+    prop = 1, plot_grid = FALSE
   )
-  resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
+  resStartGA <- init_population(grid = resGrid[[1]], n = 15, n_start = 100)
 
-  srtm_crop <- terra::mask(srtm_crop, Polygon1)
+  srtm_crop <- terra::mask(srtm_crop, area)
   roughrast <- terra::terrain(srtm_crop, "roughness")
   if (all(is.na(values(roughrast)))) {
     values(roughrast) <- 1
@@ -307,10 +307,10 @@ test_that("Test Terrain and Weibull Effects", {
   )
 
   ccl <- terra::rast("g100_06.tif")
-  ccl <- crop(ccl, Polygon1, mask = TRUE)
+  ccl <- crop(ccl, area, mask = TRUE)
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-  sourceCCLRoughness <- paste0(path, "clc_legend.csv")
-  rauhigkeitz <- utils::read.csv(sourceCCLRoughness,
+  ccl_roughness <- paste0(path, "clc_legend.csv")
+  rauhigkeitz <- utils::read.csv(ccl_roughness,
     header = TRUE, sep = ";"
   )
   cclRaster <- terra::classify(ccl, matrix(c(
@@ -320,12 +320,12 @@ test_that("Test Terrain and Weibull Effects", {
   ncol = 2
   ))
   resCalcEn <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
+    layout = resStartGA[[1]], reference_height = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = Polygon1,
-    topograp = TRUE, weibull = FALSE, plotit = TRUE
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = area,
+    terrain = TRUE, weibull = FALSE, plot = TRUE
   )
   expect_output(str(resCalcEn), "List of 1")
   df <- do.call(rbind, resCalcEn)
@@ -337,14 +337,14 @@ test_that("Test Terrain and Weibull Effects", {
 
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(
-      Polygon1 = Polygon1,
+      area = area,
       n = 12, iteration = 1,
-      vdirspe = vdata,
-      Rotor = 30,
-      RotorHeight = 100,
-      topograp = srtm_crop$strm_crop, verbose = TRUE,
-      plotit = TRUE, sourceCCL = "g100_06.tif",
-      sourceCCLRoughness = sourceCCLRoughness
+      wind = vdata,
+      rotor = 30,
+      rotor_height = 100,
+      terrain = srtm_crop$strm_crop, verbose = TRUE,
+      plot = TRUE, ccl = "g100_06.tif",
+      ccl_roughness = ccl_roughness
     )
   ))
   expect_true(nrow(resultrect) == 1)
@@ -358,12 +358,12 @@ test_that("Test Terrain and Weibull Effects", {
   k_raster <- terra::app(DEMcrop, function(x) (x / maxval) + 6)
   weibullraster <- a_raster * (gamma(1 + (1 / values(k_raster))))
   resCalcEn <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
+    layout = resStartGA[[1]], reference_height = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-    weibull = weibullraster, plotit = TRUE
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = area, terrain = FALSE,
+    weibull = weibullraster, plot = TRUE
   )
   expect_output(str(resCalcEn), "List of 1")
   df <- do.call(rbind, resCalcEn)
@@ -375,12 +375,12 @@ test_that("Test Terrain and Weibull Effects", {
 
 
   resCalcEn <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
+    layout = resStartGA[[1]], reference_height = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-    weibull = raster::raster(weibullraster), plotit = TRUE
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = area, terrain = FALSE,
+    weibull = raster::raster(weibullraster), plot = TRUE
   )
   expect_output(str(resCalcEn), "List of 1")
   df <- do.call(rbind, resCalcEn)
@@ -396,12 +396,12 @@ test_that("Test Terrain and Weibull Effects", {
   min_y_ppt <- st_as_sf(min_y_ppt, coords = c("X", "Y"))
   weibullrastercrop <- crop(weibullraster, terra::ext(min_y_ppt))
   resCalcEn <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
+    layout = resStartGA[[1]], reference_height = 50,
     srtm_crop = srtm_crop, cclRaster = cclRaster,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
-    weibull = weibullrastercrop, plotit = TRUE
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = area, terrain = FALSE,
+    weibull = weibullrastercrop, plot = TRUE
   )
   expect_output(str(resCalcEn), "List of 1")
   df <- do.call(rbind, resCalcEn)

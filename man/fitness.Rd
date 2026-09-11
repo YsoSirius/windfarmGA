@@ -5,60 +5,50 @@
 \title{Evaluate the Individual Fitness values}
 \usage{
 fitness(
-  selection,
-  referenceHeight,
-  RotorHeight,
-  SurfaceRoughness,
-  Polygon,
-  resol1,
-  rot,
-  dirspeed,
-  srtm_crop,
-  topograp,
-  cclRaster,
-  weibull,
-  Parallel,
-  numCluster
+  population,
+  reference_height,
+  rotor_height,
+  surface_roughness,
+  area,
+  rotor,
+  wind,
+  elevation = NULL,
+  terrain = FALSE,
+  ccl_raster = NULL,
+  weibull = FALSE,
+  parallel = FALSE,
+  n_cluster = 2
 )
 }
 \arguments{
-\item{selection}{A list containing all individuals of the current population.}
+\item{population}{A list of individuals (layouts with X/Y and cell IDs).}
 
-\item{referenceHeight}{The height at which the incoming wind speeds were
-measured. Default is \code{RotorHeight}}
+\item{reference_height}{Height at which \code{wind$ws} was measured.}
 
-\item{RotorHeight}{The height of the turbine hub}
+\item{rotor_height}{Hub height in metres.}
 
-\item{SurfaceRoughness}{A surface roughness length in meters.
-With the terrain effect model, a surface roughness is calculated for every
-grid cell using the elevation and land cover data. Default is \code{0.3}}
+\item{surface_roughness}{Roughness length in metres. Per-cell when
+\code{terrain} is on.}
 
-\item{Polygon}{The considered area as shapefile.}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
-\item{resol1}{The resolution of the grid in meter.}
+\item{rotor}{Rotor radius in metres.}
 
-\item{rot}{The desired rotor radius in meter.}
+\item{wind}{Wind data as returned by \code{\link[=windata_format]{windata_format()}} (\code{list(df, probab)}).}
 
-\item{dirspeed}{The wind data as list.}
+\item{elevation}{Terrain list from \code{\link[=terrain_model]{terrain_model()}} (elevation, orography,
+roughness). Unused when \code{terrain} is \code{FALSE}.}
 
-\item{srtm_crop}{A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}}
+\item{terrain}{Terrain model (elevation + land cover).}
 
-\item{topograp}{Boolean value, which indicates if the terrain effect model
-should be enabled or not. Default is \code{FALSE}}
+\item{ccl_raster}{Land-cover roughness raster from \code{\link[=terrain_model]{terrain_model()}}.}
 
-\item{cclRaster}{A Corine Land Cover raster, that has to be adapted
-previously by hand with the surface roughness length for every land cover
-type. Is only used, when the terrain effect model is activated.}
+\item{weibull}{Raster of estimated wind speeds, or \code{FALSE}.}
 
-\item{weibull}{A raster representing the estimated wind speeds}
+\item{parallel}{Parallel fitness (\code{parallel} + \code{doParallel}).}
 
-\item{Parallel}{A boolean value, indicating whether parallel processing
-should be used. The \emph{parallel} and \emph{doParallel} packages are used for
-parallel processing. Default is \code{FALSE}}
-
-\item{numCluster}{If \code{Parallel} is TRUE, this variable defines the
-number of clusters to be used. Default is \code{2}}
+\item{n_cluster}{Worker count when \code{parallel} is \code{TRUE}.}
 }
 \value{
 Returns a list with every individual, consisting of X & Y
@@ -75,7 +65,7 @@ outputs to a single fitness value for each individual.
 \donttest{
 ## Create a random rectangular shapefile
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -92,17 +82,16 @@ wind <- data.frame(ws = 12, wd = 0)
 
 ## Calculate a Grid and an indexed data.frame with coordinates and
 ## grid cell IDs.
-Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+Grid1 <- grid_area(area = area, size = 200, prop = 1)
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
 wind <- list(wind, probab = 100)
 startsel <- init_population(Grid, 10, 20)
 fit <- fitness(
-  selection = startsel, referenceHeight = 100, RotorHeight = 100,
-  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-  dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = "",
-  Parallel = FALSE
+  population = startsel, reference_height = 100, rotor_height = 100,
+  surface_roughness = 0.3, area = area, rotor = 20,
+  wind = wind, terrain = FALSE, parallel = FALSE
 )
 }
 }

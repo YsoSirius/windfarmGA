@@ -26,4 +26,11 @@ test_that("Test Viewshed Functions", {
   plt <- plot_viewshed(x, locs, h1 = 0, h2 = 0, plot = TRUE)
   expect_s4_class(plt, "SpatRaster")
   expect_true(all(range(values(plt, na.rm = TRUE)) %in% c(0, 1)))
+
+  ## lon/lat DEM: terra::viewshed needs metres; project first
+  r_ll <- terra::project(x, "EPSG:4326")
+  locs_ll <- sf::st_transform(sf::st_as_sf(st_sample(shape, 5, type = "random")), 4326)
+  plt_ll <- plot_viewshed(r_ll, locs_ll, h1 = 0, h2 = 0, plot = FALSE)
+  expect_s4_class(plt_ll, "SpatRaster")
+  expect_false(isTRUE(terra::is.lonlat(plt_ll)))
 })

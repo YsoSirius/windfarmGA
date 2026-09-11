@@ -1,7 +1,7 @@
 
 test_that("Test Random Search Functions", {
   ## Data ##############
-  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  area <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
       c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -10,7 +10,7 @@ test_that("Test Random Search Functions", {
   ))
 
   ## RandomSearch #########################
-  new <- random_search(resultrect, Polygon1, n = 20, best = 3, Plot = TRUE)
+  new <- random_search(resultrect, area, n = 20, best = 3, plot = TRUE)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -18,7 +18,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
-  new <- random_search(resultrect, Polygon1, Plot = TRUE)
+  new <- random_search(resultrect, area, plot = TRUE)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -26,7 +26,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
-  new <- random_search(resulthex, Polygon1, Plot = TRUE)
+  new <- random_search(resulthex, area, plot = TRUE)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -34,7 +34,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "EnergyOverall"] > 0))
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
-  new <- random_search(resultrect[1:30, ], Polygon1, best = 10000)
+  new <- random_search(resultrect[1:30, ], area, best = 10000)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -43,7 +43,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
   ## Test Plots with Hexagons
-  new <- random_search(resultrect, Polygon1, n = 10, best = 1)
+  new <- random_search(resultrect, area, n = 10, best = 1)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -54,32 +54,32 @@ test_that("Test Random Search Functions", {
   ## Plots ###################
   res <- plot_random_search(
     resultRS = new, result = resultrect,
-    Polygon1 = Polygon1, best = 1
+    area = area, best = 1
   )
   expect_true(is.null(res))
 
-  new10 <- random_search(resulthex, Polygon1, n = 20, best = 3, Plot = TRUE)
-  respl <- plot_random_search(new10, resulthex, Polygon1 = Polygon1)
+  new10 <- random_search(resulthex, area, n = 20, best = 3, plot = TRUE)
+  respl <- plot_random_search(new10, resulthex, area = area)
   expect_true(is.null(respl))
 
-  new <- random_search(resultrect, Polygon1, n = 2, best = 1)
+  new <- random_search(resultrect, area, n = 2, best = 1)
   res <- plot_random_search(
     resultRS = new, result = resultrect,
-    Polygon1 = Polygon1, best = 100
+    area = area, best = 100
   )
   expect_true(is.null(res))
 
   vdata <- data.frame(ws = 12, wd = 0)
   resultSP <- genetic_algorithm(
-    Polygon1 = Polygon1,
+    area = area,
     n = 5, iteration = 3,
-    vdirspe = vdata, Rotor = 35,
-    RotorHeight = 100
+    wind = vdata, rotor = 35,
+    rotor_height = 100
   )
-  new <- random_search(resultSP, Polygon1, n = 2, best = 1)
+  new <- random_search(resultSP, area, n = 2, best = 1)
   res <- plot_random_search(
     resultRS = new, result = resultSP,
-    Polygon1 = Polygon1, best = 100
+    area = area, best = 100
   )
   expect_true(is.null(res))
 })

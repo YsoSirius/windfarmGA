@@ -6,9 +6,9 @@
 #'
 #' @export
 #'
-#' @param trimtonOut Binary matrix (legacy) or integer matrix of grid IDs
+#' @param layouts Binary matrix (legacy) or integer matrix of grid IDs
 #'   (`n` turbines × individuals)
-#' @param Grid Grid of the considered area
+#' @param grid Indexed grid from [grid_area()]
 #'
 #' @family Helper Functions
 #' @return Returns a list of all individuals with X and Y coordinates and the
@@ -17,7 +17,7 @@
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(0, 0, 2000, 2000, 0),
 #'     c(0, 2000, 2000, 0, 0)
@@ -27,16 +27,16 @@
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and
 #' ## grid cell Ids.
-#' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+#' Grid1 <- grid_area(area = area, size = 200, prop = 1)
 #' Grid <- Grid1[[1]]
 #'
 #' startsel <- init_population(Grid, 10, 20)
 #' wind <- data.frame(ws = 12, wd = 0)
 #' wind <- list(wind, probab = 100)
 #' fit <- fitness(
-#'   selection = startsel, referenceHeight = 100, RotorHeight = 100,
-#'   SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-#'   dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+#'   population = startsel, reference_height = 100, rotor_height = 100,
+#'   surface_roughness = 0.3, area = area, rotor = 20,
+#'   wind = wind, terrain = FALSE
 #' )
 #' allparks <- do.call("rbind", fit)
 #'
@@ -50,23 +50,24 @@
 #' ## Look up XY coordinates for the next fitness evaluation.
 #' getRectV <- get_grids(mut_ids, Grid)
 #' fit <- fitness(
-#'   selection = getRectV, referenceHeight = 100, RotorHeight = 100,
-#'   SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-#'   dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+#'   population = getRectV, reference_height = 100, rotor_height = 100,
+#'   surface_roughness = 0.3, area = area, rotor = 20,
+#'   wind = wind, terrain = FALSE
 #' )
 #' head(fit)
 #' }
-get_grids <- function(trimtonOut, Grid) {
-  if (!is.matrix(trimtonOut)) {
-    trimtonOut <- matrix(trimtonOut, ncol = 1)
+get_grids <- function(layouts, grid) {
+  Grid <- grid
+  if (!is.matrix(layouts)) {
+    layouts <- matrix(layouts, ncol = 1)
   }
-  binary <- isTRUE(all(trimtonOut %in% c(0, 1))) &&
-    nrow(trimtonOut) == nrow(Grid)
-  lapply(seq_len(ncol(trimtonOut)), function(i) {
+  binary <- isTRUE(all(layouts %in% c(0, 1))) &&
+    nrow(layouts) == nrow(Grid)
+  lapply(seq_len(ncol(layouts)), function(i) {
     if (binary) {
-      Grid[trimtonOut[, i] == 1, , drop = FALSE]
+      Grid[layouts[, i] == 1, , drop = FALSE]
     } else {
-      Grid[match(trimtonOut[, i], Grid[, "ID"]), , drop = FALSE]
+      Grid[match(layouts[, i], Grid[, "ID"]), , drop = FALSE]
     }
   })
 }

@@ -61,20 +61,20 @@ parameters. For Austria this data is already included in the package.
 library(sf)
 dsn <- "Path to the Shapefile"
 layer <- "Name of the Shapefile"
-Polygon1 <- sf::st_read(dsn = dsn, layer = layer)
-plot(Polygon1, col = "blue")
+area <- sf::st_read(dsn = dsn, layer = layer)
+plot(area, col = "blue")
 ```
 
 - Or create a random Polygon
 ```R
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),
     c(0, 2000, 2000, 0, 0)))),
   crs = 3035
 ))
-plot(Polygon1, col = "blue", axes = TRUE)
+plot(area, col = "blue", axes = TRUE)
 ```
 
 ## Create random Wind data 
@@ -95,22 +95,22 @@ windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
 ## Grid Spacing
 ### Rectangular Grid Cells
 Verify that the grid spacing is appropriate. Adapt the following input variables if necessary:
-- *Rotor*: The rotor radius in meters.
-- *fcrR*: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter.
+- *rotor*: The rotor radius in meters.
+- *fcr*: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter.
 - *prop*: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.
 
 *Make sure that the Polygon is projected in meters.*
 ```R
 Rotor <- 20
-fcrR <- 9
-Grid <- grid_area(Polygon1, size = (Rotor * fcrR), prop = 1, plotGrid = TRUE)
+fcr <- 9
+Grid <- grid_area(area, size = (Rotor * fcr), prop = 1, plot_grid = TRUE)
 str(Grid)
 ```
 ### Hexagonal Grid Cells
 ```R
 Rotor <- 20
-fcrR <- 9
-HexGrid <- hexa_area(Polygon1, size = (Rotor * fcrR), plotGrid = TRUE)
+fcr <- 9
+HexGrid <- hexa_area(area, size = (Rotor * fcr), plot_grid = TRUE)
 str(HexGrid)
 ```
 <p align="center">
@@ -119,11 +119,14 @@ str(HexGrid)
 
 
 ## Terrain Effect Model
-If the input variable **topograp** for the functions `windfarmGA` or `genetic_algorithm` is TRUE, the genetic algorithm will take terrain effects into account. For this purpose an elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. ( [Download a CLC raster](https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4) ).
+If **terrain** is `TRUE` in `genetic_algorithm`, terrain effects are taken
+into account. An elevation model and a Corine Land Cover raster are
+downloaded automatically, but can also be given manually.
+([Download a CLC raster](https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4)).
             
 
-If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable **sourceCCL**. The algorithm uses an adapted version of the Raster legend ("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named **Rauhigkeit_z** to the .csv file. Assign a surface roughness length to all land cover types. 
-Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the .csv file path to the input variable **sourceCCLRoughness**.
+If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable **ccl**. The algorithm uses an adapted version of the Raster legend ("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named **Rauhigkeit_z** to the .csv file. Assign a surface roughness length to all land cover types. 
+Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the .csv file path to the input variable **ccl_roughness**.
 
 
 ## Start an Optimization
@@ -134,20 +137,20 @@ Search knobs that are not function arguments are session options
 - without terrain effects
 ```R
 result <- genetic_algorithm(
-  Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-  vdirspe = wind_df, RotorHeight = 100
+  area = area, n = 12, rotor = 20, fcr = 9, iteration = 10,
+  wind = wind_df, rotor_height = 100
 )
 ```
 
 - with terrain effects
 ```R
-sourceCCL <- "Source of the CCL raster (TIF)"
-sourceCCLRoughness <- "Source of the Adapted CCL legend (CSV)"
+ccl <- "Source of the CCL raster (TIF)"
+ccl_roughness <- "Source of the Adapted CCL legend (CSV)"
 
 result <- genetic_algorithm(
-  Polygon1 = Polygon1, n = 12, Rotor = 20, fcrR = 9, iteration = 10,
-  vdirspe = wind_df, RotorHeight = 100, topograp = TRUE,
-  sourceCCL = sourceCCL, sourceCCLRoughness = sourceCCLRoughness
+  area = area, n = 12, rotor = 20, fcr = 9, iteration = 10,
+  wind = wind_df, rotor_height = 100, terrain = TRUE,
+  ccl = ccl, ccl_roughness = ccl_roughness
 )
 ```
 
@@ -162,11 +165,11 @@ araster <- "/..pathto../a_param_raster.tif"
 weibullrasters <- list(terra::rast(kraster), terra::rast(araster))
 
 result_weibull <- genetic_algorithm(
-  Polygon1 = Polygon1, GridMethod = "h", n = 12,
-  fcrR = 5, iteration = 10, vdirspe = wind_df, Rotor = 30,
-  RotorHeight = 100, weibull = TRUE, weibullsrc = weibullrasters
+  area = area, grid_method = "h", n = 12,
+  fcr = 5, iteration = 10, wind = wind_df, rotor = 30,
+  rotor_height = 100, weibull = TRUE, weibull_src = weibullrasters
 )
-plot_windfarmGA(result = result_weibull, Polygon1 = Polygon1)
+plot_windfarmGA(result = result_weibull, area = area)
 ```
 
 # Options
@@ -178,11 +181,8 @@ the turbines and which GA pieces to use. Session options
 the run; they apply for the whole R session until you change them again.
 
 ```R
-options(
-  windfarmGA.immigrants = 3,
-  windfarmGA.local_search_elites = 5,
-  windfarmGA.local_search_tries = 6
-)
+ga_options()
+ga_options(immigrants = 3, local_search_elites = 5, local_search_tries = 6)
 ```
 
 The north-wind benchmark and why these search defaults exist are in
@@ -190,52 +190,49 @@ The north-wind benchmark and why these search defaults exist are in
 
 ## Arguments of `genetic_algorithm()`
 
-Required: `Polygon1`, `n`, `Rotor`, `vdirspe`, `RotorHeight`.
+Required: `area`, `wind`, `n`, `rotor`, `rotor_height`.
 
 ### Site and turbines
 
 | Argument | Default | Meaning |
 |---|---|---|
-| `Polygon1` | — | Area as sf polygon, SpatialPolygons, or coordinate matrix. Must be projected (metres). |
+| `area` | — | Area as sf polygon, SpatialPolygons, or coordinate matrix. Must be projected (metres). |
 | `n` | — | Number of turbines (fixed; every individual has exactly `n` unique cell IDs). |
-| `Rotor` | — | Rotor radius in metres. |
-| `fcrR` | `5` | Grid spacing factor. Cell size is `fcrR * Rotor`. Use at least `2` so a cell covers the rotor diameter. |
-| `GridMethod` | rectangular | `"h"` / `"hexagon"` for hexagonal cells. |
-| `Proportionality` | `1` | Minimum fraction of a grid cell that must overlap the polygon (`prop` in `grid_area`). |
-| `Projection` | EPSG:3035 | CRS if the polygon has none (numeric EPSG or PROJ string). |
-| `vdirspe` | — | Wind data.frame (`ws`, `wd`, optional `probab`). See `windata_format`. |
-| `referenceHeight` | `RotorHeight` | Height at which `ws` was measured. |
-| `RotorHeight` | — | Hub height in metres. |
-| `SurfaceRoughness` | `0.3` | Roughness length \(z_0\) in metres. Ignored per cell when `topograp = TRUE`. |
+| `rotor` | — | Rotor radius in metres. |
+| `fcr` | `5` | Grid spacing factor. Cell size is `fcr * rotor`. Use at least `2` so a cell covers the rotor diameter. |
+| `grid_method` | `"rectangular"` | `"h"` / `"hexagon"` for hexagonal cells. |
+| `proportionality` | `1` | Minimum fraction of a grid cell that must overlap the polygon (`prop` in `grid_area`). |
+| `crs` | EPSG:3035 | CRS if the polygon has none (numeric EPSG or PROJ string). |
+| `wind` | — | Wind data.frame (`ws`, `wd`, optional `probab`). See `windata_format`. |
+| `reference_height` | `rotor_height` | Height at which `ws` was measured. |
+| `rotor_height` | — | Hub height in metres. |
+| `surface_roughness` | `0.3` | Roughness length \(z_0\) in metres. Ignored per cell when `terrain = TRUE`. |
 
 ### Terrain and Weibull
 
 | Argument | Default | Meaning |
 |---|---|---|
-| `topograp` | `FALSE` | Terrain model: elevation (via `elevatr`) plus Corine Land Cover for roughness and wake decay. |
-| `sourceCCL` | auto / package | Path to a CLC raster (`.tif`) if you do not want the download. |
-| `sourceCCLRoughness` | `inst/extdata` | CSV legend with column `Rauhigkeit_z` (`;` separated). |
-| `weibull` | `FALSE` | If `TRUE`, mean speed at each turbine comes from Weibull rasters; `ws` in `vdirspe` is ignored. |
-| `weibullsrc` | Austria rasters | `list(k, a)` shape and scale rasters. Package data cover Austria only. |
+| `terrain` | `FALSE` | Terrain model: elevation (via `elevatr`) plus Corine Land Cover for roughness and wake decay. |
+| `ccl` | auto / package | Path to a CLC raster (`.tif`) if you do not want the download. |
+| `ccl_roughness` | `inst/extdata` | CSV legend with column `Rauhigkeit_z` (`;` separated). |
+| `weibull` | `FALSE` | If `TRUE`, mean speed at each turbine comes from Weibull rasters; `ws` in `wind` is ignored. |
+| `weibull_src` | Austria rasters | `list(k, a)` shape and scale rasters. Package data cover Austria only. |
 
 ### GA loop
 
 The loop is **selection → set-crossover → swap-mutation → fitness**.
-`crossPart1` and `trimForce` are unused here (legacy binary API).
 
 | Argument | Default | Meaning |
 |---|---|---|
 | `iteration` | `20` | Generation budget. Raise this for real searches (the gold-layout tests used 80–150). |
-| `mutr` | `2/n` | Mutation probability **per turbine** (swap with an unused cell). Adaptive rates still keep this as the mutate target. |
-| `selstate` | `"VAR"` | `"VAR"`: parent share follows fitness progress. `"FIX"`: always 50 %. |
+| `mutation_rate` | `2/n` | Mutation probability **per turbine** (swap with an unused cell). Adaptive rates still keep this as the mutate target. |
+| `selection_mode` | `"VAR"` | `"VAR"`: parent share follows fitness progress. `"FIX"`: always 50 %. |
 | `elitism` | `TRUE` | Archive the best layout unchanged; elites also spawn children and get local search. |
-| `nelit` | `3` | Base elite count. Grows in a long refine stall, drops by 1 during a disturbance pulse. |
-| `crossPart1` | `"EQU"` | Unused by set-crossover. Still accepted for the old `crossover()` helper (`EQU` / `RAN`). |
-| `trimForce` | `FALSE` | Unused; the genome always has `n` turbines. Kept for `trimton()`. |
-| `Parallel` | `FALSE` | Parallel fitness (`parallel` + `doParallel`). |
-| `numCluster` | `2` | Worker count if `Parallel` is `TRUE` (capped at cores − 1). |
+| `n_elite` | `3` | Base elite count. Grows in a long refine stall, drops by 1 during a disturbance pulse. |
+| `parallel` | `FALSE` | Parallel fitness (`parallel` + `doParallel`). |
+| `n_cluster` | `2` | Worker count if `parallel` is `TRUE` (capped at cores − 1). |
 | `verbose` | `FALSE` | Print a line per generation. |
-| `plotit` | `FALSE` | Plot the current best layout each generation. |
+| `plot` | `FALSE` | Plot the current best layout each generation. |
 
 ## Session options (`options(windfarmGA.*)`)
 
@@ -255,6 +252,7 @@ Fitness is \(E \times (\eta/100)^w\). These options change how \(E\) and \(\eta\
 | `windfarmGA.cut_in` | `0` | Cut-in wind speed (m/s). `0` = no cut-in. |
 | `windfarmGA.rated_ws` | `Inf` | Rated wind speed; above this, power stays at rated. |
 | `windfarmGA.cut_out` | `Inf` | Cut-out wind speed. |
+| `windfarmGA.power_curve` | `NULL` | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not \(C_p \cdot v^3\)). On the rated plateau, wakes may not change power. See `plot_power_curve()`. |
 | `windfarmGA.fitness_efficiency_weight` | `1` | Exponent \(w\) on park efficiency. `0` optimises energy only. |
 | `windfarmGA.max_angle` | `20` | Max wake angle (degrees) when assigning downstream turbines. |
 | `windfarmGA.max_distance` | `100000` | Max wake distance (m). |
@@ -308,25 +306,39 @@ Same three operators; only the rates change. **Explore** raises inject and mutat
 
 # Plotting
 
-```R
-## Best layout on a leaflet map (ordered by energy)
-plot_leaflet(result = resulthex, Polygon1, which = 1)
+A result from `genetic_algorithm()` has class `windfarmGA`:
+`print(result)` summarises the run, `plot(result, area)` is
+`plot_windfarmGA()`, and `explore_result(result, area)` opens a
+one-page Shiny viewer with a Leaflet map of the best layout and a
+plotly figure (fitness, rates, population; click a New max marker to
+jump to that generation).
+(Suggests: shiny, leaflet, plotly).
 
-## Last generation (chronological order)
-plot_leaflet(result = resulthex, Polygon1, orderitems = FALSE, which = 1)
+`plot_windfarmGA()` pages through the best layout, fitness and operator
+rates, the population census, and the cell heatmap. In an interactive
+session each page waits for Enter. Plotly hover is used only with
+`ask = FALSE` when the plotly package is installed.
+
+```R
+print(result)
+plot(result, area)
+explore_result(result, area)
+plot_windfarmGA(result, area)
+
+plot_result(result, area)                 # best layout
+plot_parkfitness(result)                      # fitness + operator rates
+plot_population(result)                       # individuals, elites, cells
+plot_generation(result, area)             # last generation (omit generation, or pass an index)
+plot_cell_heatmap(result, area)           # which cells were tried
+plot_leaflet(result, area, which = 1)     # best on a map
+plot_leaflet(result, area, orderitems = FALSE, which = 1)  # last generation
+plot_evolution(result)                        # energy + efficiency
+plot_development(result)                      # when the max improved
 ```
 
-The useful plots after a run:
-```R
-plot_windfarmGA(result, Polygon1)                 # layout + progress + heatmap
-plot_result(result, Polygon1)                     # best layout
-plot_parkfitness(result)                          # fitness + operator rates
-plot_generation(result, Polygon1, generation = 122)  # all layouts in one generation
-plot_cell_heatmap(result, Polygon1)               # which cells were tried
-plot_leaflet(result, Polygon1, which = 1)         # interactive map
-plot_evolution(result)                            # energy + efficiency
-plot_development(result)                          # when the max improved
-```
+`plot_fitness_evolution()` is the same as `plot_parkfitness()`.
+Package data `resulthex` / `resultrect` and `sp_polygon` work the same way
+(`plot_leaflet(resulthex, sp_polygon, which = 1)`).
 
 A full documentation of the genetic algorithm is given in my [master thesis](https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf).
 
@@ -339,32 +351,33 @@ Unfortunately, as an optimization takes quite some time and the app is currently
 library(sf)
 library(windfarmGA)
 
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4651704, 4651704, 4654475, 4654475, 4651704),
     c(2692925, 2694746, 2694746, 2692925, 2692925)))), 
   crs = 3035
 ))
-plot(Polygon1, col = "blue", axes = TRUE)
+plot(area, col = "blue", axes = TRUE)
 
 wind_df <- data.frame(ws = 12, wd = 0)
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                              dir = wind_df$wd, dirres = 10, spdmax = 20)
 Rotor <- 20
-fcrR <- 9
-Grid <- grid_area(shape = Polygon1, size = (Rotor*fcrR), prop = 1, plotGrid = TRUE)
+fcr <- 9
+Grid <- grid_area(area = area, size = (Rotor*fcr), prop = 1, plot_grid = TRUE)
 
-result <- genetic_algorithm(Polygon1 = Polygon1,
+result <- genetic_algorithm(area = area,
                             n = 20,
-                            Rotor = Rotor, fcrR = fcrR,
+                            rotor = Rotor, fcr = fcr,
                             iteration = 50,
-                            vdirspe = wind_df,
-                            referenceHeight = 50, RotorHeight = 100)
+                            wind = wind_df,
+                            reference_height = 50, rotor_height = 100)
 
-plot_windfarmGA(result, Polygon1)
-plot_result(result, Polygon1)
+plot_windfarmGA(result, area)
+plot_result(result, area)
 plot_parkfitness(result)
-plot_generation(result, Polygon1, generation = 122)
-plot_cell_heatmap(result, Polygon1)
-plot_leaflet(result, Polygon1, which = 1)
+plot_population(result)
+plot_generation(result, area)
+plot_cell_heatmap(result, area)
+plot_leaflet(result, area, which = 1)
 ```

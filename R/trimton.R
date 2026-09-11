@@ -21,7 +21,7 @@
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(0, 0, 2000, 2000, 0),
 #'     c(0, 2000, 2000, 0, 0)
@@ -35,7 +35,7 @@
 #' data.in <- as.data.frame(cbind(ws = 12, wd = 0))
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-#' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+#' Grid1 <- grid_area(area = area, size = 200, prop = 1)
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
@@ -43,9 +43,9 @@
 #' wind <- as.data.frame(cbind(ws = 12, wd = 0))
 #' wind <- list(wind, probab = 100)
 #' fit <- fitness(
-#'   selection = startsel, referenceHeight = 100, RotorHeight = 100,
-#'   SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-#'   dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+#'   population = startsel, reference_height = 100, rotor_height = 100,
+#'   surface_roughness = 0.3, area = area, rotor = 20,
+#'   wind = wind, terrain = FALSE
 #' )
 #' allparks <- do.call("rbind", fit)
 #' ## selection() returns ID matrices; crossover()/trimton() expect 0/1.

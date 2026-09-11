@@ -25,8 +25,8 @@ Rates are percentages: \strong{Selection} = share of the population used as
 parents, \strong{Crossover inject} = unused cells mixed into children,
 \strong{Mutation} = chance that a turbine is swapped to a free cell.
 The legend sits outside and follows the typical vertical order of the
-lines (selection highest, then inject, mutation lowest). Uses plotly
-(hover) when the package is installed.
+lines (selection highest, then inject, mutation lowest). Plotly hover
+is used only when \code{ask} is \code{FALSE} and plotly is installed.
 }
 \examples{
 \donttest{

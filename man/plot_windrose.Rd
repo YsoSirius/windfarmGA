@@ -14,7 +14,7 @@ plot_windrose(
   spdmax = 30,
   palette = "YlGnBu",
   spdseq = NULL,
-  plotit = TRUE
+  plot = TRUE
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ plot_windrose(
 
 \item{spdseq}{A wind speed sequence, that is used for plotting}
 
-\item{plotit}{Should the windrose be plotted? Default is TRUE}
+\item{plot}{Deprecated alias for \code{plot}.}
 }
 \value{
 A ggplot2 wind rose plot, returned invisibly.

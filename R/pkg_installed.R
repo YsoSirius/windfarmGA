@@ -48,3 +48,9 @@ is_elevatr_installed <- function() {
 is_plotly_installed <- function() {
   requireNamespace("plotly", quietly = TRUE)
 }
+
+##' @rdname package_installed
+##' @export
+is_shiny_installed <- function() {
+  requireNamespace("shiny", quietly = TRUE)
+}

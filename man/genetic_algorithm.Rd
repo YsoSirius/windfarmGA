@@ -5,136 +5,89 @@
 \title{Run a Genetic Algorithm to optimize a wind farm layout}
 \usage{
 genetic_algorithm(
-  Polygon1,
-  GridMethod,
-  Rotor,
+  area,
+  wind,
   n,
-  fcrR,
-  referenceHeight,
-  RotorHeight,
-  SurfaceRoughness,
-  Proportionality,
-  iteration,
-  mutr,
-  vdirspe,
-  topograp,
-  elitism,
-  nelit,
-  selstate,
-  crossPart1,
-  trimForce,
-  Projection,
-  sourceCCL,
-  sourceCCLRoughness,
-  weibull,
-  weibullsrc,
-  Parallel,
-  numCluster,
+  rotor,
+  rotor_height,
+  grid_method = "rectangular",
+  fcr = 5,
+  reference_height = rotor_height,
+  surface_roughness = 0.3,
+  proportionality = 1,
+  iteration = 20,
+  mutation_rate = NULL,
+  terrain = FALSE,
+  elitism = TRUE,
+  n_elite = 3,
+  selection_mode = "VAR",
+  crs = NULL,
+  ccl = NULL,
+  ccl_roughness = NULL,
+  weibull = FALSE,
+  weibull_src = NULL,
+  parallel = FALSE,
+  n_cluster = 2,
   verbose = FALSE,
-  plotit = FALSE
+  plot = FALSE
 )
 }
 \arguments{
-\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
-\item{GridMethod}{Should the polygon be divided into rectangular or hexagonal
-grid cells? The default is \code{Rectangular} grid. Hexagonal grids
-are computed when assigning \code{h} or \code{hexagon} to this input variable.}
+\item{wind}{Wind data.frame with \code{ws}, \code{wd} and optional \code{probab}.
+See \code{\link[=windata_format]{windata_format()}}.}
 
-\item{Rotor}{The rotor radius in meter}
+\item{n}{Number of turbines (fixed; every individual has \code{n} unique cell IDs).}
 
-\item{n}{The amount of turbines}
+\item{rotor}{Rotor radius in metres.}
 
-\item{fcrR}{A numeric value used for grid spacing. Default is \code{5}}
+\item{rotor_height}{Hub height in metres.}
 
-\item{referenceHeight}{The height at which the incoming wind speeds were
-measured. Default is \code{RotorHeight}}
+\item{grid_method}{\code{"rectangular"} or \code{"h"} / \code{"hexagon"}.}
 
-\item{RotorHeight}{The height of the turbine hub}
+\item{fcr}{Grid spacing factor. Cell size is \code{fcr * rotor}.}
 
-\item{SurfaceRoughness}{A surface roughness length in meters.
-With the terrain effect model, a surface roughness is calculated for every
-grid cell using the elevation and land cover data. Default is \code{0.3}}
+\item{reference_height}{Height at which \code{wind$ws} was measured.}
 
-\item{Proportionality}{A numeric value used for the grid calculation, as it
-determines the percentage a grid cell must overlay the area.
-Default is \code{1}}
+\item{surface_roughness}{Roughness length in metres. Per-cell when
+\code{terrain} is on.}
 
-\item{iteration}{The number of iterations. Default is \code{20}}
+\item{proportionality}{Minimum fraction of a grid cell that must overlap
+the site (\code{prop} in \code{\link[=grid_area]{grid_area()}}).}
 
-\item{mutr}{Mutation probability per turbine (swap with an unused cell).
-Default is \code{2/n}. Each individual swaps at least
-\code{getOption("windfarmGA.min_swaps")} cells (default 1).}
+\item{iteration}{Generation budget.}
 
-\item{vdirspe}{A data.frame containing the wind speeds, directions and
-probabilities. See \code{\link{windata_format}}.}
+\item{mutation_rate}{Swap probability per turbine. \code{NULL} means \code{2/n}.}
 
-\item{topograp}{Boolean value, which indicates if the terrain effect model
-should be enabled or not. Default is \code{FALSE}}
+\item{terrain}{Terrain model (elevation + land cover).}
 
-\item{elitism}{Boolean value, which indicates whether elitism should be
-activated or not. If \code{TRUE}, the current best layout is archived
-unchanged and each elite produces several mutated copies plus mixes with
-weaker layouts (\code{windfarmGA.elite_children} /
-\code{windfarmGA.elite_mix}). The elite count starts at \code{nelit} and
-rises while refining a stall, then drops by one during a disturbance
-pulse. Default is \code{TRUE}}
+\item{elitism}{Archive the best layout and breed elite children.}
 
-\item{nelit}{If \code{elitism} is TRUE, this input determines the amount
-of individuals in the elite group. Default is 3}
+\item{n_elite}{Base elite count (grows/shrinks with search phase).}
 
-\item{selstate}{Determines which selection method is used, "FIX" selects a
-constant percentage and "VAR" selects a variable percentage, depending on
-the development of the fitness values. Default is "VAR"}
+\item{selection_mode}{\code{"VAR"} (parent share follows fitness) or \code{"FIX"} (50 \%).}
 
-\item{crossPart1}{Unused by the combinatorial genome (set crossover).
-Kept for API compatibility with the legacy binary operators
-\code{\link{crossover}} (\code{EQU} / \code{RAN}). Default is \code{"EQU"}}
+\item{crs}{CRS if \code{area} has none (EPSG code or PROJ string).}
 
-\item{trimForce}{If \code{TRUE} the algorithm will use a probabilistic
-approach to correct the windfarms to the desired amount of turbines.
-If \code{FALSE} the adjustment will be random. Default is \code{FALSE}.
-Unused by the combinatorial genome; kept for compatibility with
-\code{\link{trimton}}.}
+\item{ccl}{Path to a Corine Land Cover raster when \code{terrain} is on.}
 
-\item{Projection}{A spatial reference system. Depending on your PROJ-version,
-it should either be a numeric \code{EPSG-code} or a \code{Proj4-string}.
-Default is \code{EPSG:3035}}
+\item{ccl_roughness}{Path to the CLC legend CSV (\code{Rauhigkeit_z} column).}
 
-\item{sourceCCL}{The path to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated.}
+\item{weibull}{If \code{TRUE}, hub-height speed comes from Weibull rasters;
+\code{wind$ws} is ignored.}
 
-\item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
-as .csv file. Only required when terrain effect model is activated. As
-default a .csv file within this package (\file{~/extdata}) is taken that
-was already adapted manually.}
+\item{weibull_src}{\code{list(k, a)} shape and scale rasters. Package data
+cover Austria.}
 
-\item{weibull}{A boolean value that specifies whether to take Weibull
-parameters into account. If \code{TRUE}, the wind speed values
-of \code{vdirspe} are ignored. The algorithm will calculate the mean
-wind speed for every wind turbine according to the Weibull parameters.
-Default is \code{FALSE}}
+\item{parallel}{Parallel fitness (\code{parallel} + \code{doParallel}).}
 
-\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster \code{k} and the second item must be the
-scale parameter raster \code{a} of the Weibull distribution. If no list is
-given, then rasters included in the package are used instead, which
-currently only cover Austria. This variable is only used
-if \code{weibull = TRUE}.}
+\item{n_cluster}{Worker count when \code{parallel} is \code{TRUE}.}
 
-\item{Parallel}{A boolean value, indicating whether parallel processing
-should be used. The \emph{parallel} and \emph{doParallel} packages are used for
-parallel processing. Default is \code{FALSE}}
+\item{verbose}{Print a line per generation.}
 
-\item{numCluster}{If \code{Parallel} is TRUE, this variable defines the
-number of clusters to be used. Default is \code{2}}
-
-\item{verbose}{If TRUE it will print information for every generation.
-Default is \code{FALSE}}
-
-\item{plotit}{If TRUE it will plot the best windfarm of every generation.
-Default is \code{FALSE}}
+\item{plot}{Plot the current best layout each generation.}
 }
 \value{
 The result is a matrix with aggregated values per generation; the
@@ -158,14 +111,14 @@ A terrain effect model can be included in the optimization process.
 Therefore, a digital elevation model will be downloaded automatically via
 the \code{elevatr::get_elev_raster} function. A land cover raster can also
 downloaded automatically from the EEA-website, or the path to a raster file
-can be passed to \code{sourceCCL}. The algorithm uses an adapted version of
+can be passed to \code{ccl}. The algorithm uses an adapted version of
 the Raster legend ("clc_legend.csv"), which is stored in the package
 directory \file{~/inst/extdata}. To use other values for the land cover
 roughness lengths, insert a column named \strong{"Rauhigkeit_z"} to the
 .csv file, assign a surface roughness length to all land cover types. Be
 sure that all rows are filled with numeric values and save the file with
 \strong{";"} separation. Assign the path of the file to the input variable
-\code{sourceCCLRoughness} of this function.
+\code{ccl_roughness} of this function.
 
 Fitness is \eqn{EnergyOverall \times (EfficAllDir/100)^w} with
 \code{w = getOption("windfarmGA.fitness_efficiency_weight")}. Hub-height
@@ -192,16 +145,14 @@ a short disturbance pulse of \code{options(windfarmGA.explore_pulse)}
 generations (default 10) raises the same rates even if new maxes are
 still trickling in, then refine resumes. Elites get a short local search
 each generation: one turbine slides to a neighbouring empty cell
-(not a random cell anywhere on the grid). The legacy binary operators
-\code{\link{crossover}}, \code{\link{mutation}} and
-\code{\link{trimton}} remain available.
+(not a random cell anywhere on the grid).
 }
 \examples{
 \dontrun{
 ## Create a random rectangular shapefile
 library(sf)
 
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -218,16 +169,16 @@ windrosePlot <- plot_windrose(
 )
 
 ## Runs an optimization run for 20 iterations with the
-## given shapefile (Polygon1), the wind data.frame (data.in),
-## 12 turbines (n) with rotor radii of 30m (Rotor) and rotor height of 100m.
+## given shapefile (area), the wind data.frame (data.in),
+## 12 turbines (n) with rotor radii of 30m and hub height of 100m.
 result <- genetic_algorithm(
-  Polygon1 = Polygon1,
+  area = area,
   n = 12,
-  vdirspe = data.in,
-  Rotor = 30,
-  RotorHeight = 100
+  wind = data.in,
+  rotor = 30,
+  rotor_height = 100
 )
-plot_windfarmGA(result = result, Polygon1 = Polygon1)
+plot_windfarmGA(result = result, area = area)
 }
 }
 \seealso{

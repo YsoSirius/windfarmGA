@@ -9,7 +9,7 @@
 #' @param best Which best individuals should be the starting conditions for a
 #'   random search. The default is 1.
 #' @param n The number of random searches to be performed. Default is 20.
-#' @param Plot Should the random search be plotted? Default is \code{FALSE}
+#' @param plot Draw the random-search layouts
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #'   collision checks. Default is \code{2.2}
 #'
@@ -18,9 +18,9 @@
 #'
 #' @examples \donttest{
 #' new <- random_search(resultrect, sp_polygon, n = 20, best = 4)
-#' plot_random_search(resultRS = new, result = resultrect, Polygon1 = sp_polygon, best = 2)
+#' plot_random_search(resultRS = new, result = resultrect, area = sp_polygon, best = 2)
 #' }
-random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_dist = 2.2) {
+random_search <- function(result, area, n = 20, best = 1, plot = FALSE, max_dist = 2.2) {
   ## TODO - Performance and structure ---
   ## Data Config ############################
   # Order the resulting layouts with highest Energy output
@@ -30,7 +30,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
   ## Remove duplicated layouts based on x, y energy / efficiency
   resldat <- resldat[!duplicated(resldat[, 1:4]), ]
 
-  if (Plot) {
+  if (plot) {
     plot.new()
     opar <- par(no.readonly = TRUE)
     par(mfrow = c(1, 1))
@@ -61,16 +61,16 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
   maxFac <- rotRad * (resolu / (rotRad * 2))
 
   ## Grid the Polygon ############
-  Polygon1 <- isSpatial(shape = Polygon1)
-  GridMethod <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
-  GridMethod <- toupper(GridMethod)
-  if (GridMethod != "HEXAGON" && GridMethod != "H") {
+  area <- isSpatial(area = area)
+  grid_method <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
+  grid_method <- toupper(grid_method)
+  if (grid_method != "HEXAGON" && grid_method != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
     propu <- as.numeric(result[bestGARunIn[1], ]$inputData["Percentage of Polygon", ][1])
-    Grid <- grid_area(shape = Polygon1, size = resolu, prop = propu)
+    Grid <- grid_area(area = area, size = resolu, prop = propu)
   } else {
     # Calculate a Grid with hexagonal grid cells
-    Grid <- hexa_area(Polygon1, resolu)
+    Grid <- hexa_area(area, resolu)
   }
 
   ## Windata Formatting ###################
@@ -98,7 +98,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
     layout_start <- result[bestGARun, ]$bestPaEn
     coordLay <- layout_start[, 1:2]
 
-    if (Plot) {
+    if (plot) {
       plot(Grid[[2]])
       points(coordLay, pch = 15, col = "black")
 
@@ -124,7 +124,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
         cordNew <- coordLay[j, ]
         cordNew[1] <- cordNew[1] + maxAlterX
         cordNew[2] <- cordNew[2] + maxAlterY
-        if (Plot) {
+        if (plot) {
           points(cordNew[1], cordNew[2], col = "blue", pch = 3)
         }
         coordLayTmp[[j]] <- cordNew
@@ -160,7 +160,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
           cordNew[1] <- cordNew[1] + maxAlterX
           cordNew[2] <- cordNew[2] + maxAlterY
 
-          if (Plot) {
+          if (plot) {
             points(
               x = coordsj[ColRowMin[1, 2], 1],
               y = coordsj[ColRowMin[1, 2], 2],
@@ -170,7 +170,7 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
           coordsj[ColRowMin[1, 2], ] <- cordNew
         }
       }
-      if (Plot) {
+      if (plot) {
         points(coordsj, col = "green", cex = 1.5)
       }
       #####################
@@ -184,15 +184,15 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
 
       # Calculate energy and save in list with length n ################
       resCalcen <- calculate_energy(
-        sel = coordsj,
-        referenceHeight = ref_height,
-        RotorHeight = rotor_height,
-        SurfaceRoughness = 0.3,
-        wnkl = max_angle, distanz = max_dist,
-        dirSpeed = winddata,
-        RotorR = rotor_radius,
-        polygon1 = Polygon1, topograp = FALSE,
-        srtm_crop = NULL, cclRaster = NULL,
+        layout = coordsj,
+        reference_height = ref_height,
+        rotor_height = rotor_height,
+        surface_roughness = 0.3,
+        wake_angle = max_angle, wake_distance = max_dist,
+        wind = winddata,
+        rotor = rotor_radius,
+        area = area, terrain = FALSE,
+        elevation = NULL, ccl_raster = NULL,
         weibull = FALSE
       )
 
@@ -292,14 +292,14 @@ random_search <- function(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_
 #' @family Randomization
 #' @family Plotting Functions
 #' @return Returns a list
-random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dist = 2.2) {
+random_search_single <- function(result, area, n = 20, plot = FALSE, max_dist = 2.2) {
   ## TODO - Performance and structure ---
   ## Data Config ############################
   # Order the resulting layouts with highest Energy output
   resldat <- do.call("rbind", result[, "bestPaEn"])
   maxDist <- as.numeric(result[, "inputData"][[1]]["Rotorradius", ]) * max_dist
 
-  if (Plot) {
+  if (plot) {
     plot.new()
     opar <- par(no.readonly = TRUE)
     on.exit(par(opar))
@@ -323,16 +323,16 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
   maxFac <- rotRad * (resolu / (rotRad * 2))
 
   ## Grid the Polygon ############
-  Polygon1 <- isSpatial(shape = Polygon1)
-  GridMethod <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
-  GridMethod <- toupper(GridMethod)
-  if (GridMethod != "HEXAGON" && GridMethod != "H") {
+  area <- isSpatial(area = area)
+  grid_method <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
+  grid_method <- toupper(grid_method)
+  if (grid_method != "HEXAGON" && grid_method != "H") {
     # Calculate a Grid and indexed coordinates of all grid cell centers
     propu <- as.numeric(result[bestGARun, ]$inputData["Percentage of Polygon", ][1])
-    Grid <- grid_area(shape = Polygon1, size = resolu, prop = propu)
+    Grid <- grid_area(area = area, size = resolu, prop = propu)
   } else {
     # Calculate a Grid with hexagonal grid cells
-    Grid <- hexa_area(Polygon1, resolu)
+    Grid <- hexa_area(area, resolu)
   }
 
   ## Windata Formatting ###################
@@ -368,7 +368,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
   }
   turbInx <- which(layout_start[, "Rect_ID"] == as.numeric(turbInx))
   coordLay <- layout_start[, 1:2]
-  if (Plot) {
+  if (plot) {
     plot(Grid[[2]])
     points(coordLay, pch = 15, col = "black")
     points(coordLay[as.numeric(turbInx), ][1],
@@ -398,7 +398,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
     cordNew <- coordLay[as.numeric(turbInx), ]
     cordNew[1] <- cordNew[1] + maxAlterX
     cordNew[2] <- cordNew[2] + maxAlterY
-    if (Plot) {
+    if (plot) {
       points(cordNew[1], cordNew[2], col = "blue", pch = 3)
     }
 
@@ -433,7 +433,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
         cordNew[1] <- cordNew[1] + maxAlterX
         cordNew[2] <- cordNew[2] + maxAlterY
 
-        if (Plot) {
+        if (plot) {
           points(
             x = cordNew[1],
             y = cordNew[2],
@@ -445,7 +445,7 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
         coordLayRnd[as.numeric(turbInx), ] <- cordNew
       }
     }
-    if (Plot) {
+    if (plot) {
       points(x = cordNew[1], y = cordNew[2], col = "green", pch = 20)
     }
     #####################
@@ -460,14 +460,14 @@ random_search_single <- function(result, Polygon1, n = 20, Plot = FALSE, max_dis
 
     # Calculate energy and save in list with length n ################
     resCalcen <- calculate_energy(
-      sel = coordLayRnd,
-      referenceHeight = ref_height,
-      RotorHeight = rotor_height,
-      SurfaceRoughness = 0.3, wnkl = max_angle, distanz = max_dist,
-      dirSpeed = winddata,
-      RotorR = rotor_radius,
-      polygon1 = Polygon1, topograp = FALSE,
-      srtm_crop = NULL, cclRaster = NULL, weibull = FALSE
+      layout = coordLayRnd,
+      reference_height = ref_height,
+      rotor_height = rotor_height,
+      surface_roughness = 0.3, wake_angle = max_angle, wake_distance = max_dist,
+      wind = winddata,
+      rotor = rotor_radius,
+      area = area, terrain = FALSE,
+      elevation = NULL, ccl_raster = NULL, weibull = FALSE
     )
 
     ## Process Data ###################

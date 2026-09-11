@@ -9,20 +9,15 @@
 #'
 #' @inheritParams genetic_algorithm
 #' @inheritParams fitness
-#' @param sel A matrix of an individual of the current population
-#' @param srtm_crop The first element of the \code{\link{terrain_model}} resulting list
-#' @param cclRaster The second element of the \code{\link{terrain_model}} resulting list
-#' @param wnkl The angle from which wake influences are considered to be
-#'   negligible
-#' @param distanz The distance after which wake effects are considered
-#'   to be eliminated
-#' @param polygon1 The considered area as Simple Feature Polygon
-#' @param RotorR The desired rotor radius in meter
-#' @param dirSpeed The wind speed and direction data.frame
+#' @param layout One individual: matrix with X/Y (and typically cell IDs).
+#' @param wake_angle Angle (degrees) beyond which wake influence is ignored.
+#' @param wake_distance Distance (metres) beyond which wake effects are ignored.
+#' @param elevation Terrain list from [terrain_model()]. Unused when
+#'   `terrain` is `FALSE`.
+#' @param ccl_raster Land-cover roughness raster from [terrain_model()].
 #' @param park_center Optional numeric of length 2 (`x`, `y`) used as rotation
 #'   origin. Computed from the polygon bounding box when missing.
-#' @param plotit If \code{TRUE}, the process will be plotted.
-#'   Default is \code{FALSE}
+#' @param plot If `TRUE`, the process will be plotted.
 #'
 #' @family Wind Energy Calculation Functions
 #' @return Returns a list of an individual of the current generation with
@@ -33,7 +28,7 @@
 #' @examples \donttest{
 #' ## Create a random Polygon
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(4498482, 4498482, 4499991, 4499991, 4498482),
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -50,11 +45,11 @@
 #' )
 #'
 #' ## Assign the rotor radius and a factor of the radius for grid spacing.
-#' Rotor <- 50
-#' fcrR <- 3
+#' rotor <- 50
+#' fcr <- 3
 #' resGrid <- grid_area(
-#'   shape = Polygon1, size = Rotor * fcrR, prop = 1,
-#'   plotGrid = TRUE
+#'   area = area, size = rotor * fcr, prop = 1,
+#'   plot_grid = TRUE
 #' )
 #' ## Assign the indexed data frame to new variable. Element 2 of the list
 #' ## is the grid, saved as Simple Feature Polygons.
@@ -62,23 +57,23 @@
 #'
 #' ## Create an initial population with the indexed Grid, 15 turbines and
 #' ## 100 individuals.
-#' initpop <- init_population(Grid = resGrid1, n = 15, nStart = 100)
+#' initpop <- init_population(grid = resGrid1, n = 15, n_start = 100)
 #'
 #' ## Calculate the expected energy output of the first individual of the
 #' ## population.
 #' par(mfrow = c(1, 2))
-#' plot(Polygon1)
+#' plot(area)
 #' points(initpop[[1]][, "X"], initpop[[1]][, "Y"], pch = 20, cex = 2)
 #' plot(resGrid[[2]], add = TRUE)
 #' resCalcEn <- calculate_energy(
-#'   sel = initpop[[1]], referenceHeight = 50,
-#'   RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-#'   distanz = 100000, dirSpeed = data.in,
-#'   RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+#'   layout = initpop[[1]], reference_height = 50,
+#'   rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+#'   wake_distance = 100000, wind = data.in,
+#'   rotor = 50, area = area, terrain = FALSE,
 #'   weibull = FALSE
 #' )
 #' resCalcEn <- as.data.frame(resCalcEn)
-#' plot(Polygon1, main = resCalcEn[, "Energy_Output_Red"][[1]])
+#' plot(area, main = resCalcEn[, "Energy_Output_Red"][[1]])
 #' points(x = resCalcEn[, "Bx"], y = resCalcEn[, "By"], pch = 20)
 #'
 #'
@@ -93,19 +88,28 @@
 #' ## Calculate the energy outputs for the first individual with more than one
 #' ## wind direction.
 #' resCalcEn <- calculate_energy(
-#'   sel = initpop[[1]], referenceHeight = 50,
-#'   RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-#'   distanz = 100000, dirSpeed = data.in10,
-#'   RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+#'   layout = initpop[[1]], reference_height = 50,
+#'   rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+#'   wake_distance = 100000, wind = data.in10,
+#'   rotor = 50, area = area, terrain = FALSE,
 #'   weibull = FALSE
 #' )
 #' }
 #'
-calculate_energy <- function(sel, referenceHeight, RotorHeight,
-                             SurfaceRoughness, wnkl, distanz,
-                             polygon1, RotorR, dirSpeed,
-                             srtm_crop, topograp, cclRaster, weibull,
-                             park_center = NULL, plotit = FALSE) {
+calculate_energy <- function(layout, reference_height, rotor_height,
+                             surface_roughness, wake_angle, wake_distance,
+                             area, rotor, wind,
+                             elevation = NULL, terrain = FALSE,
+                             ccl_raster = NULL, weibull = FALSE,
+                             park_center = NULL, plot = FALSE) {
+  sel <- layout
+  polygon1 <- area
+  RotorR <- rotor
+  dirSpeed <- wind
+  wnkl <- wake_angle
+  distanz <- wake_distance
+  srtm_crop <- elevation
+  cclRaster <- ccl_raster
 
   ## Get default values ###################
   cT <- getOption("windfarmGA.cT", 0.88)
@@ -115,6 +119,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   cut_in <- getOption("windfarmGA.cut_in", 0)
   rated_ws <- getOption("windfarmGA.rated_ws", Inf)
   cut_out <- getOption("windfarmGA.cut_out", Inf)
+  pcurve <- getOption("windfarmGA.power_curve", NULL)
 
   ## Get the Coordinates of the current individual / windfarm ###################
   xy_individual <- sel[, 2:3, drop = FALSE]
@@ -132,7 +137,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   windpo <- rep(1, n_turbines)
 
   ## set Graphic Params ###############
-  if (plotit) {
+  if (plot) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(par(oldpar))
   }
@@ -140,7 +145,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
   ## Terrain Effect Model ###################
   cexa <- 0.7
   turb_elev <- rep(1, nrow(xy_individual))
-  if (topograp) {
+  if (terrain) {
     ## Calculate Wind multiplier - Hills get higher values, valleys get lower values.
     wind_multiplier <- srtm_crop[[2]]
     wind_multiplier_val <- terra::extract(x = wind_multiplier, y = xy_individual)
@@ -154,7 +159,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     turb_elev <- turb_elev[, 1]
 
     ## Plot the elevation and the wind speed multiplier rasters
-    if (plotit) {
+    if (plot) {
       par(mfrow = c(2, 1))
       plot(srtm_crop[[1]], main = "SRTM Elevation Data")
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
@@ -176,7 +181,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     air_dt <- barometric_height(matrix(turb_elev), turb_elev)
     air_rh <- as.numeric(air_dt[, "rh"])
     ## Plot the normal and corrected Air Density Values
-    if (plotit) {
+    if (plot) {
       par(mfrow = c(1, 1))
       plot(srtm_crop[[1]], main = "Normal Air Density", col = topo.colors(10))
       points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
@@ -208,10 +213,10 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     maxrasres <- max(terra::res(terrain_rough_ras))
 
     ## Calculate modified surface Roughness
-    SurfaceRoughness <- land_rough * (1 + (terrain_rough_vals / maxrasres))
+    surface_roughness <- land_rough * (1 + (terrain_rough_vals / maxrasres))
 
     ## Plot the different Surface Roughness Values
-    if (plotit) {
+    if (plot) {
       terrain_rough_resample <- terra::resample(terrain_rough_ras, cclRaster, method = "near")
       modified_rough <- terra::lapp(
         x = c(cclRaster, terrain_rough_resample),
@@ -237,16 +242,16 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       plot(modified_rough, main = "Modified Surface Roughness")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
       calibrate::textxy(xy_individual[, "X"], xy_individual[, "Y"],
-        labs = round(SurfaceRoughness, 2), cex = cexa
+        labs = round(surface_roughness, 2), cex = cexa
       )
       plot(st_geometry(polygon1), add = TRUE)
     }
 
     ## New Wake Decay Constant calculated with new surface roughness values
-    k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
+    k <- 0.5 / (log(rotor_height / surface_roughness))
 
     ## Plot resulting Wake Decay Values
-    if (plotit) {
+    if (plot) {
       graphics::par(mfrow = c(1, 1))
       plot(x = terrain_rough_ras, main = "Adapted Wake Decay Values - K")
       graphics::points(xy_individual[, "X"], xy_individual[, "Y"], pch = 20)
@@ -263,7 +268,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     if (!inherits(weibull, "SpatRaster")) {
       weibull <- terra::rast(weibull)
     }
-    if (plotit) {
+    if (plot) {
       par(mfrow = c(1, 1), ask = FALSE)
       plot(weibull, main = "Weibull Raster")
       plot(polygon1, add = TRUE)
@@ -296,13 +301,13 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     ## Calculate Windspeed according to Rotor Height using the log profile
     ## (or the legacy power law if options(windfarmGA.wind_profile = "power"))
     point_wind <- point_wind * wind_shear_factor(
-      RotorHeight, referenceHeight, SurfaceRoughness
+      rotor_height, reference_height, surface_roughness
     )
     point_wind[is.na(point_wind)] <- 0
 
     ## Get the current incoming wind direction and assign to "angle"
     angle <- -dirSpeed[index, "wd"]
-    if (plotit) {
+    if (plot) {
       ## Plot turbine locations with angle 0 and open a
       ## second frame for rotated turbine locations
       par(mfrow = c(1, 2))
@@ -333,7 +338,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
       xy_individual[, 1], xy_individual[, 2],
       pcent[1], pcent[2], angle
     )
-    if (plotit) {
+    if (plot) {
       ## Plot the rotated turbines in red
       points(xy_individual_rot[, 1], xy_individual_rot[, 2], col = "red", pch = 20)
     }
@@ -347,7 +352,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     ## and reduce then to data frame
     tmp <- turbine_influences(
       t = xy_individual_rot, wnkl = wnkl, dist = distanz,
-      polYgon = polygon1, dirct = angle
+      area = polygon1, dirct = angle
     )
     df_all <- do.call("rbind", tmp)
 
@@ -377,7 +382,7 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     )
 
     ## Change k to lenght of windlist. Repeat or Inflate vector k ##################
-    if (!topograp) {
+    if (!terrain) {
       ## Repeat the vector k
       k1 <- rep(k, length(windlist[, 1]))
     } else {
@@ -475,25 +480,34 @@ calculate_energy <- function(sel, referenceHeight, RotorHeight,
     )
 
     ## Change air-density to length of windlist1. Repeat or inflate ##################
-    if (!topograp) {
+    if (!terrain) {
       airrh <- rep(air_rh, length(windlist1[, 1]))
     } else {
       airrh <- air_rh
     }
 
-    ## Calculate Full and Reduced Energy Outputs in kW and ##################
-    ## Park Efficiency in %.
-    v_red <- apply_power_curve(windlist1[, "V_New"], cut_in, rated_ws, cut_out)
-    v_full <- apply_power_curve(windlist1[, "Windmean"], cut_in, rated_ws, cut_out)
-    energy_reduced <- energy_calc_CPP(
-      v_red,
-      windlist1[, "RotorR"], airrh
-    ) * (cp / 0.593)
-    energy_full <- energy_calc_CPP(
-      v_full,
-      windlist1[, "RotorR"], airrh
-    ) * (cp / 0.593)
-    efficiency <- ifelse(energy_full > 0, (energy_reduced * 100) / energy_full, 0)
+    ## Park energy (kW) and efficiency. energy_calc_CPP already sums
+    ## turbines; a power-curve table must be summed the same way.
+    if (!is.null(pcurve)) {
+      energy_reduced <- sum(lookup_power_curve(windlist1[, "V_New"], pcurve))
+      energy_full <- sum(lookup_power_curve(windlist1[, "Windmean"], pcurve))
+    } else {
+      v_red <- apply_power_curve(windlist1[, "V_New"], cut_in, rated_ws, cut_out)
+      v_full <- apply_power_curve(windlist1[, "Windmean"], cut_in, rated_ws, cut_out)
+      energy_reduced <- energy_calc_CPP(
+        v_red,
+        windlist1[, "RotorR"], airrh
+      ) * (cp / 0.593)
+      energy_full <- energy_calc_CPP(
+        v_full,
+        windlist1[, "RotorR"], airrh
+      ) * (cp / 0.593)
+    }
+    efficiency <- if (energy_full > 0) {
+      (energy_reduced * 100) / energy_full
+    } else {
+      0
+    }
 
 
     ## Assign values back to complete matrix ##################
@@ -563,4 +577,62 @@ apply_power_curve <- function(v, cut_in, rated_ws, cut_out) {
   v_out <- pmin(v, rated_ws)
   v_out[v < cut_in | v >= cut_out] <- 0
   v_out
+}
+
+power_curve_xy <- function(curve) {
+  if (is.null(curve)) {
+    return(NULL)
+  }
+  curve <- as.data.frame(curve)
+  ws <- if ("ws" %in% names(curve)) curve$ws else curve[[1]]
+  pw <- if ("power" %in% names(curve)) curve$power else curve[[2]]
+  data.frame(ws = as.numeric(ws), power = as.numeric(pw))
+}
+
+lookup_power_curve <- function(v, curve) {
+  xy <- power_curve_xy(curve)
+  as.numeric(stats::approx(xy$ws, xy$power, xout = as.numeric(v), rule = 2)$y)
+}
+
+#' @title Manufacturer power curve
+#' @name plot_power_curve
+#' @description Linear interpolation of a two-column table (`ws`, `power`
+#'   in kW). Set it with `ga_options(power_curve = curve)` or
+#'   `options(windfarmGA.power_curve = curve)`. While a curve is set,
+#'   park energy is the sum of those kW values instead of \(C_p \cdot v^3\).
+#'   Cut-in / rated / cut-out still apply only when no table is set.
+#'   If hub wind stays on the rated plateau after wakes, every layout
+#'   looks the same — use wind in the rising part of the curve.
+#'   Supply your own table (manufacturer data); the package does not
+#'   ship copyrighted curves.
+#' @export
+#'
+#' @param curve A data.frame with wind speed and power. Default is the
+#'   current `windfarmGA.power_curve` option.
+#' @param plot If `TRUE`, draw the curve. Default is `TRUE`.
+#' @return The interpolated table, invisibly.
+#'
+#' @examples
+#' curve <- data.frame(
+#'   ws = c(0, 3, 4, 8, 12, 25, 26),
+#'   power = c(0, 0, 80, 1200, 2000, 2000, 0)
+#' )
+#' plot_power_curve(curve)
+plot_power_curve <- function(curve = NULL, plot = TRUE) {
+  if (is.null(curve)) {
+    curve <- getOption("windfarmGA.power_curve", NULL)
+  }
+  if (is.null(curve)) {
+    stop("No power curve. Pass a data.frame(ws, power) or ga_options(power_curve = ...).")
+  }
+  xy <- power_curve_xy(curve)
+  if (isTRUE(plot)) {
+    graphics::plot(
+      xy$ws, xy$power, type = "l", lwd = 2,
+      xlab = "Wind speed (m/s)", ylab = "Power (kW)",
+      main = "Power curve"
+    )
+    graphics::points(xy$ws, xy$power, pch = 16)
+  }
+  invisible(xy)
 }

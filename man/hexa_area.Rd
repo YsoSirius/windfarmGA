@@ -4,15 +4,14 @@
 \alias{hexa_area}
 \title{Polygon to Hexagonal Grids}
 \usage{
-hexa_area(shape, size = 500, plotGrid = FALSE)
+hexa_area(area, size = 500, plot_grid = FALSE)
 }
 \arguments{
-\item{shape}{Simple Feature Polygon of the considered area}
+\item{area}{Simple Feature polygon of the site}
 
-\item{size}{The cellsize of the grid in meters. Default is 500}
+\item{size}{Cell size of the grid in metres}
 
-\item{plotGrid}{Logical value indicating whether the results should be
-plotted. Default is \code{FALSE}}
+\item{plot_grid}{Draw the grid}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have the grid
@@ -44,8 +43,6 @@ Other Helper Functions:
 \code{\link{grid_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
-\code{\link{readinteger}()},
-\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

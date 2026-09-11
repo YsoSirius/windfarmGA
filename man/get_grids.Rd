@@ -4,13 +4,13 @@
 \alias{get_grids}
 \title{Map layouts to grid coordinates}
 \usage{
-get_grids(trimtonOut, Grid)
+get_grids(layouts, grid)
 }
 \arguments{
-\item{trimtonOut}{Binary matrix (legacy) or integer matrix of grid IDs
+\item{layouts}{Binary matrix (legacy) or integer matrix of grid IDs
 (\code{n} turbines × individuals)}
 
-\item{Grid}{Grid of the considered area}
+\item{grid}{Indexed grid from \code{\link[=grid_area]{grid_area()}}}
 }
 \value{
 Returns a list of all individuals with X and Y coordinates and the
@@ -25,7 +25,7 @@ legacy binary matrix (\code{n_gridcells} × individuals).
 \donttest{
 ## Create a random rectangular shapefile
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),
     c(0, 2000, 2000, 0, 0)
@@ -35,16 +35,16 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 
 ## Calculate a Grid and an indexed data.frame with coordinates and
 ## grid cell Ids.
-Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+Grid1 <- grid_area(area = area, size = 200, prop = 1)
 Grid <- Grid1[[1]]
 
 startsel <- init_population(Grid, 10, 20)
 wind <- data.frame(ws = 12, wd = 0)
 wind <- list(wind, probab = 100)
 fit <- fitness(
-  selection = startsel, referenceHeight = 100, RotorHeight = 100,
-  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-  dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+  population = startsel, reference_height = 100, rotor_height = 100,
+  surface_roughness = 0.3, area = area, rotor = 20,
+  wind = wind, terrain = FALSE
 )
 allparks <- do.call("rbind", fit)
 
@@ -58,9 +58,9 @@ mut_ids <- swap_mutation(cross_ids, Grid[, "ID"], p = 0.2)
 ## Look up XY coordinates for the next fitness evaluation.
 getRectV <- get_grids(mut_ids, Grid)
 fit <- fitness(
-  selection = getRectV, referenceHeight = 100, RotorHeight = 100,
-  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-  dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+  population = getRectV, reference_height = 100, rotor_height = 100,
+  surface_roughness = 0.3, area = area, rotor = 20,
+  wind = wind, terrain = FALSE
 )
 head(fit)
 }
@@ -71,8 +71,6 @@ Other Helper Functions:
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
-\code{\link{readinteger}()},
-\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

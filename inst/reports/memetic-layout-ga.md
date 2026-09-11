@@ -28,7 +28,7 @@ Until version 4.0 each chromosome was a 0/1 vector over all cells. After crossov
 
 Elites, immigrants, and local search do not replace the evolutionary loop; they insert or refine individuals after the genetic operators.
 
-The current best layout is archived unchanged (`nelit` = 3). Each elite also produces a few mutated copies and mixes with weaker layouts (injection off, so the elite structure is kept). Three random immigrants enter each generation. Identical ID sets are cached and not re-evaluated; duplicate layouts are dropped.
+The current best layout is archived unchanged (`n_elite` = 3). Each elite also produces a few mutated copies and mixes with weaker layouts (injection off, so the elite structure is kept). Three random immigrants enter each generation. Identical ID sets are cached and not re-evaluated; duplicate layouts are dropped.
 
 Local search used to swap an elite turbine to a *random* free cell. On the north-wind site that move usually parks a turbine in the interior and is rejected, so the few useful corrections are chance hits. The operator now slides **one** turbine to a free rook (or hex) neighbor—cells within 1.2 times the typical grid step. The candidate is kept only if fitness rises. Five elites receive six such tries each generation. This is hill-climbing on the elite, not a second global optimizer.
 
@@ -48,7 +48,7 @@ Evaluated with the same `fitness()` path as the algorithm (roughness 0.3, hub 10
 library(sf)
 library(windfarmGA)
 
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -57,8 +57,8 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 genetic_algorithm(
-  Polygon1 = Polygon1, n = 20, vdirspe = data.frame(ws = 12, wd = 0),
-  Rotor = 30, RotorHeight = 100, iteration = 130
+  area = area, n = 20, wind = data.frame(ws = 12, wd = 0),
+  rotor = 30, rotor_height = 100, iteration = 130
 )
 ```
 

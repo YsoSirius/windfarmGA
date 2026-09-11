@@ -6,7 +6,7 @@
 \usage{
 plot_generation(
   result,
-  Polygon1,
+  area,
   generation = NULL,
   n_show = 6,
   interactive = NULL,
@@ -16,8 +16,8 @@ plot_generation(
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
 
-\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
 \item{generation}{Generation index (1 = first). Default is the last
 generation.}

@@ -232,7 +232,7 @@ permutations <- function(n, r, v = 1:n) {
 #' @param seed Set a seed for comparability. Default is `NULL`
 #' @param verbose If `TRUE`, print the number of children
 #' @param p_inject Fraction of non-shared slots filled from unused grid cells.
-#'   Default is `getOption("windfarmGA.crossover_inject")` (0.3). At least one
+#'   Default is `getOption("windfarmGA.crossover_inject")` (0.25). At least one
 #'   unused cell is injected when any are available.
 #' @param grid_xy Optional matrix/data.frame with columns `ID`, `X`, `Y`. If
 #'   given, a spatial half-plane crossover is used with probability
@@ -254,7 +254,7 @@ set_crossover <- function(ids, grid_ids, uplimit = 300, seed = NULL,
     set.seed(as.integer(seed))
   }
   if (is.null(p_inject)) {
-    p_inject <- getOption("windfarmGA.crossover_inject", 0.3)
+    p_inject <- getOption("windfarmGA.crossover_inject", 0.25)
   }
   if (is.null(p_spatial)) {
     p_spatial <- getOption("windfarmGA.spatial_crossover", 0.5)
@@ -308,7 +308,7 @@ set_cross_pick <- function(a, b, grid_ids, p_inject, grid_xy, visit,
   }
 }
 
-set_cross_one <- function(a, b, grid_ids, p_inject = 0.3, visit = NULL) {
+set_cross_one <- function(a, b, grid_ids, p_inject = 0.25, visit = NULL) {
   n <- length(a)
   a <- unique(as.integer(a))
   b <- unique(as.integer(b))

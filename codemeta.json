@@ -2,7 +2,7 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "windfarmGA",
-  "description": "The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.",
+  "description": "The genetic algorithm is designed to optimize wind farms of any shape. Each layout is encoded as n unique grid-cell identifiers. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.",
   "name": "windfarmGA: Genetic Algorithm for Wind Farm Layout Optimization",
   "codeRepository": "https://github.com/YsoSirius/windfarmGA",
   "issueTracker": "https://github.com/YsoSirius/windfarmGA/issues",
@@ -156,6 +156,30 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "plotly",
+      "name": "plotly",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=plotly"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "shiny",
+      "name": "shiny",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=shiny"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "gstat",
       "name": "gstat",
       "provider": {
@@ -286,7 +310,7 @@
     "SystemRequirements": null
   },
   "keywords": ["windfarm-layout", "optimization", "genetic-algorithm", "renewable-energy", "r", "rstats", "r-package"],
-  "fileSize": "5158.121KB",
+  "fileSize": "5328.444KB",
   "relatedLink": "https://ysosirius.github.io/windfarmGA/index.html",
   "releaseNotes": "https://github.com/YsoSirius/windfarmGA/blob/master/NEWS.md",
   "readme": "https://github.com/YsoSirius/windfarmGA/blob/master/README.md",

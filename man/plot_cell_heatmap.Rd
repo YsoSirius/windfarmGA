@@ -4,18 +4,18 @@
 \alias{plot_cell_heatmap}
 \title{Heatmap of probed grid cells}
 \usage{
-plot_cell_heatmap(result, Polygon1, log = TRUE, plotit = TRUE)
+plot_cell_heatmap(result, area, log = TRUE, plot = TRUE)
 }
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
 
-\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
 \item{log}{If \code{TRUE}, color the counts on a \code{log1p} scale so a few elite
 cells do not dominate the palette. Default is \code{TRUE}}
 
-\item{plotit}{If \code{FALSE}, only return the counts. Default is \code{TRUE}}
+\item{plot}{Deprecated alias for \code{plot}.}
 }
 \value{
 A \code{data.frame} with grid ID, coordinates and visit count

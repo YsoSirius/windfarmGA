@@ -4,17 +4,17 @@
 \alias{random_search_single}
 \title{Randomize the location of a single turbine}
 \usage{
-random_search_single(result, Polygon1, n = 20, Plot = FALSE, max_dist = 2.2)
+random_search_single(result, area, n = 20, plot = FALSE, max_dist = 2.2)
 }
 \arguments{
 \item{result}{The resulting matrix of the function \code{\link{genetic_algorithm}}}
 
-\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
 \item{n}{The number of random searches to be performed. Default is 20.}
 
-\item{Plot}{Should the random search be plotted? Default is \code{FALSE}}
+\item{plot}{Draw the random-search layouts}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
 collision checks. Default is 2.2}

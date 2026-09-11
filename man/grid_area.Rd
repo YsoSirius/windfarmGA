@@ -4,18 +4,16 @@
 \alias{grid_area}
 \title{Make a grid from a Simple Feature Polygon}
 \usage{
-grid_area(shape, size = 500, prop = 1, plotGrid = FALSE)
+grid_area(area, size = 500, prop = 1, plot_grid = FALSE)
 }
 \arguments{
-\item{shape}{Simple Feature Polygon of the considered area}
+\item{area}{Simple Feature polygon of the site}
 
-\item{size}{The cellsize of the grid in meters. Default is 500}
+\item{size}{Cell size of the grid in metres}
 
-\item{prop}{A factor used for grid calculation. It determines the minimum
-percentage that a grid cell must cover the area. Default is 1}
+\item{prop}{Minimum fraction of a cell that must overlap the site}
 
-\item{plotGrid}{Logical value indicating whether the results should be
-plotted. Default is \code{FALSE}}
+\item{plot_grid}{Draw the grid}
 }
 \value{
 Returns a list with 2 elements. List element 1 will have the grid
@@ -29,14 +27,14 @@ and proportionality. The grid cell centroids represent possible
 wind turbine locations.
 }
 \note{
-The grid of the genetic algorithm will have a resolution of \code{Rotor
-  * fcrR}. See the arguments of \code{\link{genetic_algorithm}}
+The grid of the genetic algorithm will have a resolution of
+\code{rotor * fcr}. See the arguments of \code{\link[=genetic_algorithm]{genetic_algorithm()}}.
 }
 \examples{
 \donttest{
 ## Exemplary input Polygon with 2km x 2km:
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),
     c(0, 2000, 2000, 0, 0)
@@ -45,11 +43,11 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Create a Grid
-grid_area(Polygon1, 200, 1, TRUE)
-grid_area(Polygon1, 400, 1, TRUE)
+grid_area(area, 200, 1, TRUE)
+grid_area(area, 400, 1, TRUE)
 
 ## Examplary irregular input Polygon
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 3000, 0),
     c(20, 200, 2000, 0, 20)
@@ -58,10 +56,10 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Create a Grid
-grid_area(Polygon1, 200, 1, TRUE)
-grid_area(Polygon1, 200, 0.1, TRUE)
-grid_area(Polygon1, 400, 1, TRUE)
-grid_area(Polygon1, 400, 0.1, TRUE)
+grid_area(area, 200, 1, TRUE)
+grid_area(area, 200, 0.1, TRUE)
+grid_area(area, 400, 1, TRUE)
+grid_area(area, 400, 0.1, TRUE)
 }
 }
 \seealso{
@@ -70,8 +68,6 @@ Other Helper Functions:
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
-\code{\link{readinteger}()},
-\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

@@ -2,36 +2,30 @@
 % Please edit documentation in R/terrain_model.R
 \name{terrain_model}
 \alias{terrain_model}
-\title{Get topographic rasters}
+\title{Get terrainhic rasters}
 \usage{
 terrain_model(
-  topograp = TRUE,
-  Polygon1,
-  sourceCCL,
-  sourceCCLRoughness,
-  plotit = FALSE,
+  terrain = TRUE,
+  area,
+  ccl,
+  ccl_roughness,
+  plot = FALSE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{topograp}{Boolean value, which indicates if the terrain effect model
-should be enabled or not. Default is \code{FALSE}}
+\item{terrain}{Terrain model (elevation + land cover).}
 
-\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
-\item{sourceCCL}{The path to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated.}
+\item{ccl}{Path to a Corine Land Cover raster when \code{terrain} is on.}
 
-\item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
-as .csv file. Only required when terrain effect model is activated. As
-default a .csv file within this package (\file{~/extdata}) is taken that
-was already adapted manually.}
+\item{ccl_roughness}{Path to the CLC legend CSV (\code{Rauhigkeit_z} column).}
 
-\item{plotit}{Plots the elevation data}
+\item{plot}{Plot the elevation and roughness rasters}
 
-\item{verbose}{If TRUE it will print information for every generation.
-Default is \code{FALSE}}
+\item{verbose}{Print a line per generation.}
 }
 \value{
 A list of SpatRasters
@@ -42,16 +36,16 @@ Calculate the SpatRasters needed for the terrain model.
 \examples{
 \dontrun{
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4651704, 4651704, 4654475, 4654475, 4651704),
     c(2692925, 2694746, 2694746, 2692925, 2692925)
   ))),
   crs = 3035
 ))
-Polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
+Polygon_wgs84 <- sf::st_transform(area, st_crs(4326))
 srtm <- elevatr::get_elev_raster(locations = Polygon_wgs84, z = 11)
-res <- terrain_model(srtm, Polygon1)
+res <- terrain_model(srtm, area)
 }
 }
 \concept{Terrain Model}

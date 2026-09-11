@@ -4,7 +4,7 @@ test_that("Test Parallelisation", {
   skip_on_ci()
 
   ## Inputs ##################
-  Polygon1 <- sf::st_as_sf(sf::st_sfc(
+  area <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
       c(4498482, 4498482, 4499991, 4499991, 4498482),
       c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -18,11 +18,11 @@ test_that("Test Parallelisation", {
     is_foreach_installed = function() FALSE,
     expect_error(
       genetic_algorithm(
-        Polygon1 = Polygon1,
+        area = area,
         n = 12, iteration = 2,
-        vdirspe = wind,
-        Rotor = 30,
-        RotorHeight = 100, Parallel = TRUE
+        wind = wind,
+        rotor = 30,
+        rotor_height = 100, parallel = TRUE
       )
     )
   )
@@ -30,11 +30,11 @@ test_that("Test Parallelisation", {
     is_parallel_installed = function() FALSE,
     expect_error(
       genetic_algorithm(
-        Polygon1 = Polygon1,
+        area = area,
         n = 12, iteration = 2,
-        vdirspe = wind,
-        Rotor = 30,
-        RotorHeight = 100, Parallel = TRUE
+        wind = wind,
+        rotor = 30,
+        rotor_height = 100, parallel = TRUE
       )
     )
   )
@@ -42,11 +42,11 @@ test_that("Test Parallelisation", {
     is_doparallel_installed = function() FALSE,
     expect_error(
       genetic_algorithm(
-        Polygon1 = Polygon1,
+        area = area,
         n = 12, iteration = 2,
-        vdirspe = wind,
-        Rotor = 30,
-        RotorHeight = 100, Parallel = TRUE
+        wind = wind,
+        rotor = 30,
+        rotor_height = 100, parallel = TRUE
       )
     )
   )
@@ -54,11 +54,11 @@ test_that("Test Parallelisation", {
   ## genetic_algorithm ####################
   ## Default amount of Cluster
   res <- genetic_algorithm(
-    Polygon1 = Polygon1,
+    area = area,
     n = 12, iteration = 2,
-    vdirspe = wind,
-    Rotor = 30,
-    RotorHeight = 100, Parallel = TRUE
+    wind = wind,
+    rotor = 30,
+    rotor_height = 100, parallel = TRUE
   )
   expect_true(nrow(res) == 2)
   expect_true(is.matrix(res))
@@ -68,22 +68,22 @@ test_that("Test Parallelisation", {
   # skip("Too many clusters")
   res <- expect_warning(
     genetic_algorithm(
-      Polygon1 = Polygon1,
+      area = area,
       n = 12, iteration = 2,
-      vdirspe = wind,
-      Rotor = 30,
-      RotorHeight = 100,
-      Parallel = TRUE, numCluster = 100
+      wind = wind,
+      rotor = 30,
+      rotor_height = 100,
+      parallel = TRUE, n_cluster = 100
     )
   )
   res <- suppressWarnings(
     genetic_algorithm(
-      Polygon1 = Polygon1,
+      area = area,
       n = 12, iteration = 2,
-      vdirspe = wind,
-      Rotor = 30,
-      RotorHeight = 100,
-      Parallel = TRUE, numCluster = 100
+      wind = wind,
+      rotor = 30,
+      rotor_height = 100,
+      parallel = TRUE, n_cluster = 100
     )
   )
   expect_true(nrow(res) == 2)

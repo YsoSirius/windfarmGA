@@ -5,7 +5,7 @@ Authors@R: c(
     person("Sebastian", "Gatscha", , email="sebastian_gatscha@gmx.at", c("aut", "cre", "cph"))
     )
 Maintainer: Sebastian Gatscha <sebastian_gatscha@gmx.at>
-Description: The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
+Description: The genetic algorithm is designed to optimize wind farms of any shape. Each layout is encoded as n unique grid-cell identifiers. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 Depends:
     R (>= 4.1.0)
 Imports: Rcpp,
@@ -39,6 +39,7 @@ Suggests:
     elevatr (>= 0.99.0),
     ggplot2,
     plotly,
+    shiny,
     gstat,
     rworldmap
 X-schema.org-keywords: windfarm-layout, optimization, genetic-algorithm, renewable-energy, r, rstats, r-package

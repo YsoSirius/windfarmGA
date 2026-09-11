@@ -6,11 +6,11 @@
 \usage{
 plot_windfarmGA(
   result,
-  Polygon1,
-  whichPl = "all",
+  area,
+  which_plot = "all",
   best = 1,
-  plotEn = 1,
-  weibullsrc,
+  plot_en = 1,
+  weibull_src = NULL,
   ask = NULL,
   plotly = NULL
 )
@@ -18,31 +18,27 @@ plot_windfarmGA(
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
 
-\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
-\item{whichPl}{\code{"all"} (default) shows \code{result}, \code{progress}, \code{population}
+\item{which_plot}{\code{"all"} (default) shows \code{result}, \code{progress}, \code{population}
 and \code{heatmap}. Or a character vector (\code{"result"}, \code{"progress"},
 \code{"population"}, \code{"heatmap"}, \code{"evolution"}) or the numbers 1–4.}
 
 \item{best}{How many distinct best layouts to draw. Default is 1.}
 
-\item{plotEn}{A numeric value that indicates if the best energy or efficiency
+\item{plot_en}{A numeric value that indicates if the best energy or efficiency
 output should be plotted. \code{1} plots the best energy solutions
 and \code{2} plots the best efficiency solutions}
 
-\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster \code{k} and the second item must be the
-scale parameter raster \code{a} of the Weibull distribution. If no list is
-given, then rasters included in the package are used instead, which
-currently only cover Austria. This variable is only used
-if \code{weibull = TRUE}.}
+\item{weibull_src}{\code{list(k, a)} shape and scale rasters. Package data
+cover Austria.}
 
 \item{ask}{If \code{TRUE}, wait for Enter between pages. Default is \code{TRUE}
 in an interactive session.}
 
 \item{plotly}{If \code{TRUE}, draw fitness and rates with plotly (hover).
-Default is \code{TRUE} when the plotly package is installed.}
+Used only when \code{ask} is \code{FALSE} and plotly is installed.}
 }
 \value{
 Returns NULL. Used for plotting
@@ -56,7 +52,7 @@ Enter so nothing is overwritten in the Plots pane.
 \examples{
 \dontrun{
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -64,8 +60,8 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
   crs = 3035
 ))
 
-plot_windfarmGA(resulthex, Polygon1)
-plot_windfarmGA(resultrect, Polygon1, whichPl = "progress")
+plot_windfarmGA(resulthex, area)
+plot_windfarmGA(resultrect, area, which_plot = "progress")
 }
 }
 \seealso{

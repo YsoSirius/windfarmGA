@@ -4,14 +4,13 @@
 \alias{isSpatial}
 \title{Transform to Simple Feature Polygons}
 \usage{
-isSpatial(shape, proj)
+isSpatial(area, crs = NULL)
 }
 \arguments{
-\item{shape}{An area as SpatialPolygon, SimpleFeature Polygon or coordinates
+\item{area}{Site as SpatialPolygon, Simple Feature polygon, or coordinates
 as matrix/data.frame}
 
-\item{proj}{Which Projection should be assigned to matrix / data.frame
-coordinates}
+\item{crs}{CRS assigned to matrix / data.frame coordinates}
 }
 \value{
 A Simple Feature Polygon
@@ -34,14 +33,14 @@ df <- rbind(
 )
 isSpatial(df)
 
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
   ))),
   crs = 3035
 ))
-isSpatial(st_coordinates(Polygon1), 3035)
+isSpatial(st_coordinates(area), 3035)
 }
 }
 \seealso{
@@ -50,8 +49,6 @@ Other Helper Functions:
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},
 \code{\link{permutations}()},
-\code{\link{readinteger}()},
-\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

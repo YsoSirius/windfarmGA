@@ -6,7 +6,7 @@ utils::globalVariables(
     "var1.pred", "x", "y",
     "element_rect", "element_line",
     "unit",
-    "srtm_crop", "cclRaster", "weibullsrc",
+    "srtm_crop", "cclRaster", "weibull_src",
     "cl",
     "k"
   )
@@ -23,6 +23,7 @@ utils::globalVariables(
     windfarmGA.cut_in = 0,
     windfarmGA.rated_ws = Inf,
     windfarmGA.cut_out = Inf,
+    windfarmGA.power_curve = NULL,
     windfarmGA.wind_profile = "log",
     windfarmGA.fitness_efficiency_weight = 1,
     windfarmGA.max_angle = 20,

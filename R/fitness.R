@@ -8,17 +8,12 @@
 #' @export
 #'
 #' @inheritParams genetic_algorithm
-#' @param selection A list containing all individuals of the current population.
-#' @param Polygon The considered area as shapefile.
-#' @param resol1 The resolution of the grid in meter.
-#' @param rot The desired rotor radius in meter.
-#' @param dirspeed The wind data as list.
-#' @param srtm_crop A list of 3 raster, with 1) the elevation, 2) an orographic
-#'   and 3) a terrain raster. Calculated in \code{\link{genetic_algorithm}}
-#' @param cclRaster A Corine Land Cover raster, that has to be adapted
-#'   previously by hand with the surface roughness length for every land cover
-#'   type. Is only used, when the terrain effect model is activated.
-#' @param weibull A raster representing the estimated wind speeds
+#' @param population A list of individuals (layouts with X/Y and cell IDs).
+#' @param wind Wind data as returned by [windata_format()] (`list(df, probab)`).
+#' @param elevation Terrain list from [terrain_model()] (elevation, orography,
+#'   roughness). Unused when `terrain` is `FALSE`.
+#' @param ccl_raster Land-cover roughness raster from [terrain_model()].
+#' @param weibull Raster of estimated wind speeds, or `FALSE`.
 #'
 #' @family Genetic Algorithm Functions
 #' @return Returns a list with every individual, consisting of X & Y
@@ -28,7 +23,7 @@
 #' @examples \donttest{
 #' ## Create a random rectangular shapefile
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(4498482, 4498482, 4499991, 4499991, 4498482),
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -45,36 +40,29 @@
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and
 #' ## grid cell IDs.
-#' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+#' Grid1 <- grid_area(area = area, size = 200, prop = 1)
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
 #' wind <- list(wind, probab = 100)
 #' startsel <- init_population(Grid, 10, 20)
 #' fit <- fitness(
-#'   selection = startsel, referenceHeight = 100, RotorHeight = 100,
-#'   SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-#'   dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = "",
-#'   Parallel = FALSE
+#'   population = startsel, reference_height = 100, rotor_height = 100,
+#'   surface_roughness = 0.3, area = area, rotor = 20,
+#'   wind = wind, terrain = FALSE, parallel = FALSE
 #' )
 #' }
-fitness <- function(selection, referenceHeight, RotorHeight,
-                    SurfaceRoughness, Polygon, resol1,
-                    rot, dirspeed, srtm_crop, topograp, cclRaster,
-                    weibull, Parallel, numCluster) {
-  ## Missing Arguments? #############
-  if (missing(srtm_crop)) {
-    srtm_crop <- NULL
-  }
-  if (missing(cclRaster)) {
-    cclRaster <- NULL
-  }
-  if (missing(Parallel)) {
-    Parallel <- FALSE
-  }
-  if (missing(weibull)) {
-    weibull <- FALSE
-  }
+fitness <- function(population, reference_height, rotor_height,
+                    surface_roughness, area, rotor, wind,
+                    elevation = NULL, terrain = FALSE,
+                    ccl_raster = NULL, weibull = FALSE,
+                    parallel = FALSE, n_cluster = 2) {
+  selection <- population
+  Polygon <- area
+  rot <- rotor
+  dirspeed <- wind
+  srtm_crop <- elevation
+  cclRaster <- ccl_raster
 
   ## Wind Data ###########
   probability_direction <- dirspeed[[2]]
@@ -87,8 +75,8 @@ fitness <- function(selection, referenceHeight, RotorHeight,
   park_center <- apply(bbox_m, 1, mean)
 
   ## Calculate Energy Output ###########
-  # For every selection i and every angle j - in Parallel
-  if (Parallel == TRUE) {
+  # For every selection i and every angle j - in parallel
+  if (parallel == TRUE) {
     if (!is_foreach_installed()) {
       stop(
         "The package 'foreach' is required for this function, but it is not installed.\n",
@@ -98,11 +86,11 @@ fitness <- function(selection, referenceHeight, RotorHeight,
     `%dopar%` <- foreach::`%dopar%`
     e <- foreach::foreach(k = 1:length(selection)) %dopar% {
       windfarmGA::calculate_energy(
-        sel = selection[[k]], referenceHeight = referenceHeight,
-        RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-        wnkl = wnkl_max, distanz = dist_max,
-        polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
-        srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
+        layout = selection[[k]], reference_height = reference_height,
+        rotor_height = rotor_height, surface_roughness = surface_roughness,
+        wake_angle = wnkl_max, wake_distance = dist_max,
+        area = Polygon, rotor = rot, wind = dirspeed,
+        elevation = srtm_crop, terrain = terrain, ccl_raster = cclRaster,
         weibull = weibull, park_center = park_center
       )
     }
@@ -110,14 +98,14 @@ fitness <- function(selection, referenceHeight, RotorHeight,
 
   euniqu <- vector("list", length(selection))
   for (i in 1:length(selection)) {
-    if (!Parallel) {
-      # For every selection i and every angle j - not in Parallel
+    if (!parallel) {
+      # For every selection i and every angle j - not in parallel
       e <- calculate_energy(
-        sel = selection[[i]], referenceHeight = referenceHeight,
-        RotorHeight = RotorHeight, SurfaceRoughness = SurfaceRoughness,
-        wnkl = wnkl_max, distanz = dist_max,
-        polygon1 = Polygon, RotorR = rot, dirSpeed = dirspeed,
-        srtm_crop = srtm_crop, topograp = topograp, cclRaster = cclRaster,
+        layout = selection[[i]], reference_height = reference_height,
+        rotor_height = rotor_height, surface_roughness = surface_roughness,
+        wake_angle = wnkl_max, wake_distance = dist_max,
+        area = Polygon, rotor = rot, wind = dirspeed,
+        elevation = srtm_crop, terrain = terrain, ccl_raster = cclRaster,
         weibull = weibull, park_center = park_center
       )
 

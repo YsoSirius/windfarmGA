@@ -26,9 +26,9 @@ sample_weighted_ids <- function(pool, size, visit = NULL) {
   pool[sample.int(length(pool), size, prob = w)]
 }
 
-fitness_with_cache <- function(cache, selection, ...) {
-  n_sel <- length(selection)
-  keys <- vapply(selection, layout_key, character(1))
+fitness_with_cache <- function(cache, population, ...) {
+  n_sel <- length(population)
+  keys <- vapply(population, layout_key, character(1))
   fit <- vector("list", n_sel)
   need <- integer(0)
   for (j in seq_len(n_sel)) {
@@ -41,17 +41,25 @@ fitness_with_cache <- function(cache, selection, ...) {
     }
   }
   if (length(need)) {
-    fresh <- fitness(selection = selection[need], ...)
-    for (k in seq_along(need)) {
-      j <- need[k]
-      row <- fresh[[k]]
+    eval_at <- need[!duplicated(keys[need])]
+    fresh <- fitness(population = population[eval_at], ...)
+    by_key <- list()
+    for (k in seq_along(eval_at)) {
+      by_key[[keys[eval_at[k]]]] <- fresh[[k]]
+    }
+    for (j in need) {
+      row <- by_key[[keys[j]]]
       row[, "Run"] <- j
       assign(keys[j], row, envir = cache)
       fit[[j]] <- row
     }
   }
   names(fit) <- keys
-  attr(fit, "n_new") <- length(need)
+  attr(fit, "n_new") <- if (length(need)) {
+    sum(!duplicated(keys[need]))
+  } else {
+    0L
+  }
   fit
 }
 
@@ -167,8 +175,8 @@ adapt_operator_rates <- function(phase, stall, coverage, generation,
 
 ## More elites while refining a plateau (keep good memory). Fewer during
 ## a disturbance pulse so new lineages can enter the archive.
-adapt_elite_n <- function(nelit, n_pop, phase = "explore", stall = 0L) {
-  n_el <- max(1L, as.integer(nelit))
+adapt_elite_n <- function(n_elite, n_pop, phase = "explore", stall = 0L) {
+  n_el <- max(1L, as.integer(n_elite))
   n_pop <- max(1L, as.integer(n_pop))
   stall <- as.integer(stall)
   if (identical(phase, "pulse")) {

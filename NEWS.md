@@ -1,7 +1,6 @@
 # windfarmGA 5.0.0
 
 Breaking release: the layout chromosome is no longer a 0/1 string.
-`4.0.1` is skipped; this would not have been a patch on `4.0.0`.
 
 ## Breaking
 * Each individual is `n` unique grid-cell IDs, not a binary vector over all
@@ -11,15 +10,31 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 * `selection()` returns an ID matrix (`n` × selected) plus fitness. Code that
   piped `selection()` into `crossover()` must convert IDs to binary or switch
   to `set_crossover()`.
-* `crossPart1` and `trimForce` are unused by the combinatorial genome
-  (kept for the legacy helpers `crossover()` / `trimton()`).
-* Defaults: `selstate = "VAR"`, mutation `2/n` (was often `0.8`), `nelit = 3`.
+* Public API is snake_case. `Polygon1` → `area`, `vdirspe` → `wind`,
+  `Rotor` → `rotor`, `mutr` → `mutation_rate`, `selstate` → `selection_mode`,
+  `Projection` → `crs`. `plotit` is gone (`plot` only).
+* Unused loop args `crossPart1` and `trimForce` are removed from
+  `genetic_algorithm()`. Invalid `selection_mode` errors (no interactive
+  `readinteger` prompt). Defaults live in the function signature, not in
+  `if (missing())` or the Rd file.
+* Related formals: `fitness(population, area, rotor, wind, ...)`,
+  `calculate_energy(layout, area, rotor, wind, wake_angle, wake_distance, ...)`,
+  `selection(fit, grid, share, ...)`, `grid_area(area, ...)`,
+  `random_search(..., plot)`, `plot_windfarmGA(..., which_plot)`,
+  `plot_result(..., terrain, plot_grid)`.
+* Defaults: `selection_mode = "VAR"`, mutation `2/n` (was often `0.8`), `n_elite = 3`.
   New session options (inject, immigrants, seasons, neighbour local search)
   change search behaviour even if you call `genetic_algorithm()` the same way.
 * Legacy `crossover()`, `mutation()` and `trimton()` still accept 0/1
   chromosomes. New exports: `set_crossover()`, `swap_mutation()`.
 
 ## Fixes
+* Power-curve energy was the first turbine's kW (often rated power and 100%
+  efficiency), not the park sum. `energy_calc_CPP` already summed; table
+  lookup now does the same. Cut-in / rated / cut-out apply only when no
+  table is set (as documented). On the rated plateau, wakes may still leave
+  every turbine at rated power — then layouts look identical and the GA
+  cannot improve energy. Use hub wind in the rising part of the curve.
 * CRAN tests for `plot_windrose()` failed on r-devel with ggplot2 >= 4.0.0.
   ggplot2 4.0 uses S7 plot objects, so they are no longer recursive lists and
   `class(.)[1]` is no longer `"gg"`. Checks now use
@@ -36,10 +51,25 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   `options(windfarmGA.wind_profile = "power")`).
 * Power coefficient `options(windfarmGA.Cp)` defaults to 0.45; optional
   cut-in / rated / cut-out speeds.
-* Parallel clusters are always stopped via `on.exit`; dead Weibull crop
+* parallel clusters are always stopped via `on.exit`; dead Weibull crop
   call removed.
 * Diagnostic plots no longer crash on negative leftover EQU values; rates
   are drawn as percentages, not as palette indices.
+* Plot flags are named `plot` (`plotit` removed).
+* `genetic_algorithm()` results have class `windfarmGA` with `print()` /
+  `plot()`. `ga_options()` lists or sets `windfarmGA.*` options.
+  `explore_result()` is a one-page Shiny viewer (Suggests): Leaflet map
+  of the selected generation's best layout, plus one plotly figure
+  (fitness / rates / population subplots). New fitness maxima are
+  marked; click a marker to jump the slider to that generation. The
+  plotly legend sits further above the figure so it does not cover the
+  series. The cell heatmap is omitted there (it rebuilds the grid and
+  is slower than the map). `plot_viewshed()` projects lon/lat DEMs
+  (e.g. elevatr) before `terra::viewshed`.
+* Optional manufacturer `data.frame(ws, power)` via
+  `ga_options(power_curve = ...)` / `plot_power_curve()`. GitHub-only
+  extras live in `experimental/` (not the CRAN tarball): draw a site
+  polygon, circle-overlap app. rayshader and noise stay local.
 * `plot_windrose()` uses a white panel instead of the gray fill and thick
   minor rings.
 * `plot_population()` was slow because `population_census()` rescanned
@@ -58,7 +88,7 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   when `ask = FALSE`. `plot_population()` has a bottom legend, an elite
   cell-count line (the population can sit at the full grid size, e.g. 70,
   while elites shrink), and a park-efficiency page.
-* `plot_generation(result, Polygon, generation = 122)` shows every layout
+* `plot_generation(result, area, generation = 122)` shows every layout
   evaluated in that generation (cell occupancy + all turbines, best in
   black, plus the top distinct maps). `generation_layouts()` returns the
   table. `plot_parkfitness()` is ggplot2 with the legend outside; rates
@@ -75,7 +105,7 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   (`options(windfarmGA.elite_children)`, default 3) and mixes with weaker
   layouts (`windfarmGA.elite_mix`, default 2, inject 0 so elite structure
   stays). Extra mutants when the max has been flat for 10 generations.
-  Elite count starts at `nelit` (default 3), grows by 2–3 during a long
+  Elite count starts at `n_elite` (default 3), grows by 2–3 during a long
   refine stall, and drops by 1 in a disturbance pulse.
   Operator rates follow seasons with the same three operators.
   Explore: inject in `[0.20, 0.40]` and mutation rise while the max is
@@ -94,7 +124,7 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   (default 0.5). Elites get a memetic local search
   (`windfarmGA.local_search_elites` default 5 /
   `local_search_tries` default 6).
-* Default `selstate` is `VAR` (selection share follows fitness). Mutation
+* Default `selection_mode` is `VAR` (selection share follows fitness). Mutation
   and crossover inject rates adapt each generation from max fitness and
   the top quartile (immigrants no longer freeze the controller).
 * `options(windfarmGA.max_selection)` default is 300 (was 100), matching
@@ -110,8 +140,10 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   benchmark (defaults after that: LS 5×6). Figure: `fig-north-gold.png`.
 * README documents all `genetic_algorithm()` arguments and
   `options(windfarmGA.*)` (physics, inject, immigrants, seasons, neighbour
-  local search). Examples no longer pass leftover `FIX` / `mutr = 0.8` /
-  `trimForce` as if they were still the recommended setup.
+  local search). Examples no longer pass leftover `FIX` / `mutation_rate = 0.8` /
+  `trimForce` as if they were still the recommended setup. Plotting
+  examples match the current functions (`plot_population`, last-generation
+  `plot_generation`, no removed `windfarmGA()` entry point).
 * `selection()` returns an ID matrix (`n` × selected) plus fitness; it no
   longer expands layouts to a binary grid.
 * `get_grids()` accepts ID matrices and still accepts legacy binary matrices.
@@ -120,7 +152,7 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ## Open / Todos
 * Submit 5.0.0 to CRAN (ggplot2 4.x tests plus combinatorial genome).
-* Parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
+* parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
 * Consider splitting the large `test_plots.R` block so a single assertion
   failure does not hide later plot checks.
 * `plot_heatmap()` was never reimplemented; use `plot_cell_heatmap()`.
@@ -140,7 +172,10 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   those counts are stored per generation.
 * Pin or document ggplot2 compatibility in `Suggests` if further S7 class
   cleanup removes the legacy `"ggplot"` S3 class.
-* Full manufacturer power curve as input, not only cut-in / rated / cut-out.
+* Noise (ISO 9613) and rayshader 3D stay experimental / local; do not
+  add them to Suggests.
+* With a manufacturer curve, run the GA at hub winds in the rising part
+  (or a Weibull climate), not only on the rated plateau.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
@@ -265,7 +300,7 @@ performance optimization of the whole algorithm.
     + `getDEM`
 
 #### Other Changes 
-* The function `genAlgo`/`windfarmGA` and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting **topograp** to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.
+* The function `genAlgo`/`windfarmGA` and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting **terrain** to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.
 
 * `plot_farm_3d` Experimental rayshader function
 
@@ -287,22 +322,22 @@ original result.
 ```sh
 load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
-Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
-RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
+Res = RandomSearchTurb(result = resultrect, area = polygon, n=10)
+RandomSearchPlot(resultRS = Res, result = resultrect, area = polygon, best=2)
 ```
 
 # windfarmGA 1.2
-#### Parallel Processing
+#### parallel Processing
 ```sh
 ## Runs the same optimization, but with parallel processing and 3 cores.
-result_par <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-                 fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-                 selstate="FIX",mutr=0.8, Proportionality = 1,
-                 SurfaceRoughness = 0.3, topograp = FALSE,
-                 elitism=TRUE, nelit = 7, trimForce = TRUE,
-                 referenceHeight = 50,RotorHeight = 100,
-                 Parallel = TRUE, numCluster = 3)
-PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
+result_par <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
+                 fcr=5,iteration=10, wind = data.in,crossPart1 = "EQU",
+                 selection_mode="FIX",mutation_rate=0.8, proportionality = 1,
+                 surface_roughness = 0.3, terrain = FALSE,
+                 elitism=TRUE, n_elite = 7, trimForce = TRUE,
+                 reference_height = 50,rotor_height = 100,
+                 parallel = TRUE, n_cluster = 3)
+PlotWindfarmGA(result = result_par, grid_method = "h", area = area)
 ```
 
 # windfarmGA 1.1
@@ -310,11 +345,11 @@ PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
 
 #### Optimization with Hexagonal Grid Cells
 ```sh
-result_hex <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-                  selstate="FIX",mutr=0.8, Proportionality = 1,
-                  SurfaceRoughness = 0.3, topograp = FALSE,
-                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-                  referenceHeight = 50,RotorHeight = 100)
-PlotWindfarmGA(result = result_hex, GridMethod = "h", Polygon1 = Polygon1)
+result_hex <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
+                  fcr=5,iteration=10, wind = data.in,crossPart1 = "EQU",
+                  selection_mode="FIX",mutation_rate=0.8, proportionality = 1,
+                  surface_roughness = 0.3, terrain = FALSE,
+                  elitism=TRUE, n_elite = 7, trimForce = TRUE,
+                  reference_height = 50,rotor_height = 100)
+PlotWindfarmGA(result = result_hex, grid_method = "h", area = area)
 ```

@@ -31,8 +31,6 @@ Other Helper Functions:
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
-\code{\link{readinteger}()},
-\code{\link{readintegerSel}()},
 \code{\link{splitAt}()},
 \code{\link{windata_format}()}
 }

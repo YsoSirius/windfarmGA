@@ -4,23 +4,19 @@
 \alias{turbine_influences}
 \title{Find potentially influencing turbines}
 \usage{
-turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE)
+turbine_influences(t, wnkl, dist, area, dirct, plot_angles = FALSE)
 }
 \arguments{
 \item{t}{A data.frame of the current individual with X and Y coordinates}
 
-\item{wnkl}{The angle from which wake influences are considered to be
-negligible}
-
 \item{dist}{A numeric value indicating the distance, after which the wake
 effects are considered to be eliminated.}
 
-\item{polYgon}{A shapefile representing the considered area}
+\item{area}{Site polygon}
 
-\item{dirct}{A numeric value indicating the current wind direction}
+\item{dirct}{Current wind direction}
 
-\item{plotAngles}{A logical variable, which is used to plot the distances and
-angles. Default is \code{FALSE}}
+\item{plot_angles}{Plot distances and angles}
 }
 \value{
 Returns a list of all individuals of the current generation which
@@ -35,7 +31,7 @@ turbine and save them to a list.
 ## Exemplary input Polygon with 2km x 2km:
 library(sf)
 
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),
     c(0, 2000, 2000, 0, 0)
@@ -43,13 +39,13 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
   crs = 3035
 ))
 
-t <- st_coordinates(st_sample(Polygon1, 10))
+t <- st_coordinates(st_sample(area, 10))
 t <- cbind(t, "Z" = 1)
 wnkl <- 20
 dist <- 100000
 dirct <- 0
 
-res <- turbine_influences(t, wnkl, dist, Polygon1, dirct, plotAngles = TRUE)
+res <- turbine_influences(t, wnkl, dist, area, dirct, plot_angles = TRUE)
 
 }
 \seealso{

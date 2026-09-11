@@ -4,17 +4,15 @@
 #'   and proportionality. The grid cell centroids represent possible
 #'   wind turbine locations.
 #'
-#' @note The grid of the genetic algorithm will have a resolution of \code{Rotor
-#'   * fcrR}. See the arguments of \code{\link{genetic_algorithm}}
+#' @note The grid of the genetic algorithm will have a resolution of
+#'   `rotor * fcr`. See the arguments of [genetic_algorithm()].
 #'
 #' @export
 #'
-#' @param shape Simple Feature Polygon of the considered area
-#' @param size The cellsize of the grid in meters. Default is 500
-#' @param prop A factor used for grid calculation. It determines the minimum
-#'   percentage that a grid cell must cover the area. Default is 1
-#' @param plotGrid Logical value indicating whether the results should be
-#'   plotted. Default is \code{FALSE}
+#' @param area Simple Feature polygon of the site
+#' @param size Cell size of the grid in metres
+#' @param prop Minimum fraction of a cell that must overlap the site
+#' @param plot_grid Draw the grid
 #'
 #' @family Helper Functions
 #' @return Returns a list with 2 elements. List element 1 will have the grid
@@ -25,7 +23,7 @@
 #' @examples \donttest{
 #' ## Exemplary input Polygon with 2km x 2km:
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(0, 0, 2000, 2000, 0),
 #'     c(0, 2000, 2000, 0, 0)
@@ -34,11 +32,11 @@
 #' ))
 #'
 #' ## Create a Grid
-#' grid_area(Polygon1, 200, 1, TRUE)
-#' grid_area(Polygon1, 400, 1, TRUE)
+#' grid_area(area, 200, 1, TRUE)
+#' grid_area(area, 400, 1, TRUE)
 #'
 #' ## Examplary irregular input Polygon
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(0, 0, 2000, 3000, 0),
 #'     c(20, 200, 2000, 0, 20)
@@ -47,12 +45,13 @@
 #' ))
 #'
 #' ## Create a Grid
-#' grid_area(Polygon1, 200, 1, TRUE)
-#' grid_area(Polygon1, 200, 0.1, TRUE)
-#' grid_area(Polygon1, 400, 1, TRUE)
-#' grid_area(Polygon1, 400, 0.1, TRUE)
+#' grid_area(area, 200, 1, TRUE)
+#' grid_area(area, 200, 0.1, TRUE)
+#' grid_area(area, 400, 1, TRUE)
+#' grid_area(area, 400, 0.1, TRUE)
 #' }
-grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
+grid_area <- function(area, size = 500, prop = 1, plot_grid = FALSE) {
+  shape <- area
   if (prop < 0.01) {
     prop <- 0.01
   }
@@ -80,7 +79,7 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
   centpo <- st_coordinates(grid_centr)
   centpo <- cbind(ID = 1:nrow(centpo), "X" = centpo[, 1], "Y" = centpo[, 2])
 
-  if (plotGrid) {
+  if (plot_grid) {
     par_grid <- par(ask = FALSE, no.readonly = TRUE)
     on.exit(par_grid)
     plot.new()
@@ -135,7 +134,8 @@ grid_area <- function(shape, size = 500, prop = 1, plotGrid = FALSE) {
 #' ))
 #' HexGrid <- hexa_area(Poly, 100, TRUE)
 #'
-hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
+hexa_area <- function(area, size = 500, plot_grid = FALSE) {
+  shape <- area
   grid_polys <- sf::st_make_grid(shape,
     cellsize = size,
     what = "polygons", square = FALSE
@@ -161,7 +161,7 @@ hexa_area <- function(shape, size = 500, plotGrid = FALSE) {
   centpo <- st_coordinates(grid_centr)
   centpo <- cbind(ID = 1:nrow(centpo), "X" = centpo[, 1], "Y" = centpo[, 2])
 
-  if (plotGrid) {
+  if (plot_grid) {
     par_grid <- par(ask = FALSE, no.readonly = TRUE)
     on.exit(par_grid)
     plot.new()

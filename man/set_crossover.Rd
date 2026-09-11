@@ -28,7 +28,7 @@ set_crossover(
 \item{verbose}{If \code{TRUE}, print the number of children}
 
 \item{p_inject}{Fraction of non-shared slots filled from unused grid cells.
-Default is \code{getOption("windfarmGA.crossover_inject")} (0.3). At least one
+Default is \code{getOption("windfarmGA.crossover_inject")} (0.25). At least one
 unused cell is injected when any are available.}
 
 \item{grid_xy}{Optional matrix/data.frame with columns \code{ID}, \code{X}, \code{Y}. If

@@ -17,6 +17,7 @@ release_to_cran.R
 ^pkgdown$
 ^cran-comments\.md$
 ^_experiment$
+^experimental$
 ^revdep$
 ^\.github$
 ^CRAN-SUBMISSION$

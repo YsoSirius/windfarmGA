@@ -26,6 +26,8 @@ A mosaiced SpatRaster, representing the visibility for all \code{turbine_locs}
 }
 \description{
 Calculate and plot visibility for given points in a given area.
+\code{terra::viewshed} needs a projected (metre) raster. Lon/lat DEMs
+(typical \code{elevatr} downloads) are projected automatically.
 }
 \examples{
 \donttest{

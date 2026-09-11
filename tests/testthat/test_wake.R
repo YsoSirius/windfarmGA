@@ -63,8 +63,8 @@ test_that("Test Wake Functions", {
   for (i in 1:(length(t[, 1]))) {
     pointInfluences[[i]] <- get_dist_angles(
       t = t, o = i, wnkl = wnkl,
-      dist = distanz, polYgon = polYgon,
-      plotAngles = TRUE
+      dist = distanz, area = polYgon,
+      plot_angles = TRUE
     )
   }
   expect_false(all(unlist(sapply(potInfTur, is.na))))
@@ -151,15 +151,15 @@ test_that("Test Wake Functions", {
 
   ## Assign the rotor radius and a factor of the radius for grid spacing.
   Rotor <- 50
-  fcrR <- 3
+  fcr <- 3
   resGrid <- grid_area(
-    shape = polYgon, size = Rotor * fcrR, prop = 1,
-    plotGrid = FALSE
+    area = polYgon, size = Rotor * fcr, prop = 1,
+    plot_grid = FALSE
   )
 
   ## Create an initial population with the indexed Grid, 15 turbines and
   ## 100 individuals.
-  resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
+  resStartGA <- init_population(grid = resGrid[[1]], n = 15, n_start = 100)
   expect_true(all(sapply(resStartGA, ncol) == 4))
   expect_true(all(sapply(resStartGA, nrow) == 15))
   expect_true(length(resStartGA) == 100)
@@ -168,11 +168,11 @@ test_that("Test Wake Functions", {
   ## Calculate the expected energy output of the first individual of the
   ## population.
   resCalcEn <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = polYgon,
-    topograp = FALSE, weibull = FALSE
+    layout = resStartGA[[1]], reference_height = 50,
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = polYgon,
+    terrain = FALSE, weibull = FALSE
   )
 
   expect_output(str(resCalcEn), "List of 1")
@@ -186,18 +186,18 @@ test_that("Test Wake Functions", {
 
   ## Logarithmic wind profile: hub above reference height increases wind speed
   resEq <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
-    RotorHeight = 50, SurfaceRoughness = 0.03, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = polYgon,
-    topograp = FALSE, weibull = FALSE
+    layout = resStartGA[[1]], reference_height = 50,
+    rotor_height = 50, surface_roughness = 0.03, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = polYgon,
+    terrain = FALSE, weibull = FALSE
   )
   resHub <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
-    RotorHeight = 100, SurfaceRoughness = 0.03, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = polYgon,
-    topograp = FALSE, weibull = FALSE
+    layout = resStartGA[[1]], reference_height = 50,
+    rotor_height = 100, surface_roughness = 0.03, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = polYgon,
+    terrain = FALSE, weibull = FALSE
   )
   expect_gt(
     mean(do.call(rbind, resHub)[, "Windmean"]),
@@ -207,21 +207,43 @@ test_that("Test Wake Functions", {
   ## Cut-in: speeds below the threshold contribute no power
   old_cut <- options(windfarmGA.cut_in = 20)
   resCut <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = data.frame(ws = 12, wd = 0),
-    RotorR = 50, polygon1 = polYgon,
-    topograp = FALSE, weibull = FALSE
+    layout = resStartGA[[1]], reference_height = 50,
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = data.frame(ws = 12, wd = 0),
+    rotor = 50, area = polYgon,
+    terrain = FALSE, weibull = FALSE
   )
   options(old_cut)
   expect_equal(unname(do.call(rbind, resCut)[1, "Energy_Output_Red"]), 0)
 
+  ## Power curve: park totals (sum of turbine kW), not the first machine
+  curve <- data.frame(
+    ws = c(0, 3, 4, 12, 25, 26),
+    power = c(0, 0, 80, 2000, 2000, 0)
+  )
+  old_pc <- options(windfarmGA.power_curve = curve)
+  resPc <- calculate_energy(
+    layout = resStartGA[[1]], reference_height = 50,
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = data.frame(ws = 8, wd = 0),
+    rotor = 50, area = polYgon,
+    terrain = FALSE, weibull = FALSE
+  )
+  options(old_pc)
+  dfPc <- do.call(rbind, resPc)
+  n_t <- length(unique(dfPc[, "Punkt_id"]))
+  p8 <- lookup_power_curve(8, curve)
+  expect_equal(unname(dfPc[1, "Energy_Output_Voll"]), n_t * p8, tolerance = 1e-6)
+  expect_gt(unname(dfPc[1, "Energy_Output_Voll"]), p8)
+  expect_lt(unname(dfPc[1, "Energy_Output_Red"]), unname(dfPc[1, "Energy_Output_Voll"]))
+  expect_lt(unname(dfPc[1, "Parkwirkungsgrad"]), 100)
+
   resCalcEn <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = polYgon,
-    topograp = FALSE, weibull = FALSE, plotit = TRUE
+    layout = resStartGA[[1]], reference_height = 50,
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = polYgon,
+    terrain = FALSE, weibull = FALSE, plot = TRUE
   )
 
   expect_output(str(resCalcEn), "List of 1")
@@ -230,10 +252,10 @@ test_that("Test Wake Functions", {
   ## 2 Wind Directions
   vdata <- as.data.frame(cbind(ws = c(12, 12), wd = c(0, 30)))
   resCalcEn <- calculate_energy(
-    sel = resStartGA[[1]], referenceHeight = 50,
-    RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-    distanz = 100000, dirSpeed = vdata,
-    RotorR = 50, polygon1 = polYgon, topograp = FALSE,
+    layout = resStartGA[[1]], reference_height = 50,
+    rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+    wake_distance = 100000, wind = vdata,
+    rotor = 50, area = polYgon, terrain = FALSE,
     weibull = FALSE
   )
 
@@ -251,15 +273,15 @@ test_that("Test Wake Functions", {
   #   terra::ext(hole_shape),
   #   ncol = 180, nrow = 180), field = 1)
   # vdata <- data.frame(ws = c(12,12), wd = c(0,90))
-  # Rotor <- 50; fcrR <- 3
-  # resGrid <- grid_area(shape = hole_shape, size = Rotor * fcrR, prop = 1,
-  #                       plotGrid = FALSE)
-  # resStartGA <- init_population(Grid = resGrid[[1]], n = 15, nStart = 100)
-  # resCalcEn <- calculate_energy(sel = resStartGA[[1]], referenceHeight = 50,
-  #                          RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-  #                          distanz = 100000, dirSpeed = vdata,
-  #                          RotorR = 50, polygon1 = hole_shape,
-  #                          topograp = FALSE, weibull=FALSE,
-  #                          plotit = TRUE)
+  # Rotor <- 50; fcr <- 3
+  # resGrid <- grid_area(area = hole_shape, size = Rotor * fcr, prop = 1,
+  #                       plot_grid = FALSE)
+  # resStartGA <- init_population(Grid = resGrid[[1]], n = 15, n_start = 100)
+  # resCalcEn <- calculate_energy(layout = resStartGA[[1]], reference_height = 50,
+  #                          rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+  #                          wake_distance = 100000, wind = vdata,
+  #                          rotor = 50, area = hole_shape,
+  #                          terrain = FALSE, weibull=FALSE,
+  #                          plot = TRUE)
 })
 

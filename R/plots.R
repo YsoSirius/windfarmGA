@@ -13,7 +13,8 @@
 #' @param spdmax Maximal wind speed. Default is 30
 #' @param palette A color palette used for drawing the wind rose
 #' @param spdseq A wind speed sequence, that is used for plotting
-#' @param plotit Should the windrose be plotted? Default is TRUE
+#' @param plot Should the windrose be plotted? Default is TRUE
+#' @param plot Deprecated alias for \code{plot}.
 #'
 #' @family Plotting Functions
 #' @return A ggplot2 wind rose plot, returned invisibly.
@@ -39,7 +40,7 @@
 #'
 plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
                           spdmax = 30, palette = "YlGnBu",
-                          spdseq = NULL, plotit = TRUE) {
+                          spdseq = NULL, plot = TRUE) {
   if (!is_ggplot2_installed()) {
     stop(
       "The package 'ggplot2' is required for this function, but it is not installed.\n",
@@ -195,7 +196,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
     )
 
 
-  if (plotit) {
+  if (plot) {
     # print the plot #################
     print(plot_windrose)
   }
@@ -215,13 +216,12 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' @inheritParams genetic_algorithm
 #' @param result The output of \code{\link{genetic_algorithm}}
 #' @param best How many distinct best layouts to draw. Default is 1.
-#' @param plotEn A numeric value that indicates if the best energy or efficiency
+#' @param plot_en A numeric value that indicates if the best energy or efficiency
 #'   output should be plotted. \code{1} plots the best energy solutions
 #'   and \code{2} plots the best efficiency solutions
-#' @param topographie A logical value, indicating whether terrain effects should
-#'   be considered and plotted or not
-#' @param Grid If \code{TRUE} (default) the used grid will be added to the plot.
-#'   You can also pass another Simple Feature object
+#' @param terrain Draw terrain rasters for the best layout
+#' @param plot_grid If `TRUE` (default) the used grid is added. You can also
+#'   pass another Simple Feature object
 #'
 #' @family Plotting Functions
 #' @return Returns a data.frame of the best (energy/efficiency) individual
@@ -230,7 +230,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' @examples \dontrun{
 #' ## Add some data examples from the package
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(4498482, 4498482, 4499991, 4499991, 4498482),
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -239,19 +239,21 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' ))
 #'
 #' ## Plot the results of a hexagonal grid optimization
-#' plot_result(resulthex, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
+#' plot_result(resulthex, area, best = 1, plot_en = 1, terrain = FALSE)
 #'
 #' ## Plot the results of a rectangular grid optimization
-#' plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
+#' plot_result(resultrect, area, best = 1, plot_en = 1, terrain = FALSE)
 #' }
-plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
-                        topographie = FALSE, Grid = TRUE,
-                        sourceCCLRoughness = NULL, sourceCCL = NULL,
-                        weibullsrc) {
-  ## Check plotEn, set par() and color palette ##############
-  if (!plotEn %in% c(1, 2)) {
+plot_result <- function(result, area, best = 1, plot_en = 1,
+                        terrain = FALSE, plot_grid = TRUE,
+                        ccl_roughness = NULL, ccl = NULL,
+                        weibull_src = NULL) {
+  terrainhie <- terrain
+  Grid <- plot_grid
+  ## Check plot_en, set par() and color palette ##############
+  if (!plot_en %in% c(1, 2)) {
     stop(
-      "plotEn must be either 1 or 2. \n",
+      "plot_en must be either 1 or 2. \n",
       "1 - plots the best energy output. \n",
       "2 - plots the best efficiency output."
     )
@@ -264,7 +266,7 @@ plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
   result_inputs <- result[1, "inputData"][[1]]
 
   ## Check Projections and reference systems ####
-  Polygon1 <- isSpatial(Polygon1)
+  area <- isSpatial(area)
   PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   Projection <- result_inputs["Projection", ][[1]]
   if (PROJ6) {
@@ -273,63 +275,63 @@ plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
       error = function(e) Projection
     )
   }
-  if (is.na(st_crs(Polygon1))) {
+  if (is.na(st_crs(area))) {
     message("Polygon is not projected. The spatial reference WGS 84 (EPSG:4326) is assumed.")
     if (PROJ6) {
-      st_crs(Polygon1) <- 4326
+      st_crs(area) <- 4326
     } else {
-      st_crs(Polygon1) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
+      st_crs(area) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
     }
   }
-  Polygon1 <- sf::st_transform(Polygon1, st_crs(Projection))
+  area <- sf::st_transform(area, st_crs(Projection))
 
   ## Check Weibull Rasters #########
-  if (missing(weibullsrc) || is.null(weibullsrc)) {
-    weibullsrc <- NULL
+  if (is.null(weibull_src)) {
+    weibull_src <- NULL
     col2res <- "lightblue"
   } else {
-    PolyCrop <- sf::st_transform(Polygon1, sf::st_crs(weibullsrc[[1]]))
-    if (inherits(weibullsrc, "list") && length(weibullsrc) == 2) {
-      wblcroped <- lapply(weibullsrc, function(x) {
+    PolyCrop <- sf::st_transform(area, sf::st_crs(weibull_src[[1]]))
+    if (inherits(weibull_src, "list") && length(weibull_src) == 2) {
+      wblcroped <- lapply(weibull_src, function(x) {
         if (!inherits(x, "SpatRaster")) {
           x <- terra::rast(x)
         }
         terra::crop(x, PolyCrop, mask = TRUE)
       })
       Erwartungswert <- wblcroped[[2]] * (gamma(1 + (1 / values(wblcroped[[1]]))))
-    } else if (length(weibullsrc) == 1) {
-      if (!inherits(weibullsrc[[1]], "SpatRaster")) {
-        weibullsrc[[1]] <- terra::rast(weibullsrc[[1]])
+    } else if (length(weibull_src) == 1) {
+      if (!inherits(weibull_src[[1]], "SpatRaster")) {
+        weibull_src[[1]] <- terra::rast(weibull_src[[1]])
       }
-      wblcroped <- terra::crop(weibullsrc[[1]], PolyCrop, mask = TRUE)
+      wblcroped <- terra::crop(weibull_src[[1]], PolyCrop, mask = TRUE)
       Erwartungswert <- wblcroped[[1]]
-    } else if (inherits(weibullsrc, "RasterLayer")) {
-      wblcroped <- terra::crop(terra::rast(weibullsrc), PolyCrop, mask = TRUE)
+    } else if (inherits(weibull_src, "RasterLayer")) {
+      wblcroped <- terra::crop(terra::rast(weibull_src), PolyCrop, mask = TRUE)
       Erwartungswert <- wblcroped
     }
     col2res <- "transparent"
     alpha <- 0.9
-    Erwartungswert <- terra::project(Erwartungswert, terra::crs(Polygon1))
+    Erwartungswert <- terra::project(Erwartungswert, terra::crs(area))
   }
 
   ## Check & Make Grid #############
   if (isTRUE(Grid)) {
     cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
     if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
-      Grid <- grid_area(Polygon1,
+      Grid <- grid_area(area,
         size = cellsize,
         prop = as.numeric(result_inputs["Percentage of Polygon", ][[1]])
       )[[2]]
     } else {
-      Grid <- hexa_area(Polygon1, size = cellsize)[[2]]
+      Grid <- hexa_area(area, size = cellsize)[[2]]
     }
   }
 
 
   ## Check Terrain Modell #########
-  if (topographie == TRUE) {
-    terrain_data <- terrain_model(topographie, Polygon1, sourceCCL, sourceCCLRoughness,
-      plotit = TRUE, verbose = FALSE
+  if (terrainhie == TRUE) {
+    terrain_data <- terrain_model(terrainhie, area, ccl, ccl_roughness,
+      plot = TRUE, verbose = FALSE
     )
     cclRaster <- terrain_data$cclRaster
     orogr1 <- terrain_data$srtm_crop$orogr1
@@ -337,12 +339,12 @@ plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
   }
 
   ## Set Argments for Best Energy/Efficiency Windfarm ##########
-  if (plotEn == 1) {
+  if (plot_en == 1) {
     filter_col <- "EnergyOverall"
     listind <- 2
     title <- "Energy"
   }
-  if (plotEn == 2) {
+  if (plot_en == 2) {
     filter_col <- "EfficAllDir"
     listind <- 3
     title <- "Efficiency"
@@ -392,7 +394,7 @@ plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
 
     rank_i <- (best + 1) - i
     par(mfrow = c(1, 1), ask = FALSE)
-    plot(st_geometry(Polygon1),
+    plot(st_geometry(area),
       col = col2res,
       main = sprintf(
         "%s layout #%d   |   %s kW   |   %s%% efficiency",
@@ -405,7 +407,7 @@ plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
     }
 
     ## Plot Weibull Data ###########
-    if (!is.null(weibullsrc)) {
+    if (!is.null(weibull_src)) {
       terra::plot(Erwartungswert,
         alpha = alpha, legend = TRUE, axes = FALSE,
         useRaster = TRUE, add = TRUE,
@@ -438,10 +440,10 @@ plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
     )
 
     ## Plot Terrain Model  ###########
-    if (topographie == TRUE) {
+    if (terrainhie == TRUE) {
       par(ask = TRUE)
       sel1 <- best_result[, 1:2]
-      plot_terrain(result_inputs, sel1, Polygon1, orogr1, srtm_crop, cclRaster)
+      plot_terrain(result_inputs, sel1, area, orogr1, srtm_crop, cclRaster)
     }
   }
 
@@ -496,12 +498,12 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   plot(polygon1, add = TRUE)
 
   ## CorineLandCover Roughness values ##################
-  SurfaceRoughness0 <- terra::extract(x = cclRaster, y = as.matrix(sel1))
-  SurfaceRoughness1 <- terra::extract(
+  surface_roughness0 <- terra::extract(x = cclRaster, y = as.matrix(sel1))
+  surface_roughness1 <- terra::extract(
     x = terra::terrain(srtm_crop, "roughness"),
     y = as.matrix(sel1)
   )
-  SurfaceRoughness <- SurfaceRoughness0 * (1 + (SurfaceRoughness1[[1]] / max(terra::res(srtm_crop))))
+  surface_roughness <- surface_roughness0 * (1 + (surface_roughness1[[1]] / max(terra::res(srtm_crop))))
   elrouind <- terra::terrain(srtm_crop, "roughness")
   elrouindn <- terra::resample(elrouind, cclRaster, method = "near")
   modSurf <- cclRaster * (1 + (values(elrouindn) / max(terra::res(srtm_crop))))
@@ -510,7 +512,7 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   terra::plot(cclRaster, main = "Corine Land Cover Roughness")
   points(sel1[, "X"], sel1[, "Y"], pch = 20)
   calibrate::textxy(sel1[, "X"], sel1[, "Y"],
-    labs = round(SurfaceRoughness0[[1]], 2), cex = cexa
+    labs = round(surface_roughness0[[1]], 2), cex = cexa
   )
   plot(polygon1, add = TRUE)
   terra::plot(
@@ -519,23 +521,23 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   )
   points(sel1[, "X"], sel1[, "Y"], pch = 20)
   calibrate::textxy(sel1[, "X"], sel1[, "Y"],
-    labs = round((SurfaceRoughness1[[1]]), 2), cex = cexa
+    labs = round((surface_roughness1[[1]]), 2), cex = cexa
   )
   plot(polygon1, add = TRUE)
   terra::plot(modSurf, main = "Modified Surface Roughness")
   points(sel1[, "X"], sel1[, "Y"], pch = 20)
   calibrate::textxy(sel1[, "X"], sel1[, "Y"],
-    labs = round((SurfaceRoughness[[1]]), 2), cex = cexa
+    labs = round((surface_roughness[[1]]), 2), cex = cexa
   )
   plot(polygon1, add = TRUE)
 
   ## Wake Decay Constant #############
-  RotorHeight <- as.integer(inputs["Rotor Height", ])
+  rotor_height <- as.integer(inputs["Rotor Height", ])
   k_raster <- terra::app(modSurf, function(x) {
-    0.5 / (log(RotorHeight / x))
+    0.5 / (log(rotor_height / x))
   })
   # New Wake Decay Constant calculated with new surface roughness values, according to CLC
-  k <- 0.5 / (log(RotorHeight / SurfaceRoughness))
+  k <- 0.5 / (log(rotor_height / surface_roughness))
   terra::plot(k_raster, main = "Adapted Wake Decay Constant - K")
   points(sel1[, "X"], sel1[, "Y"], pch = 20)
   calibrate::textxy(sel1[, "X"], sel1[, "Y"], labs = round(k[[1]], 3), cex = cexa)
@@ -638,9 +640,9 @@ ga_plot_theme <- function(legend = "right") {
     )
 }
 
-ga_result_grid <- function(result, Polygon1) {
+ga_result_grid <- function(result, area) {
   result_inputs <- result[1, "inputData"][[1]]
-  Polygon1 <- isSpatial(Polygon1)
+  area <- isSpatial(area)
   PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   Projection <- result_inputs["Projection", ][[1]]
   if (PROJ6) {
@@ -649,22 +651,22 @@ ga_result_grid <- function(result, Polygon1) {
       error = function(e) Projection
     )
   }
-  if (is.na(sf::st_crs(Polygon1))) {
+  if (is.na(sf::st_crs(area))) {
     if (PROJ6) {
-      sf::st_crs(Polygon1) <- 4326
+      sf::st_crs(area) <- 4326
     } else {
-      sf::st_crs(Polygon1) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
+      sf::st_crs(area) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
     }
   }
-  Polygon1 <- sf::st_transform(Polygon1, sf::st_crs(Projection))
+  area <- sf::st_transform(area, sf::st_crs(Projection))
   cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
   prop <- as.numeric(result_inputs["Percentage of Polygon", ][[1]])
   if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
-    Grid <- grid_area(Polygon1, size = cellsize, prop = prop)
+    Grid <- grid_area(area, size = cellsize, prop = prop)
   } else {
-    Grid <- hexa_area(Polygon1, size = cellsize)
+    Grid <- hexa_area(area, size = cellsize)
   }
-  list(polygon = Polygon1, grid_xy = Grid[[1]], grid_poly = Grid[[2]])
+  list(polygon = area, grid_xy = Grid[[1]], grid_poly = Grid[[2]])
 }
 
 maybe_plotly <- function(plots, use) {
@@ -733,19 +735,19 @@ show_plot_pages <- function(plots, ask = FALSE, plotly = FALSE) {
 #' @export
 #'
 #' @inheritParams plot_result
-#' @param whichPl `"all"` (default) shows `result`, `progress`, `population`
+#' @param which_plot `"all"` (default) shows `result`, `progress`, `population`
 #'   and `heatmap`. Or a character vector (`"result"`, `"progress"`,
 #'   `"population"`, `"heatmap"`, `"evolution"`) or the numbers 1–4.
 #' @param ask If `TRUE`, wait for Enter between pages. Default is `TRUE`
 #'   in an interactive session.
 #' @param plotly If `TRUE`, draw fitness and rates with plotly (hover).
-#'   Default is `TRUE` when the plotly package is installed.
+#'   Used only when `ask` is `FALSE` and plotly is installed.
 #'
 #' @family Plotting Functions
 #' @return Returns NULL. Used for plotting
 #' @examples \dontrun{
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(4498482, 4498482, 4499991, 4499991, 4498482),
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -753,19 +755,20 @@ show_plot_pages <- function(plots, ask = FALSE, plotly = FALSE) {
 #'   crs = 3035
 #' ))
 #'
-#' plot_windfarmGA(resulthex, Polygon1)
-#' plot_windfarmGA(resultrect, Polygon1, whichPl = "progress")
+#' plot_windfarmGA(resulthex, area)
+#' plot_windfarmGA(resultrect, area, which_plot = "progress")
 #' }
-plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
-                            best = 1, plotEn = 1,
-                            weibullsrc, ask = NULL, plotly = NULL) {
+plot_windfarmGA <- function(result, area, which_plot = "all",
+                            best = 1, plot_en = 1,
+                            weibull_src = NULL, ask = NULL, plotly = NULL) {
+  whichPl <- which_plot
   oldpar <- graphics::par(ask = FALSE, no.readonly = TRUE)
   on.exit(graphics::par(oldpar))
 
   if (is.null(ask)) {
     ask <- interactive()
   }
-  Polygon1 <- isSpatial(Polygon1)
+  area <- isSpatial(area)
 
   if (length(whichPl) == 1 && identical(tolower(as.character(whichPl)), "all")) {
     whichPl <- c("result", "progress", "population", "heatmap")
@@ -786,8 +789,8 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
     pg <- whichPl[[i]]
     if (pg == "result") {
       plot_result(
-        result = result, Polygon1 = Polygon1, best = best, plotEn = plotEn,
-        topographie = FALSE, Grid = TRUE, weibullsrc = weibullsrc
+        result = result, area = area, best = best, plot_en = plot_en,
+        terrain = FALSE, plot_grid = TRUE, weibull_src = weibull_src
       )
     } else if (pg == "progress") {
       plot_parkfitness(result, interactive = use_plotly(plotly), ask = ask)
@@ -796,7 +799,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
     } else if (pg == "evolution") {
       plot_evolution(result, ask = FALSE)
     } else if (pg == "heatmap") {
-      plot_cell_heatmap(result, Polygon1)
+      plot_cell_heatmap(result, area)
     }
     if (i < length(whichPl)) {
       pause_next_plot(ask)
@@ -817,7 +820,8 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
 #' @inheritParams plot_result
 #' @param log If `TRUE`, color the counts on a `log1p` scale so a few elite
 #'   cells do not dominate the palette. Default is `TRUE`
-#' @param plotit If `FALSE`, only return the counts. Default is `TRUE`
+#' @param plot If `FALSE`, only return the counts. Default is `TRUE`
+#' @param plot Deprecated alias for `plot`.
 #'
 #' @family Plotting Functions
 #' @return A `data.frame` with grid ID, coordinates and visit count
@@ -825,7 +829,7 @@ plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
 #' @examples \donttest{
 #' plot_cell_heatmap(resultrect, sp_polygon)
 #' }
-plot_cell_heatmap <- function(result, Polygon1, log = TRUE, plotit = TRUE) {
+plot_cell_heatmap <- function(result, area, log = TRUE, plot = TRUE) {
   if (!"allCoords" %in% colnames(result)) {
     stop("result has no allCoords column. Run genetic_algorithm() first.")
   }
@@ -836,7 +840,7 @@ plot_cell_heatmap <- function(result, Polygon1, log = TRUE, plotit = TRUE) {
   counts <- table(as.integer(parks[, "Rect_ID"]))
 
   result_inputs <- result[1, "inputData"][[1]]
-  Polygon1 <- isSpatial(Polygon1)
+  area <- isSpatial(area)
   PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   Projection <- result_inputs["Projection", ][[1]]
   if (PROJ6) {
@@ -845,21 +849,21 @@ plot_cell_heatmap <- function(result, Polygon1, log = TRUE, plotit = TRUE) {
       error = function(e) Projection
     )
   }
-  if (is.na(sf::st_crs(Polygon1))) {
+  if (is.na(sf::st_crs(area))) {
     if (PROJ6) {
-      sf::st_crs(Polygon1) <- 4326
+      sf::st_crs(area) <- 4326
     } else {
-      sf::st_crs(Polygon1) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
+      sf::st_crs(area) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
     }
   }
-  Polygon1 <- sf::st_transform(Polygon1, sf::st_crs(Projection))
+  area <- sf::st_transform(area, sf::st_crs(Projection))
 
   cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
   prop <- as.numeric(result_inputs["Percentage of Polygon", ][[1]])
   if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
-    Grid <- grid_area(Polygon1, size = cellsize, prop = prop)
+    Grid <- grid_area(area, size = cellsize, prop = prop)
   } else {
-    Grid <- hexa_area(Polygon1, size = cellsize)
+    Grid <- hexa_area(area, size = cellsize)
   }
   grid_xy <- Grid[[1]]
   grid_poly <- Grid[[2]]
@@ -876,7 +880,7 @@ plot_cell_heatmap <- function(result, Polygon1, log = TRUE, plotit = TRUE) {
     n_probed = vis
   )
 
-  if (isTRUE(plotit)) {
+  if (isTRUE(plot)) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(oldpar))
     graphics::par(mar = c(4, 4, 4, 6) + 0.1)
@@ -905,10 +909,10 @@ plot_cell_heatmap <- function(result, Polygon1, log = TRUE, plotit = TRUE) {
       "%d / %d cells never tried (%.0f%%)",
       n_zero, ncell, 100 * n_zero / ncell
     )
-    plot(sf::st_geometry(Polygon1), col = "white", border = "grey30",
+    plot(sf::st_geometry(area), col = "white", border = "grey30",
          main = main, sub = sub)
     plot(grid_poly, col = cols, border = "white", lwd = 0.4, add = TRUE)
-    plot(sf::st_geometry(Polygon1), add = TRUE, border = "grey20", col = NA)
+    plot(sf::st_geometry(area), add = TRUE, border = "grey20", col = NA)
 
     n_leg <- 6
     mx <- max(vis)
@@ -1016,14 +1020,14 @@ generation_layouts <- function(result, generation = NULL) {
 #' @examples \donttest{
 #' plot_generation(resultrect, sp_polygon, generation = 10)
 #' }
-plot_generation <- function(result, Polygon1, generation = NULL,
+plot_generation <- function(result, area, generation = NULL,
                             n_show = 6, interactive = NULL, ask = NULL) {
   dat <- generation_layouts(result, generation)
   if (is.null(ask)) {
     ask <- interactive()
   }
   interactive <- if (isTRUE(ask)) FALSE else use_plotly(interactive)
-  site <- ga_result_grid(result, Polygon1)
+  site <- ga_result_grid(result, area)
   parks <- dat$turbines
   lay <- dat$layouts
   best_run <- lay$Run[1]
@@ -1481,38 +1485,38 @@ plot_population <- function(result, interactive = NULL, ask = NULL) {
 #'   best performing wind farm.
 #' @param orderitems A logical value indicating whether the results should be
 #'   ordered by energy values \code{TRUE} or chronologically \code{FALSE}
-#' @param GridPol By default, the grid will be calculated based on the inputs
-#'  of \code{result} and the \code{Polygon1}. But another spatial object or the
-#'  output of the  \code{\link{grid_area}} or \code{\link{hexa_area}} functions
-#'  can also be
+#' @param grid Optional grid polygons. By default they are rebuilt from
+#'   `result` and `area`. You can pass the polygon element of
+#'   [grid_area()] or [hexa_area()].
 #'
 #' @return Returns a leaflet map.
 #'
 #' @examples \dontrun{
 #' ## Plot the best wind farm on a leaflet map (ordered by energy values)
-#' plot_leaflet(result = resulthex, Polygon1 = sp_polygon, which = 1)
+#' plot_leaflet(result = resulthex, area = sp_polygon, which = 1)
 #'
 #' ## Plot the last wind farm (ordered by chronology).
 #' plot_leaflet(
-#'   result = resulthex, Polygon1 = sp_polygon, orderitems = FALSE,
+#'   result = resulthex, area = sp_polygon, orderitems = FALSE,
 #'   which = 1
 #' )
 #'
 #' ## Plot the best wind farm on a leaflet map with the rectangular Grid
 #' Grid <- grid_area(sp_polygon, size = 150, prop = 0.4)
 #' plot_leaflet(
-#'   result = resultrect, Polygon1 = sp_polygon, which = 1,
-#'   GridPol = Grid[[2]]
+#'   result = resultrect, area = sp_polygon, which = 1,
+#'   grid = Grid[[2]]
 #' )
 #'
 #' ## Plot the last wind farm with hexagonal Grid
 #' Grid <- hexa_area(sp_polygon, size = 75)
 #' plot_leaflet(
-#'   result = resulthex, Polygon1 = sp_polygon, which = 1,
-#'   GridPol = Grid[[2]]
+#'   result = resulthex, area = sp_polygon, which = 1,
+#'   grid = Grid[[2]]
 #' )
 #' }
-plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol) {
+plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL) {
+  GridPol <- grid
   if (!is_leaflet_installed()) {
     stop(
       "The package 'leaflet' is required for this function, but it is not installed.\n",
@@ -1521,7 +1525,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   }
 
   ## Check Polygon and CRS ##############
-  poly1 <- isSpatial(shape = Polygon1)
+  poly1 <- isSpatial(area = area)
   if (is.na(st_crs(poly1))) {
     projection <- result[, "inputData"][[1]]["Projection", ][[1]]
     projection <- tryCatch(as.numeric(projection),
@@ -1561,7 +1565,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   }
 
   ## Grid-Function ##############
-  if (!missing(GridPol)) {
+  if (!is.null(GridPol)) {
     if (is.na(st_crs(GridPol))) {
       st_crs(GridPol) <- st_crs(proj_pol)
     }
@@ -1570,10 +1574,10 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     if (result[, "inputData"][[1]]["Grid Method", ][[1]] != "h") {
       GridPol <- grid_area(poly1, cellsize,
         prop = as.numeric(result[, "inputData"][[1]]["Percentage of Polygon", ][[1]]),
-        plotGrid = FALSE
+        plot_grid = FALSE
       )[[2]]
     } else {
-      GridPol <- hexa_area(poly1, cellsize, plotGrid = FALSE)[[2]]
+      GridPol <- hexa_area(poly1, cellsize, plot_grid = FALSE)[[2]]
     }
   }
   GridPol <- st_transform(GridPol, st_crs(proj_longlat))
@@ -1671,7 +1675,7 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
     ) %>%
     ## Add the turbine symbols
     leaflet::addMarkers(
-      lng = result[, 1], lat = result[, 2],
+      lng = result$X, lat = result$Y,
       icon = turbine_icon[1], popup = list_popup,
       group = "Turbines"
     ) %>%
@@ -1704,8 +1708,8 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
 #'   parents, **Crossover inject** = unused cells mixed into children,
 #'   **Mutation** = chance that a turbine is swapped to a free cell.
 #'   The legend sits outside and follows the typical vertical order of the
-#'   lines (selection highest, then inject, mutation lowest). Uses plotly
-#'   (hover) when the package is installed.
+#'   lines (selection highest, then inject, mutation lowest). Plotly hover
+#'   is used only when \code{ask} is \code{FALSE} and plotly is installed.
 #' @export
 #'
 #' @inheritParams plot_result
@@ -2024,7 +2028,7 @@ plot_fitness_evolution <- function(result, spar = 0.1, interactive = NULL,
 #'
 #' @examples \donttest{
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(4498482, 4498482, 4499991, 4499991, 4498482),
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -2032,10 +2036,10 @@ plot_fitness_evolution <- function(result, spar = 0.1, interactive = NULL,
 #'   crs = 3035
 #' ))
 #'
-#' Res <- random_search(result = resultrect, Polygon1 = Polygon1)
-#' plot_random_search(resultRS = Res, result = resultrect, Polygon1 = Polygon1, best = 2)
+#' Res <- random_search(result = resultrect, area = area)
+#' plot_random_search(resultRS = Res, result = resultrect, area = area, best = 2)
 #' }
-plot_random_search <- function(resultRS, result, Polygon1, best) {
+plot_random_search <- function(resultRS, result, area, best) {
 
   ## set Graphic Params
   oldpar <- graphics::par(no.readonly = TRUE)
@@ -2067,15 +2071,15 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
   resultRS1 <- rev(resultRS1)
   resBest <- resBest[order(resBest[, "EnergyOverall"]), , drop = FALSE]
 
-  Polygon1 <- isSpatial(Polygon1)
+  area <- isSpatial(area)
   cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
   if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
-    Grid <- grid_area(Polygon1,
+    Grid <- grid_area(area,
       size = cellsize,
       prop = as.numeric(result_inputs["Percentage of Polygon", ][[1]])
     )[[2]]
   } else {
-    Grid <- hexa_area(Polygon1, size = cellsize)[[2]]
+    Grid <- hexa_area(area, size = cellsize)[[2]]
   }
   rbPal1 <- grDevices::colorRampPalette(c("green", "red"))
   col2res <- "lightblue"
@@ -2096,7 +2100,7 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
 
     bestrestGA[, "EnergyOverall"] <- round(bestrestGA[, "EnergyOverall"], 2)
     bestrestGA[, "EfficAllDir"] <- round(bestrestGA[, "EfficAllDir"], 2)
-    plot(Polygon1,
+    plot(area,
       col = col2res,
       main = paste(
         "Original - Best Energy:", (best + 1) - i, "\n", "Energy Output",
@@ -2139,7 +2143,7 @@ plot_random_search <- function(resultRS, result, Polygon1, best) {
 
     EnergyBest[, "EnergyOverall"] <- round(EnergyBest[, "EnergyOverall"], 2)
     EnergyBest[, "EfficAllDir"] <- round(EnergyBest[, "EfficAllDir"], 2)
-    plot(Polygon1,
+    plot(area,
       col = col2res,
       main = paste(
         "Random Search - Best Energy:", (best + 1) - i,

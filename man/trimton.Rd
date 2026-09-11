@@ -16,12 +16,6 @@ generation}
 
 \item{nGrids}{A numeric value indicating the total amount of grid cells}
 
-\item{trimForce}{If \code{TRUE} the algorithm will use a probabilistic
-approach to correct the windfarms to the desired amount of turbines.
-If \code{FALSE} the adjustment will be random. Default is \code{FALSE}.
-Unused by the combinatorial genome; kept for compatibility with
-\code{\link{trimton}}.}
-
 \item{seed}{Set a seed for comparability. Default is NULL}
 }
 \value{
@@ -38,7 +32,7 @@ It remains exported for the old 0/1 pipeline
 \donttest{
 ## Create a random rectangular shapefile
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),
     c(0, 2000, 2000, 0, 0)
@@ -52,7 +46,7 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 data.in <- as.data.frame(cbind(ws = 12, wd = 0))
 
 ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+Grid1 <- grid_area(area = area, size = 200, prop = 1)
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
@@ -60,9 +54,9 @@ startsel <- init_population(Grid, 10, 20)
 wind <- as.data.frame(cbind(ws = 12, wd = 0))
 wind <- list(wind, probab = 100)
 fit <- fitness(
-  selection = startsel, referenceHeight = 100, RotorHeight = 100,
-  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-  dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+  population = startsel, reference_height = 100, rotor_height = 100,
+  surface_roughness = 0.3, area = area, rotor = 20,
+  wind = wind, terrain = FALSE
 )
 allparks <- do.call("rbind", fit)
 ## selection() returns ID matrices; crossover()/trimton() expect 0/1.

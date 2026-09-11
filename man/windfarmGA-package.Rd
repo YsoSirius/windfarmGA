@@ -6,14 +6,15 @@
 \alias{windfarmGA-package}
 \title{windfarmGA: Genetic Algorithm for Wind Farm Layout Optimization}
 \description{
-The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
+The genetic algorithm is designed to optimize wind farms of any shape. Each layout is encoded as n unique grid-cell identifiers. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 }
 \details{
 \if{html}{\figure{windfarmGA.png}{options: width="25\%" alt="Figure: windfarmGA.png"}}
 \if{latex}{\figure{windfarmGA.png}{options: width=0.2in}}
 A package to optimize small wind farms with irregular shapes
-using a genetic algorithm. It requires a fixed amount of turbines, a fixed
-rotor radius and an average wind speed value for each incoming wind
+using a genetic algorithm. Each individual is \code{n} unique grid-cell
+IDs (set-crossover, swap-mutation). It requires a fixed amount of turbines,
+a fixed rotor radius and an average wind speed value for each incoming wind
 direction. A terrain effect model can be included which downloads a digital
 elevation model and a Corine Land Cover raster to approximate surface
 roughness. Further information can be found at the description of the

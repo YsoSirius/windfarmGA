@@ -47,8 +47,6 @@ Other Helper Functions:
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
-\code{\link{readinteger}()},
-\code{\link{readintegerSel}()},
 \code{\link{splitAt}()}
 }
 \concept{Helper Functions}

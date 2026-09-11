@@ -2,7 +2,7 @@
 #' @name selection
 #' @description  Select a certain amount of individuals and recombine them to
 #'   parental teams. Add the mean fitness value of both parents to the parental
-#'   team. Depending on the selected \code{selstate}, the algorithm will either
+#'   team. Depending on the selected \code{selection_mode}, the algorithm will either
 #'   take always 50 percent or a variable percentage of the current population.
 #'   The variable percentage depends on the evolution of the populations fitness
 #'   values. With \code{elitism = TRUE} the best individuals are always included
@@ -11,8 +11,9 @@
 #'
 #' @inheritParams genetic_algorithm
 #' @param fit A list of all fitness-evaluated individuals
-#' @param Grid Is the indexed grid output from \code{\link{grid_area}}
-#' @param teil A numeric value that determines the selection percentage
+#' @param grid Indexed grid from [grid_area()]
+#' @param share Selection divisor: parents are about `nrow / share` of the
+#'   population (`2` ≈ 50 %).
 #' @param verbose If TRUE, will print out further information.
 #'
 #' @family Genetic Algorithm Functions
@@ -23,7 +24,7 @@
 #' @examples \donttest{
 #' ## Exemplary input Polygon with 2km x 2km:
 #' library(sf)
-#' Polygon1 <- sf::st_as_sf(sf::st_sfc(
+#' area <- sf::st_as_sf(sf::st_sfc(
 #'   sf::st_polygon(list(cbind(
 #'     c(4498482, 4498482, 4499991, 4499991, 4498482),
 #'     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -32,7 +33,7 @@
 #' ))
 #'
 #' ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-#' Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+#' Grid1 <- grid_area(area = area, size = 200, prop = 1)
 #' Grid <- Grid1[[1]]
 #' AmountGrids <- nrow(Grid)
 #'
@@ -40,10 +41,9 @@
 #' wind <- as.data.frame(cbind(ws = 12, wd = 0))
 #' wind <- list(wind, probab = 100)
 #' fit <- fitness(
-#'   selection = startsel, referenceHeight = 100, RotorHeight = 100,
-#'   SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200,
-#'   rot = 20, dirspeed = wind,
-#'   srtm_crop = "", topograp = FALSE, cclRaster = ""
+#'   population = startsel, reference_height = 100, rotor_height = 100,
+#'   surface_roughness = 0.3, area = area, rotor = 20, wind = wind,
+#'   terrain = FALSE
 #' )
 #' allparks <- do.call("rbind", fit)
 #' ## SELECTION
@@ -53,10 +53,10 @@
 #' selec6best <- selection(fit, Grid, 2, TRUE, 6, "FIX")
 #' selec6best <- selection(fit, Grid, 4, FALSE, 6, "FIX")
 #' }
-selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
-  if (missing(verbose)) {
-    verbose <- FALSE
-  }
+selection <- function(fit, grid, share, elitism = TRUE, n_elite = 3,
+                      selection_mode = "VAR", verbose = FALSE) {
+  Grid <- grid
+  teil <- share
 
   ## Make a DataFrame of the Fitness Function Output. Representing all x Parks with their fitness value.
   new <- do.call("rbind", fit)
@@ -74,13 +74,13 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
   ## Elitism: keep the best individuals in the mating pool (no fitness scaling)
   elite_runs <- integer(0)
   if (elitism) {
-    if (nrow(new1) < nelit) {
-      nelit <- nrow(new1)
+    if (nrow(new1) < n_elite) {
+      n_elite <- nrow(new1)
     }
     if (verbose) {
-      message(paste("Elitism activated. Best", nelit, "individuals are kept"))
+      message(paste("Elitism activated. Best", n_elite, "individuals are kept"))
     }
-    elite_runs <- new1[seq_len(nelit), "Run"]
+    elite_runs <- new1[seq_len(n_elite), "Run"]
   }
 
   ## Delete some of the worst individuals, if there are more than 10
@@ -90,7 +90,7 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
 
   ## The next two methods determine how a selection percentage is calculated
   # Either a fixed percentage of 50% is used
-  if (selstate == "FIX") {
+  if (selection_mode == "FIX") {
     # Select a fixed amount of indivs. # Teil=2 takes always 50% of population
     if (teil != 1) {
       teil <- 2
@@ -105,7 +105,7 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
     }
   }
   ## Or the selection percentage is variable, depending on the development of the fitness values.
-  if (selstate == "VAR") {
+  if (selection_mode == "VAR") {
     # Select a variable amount of indivs. Teil comes from the "fuzzy logic" modell
     nPar <- ceiling(nrow(new1) / teil)
     if (verbose) {

@@ -6,48 +6,39 @@
 \usage{
 plot_result(
   result,
-  Polygon1,
+  area,
   best = 1,
-  plotEn = 1,
-  topographie = FALSE,
-  Grid = TRUE,
-  sourceCCLRoughness = NULL,
-  sourceCCL = NULL,
-  weibullsrc
+  plot_en = 1,
+  terrain = FALSE,
+  plot_grid = TRUE,
+  ccl_roughness = NULL,
+  ccl = NULL,
+  weibull_src = NULL
 )
 }
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
 
-\item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame}
+\item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.}
 
 \item{best}{How many distinct best layouts to draw. Default is 1.}
 
-\item{plotEn}{A numeric value that indicates if the best energy or efficiency
+\item{plot_en}{A numeric value that indicates if the best energy or efficiency
 output should be plotted. \code{1} plots the best energy solutions
 and \code{2} plots the best efficiency solutions}
 
-\item{topographie}{A logical value, indicating whether terrain effects should
-be considered and plotted or not}
+\item{terrain}{Draw terrain rasters for the best layout}
 
-\item{Grid}{If \code{TRUE} (default) the used grid will be added to the plot.
-You can also pass another Simple Feature object}
+\item{plot_grid}{If \code{TRUE} (default) the used grid is added. You can also
+pass another Simple Feature object}
 
-\item{sourceCCLRoughness}{The source to the adapted Corine Land Cover legend
-as .csv file. Only required when terrain effect model is activated. As
-default a .csv file within this package (\file{~/extdata}) is taken that
-was already adapted manually.}
+\item{ccl_roughness}{Path to the CLC legend CSV (\code{Rauhigkeit_z} column).}
 
-\item{sourceCCL}{The path to the Corine Land Cover raster (.tif). Only
-required when the terrain effect model is activated.}
+\item{ccl}{Path to a Corine Land Cover raster when \code{terrain} is on.}
 
-\item{weibullsrc}{A list of Weibull parameter rasters, where the first list
-item must be the shape parameter raster \code{k} and the second item must be the
-scale parameter raster \code{a} of the Weibull distribution. If no list is
-given, then rasters included in the package are used instead, which
-currently only cover Austria. This variable is only used
-if \code{weibull = TRUE}.}
+\item{weibull_src}{\code{list(k, a)} shape and scale rasters. Package data
+cover Austria.}
 }
 \value{
 Returns a data.frame of the best (energy/efficiency) individual
@@ -61,7 +52,7 @@ total wake in percent. Default is the single best energy layout.
 \dontrun{
 ## Add some data examples from the package
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -70,10 +61,10 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Plot the results of a hexagonal grid optimization
-plot_result(resulthex, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
+plot_result(resulthex, area, best = 1, plot_en = 1, terrain = FALSE)
 
 ## Plot the results of a rectangular grid optimization
-plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
+plot_result(resultrect, area, best = 1, plot_en = 1, terrain = FALSE)
 }
 }
 \seealso{
