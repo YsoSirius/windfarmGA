@@ -1,12 +1,11 @@
-# Plot the evolution of fitness values
+# Energy and efficiency over generations
 
-Plot the evolution of energy outputs and efficiency rates over the whole
-generations. Plots min, mean and max values.
+Max and mean park efficiency and energy yield on one page.
 
 ## Usage
 
 ``` r
-plot_evolution(result, ask = TRUE, spar = 0.1)
+plot_evolution(result, ask = FALSE, spar = 0.1)
 ```
 
 ## Arguments
@@ -18,12 +17,11 @@ plot_evolution(result, ask = TRUE, spar = 0.1)
 
 - ask:
 
-  Should R wait for interaction for subsequent plotting. Default is TRUE
+  Unused, kept so existing calls do not break.
 
 - spar:
 
-  A numeric value determining how exact a spline should be drawn.
-  Default is 0.1
+  Unused, kept so existing calls do not break.
 
 ## Value
 
@@ -32,23 +30,25 @@ Returns NULL. Used for plotting
 ## See also
 
 Other Plotting Functions:
+[`generation_layouts()`](https://YsoSirius.github.io/windfarmGA/reference/generation_layouts.md),
+[`plot_cell_heatmap()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md),
 [`plot_cloud()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cloud.md),
 [`plot_development()`](https://YsoSirius.github.io/windfarmGA/reference/plot_development.md),
 [`plot_fitness_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.md),
+[`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md),
 [`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md),
+[`plot_population()`](https://YsoSirius.github.io/windfarmGA/reference/plot_population.md),
 [`plot_result()`](https://YsoSirius.github.io/windfarmGA/reference/plot_result.md),
 [`plot_windfarmGA()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windfarmGA.md),
 [`plot_windrose()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.md),
+[`population_census()`](https://YsoSirius.github.io/windfarmGA/reference/population_census.md),
 [`random_search_single()`](https://YsoSirius.github.io/windfarmGA/reference/random_search_single.md)
 
 ## Examples
 
 ``` r
 # \donttest{
-## Plot the results of a rectangular grid optimization
-plot_evolution(resultrect, ask = TRUE, spar = 0.1)
+plot_evolution(resultrect)
 
-
-#> NULL
 # }
 ```

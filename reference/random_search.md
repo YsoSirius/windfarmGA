@@ -6,7 +6,7 @@ output of the wind farm layout.
 ## Usage
 
 ``` r
-random_search(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_dist = 2.2)
+random_search(result, area, n = 20, best = 1, plot = FALSE, max_dist = 2.2)
 ```
 
 ## Arguments
@@ -16,10 +16,10 @@ random_search(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_dist = 2.2)
   The resulting matrix of the function
   [`genetic_algorithm`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
 
-- Polygon1:
+- area:
 
-  The considered area as SpatialPolygon, SimpleFeature Polygon or
-  coordinates as matrix/data.frame
+  Site polygon (`sf`, SpatialPolygons, or coordinate matrix). Must be
+  projected in metres.
 
 - n:
 
@@ -30,9 +30,9 @@ random_search(result, Polygon1, n = 20, best = 1, Plot = FALSE, max_dist = 2.2)
   Which best individuals should be the starting conditions for a random
   search. The default is 1.
 
-- Plot:
+- plot:
 
-  Should the random search be plotted? Default is `FALSE`
+  Draw the random-search layouts
 
 - max_dist:
 
@@ -54,7 +54,7 @@ Other Randomization:
 ``` r
 # \donttest{
 new <- random_search(resultrect, sp_polygon, n = 20, best = 4)
-plot_random_search(resultRS = new, result = resultrect, Polygon1 = sp_polygon, best = 2)
+plot_random_search(resultRS = new, result = resultrect, area = sp_polygon, best = 2)
 
 
 

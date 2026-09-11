@@ -13,7 +13,7 @@ model those effects will be done in this function."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,20 +49,21 @@ model those effects will be done in this function.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_energy</span><span class="op">(</span></span>
-<span>  <span class="va">sel</span>,</span>
-<span>  <span class="va">referenceHeight</span>,</span>
-<span>  <span class="va">RotorHeight</span>,</span>
-<span>  <span class="va">SurfaceRoughness</span>,</span>
-<span>  <span class="va">wnkl</span>,</span>
-<span>  <span class="va">distanz</span>,</span>
-<span>  <span class="va">polygon1</span>,</span>
-<span>  <span class="va">RotorR</span>,</span>
-<span>  <span class="va">dirSpeed</span>,</span>
-<span>  <span class="va">srtm_crop</span>,</span>
-<span>  <span class="va">topograp</span>,</span>
-<span>  <span class="va">cclRaster</span>,</span>
-<span>  <span class="va">weibull</span>,</span>
-<span>  plotit <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="va">layout</span>,</span>
+<span>  <span class="va">reference_height</span>,</span>
+<span>  <span class="va">rotor_height</span>,</span>
+<span>  <span class="va">surface_roughness</span>,</span>
+<span>  <span class="va">wake_angle</span>,</span>
+<span>  <span class="va">wake_distance</span>,</span>
+<span>  <span class="va">area</span>,</span>
+<span>  <span class="va">rotor</span>,</span>
+<span>  <span class="va">wind</span>,</span>
+<span>  elevation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  terrain <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ccl_raster <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weibull <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  park_center <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -70,71 +71,70 @@ model those effects will be done in this function.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-sel">sel<a class="anchor" aria-label="anchor" href="#arg-sel"></a></dt>
-<dd><p>A matrix of an individual of the current population</p></dd>
+<dl><dt id="arg-layout">layout<a class="anchor" aria-label="anchor" href="#arg-layout"></a></dt>
+<dd><p>One individual: matrix with X/Y (and typically cell IDs).</p></dd>
 
 
-<dt id="arg-referenceheight">referenceHeight<a class="anchor" aria-label="anchor" href="#arg-referenceheight"></a></dt>
-<dd><p>The height at which the incoming wind speeds were
-measured. Default is <code>RotorHeight</code></p></dd>
+<dt id="arg-reference-height">reference_height<a class="anchor" aria-label="anchor" href="#arg-reference-height"></a></dt>
+<dd><p>Height at which <code>wind$ws</code> was measured.</p></dd>
 
 
-<dt id="arg-rotorheight">RotorHeight<a class="anchor" aria-label="anchor" href="#arg-rotorheight"></a></dt>
-<dd><p>The height of the turbine hub</p></dd>
+<dt id="arg-rotor-height">rotor_height<a class="anchor" aria-label="anchor" href="#arg-rotor-height"></a></dt>
+<dd><p>Hub height in metres.</p></dd>
 
 
-<dt id="arg-surfaceroughness">SurfaceRoughness<a class="anchor" aria-label="anchor" href="#arg-surfaceroughness"></a></dt>
-<dd><p>A surface roughness length in meters.
-With the terrain effect model, a surface roughness is calculated for every
-grid cell using the elevation and land cover data. Default is <code>0.3</code></p></dd>
+<dt id="arg-surface-roughness">surface_roughness<a class="anchor" aria-label="anchor" href="#arg-surface-roughness"></a></dt>
+<dd><p>Roughness length in metres. Per-cell when
+<code>terrain</code> is on.</p></dd>
 
 
-<dt id="arg-wnkl">wnkl<a class="anchor" aria-label="anchor" href="#arg-wnkl"></a></dt>
-<dd><p>The angle from which wake influences are considered to be
-negligible</p></dd>
+<dt id="arg-wake-angle">wake_angle<a class="anchor" aria-label="anchor" href="#arg-wake-angle"></a></dt>
+<dd><p>Angle (degrees) beyond which wake influence is ignored.</p></dd>
 
 
-<dt id="arg-distanz">distanz<a class="anchor" aria-label="anchor" href="#arg-distanz"></a></dt>
-<dd><p>The distance after which wake effects are considered
-to be eliminated</p></dd>
+<dt id="arg-wake-distance">wake_distance<a class="anchor" aria-label="anchor" href="#arg-wake-distance"></a></dt>
+<dd><p>Distance (metres) beyond which wake effects are ignored.</p></dd>
 
 
-<dt id="arg-polygon-">polygon1<a class="anchor" aria-label="anchor" href="#arg-polygon-"></a></dt>
-<dd><p>The considered area as Simple Feature Polygon</p></dd>
+<dt id="arg-area">area<a class="anchor" aria-label="anchor" href="#arg-area"></a></dt>
+<dd><p>Site polygon (<code>sf</code>, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.</p></dd>
 
 
-<dt id="arg-rotorr">RotorR<a class="anchor" aria-label="anchor" href="#arg-rotorr"></a></dt>
-<dd><p>The desired rotor radius in meter</p></dd>
+<dt id="arg-rotor">rotor<a class="anchor" aria-label="anchor" href="#arg-rotor"></a></dt>
+<dd><p>Rotor radius in metres.</p></dd>
 
 
-<dt id="arg-dirspeed">dirSpeed<a class="anchor" aria-label="anchor" href="#arg-dirspeed"></a></dt>
-<dd><p>The wind speed and direction data.frame</p></dd>
+<dt id="arg-wind">wind<a class="anchor" aria-label="anchor" href="#arg-wind"></a></dt>
+<dd><p>Wind data.frame with <code>ws</code>, <code>wd</code> and optional <code>probab</code>.
+See <code><a href="windata_format.html">windata_format()</a></code>.</p></dd>
 
 
-<dt id="arg-srtm-crop">srtm_crop<a class="anchor" aria-label="anchor" href="#arg-srtm-crop"></a></dt>
-<dd><p>The first element of the <code><a href="terrain_model.html">terrain_model</a></code> resulting list</p></dd>
+<dt id="arg-elevation">elevation<a class="anchor" aria-label="anchor" href="#arg-elevation"></a></dt>
+<dd><p>Terrain list from <code><a href="terrain_model.html">terrain_model()</a></code>. Unused when
+<code>terrain</code> is <code>FALSE</code>.</p></dd>
 
 
-<dt id="arg-topograp">topograp<a class="anchor" aria-label="anchor" href="#arg-topograp"></a></dt>
-<dd><p>Boolean value, which indicates if the terrain effect model
-should be enabled or not. Default is <code>FALSE</code></p></dd>
+<dt id="arg-terrain">terrain<a class="anchor" aria-label="anchor" href="#arg-terrain"></a></dt>
+<dd><p>Terrain model (elevation + land cover).</p></dd>
 
 
-<dt id="arg-cclraster">cclRaster<a class="anchor" aria-label="anchor" href="#arg-cclraster"></a></dt>
-<dd><p>The second element of the <code><a href="terrain_model.html">terrain_model</a></code> resulting list</p></dd>
+<dt id="arg-ccl-raster">ccl_raster<a class="anchor" aria-label="anchor" href="#arg-ccl-raster"></a></dt>
+<dd><p>Land-cover roughness raster from <code><a href="terrain_model.html">terrain_model()</a></code>.</p></dd>
 
 
 <dt id="arg-weibull">weibull<a class="anchor" aria-label="anchor" href="#arg-weibull"></a></dt>
-<dd><p>A boolean value that specifies whether to take Weibull
-parameters into account. If <code>TRUE</code>, the wind speed values
-of <code>vdirspe</code> are ignored. The algorithm will calculate the mean
-wind speed for every wind turbine according to the Weibull parameters.
-Default is <code>FALSE</code></p></dd>
+<dd><p>If <code>TRUE</code>, hub-height speed comes from Weibull rasters;
+<code>wind$ws</code> is ignored.</p></dd>
 
 
-<dt id="arg-plotit">plotit<a class="anchor" aria-label="anchor" href="#arg-plotit"></a></dt>
-<dd><p>If <code>TRUE</code>, the process will be plotted.
-Default is <code>FALSE</code></p></dd>
+<dt id="arg-park-center">park_center<a class="anchor" aria-label="anchor" href="#arg-park-center"></a></dt>
+<dd><p>Optional numeric of length 2 (<code>x</code>, <code>y</code>) used as rotation
+origin. Computed from the polygon bounding box when missing.</p></dd>
+
+
+<dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
+<dd><p>If <code>TRUE</code>, the process will be plotted.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -159,7 +159,7 @@ wind directions.</p>
 <span class="r-in"><span><span class="co">## Create a random Polygon</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</span>
-<span class="r-in"><span><span class="va">Polygon1</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4498482</span>, <span class="fl">4498482</span>, <span class="fl">4499991</span>, <span class="fl">4499991</span>, <span class="fl">4498482</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2668272</span>, <span class="fl">2669343</span>, <span class="fl">2669343</span>, <span class="fl">2668272</span>, <span class="fl">2668272</span><span class="op">)</span></span></span>
@@ -177,11 +177,11 @@ wind directions.</p>
 <span class="r-plt img"><img src="calculate_energy-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Assign the rotor radius and a factor of the radius for grid spacing.</span></span></span>
-<span class="r-in"><span><span class="va">Rotor</span> <span class="op">&lt;-</span> <span class="fl">50</span></span></span>
-<span class="r-in"><span><span class="va">fcrR</span> <span class="op">&lt;-</span> <span class="fl">3</span></span></span>
+<span class="r-in"><span><span class="va">rotor</span> <span class="op">&lt;-</span> <span class="fl">50</span></span></span>
+<span class="r-in"><span><span class="va">fcr</span> <span class="op">&lt;-</span> <span class="fl">3</span></span></span>
 <span class="r-in"><span><span class="va">resGrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="grid_area.html">grid_area</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  shape <span class="op">=</span> <span class="va">Polygon1</span>, size <span class="op">=</span> <span class="va">Rotor</span> <span class="op">*</span> <span class="va">fcrR</span>, prop <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>  plotGrid <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  area <span class="op">=</span> <span class="va">area</span>, size <span class="op">=</span> <span class="va">rotor</span> <span class="op">*</span> <span class="va">fcr</span>, prop <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  plot_grid <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="calculate_energy-2.png" alt="" width="700" height="433"></span>
 <span class="r-plt img"><img src="calculate_energy-3.png" alt="" width="700" height="433"></span>
@@ -191,24 +191,24 @@ wind directions.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Create an initial population with the indexed Grid, 15 turbines and</span></span></span>
 <span class="r-in"><span><span class="co">## 100 individuals.</span></span></span>
-<span class="r-in"><span><span class="va">initpop</span> <span class="op">&lt;-</span> <span class="fu"><a href="init_population.html">init_population</a></span><span class="op">(</span>Grid <span class="op">=</span> <span class="va">resGrid1</span>, n <span class="op">=</span> <span class="fl">15</span>, nStart <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">initpop</span> <span class="op">&lt;-</span> <span class="fu"><a href="init_population.html">init_population</a></span><span class="op">(</span>grid <span class="op">=</span> <span class="va">resGrid1</span>, n <span class="op">=</span> <span class="fl">15</span>, n_start <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Calculate the expected energy output of the first individual of the</span></span></span>
 <span class="r-in"><span><span class="co">## population.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Polygon1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">area</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">initpop</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>, <span class="st">"X"</span><span class="op">]</span>, <span class="va">initpop</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span>, <span class="st">"Y"</span><span class="op">]</span>, pch <span class="op">=</span> <span class="fl">20</span>, cex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">resGrid</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="calculate_energy-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">resCalcEn</span> <span class="op">&lt;-</span> <span class="fu">calculate_energy</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  sel <span class="op">=</span> <span class="va">initpop</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, referenceHeight <span class="op">=</span> <span class="fl">50</span>,</span></span>
-<span class="r-in"><span>  RotorHeight <span class="op">=</span> <span class="fl">50</span>, SurfaceRoughness <span class="op">=</span> <span class="fl">0.14</span>, wnkl <span class="op">=</span> <span class="fl">20</span>,</span></span>
-<span class="r-in"><span>  distanz <span class="op">=</span> <span class="fl">100000</span>, dirSpeed <span class="op">=</span> <span class="va">data.in</span>,</span></span>
-<span class="r-in"><span>  RotorR <span class="op">=</span> <span class="fl">50</span>, polygon1 <span class="op">=</span> <span class="va">Polygon1</span>, topograp <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  layout <span class="op">=</span> <span class="va">initpop</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, reference_height <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>  rotor_height <span class="op">=</span> <span class="fl">50</span>, surface_roughness <span class="op">=</span> <span class="fl">0.14</span>, wake_angle <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>  wake_distance <span class="op">=</span> <span class="fl">100000</span>, wind <span class="op">=</span> <span class="va">data.in</span>,</span></span>
+<span class="r-in"><span>  rotor <span class="op">=</span> <span class="fl">50</span>, area <span class="op">=</span> <span class="va">area</span>, terrain <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  weibull <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">resCalcEn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">resCalcEn</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Polygon1</span>, main <span class="op">=</span> <span class="va">resCalcEn</span><span class="op">[</span>, <span class="st">"Energy_Output_Red"</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">area</span>, main <span class="op">=</span> <span class="va">resCalcEn</span><span class="op">[</span>, <span class="st">"Energy_Output_Red"</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">resCalcEn</span><span class="op">[</span>, <span class="st">"Bx"</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">resCalcEn</span><span class="op">[</span>, <span class="st">"By"</span><span class="op">]</span>, pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="calculate_energy-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
@@ -225,10 +225,10 @@ wind directions.</p>
 <span class="r-in"><span><span class="co">## Calculate the energy outputs for the first individual with more than one</span></span></span>
 <span class="r-in"><span><span class="co">## wind direction.</span></span></span>
 <span class="r-in"><span><span class="va">resCalcEn</span> <span class="op">&lt;-</span> <span class="fu">calculate_energy</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  sel <span class="op">=</span> <span class="va">initpop</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, referenceHeight <span class="op">=</span> <span class="fl">50</span>,</span></span>
-<span class="r-in"><span>  RotorHeight <span class="op">=</span> <span class="fl">50</span>, SurfaceRoughness <span class="op">=</span> <span class="fl">0.14</span>, wnkl <span class="op">=</span> <span class="fl">20</span>,</span></span>
-<span class="r-in"><span>  distanz <span class="op">=</span> <span class="fl">100000</span>, dirSpeed <span class="op">=</span> <span class="va">data.in10</span>,</span></span>
-<span class="r-in"><span>  RotorR <span class="op">=</span> <span class="fl">50</span>, polygon1 <span class="op">=</span> <span class="va">Polygon1</span>, topograp <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  layout <span class="op">=</span> <span class="va">initpop</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, reference_height <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span>  rotor_height <span class="op">=</span> <span class="fl">50</span>, surface_roughness <span class="op">=</span> <span class="fl">0.14</span>, wake_angle <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>  wake_distance <span class="op">=</span> <span class="fl">100000</span>, wind <span class="op">=</span> <span class="va">data.in10</span>,</span></span>
+<span class="r-in"><span>  rotor <span class="op">=</span> <span class="fl">50</span>, area <span class="op">=</span> <span class="va">area</span>, terrain <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  weibull <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

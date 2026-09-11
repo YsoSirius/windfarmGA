@@ -10,6 +10,14 @@
 
 - [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
   : Run a Genetic Algorithm to optimize a wind farm layout
+- [`ga_options()`](https://YsoSirius.github.io/windfarmGA/reference/ga_options.md)
+  : Get or set windfarmGA options
+- [`explore_result()`](https://YsoSirius.github.io/windfarmGA/reference/explore_result.md)
+  : Shiny explorer for a GA result
+- [`as_windfarmGA()`](https://YsoSirius.github.io/windfarmGA/reference/as_windfarmGA.md)
+  [`print(`*`<windfarmGA>`*`)`](https://YsoSirius.github.io/windfarmGA/reference/as_windfarmGA.md)
+  [`plot(`*`<windfarmGA>`*`)`](https://YsoSirius.github.io/windfarmGA/reference/as_windfarmGA.md)
+  : Mark a genetic_algorithm result
 
 ## Genetic Algorithm Components
 
@@ -23,15 +31,19 @@ Main components of the genetic algorithm
   : Evaluate the Individual Fitness values
 - [`crossover()`](https://YsoSirius.github.io/windfarmGA/reference/crossover.md)
   : Crossover Method
+- [`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md)
+  : Set crossover of turbine layouts
 - [`mutation()`](https://YsoSirius.github.io/windfarmGA/reference/mutation.md)
   : Mutation Method
+- [`swap_mutation()`](https://YsoSirius.github.io/windfarmGA/reference/swap_mutation.md)
+  : Swap mutation of turbine layouts
 - [`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
   : Adjust the amount of turbines per windfarm
 
 ## Topographic Model
 
 - [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md)
-  : Get topographic rasters
+  : Get terrainhic rasters
 
 ## Wind Energy Calculation Functions
 
@@ -58,18 +70,26 @@ Main components of the genetic algorithm
 
 ## Plotting Functions
 
+- [`plot_cell_heatmap()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md)
+  : Heatmap of probed grid cells
 - [`plot_cloud()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cloud.md)
-  : Plot outputs of all generations with standard deviations
+  : Per-generation fitness / efficiency / energy
 - [`plot_development()`](https://YsoSirius.github.io/windfarmGA/reference/plot_development.md)
-  : Plot the progress of populations
+  : When the best layout improved
 - [`plot_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.md)
-  : Plot the evolution of fitness values
+  : Energy and efficiency over generations
 - [`plot_fitness_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.md)
-  : Plot the changes of min/mean/max fitness values
+  : Fitness and operator rates
+- [`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md)
+  : Plot all layouts of one generation
 - [`plot_leaflet()`](https://YsoSirius.github.io/windfarmGA/reference/plot_leaflet.md)
   : Plot a wind warm with leaflet
 - [`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md)
-  : Plot the genetic algorithm results
+  : Fitness and operator rates
+- [`plot_population()`](https://YsoSirius.github.io/windfarmGA/reference/plot_population.md)
+  : Plot population size, cells and efficiency
+- [`plot_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/plot_power_curve.md)
+  : Manufacturer power curve
 - [`plot_random_search()`](https://YsoSirius.github.io/windfarmGA/reference/plot_random_search.md)
   : Plot the result of a randomized output.
 - [`plot_result()`](https://YsoSirius.github.io/windfarmGA/reference/plot_result.md)
@@ -80,6 +100,10 @@ Main components of the genetic algorithm
   : Plot the results of an optimization run
 - [`plot_windrose()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.md)
   : Plot a Windrose
+- [`generation_layouts()`](https://YsoSirius.github.io/windfarmGA/reference/generation_layouts.md)
+  : Layouts evaluated in one generation
+- [`population_census()`](https://YsoSirius.github.io/windfarmGA/reference/population_census.md)
+  : Population size and diversity per generation
 
 ## Viewshed Analysis Functions
 
@@ -89,7 +113,7 @@ Main components of the genetic algorithm
 ## Helper Functions
 
 - [`get_grids()`](https://YsoSirius.github.io/windfarmGA/reference/get_grids.md)
-  : Get the Grid-IDs from binary matrix
+  : Map layouts to grid coordinates
 - [`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md)
   : Make a grid from a Simple Feature Polygon
 - [`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md)
@@ -101,10 +125,6 @@ Main components of the genetic algorithm
 - [`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md)
   : Enumerate the Combinations or Permutations of the Elements of a
   Vector
-- [`readinteger()`](https://YsoSirius.github.io/windfarmGA/reference/readinteger.md)
-  : Check Input Crossover Method
-- [`readintegerSel()`](https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.md)
-  : Check Input Selection Method
 - [`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md)
   : Split matrices or numeric vectors at specific indices
 - [`is_foreach_installed()`](https://YsoSirius.github.io/windfarmGA/reference/package_installed.md)
@@ -113,6 +133,8 @@ Main components of the genetic algorithm
   [`is_ggplot2_installed()`](https://YsoSirius.github.io/windfarmGA/reference/package_installed.md)
   [`is_leaflet_installed()`](https://YsoSirius.github.io/windfarmGA/reference/package_installed.md)
   [`is_elevatr_installed()`](https://YsoSirius.github.io/windfarmGA/reference/package_installed.md)
+  [`is_plotly_installed()`](https://YsoSirius.github.io/windfarmGA/reference/package_installed.md)
+  [`is_shiny_installed()`](https://YsoSirius.github.io/windfarmGA/reference/package_installed.md)
   : Is the package installed or not
 
 ## Datasets

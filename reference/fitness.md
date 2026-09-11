@@ -10,91 +10,81 @@ value for each individual.
 
 ``` r
 fitness(
-  selection,
-  referenceHeight,
-  RotorHeight,
-  SurfaceRoughness,
-  Polygon,
-  resol1,
-  rot,
-  dirspeed,
-  srtm_crop,
-  topograp,
-  cclRaster,
-  weibull,
-  Parallel,
-  numCluster
+  population,
+  reference_height,
+  rotor_height,
+  surface_roughness,
+  area,
+  rotor,
+  wind,
+  elevation = NULL,
+  terrain = FALSE,
+  ccl_raster = NULL,
+  weibull = FALSE,
+  parallel = FALSE,
+  n_cluster = 2
 )
 ```
 
 ## Arguments
 
-- selection:
+- population:
 
-  A list containing all individuals of the current population.
+  A list of individuals (layouts with X/Y and cell IDs).
 
-- referenceHeight:
+- reference_height:
 
-  The height at which the incoming wind speeds were measured. Default is
-  `RotorHeight`
+  Height at which `wind$ws` was measured.
 
-- RotorHeight:
+- rotor_height:
 
-  The height of the turbine hub
+  Hub height in metres.
 
-- SurfaceRoughness:
+- surface_roughness:
 
-  A surface roughness length in meters. With the terrain effect model, a
-  surface roughness is calculated for every grid cell using the
-  elevation and land cover data. Default is `0.3`
+  Roughness length in metres. Per-cell when `terrain` is on.
 
-- Polygon:
+- area:
 
-  The considered area as shapefile.
+  Site polygon (`sf`, SpatialPolygons, or coordinate matrix). Must be
+  projected in metres.
 
-- resol1:
+- rotor:
 
-  The resolution of the grid in meter.
+  Rotor radius in metres.
 
-- rot:
+- wind:
 
-  The desired rotor radius in meter.
+  Wind data as returned by
+  [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
+  (`list(df, probab)`).
 
-- dirspeed:
+- elevation:
 
-  The wind data as list.
+  Terrain list from
+  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md)
+  (elevation, orography, roughness). Unused when `terrain` is `FALSE`.
 
-- srtm_crop:
+- terrain:
 
-  A list of 3 raster, with 1) the elevation, 2) an orographic and 3) a
-  terrain raster. Calculated in
-  [`genetic_algorithm`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
+  Terrain model (elevation + land cover).
 
-- topograp:
+- ccl_raster:
 
-  Boolean value, which indicates if the terrain effect model should be
-  enabled or not. Default is `FALSE`
-
-- cclRaster:
-
-  A Corine Land Cover raster, that has to be adapted previously by hand
-  with the surface roughness length for every land cover type. Is only
-  used, when the terrain effect model is activated.
+  Land-cover roughness raster from
+  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
 
 - weibull:
 
-  A raster representing the estimated wind speeds
+  Raster of estimated wind speeds, or `FALSE`.
 
-- Parallel:
+- parallel:
 
-  A boolean value, indicating whether parallel processing should be
-  used. The *parallel* and *doParallel* packages are used for parallel
-  processing. Default is `FALSE`
+  Parallel fitness (`parallel` + `doParallel`).
 
-- numCluster:
+- n_cluster:
 
-  If `Parallel` is TRUE, this variable defines the number of clusters to
-  be used. Default is `2`
+  Worker count when `parallel` is `TRUE`.
 
 ## Value
 
@@ -110,6 +100,8 @@ Other Genetic Algorithm Functions:
 [`init_population()`](https://YsoSirius.github.io/windfarmGA/reference/init_population.md),
 [`mutation()`](https://YsoSirius.github.io/windfarmGA/reference/mutation.md),
 [`selection()`](https://YsoSirius.github.io/windfarmGA/reference/selection.md),
+[`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md),
+[`swap_mutation()`](https://YsoSirius.github.io/windfarmGA/reference/swap_mutation.md),
 [`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
 
 ## Examples
@@ -118,7 +110,7 @@ Other Genetic Algorithm Functions:
 # \donttest{
 ## Create a random rectangular shapefile
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -135,17 +127,16 @@ wind <- data.frame(ws = 12, wd = 0)
 
 ## Calculate a Grid and an indexed data.frame with coordinates and
 ## grid cell IDs.
-Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+Grid1 <- grid_area(area = area, size = 200, prop = 1)
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
 wind <- list(wind, probab = 100)
 startsel <- init_population(Grid, 10, 20)
 fit <- fitness(
-  selection = startsel, referenceHeight = 100, RotorHeight = 100,
-  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
-  dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = "",
-  Parallel = FALSE
+  population = startsel, reference_height = 100, rotor_height = 100,
+  surface_roughness = 0.3, area = area, rotor = 20,
+  wind = wind, terrain = FALSE, parallel = FALSE
 )
 # }
 ```

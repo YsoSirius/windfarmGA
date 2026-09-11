@@ -1,9 +1,71 @@
 # Changelog
 
-## windfarmGA 4.0.1
+## windfarmGA 5.0.0
+
+Breaking release: the layout chromosome is no longer a 0/1 string.
+
+### Breaking
+
+- Each individual is `n` unique grid-cell IDs, not a binary vector over
+  all cells. `genetic_algorithm` runs `selection` → `set_crossover` →
+  `swap_mutation` → `get_grids` → `fitness`. `trimton` is not in the
+  loop.
+- [`selection()`](https://YsoSirius.github.io/windfarmGA/reference/selection.md)
+  returns an ID matrix (`n` × selected) plus fitness. Code that piped
+  [`selection()`](https://YsoSirius.github.io/windfarmGA/reference/selection.md)
+  into
+  [`crossover()`](https://YsoSirius.github.io/windfarmGA/reference/crossover.md)
+  must convert IDs to binary or switch to
+  [`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md).
+- Public API is snake_case. `Polygon1` → `area`, `vdirspe` → `wind`,
+  `Rotor` → `rotor`, `mutr` → `mutation_rate`, `selstate` →
+  `selection_mode`, `Projection` → `crs`. `plotit` is gone (`plot`
+  only).
+- Unused loop args `crossPart1` and `trimForce` are removed from
+  [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md).
+  Invalid `selection_mode` errors (no interactive `readinteger` prompt).
+  Defaults live in the function signature, not in `if (missing())` or
+  the Rd file.
+- Related formals: `fitness(population, area, rotor, wind, ...)`,
+  `calculate_energy(layout, area, rotor, wind, wake_angle, wake_distance, ...)`,
+  `selection(fit, grid, share, ...)`, `grid_area(area, ...)`,
+  `random_search(..., plot)`, `plot_windfarmGA(..., which_plot)`,
+  `plot_result(..., terrain, plot_grid)`.
+- Defaults: `selection_mode = "VAR"`, mutation `2/n` (was often `0.8`),
+  `n_elite = 3`. New session options (inject, immigrants, seasons,
+  neighbour local search) change search behaviour even if you call
+  [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
+  the same way.
+- Legacy
+  [`crossover()`](https://YsoSirius.github.io/windfarmGA/reference/crossover.md),
+  [`mutation()`](https://YsoSirius.github.io/windfarmGA/reference/mutation.md)
+  and
+  [`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
+  still accept 0/1 chromosomes. New exports:
+  [`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md),
+  [`swap_mutation()`](https://YsoSirius.github.io/windfarmGA/reference/swap_mutation.md).
 
 ### Fixes
 
+- pkgdown reference lists the new exports (`as_windfarmGA`,
+  `explore_result`, `ga_options`, `generation_layouts`,
+  `population_census`, `set_crossover`, `swap_mutation`).
+  [`plot_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/plot_power_curve.md)
+  Rd no longer uses `\cdot`. `plots.R` is ASCII-only. ggplot aesthetics
+  are in `globalVariables`. Rd documents `wnkl`, `trimForce` and
+  `plot_fitness_evolution(interactive)`.
+- `experimental/draw_shape()` uses
+  `mapedit::editMap(..., editor = "leafpm")`. mapedit 0.8 dropped
+  leaflet.extras (off CRAN); older mapedit still calls
+  [`dplyr::select_()`](https://dplyr.tidyverse.org/reference/defunct-lazyeval.html),
+  which current dplyr rejects.
+- Power-curve energy was the first turbine’s kW (often rated power and
+  100% efficiency), not the park sum. `energy_calc_CPP` already summed;
+  table lookup now does the same. Cut-in / rated / cut-out apply only
+  when no table is set (as documented). On the rated plateau, wakes may
+  still leave every turbine at rated power — then layouts look identical
+  and the GA cannot improve energy. Use hub wind in the rising part of
+  the curve.
 - CRAN tests for
   [`plot_windrose()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.md)
   failed on r-devel with ggplot2 \>= 4.0.0. ggplot2 4.0 uses S7 plot
@@ -11,18 +73,187 @@
   longer `"gg"`. Checks now use
   `inherits(., c("ggplot", "ggplot2::ggplot"))`, which works with
   ggplot2 3.x and 4.x.
+- `crossover`: parent fitness is now `(a + b) / 2` (operator precedence
+  bug).
+- `isSpatial`: assigned CRS is the given `proj`, not hardcoded
+  EPSG:3035.
+- Fitness is `EnergyOverall * (EfficAllDir/100)^w` with
+  `options(windfarmGA.fitness_efficiency_weight)` (default 1).
+- Elitism copies the best layouts into the next generation instead of
+  multiplying their fitness by 10.
+- Duplicate layouts after crossover/mutation (sorted ID keys) are
+  dropped.
+- Logarithmic hub-height wind profile (legacy power law via
+  `options(windfarmGA.wind_profile = "power")`).
+- Power coefficient `options(windfarmGA.Cp)` defaults to 0.45; optional
+  cut-in / rated / cut-out speeds.
+- parallel clusters are always stopped via `on.exit`; dead Weibull crop
+  call removed.
+- Diagnostic plots no longer crash on negative leftover EQU values;
+  rates are drawn as percentages, not as palette indices.
+- Plot flags are named `plot` (`plotit` removed).
+- [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
+  results have class `windfarmGA` with
+  [`print()`](https://rdrr.io/r/base/print.html) /
+  [`plot()`](https://rspatial.github.io/terra/reference/plot.html).
+  [`ga_options()`](https://YsoSirius.github.io/windfarmGA/reference/ga_options.md)
+  lists or sets `windfarmGA.*` options.
+  [`explore_result()`](https://YsoSirius.github.io/windfarmGA/reference/explore_result.md)
+  is a one-page Shiny viewer (Suggests): Leaflet map of the selected
+  generation’s best layout, plus one plotly figure (fitness / rates /
+  population subplots). New fitness maxima are marked; click a marker to
+  jump the slider to that generation. The plotly legend sits further
+  above the figure so it does not cover the series. The cell heatmap is
+  omitted there (it rebuilds the grid and is slower than the map).
+  [`plot_viewshed()`](https://YsoSirius.github.io/windfarmGA/reference/plot_viewshed.md)
+  projects lon/lat DEMs (e.g. elevatr) before
+  [`terra::viewshed`](https://rspatial.github.io/terra/reference/viewshed.html).
+- Optional manufacturer `data.frame(ws, power)` via
+  `ga_options(power_curve = ...)` /
+  [`plot_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/plot_power_curve.md).
+  GitHub-only extras live in `experimental/` (not the CRAN tarball):
+  draw a site polygon, circle-overlap app. rayshader and noise stay
+  local.
+- [`plot_windrose()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.md)
+  uses a white panel instead of the gray fill and thick minor rings.
+- [`plot_population()`](https://YsoSirius.github.io/windfarmGA/reference/plot_population.md)
+  was slow because
+  [`population_census()`](https://YsoSirius.github.io/windfarmGA/reference/population_census.md)
+  rescanned every layout with `Run == r` per individual. Counts now come
+  from `nindiv` (`cells`, `cells_elite` stored during the run); the
+  fallback uses
+  [`split()`](https://rspatial.github.io/terra/reference/split.html).
+  Elite offspring is green (`#27AE60`), elites stay orange.
+
+### Features
+
+- Combinatorial genome: each individual is `n` unique grid-cell IDs, not
+  a 0/1 string over all cells. `genetic_algorithm` now runs `selection`
+  → `set_crossover` → `swap_mutation` → `get_grids` → `fitness`.
+  `trimton` is no longer in the loop (always exactly `n` turbines).
+- [`plot_windfarmGA()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windfarmGA.md),
+  [`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md),
+  [`plot_population()`](https://YsoSirius.github.io/windfarmGA/reference/plot_population.md)
+  and
+  [`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md)
+  wait for Enter between every page in an interactive session (Plots
+  pane, so pages are not overwritten). plotly is only used when
+  `ask = FALSE`.
+  [`plot_population()`](https://YsoSirius.github.io/windfarmGA/reference/plot_population.md)
+  has a bottom legend, an elite cell-count line (the population can sit
+  at the full grid size, e.g. 70, while elites shrink), and a
+  park-efficiency page.
+- `plot_generation(result, area, generation = 122)` shows every layout
+  evaluated in that generation (cell occupancy + all turbines, best in
+  black, plus the top distinct maps).
+  [`generation_layouts()`](https://YsoSirius.github.io/windfarmGA/reference/generation_layouts.md)
+  returns the table.
+  [`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md)
+  is ggplot2 with the legend outside; rates are ordered Selection /
+  Crossover inject / Mutation. Hoverable via plotly in an interactive
+  session.
+- Fitness cache: identical layouts (sorted cell IDs) are not
+  re-evaluated. Early stop is not “max unchanged”. The run uses the full
+  `iteration` budget unless `options(windfarmGA.stall_generations)`
+  consecutive generations produce no new layout, no new cell and no new
+  best (set to 0 to never stop early). A flat maximum while new sites
+  are still tried is treated as ongoing search.
+- Weak elitism: the current best layout is archived unchanged. Each
+  elite then produces several mutated copies
+  (`options(windfarmGA.elite_children)`, default 3) and mixes with
+  weaker layouts (`windfarmGA.elite_mix`, default 2, inject 0 so elite
+  structure stays). Extra mutants when the max has been flat for 10
+  generations. Elite count starts at `n_elite` (default 3), grows by 2–3
+  during a long refine stall, and drops by 1 in a disturbance pulse.
+  Operator rates follow seasons with the same three operators. Explore:
+  inject in `[0.20, 0.40]` and mutation rise while the max is stalling
+  (VAR selection starts near 55%). Refine: after
+  `options(windfarmGA.refine_min_gen)` (18) and
+  `options(windfarmGA.refine_after)` (12) generations without a new max
+  at cell coverage ≥ 0.35, inject decays toward 0.15, mutation toward
+  `2/n`, selection toward ~45%. Refine is not a trap: after
+  `options(windfarmGA.refine_hold)` (25) generations a disturbance pulse
+  of `options(windfarmGA.explore_pulse)` (10) gens raises
+  inject/mutation again even if new maxes still appear, then refine
+  resumes. Local search slides one elite turbine to a neighbouring empty
+  cell (rook / hex), not to a random cell anywhere on the grid.
+- Mutation and immigrants prefer rarely visited cells. Crossover is
+  spatial (half-plane) with probability
+  `options(windfarmGA.spatial_crossover)` (default 0.5). Elites get a
+  memetic local search (`windfarmGA.local_search_elites` default 5 /
+  `local_search_tries` default 6).
+- Default `selection_mode` is `VAR` (selection share follows fitness).
+  Mutation and crossover inject rates adapt each generation from max
+  fitness and the top quartile (immigrants no longer freeze the
+  controller).
+- `options(windfarmGA.max_selection)` default is 300 (was 100), matching
+  `max_population`.
+- Default mutation rate is `2/n` per turbine, with at least one swap
+  (`options(windfarmGA.min_swaps)`). Set-crossover injects unused cells
+  (`options(windfarmGA.crossover_inject)`, default 0.25) so the search
+  is not trapped in the parental union. Each generation adds random
+  immigrant layouts (`options(windfarmGA.immigrants)`, default 3).
+  Default elite count is 3.
+- Report `inst/reports/memetic-layout-ga.md`: short English note on the
+  combinatorial genome, neighbourhood local search, and the north-wind
+  benchmark (defaults after that: LS 5×6). Figure: `fig-north-gold.png`.
+- README documents all
+  [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
+  arguments and `options(windfarmGA.*)` (physics, inject, immigrants,
+  seasons, neighbour local search). Examples no longer pass leftover
+  `FIX` / `mutation_rate = 0.8` / `trimForce` as if they were still the
+  recommended setup. Plotting examples match the current functions
+  (`plot_population`, last-generation `plot_generation`, no removed
+  [`windfarmGA()`](https://YsoSirius.github.io/windfarmGA/reference/windfarmGA-package.md)
+  entry point).
+- [`selection()`](https://YsoSirius.github.io/windfarmGA/reference/selection.md)
+  returns an ID matrix (`n` × selected) plus fitness; it no longer
+  expands layouts to a binary grid.
+- [`get_grids()`](https://YsoSirius.github.io/windfarmGA/reference/get_grids.md)
+  accepts ID matrices and still accepts legacy binary matrices.
+- Exported legacy API kept:
+  [`crossover()`](https://YsoSirius.github.io/windfarmGA/reference/crossover.md),
+  [`mutation()`](https://YsoSirius.github.io/windfarmGA/reference/mutation.md),
+  [`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
+  still work on 0/1 chromosomes. New exports:
+  [`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md),
+  [`swap_mutation()`](https://YsoSirius.github.io/windfarmGA/reference/swap_mutation.md).
 
 ### Open / Todos
 
-- Resubmit 4.0.1 to CRAN after the ggplot2 4.0 test failures.
-- Parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
+- Submit 5.0.0 to CRAN (ggplot2 4.x tests plus combinatorial genome).
+  Re-check pkgdown and Rd after the reference-index / `\cdot` / ASCII
+  fixes.
+- parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
 - Consider splitting the large `test_plots.R` block so a single
   assertion failure does not hide later plot checks.
+- `plot_heatmap()` was never reimplemented; use
+  [`plot_cell_heatmap()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md).
+- Callers that piped
+  [`selection()`](https://YsoSirius.github.io/windfarmGA/reference/selection.md)
+  into
+  [`crossover()`](https://YsoSirius.github.io/windfarmGA/reference/crossover.md)
+  must convert IDs to binary or switch to
+  [`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md).
+- Tune `iteration` as the real runtime budget. `stall_generations` now
+  only fires when the search is idle (no new layouts/cells), not when
+  the record is merely flat. If rates freeze at the refine floor while
+  the max still creeps, the disturbance pulse should lift them; shorten
+  `windfarmGA.refine_hold` or lengthen `explore_pulse` if it still feels
+  stuck. Local search now slides to a neighbour cell.
+- Spatial EQU/RAN crossover is unused; set-crossover can use a
+  half-plane split when coordinates are passed.
 
 ### Ideas
 
+- Census could also show immigrants, cache hits and local-search tries
+  if those counts are stored per generation.
 - Pin or document ggplot2 compatibility in `Suggests` if further S7
   class cleanup removes the legacy `"ggplot"` S3 class.
+- Noise (ISO 9613) and rayshader 3D stay experimental / local; do not
+  add them to Suggests.
+- With a manufacturer curve, run the GA at hub winds in the rising part
+  (or a Weibull climate), not only on the rated plateau.
 
 ## windfarmGA 4.0.0
 
@@ -200,7 +431,7 @@ CRAN release: 2019-02-18
 - The function `genAlgo`/`windfarmGA` and the plotting functions now
   accept SimpleFeature Polygons or coordinates in table format with
   long, lat or x, y column names. The terrain effect model can now be
-  activated only by setting **topograp** to TRUE and it will attempt to
+  activated only by setting **terrain** to TRUE and it will attempt to
   download the land cover raster from the European Environment Agency
   website.
 
@@ -226,26 +457,26 @@ comparing them with the original result.
 ``` sh
 load(file = system.file("extdata/resultrect.rda", package = "windfarmGA"))
 load(file = system.file("extdata/polygon.rda", package = "windfarmGA"))
-Res = RandomSearchTurb(result = resultrect, Polygon1 = polygon, n=10)
-RandomSearchPlot(resultRS = Res, result = resultrect, Polygon1 = polygon, best=2)
+Res = RandomSearchTurb(result = resultrect, area = polygon, n=10)
+RandomSearchPlot(resultRS = Res, result = resultrect, area = polygon, best=2)
 ```
 
 ## windfarmGA 1.2
 
 CRAN release: 2018-03-11
 
-##### Parallel Processing
+##### parallel Processing
 
 ``` sh
 ## Runs the same optimization, but with parallel processing and 3 cores.
-result_par <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-                 fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-                 selstate="FIX",mutr=0.8, Proportionality = 1,
-                 SurfaceRoughness = 0.3, topograp = FALSE,
-                 elitism=TRUE, nelit = 7, trimForce = TRUE,
-                 referenceHeight = 50,RotorHeight = 100,
-                 Parallel = TRUE, numCluster = 3)
-PlotWindfarmGA(result = result_par, GridMethod = "h", Polygon1 = Polygon1)
+result_par <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
+                 fcr=5,iteration=10, wind = data.in,crossPart1 = "EQU",
+                 selection_mode="FIX",mutation_rate=0.8, proportionality = 1,
+                 surface_roughness = 0.3, terrain = FALSE,
+                 elitism=TRUE, n_elite = 7, trimForce = TRUE,
+                 reference_height = 50,rotor_height = 100,
+                 parallel = TRUE, n_cluster = 3)
+PlotWindfarmGA(result = result_par, grid_method = "h", area = area)
 ```
 
 ## windfarmGA 1.1
@@ -255,11 +486,11 @@ CRAN release: 2017-07-09
 ##### Optimization with Hexagonal Grid Cells
 
 ``` sh
-result_hex <- genAlgo(Polygon1 = Polygon1, GridMethod ="h", n=12, Rotor=30,
-                  fcrR=5,iteration=10, vdirspe = data.in,crossPart1 = "EQU",
-                  selstate="FIX",mutr=0.8, Proportionality = 1,
-                  SurfaceRoughness = 0.3, topograp = FALSE,
-                  elitism=TRUE, nelit = 7, trimForce = TRUE,
-                  referenceHeight = 50,RotorHeight = 100)
-PlotWindfarmGA(result = result_hex, GridMethod = "h", Polygon1 = Polygon1)
+result_hex <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
+                  fcr=5,iteration=10, wind = data.in,crossPart1 = "EQU",
+                  selection_mode="FIX",mutation_rate=0.8, proportionality = 1,
+                  surface_roughness = 0.3, terrain = FALSE,
+                  elitism=TRUE, n_elite = 7, trimForce = TRUE,
+                  reference_height = 50,rotor_height = 100)
+PlotWindfarmGA(result = result_hex, grid_method = "h", area = area)
 ```

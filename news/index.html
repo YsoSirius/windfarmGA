@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,20 +33,85 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="4.0.1" id="windfarmga-401">windfarmGA 4.0.1<a class="anchor" aria-label="anchor" href="#windfarmga-401"></a></h2>
+<h2 class="pkg-version" data-toc-text="5.0.0" id="windfarmga-500">windfarmGA 5.0.0<a class="anchor" aria-label="anchor" href="#windfarmga-500"></a></h2>
+<p>Breaking release: the layout chromosome is no longer a 0/1 string.</p>
 <div class="section level3">
-<h3 id="fixes-4-0-1">Fixes<a class="anchor" aria-label="anchor" href="#fixes-4-0-1"></a></h3>
-<ul><li>CRAN tests for <code><a href="../reference/plot_windrose.html">plot_windrose()</a></code> failed on r-devel with ggplot2 &gt;= 4.0.0. ggplot2 4.0 uses S7 plot objects, so they are no longer recursive lists and <code>class(.)[1]</code> is no longer <code>"gg"</code>. Checks now use <code>inherits(., c("ggplot", "ggplot2::ggplot"))</code>, which works with ggplot2 3.x and 4.x.</li>
+<h3 id="breaking-5-0-0">Breaking<a class="anchor" aria-label="anchor" href="#breaking-5-0-0"></a></h3>
+<ul><li>Each individual is <code>n</code> unique grid-cell IDs, not a binary vector over all cells. <code>genetic_algorithm</code> runs <code>selection</code> → <code>set_crossover</code> → <code>swap_mutation</code> → <code>get_grids</code> → <code>fitness</code>. <code>trimton</code> is not in the loop.</li>
+<li>
+<code><a href="../reference/selection.html">selection()</a></code> returns an ID matrix (<code>n</code> × selected) plus fitness. Code that piped <code><a href="../reference/selection.html">selection()</a></code> into <code><a href="../reference/crossover.html">crossover()</a></code> must convert IDs to binary or switch to <code><a href="../reference/set_crossover.html">set_crossover()</a></code>.</li>
+<li>Public API is snake_case. <code>Polygon1</code> → <code>area</code>, <code>vdirspe</code> → <code>wind</code>, <code>Rotor</code> → <code>rotor</code>, <code>mutr</code> → <code>mutation_rate</code>, <code>selstate</code> → <code>selection_mode</code>, <code>Projection</code> → <code>crs</code>. <code>plotit</code> is gone (<code>plot</code> only).</li>
+<li>Unused loop args <code>crossPart1</code> and <code>trimForce</code> are removed from <code><a href="../reference/genetic_algorithm.html">genetic_algorithm()</a></code>. Invalid <code>selection_mode</code> errors (no interactive <code>readinteger</code> prompt). Defaults live in the function signature, not in <code>if (missing())</code> or the Rd file.</li>
+<li>Related formals: <code>fitness(population, area, rotor, wind, ...)</code>, <code>calculate_energy(layout, area, rotor, wind, wake_angle, wake_distance, ...)</code>, <code>selection(fit, grid, share, ...)</code>, <code>grid_area(area, ...)</code>, <code>random_search(..., plot)</code>, <code>plot_windfarmGA(..., which_plot)</code>, <code>plot_result(..., terrain, plot_grid)</code>.</li>
+<li>Defaults: <code>selection_mode = "VAR"</code>, mutation <code>2/n</code> (was often <code>0.8</code>), <code>n_elite = 3</code>. New session options (inject, immigrants, seasons, neighbour local search) change search behaviour even if you call <code><a href="../reference/genetic_algorithm.html">genetic_algorithm()</a></code> the same way.</li>
+<li>Legacy <code><a href="../reference/crossover.html">crossover()</a></code>, <code><a href="../reference/mutation.html">mutation()</a></code> and <code><a href="../reference/trimton.html">trimton()</a></code> still accept 0/1 chromosomes. New exports: <code><a href="../reference/set_crossover.html">set_crossover()</a></code>, <code><a href="../reference/swap_mutation.html">swap_mutation()</a></code>.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="open--todos-4-0-1">Open / Todos<a class="anchor" aria-label="anchor" href="#open--todos-4-0-1"></a></h3>
-<ul><li>Resubmit 4.0.1 to CRAN after the ggplot2 4.0 test failures.</li>
-<li>Parallel and terrain tests remain skipped on CRAN (<code>skip_on_cran</code>).</li>
+<h3 id="fixes-5-0-0">Fixes<a class="anchor" aria-label="anchor" href="#fixes-5-0-0"></a></h3>
+<ul><li>pkgdown reference lists the new exports (<code>as_windfarmGA</code>, <code>explore_result</code>, <code>ga_options</code>, <code>generation_layouts</code>, <code>population_census</code>, <code>set_crossover</code>, <code>swap_mutation</code>). <code><a href="../reference/plot_power_curve.html">plot_power_curve()</a></code> Rd no longer uses <code>\cdot</code>. <code>plots.R</code> is ASCII-only. ggplot aesthetics are in <code>globalVariables</code>. Rd documents <code>wnkl</code>, <code>trimForce</code> and <code>plot_fitness_evolution(interactive)</code>.</li>
+<li>
+<code>experimental/draw_shape()</code> uses <code>mapedit::editMap(..., editor = "leafpm")</code>. mapedit 0.8 dropped leaflet.extras (off CRAN); older mapedit still calls <code><a href="https://dplyr.tidyverse.org/reference/defunct-lazyeval.html" class="external-link">dplyr::select_()</a></code>, which current dplyr rejects.</li>
+<li>Power-curve energy was the first turbine’s kW (often rated power and 100% efficiency), not the park sum. <code>energy_calc_CPP</code> already summed; table lookup now does the same. Cut-in / rated / cut-out apply only when no table is set (as documented). On the rated plateau, wakes may still leave every turbine at rated power — then layouts look identical and the GA cannot improve energy. Use hub wind in the rising part of the curve.</li>
+<li>CRAN tests for <code><a href="../reference/plot_windrose.html">plot_windrose()</a></code> failed on r-devel with ggplot2 &gt;= 4.0.0. ggplot2 4.0 uses S7 plot objects, so they are no longer recursive lists and <code>class(.)[1]</code> is no longer <code>"gg"</code>. Checks now use <code>inherits(., c("ggplot", "ggplot2::ggplot"))</code>, which works with ggplot2 3.x and 4.x.</li>
+<li>
+<code>crossover</code>: parent fitness is now <code>(a + b) / 2</code> (operator precedence bug).</li>
+<li>
+<code>isSpatial</code>: assigned CRS is the given <code>proj</code>, not hardcoded EPSG:3035.</li>
+<li>Fitness is <code>EnergyOverall * (EfficAllDir/100)^w</code> with <code>options(windfarmGA.fitness_efficiency_weight)</code> (default 1).</li>
+<li>Elitism copies the best layouts into the next generation instead of multiplying their fitness by 10.</li>
+<li>Duplicate layouts after crossover/mutation (sorted ID keys) are dropped.</li>
+<li>Logarithmic hub-height wind profile (legacy power law via <code>options(windfarmGA.wind_profile = "power")</code>).</li>
+<li>Power coefficient <code>options(windfarmGA.Cp)</code> defaults to 0.45; optional cut-in / rated / cut-out speeds.</li>
+<li>parallel clusters are always stopped via <code>on.exit</code>; dead Weibull crop call removed.</li>
+<li>Diagnostic plots no longer crash on negative leftover EQU values; rates are drawn as percentages, not as palette indices.</li>
+<li>Plot flags are named <code>plot</code> (<code>plotit</code> removed).</li>
+<li>
+<code><a href="../reference/genetic_algorithm.html">genetic_algorithm()</a></code> results have class <code>windfarmGA</code> with <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> / <code><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot()</a></code>. <code><a href="../reference/ga_options.html">ga_options()</a></code> lists or sets <code>windfarmGA.*</code> options. <code><a href="../reference/explore_result.html">explore_result()</a></code> is a one-page Shiny viewer (Suggests): Leaflet map of the selected generation’s best layout, plus one plotly figure (fitness / rates / population subplots). New fitness maxima are marked; click a marker to jump the slider to that generation. The plotly legend sits further above the figure so it does not cover the series. The cell heatmap is omitted there (it rebuilds the grid and is slower than the map). <code><a href="../reference/plot_viewshed.html">plot_viewshed()</a></code> projects lon/lat DEMs (e.g. elevatr) before <code><a href="https://rspatial.github.io/terra/reference/viewshed.html" class="external-link">terra::viewshed</a></code>.</li>
+<li>Optional manufacturer <code>data.frame(ws, power)</code> via <code>ga_options(power_curve = ...)</code> / <code><a href="../reference/plot_power_curve.html">plot_power_curve()</a></code>. GitHub-only extras live in <code>experimental/</code> (not the CRAN tarball): draw a site polygon, circle-overlap app. rayshader and noise stay local.</li>
+<li>
+<code><a href="../reference/plot_windrose.html">plot_windrose()</a></code> uses a white panel instead of the gray fill and thick minor rings.</li>
+<li>
+<code><a href="../reference/plot_population.html">plot_population()</a></code> was slow because <code><a href="../reference/population_census.html">population_census()</a></code> rescanned every layout with <code>Run == r</code> per individual. Counts now come from <code>nindiv</code> (<code>cells</code>, <code>cells_elite</code> stored during the run); the fallback uses <code><a href="https://rspatial.github.io/terra/reference/split.html" class="external-link">split()</a></code>. Elite offspring is green (<code>#27AE60</code>), elites stay orange.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="features-5-0-0">Features<a class="anchor" aria-label="anchor" href="#features-5-0-0"></a></h3>
+<ul><li>Combinatorial genome: each individual is <code>n</code> unique grid-cell IDs, not a 0/1 string over all cells. <code>genetic_algorithm</code> now runs <code>selection</code> → <code>set_crossover</code> → <code>swap_mutation</code> → <code>get_grids</code> → <code>fitness</code>. <code>trimton</code> is no longer in the loop (always exactly <code>n</code> turbines).</li>
+<li>
+<code><a href="../reference/plot_windfarmGA.html">plot_windfarmGA()</a></code>, <code><a href="../reference/plot_parkfitness.html">plot_parkfitness()</a></code>, <code><a href="../reference/plot_population.html">plot_population()</a></code> and <code><a href="../reference/plot_generation.html">plot_generation()</a></code> wait for Enter between every page in an interactive session (Plots pane, so pages are not overwritten). plotly is only used when <code>ask = FALSE</code>. <code><a href="../reference/plot_population.html">plot_population()</a></code> has a bottom legend, an elite cell-count line (the population can sit at the full grid size, e.g. 70, while elites shrink), and a park-efficiency page.</li>
+<li>
+<code>plot_generation(result, area, generation = 122)</code> shows every layout evaluated in that generation (cell occupancy + all turbines, best in black, plus the top distinct maps). <code><a href="../reference/generation_layouts.html">generation_layouts()</a></code> returns the table. <code><a href="../reference/plot_parkfitness.html">plot_parkfitness()</a></code> is ggplot2 with the legend outside; rates are ordered Selection / Crossover inject / Mutation. Hoverable via plotly in an interactive session.</li>
+<li>Fitness cache: identical layouts (sorted cell IDs) are not re-evaluated. Early stop is not “max unchanged”. The run uses the full <code>iteration</code> budget unless <code>options(windfarmGA.stall_generations)</code> consecutive generations produce no new layout, no new cell and no new best (set to 0 to never stop early). A flat maximum while new sites are still tried is treated as ongoing search.</li>
+<li>Weak elitism: the current best layout is archived unchanged. Each elite then produces several mutated copies (<code>options(windfarmGA.elite_children)</code>, default 3) and mixes with weaker layouts (<code>windfarmGA.elite_mix</code>, default 2, inject 0 so elite structure stays). Extra mutants when the max has been flat for 10 generations. Elite count starts at <code>n_elite</code> (default 3), grows by 2–3 during a long refine stall, and drops by 1 in a disturbance pulse. Operator rates follow seasons with the same three operators. Explore: inject in <code>[0.20, 0.40]</code> and mutation rise while the max is stalling (VAR selection starts near 55%). Refine: after <code>options(windfarmGA.refine_min_gen)</code> (18) and <code>options(windfarmGA.refine_after)</code> (12) generations without a new max at cell coverage ≥ 0.35, inject decays toward 0.15, mutation toward <code>2/n</code>, selection toward ~45%. Refine is not a trap: after <code>options(windfarmGA.refine_hold)</code> (25) generations a disturbance pulse of <code>options(windfarmGA.explore_pulse)</code> (10) gens raises inject/mutation again even if new maxes still appear, then refine resumes. Local search slides one elite turbine to a neighbouring empty cell (rook / hex), not to a random cell anywhere on the grid.</li>
+<li>Mutation and immigrants prefer rarely visited cells. Crossover is spatial (half-plane) with probability <code>options(windfarmGA.spatial_crossover)</code> (default 0.5). Elites get a memetic local search (<code>windfarmGA.local_search_elites</code> default 5 / <code>local_search_tries</code> default 6).</li>
+<li>Default <code>selection_mode</code> is <code>VAR</code> (selection share follows fitness). Mutation and crossover inject rates adapt each generation from max fitness and the top quartile (immigrants no longer freeze the controller).</li>
+<li>
+<code>options(windfarmGA.max_selection)</code> default is 300 (was 100), matching <code>max_population</code>.</li>
+<li>Default mutation rate is <code>2/n</code> per turbine, with at least one swap (<code>options(windfarmGA.min_swaps)</code>). Set-crossover injects unused cells (<code>options(windfarmGA.crossover_inject)</code>, default 0.25) so the search is not trapped in the parental union. Each generation adds random immigrant layouts (<code>options(windfarmGA.immigrants)</code>, default 3). Default elite count is 3.</li>
+<li>Report <code>inst/reports/memetic-layout-ga.md</code>: short English note on the combinatorial genome, neighbourhood local search, and the north-wind benchmark (defaults after that: LS 5×6). Figure: <code>fig-north-gold.png</code>.</li>
+<li>README documents all <code><a href="../reference/genetic_algorithm.html">genetic_algorithm()</a></code> arguments and <code>options(windfarmGA.*)</code> (physics, inject, immigrants, seasons, neighbour local search). Examples no longer pass leftover <code>FIX</code> / <code>mutation_rate = 0.8</code> / <code>trimForce</code> as if they were still the recommended setup. Plotting examples match the current functions (<code>plot_population</code>, last-generation <code>plot_generation</code>, no removed <code><a href="../reference/windfarmGA-package.html">windfarmGA()</a></code> entry point).</li>
+<li>
+<code><a href="../reference/selection.html">selection()</a></code> returns an ID matrix (<code>n</code> × selected) plus fitness; it no longer expands layouts to a binary grid.</li>
+<li>
+<code><a href="../reference/get_grids.html">get_grids()</a></code> accepts ID matrices and still accepts legacy binary matrices.</li>
+<li>Exported legacy API kept: <code><a href="../reference/crossover.html">crossover()</a></code>, <code><a href="../reference/mutation.html">mutation()</a></code>, <code><a href="../reference/trimton.html">trimton()</a></code> still work on 0/1 chromosomes. New exports: <code><a href="../reference/set_crossover.html">set_crossover()</a></code>, <code><a href="../reference/swap_mutation.html">swap_mutation()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="open--todos-5-0-0">Open / Todos<a class="anchor" aria-label="anchor" href="#open--todos-5-0-0"></a></h3>
+<ul><li>Submit 5.0.0 to CRAN (ggplot2 4.x tests plus combinatorial genome). Re-check pkgdown and Rd after the reference-index / <code>\cdot</code> / ASCII fixes.</li>
+<li>parallel and terrain tests remain skipped on CRAN (<code>skip_on_cran</code>).</li>
 <li>Consider splitting the large <code>test_plots.R</code> block so a single assertion failure does not hide later plot checks.</li>
+<li>
+<code>plot_heatmap()</code> was never reimplemented; use <code><a href="../reference/plot_cell_heatmap.html">plot_cell_heatmap()</a></code>.</li>
+<li>Callers that piped <code><a href="../reference/selection.html">selection()</a></code> into <code><a href="../reference/crossover.html">crossover()</a></code> must convert IDs to binary or switch to <code><a href="../reference/set_crossover.html">set_crossover()</a></code>.</li>
+<li>Tune <code>iteration</code> as the real runtime budget. <code>stall_generations</code> now only fires when the search is idle (no new layouts/cells), not when the record is merely flat. If rates freeze at the refine floor while the max still creeps, the disturbance pulse should lift them; shorten <code>windfarmGA.refine_hold</code> or lengthen <code>explore_pulse</code> if it still feels stuck. Local search now slides to a neighbour cell.</li>
+<li>Spatial EQU/RAN crossover is unused; set-crossover can use a half-plane split when coordinates are passed.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="ideas-4-0-1">Ideas<a class="anchor" aria-label="anchor" href="#ideas-4-0-1"></a></h3>
-<ul><li>Pin or document ggplot2 compatibility in <code>Suggests</code> if further S7 class cleanup removes the legacy <code>"ggplot"</code> S3 class.</li>
+<h3 id="ideas-5-0-0">Ideas<a class="anchor" aria-label="anchor" href="#ideas-5-0-0"></a></h3>
+<ul><li>Census could also show immigrants, cache hits and local-search tries if those counts are stored per generation.</li>
+<li>Pin or document ggplot2 compatibility in <code>Suggests</code> if further S7 class cleanup removes the legacy <code>"ggplot"</code> S3 class.</li>
+<li>Noise (ISO 9613) and rayshader 3D stay experimental / local; do not add them to Suggests.</li>
+<li>With a manufacturer curve, run the GA at hub winds in the rising part (or a Weibull climate), not only on the rated plateau.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -215,7 +280,7 @@
 </ul></div>
 <div class="section level5">
 <h5 id="other-changes-2-2-1">Other Changes<a class="anchor" aria-label="anchor" href="#other-changes-2-2-1"></a></h5>
-<ul><li><p>The function <code>genAlgo</code>/<code>windfarmGA</code> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <strong>topograp</strong> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p></li>
+<ul><li><p>The function <code>genAlgo</code>/<code>windfarmGA</code> and the plotting functions now accept SimpleFeature Polygons or coordinates in table format with long, lat or x, y column names. The terrain effect model can now be activated only by setting <strong>terrain</strong> to TRUE and it will attempt to download the land cover raster from the European Environment Agency website.</p></li>
 <li><p><code>plot_farm_3d</code> Experimental rayshader function</p></li>
 </ul></div>
 </div>
@@ -229,36 +294,36 @@
 <p><strong><code>RandomSearchPlot</code></strong> is used to plot the output of those functions, comparing them with the original result.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">load</span><span class="er">(</span><span class="fu">file</span> = system.file<span class="er">(</span><span class="st">"extdata/resultrect.rda"</span><span class="ex">,</span> package = <span class="st">"windfarmGA"</span><span class="kw">))</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="ex">load</span><span class="er">(</span><span class="fu">file</span> = system.file<span class="er">(</span><span class="st">"extdata/polygon.rda"</span><span class="ex">,</span> package = <span class="st">"windfarmGA"</span><span class="kw">))</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="ex">Res</span> = RandomSearchTurb<span class="er">(</span><span class="ex">result</span> = resultrect, Polygon1 = polygon, n=10<span class="kw">)</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="ex">RandomSearchPlot</span><span class="er">(</span><span class="ex">resultRS</span> = Res, result = resultrect, Polygon1 = polygon, best=2<span class="kw">)</span></span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="ex">Res</span> = RandomSearchTurb<span class="er">(</span><span class="ex">result</span> = resultrect, area = polygon, n=10<span class="kw">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="ex">RandomSearchPlot</span><span class="er">(</span><span class="ex">resultRS</span> = Res, result = resultrect, area = polygon, best=2<span class="kw">)</span></span></code></pre></div>
 </div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2" id="windfarmga-12">windfarmGA 1.2<a class="anchor" aria-label="anchor" href="#windfarmga-12"></a></h2><p class="text-muted">CRAN release: 2018-03-11</p>
 <div class="section level5">
-<h5 id="parallel-processing-1-2">Parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing-1-2"></a></h5>
+<h5 id="parallel-processing-1-2">parallel Processing<a class="anchor" aria-label="anchor" href="#parallel-processing-1-2"></a></h5>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">## Runs the same optimization, but with parallel processing and 3 cores.</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="ex">result_par</span> <span class="op">&lt;</span>- genAlgo<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                 <span class="va">fcrR</span><span class="op">=</span>5,iteration=10, <span class="ex">vdirspe</span> = data.in,crossPart1 = <span class="st">"EQU"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                 <span class="va">selstate</span><span class="op">=</span><span class="st">"FIX"</span>,mutr=0.8, <span class="ex">Proportionality</span> = 1,</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                 <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                 <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                 <span class="ex">referenceHeight</span> = 50,RotorHeight = 100,</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>                 <span class="ex">Parallel</span> = TRUE, numCluster = 3<span class="kw">)</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="ex">PlotWindfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_par, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1<span class="kw">)</span></span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="ex">result_par</span> <span class="op">&lt;</span>- genAlgo<span class="er">(</span><span class="ex">area</span> = area, grid_method =<span class="st">"h"</span>, n=12, Rotor=30,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                 <span class="va">fcr</span><span class="op">=</span>5,iteration=10, <span class="ex">wind</span> = data.in,crossPart1 = <span class="st">"EQU"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                 <span class="va">selection_mode</span><span class="op">=</span><span class="st">"FIX"</span>,mutation_rate=0.8, <span class="ex">proportionality</span> = 1,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                 <span class="ex">surface_roughness</span> = 0.3, terrain = FALSE,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                 <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">n_elite</span> = 7, trimForce = TRUE,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                 <span class="ex">reference_height</span> = 50,rotor_height = 100,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>                 <span class="ex">parallel</span> = TRUE, n_cluster = 3<span class="kw">)</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="ex">PlotWindfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_par, grid_method = <span class="st">"h"</span>, area = area<span class="kw">)</span></span></code></pre></div>
 </div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1" id="windfarmga-11">windfarmGA 1.1<a class="anchor" aria-label="anchor" href="#windfarmga-11"></a></h2><p class="text-muted">CRAN release: 2017-07-09</p>
 <div class="section level5">
 <h5 id="optimization-with-hexagonal-grid-cells-1-1">Optimization with Hexagonal Grid Cells<a class="anchor" aria-label="anchor" href="#optimization-with-hexagonal-grid-cells-1-1"></a></h5>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo<span class="er">(</span><span class="ex">Polygon1</span> = Polygon1, GridMethod =<span class="st">"h"</span>, n=12, Rotor=30,</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>                  <span class="va">fcrR</span><span class="op">=</span>5,iteration=10, <span class="ex">vdirspe</span> = data.in,crossPart1 = <span class="st">"EQU"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>                  <span class="va">selstate</span><span class="op">=</span><span class="st">"FIX"</span>,mutr=0.8, <span class="ex">Proportionality</span> = 1,</span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                  <span class="ex">SurfaceRoughness</span> = 0.3, topograp = FALSE,</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>                  <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">nelit</span> = 7, trimForce = TRUE,</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>                  <span class="ex">referenceHeight</span> = 50,RotorHeight = 100<span class="kw">)</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="ex">PlotWindfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_hex, GridMethod = <span class="st">"h"</span>, Polygon1 = Polygon1<span class="kw">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo<span class="er">(</span><span class="ex">area</span> = area, grid_method =<span class="st">"h"</span>, n=12, Rotor=30,</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>                  <span class="va">fcr</span><span class="op">=</span>5,iteration=10, <span class="ex">wind</span> = data.in,crossPart1 = <span class="st">"EQU"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>                  <span class="va">selection_mode</span><span class="op">=</span><span class="st">"FIX"</span>,mutation_rate=0.8, <span class="ex">proportionality</span> = 1,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>                  <span class="ex">surface_roughness</span> = 0.3, terrain = FALSE,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>                  <span class="va">elitism</span><span class="op">=</span>TRUE, <span class="ex">n_elite</span> = 7, trimForce = TRUE,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>                  <span class="ex">reference_height</span> = 50,rotor_height = 100<span class="kw">)</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="ex">PlotWindfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_hex, grid_method = <span class="st">"h"</span>, area = area<span class="kw">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

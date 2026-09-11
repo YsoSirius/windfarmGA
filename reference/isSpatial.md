@@ -6,19 +6,19 @@ matrix/data.frame - form to a Simple Feature Polygon
 ## Usage
 
 ``` r
-isSpatial(shape, proj)
+isSpatial(area, crs = NULL)
 ```
 
 ## Arguments
 
-- shape:
+- area:
 
-  An area as SpatialPolygon, SimpleFeature Polygon or coordinates as
+  Site as SpatialPolygon, Simple Feature polygon, or coordinates as
   matrix/data.frame
 
-- proj:
+- crs:
 
-  Which Projection should be assigned to matrix / data.frame coordinates
+  CRS assigned to matrix / data.frame coordinates
 
 ## Value
 
@@ -37,8 +37,6 @@ Other Helper Functions:
 [`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md),
 [`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md),
 [`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md),
-[`readinteger()`](https://YsoSirius.github.io/windfarmGA/reference/readinteger.md),
-[`readintegerSel()`](https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.md),
 [`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md),
 [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
 
@@ -59,14 +57,14 @@ isSpatial(df)
 #> CRS:           NA
 #> POLYGON ((4498482 2668272, 4498482 2669343, 449...
 
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
   ))),
   crs = 3035
 ))
-isSpatial(st_coordinates(Polygon1), 3035)
+isSpatial(st_coordinates(area), 3035)
 #> Geometry set for 1 feature 
 #> Geometry type: POLYGON
 #> Dimension:     XY

@@ -1,6 +1,9 @@
 # Plot visibility
 
 Calculate and plot visibility for given points in a given area.
+[`terra::viewshed`](https://rspatial.github.io/terra/reference/viewshed.html)
+needs a projected (metre) raster. Lon/lat DEMs (typical `elevatr`
+downloads) are projected automatically.
 
 ## Usage
 
@@ -66,7 +69,7 @@ plot_viewshed(x, locs, h1 = 0, h2 = 0, plot = TRUE)
 #> extent      : 49072.34, 106970.2, 56572.15, 139945.1  (xmin, xmax, ymin, ymax)
 #> coord. ref. : LUREF / Luxembourg TM (EPSG:2169)
 #> source(s)   : memory
-#> varname     : spat_1e64417460d0_7780_2_o8up7yuDdJ6XHBX
+#> varname     : spat_1d3a61695e6e_7482_2_o8up7yuDdJ6XHBX
 #> name        : viewshed
 #> min value   :        0
 #> max value   :        1

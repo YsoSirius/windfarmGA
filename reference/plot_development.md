@@ -1,6 +1,7 @@
-# Plot the progress of populations
+# When the best layout improved
 
-Plot the changes in mean and max fitness values to previous generation.
+Change of the generation-best fitness. Green = new record, orange =
+flat, red = worse. Blue line is the share of grid cells visited so far.
 
 ## Usage
 
@@ -22,13 +23,18 @@ Returns NULL. Used for plotting
 ## See also
 
 Other Plotting Functions:
+[`generation_layouts()`](https://YsoSirius.github.io/windfarmGA/reference/generation_layouts.md),
+[`plot_cell_heatmap()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md),
 [`plot_cloud()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cloud.md),
 [`plot_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.md),
 [`plot_fitness_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.md),
+[`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md),
 [`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md),
+[`plot_population()`](https://YsoSirius.github.io/windfarmGA/reference/plot_population.md),
 [`plot_result()`](https://YsoSirius.github.io/windfarmGA/reference/plot_result.md),
 [`plot_windfarmGA()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windfarmGA.md),
 [`plot_windrose()`](https://YsoSirius.github.io/windfarmGA/reference/plot_windrose.md),
+[`population_census()`](https://YsoSirius.github.io/windfarmGA/reference/population_census.md),
 [`random_search_single()`](https://YsoSirius.github.io/windfarmGA/reference/random_search_single.md)
 
 ## Examples
@@ -37,6 +43,5 @@ Other Plotting Functions:
 # \donttest{
 plot_development(resultrect)
 
-#> NULL
 # }
 ```

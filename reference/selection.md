@@ -2,15 +2,24 @@
 
 Select a certain amount of individuals and recombine them to parental
 teams. Add the mean fitness value of both parents to the parental team.
-Depending on the selected `selstate`, the algorithm will either take
-always 50 percent or a variable percentage of the current population.
-The variable percentage depends on the evolution of the populations
-fitness values.
+Depending on the selected `selection_mode`, the algorithm will either
+take always 50 percent or a variable percentage of the current
+population. The variable percentage depends on the evolution of the
+populations fitness values. With `elitism = TRUE` the best individuals
+are always included in the mating pool.
 
 ## Usage
 
 ``` r
-selection(fit, Grid, teil, elitism, nelit, selstate, verbose)
+selection(
+  fit,
+  grid,
+  share,
+  elitism = TRUE,
+  n_elite = 3,
+  selection_mode = "VAR",
+  verbose = FALSE
+)
 ```
 
 ## Arguments
@@ -19,30 +28,27 @@ selection(fit, Grid, teil, elitism, nelit, selstate, verbose)
 
   A list of all fitness-evaluated individuals
 
-- Grid:
+- grid:
 
-  Is the indexed grid output from
-  [`grid_area`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md)
+  Indexed grid from
+  [`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md)
 
-- teil:
+- share:
 
-  A numeric value that determines the selection percentage
+  Selection divisor: parents are about `nrow / share` of the population
+  (`2` ≈ 50 %).
 
 - elitism:
 
-  Boolean value, which indicates whether elitism should be activated or
-  not. Default is `TRUE`
+  Archive the best layout and breed elite children.
 
-- nelit:
+- n_elite:
 
-  If `elitism` is TRUE, this input determines the amount of individuals
-  in the elite group. Default is 7
+  Base elite count (grows/shrinks with search phase).
 
-- selstate:
+- selection_mode:
 
-  Determines which selection method is used, "FIX" selects a constant
-  percentage and "VAR" selects a variable percentage, depending on the
-  development of the fitness values. Default is "FIX"
+  `"VAR"` (parent share follows fitness) or `"FIX"` (50 %).
 
 - verbose:
 
@@ -50,9 +56,10 @@ selection(fit, Grid, teil, elitism, nelit, selstate, verbose)
 
 ## Value
 
-Returns list with 2 elements. Element 1 is the binary encoded matrix
-which shows all selected individuals. Element 2 represent the mean
-fitness values of each parental team.
+Returns a list with 2 elements. Element 1 is an integer matrix of
+selected layouts (`n` turbines × selected individuals), each column a
+set of unique grid cell IDs. Element 2 is the fitness of each selected
+individual.
 
 ## See also
 
@@ -62,6 +69,8 @@ Other Genetic Algorithm Functions:
 [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md),
 [`init_population()`](https://YsoSirius.github.io/windfarmGA/reference/init_population.md),
 [`mutation()`](https://YsoSirius.github.io/windfarmGA/reference/mutation.md),
+[`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md),
+[`swap_mutation()`](https://YsoSirius.github.io/windfarmGA/reference/swap_mutation.md),
 [`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
 
 ## Examples
@@ -70,7 +79,7 @@ Other Genetic Algorithm Functions:
 # \donttest{
 ## Exemplary input Polygon with 2km x 2km:
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -79,7 +88,7 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ))
 
 ## Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
+Grid1 <- grid_area(area = area, size = 200, prop = 1)
 Grid <- Grid1[[1]]
 AmountGrids <- nrow(Grid)
 
@@ -87,10 +96,9 @@ startsel <- init_population(Grid, 10, 20)
 wind <- as.data.frame(cbind(ws = 12, wd = 0))
 wind <- list(wind, probab = 100)
 fit <- fitness(
-  selection = startsel, referenceHeight = 100, RotorHeight = 100,
-  SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200,
-  rot = 20, dirspeed = wind,
-  srtm_crop = "", topograp = FALSE, cclRaster = ""
+  population = startsel, reference_height = 100, rotor_height = 100,
+  surface_roughness = 0.3, area = area, rotor = 20, wind = wind,
+  terrain = FALSE
 )
 allparks <- do.call("rbind", fit)
 ## SELECTION

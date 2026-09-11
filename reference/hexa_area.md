@@ -7,23 +7,22 @@ Feature object, that consists of hexagonal grids.
 ## Usage
 
 ``` r
-hexa_area(shape, size = 500, plotGrid = FALSE)
+hexa_area(area, size = 500, plot_grid = FALSE)
 ```
 
 ## Arguments
 
-- shape:
+- area:
 
-  Simple Feature Polygon of the considered area
+  Simple Feature polygon of the site
 
 - size:
 
-  The cellsize of the grid in meters. Default is 500
+  Cell size of the grid in metres
 
-- plotGrid:
+- plot_grid:
 
-  Logical value indicating whether the results should be plotted.
-  Default is `FALSE`
+  Draw the grid
 
 ## Value
 
@@ -39,8 +38,6 @@ Other Helper Functions:
 [`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md),
 [`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md),
 [`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md),
-[`readinteger()`](https://YsoSirius.github.io/windfarmGA/reference/readinteger.md),
-[`readintegerSel()`](https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.md),
 [`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md),
 [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
 

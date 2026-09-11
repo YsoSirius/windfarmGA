@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,6 +63,27 @@
 
         </dt>
         <dd>Run a Genetic Algorithm to optimize a wind farm layout</dd>
+
+        <dt>
+
+          <code><a href="ga_options.html">ga_options()</a></code>
+
+        </dt>
+        <dd>Get or set windfarmGA options</dd>
+
+        <dt>
+
+          <code><a href="explore_result.html">explore_result()</a></code>
+
+        </dt>
+        <dd>Shiny explorer for a GA result</dd>
+
+        <dt>
+
+          <code><a href="as_windfarmGA.html">as_windfarmGA()</a></code> <code><a href="as_windfarmGA.html">print(<i>&lt;windfarmGA&gt;</i>)</a></code> <code><a href="as_windfarmGA.html">plot(<i>&lt;windfarmGA&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Mark a genetic_algorithm result</dd>
       </dl></div><div class="section level2">
       <h2 id="genetic-algorithm-components">Genetic Algorithm Components<a class="anchor" aria-label="anchor" href="#genetic-algorithm-components"></a></h2>
 
@@ -103,10 +124,24 @@
 
         <dt>
 
+          <code><a href="set_crossover.html">set_crossover()</a></code>
+
+        </dt>
+        <dd>Set crossover of turbine layouts</dd>
+
+        <dt>
+
           <code><a href="mutation.html">mutation()</a></code>
 
         </dt>
         <dd>Mutation Method</dd>
+
+        <dt>
+
+          <code><a href="swap_mutation.html">swap_mutation()</a></code>
+
+        </dt>
+        <dd>Swap mutation of turbine layouts</dd>
 
         <dt>
 
@@ -129,7 +164,7 @@
           <code><a href="terrain_model.html">terrain_model()</a></code>
 
         </dt>
-        <dd>Get topographic rasters</dd>
+        <dd>Get terrainhic rasters</dd>
       </dl></div><div class="section level2">
       <h2 id="wind-energy-calculation-functions">Wind Energy Calculation Functions<a class="anchor" aria-label="anchor" href="#wind-energy-calculation-functions"></a></h2>
 
@@ -216,31 +251,45 @@
 
       <dl><dt>
 
+          <code><a href="plot_cell_heatmap.html">plot_cell_heatmap()</a></code>
+
+        </dt>
+        <dd>Heatmap of probed grid cells</dd>
+
+        <dt>
+
           <code><a href="plot_cloud.html">plot_cloud()</a></code>
 
         </dt>
-        <dd>Plot outputs of all generations with standard deviations</dd>
+        <dd>Per-generation fitness / efficiency / energy</dd>
 
         <dt>
 
           <code><a href="plot_development.html">plot_development()</a></code>
 
         </dt>
-        <dd>Plot the progress of populations</dd>
+        <dd>When the best layout improved</dd>
 
         <dt>
 
           <code><a href="plot_evolution.html">plot_evolution()</a></code>
 
         </dt>
-        <dd>Plot the evolution of fitness values</dd>
+        <dd>Energy and efficiency over generations</dd>
 
         <dt>
 
           <code><a href="plot_fitness_evolution.html">plot_fitness_evolution()</a></code>
 
         </dt>
-        <dd>Plot the changes of min/mean/max fitness values</dd>
+        <dd>Fitness and operator rates</dd>
+
+        <dt>
+
+          <code><a href="plot_generation.html">plot_generation()</a></code>
+
+        </dt>
+        <dd>Plot all layouts of one generation</dd>
 
         <dt>
 
@@ -254,7 +303,21 @@
           <code><a href="plot_parkfitness.html">plot_parkfitness()</a></code>
 
         </dt>
-        <dd>Plot the genetic algorithm results</dd>
+        <dd>Fitness and operator rates</dd>
+
+        <dt>
+
+          <code><a href="plot_population.html">plot_population()</a></code>
+
+        </dt>
+        <dd>Plot population size, cells and efficiency</dd>
+
+        <dt>
+
+          <code><a href="plot_power_curve.html">plot_power_curve()</a></code>
+
+        </dt>
+        <dd>Manufacturer power curve</dd>
 
         <dt>
 
@@ -290,6 +353,20 @@
 
         </dt>
         <dd>Plot a Windrose</dd>
+
+        <dt>
+
+          <code><a href="generation_layouts.html">generation_layouts()</a></code>
+
+        </dt>
+        <dd>Layouts evaluated in one generation</dd>
+
+        <dt>
+
+          <code><a href="population_census.html">population_census()</a></code>
+
+        </dt>
+        <dd>Population size and diversity per generation</dd>
       </dl></div><div class="section level2">
       <h2 id="viewshed-analysis-functions">Viewshed Analysis Functions<a class="anchor" aria-label="anchor" href="#viewshed-analysis-functions"></a></h2>
 
@@ -321,7 +398,7 @@
           <code><a href="get_grids.html">get_grids()</a></code>
 
         </dt>
-        <dd>Get the Grid-IDs from binary matrix</dd>
+        <dd>Map layouts to grid coordinates</dd>
 
         <dt>
 
@@ -360,20 +437,6 @@
 
         <dt>
 
-          <code><a href="readinteger.html">readinteger()</a></code>
-
-        </dt>
-        <dd>Check Input Crossover Method</dd>
-
-        <dt>
-
-          <code><a href="readintegerSel.html">readintegerSel()</a></code>
-
-        </dt>
-        <dd>Check Input Selection Method</dd>
-
-        <dt>
-
           <code><a href="splitAt.html">splitAt()</a></code>
 
         </dt>
@@ -381,7 +444,7 @@
 
         <dt>
 
-          <code><a href="package_installed.html">is_foreach_installed()</a></code> <code><a href="package_installed.html">is_parallel_installed()</a></code> <code><a href="package_installed.html">is_doparallel_installed()</a></code> <code><a href="package_installed.html">is_ggplot2_installed()</a></code> <code><a href="package_installed.html">is_leaflet_installed()</a></code> <code><a href="package_installed.html">is_elevatr_installed()</a></code>
+          <code><a href="package_installed.html">is_foreach_installed()</a></code> <code><a href="package_installed.html">is_parallel_installed()</a></code> <code><a href="package_installed.html">is_doparallel_installed()</a></code> <code><a href="package_installed.html">is_ggplot2_installed()</a></code> <code><a href="package_installed.html">is_leaflet_installed()</a></code> <code><a href="package_installed.html">is_elevatr_installed()</a></code> <code><a href="package_installed.html">is_plotly_installed()</a></code> <code><a href="package_installed.html">is_shiny_installed()</a></code>
 
         </dt>
         <dd>Is the package installed or not</dd>

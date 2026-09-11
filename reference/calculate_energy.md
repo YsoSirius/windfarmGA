@@ -9,91 +9,92 @@ effects will be done in this function.
 
 ``` r
 calculate_energy(
-  sel,
-  referenceHeight,
-  RotorHeight,
-  SurfaceRoughness,
-  wnkl,
-  distanz,
-  polygon1,
-  RotorR,
-  dirSpeed,
-  srtm_crop,
-  topograp,
-  cclRaster,
-  weibull,
-  plotit = FALSE
+  layout,
+  reference_height,
+  rotor_height,
+  surface_roughness,
+  wake_angle,
+  wake_distance,
+  area,
+  rotor,
+  wind,
+  elevation = NULL,
+  terrain = FALSE,
+  ccl_raster = NULL,
+  weibull = FALSE,
+  park_center = NULL,
+  plot = FALSE
 )
 ```
 
 ## Arguments
 
-- sel:
+- layout:
 
-  A matrix of an individual of the current population
+  One individual: matrix with X/Y (and typically cell IDs).
 
-- referenceHeight:
+- reference_height:
 
-  The height at which the incoming wind speeds were measured. Default is
-  `RotorHeight`
+  Height at which `wind$ws` was measured.
 
-- RotorHeight:
+- rotor_height:
 
-  The height of the turbine hub
+  Hub height in metres.
 
-- SurfaceRoughness:
+- surface_roughness:
 
-  A surface roughness length in meters. With the terrain effect model, a
-  surface roughness is calculated for every grid cell using the
-  elevation and land cover data. Default is `0.3`
+  Roughness length in metres. Per-cell when `terrain` is on.
 
-- wnkl:
+- wake_angle:
 
-  The angle from which wake influences are considered to be negligible
+  Angle (degrees) beyond which wake influence is ignored.
 
-- distanz:
+- wake_distance:
 
-  The distance after which wake effects are considered to be eliminated
+  Distance (metres) beyond which wake effects are ignored.
 
-- polygon1:
+- area:
 
-  The considered area as Simple Feature Polygon
+  Site polygon (`sf`, SpatialPolygons, or coordinate matrix). Must be
+  projected in metres.
 
-- RotorR:
+- rotor:
 
-  The desired rotor radius in meter
+  Rotor radius in metres.
 
-- dirSpeed:
+- wind:
 
-  The wind speed and direction data.frame
+  Wind data.frame with `ws`, `wd` and optional `probab`. See
+  [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md).
 
-- srtm_crop:
+- elevation:
 
-  The first element of the
-  [`terrain_model`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md)
-  resulting list
+  Terrain list from
+  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
+  Unused when `terrain` is `FALSE`.
 
-- topograp:
+- terrain:
 
-  Boolean value, which indicates if the terrain effect model should be
-  enabled or not. Default is `FALSE`
+  Terrain model (elevation + land cover).
 
-- cclRaster:
+- ccl_raster:
 
-  The second element of the
-  [`terrain_model`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md)
-  resulting list
+  Land-cover roughness raster from
+  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
 
 - weibull:
 
-  A boolean value that specifies whether to take Weibull parameters into
-  account. If `TRUE`, the wind speed values of `vdirspe` are ignored.
-  The algorithm will calculate the mean wind speed for every wind
-  turbine according to the Weibull parameters. Default is `FALSE`
+  If `TRUE`, hub-height speed comes from Weibull rasters; `wind$ws` is
+  ignored.
 
-- plotit:
+- park_center:
 
-  If `TRUE`, the process will be plotted. Default is `FALSE`
+  Optional numeric of length 2 (`x`, `y`) used as rotation origin.
+  Computed from the polygon bounding box when missing.
+
+- plot:
+
+  If `TRUE`, the process will be plotted.
 
 ## Value
 
@@ -117,7 +118,7 @@ Other Wind Energy Calculation Functions:
 ## Create a random Polygon
 library(sf)
 #> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -135,11 +136,11 @@ windrosePlot <- plot_windrose(
 
 
 ## Assign the rotor radius and a factor of the radius for grid spacing.
-Rotor <- 50
-fcrR <- 3
+rotor <- 50
+fcr <- 3
 resGrid <- grid_area(
-  shape = Polygon1, size = Rotor * fcrR, prop = 1,
-  plotGrid = TRUE
+  area = area, size = rotor * fcr, prop = 1,
+  plot_grid = TRUE
 )
 
 
@@ -149,24 +150,24 @@ resGrid1 <- resGrid[[1]]
 
 ## Create an initial population with the indexed Grid, 15 turbines and
 ## 100 individuals.
-initpop <- init_population(Grid = resGrid1, n = 15, nStart = 100)
+initpop <- init_population(grid = resGrid1, n = 15, n_start = 100)
 
 ## Calculate the expected energy output of the first individual of the
 ## population.
 par(mfrow = c(1, 2))
-plot(Polygon1)
+plot(area)
 points(initpop[[1]][, "X"], initpop[[1]][, "Y"], pch = 20, cex = 2)
 plot(resGrid[[2]], add = TRUE)
 
 resCalcEn <- calculate_energy(
-  sel = initpop[[1]], referenceHeight = 50,
-  RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-  distanz = 100000, dirSpeed = data.in,
-  RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+  layout = initpop[[1]], reference_height = 50,
+  rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+  wake_distance = 100000, wind = data.in,
+  rotor = 50, area = area, terrain = FALSE,
   weibull = FALSE
 )
 resCalcEn <- as.data.frame(resCalcEn)
-plot(Polygon1, main = resCalcEn[, "Energy_Output_Red"][[1]])
+plot(area, main = resCalcEn[, "Energy_Output_Red"][[1]])
 points(x = resCalcEn[, "Bx"], y = resCalcEn[, "By"], pch = 20)
 
 
@@ -183,10 +184,10 @@ windrosePlot <- plot_windrose(
 ## Calculate the energy outputs for the first individual with more than one
 ## wind direction.
 resCalcEn <- calculate_energy(
-  sel = initpop[[1]], referenceHeight = 50,
-  RotorHeight = 50, SurfaceRoughness = 0.14, wnkl = 20,
-  distanz = 100000, dirSpeed = data.in10,
-  RotorR = 50, polygon1 = Polygon1, topograp = FALSE,
+  layout = initpop[[1]], reference_height = 50,
+  rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
+  wake_distance = 100000, wind = data.in10,
+  rotor = 50, area = area, terrain = FALSE,
   weibull = FALSE
 )
 # }

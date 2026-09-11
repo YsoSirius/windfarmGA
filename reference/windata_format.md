@@ -27,8 +27,6 @@ Other Helper Functions:
 [`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md),
 [`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md),
 [`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md),
-[`readinteger()`](https://YsoSirius.github.io/windfarmGA/reference/readinteger.md),
-[`readintegerSel()`](https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.md),
 [`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md)
 
 ## Examples

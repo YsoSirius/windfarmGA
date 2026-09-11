@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_leaflet</span><span class="op">(</span><span class="va">result</span>, <span class="va">Polygon1</span>, which <span class="op">=</span> <span class="fl">1</span>, orderitems <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">GridPol</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_leaflet</span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span>, orderitems <span class="op">=</span> <span class="cn">TRUE</span>, grid <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -50,9 +50,9 @@
 <dd><p>The output of <code><a href="genetic_algorithm.html">genetic_algorithm</a></code></p></dd>
 
 
-<dt id="arg-polygon-">Polygon1<a class="anchor" aria-label="anchor" href="#arg-polygon-"></a></dt>
-<dd><p>The considered area as SpatialPolygon, SimpleFeature Polygon
-or coordinates as matrix/data.frame</p></dd>
+<dt id="arg-area">area<a class="anchor" aria-label="anchor" href="#arg-area"></a></dt>
+<dd><p>Site polygon (<code>sf</code>, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.</p></dd>
 
 
 <dt id="arg-which">which<a class="anchor" aria-label="anchor" href="#arg-which"></a></dt>
@@ -66,11 +66,10 @@ best performing wind farm.</p></dd>
 ordered by energy values <code>TRUE</code> or chronologically <code>FALSE</code></p></dd>
 
 
-<dt id="arg-gridpol">GridPol<a class="anchor" aria-label="anchor" href="#arg-gridpol"></a></dt>
-<dd><p>By default, the grid will be calculated based on the inputs
-of <code>result</code> and the <code>Polygon1</code>. But another spatial object or the
-output of the  <code><a href="grid_area.html">grid_area</a></code> or <code><a href="hexa_area.html">hexa_area</a></code> functions
-can also be</p></dd>
+<dt id="arg-grid">grid<a class="anchor" aria-label="anchor" href="#arg-grid"></a></dt>
+<dd><p>Optional grid polygons. By default they are rebuilt from
+<code>result</code> and <code>area</code>. You can pass the polygon element of
+<code><a href="grid_area.html">grid_area()</a></code> or <code><a href="hexa_area.html">hexa_area()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -82,26 +81,26 @@ can also be</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co">## Plot the best wind farm on a leaflet map (ordered by energy values)</span></span></span>
-<span class="r-in"><span><span class="fu">plot_leaflet</span><span class="op">(</span>result <span class="op">=</span> <span class="va">resulthex</span>, Polygon1 <span class="op">=</span> <span class="va">sp_polygon</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_leaflet</span><span class="op">(</span>result <span class="op">=</span> <span class="va">resulthex</span>, area <span class="op">=</span> <span class="va">sp_polygon</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Plot the last wind farm (ordered by chronology).</span></span></span>
 <span class="r-in"><span><span class="fu">plot_leaflet</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  result <span class="op">=</span> <span class="va">resulthex</span>, Polygon1 <span class="op">=</span> <span class="va">sp_polygon</span>, orderitems <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  result <span class="op">=</span> <span class="va">resulthex</span>, area <span class="op">=</span> <span class="va">sp_polygon</span>, orderitems <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  which <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Plot the best wind farm on a leaflet map with the rectangular Grid</span></span></span>
 <span class="r-in"><span><span class="va">Grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="grid_area.html">grid_area</a></span><span class="op">(</span><span class="va">sp_polygon</span>, size <span class="op">=</span> <span class="fl">150</span>, prop <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plot_leaflet</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  result <span class="op">=</span> <span class="va">resultrect</span>, Polygon1 <span class="op">=</span> <span class="va">sp_polygon</span>, which <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>  GridPol <span class="op">=</span> <span class="va">Grid</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span>  result <span class="op">=</span> <span class="va">resultrect</span>, area <span class="op">=</span> <span class="va">sp_polygon</span>, which <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  grid <span class="op">=</span> <span class="va">Grid</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Plot the last wind farm with hexagonal Grid</span></span></span>
 <span class="r-in"><span><span class="va">Grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="hexa_area.html">hexa_area</a></span><span class="op">(</span><span class="va">sp_polygon</span>, size <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plot_leaflet</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  result <span class="op">=</span> <span class="va">resulthex</span>, Polygon1 <span class="op">=</span> <span class="va">sp_polygon</span>, which <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>  GridPol <span class="op">=</span> <span class="va">Grid</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span>  result <span class="op">=</span> <span class="va">resulthex</span>, area <span class="op">=</span> <span class="va">sp_polygon</span>, which <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  grid <span class="op">=</span> <span class="va">Grid</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

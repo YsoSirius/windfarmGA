@@ -1,7 +1,11 @@
 # Crossover Method
 
-The crossover method creates new offspring with the selected individuals
-by permutating their genetic codes.
+Legacy binary crossover. The GA loop uses
+[`set_crossover`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md)
+on unique grid-cell IDs instead. This function still permutes 0/1
+chromosomes (EQU/RAN) and typically needs
+[`trimton`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
+afterwards.
 
 ## Usage
 
@@ -13,8 +17,12 @@ crossover(se6, u, uplimit, crossPart = c("EQU", "RAN"), verbose, seed)
 
 - se6:
 
-  The selected individuals. The output of
+  Legacy binary selection: a list with a grid-ID column plus 0/1 layout
+  columns, and a fitness row. Current
   [`selection`](https://YsoSirius.github.io/windfarmGA/reference/selection.md)
+  returns ID matrices; use
+  [`set_crossover`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md)
+  in the GA loop.
 
 - u:
 
@@ -49,6 +57,8 @@ Other Genetic Algorithm Functions:
 [`init_population()`](https://YsoSirius.github.io/windfarmGA/reference/init_population.md),
 [`mutation()`](https://YsoSirius.github.io/windfarmGA/reference/mutation.md),
 [`selection()`](https://YsoSirius.github.io/windfarmGA/reference/selection.md),
+[`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md),
+[`swap_mutation()`](https://YsoSirius.github.io/windfarmGA/reference/swap_mutation.md),
 [`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
 
 ## Examples

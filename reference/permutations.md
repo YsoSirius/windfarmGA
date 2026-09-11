@@ -39,8 +39,6 @@ Other Helper Functions:
 [`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md),
 [`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md),
 [`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md),
-[`readinteger()`](https://YsoSirius.github.io/windfarmGA/reference/readinteger.md),
-[`readintegerSel()`](https://YsoSirius.github.io/windfarmGA/reference/readintegerSel.md),
 [`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md),
 [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
 

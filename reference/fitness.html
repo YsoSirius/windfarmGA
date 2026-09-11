@@ -13,7 +13,7 @@ outputs to a single fitness value for each individual."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">windfarmGA</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">5.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,20 +49,19 @@ outputs to a single fitness value for each individual.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fitness</span><span class="op">(</span></span>
-<span>  <span class="va">selection</span>,</span>
-<span>  <span class="va">referenceHeight</span>,</span>
-<span>  <span class="va">RotorHeight</span>,</span>
-<span>  <span class="va">SurfaceRoughness</span>,</span>
-<span>  <span class="va">Polygon</span>,</span>
-<span>  <span class="va">resol1</span>,</span>
-<span>  <span class="va">rot</span>,</span>
-<span>  <span class="va">dirspeed</span>,</span>
-<span>  <span class="va">srtm_crop</span>,</span>
-<span>  <span class="va">topograp</span>,</span>
-<span>  <span class="va">cclRaster</span>,</span>
-<span>  <span class="va">weibull</span>,</span>
-<span>  <span class="va">Parallel</span>,</span>
-<span>  <span class="va">numCluster</span></span>
+<span>  <span class="va">population</span>,</span>
+<span>  <span class="va">reference_height</span>,</span>
+<span>  <span class="va">rotor_height</span>,</span>
+<span>  <span class="va">surface_roughness</span>,</span>
+<span>  <span class="va">area</span>,</span>
+<span>  <span class="va">rotor</span>,</span>
+<span>  <span class="va">wind</span>,</span>
+<span>  elevation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  terrain <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ccl_raster <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weibull <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  n_cluster <span class="op">=</span> <span class="fl">2</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -70,70 +69,59 @@ outputs to a single fitness value for each individual.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-selection">selection<a class="anchor" aria-label="anchor" href="#arg-selection"></a></dt>
-<dd><p>A list containing all individuals of the current population.</p></dd>
+<dl><dt id="arg-population">population<a class="anchor" aria-label="anchor" href="#arg-population"></a></dt>
+<dd><p>A list of individuals (layouts with X/Y and cell IDs).</p></dd>
 
 
-<dt id="arg-referenceheight">referenceHeight<a class="anchor" aria-label="anchor" href="#arg-referenceheight"></a></dt>
-<dd><p>The height at which the incoming wind speeds were
-measured. Default is <code>RotorHeight</code></p></dd>
+<dt id="arg-reference-height">reference_height<a class="anchor" aria-label="anchor" href="#arg-reference-height"></a></dt>
+<dd><p>Height at which <code>wind$ws</code> was measured.</p></dd>
 
 
-<dt id="arg-rotorheight">RotorHeight<a class="anchor" aria-label="anchor" href="#arg-rotorheight"></a></dt>
-<dd><p>The height of the turbine hub</p></dd>
+<dt id="arg-rotor-height">rotor_height<a class="anchor" aria-label="anchor" href="#arg-rotor-height"></a></dt>
+<dd><p>Hub height in metres.</p></dd>
 
 
-<dt id="arg-surfaceroughness">SurfaceRoughness<a class="anchor" aria-label="anchor" href="#arg-surfaceroughness"></a></dt>
-<dd><p>A surface roughness length in meters.
-With the terrain effect model, a surface roughness is calculated for every
-grid cell using the elevation and land cover data. Default is <code>0.3</code></p></dd>
+<dt id="arg-surface-roughness">surface_roughness<a class="anchor" aria-label="anchor" href="#arg-surface-roughness"></a></dt>
+<dd><p>Roughness length in metres. Per-cell when
+<code>terrain</code> is on.</p></dd>
 
 
-<dt id="arg-polygon">Polygon<a class="anchor" aria-label="anchor" href="#arg-polygon"></a></dt>
-<dd><p>The considered area as shapefile.</p></dd>
+<dt id="arg-area">area<a class="anchor" aria-label="anchor" href="#arg-area"></a></dt>
+<dd><p>Site polygon (<code>sf</code>, SpatialPolygons, or coordinate matrix).
+Must be projected in metres.</p></dd>
 
 
-<dt id="arg-resol-">resol1<a class="anchor" aria-label="anchor" href="#arg-resol-"></a></dt>
-<dd><p>The resolution of the grid in meter.</p></dd>
+<dt id="arg-rotor">rotor<a class="anchor" aria-label="anchor" href="#arg-rotor"></a></dt>
+<dd><p>Rotor radius in metres.</p></dd>
 
 
-<dt id="arg-rot">rot<a class="anchor" aria-label="anchor" href="#arg-rot"></a></dt>
-<dd><p>The desired rotor radius in meter.</p></dd>
+<dt id="arg-wind">wind<a class="anchor" aria-label="anchor" href="#arg-wind"></a></dt>
+<dd><p>Wind data as returned by <code><a href="windata_format.html">windata_format()</a></code> (<code>list(df, probab)</code>).</p></dd>
 
 
-<dt id="arg-dirspeed">dirspeed<a class="anchor" aria-label="anchor" href="#arg-dirspeed"></a></dt>
-<dd><p>The wind data as list.</p></dd>
+<dt id="arg-elevation">elevation<a class="anchor" aria-label="anchor" href="#arg-elevation"></a></dt>
+<dd><p>Terrain list from <code><a href="terrain_model.html">terrain_model()</a></code> (elevation, orography,
+roughness). Unused when <code>terrain</code> is <code>FALSE</code>.</p></dd>
 
 
-<dt id="arg-srtm-crop">srtm_crop<a class="anchor" aria-label="anchor" href="#arg-srtm-crop"></a></dt>
-<dd><p>A list of 3 raster, with 1) the elevation, 2) an orographic
-and 3) a terrain raster. Calculated in <code><a href="genetic_algorithm.html">genetic_algorithm</a></code></p></dd>
+<dt id="arg-terrain">terrain<a class="anchor" aria-label="anchor" href="#arg-terrain"></a></dt>
+<dd><p>Terrain model (elevation + land cover).</p></dd>
 
 
-<dt id="arg-topograp">topograp<a class="anchor" aria-label="anchor" href="#arg-topograp"></a></dt>
-<dd><p>Boolean value, which indicates if the terrain effect model
-should be enabled or not. Default is <code>FALSE</code></p></dd>
-
-
-<dt id="arg-cclraster">cclRaster<a class="anchor" aria-label="anchor" href="#arg-cclraster"></a></dt>
-<dd><p>A Corine Land Cover raster, that has to be adapted
-previously by hand with the surface roughness length for every land cover
-type. Is only used, when the terrain effect model is activated.</p></dd>
+<dt id="arg-ccl-raster">ccl_raster<a class="anchor" aria-label="anchor" href="#arg-ccl-raster"></a></dt>
+<dd><p>Land-cover roughness raster from <code><a href="terrain_model.html">terrain_model()</a></code>.</p></dd>
 
 
 <dt id="arg-weibull">weibull<a class="anchor" aria-label="anchor" href="#arg-weibull"></a></dt>
-<dd><p>A raster representing the estimated wind speeds</p></dd>
+<dd><p>Raster of estimated wind speeds, or <code>FALSE</code>.</p></dd>
 
 
-<dt id="arg-parallel">Parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
-<dd><p>A boolean value, indicating whether parallel processing
-should be used. The <em>parallel</em> and <em>doParallel</em> packages are used for
-parallel processing. Default is <code>FALSE</code></p></dd>
+<dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
+<dd><p>Parallel fitness (<code>parallel</code> + <code>doParallel</code>).</p></dd>
 
 
-<dt id="arg-numcluster">numCluster<a class="anchor" aria-label="anchor" href="#arg-numcluster"></a></dt>
-<dd><p>If <code>Parallel</code> is TRUE, this variable defines the
-number of clusters to be used. Default is <code>2</code></p></dd>
+<dt id="arg-n-cluster">n_cluster<a class="anchor" aria-label="anchor" href="#arg-n-cluster"></a></dt>
+<dd><p>Worker count when <code>parallel</code> is <code>TRUE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -150,6 +138,8 @@ resulting energy outputs, efficiency rates and fitness values.</p>
 <code><a href="init_population.html">init_population()</a></code>,
 <code><a href="mutation.html">mutation()</a></code>,
 <code><a href="selection.html">selection()</a></code>,
+<code><a href="set_crossover.html">set_crossover()</a></code>,
+<code><a href="swap_mutation.html">swap_mutation()</a></code>,
 <code><a href="trimton.html">trimton()</a></code></p></div>
     </div>
 
@@ -158,7 +148,7 @@ resulting energy outputs, efficiency rates and fitness values.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">## Create a random rectangular shapefile</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">Polygon1</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4498482</span>, <span class="fl">4498482</span>, <span class="fl">4499991</span>, <span class="fl">4499991</span>, <span class="fl">4498482</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2668272</span>, <span class="fl">2669343</span>, <span class="fl">2669343</span>, <span class="fl">2668272</span>, <span class="fl">2668272</span><span class="op">)</span></span></span>
@@ -175,17 +165,16 @@ resulting energy outputs, efficiency rates and fitness values.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Calculate a Grid and an indexed data.frame with coordinates and</span></span></span>
 <span class="r-in"><span><span class="co">## grid cell IDs.</span></span></span>
-<span class="r-in"><span><span class="va">Grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="grid_area.html">grid_area</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Polygon1</span>, size <span class="op">=</span> <span class="fl">200</span>, prop <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Grid1</span> <span class="op">&lt;-</span> <span class="fu"><a href="grid_area.html">grid_area</a></span><span class="op">(</span>area <span class="op">=</span> <span class="va">area</span>, size <span class="op">=</span> <span class="fl">200</span>, prop <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">Grid</span> <span class="op">&lt;-</span> <span class="va">Grid1</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">AmountGrids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Grid</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">wind</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">wind</span>, probab <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">startsel</span> <span class="op">&lt;-</span> <span class="fu"><a href="init_population.html">init_population</a></span><span class="op">(</span><span class="va">Grid</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fitness</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  selection <span class="op">=</span> <span class="va">startsel</span>, referenceHeight <span class="op">=</span> <span class="fl">100</span>, RotorHeight <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>  SurfaceRoughness <span class="op">=</span> <span class="fl">0.3</span>, Polygon <span class="op">=</span> <span class="va">Polygon1</span>, resol1 <span class="op">=</span> <span class="fl">200</span>, rot <span class="op">=</span> <span class="fl">20</span>,</span></span>
-<span class="r-in"><span>  dirspeed <span class="op">=</span> <span class="va">wind</span>, srtm_crop <span class="op">=</span> <span class="st">""</span>, topograp <span class="op">=</span> <span class="cn">FALSE</span>, cclRaster <span class="op">=</span> <span class="st">""</span>,</span></span>
-<span class="r-in"><span>  Parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span>  population <span class="op">=</span> <span class="va">startsel</span>, reference_height <span class="op">=</span> <span class="fl">100</span>, rotor_height <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>  surface_roughness <span class="op">=</span> <span class="fl">0.3</span>, area <span class="op">=</span> <span class="va">area</span>, rotor <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>  wind <span class="op">=</span> <span class="va">wind</span>, terrain <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

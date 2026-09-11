@@ -6,7 +6,7 @@ save them to a list.
 ## Usage
 
 ``` r
-turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE)
+turbine_influences(t, wnkl, dist, area, dirct, plot_angles = FALSE)
 ```
 
 ## Arguments
@@ -17,25 +17,24 @@ turbine_influences(t, wnkl, dist, polYgon, dirct, plotAngles = FALSE)
 
 - wnkl:
 
-  The angle from which wake influences are considered to be negligible
+  Wake opening angle in degrees. Turbines outside this cone are ignored.
 
 - dist:
 
   A numeric value indicating the distance, after which the wake effects
   are considered to be eliminated.
 
-- polYgon:
+- area:
 
-  A shapefile representing the considered area
+  Site polygon
 
 - dirct:
 
-  A numeric value indicating the current wind direction
+  Current wind direction
 
-- plotAngles:
+- plot_angles:
 
-  A logical variable, which is used to plot the distances and angles.
-  Default is `FALSE`
+  Plot distances and angles
 
 ## Value
 
@@ -58,7 +57,7 @@ Other Wind Energy Calculation Functions:
 ## Exemplary input Polygon with 2km x 2km:
 library(sf)
 
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(0, 0, 2000, 2000, 0),
     c(0, 2000, 2000, 0, 0)
@@ -66,13 +65,13 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
   crs = 3035
 ))
 
-t <- st_coordinates(st_sample(Polygon1, 10))
+t <- st_coordinates(st_sample(area, 10))
 t <- cbind(t, "Z" = 1)
 wnkl <- 20
 dist <- 100000
 dirct <- 0
 
-res <- turbine_influences(t, wnkl, dist, Polygon1, dirct, plotAngles = TRUE)
+res <- turbine_influences(t, wnkl, dist, area, dirct, plot_angles = TRUE)
 
 
 

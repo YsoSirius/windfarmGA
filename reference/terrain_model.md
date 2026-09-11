@@ -1,4 +1,4 @@
-# Get topographic rasters
+# Get terrainhic rasters
 
 Calculate the SpatRasters needed for the terrain model.
 
@@ -6,47 +6,41 @@ Calculate the SpatRasters needed for the terrain model.
 
 ``` r
 terrain_model(
-  topograp = TRUE,
-  Polygon1,
-  sourceCCL,
-  sourceCCLRoughness,
-  plotit = FALSE,
+  terrain = TRUE,
+  area,
+  ccl,
+  ccl_roughness,
+  plot = FALSE,
   verbose = FALSE
 )
 ```
 
 ## Arguments
 
-- topograp:
+- terrain:
 
-  Boolean value, which indicates if the terrain effect model should be
-  enabled or not. Default is `FALSE`
+  Terrain model (elevation + land cover).
 
-- Polygon1:
+- area:
 
-  The considered area as SpatialPolygon, SimpleFeature Polygon or
-  coordinates as matrix/data.frame
+  Site polygon (`sf`, SpatialPolygons, or coordinate matrix). Must be
+  projected in metres.
 
-- sourceCCL:
+- ccl:
 
-  The path to the Corine Land Cover raster (.tif). Only required when
-  the terrain effect model is activated.
+  Path to a Corine Land Cover raster when `terrain` is on.
 
-- sourceCCLRoughness:
+- ccl_roughness:
 
-  The source to the adapted Corine Land Cover legend as .csv file. Only
-  required when terrain effect model is activated. As default a .csv
-  file within this package (`~/extdata`) is taken that was already
-  adapted manually.
+  Path to the CLC legend CSV (`Rauhigkeit_z` column).
 
-- plotit:
+- plot:
 
-  Plots the elevation data
+  Plot the elevation and roughness rasters
 
 - verbose:
 
-  If TRUE it will print information for every generation. Default is
-  `FALSE`
+  Print a line per generation.
 
 ## Value
 
@@ -57,15 +51,15 @@ A list of SpatRasters
 ``` r
 if (FALSE) { # \dontrun{
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4651704, 4651704, 4654475, 4654475, 4651704),
     c(2692925, 2694746, 2694746, 2692925, 2692925)
   ))),
   crs = 3035
 ))
-Polygon_wgs84 <- sf::st_transform(Polygon1, st_crs(4326))
+Polygon_wgs84 <- sf::st_transform(area, st_crs(4326))
 srtm <- elevatr::get_elev_raster(locations = Polygon_wgs84, z = 11)
-res <- terrain_model(srtm, Polygon1)
+res <- terrain_model(srtm, area)
 } # }
 ```

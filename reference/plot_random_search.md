@@ -8,7 +8,7 @@ and
 ## Usage
 
 ``` r
-plot_random_search(resultRS, result, Polygon1, best)
+plot_random_search(resultRS, result, area, best)
 ```
 
 ## Arguments
@@ -25,10 +25,10 @@ plot_random_search(resultRS, result, Polygon1, best)
   The output of
   [`genetic_algorithm`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
 
-- Polygon1:
+- area:
 
-  The considered area as SpatialPolygon, SimpleFeature Polygon or
-  coordinates as matrix/data.frame
+  Site polygon (`sf`, SpatialPolygons, or coordinate matrix). Must be
+  projected in metres.
 
 - best:
 
@@ -49,7 +49,7 @@ Other Randomization:
 ``` r
 # \donttest{
 library(sf)
-Polygon1 <- sf::st_as_sf(sf::st_sfc(
+area <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
     c(2668272, 2669343, 2669343, 2668272, 2668272)
@@ -57,8 +57,8 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
   crs = 3035
 ))
 
-Res <- random_search(result = resultrect, Polygon1 = Polygon1)
-plot_random_search(resultRS = Res, result = resultrect, Polygon1 = Polygon1, best = 2)
+Res <- random_search(result = resultrect, area = area)
+plot_random_search(resultRS = Res, result = resultrect, area = area, best = 2)
 
 
 
