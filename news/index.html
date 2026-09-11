@@ -48,7 +48,12 @@
 </ul></div>
 <div class="section level3">
 <h3 id="fixes-5-0-0">Fixes<a class="anchor" aria-label="anchor" href="#fixes-5-0-0"></a></h3>
-<ul><li>pkgdown reference lists the new exports (<code>as_windfarmGA</code>, <code>explore_result</code>, <code>ga_options</code>, <code>generation_layouts</code>, <code>population_census</code>, <code>set_crossover</code>, <code>swap_mutation</code>). <code><a href="../reference/plot_power_curve.html">plot_power_curve()</a></code> Rd no longer uses <code>\cdot</code>. <code>plots.R</code> is ASCII-only. ggplot aesthetics are in <code>globalVariables</code>. Rd documents <code>wnkl</code>, <code>trimForce</code> and <code>plot_fitness_evolution(interactive)</code>.</li>
+<ul><li>
+<code>ga_options(...)</code> is silent when setting; only <code><a href="../reference/ga_options.html">ga_options()</a></code> prints the table. The climate-helper demo no longer dumps options twice.</li>
+<li>
+<code><a href="../reference/plot_windrose.html">plot_windrose()</a></code> explains the ggplot2-4 / old-systemfonts clash (<code>font_info(..., weight=)</code>). Update with <code>install.packages("systemfonts")</code>.</li>
+<li>With <code>elitism = FALSE</code>, <code>nindiv$cells_elite</code> is 0 instead of <code>NA</code>. The GA input tests treat any <code>NA</code> in the result as a failure.</li>
+<li>pkgdown reference lists the new exports (<code>as_windfarmGA</code>, <code>explore_result</code>, <code>ga_options</code>, <code>generation_layouts</code>, <code>population_census</code>, <code>set_crossover</code>, <code>swap_mutation</code>). <code><a href="../reference/plot_power_curve.html">plot_power_curve()</a></code> Rd no longer uses <code>\cdot</code>. <code>plots.R</code> is ASCII-only. ggplot aesthetics are in <code>globalVariables</code>. Rd documents <code>wnkl</code>, <code>trimForce</code> and <code>plot_fitness_evolution(interactive)</code>.</li>
 <li>
 <code>experimental/draw_shape()</code> uses <code>mapedit::editMap(..., editor = "leafpm")</code>. mapedit 0.8 dropped leaflet.extras (off CRAN); older mapedit still calls <code><a href="https://dplyr.tidyverse.org/reference/defunct-lazyeval.html" class="external-link">dplyr::select_()</a></code>, which current dplyr rejects.</li>
 <li>Power-curve energy was the first turbine’s kW (often rated power and 100% efficiency), not the park sum. <code>energy_calc_CPP</code> already summed; table lookup now does the same. Cut-in / rated / cut-out apply only when no table is set (as documented). On the rated plateau, wakes may still leave every turbine at rated power — then layouts look identical and the GA cannot improve energy. Use hub wind in the rising part of the curve.</li>
@@ -75,7 +80,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="features-5-0-0">Features<a class="anchor" aria-label="anchor" href="#features-5-0-0"></a></h3>
-<ul><li>Combinatorial genome: each individual is <code>n</code> unique grid-cell IDs, not a 0/1 string over all cells. <code>genetic_algorithm</code> now runs <code>selection</code> → <code>set_crossover</code> → <code>swap_mutation</code> → <code>get_grids</code> → <code>fitness</code>. <code>trimton</code> is no longer in the loop (always exactly <code>n</code> turbines).</li>
+<ul><li>Wind-climate helpers (no extra Suggests): <code><a href="../reference/wind_from_uv.html">wind_from_uv()</a></code> bins ERA5-style u/v into <code>ws</code>/<code>wd</code>/<code>probab</code>; <code><a href="../reference/wind_from_series.html">wind_from_series()</a></code> does the same from a mast time series; <code><a href="../reference/read_power_curve.html">read_power_curve()</a></code> parses NREL/IEA CSVs (<code>Wind Speed [m/s]</code>, <code>Power [kW]</code>, optional <code>Ct</code>). Wrappers for bReeze, ecmwfr/mcera5 and <code>nrel_fetch_curve()</code> live in <code>experimental/climate_helpers.R</code> (plus <code>gwa_download_country()</code> for Global Wind Atlas country GeoTIFFs). <code>wind_from_era5()</code> accepts the list from <code>get_era5_wind()</code> (<code>experimental/download_ERA5_historic.R</code>) or its <code>$hourly</code> table with <code>u100</code>/<code>v100</code>. Downloads go to a unique folder under <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code> unless <code>out_dir</code> is set. The helper walkthrough is local: <code>source("_experiment/test_climate_helpers.R"); test_climate_helpers()</code>. Profile <code><a href="../reference/calculate_energy.html">calculate_energy()</a></code> with <code>experimental/profile_energy.R</code>. The README has an end-to-end example: draw a site, pick an IEA/NREL turbine (<a href="https://natlabrockies.github.io/turbine-models/" class="external-link">NREL archive</a>), build a wind rose from u/v, optimize, plot.</li>
+<li>Combinatorial genome: each individual is <code>n</code> unique grid-cell IDs, not a 0/1 string over all cells. <code>genetic_algorithm</code> now runs <code>selection</code> → <code>set_crossover</code> → <code>swap_mutation</code> → <code>get_grids</code> → <code>fitness</code>. <code>trimton</code> is no longer in the loop (always exactly <code>n</code> turbines).</li>
 <li>
 <code><a href="../reference/plot_windfarmGA.html">plot_windfarmGA()</a></code>, <code><a href="../reference/plot_parkfitness.html">plot_parkfitness()</a></code>, <code><a href="../reference/plot_population.html">plot_population()</a></code> and <code><a href="../reference/plot_generation.html">plot_generation()</a></code> wait for Enter between every page in an interactive session (Plots pane, so pages are not overwritten). plotly is only used when <code>ask = FALSE</code>. <code><a href="../reference/plot_population.html">plot_population()</a></code> has a bottom legend, an elite cell-count line (the population can sit at the full grid size, e.g. 70, while elites shrink), and a park-efficiency page.</li>
 <li>
@@ -105,6 +111,9 @@
 <li>Callers that piped <code><a href="../reference/selection.html">selection()</a></code> into <code><a href="../reference/crossover.html">crossover()</a></code> must convert IDs to binary or switch to <code><a href="../reference/set_crossover.html">set_crossover()</a></code>.</li>
 <li>Tune <code>iteration</code> as the real runtime budget. <code>stall_generations</code> now only fires when the search is idle (no new layouts/cells), not when the record is merely flat. If rates freeze at the refine floor while the max still creeps, the disturbance pulse should lift them; shorten <code>windfarmGA.refine_hold</code> or lengthen <code>explore_pulse</code> if it still feels stuck. Local search now slides to a neighbour cell.</li>
 <li>Spatial EQU/RAN crossover is unused; set-crossover can use a half-plane split when coordinates are passed.</li>
+<li>
+<code>windfarmGA.fitness_efficiency_weight</code> is a user preference, not a search parameter. Default <code>w = 1</code> is un-tuned. Try <code>0</code> (energy only) vs <code>1</code> vs <code>2</code> on the same site if wake vs yield trade-off matters.</li>
+<li>ERA5 / Copernicus (<code>COPERNICUS_CLIMATE_DATA</code>) stays for the directional rose only. Spatial mean speed should come from GWA Weibull A/k (<code>gwa_download_country()</code>), not the ERA5 grid.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="ideas-5-0-0">Ideas<a class="anchor" aria-label="anchor" href="#ideas-5-0-0"></a></h3>
@@ -112,6 +121,10 @@
 <li>Pin or document ggplot2 compatibility in <code>Suggests</code> if further S7 class cleanup removes the legacy <code>"ggplot"</code> S3 class.</li>
 <li>Noise (ISO 9613) and rayshader 3D stay experimental / local; do not add them to Suggests.</li>
 <li>With a manufacturer curve, run the GA at hub winds in the rising part (or a Weibull climate), not only on the rated plateau.</li>
+<li>
+<code><a href="../reference/calculate_energy.html">calculate_energy()</a></code> is about 0.05 s per call for 15 turbines and 12 directions. ~60% is <code>turbine_influences</code> / <code>get_dist_angles</code> (R loops, <code>subset.matrix</code>, <code>lapply</code>). <code>energy_calc_CPP</code> does not show up. Next speed-up is that inner loop in Rcpp; more <code>n_cluster</code> only helps a large population.</li>
+<li>Optional Bastankhah wake beside Jensen (<code>ga_options(wake_model)</code>).</li>
+<li>Use GWA <code>air-density</code> over the site for <code>windfarmGA.air_rh</code> instead of the ISA default 1.225.</li>
 </ul></div>
 </div>
     <div class="section level2">

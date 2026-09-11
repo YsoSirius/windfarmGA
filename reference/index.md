@@ -120,6 +120,12 @@ Main components of the genetic algorithm
   : Polygon to Hexagonal Grids
 - [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
   : Transform Winddata
+- [`wind_from_uv()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.md)
+  : Wind rose from u/v components
+- [`wind_from_series()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.md)
+  : Wind rose from speed and direction series
+- [`read_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/read_power_curve.md)
+  : Read a manufacturer or NREL/IEA power-curve table
 - [`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md)
   : Transform to Simple Feature Polygons
 - [`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md)

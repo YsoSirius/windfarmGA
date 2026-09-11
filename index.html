@@ -68,14 +68,14 @@
 <h1 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h1>
 <p>The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction. It can include a terrain effect model, which requires an elevation raster and a surface roughness raster. The elevation data is used to find mountains and valleys and to adjust the wind speeds accordingly by ‘wind multipliers’ and to determine the air densities at rotor heights. The surface roughness raster with an additional elevation roughness value is used to re-evaluate the surface roughness and to individually determine the wake-decay constant for each turbine.</p>
-<p>To start an optimization use the function <code>genetic_algorithm</code>.</p>
+<p>To start an optimization use the function <code>genetic_algorithm</code>. A complete path — draw a site, pick an open IEA/NREL turbine, turn u/v or mast data into a rose, then optimize and plot — is in <a href="#realistic-workflow-site-turbine-wind">Realistic workflow</a>.</p>
 <div>
 <p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;"></p>
 </div>
 <div>
 <p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 100%;display: inline-block;"></p>
 </div>
-<p>Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. Furthermore, rasters can be included, which contain information on the Weibull parameters. For Austria this data is already included in the package.</p>
+<p>Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. Furthermore, rasters can be included, which contain information on the Weibull parameters (shape <code>k</code>, scale <code>a</code>). Country GeoTIFFs from the <a href="https://globalwindatlas.info/" class="external-link">Global Wind Atlas</a> (~250 m) are a good source; see <code>gwa_download_country()</code> in <code>experimental/climate_helpers.R</code>.</p>
 <div class="section level2">
 <h2 id="create-an-input-polygon">Create an input Polygon<a class="anchor" aria-label="anchor" href="#create-an-input-polygon"></a>
 </h2>
@@ -100,6 +100,13 @@
 <span>  crs <span class="op">=</span> <span class="fl">3035</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">area</span>, col <span class="op">=</span> <span class="st">"blue"</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<ul>
+<li>Or draw a site on a map (GitHub clone; needs <code>leaflet</code>, <code>mapedit</code> &gt;= 0.8, <code>leafpm</code>)</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/draw_shape.R"</span><span class="op">)</span></span>
+<span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">draw_shape</span><span class="op">(</span><span class="op">)</span>   <span class="co"># draw a polygon, then close the viewer</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">area</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="create-random-wind-data">Create random Wind data<a class="anchor" aria-label="anchor" href="#create-random-wind-data"></a>
@@ -107,14 +114,14 @@
 <ul>
 <li>Exemplary input Wind data with <em>uniform</em> wind speed and <em>single</em> wind direction</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wind_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ws <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">12</span><span class="op">)</span>, wd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, probab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">windrosePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/plot_windrose.html">plot_windrose</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">wind_df</span>, spd <span class="op">=</span> <span class="va">wind_df</span><span class="op">$</span><span class="va">ws</span>,</span>
 <span>                              dir <span class="op">=</span> <span class="va">wind_df</span><span class="op">$</span><span class="va">wd</span>, dirres<span class="op">=</span><span class="fl">10</span>, spdmax <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>Exemplary input Wind data with <em>random</em> wind speeds and <em>random</em> wind directions</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wind_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ws <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span>, <span class="fl">10</span><span class="op">)</span>, wd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">260</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">windrosePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/plot_windrose.html">plot_windrose</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">wind_df</span>, spd <span class="op">=</span> <span class="va">wind_df</span><span class="op">$</span><span class="va">ws</span>,</span>
 <span>                              dir <span class="op">=</span> <span class="va">wind_df</span><span class="op">$</span><span class="va">wd</span><span class="op">)</span></span></code></pre></div>
@@ -127,7 +134,7 @@
 </h3>
 <p>Verify that the grid spacing is appropriate. Adapt the following input variables if necessary: - <em>rotor</em>: The rotor radius in meters. - <em>fcr</em>: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter. - <em>prop</em>: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.</p>
 <p><em>Make sure that the Polygon is projected in meters.</em></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Rotor</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">fcr</span> <span class="op">&lt;-</span> <span class="fl">9</span></span>
 <span><span class="va">Grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_area.html">grid_area</a></span><span class="op">(</span><span class="va">area</span>, size <span class="op">=</span> <span class="op">(</span><span class="va">Rotor</span> <span class="op">*</span> <span class="va">fcr</span><span class="op">)</span>, prop <span class="op">=</span> <span class="fl">1</span>, plot_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -136,7 +143,7 @@
 <div class="section level3">
 <h3 id="hexagonal-grid-cells">Hexagonal Grid Cells<a class="anchor" aria-label="anchor" href="#hexagonal-grid-cells"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Rotor</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">fcr</span> <span class="op">&lt;-</span> <span class="fl">9</span></span>
 <span><span class="va">HexGrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hexa_area.html">hexa_area</a></span><span class="op">(</span><span class="va">area</span>, size <span class="op">=</span> <span class="op">(</span><span class="va">Rotor</span> <span class="op">*</span> <span class="va">fcr</span><span class="op">)</span>, plot_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -152,13 +159,69 @@
 <p>If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable <strong>ccl</strong>. The algorithm uses an adapted version of the Raster legend (“clc_legend.csv”), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named <strong>Rauhigkeit_z</strong> to the .csv file. Assign a surface roughness length to all land cover types. Be sure that all rows are filled with numeric values and save the .csv file with “;” delimiter. Assign the .csv file path to the input variable <strong>ccl_roughness</strong>.</p>
 </div>
 <div class="section level2">
+<h2 id="realistic-workflow-site-turbine-wind">Realistic workflow (site, turbine, wind)<a class="anchor" aria-label="anchor" href="#realistic-workflow-site-turbine-wind"></a>
+</h2>
+<p>Clone the GitHub repo so <code>experimental/</code> is available (it is not in the CRAN tarball). Browse open reference turbines at the <a href="https://natlabrockies.github.io/turbine-models/" class="external-link">NREL Turbine Archive</a> (IEA 3.4 / 10 / 15 MW and NREL 5 MW are the best documented).</p>
+<p>ERA5 / Copernicus (env <code>COPERNICUS_CLIMATE_DATA</code>) is useful as a <strong>directional rose</strong> over time (<code>u10</code>/<code>v10</code> → <code>wind_from_era5()</code>), but the grid is too coarse (~31 km) as a spatial wind field for siting. For mean speed per cell use Global Wind Atlas Weibull rasters (<code>weibull = TRUE</code>, <code>weibull_src = list(k, a)</code>). Hub-height correction uses <code>reference_height</code> (10 m for ERA5) and <code>rotor_height</code> from the turbine.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ysosirius.github.io/windfarmGA/index.html" class="external-link">windfarmGA</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/draw_shape.R"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/climate_helpers.R"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 1. Site: draw a polygon (or st_read a shapefile)</span></span>
+<span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">draw_shape</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">area</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 2. Turbine: IEA 3.4 MW, 130 m rotor, 110 m hub</span></span>
+<span><span class="fu">nrel_curve_catalog</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">curve</span> <span class="op">&lt;-</span> <span class="fu">nrel_fetch_curve</span><span class="op">(</span><span class="st">"IEA_3.4MW_130"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_power_curve.html">plot_power_curve</a></span><span class="op">(</span><span class="va">curve</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/ga_options.html">ga_options</a></span><span class="op">(</span>power_curve <span class="op">=</span> <span class="va">curve</span><span class="op">)</span></span>
+<span><span class="va">rotor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">curve</span>, <span class="st">"rotor"</span><span class="op">)</span>           <span class="co"># radius in metres</span></span>
+<span><span class="va">hub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">curve</span>, <span class="st">"rotor_height"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 3. Wind rose: hourly u/v (east, north) -&gt; ws / wd / probab</span></span>
+<span><span class="co">##    Real ERA5: wind &lt;- wind_from_era5(era5_df)</span></span>
+<span><span class="co">##    Spatial field (GWA ~250 m): gwa &lt;- gwa_download_country("AUT", 100)</span></span>
+<span><span class="co">##    then genetic_algorithm(..., weibull = TRUE, weibull_src = gwa$weibull_src)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">24</span> <span class="op">*</span> <span class="fl">365</span></span>
+<span><span class="va">u</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">2.5</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="op">-</span><span class="fl">1.5</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">wind</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wind_from_uv.html">wind_from_uv</a></span><span class="op">(</span><span class="va">u</span>, <span class="va">v</span>, dir_width <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_windrose.html">plot_windrose</a></span><span class="op">(</span><span class="va">wind</span>, spd <span class="op">=</span> <span class="st">"ws"</span>, dir <span class="op">=</span> <span class="st">"wd"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 4. Optimize: keep hub wind in the rising part of the curve</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/genetic_algorithm.html">genetic_algorithm</a></span><span class="op">(</span></span>
+<span>  area <span class="op">=</span> <span class="va">area</span>,</span>
+<span>  wind <span class="op">=</span> <span class="va">wind</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">12</span>,</span>
+<span>  rotor <span class="op">=</span> <span class="va">rotor</span>,</span>
+<span>  rotor_height <span class="op">=</span> <span class="va">hub</span>,</span>
+<span>  reference_height <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  fcr <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  iteration <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 5. Plot</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_result.html">plot_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_parkfitness.html">plot_parkfitness</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/explore_result.html">explore_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span></code></pre></div>
+<p>The helper walkthrough lives locally (gitignored): <code>source("_experiment/test_climate_helpers.R"); test_climate_helpers()</code>.</p>
+</div>
+<div class="section level2">
 <h2 id="start-an-optimization">Start an Optimization<a class="anchor" aria-label="anchor" href="#start-an-optimization"></a>
 </h2>
 <p>An optimization can be initiated with the function <strong>genetic_algorithm</strong>. Search knobs that are not function arguments are session options (<code>options(windfarmGA.*)</code>); see <a href="#options">Options</a>.</p>
 <ul>
 <li>without terrain effects</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/genetic_algorithm.html">genetic_algorithm</a></span><span class="op">(</span></span>
 <span>  area <span class="op">=</span> <span class="va">area</span>, n <span class="op">=</span> <span class="fl">12</span>, rotor <span class="op">=</span> <span class="fl">20</span>, fcr <span class="op">=</span> <span class="fl">9</span>, iteration <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  wind <span class="op">=</span> <span class="va">wind_df</span>, rotor_height <span class="op">=</span> <span class="fl">100</span></span>
@@ -166,7 +229,7 @@
 <ul>
 <li>with terrain effects</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ccl</span> <span class="op">&lt;-</span> <span class="st">"Source of the CCL raster (TIF)"</span></span>
 <span><span class="va">ccl_roughness</span> <span class="op">&lt;-</span> <span class="st">"Source of the Adapted CCL legend (CSV)"</span></span>
 <span></span>
@@ -175,19 +238,15 @@
 <span>  wind <span class="op">=</span> <span class="va">wind_df</span>, rotor_height <span class="op">=</span> <span class="fl">100</span>, terrain <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  ccl <span class="op">=</span> <span class="va">ccl</span>, ccl_roughness <span class="op">=</span> <span class="va">ccl_roughness</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Run an optimization with your own Weibull parameter rasters. The shape and scale</span></span>
-<span><span class="co">## parameter rasters of the weibull distributions must be added to a list, with the first</span></span>
-<span><span class="co">## list item being the shape parameter (k) and the second list item being the scale</span></span>
-<span><span class="co">## parameter (a). Adapt the paths to your raster data and run an optimization.</span></span>
-<span><span class="va">kraster</span> <span class="op">&lt;-</span> <span class="st">"/..pathto../k_param_raster.tif"</span></span>
-<span><span class="va">araster</span> <span class="op">&lt;-</span> <span class="st">"/..pathto../a_param_raster.tif"</span></span>
-<span><span class="va">weibullrasters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">kraster</span><span class="op">)</span>, <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">araster</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Spatial mean speed from Global Wind Atlas (shape k, scale A).</span></span>
+<span><span class="co">## wind$ws is then ignored; wind$wd / wind$probab still weight directions.</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/climate_helpers.R"</span><span class="op">)</span></span>
+<span><span class="va">gwa</span> <span class="op">&lt;-</span> <span class="fu">gwa_download_country</span><span class="op">(</span><span class="st">"AUT"</span>, height <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">result_weibull</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/genetic_algorithm.html">genetic_algorithm</a></span><span class="op">(</span></span>
 <span>  area <span class="op">=</span> <span class="va">area</span>, grid_method <span class="op">=</span> <span class="st">"h"</span>, n <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  fcr <span class="op">=</span> <span class="fl">5</span>, iteration <span class="op">=</span> <span class="fl">10</span>, wind <span class="op">=</span> <span class="va">wind_df</span>, rotor <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>  rotor_height <span class="op">=</span> <span class="fl">100</span>, weibull <span class="op">=</span> <span class="cn">TRUE</span>, weibull_src <span class="op">=</span> <span class="va">weibullrasters</span></span>
+<span>  rotor_height <span class="op">=</span> <span class="fl">100</span>, weibull <span class="op">=</span> <span class="cn">TRUE</span>, weibull_src <span class="op">=</span> <span class="va">gwa</span><span class="op">$</span><span class="va">weibull_src</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_windfarmGA.html">plot_windfarmGA</a></span><span class="op">(</span>result <span class="op">=</span> <span class="va">result_weibull</span>, area <span class="op">=</span> <span class="va">area</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -196,7 +255,7 @@
 <h1 id="options">Options<a class="anchor" aria-label="anchor" href="#options"></a>
 </h1>
 <p>There are two layers. Arguments of <code><a href="reference/genetic_algorithm.html">genetic_algorithm()</a></code> describe the site, the turbines and which GA pieces to use. Session options <code>options(windfarmGA.*)</code> control physics constants and the memetic search (inject, immigrants, seasons, neighbour local search). Set them <strong>before</strong> the run; they apply for the whole R session until you change them again.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/ga_options.html">ga_options</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/ga_options.html">ga_options</a></span><span class="op">(</span>immigrants <span class="op">=</span> <span class="fl">3</span>, local_search_elites <span class="op">=</span> <span class="fl">5</span>, local_search_tries <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <p>The north-wind benchmark and why these search defaults exist are in <a href="inst/reports/memetic-layout-ga.html">inst/reports/memetic-layout-ga.md</a>.</p>
@@ -316,9 +375,9 @@
 </tr>
 <tr>
 <td><code>weibull_src</code></td>
-<td>Austria rasters</td>
+<td><code>NULL</code></td>
 <td>
-<code>list(k, a)</code> shape and scale rasters. Package data cover Austria only.</td>
+<code>list(k, a)</code> shape and scale rasters (e.g. GWA <code>combined-Weibull-k</code> / <code>combined-Weibull-A</code>).</td>
 </tr>
 </tbody>
 </table>
@@ -452,12 +511,12 @@
 <tr>
 <td><code>windfarmGA.power_curve</code></td>
 <td><code>NULL</code></td>
-<td>Optional <code>data.frame(ws, power)</code> in kW. Park energy is the sum of interpolated turbine kW (not Cp * v^3). On the rated plateau, wakes may not change power. See <code><a href="reference/plot_power_curve.html">plot_power_curve()</a></code>.</td>
+<td>Optional <code>data.frame(ws, power)</code> in kW. Park energy is the sum of interpolated turbine kW (not Cp * v^3). On the rated plateau, wakes may not change power. Build a table with <code><a href="reference/read_power_curve.html">read_power_curve()</a></code> or <code><a href="reference/plot_power_curve.html">plot_power_curve()</a></code>. ERA5 u/v: <code><a href="reference/wind_from_uv.html">wind_from_uv()</a></code>.</td>
 </tr>
 <tr>
 <td><code>windfarmGA.fitness_efficiency_weight</code></td>
 <td><code>1</code></td>
-<td>Exponent (w) on park efficiency. <code>0</code> optimises energy only.</td>
+<td>Preference weight (w): fitness is (E (/100)^w). <code>0</code> = energy only; <code>&gt;1</code> punishes wake more. Not auto-tuned.</td>
 </tr>
 <tr>
 <td><code>windfarmGA.max_angle</code></td>
@@ -650,7 +709,7 @@
 </h1>
 <p>A result from <code><a href="reference/genetic_algorithm.html">genetic_algorithm()</a></code> has class <code>windfarmGA</code>: <code>print(result)</code> summarises the run, <code>plot(result, area)</code> is <code><a href="reference/plot_windfarmGA.html">plot_windfarmGA()</a></code>, and <code>explore_result(result, area)</code> opens a one-page Shiny viewer with a Leaflet map of the best layout and a plotly figure (fitness, rates, population; click a New max marker to jump to that generation). (Suggests: shiny, leaflet, plotly).</p>
 <p><code><a href="reference/plot_windfarmGA.html">plot_windfarmGA()</a></code> pages through the best layout, fitness and operator rates, the population census, and the cell heatmap. In an interactive session each page waits for Enter. Plotly hover is used only with <code>ask = FALSE</code> when the plotly package is installed.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/explore_result.html">explore_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
@@ -676,7 +735,7 @@
 <div class="section level1">
 <h1 id="full-optimization-example">Full Optimization example:<a class="anchor" aria-label="anchor" href="#full-optimization-example"></a>
 </h1>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ysosirius.github.io/windfarmGA/index.html" class="external-link">windfarmGA</a></span><span class="op">)</span></span>
 <span></span>

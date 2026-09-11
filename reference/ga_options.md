@@ -14,7 +14,7 @@ ga_options(...)
 - ...:
 
   Named options to set, or a single named list. With no arguments, print
-  the current values and return them invisibly.
+  the current values and return them invisibly. Setting is silent.
 
 ## Value
 

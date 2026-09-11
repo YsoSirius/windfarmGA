@@ -125,7 +125,8 @@ genetic_algorithm(
 
 - weibull_src:
 
-  `list(k, a)` shape and scale rasters. Package data cover Austria.
+  `list(k, a)` shape and scale rasters (e.g. Global Wind Atlas
+  `combined-Weibull-k` / `combined-Weibull-A`).
 
 - parallel:
 

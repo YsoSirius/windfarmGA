@@ -45,6 +45,7 @@
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/population_census.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/random_search.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/random_search_single.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/read_power_curve.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/resulthex.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/resultrect.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/selection.html</loc></url>
@@ -55,6 +56,8 @@
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/terrain_model.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/trimton.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.html</loc></url>
+<url><loc>https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/windata_format.html</loc></url>
 <url><loc>https://YsoSirius.github.io/windfarmGA/reference/windfarmGA-package.html</loc></url>
 </urlset>
