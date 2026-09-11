@@ -2,9 +2,9 @@
 
 Bin ERA5-style eastward (`u`) and northward (`v`) wind components into
 the `ws` / `wd` / `probab` table that
-[`windata_format`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
+[`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
 and
-[`genetic_algorithm`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
+[`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
 expect. Direction is meteorological (where the wind comes from; 0 =
 north). Each direction bin gets the mean speed and the hour share.
 
@@ -35,8 +35,14 @@ A data.frame with `ws`, `wd`, `probab` (probabilities sum to 100).
 ## See also
 
 Other Helper Functions:
-[`wind_from_series()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.md),
+[`get_grids()`](https://YsoSirius.github.io/windfarmGA/reference/get_grids.md),
+[`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md),
+[`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md),
+[`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md),
+[`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md),
 [`read_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/read_power_curve.md),
+[`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md),
+[`wind_from_series()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.md),
 [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
 
 ## Examples

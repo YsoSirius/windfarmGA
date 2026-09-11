@@ -42,7 +42,18 @@ optimize the output of the wind farm layout.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">random_search_single</span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, n <span class="op">=</span> <span class="fl">20</span>, plot <span class="op">=</span> <span class="cn">FALSE</span>, max_dist <span class="op">=</span> <span class="fl">2.2</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">random_search_single</span><span class="op">(</span></span>
+<span>  <span class="va">result</span>,</span>
+<span>  <span class="va">area</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max_dist <span class="op">=</span> <span class="fl">2.2</span>,</span>
+<span>  terrain <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weibull <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weibull_src <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ccl <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ccl_roughness <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -69,6 +80,31 @@ Must be projected in metres.</p></dd>
 <dt id="arg-max-dist">max_dist<a class="anchor" aria-label="anchor" href="#arg-max-dist"></a></dt>
 <dd><p>A numeric value multiplied by the rotor radius to perform
 collision checks. Default is 2.2</p></dd>
+
+
+<dt id="arg-terrain">terrain<a class="anchor" aria-label="anchor" href="#arg-terrain"></a></dt>
+<dd><p><code>NULL</code> follows the GA <code>Topographie</code> flag. <code>TRUE</code> (or a
+DEM raster) rebuilds elevation + land cover via <code><a href="terrain_model.html">terrain_model()</a></code>.
+<code>FALSE</code> skips terrain even if the GA used it.</p></dd>
+
+
+<dt id="arg-weibull">weibull<a class="anchor" aria-label="anchor" href="#arg-weibull"></a></dt>
+<dd><p><code>NULL</code> follows the GA <code>Active Weibull</code> flag. A speed
+raster is used as-is. <code>TRUE</code> needs <code>weibull_src</code>. The GA does not
+store rasters in <code>result</code>.</p></dd>
+
+
+<dt id="arg-weibull-src">weibull_src<a class="anchor" aria-label="anchor" href="#arg-weibull-src"></a></dt>
+<dd><p><code>list(k, a)</code> shape and scale rasters (e.g. Global
+Wind Atlas <code>combined-Weibull-k</code> / <code>combined-Weibull-A</code>).</p></dd>
+
+
+<dt id="arg-ccl">ccl<a class="anchor" aria-label="anchor" href="#arg-ccl"></a></dt>
+<dd><p>Path to a Corine Land Cover raster when <code>terrain</code> is on.</p></dd>
+
+
+<dt id="arg-ccl-roughness">ccl_roughness<a class="anchor" aria-label="anchor" href="#arg-ccl-roughness"></a></dt>
+<dd><p>Path to the CLC legend CSV (<code>Rauhigkeit_z</code> column).</p></dd>
 
 </dl></div>
     <div class="section level2">

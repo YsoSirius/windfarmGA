@@ -205,6 +205,7 @@
 <span>  reference_height <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  weibull <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  weibull_src <span class="op">=</span> <span class="va">gwa</span><span class="op">$</span><span class="va">weibull_src</span>,</span>
+<span>  terrain <span class="op">=</span> <span class="cn">TRUE</span>,                   <span class="co"># DEM + CLC; needs elevatr</span></span>
 <span>  fcr <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  iteration <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -215,7 +216,16 @@
 <span><span class="fu"><a href="reference/plot_result.html">plot_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_parkfitness.html">plot_parkfitness</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/explore_result.html">explore_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/explore_result.html">explore_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## 6. Optional: jitter turbines inside their cells (same physics as the GA)</span></span>
+<span><span class="co">##    Weibull rasters are not stored in `result` — pass weibull_src again.</span></span>
+<span><span class="va">refined</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/random_search.html">random_search</a></span><span class="op">(</span></span>
+<span>  <span class="va">result</span>, <span class="va">area</span>, n <span class="op">=</span> <span class="fl">20</span>, best <span class="op">=</span> <span class="fl">1</span>, plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  terrain <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  weibull_src <span class="op">=</span> <span class="va">gwa</span><span class="op">$</span><span class="va">weibull_src</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/plot_random_search.html">plot_random_search</a></span><span class="op">(</span><span class="va">refined</span>, <span class="va">result</span>, <span class="va">area</span>, best <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="start-an-optimization">Start an Optimization<a class="anchor" aria-label="anchor" href="#start-an-optimization"></a>

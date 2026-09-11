@@ -141,6 +141,18 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ### Features
 
+- [`random_search()`](https://YsoSirius.github.io/windfarmGA/reference/random_search.md)
+  /
+  [`random_search_single()`](https://YsoSirius.github.io/windfarmGA/reference/random_search_single.md)
+  still take a 5.0.0
+  [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
+  result. Turbines are jittered inside their cells (continuous
+  Feinoptimierung after the discrete GA). Heights are read by name
+  (`Reference Height`, `Rotor Height`); the old row indices 12/13
+  pointed at the wrong rows after Trim/Crossover were dropped from
+  `inputData`. `terrain = NULL` / `weibull = NULL` follow the GA flags.
+  Pass `weibull_src` again (rasters are not stored in `result`). README
+  realistic workflow step 6.
 - Wake-pair search (`get_dist_angles` / `turbine_influences`) runs in
   Rcpp instead of an R loop around `point_2_line_CPP` / `angles_CPP`.
   Turbines exactly upwind (same X after rotation, e.g. a grid column

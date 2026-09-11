@@ -219,6 +219,7 @@ result <- genetic_algorithm(
   reference_height = 100,
   weibull = TRUE,
   weibull_src = gwa$weibull_src,
+  terrain = TRUE,                   # DEM + CLC; needs elevatr
   fcr = 5,
   iteration = 40,
   plot = FALSE
@@ -230,6 +231,15 @@ plot_result(result, area)
 plot_parkfitness(result)
 plot_leaflet(result, area, which = 1)
 explore_result(result, area)
+
+## 6. Optional: jitter turbines inside their cells (same physics as the GA)
+##    Weibull rasters are not stored in `result` — pass weibull_src again.
+refined <- random_search(
+  result, area, n = 20, best = 1, plot = FALSE,
+  terrain = TRUE,
+  weibull_src = gwa$weibull_src
+)
+plot_random_search(refined, result, area, best = 1)
 ```
 
 ## Start an Optimization

@@ -50,7 +50,7 @@ Main components of the genetic algorithm
 - [`barometric_height()`](https://YsoSirius.github.io/windfarmGA/reference/barometric_height.md)
   : Calculates Air Density, Air Pressure and Temperature according to
   the Barometric Height Formula
-- [`get_dist_angles()`](https://YsoSirius.github.io/windfarmGA/reference/get_dist_angles.md)
+- [`as_xy_matrix()`](https://YsoSirius.github.io/windfarmGA/reference/get_dist_angles.md)
   : Calculate distances and angles of possibly influencing turbines
 - [`turbine_influences()`](https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.md)
   : Find potentially influencing turbines

@@ -6,7 +6,18 @@ output of the wind farm layout.
 ## Usage
 
 ``` r
-random_search_single(result, area, n = 20, plot = FALSE, max_dist = 2.2)
+random_search_single(
+  result,
+  area,
+  n = 20,
+  plot = FALSE,
+  max_dist = 2.2,
+  terrain = NULL,
+  weibull = NULL,
+  weibull_src = NULL,
+  ccl = NULL,
+  ccl_roughness = NULL
+)
 ```
 
 ## Arguments
@@ -33,6 +44,32 @@ random_search_single(result, area, n = 20, plot = FALSE, max_dist = 2.2)
 
   A numeric value multiplied by the rotor radius to perform collision
   checks. Default is 2.2
+
+- terrain:
+
+  `NULL` follows the GA `Topographie` flag. `TRUE` (or a DEM raster)
+  rebuilds elevation + land cover via
+  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
+  `FALSE` skips terrain even if the GA used it.
+
+- weibull:
+
+  `NULL` follows the GA `Active Weibull` flag. A speed raster is used
+  as-is. `TRUE` needs `weibull_src`. The GA does not store rasters in
+  `result`.
+
+- weibull_src:
+
+  `list(k, a)` shape and scale rasters (e.g. Global Wind Atlas
+  `combined-Weibull-k` / `combined-Weibull-A`).
+
+- ccl:
+
+  Path to a Corine Land Cover raster when `terrain` is on.
+
+- ccl_roughness:
+
+  Path to the CLC legend CSV (`Rauhigkeit_z` column).
 
 ## Value
 

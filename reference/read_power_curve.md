@@ -26,9 +26,15 @@ data.frame when a thrust column is present.
 ## See also
 
 Other Helper Functions:
-[`wind_from_uv()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.md),
+[`get_grids()`](https://YsoSirius.github.io/windfarmGA/reference/get_grids.md),
+[`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md),
+[`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md),
+[`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md),
+[`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md),
+[`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md),
 [`wind_from_series()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.md),
-[`plot_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/plot_power_curve.md)
+[`wind_from_uv()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.md),
+[`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
 
 ## Examples
 

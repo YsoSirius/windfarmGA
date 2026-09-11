@@ -39,7 +39,10 @@ Other Helper Functions:
 [`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md),
 [`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md),
 [`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md),
+[`read_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/read_power_curve.md),
 [`splitAt()`](https://YsoSirius.github.io/windfarmGA/reference/splitAt.md),
+[`wind_from_series()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.md),
+[`wind_from_uv()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.md),
 [`windata_format()`](https://YsoSirius.github.io/windfarmGA/reference/windata_format.md)
 
 ## Author

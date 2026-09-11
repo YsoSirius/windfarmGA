@@ -7,9 +7,9 @@ figure with fitness, operator rates and population (subplots). New
 fitness maxima are marked; click a marker to jump to that generation.
 The cell heatmap is not included: it rebuilds the site grid on every
 draw and adds little next to the map. Use
-[`plot_cell_heatmap`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md)
+[`plot_cell_heatmap()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md)
 or
-[`plot_generation`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md)
+[`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md)
 for that offline. Requires Suggests `shiny`. Plotly is used when
 installed.
 
