@@ -49,6 +49,9 @@ To start an optimization use the function `genetic_algorithm`.
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"/>
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"  style="width: 49%;display: inline-block;"/>
 </div>
+<div>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 100%;display: inline-block;"/>
+</div>
 
 Since version 1.1, hexagonal grid cells are possible, with 
 their center points being possible locations for wind turbines. 

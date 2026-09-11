@@ -40,7 +40,9 @@ The test site is a projected rectangle (EPSG:3035) with uniform wind from the no
 
 **Figure 1.** Known optimum under uniform northerly wind: the northern and southern rows of the 10 × 7 grid.
 
-![Figure 1. Northern and southern rows occupied.](fig-north-gold.png)
+<div>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"  style="width: 100%;display: inline-block;"/>
+</div>
 
 Evaluated with the same `fitness()` path as the algorithm (roughness 0.3, hub 100 m, logarithmic profile, *C*<sub>p</sub> = 0.45) the layout scores 24 584.64 kW, 91.281 % efficiency, and fitness 22 441.05. A run is counted as a hit if the cell set matches or fitness reaches 99.5 % of that value. Physics are held fixed; only search options vary.
 
