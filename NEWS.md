@@ -29,6 +29,9 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   chromosomes. New exports: `set_crossover()`, `swap_mutation()`.
 
 ## Fixes
+* `test-coverage` workflow was invalid YAML (`with:` missing under
+  `setup-r-dependencies`), so GitHub skipped the job in 0s and the
+  Codecov badge never updated.
 * `ga_options(...)` is silent when setting; only `ga_options()` prints
   the table. The climate-helper demo no longer dumps options twice.
 * `plot_windrose()` explains the ggplot2-4 / old-systemfonts clash
