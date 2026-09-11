@@ -9,6 +9,9 @@ turbine_influences(t, wnkl, dist, area, dirct, plot_angles = FALSE)
 \arguments{
 \item{t}{A data.frame of the current individual with X and Y coordinates}
 
+\item{wnkl}{Wake opening angle in degrees. Turbines outside this cone
+are ignored.}
+
 \item{dist}{A numeric value indicating the distance, after which the wake
 effects are considered to be eliminated.}
 

@@ -599,10 +599,10 @@ lookup_power_curve <- function(v, curve) {
 #' @description Linear interpolation of a two-column table (`ws`, `power`
 #'   in kW). Set it with `ga_options(power_curve = curve)` or
 #'   `options(windfarmGA.power_curve = curve)`. While a curve is set,
-#'   park energy is the sum of those kW values instead of \(C_p \cdot v^3\).
+#'   park energy is the sum of those kW values instead of Cp * v^3.
 #'   Cut-in / rated / cut-out still apply only when no table is set.
 #'   If hub wind stays on the rated plateau after wakes, every layout
-#'   looks the same — use wind in the rising part of the curve.
+#'   looks the same - use wind in the rising part of the curve.
 #'   Supply your own table (manufacturer data); the package does not
 #'   ship copyrighted curves.
 #' @export

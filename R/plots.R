@@ -737,7 +737,7 @@ show_plot_pages <- function(plots, ask = FALSE, plotly = FALSE) {
 #' @inheritParams plot_result
 #' @param which_plot `"all"` (default) shows `result`, `progress`, `population`
 #'   and `heatmap`. Or a character vector (`"result"`, `"progress"`,
-#'   `"population"`, `"heatmap"`, `"evolution"`) or the numbers 1–4.
+#'   `"population"`, `"heatmap"`, `"evolution"`) or the numbers 1-4.
 #' @param ask If `TRUE`, wait for Enter between pages. Default is `TRUE`
 #'   in an interactive session.
 #' @param plotly If `TRUE`, draw fitness and rates with plotly (hover).
@@ -1114,7 +1114,7 @@ plot_generation <- function(result, area, generation = NULL,
           ggplot2::labs(
             x = NULL, y = NULL,
             title = sprintf(
-              "Generation %d  layouts %d–%d of %d%s",
+              "Generation %d  layouts %d-%d of %d%s",
               dat$generation, from, to, n_unique,
               if (n_pages > 1L) sprintf("  (page %d/%d)", pg, n_pages) else ""
             )
@@ -1999,6 +1999,7 @@ plot_cloud <- function(result, pl = FALSE) {
 #' @export
 #'
 #' @inheritParams plot_evolution
+#' @param interactive Use plotly when `ask` is `FALSE` and plotly is installed.
 #'
 #' @family Plotting Functions
 #' @return Returns NULL. Used for plotting

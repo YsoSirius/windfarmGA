@@ -255,7 +255,7 @@ Fitness is \(E \times (\eta/100)^w\). These options change how \(E\) and \(\eta\
 | `windfarmGA.cut_in` | `0` | Cut-in wind speed (m/s). `0` = no cut-in. |
 | `windfarmGA.rated_ws` | `Inf` | Rated wind speed; above this, power stays at rated. |
 | `windfarmGA.cut_out` | `Inf` | Cut-out wind speed. |
-| `windfarmGA.power_curve` | `NULL` | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not \(C_p \cdot v^3\)). On the rated plateau, wakes may not change power. See `plot_power_curve()`. |
+| `windfarmGA.power_curve` | `NULL` | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not Cp * v^3). On the rated plateau, wakes may not change power. See `plot_power_curve()`. |
 | `windfarmGA.fitness_efficiency_weight` | `1` | Exponent \(w\) on park efficiency. `0` optimises energy only. |
 | `windfarmGA.max_angle` | `20` | Max wake angle (degrees) when assigning downstream turbines. |
 | `windfarmGA.max_distance` | `100000` | Max wake distance (m). |

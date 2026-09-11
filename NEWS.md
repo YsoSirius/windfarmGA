@@ -29,6 +29,14 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   chromosomes. New exports: `set_crossover()`, `swap_mutation()`.
 
 ## Fixes
+* pkgdown reference lists the new exports (`as_windfarmGA`, `explore_result`,
+  `ga_options`, `generation_layouts`, `population_census`, `set_crossover`,
+  `swap_mutation`). `plot_power_curve()` Rd no longer uses `\cdot`.
+  `plots.R` is ASCII-only. ggplot aesthetics are in `globalVariables`.
+  Rd documents `wnkl`, `trimForce` and `plot_fitness_evolution(interactive)`.
+* `experimental/draw_shape()` uses `mapedit::editMap(..., editor = "leafpm")`.
+  mapedit 0.8 dropped leaflet.extras (off CRAN); older mapedit still calls
+  `dplyr::select_()`, which current dplyr rejects.
 * Power-curve energy was the first turbine's kW (often rated power and 100%
   efficiency), not the park sum. `energy_calc_CPP` already summed; table
   lookup now does the same. Cut-in / rated / cut-out apply only when no
@@ -152,6 +160,7 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ## Open / Todos
 * Submit 5.0.0 to CRAN (ggplot2 4.x tests plus combinatorial genome).
+  Re-check pkgdown and Rd after the reference-index / `\cdot` / ASCII fixes.
 * parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
 * Consider splitting the large `test_plots.R` block so a single assertion
   failure does not hide later plot checks.

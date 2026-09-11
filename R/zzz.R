@@ -8,7 +8,10 @@ utils::globalVariables(
     "unit",
     "srtm_crop", "cclRaster", "weibull_src",
     "cl",
-    "k"
+    "k",
+    "generation", "value", "series",
+    "n_used", "Parkfitness", "Max",
+    "rate", "operator", "count", "efficiency"
   )
 )
 

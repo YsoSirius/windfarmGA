@@ -7,7 +7,7 @@ installing any extra packages they need.
 | File | What | Extra packages |
 |---|---|---|
 | `run_experiments.R` | Source this: `run_experiments()`, `viewshed_from_result()` | elevatr, terra, sf |
-| `draw_shape.R` | Draw a site polygon in Leaflet, then run the GA | leaflet, mapedit, leaflet.extras |
+| `draw_shape.R` | Draw a site polygon in Leaflet, then run the GA. Needs mapedit >= 0.8 and leafpm (`leaflet.extras` is off CRAN; old mapedit still calls `dplyr::select_()`). | leaflet, mapedit (>= 0.8), leafpm |
 | `circle_overlap_app.R` | Shiny slider for `circle_intersection()` | shiny, ggplot2, ggforce |
 
 **Already in the package (do not duplicate here)**

@@ -11,6 +11,9 @@ get_dist_angles(t, o, wnkl, dist, area, plot_angles = FALSE)
 
 \item{o}{A numeric value indicating the index of the current turbine}
 
+\item{wnkl}{Wake opening angle in degrees. Turbines outside this cone
+are ignored.}
+
 \item{dist}{A numeric value indicating the distance, after which the wake
 effects are considered to be eliminated.}
 

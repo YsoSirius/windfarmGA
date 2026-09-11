@@ -21,7 +21,7 @@ NULL
 #' @author \strong{Maintainer}: Sebastian Gatscha \email{sebastian_gatscha@@gmx.at}
 #' @details
 #'
-#' \if{html}{\figure{windfarmGA.png}{options: width="25\%" alt="Figure: windfarmGA.png"}}
+#' \if{html}{\figure{windfarmGA.png}{options: width="200" alt="Figure: windfarmGA.png"}}
 #' \if{latex}{\figure{windfarmGA.png}{options: width=0.2in}}
 #' A package to optimize small wind farms with irregular shapes
 #' using a genetic algorithm. Each individual is \code{n} unique grid-cell

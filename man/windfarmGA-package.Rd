@@ -9,7 +9,7 @@
 The genetic algorithm is designed to optimize wind farms of any shape. Each layout is encoded as n unique grid-cell identifiers. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 }
 \details{
-\if{html}{\figure{windfarmGA.png}{options: width="25\%" alt="Figure: windfarmGA.png"}}
+\if{html}{\figure{windfarmGA.png}{options: width="200" alt="Figure: windfarmGA.png"}}
 \if{latex}{\figure{windfarmGA.png}{options: width=0.2in}}
 A package to optimize small wind farms with irregular shapes
 using a genetic algorithm. Each individual is \code{n} unique grid-cell

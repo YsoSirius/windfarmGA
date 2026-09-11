@@ -13,6 +13,8 @@
 #' @param allparks A data.frame consisting of all individuals of the current
 #'   generation
 #' @param nGrids A numeric value indicating the total amount of grid cells
+#' @param trimForce If `TRUE`, add or drop turbines using fitness-weighted
+#'   probabilities. If `FALSE`, choose cells at random.
 #' @param seed Set a seed for comparability. Default is NULL
 #'
 #' @family Genetic Algorithm Functions

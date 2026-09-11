@@ -11,6 +11,8 @@ plot_fitness_evolution(result, spar = 0.1, interactive = NULL, ask = NULL)
 
 \item{spar}{Unused, kept so existing calls do not break.}
 
+\item{interactive}{Use plotly when \code{ask} is \code{FALSE} and plotly is installed.}
+
 \item{ask}{Unused, kept so existing calls do not break.}
 }
 \value{

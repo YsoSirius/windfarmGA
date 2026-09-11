@@ -15,6 +15,9 @@ reference:
   - title: Run an Optimization
     contents:
     - genetic_algorithm
+    - ga_options
+    - explore_result
+    - as_windfarmGA
   - title: Genetic Algorithm Components
     desc: Main components of the genetic algorithm
     contents:
@@ -22,7 +25,9 @@ reference:
     - selection
     - fitness
     - crossover
+    - set_crossover
     - mutation
+    - swap_mutation
     - trimton
   - title: Topographic Model
     contents:
@@ -41,6 +46,8 @@ reference:
   - title: Plotting Functions
     contents:
     - starts_with("plot_", internal = TRUE)
+    - generation_layouts
+    - population_census
   - title: Viewshed Analysis Functions
     contents:
     - plot_viewshed

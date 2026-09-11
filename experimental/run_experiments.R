@@ -129,3 +129,5 @@ run_experiments <- function(interactive = FALSE,
 if (identical(environment(), globalenv()) && !length(sys.frames())) {
   message("Functions loaded. Example:\n  run_experiments()\n  viewshed_from_result(result, area)")
 }
+
+# run_experiments(interactive = T)

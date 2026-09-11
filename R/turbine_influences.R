@@ -7,6 +7,8 @@
 #'
 #' @inheritParams calculate_energy
 #' @param t A data.frame of the current individual with X and Y coordinates
+#' @param wnkl Wake opening angle in degrees. Turbines outside this cone
+#'   are ignored.
 #' @param dist A numeric value indicating the distance, after which the wake
 #'   effects are considered to be eliminated.
 #' @param area Site polygon

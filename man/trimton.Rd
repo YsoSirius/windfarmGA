@@ -16,6 +16,9 @@ generation}
 
 \item{nGrids}{A numeric value indicating the total amount of grid cells}
 
+\item{trimForce}{If \code{TRUE}, add or drop turbines using fitness-weighted
+probabilities. If \code{FALSE}, choose cells at random.}
+
 \item{seed}{Set a seed for comparability. Default is NULL}
 }
 \value{

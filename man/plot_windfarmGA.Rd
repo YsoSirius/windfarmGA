@@ -23,7 +23,7 @@ Must be projected in metres.}
 
 \item{which_plot}{\code{"all"} (default) shows \code{result}, \code{progress}, \code{population}
 and \code{heatmap}. Or a character vector (\code{"result"}, \code{"progress"},
-\code{"population"}, \code{"heatmap"}, \code{"evolution"}) or the numbers 1–4.}
+\code{"population"}, \code{"heatmap"}, \code{"evolution"}) or the numbers 1-4.}
 
 \item{best}{How many distinct best layouts to draw. Default is 1.}
 
