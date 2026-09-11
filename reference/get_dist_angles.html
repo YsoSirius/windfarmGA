@@ -42,7 +42,7 @@ potentially influencing turbines.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">as_xy_matrix</span><span class="op">(</span><span class="va">t</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_dist_angles</span><span class="op">(</span><span class="va">t</span>, <span class="va">o</span>, <span class="va">wnkl</span>, <span class="va">dist</span>, <span class="va">area</span>, plot_angles <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -55,6 +55,24 @@ potentially influencing turbines.</p>
 
 <dt id="arg-o">o<a class="anchor" aria-label="anchor" href="#arg-o"></a></dt>
 <dd><p>A numeric value indicating the index of the current turbine</p></dd>
+
+
+<dt id="arg-wnkl">wnkl<a class="anchor" aria-label="anchor" href="#arg-wnkl"></a></dt>
+<dd><p>Wake opening angle in degrees. Turbines outside this cone
+are ignored.</p></dd>
+
+
+<dt id="arg-dist">dist<a class="anchor" aria-label="anchor" href="#arg-dist"></a></dt>
+<dd><p>A numeric value indicating the distance, after which the wake
+effects are considered to be eliminated.</p></dd>
+
+
+<dt id="arg-area">area<a class="anchor" aria-label="anchor" href="#arg-area"></a></dt>
+<dd><p>Site polygon</p></dd>
+
+
+<dt id="arg-plot-angles">plot_angles<a class="anchor" aria-label="anchor" href="#arg-plot-angles"></a></dt>
+<dd><p>Plot distances and angles</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -98,9 +116,81 @@ influencing turbines</p>
 <span class="r-in"><span>    dist <span class="op">=</span> <span class="va">dist</span>, area <span class="op">=</span> <span class="va">area</span>, plot_angles <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in get_dist_angles(t = t, o = i, wnkl = wnkl, dist = dist, area = area,     plot_angles = TRUE):</span> could not find function "get_dist_angles"</span>
+<span class="r-plt img"><img src="get_dist_angles-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-5.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-6.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-7.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-8.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-9.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="get_dist_angles-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">potInfTur</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499324 2669115  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499324 2669115 4499223 2668495 4499324 2668495 627.6689 619.4792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4499281 2669089 4499223 2668495 4499281 2668495 596.5332 593.6982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Laenge_A    alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 101.06320 9.265732 80.73427    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  58.08888 5.588172 84.41183    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499870 2669079 4499891 2668958 4499870 2668958 123.3227 121.4304 21.52116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        alpha   betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 10.0502 79.9498    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4498788 2669304  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499281 2669089  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499870 2669079  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  0  0 4499474 2668859  0  0        0        0        0     0     0     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4498788 2669304 4498836 2668846 4498788 2668846 460.9221 458.4595 47.58186</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 5.925308 84.07469    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499324 2669115 4499316 2668523 4499324 2668523 592.4178 592.3544</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 4499281 2669089 4499316 2668523 4499281 2668523 567.6110 566.5734</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Laenge_A     alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  8.669484 0.8385004 89.16150    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 34.304837 3.4649097 86.53509    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[10]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 4499870 2669079 4499853 2668944 4499870 2668944  136.655 135.5914 17.01659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        alpha    betha gamma height1 height2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 7.15317 82.84683    90       1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -47,6 +47,11 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ### Fixes
 
+- R CMD check: import [`stats::ave`](https://rdrr.io/r/stats/ave.html)
+  (used in `calculate_energy`). `@export` on `get_dist_angles` was
+  attached to `as_xy_matrix`, so the function was not exported, the Rd
+  `\usage` only listed `as_xy_matrix(t)`, and the examples failed with
+  “could not find function”.
 - `test-coverage` workflow was invalid YAML (`with:` missing under
   `setup-r-dependencies`), so GitHub skipped the job in 0s and the
   Codecov badge never updated. Upload now uses `codecov-action` plus

@@ -6,7 +6,7 @@ influencing turbines.
 ## Usage
 
 ``` r
-as_xy_matrix(t)
+get_dist_angles(t, o, wnkl, dist, area, plot_angles = FALSE)
 ```
 
 ## Arguments
@@ -18,6 +18,23 @@ as_xy_matrix(t)
 - o:
 
   A numeric value indicating the index of the current turbine
+
+- wnkl:
+
+  Wake opening angle in degrees. Turbines outside this cone are ignored.
+
+- dist:
+
+  A numeric value indicating the distance, after which the wake effects
+  are considered to be eliminated.
+
+- area:
+
+  Site polygon
+
+- plot_angles:
+
+  Plot distances and angles
 
 ## Value
 
@@ -60,7 +77,79 @@ for (i in 1:(length(t[, 1]))) {
     dist = dist, area = area, plot_angles = TRUE
   )
 }
-#> Error in get_dist_angles(t = t, o = i, wnkl = wnkl, dist = dist, area = area,     plot_angles = TRUE): could not find function "get_dist_angles"
+
+
+
+
+
+
+
+
+
+
 potInfTur
-#> list()
+#> [[1]]
+#>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#> [1,]  0  0 4499324 2669115  0  0        0        0        0     0     0     0
+#>      height1 height2
+#> [1,]       0       0
+#> 
+#> [[2]]
+#>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B
+#> [1,] 4499324 2669115 4499223 2668495 4499324 2668495 627.6689 619.4792
+#> [2,] 4499281 2669089 4499223 2668495 4499281 2668495 596.5332 593.6982
+#>       Laenge_A    alpha    betha gamma height1 height2
+#> [1,] 101.06320 9.265732 80.73427    90       1       1
+#> [2,]  58.08888 5.588172 84.41183    90       1       1
+#> 
+#> [[3]]
+#>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A
+#> [1,] 4499870 2669079 4499891 2668958 4499870 2668958 123.3227 121.4304 21.52116
+#>        alpha   betha gamma height1 height2
+#> [1,] 10.0502 79.9498    90       1       1
+#> 
+#> [[4]]
+#>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#> [1,]  0  0 4498788 2669304  0  0        0        0        0     0     0     0
+#>      height1 height2
+#> [1,]       0       0
+#> 
+#> [[5]]
+#>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#> [1,]  0  0 4499281 2669089  0  0        0        0        0     0     0     0
+#>      height1 height2
+#> [1,]       0       0
+#> 
+#> [[6]]
+#>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#> [1,]  0  0 4499870 2669079  0  0        0        0        0     0     0     0
+#>      height1 height2
+#> [1,]       0       0
+#> 
+#> [[7]]
+#>      Ax Ay      Bx      By Cx Cy Laenge_C Laenge_B Laenge_A alpha betha gamma
+#> [1,]  0  0 4499474 2668859  0  0        0        0        0     0     0     0
+#>      height1 height2
+#> [1,]       0       0
+#> 
+#> [[8]]
+#>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A
+#> [1,] 4498788 2669304 4498836 2668846 4498788 2668846 460.9221 458.4595 47.58186
+#>         alpha    betha gamma height1 height2
+#> [1,] 5.925308 84.07469    90       1       1
+#> 
+#> [[9]]
+#>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B
+#> [1,] 4499324 2669115 4499316 2668523 4499324 2668523 592.4178 592.3544
+#> [2,] 4499281 2669089 4499316 2668523 4499281 2668523 567.6110 566.5734
+#>       Laenge_A     alpha    betha gamma height1 height2
+#> [1,]  8.669484 0.8385004 89.16150    90       1       1
+#> [2,] 34.304837 3.4649097 86.53509    90       1       1
+#> 
+#> [[10]]
+#>           Ax      Ay      Bx      By      Cx      Cy Laenge_C Laenge_B Laenge_A
+#> [1,] 4499870 2669079 4499853 2668944 4499870 2668944  136.655 135.5914 17.01659
+#>        alpha    betha gamma height1 height2
+#> [1,] 7.15317 82.84683    90       1       1
+#> 
 ```
