@@ -33,7 +33,7 @@ circle_intersection(r1, r2, h1, h2, dx)
 
 ## Value
 
-A numeric value
+A numeric vector; one intersection area per pair. Scalars stay length 1.
 
 ## See also
 

@@ -73,7 +73,7 @@
 <p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;"></p>
 </div>
 <div>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 100%;display: inline-block;"></p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 98.5%;display: inline-block;"></p>
 </div>
 <p>Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. Furthermore, rasters can be included, which contain information on the Weibull parameters (shape <code>k</code>, scale <code>a</code>). Country GeoTIFFs from the <a href="https://globalwindatlas.info/" class="external-link">Global Wind Atlas</a> (~250 m) are a good source; see <code>gwa_download_country()</code> in <code>experimental/climate_helpers.R</code>.</p>
 <div class="section level2">
@@ -162,13 +162,14 @@
 <h2 id="realistic-workflow-site-turbine-wind">Realistic workflow (site, turbine, wind)<a class="anchor" aria-label="anchor" href="#realistic-workflow-site-turbine-wind"></a>
 </h2>
 <p>Clone the GitHub repo so <code>experimental/</code> is available (it is not in the CRAN tarball). Browse open reference turbines at the <a href="https://natlabrockies.github.io/turbine-models/" class="external-link">NREL Turbine Archive</a> (IEA 3.4 / 10 / 15 MW and NREL 5 MW are the best documented).</p>
-<p>ERA5 / Copernicus (env <code>COPERNICUS_CLIMATE_DATA</code>) is useful as a <strong>directional rose</strong> over time (<code>u10</code>/<code>v10</code> → <code>wind_from_era5()</code>), but the grid is too coarse (~31 km) as a spatial wind field for siting. For mean speed per cell use Global Wind Atlas Weibull rasters (<code>weibull = TRUE</code>, <code>weibull_src = list(k, a)</code>). Hub-height correction uses <code>reference_height</code> (10 m for ERA5) and <code>rotor_height</code> from the turbine.</p>
+<p>ERA5 / Copernicus (env <code>COPERNICUS_CLIMATE_DATA</code>) is useful as a <strong>directional rose</strong> over time (<code>get_era5_wind()</code> → <code>wind_from_era5()</code>), but the grid is too coarse (~31 km) as a spatial wind field for siting. For mean speed per cell use Global Wind Atlas Weibull rasters (<code>weibull = TRUE</code>, <code>weibull_src = list(k, a)</code>). Hub-height correction uses <code>reference_height</code> (100 m for the ERA5 100 m u/v download) and <code>rotor_height</code> from the turbine. A met mast goes through <code>wind_from_breeze()</code> or <code><a href="reference/wind_from_series.html">wind_from_series()</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ysosirius.github.io/windfarmGA/index.html" class="external-link">windfarmGA</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/draw_shape.R"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/climate_helpers.R"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/download_ERA5_historic.R"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## 1. Site: draw a polygon (or st_read a shapefile)</span></span>
 <span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">draw_shape</span><span class="op">(</span><span class="op">)</span></span>
@@ -182,16 +183,17 @@
 <span><span class="va">rotor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">curve</span>, <span class="st">"rotor"</span><span class="op">)</span>           <span class="co"># radius in metres</span></span>
 <span><span class="va">hub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">curve</span>, <span class="st">"rotor_height"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## 3. Wind rose: hourly u/v (east, north) -&gt; ws / wd / probab</span></span>
-<span><span class="co">##    Real ERA5: wind &lt;- wind_from_era5(era5_df)</span></span>
-<span><span class="co">##    Spatial field (GWA ~250 m): gwa &lt;- gwa_download_country("AUT", 100)</span></span>
-<span><span class="co">##    then genetic_algorithm(..., weibull = TRUE, weibull_src = gwa$weibull_src)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">24</span> <span class="op">*</span> <span class="fl">365</span></span>
-<span><span class="va">u</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">2.5</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="op">-</span><span class="fl">1.5</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="va">wind</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wind_from_uv.html">wind_from_uv</a></span><span class="op">(</span><span class="va">u</span>, <span class="va">v</span>, dir_width <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
+<span><span class="co">## 3. Wind rose from ERA5 100 m u/v at the site (needs CDS key)</span></span>
+<span><span class="va">era5</span> <span class="op">&lt;-</span> <span class="fu">get_era5_wind</span><span class="op">(</span><span class="va">area</span>, <span class="st">"2021-01-01"</span>, <span class="st">"2025-12-31"</span><span class="op">)</span></span>
+<span><span class="va">wind</span> <span class="op">&lt;-</span> <span class="fu">wind_from_era5</span><span class="op">(</span><span class="va">era5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_windrose.html">plot_windrose</a></span><span class="op">(</span><span class="va">wind</span>, spd <span class="op">=</span> <span class="st">"ws"</span>, dir <span class="op">=</span> <span class="st">"wd"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">##    Mast instead of ERA5:</span></span>
+<span><span class="co">##    wind &lt;- wind_from_breeze(mast)</span></span>
+<span><span class="co">##    wind &lt;- wind_from_series(dat$ws, dat$wd)</span></span>
+<span></span>
+<span><span class="co">##    Spatial mean speed (GWA ~250 m); wind$ws is then ignored</span></span>
+<span><span class="va">gwa</span> <span class="op">&lt;-</span> <span class="fu">gwa_download_country</span><span class="op">(</span><span class="st">"AUT"</span>, height <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>  <span class="co"># ISO3 of the site country</span></span>
 <span></span>
 <span><span class="co">## 4. Optimize: keep hub wind in the rising part of the curve</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/genetic_algorithm.html">genetic_algorithm</a></span><span class="op">(</span></span>
@@ -200,7 +202,9 @@
 <span>  n <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  rotor <span class="op">=</span> <span class="va">rotor</span>,</span>
 <span>  rotor_height <span class="op">=</span> <span class="va">hub</span>,</span>
-<span>  reference_height <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  reference_height <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  weibull <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  weibull_src <span class="op">=</span> <span class="va">gwa</span><span class="op">$</span><span class="va">weibull_src</span>,</span>
 <span>  fcr <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  iteration <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -212,7 +216,6 @@
 <span><span class="fu"><a href="reference/plot_parkfitness.html">plot_parkfitness</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/explore_result.html">explore_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span></code></pre></div>
-<p>The helper walkthrough lives locally (gitignored): <code>source("_experiment/test_climate_helpers.R"); test_climate_helpers()</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="start-an-optimization">Start an Optimization<a class="anchor" aria-label="anchor" href="#start-an-optimization"></a>

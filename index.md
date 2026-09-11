@@ -167,12 +167,14 @@ Archive](https://natlabrockies.github.io/turbine-models/) (IEA 3.4 / 10
 / 15 MW and NREL 5 MW are the best documented).
 
 ERA5 / Copernicus (env `COPERNICUS_CLIMATE_DATA`) is useful as a
-**directional rose** over time (`u10`/`v10` → `wind_from_era5()`), but
-the grid is too coarse (~31 km) as a spatial wind field for siting. For
-mean speed per cell use Global Wind Atlas Weibull rasters
+**directional rose** over time (`get_era5_wind()` → `wind_from_era5()`),
+but the grid is too coarse (~31 km) as a spatial wind field for siting.
+For mean speed per cell use Global Wind Atlas Weibull rasters
 (`weibull = TRUE`, `weibull_src = list(k, a)`). Hub-height correction
-uses `reference_height` (10 m for ERA5) and `rotor_height` from the
-turbine.
+uses `reference_height` (100 m for the ERA5 100 m u/v download) and
+`rotor_height` from the turbine. A met mast goes through
+`wind_from_breeze()` or
+[`wind_from_series()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.md).
 
 ``` r
 
@@ -181,6 +183,7 @@ library(sf)
 
 source("experimental/draw_shape.R")
 source("experimental/climate_helpers.R")
+source("experimental/download_ERA5_historic.R")
 
 ## 1. Site: draw a polygon (or st_read a shapefile)
 area <- draw_shape()
@@ -194,16 +197,17 @@ ga_options(power_curve = curve)
 rotor <- attr(curve, "rotor")           # radius in metres
 hub <- attr(curve, "rotor_height")
 
-## 3. Wind rose: hourly u/v (east, north) -> ws / wd / probab
-##    Real ERA5: wind <- wind_from_era5(era5_df)
-##    Spatial field (GWA ~250 m): gwa <- gwa_download_country("AUT", 100)
-##    then genetic_algorithm(..., weibull = TRUE, weibull_src = gwa$weibull_src)
-set.seed(1)
-n <- 24 * 365
-u <- rnorm(n, 2.5, 3)
-v <- rnorm(n, -1.5, 3)
-wind <- wind_from_uv(u, v, dir_width = 30)
+## 3. Wind rose from ERA5 100 m u/v at the site (needs CDS key)
+era5 <- get_era5_wind(area, "2021-01-01", "2025-12-31")
+wind <- wind_from_era5(era5)
 plot_windrose(wind, spd = "ws", dir = "wd")
+
+##    Mast instead of ERA5:
+##    wind <- wind_from_breeze(mast)
+##    wind <- wind_from_series(dat$ws, dat$wd)
+
+##    Spatial mean speed (GWA ~250 m); wind$ws is then ignored
+gwa <- gwa_download_country("AUT", height = 100)  # ISO3 of the site country
 
 ## 4. Optimize: keep hub wind in the rising part of the curve
 result <- genetic_algorithm(
@@ -212,7 +216,9 @@ result <- genetic_algorithm(
   n = 12,
   rotor = rotor,
   rotor_height = hub,
-  reference_height = 10,
+  reference_height = 100,
+  weibull = TRUE,
+  weibull_src = gwa$weibull_src,
   fcr = 5,
   iteration = 40,
   plot = FALSE
@@ -225,9 +231,6 @@ plot_parkfitness(result)
 plot_leaflet(result, area, which = 1)
 explore_result(result, area)
 ```
-
-The helper walkthrough lives locally (gitignored):
-`source("_experiment/test_climate_helpers.R"); test_climate_helpers()`.
 
 ## Start an Optimization
 

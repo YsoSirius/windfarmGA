@@ -137,6 +137,19 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ### Features
 
+- Wake-pair search (`get_dist_angles` / `turbine_influences`) runs in
+  Rcpp instead of an R loop around `point_2_line_CPP` / `angles_CPP`.
+  Turbines exactly upwind (same X after rotation, e.g. a grid column
+  with `wd = 0`) are kept with `alpha = 0`. The old triangle test
+  dropped them (`Laenge_A = 0` → NaN angles), so `plot = TRUE` showed
+  only green markers and 100% efficiency.
+- [`circle_intersection()`](https://YsoSirius.github.io/windfarmGA/reference/circle_intersection.md)
+  is vectorized C++ (`circle_intersection_CPP`).
+  [`calculate_energy()`](https://YsoSirius.github.io/windfarmGA/reference/calculate_energy.md)
+  no longer runs an R `sapply` per wake row. Wake totals per turbine
+  (`V_i`, `TotAbschProz`, `V_New`, `Rect_ID`) use
+  [`ave()`](https://rdrr.io/r/stats/ave.html) / index instead of four
+  `lapply` loops.
 - Wind-climate helpers (no extra Suggests):
   [`wind_from_uv()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.md)
   bins ERA5-style u/v into `ws`/`wd`/`probab`;
@@ -155,10 +168,9 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   `source("_experiment/test_climate_helpers.R"); test_climate_helpers()`.
   Profile
   [`calculate_energy()`](https://YsoSirius.github.io/windfarmGA/reference/calculate_energy.md)
-  with `experimental/profile_energy.R`. The README has an end-to-end
-  example: draw a site, pick an IEA/NREL turbine ([NREL
-  archive](https://natlabrockies.github.io/turbine-models/)), build a
-  wind rose from u/v, optimize, plot.
+  with `experimental/profile_energy.R`. The README realistic workflow
+  uses ERA5 (`get_era5_wind` → `wind_from_era5`) for the rose and GWA
+  Weibull for spatial speed, not random u/v.
 - Combinatorial genome: each individual is `n` unique grid-cell IDs, not
   a 0/1 string over all cells. `genetic_algorithm` now runs `selection`
   → `set_crossover` → `swap_mutation` → `get_grids` → `fitness`.
@@ -292,11 +304,14 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   add them to Suggests.
 - With a manufacturer curve, run the GA at hub winds in the rising part
   (or a Weibull climate), not only on the rated plateau.
-- [`calculate_energy()`](https://YsoSirius.github.io/windfarmGA/reference/calculate_energy.md)
-  is about 0.05 s per call for 15 turbines and 12 directions. ~60% is
-  `turbine_influences` / `get_dist_angles` (R loops, `subset.matrix`,
-  `lapply`). `energy_calc_CPP` does not show up. Next speed-up is that
-  inner loop in Rcpp; more `n_cluster` only helps a large population.
+- [`turbine_influences()`](https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.md)
+  /
+  [`get_dist_angles()`](https://YsoSirius.github.io/windfarmGA/reference/get_dist_angles.md)
+  now do the wake-pair search in Rcpp (`turbine_influences_CPP`).
+  [`circle_intersection()`](https://YsoSirius.github.io/windfarmGA/reference/circle_intersection.md)
+  is vectorized C++ as well. (V_i) / `TotAbschProz` use
+  [`ave()`](https://rdrr.io/r/stats/ave.html) (same RMS and sums, in row
+  order) instead of `unlist(lapply(unique()))`.
 - Optional Bastankhah wake beside Jensen (`ga_options(wake_model)`).
 - Use GWA `air-density` over the site for `windfarmGA.air_rh` instead of
   the ISA default 1.225.
