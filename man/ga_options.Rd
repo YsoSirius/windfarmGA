@@ -8,7 +8,7 @@ ga_options(...)
 }
 \arguments{
 \item{...}{Named options to set, or a single named list. With no arguments,
-print the current values and return them invisibly.}
+print the current values and return them invisibly. Setting is silent.}
 }
 \value{
 A named list of \verb{windfarmGA.*} options, invisibly.

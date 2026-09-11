@@ -32,8 +32,8 @@
 #' @param ccl_roughness Path to the CLC legend CSV (`Rauhigkeit_z` column).
 #' @param weibull If `TRUE`, hub-height speed comes from Weibull rasters;
 #'   `wind$ws` is ignored.
-#' @param weibull_src `list(k, a)` shape and scale rasters. Package data
-#'   cover Austria.
+#' @param weibull_src `list(k, a)` shape and scale rasters (e.g. Global
+#'   Wind Atlas `combined-Weibull-k` / `combined-Weibull-A`).
 #' @param parallel Parallel fitness (`parallel` + `doParallel`).
 #' @param n_cluster Worker count when `parallel` is `TRUE`.
 #' @param verbose Print a line per generation.
@@ -823,7 +823,7 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
     }
 
     n_cells_now <- length(unique(as.integer(allparks[, "Rect_ID"])))
-    n_cells_elite <- NA_real_
+    n_cells_elite <- 0
     n_take <- min(max(0L, as.integer(n_elite_used)), nrow(allparksUni))
     if (n_take > 0L) {
       ord_el <- order(allparksUni[, "Parkfitness"], decreasing = TRUE)

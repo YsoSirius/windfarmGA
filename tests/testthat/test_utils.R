@@ -203,6 +203,35 @@ test_that("Test Basic Functions", {
   expect_true(sum(a[[2]]) == 100)
 })
 
+test_that("wind_from_uv bins ERA5 components into a rose", {
+  north <- wind_from_uv(0, -1, dir_width = 30)
+  expect_equal(nrow(north), 1L)
+  expect_equal(north$ws, 1)
+  expect_equal(north$wd, 15)
+  expect_equal(north$probab, 100)
+
+  east <- wind_from_uv(-1, 0, dir_width = 30)
+  expect_equal(east$wd, 105)
+
+  mixed <- wind_from_uv(c(0, 0, -1), c(-1, -1, 0), dir_width = 30)
+  expect_equal(nrow(mixed), 2L)
+  expect_equal(sum(mixed$probab), 100)
+  expect_true(mixed$probab[mixed$wd == 15] > mixed$probab[mixed$wd == 105])
+})
+
+test_that("read_power_curve understands NREL headers", {
+  raw <- data.frame(
+    `Wind Speed [m/s]` = c(4, 12, 8),
+    `Power [kW]` = c(80, 2000, 1200),
+    `Ct [-]` = c(0.8, 0.4, 0.7),
+    check.names = FALSE
+  )
+  curve <- read_power_curve(raw)
+  expect_equal(curve$ws, c(4, 8, 12))
+  expect_equal(curve$power, c(80, 1200, 2000))
+  expect_equal(attr(curve, "ct")$ct, c(0.8, 0.7, 0.4))
+})
+
 test_that("explore_result click maps New max to a generation", {
   expect_null(explore_click_generation(NULL, 1:3))
   expect_null(explore_click_generation(data.frame(), 1:3))

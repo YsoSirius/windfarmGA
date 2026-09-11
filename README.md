@@ -43,7 +43,10 @@ the air densities at rotor heights. The surface roughness raster with an additio
 roughness value is used to re-evaluate the surface roughness and to individually
 determine the wake-decay constant for each turbine.
 
-To start an optimization use the function `genetic_algorithm`. 
+To start an optimization use the function `genetic_algorithm`.
+A complete path — draw a site, pick an open IEA/NREL turbine, turn
+u/v or mast data into a rose, then optimize and plot — is in
+[Realistic workflow](#realistic-workflow-site-turbine-wind). 
 
 <div>
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"/>
@@ -55,8 +58,10 @@ To start an optimization use the function `genetic_algorithm`.
 
 Since version 1.1, hexagonal grid cells are possible, with 
 their center points being possible locations for wind turbines. 
-Furthermore, rasters can be included, which contain information on the Weibull 
-parameters. For Austria this data is already included in the package. 
+Furthermore, rasters can be included, which contain information on the Weibull
+parameters (shape `k`, scale `a`). Country GeoTIFFs from the
+[Global Wind Atlas](https://globalwindatlas.info/) (~250 m) are a good
+source; see `gwa_download_country()` in `experimental/climate_helpers.R`. 
     
 ## Create an input Polygon
 - Input Polygon by source
@@ -78,6 +83,13 @@ area <- sf::st_as_sf(sf::st_sfc(
   crs = 3035
 ))
 plot(area, col = "blue", axes = TRUE)
+```
+
+- Or draw a site on a map (GitHub clone; needs `leaflet`, `mapedit` >= 0.8, `leafpm`)
+```R
+source("experimental/draw_shape.R")
+area <- draw_shape()   # draw a polygon, then close the viewer
+plot(area, axes = TRUE)
 ```
 
 ## Create random Wind data 
@@ -132,6 +144,74 @@ If you want to include your own Land Cover Raster, you must assign the Raster Im
 Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the .csv file path to the input variable **ccl_roughness**.
 
 
+## Realistic workflow (site, turbine, wind)
+
+Clone the GitHub repo so `experimental/` is available (it is not in
+the CRAN tarball). Browse open reference turbines at the
+[NREL Turbine Archive](https://natlabrockies.github.io/turbine-models/)
+(IEA 3.4 / 10 / 15 MW and NREL 5 MW are the best documented).
+
+ERA5 / Copernicus (env `COPERNICUS_CLIMATE_DATA`) is useful as a
+**directional rose** over time (`u10`/`v10` → `wind_from_era5()`), but
+the grid is too coarse (~31 km) as a spatial wind field for siting.
+For mean speed per cell use Global Wind Atlas Weibull rasters
+(`weibull = TRUE`, `weibull_src = list(k, a)`). Hub-height correction
+uses `reference_height` (10 m for ERA5) and `rotor_height` from the turbine.
+
+```R
+library(windfarmGA)
+library(sf)
+
+source("experimental/draw_shape.R")
+source("experimental/climate_helpers.R")
+
+## 1. Site: draw a polygon (or st_read a shapefile)
+area <- draw_shape()
+plot(area, axes = TRUE)
+
+## 2. Turbine: IEA 3.4 MW, 130 m rotor, 110 m hub
+nrel_curve_catalog()
+curve <- nrel_fetch_curve("IEA_3.4MW_130")
+plot_power_curve(curve)
+ga_options(power_curve = curve)
+rotor <- attr(curve, "rotor")           # radius in metres
+hub <- attr(curve, "rotor_height")
+
+## 3. Wind rose: hourly u/v (east, north) -> ws / wd / probab
+##    Real ERA5: wind <- wind_from_era5(era5_df)
+##    Spatial field (GWA ~250 m): gwa <- gwa_download_country("AUT", 100)
+##    then genetic_algorithm(..., weibull = TRUE, weibull_src = gwa$weibull_src)
+set.seed(1)
+n <- 24 * 365
+u <- rnorm(n, 2.5, 3)
+v <- rnorm(n, -1.5, 3)
+wind <- wind_from_uv(u, v, dir_width = 30)
+plot_windrose(wind, spd = "ws", dir = "wd")
+
+## 4. Optimize: keep hub wind in the rising part of the curve
+result <- genetic_algorithm(
+  area = area,
+  wind = wind,
+  n = 12,
+  rotor = rotor,
+  rotor_height = hub,
+  reference_height = 10,
+  fcr = 5,
+  iteration = 40,
+  plot = FALSE
+)
+
+## 5. Plot
+print(result)
+plot_result(result, area)
+plot_parkfitness(result)
+plot_leaflet(result, area, which = 1)
+explore_result(result, area)
+```
+
+The helper walkthrough lives locally (gitignored):
+`source("_experiment/test_climate_helpers.R"); test_climate_helpers()`.
+
 ## Start an Optimization
 An optimization can be initiated with the function **genetic_algorithm**.
 Search knobs that are not function arguments are session options
@@ -159,18 +239,14 @@ result <- genetic_algorithm(
 
 
 ```R
-## Run an optimization with your own Weibull parameter rasters. The shape and scale
-## parameter rasters of the weibull distributions must be added to a list, with the first
-## list item being the shape parameter (k) and the second list item being the scale
-## parameter (a). Adapt the paths to your raster data and run an optimization.
-kraster <- "/..pathto../k_param_raster.tif"
-araster <- "/..pathto../a_param_raster.tif"
-weibullrasters <- list(terra::rast(kraster), terra::rast(araster))
-
+## Spatial mean speed from Global Wind Atlas (shape k, scale A).
+## wind$ws is then ignored; wind$wd / wind$probab still weight directions.
+source("experimental/climate_helpers.R")
+gwa <- gwa_download_country("AUT", height = 100)
 result_weibull <- genetic_algorithm(
   area = area, grid_method = "h", n = 12,
   fcr = 5, iteration = 10, wind = wind_df, rotor = 30,
-  rotor_height = 100, weibull = TRUE, weibull_src = weibullrasters
+  rotor_height = 100, weibull = TRUE, weibull_src = gwa$weibull_src
 )
 plot_windfarmGA(result = result_weibull, area = area)
 ```
@@ -219,7 +295,7 @@ Required: `area`, `wind`, `n`, `rotor`, `rotor_height`.
 | `ccl` | auto / package | Path to a CLC raster (`.tif`) if you do not want the download. |
 | `ccl_roughness` | `inst/extdata` | CSV legend with column `Rauhigkeit_z` (`;` separated). |
 | `weibull` | `FALSE` | If `TRUE`, mean speed at each turbine comes from Weibull rasters; `ws` in `wind` is ignored. |
-| `weibull_src` | Austria rasters | `list(k, a)` shape and scale rasters. Package data cover Austria only. |
+| `weibull_src` | `NULL` | `list(k, a)` shape and scale rasters (e.g. GWA `combined-Weibull-k` / `combined-Weibull-A`). |
 
 ### GA loop
 
@@ -255,8 +331,8 @@ Fitness is \(E \times (\eta/100)^w\). These options change how \(E\) and \(\eta\
 | `windfarmGA.cut_in` | `0` | Cut-in wind speed (m/s). `0` = no cut-in. |
 | `windfarmGA.rated_ws` | `Inf` | Rated wind speed; above this, power stays at rated. |
 | `windfarmGA.cut_out` | `Inf` | Cut-out wind speed. |
-| `windfarmGA.power_curve` | `NULL` | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not Cp * v^3). On the rated plateau, wakes may not change power. See `plot_power_curve()`. |
-| `windfarmGA.fitness_efficiency_weight` | `1` | Exponent \(w\) on park efficiency. `0` optimises energy only. |
+| `windfarmGA.power_curve` | `NULL` | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not Cp * v^3). On the rated plateau, wakes may not change power. Build a table with `read_power_curve()` or `plot_power_curve()`. ERA5 u/v: `wind_from_uv()`. |
+| `windfarmGA.fitness_efficiency_weight` | `1` | Preference weight \(w\): fitness is \(E \times (\eta/100)^w\). `0` = energy only; `>1` punishes wake more. Not auto-tuned. |
 | `windfarmGA.max_angle` | `20` | Max wake angle (degrees) when assigning downstream turbines. |
 | `windfarmGA.max_distance` | `100000` | Max wake distance (m). |
 

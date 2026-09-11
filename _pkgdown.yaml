@@ -57,6 +57,9 @@ reference:
     - grid_area
     - hexa_area
     - windata_format
+    - wind_from_uv
+    - wind_from_series
+    - read_power_curve
     - isSpatial
     - permutations
     - splitAt

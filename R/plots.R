@@ -197,8 +197,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 
 
   if (plot) {
-    # print the plot #################
-    print(plot_windrose)
+    print_ggplot_or_font_hint(plot_windrose)
   }
 
   # return the handle to the wind rose #################
@@ -626,6 +625,25 @@ ga_elite_n <- function(result) {
     n_el <- 3L
   }
   n_el
+}
+
+print_ggplot_or_font_hint <- function(p) {
+  tryCatch(
+    print(p),
+    error = function(e) {
+      msg <- conditionMessage(e)
+      if (grepl("font_info", msg, fixed = TRUE) ||
+        grepl("unused argument \\(weight", msg)) {
+        stop(
+          "ggplot2 4 / textshaping need a current 'systemfonts' ",
+          "(font_info() gained a weight argument).\n",
+          "Update with install.packages(\"systemfonts\")",
+          call. = FALSE
+        )
+      }
+      stop(e)
+    }
+  )
 }
 
 ga_plot_theme <- function(legend = "right") {

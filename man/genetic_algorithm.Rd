@@ -78,8 +78,8 @@ the site (\code{prop} in \code{\link[=grid_area]{grid_area()}}).}
 \item{weibull}{If \code{TRUE}, hub-height speed comes from Weibull rasters;
 \code{wind$ws} is ignored.}
 
-\item{weibull_src}{\code{list(k, a)} shape and scale rasters. Package data
-cover Austria.}
+\item{weibull_src}{\code{list(k, a)} shape and scale rasters (e.g. Global
+Wind Atlas \code{combined-Weibull-k} / \code{combined-Weibull-A}).}
 
 \item{parallel}{Parallel fitness (\code{parallel} + \code{doParallel}).}
 

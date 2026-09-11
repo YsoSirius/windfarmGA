@@ -29,6 +29,12 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   chromosomes. New exports: `set_crossover()`, `swap_mutation()`.
 
 ## Fixes
+* `ga_options(...)` is silent when setting; only `ga_options()` prints
+  the table. The climate-helper demo no longer dumps options twice.
+* `plot_windrose()` explains the ggplot2-4 / old-systemfonts clash
+  (`font_info(..., weight=)`). Update with `install.packages("systemfonts")`.
+* With `elitism = FALSE`, `nindiv$cells_elite` is 0 instead of `NA`. The GA
+  input tests treat any `NA` in the result as a failure.
 * pkgdown reference lists the new exports (`as_windfarmGA`, `explore_result`,
   `ga_options`, `generation_layouts`, `population_census`, `set_crossover`,
   `swap_mutation`). `plot_power_curve()` Rd no longer uses `\cdot`.
@@ -86,6 +92,21 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   Elite offspring is green (`#27AE60`), elites stay orange.
 
 ## Features
+* Wind-climate helpers (no extra Suggests): `wind_from_uv()` bins ERA5-style
+  u/v into `ws`/`wd`/`probab`; `wind_from_series()` does the same from a
+  mast time series; `read_power_curve()` parses NREL/IEA CSVs
+  (`Wind Speed [m/s]`, `Power [kW]`, optional `Ct`). Wrappers for bReeze,
+  ecmwfr/mcera5 and `nrel_fetch_curve()` live in
+  `experimental/climate_helpers.R` (plus `gwa_download_country()` for
+  Global Wind Atlas country GeoTIFFs). `wind_from_era5()` accepts the
+  list from `get_era5_wind()` (`experimental/download_ERA5_historic.R`)
+  or its `$hourly` table with `u100`/`v100`. Downloads go to a unique
+  folder under `tempdir()` unless `out_dir` is set. The helper walkthrough is local:
+  `source("_experiment/test_climate_helpers.R"); test_climate_helpers()`.
+  Profile `calculate_energy()` with `experimental/profile_energy.R`.
+  The README has an end-to-end example: draw a site, pick an IEA/NREL
+  turbine ([NREL archive](https://natlabrockies.github.io/turbine-models/)),
+  build a wind rose from u/v, optimize, plot.
 * Combinatorial genome: each individual is `n` unique grid-cell IDs, not a
   0/1 string over all cells. `genetic_algorithm` now runs
   `selection` → `set_crossover` → `swap_mutation` → `get_grids` → `fitness`.
@@ -175,6 +196,12 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   stuck. Local search now slides to a neighbour cell.
 * Spatial EQU/RAN crossover is unused; set-crossover can use a half-plane
   split when coordinates are passed.
+* `windfarmGA.fitness_efficiency_weight` is a user preference, not a
+  search parameter. Default `w = 1` is un-tuned. Try `0` (energy only)
+  vs `1` vs `2` on the same site if wake vs yield trade-off matters.
+* ERA5 / Copernicus (`COPERNICUS_CLIMATE_DATA`) stays for the directional
+  rose only. Spatial mean speed should come from GWA Weibull A/k
+  (`gwa_download_country()`), not the ERA5 grid.
 
 ## Ideas
 * Census could also show immigrants, cache hits and local-search tries if
@@ -185,6 +212,14 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   add them to Suggests.
 * With a manufacturer curve, run the GA at hub winds in the rising part
   (or a Weibull climate), not only on the rated plateau.
+* `calculate_energy()` is about 0.05 s per call for 15 turbines and 12
+  directions. ~60% is `turbine_influences` / `get_dist_angles` (R loops,
+  `subset.matrix`, `lapply`). `energy_calc_CPP` does not show up.
+  Next speed-up is that inner loop in Rcpp; more `n_cluster` only helps
+  a large population.
+* Optional Bastankhah wake beside Jensen (`ga_options(wake_model)`).
+* Use GWA `air-density` over the site for `windfarmGA.air_rh` instead of
+  the ISA default 1.225.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0

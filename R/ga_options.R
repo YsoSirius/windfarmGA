@@ -22,7 +22,7 @@ format_ga_option <- function(x) {
 #' @export
 #'
 #' @param ... Named options to set, or a single named list. With no arguments,
-#'   print the current values and return them invisibly.
+#'   print the current values and return them invisibly. Setting is silent.
 #'
 #' @return A named list of `windfarmGA.*` options, invisibly.
 #'
@@ -50,7 +50,7 @@ ga_options <- function(...) {
   keys <- ga_option_names()
   vals <- lapply(keys, function(k) getOption(k))
   names(vals) <- keys
-  if (!length(dots) || interactive()) {
+  if (!length(dots)) {
     print(data.frame(
       option = sub("^windfarmGA\\.", "", keys),
       value = vapply(vals, format_ga_option, character(1)),
