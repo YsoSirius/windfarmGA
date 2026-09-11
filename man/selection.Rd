@@ -14,22 +14,27 @@ selection(fit, Grid, teil, elitism, nelit, selstate, verbose)
 \item{teil}{A numeric value that determines the selection percentage}
 
 \item{elitism}{Boolean value, which indicates whether elitism should be
-activated or not. If \code{TRUE}, the best \code{nelit} layouts are copied
-unchanged into the next generation. Default is \code{TRUE}}
+activated or not. If \code{TRUE}, the current best layout is archived
+unchanged and each elite produces several mutated copies plus mixes with
+weaker layouts (\code{windfarmGA.elite_children} /
+\code{windfarmGA.elite_mix}). The elite count starts at \code{nelit} and
+rises while refining a stall, then drops by one during a disturbance
+pulse. Default is \code{TRUE}}
 
 \item{nelit}{If \code{elitism} is TRUE, this input determines the amount
-of individuals in the elite group. Default is 7}
+of individuals in the elite group. Default is 3}
 
 \item{selstate}{Determines which selection method is used, "FIX" selects a
 constant percentage and "VAR" selects a variable percentage, depending on
-the development of the fitness values. Default is "FIX"}
+the development of the fitness values. Default is "VAR"}
 
 \item{verbose}{If TRUE, will print out further information.}
 }
 \value{
-Returns list with 2 elements. Element 1 is the binary encoded matrix
-which shows all selected individuals. Element 2 represent the mean fitness
-values of each parental team.
+Returns a list with 2 elements. Element 1 is an integer matrix of
+selected layouts (\code{n} turbines × selected individuals), each column a
+set of unique grid cell IDs. Element 2 is the fitness of each selected
+individual.
 }
 \description{
 Select a certain amount of individuals and recombine them to
@@ -82,6 +87,8 @@ Other Genetic Algorithm Functions:
 \code{\link{genetic_algorithm}()},
 \code{\link{init_population}()},
 \code{\link{mutation}()},
+\code{\link{set_crossover}()},
+\code{\link{swap_mutation}()},
 \code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

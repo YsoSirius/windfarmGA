@@ -184,25 +184,13 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
       axis.title.y = ggplot2::element_blank(),
       axis.text.y = ggplot2::element_blank(),
       axis.ticks.y = ggplot2::element_blank(),
-      legend.background = ggplot2::element_rect(
-        fill = "gray96",
-        colour = "gray96"
-      ),
-      panel.background = ggplot2::element_rect(
-        fill = "gray96",
-        colour = "gray96"
-      ),
-      panel.grid.minor.y = ggplot2::element_line(linewidth = 2),
-      panel.grid.major = ggplot2::element_line(colour = "gray86"),
+      legend.background = ggplot2::element_blank(),
+      panel.background = ggplot2::element_rect(fill = "white", colour = NA),
+      panel.grid.minor = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_line(colour = "grey90", linewidth = 0.3),
       panel.border = ggplot2::element_blank(),
-      plot.background = ggplot2::element_rect(
-        fill = "gray96",
-        colour = "gray96"
-      ),
-      strip.background = ggplot2::element_rect(
-        fill = "gray96",
-        colour = "gray96"
-      ),
+      plot.background = ggplot2::element_rect(fill = "white", colour = NA),
+      strip.background = ggplot2::element_blank(),
       plot.margin = ggplot2::unit(c(0, 0, 0, 0), "lines")
     )
 
@@ -219,16 +207,14 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 
 #' @title Plot the best results
 #' @name plot_result
-#' @description  Plot the best solutions of the genetic algorithm.
-#'   Depending on \code{plotEn}, either the best energy or efficiency solutions
-#'   can be plotted. \code{best} indicates the amount of best solutions to plot.
+#' @description Draw the best layout(s) on the site. Turbine labels are the
+#'   total wake in percent. Default is the single best energy layout.
 #'
 #' @export
 #'
 #' @inheritParams genetic_algorithm
 #' @param result The output of \code{\link{genetic_algorithm}}
-#' @param best A numeric value indicating how many of the best individuals
-#'   should be plotted
+#' @param best How many distinct best layouts to draw. Default is 1.
 #' @param plotEn A numeric value that indicates if the best energy or efficiency
 #'   output should be plotted. \code{1} plots the best energy solutions
 #'   and \code{2} plots the best efficiency solutions
@@ -258,7 +244,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' ## Plot the results of a rectangular grid optimization
 #' plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
 #' }
-plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
+plot_result <- function(result, Polygon1, best = 1, plotEn = 1,
                         topographie = FALSE, Grid = TRUE,
                         sourceCCLRoughness = NULL, sourceCCL = NULL,
                         weibullsrc) {
@@ -273,8 +259,8 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   ## set Graphic Params ###############
   oldpar <- graphics::par(no.readonly = TRUE)
   on.exit(par(oldpar))
-  par(mfrow = c(1, 1), mar = c(5, 6, 4, 2) + 0.1, mgp = c(5, 1, 0))
-  rbPal1 <- grDevices::colorRampPalette(c("green", "red"))
+  par(mfrow = c(1, 1), mar = c(4.5, 4.5, 3.5, 1.5), mgp = c(2.5, 0.8, 0))
+  rbPal1 <- grDevices::colorRampPalette(c("#27AE60", "#C0392B"))
   result_inputs <- result[1, "inputData"][[1]]
 
   ## Check Projections and reference systems ####
@@ -298,7 +284,7 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   Polygon1 <- sf::st_transform(Polygon1, st_crs(Projection))
 
   ## Check Weibull Rasters #########
-  if (missing(weibullsrc)) {
+  if (missing(weibullsrc) || is.null(weibullsrc)) {
     weibullsrc <- NULL
     col2res <- "lightblue"
   } else {
@@ -375,14 +361,13 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
   rectidt <- !duplicated(rectid)
   result <- result[rectidt]
   ndif <- length(result)
-  message(paste(
-    "N different optimal configurations:", ndif, "\nAmount duplicates:",
-    (ledup - ndif)
-  ))
+  if (ndif < ledup) {
+    message(ndif, " distinct layouts (", ledup - ndif, " duplicates skipped)")
+  }
 
   ## Check for enough results #########
   if (ndif < best) {
-    message(paste("Not enough unique Optimas. Show first best Half of different configurations."))
+    message("Fewer distinct layouts than `best`; showing ", max(1, trunc(ndif / 2)), ".")
     best <- trunc(ndif / 2)
   }
   if (best == 0) best <- 1
@@ -405,22 +390,18 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
       Col <- "green"
     }
 
-    ## Plot Best Windfarm  ###########
-    message(paste("Plot ", (best + 1) - i, " Best ", title, " Solution:\n"))
+    rank_i <- (best + 1) - i
     par(mfrow = c(1, 1), ask = FALSE)
     plot(st_geometry(Polygon1),
       col = col2res,
-      main = paste(
-        (best + 1) - i, "Best ", title, " Windfarm",
-        "\nEnergy Output", best_result$EnergyOverall[[1]], "kW",
-        "\nEfficiency:", best_result$EfficAllDir[[1]], "%"
+      main = sprintf(
+        "%s layout #%d   |   %s kW   |   %s%% efficiency",
+        title, rank_i, best_result$EnergyOverall[[1]], best_result$EfficAllDir[[1]]
       ),
-      cex.main = 0.8
+      cex.main = 1
     )
-    if (best > 1) {
-      if (i > 1) {
-        par(ask = TRUE)
-      }
+    if (best > 1 && i > 1) {
+      par(ask = TRUE)
     }
 
     ## Plot Weibull Data ###########
@@ -438,24 +419,22 @@ plot_result <- function(result, Polygon1, best = 3, plotEn = 1,
     }
 
     ## Plot Turbines and additional Info ###########
-    graphics::mtext("Total Wake Effect in %", side = 2, cex = 0.8)
     graphics::points(best_result[, "X"], best_result[, "Y"],
       cex = 2, pch = 20, col = Col
     )
     graphics::text(best_result[, "X"], best_result[, "Y"],
       round(best_result[, "AbschGesamt"], 0),
-      cex = 0.8, pos = 1, col = "black"
+      cex = 0.75, pos = 1, col = "black"
     )
 
     distpo <- stats::dist(
       x = cbind(best_result[, "X"], best_result[, "Y"]),
       method = "euclidian"
     )
-    graphics::mtext(paste("minimal Distance", round(min(distpo), 2)),
-      side = 1, line = 0, cex = 0.8
-    )
-    graphics::mtext(paste("mean Distance", round(mean(distpo), 2)),
-      side = 1, line = 1, cex = 0.8
+    graphics::mtext(
+      sprintf("Wake %% at turbines   |   min dist %s   mean dist %s",
+              round(min(distpo), 1), round(mean(distpo), 1)),
+      side = 1, line = 2, cex = 0.85
     )
 
     ## Plot Terrain Model  ###########
@@ -563,17 +542,204 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
   plot(polygon1, add = TRUE)
 }
 
+ga_series <- function(result) {
+  rslt <- as.data.frame(do.call("rbind", result[, "allparkcoeff"]))
+  n <- nrow(rslt)
+  pad_n <- function(x) {
+    x <- as.numeric(x)
+    if (!length(x)) {
+      return(rep(NA_real_, n))
+    }
+    if (length(x) < n) {
+      x <- c(x, rep(utils::tail(x, 1), n - length(x)))
+    }
+    x[seq_len(n)]
+  }
+
+  mut <- if ("mut_rate" %in% colnames(result)) {
+    pad_n(unlist(result[, "mut_rate"]))
+  } else {
+    rep(NA_real_, n)
+  }
+
+  sc <- if ("selcross" %in% colnames(result)) result[, "selcross"] else result[, 8]
+  cross_raw <- pad_n(vapply(sc, function(x) as.numeric(x)[1], numeric(1)))
+  teil <- pad_n(vapply(sc, function(x) as.numeric(x)[2], numeric(1)))
+  mx <- suppressWarnings(max(cross_raw, na.rm = TRUE))
+  inject <- if (is.finite(mx) && mx > 1) cross_raw / 10 else cross_raw
+  inject[!is.finite(inject)] <- NA_real_
+  inject <- pmax(0, inject)
+
+  sel_pct <- 100 / teil
+  sel_pct[!is.finite(sel_pct)] <- NA_real_
+
+  coverage <- rep(NA_real_, n)
+  bw <- tryCatch(
+    do.call("rbind", result[, if ("beorwor" %in% colnames(result)) "beorwor" else 9]),
+    error = function(e) NULL
+  )
+  if (!is.null(bw)) {
+    bw <- as.matrix(bw)
+    if (ncol(bw) >= 2) {
+      coverage <- pad_n(bw[, 2])
+      cmx <- suppressWarnings(max(coverage, na.rm = TRUE))
+      if (is.finite(cmx) && cmx <= 1.5) {
+        coverage <- coverage * 100
+      }
+    }
+  }
+
+  rec <- cummax(rslt$maxparkfitness)
+  improved <- c(TRUE, rec[-1] > rec[-n] + 1e-8)
+
+  list(
+    n = n,
+    gen = seq_len(n),
+    fit_max = rslt$maxparkfitness,
+    fit_mean = rslt$meanparkfitness,
+    fit_min = rslt$minparkfitness,
+    ene_max = rslt$MaxEnergyRedu,
+    ene_mean = rslt$MeanEnergyRedu,
+    ene_min = rslt$MinEnergyRedu,
+    eff_max = rslt$maxParkwirkungsg,
+    eff_mean = rslt$meanParkwirkungsg,
+    eff_min = rslt$minParkwirkungsg,
+    inject = inject,
+    mut = mut,
+    sel_pct = sel_pct,
+    coverage = coverage,
+    improved = improved
+  )
+}
+
+ga_elite_n <- function(result) {
+  n_el <- 3L
+  if ("inputData" %in% colnames(result)) {
+    inp <- tryCatch(result[1, "inputData"][[1]], error = function(e) NULL)
+    if (!is.null(inp) && "Elite count" %in% rownames(inp)) {
+      n_el <- suppressWarnings(as.integer(inp["Elite count", ][[1]]))
+    }
+  }
+  if (!is.finite(n_el) || n_el < 1L) {
+    n_el <- 3L
+  }
+  n_el
+}
+
+ga_plot_theme <- function(legend = "right") {
+  ggplot2::theme_minimal(base_size = 11) +
+    ggplot2::theme(
+      legend.position = legend,
+      legend.justification = if (identical(legend, "bottom")) "center" else "top",
+      legend.direction = if (identical(legend, "bottom")) "horizontal" else "vertical",
+      legend.title = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.title = ggplot2::element_text(face = "bold", size = 12)
+    )
+}
+
+ga_result_grid <- function(result, Polygon1) {
+  result_inputs <- result[1, "inputData"][[1]]
+  Polygon1 <- isSpatial(Polygon1)
+  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
+  Projection <- result_inputs["Projection", ][[1]]
+  if (PROJ6) {
+    Projection <- tryCatch(as.integer(Projection),
+      warning = function(e) Projection,
+      error = function(e) Projection
+    )
+  }
+  if (is.na(sf::st_crs(Polygon1))) {
+    if (PROJ6) {
+      sf::st_crs(Polygon1) <- 4326
+    } else {
+      sf::st_crs(Polygon1) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
+    }
+  }
+  Polygon1 <- sf::st_transform(Polygon1, sf::st_crs(Projection))
+  cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
+  prop <- as.numeric(result_inputs["Percentage of Polygon", ][[1]])
+  if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
+    Grid <- grid_area(Polygon1, size = cellsize, prop = prop)
+  } else {
+    Grid <- hexa_area(Polygon1, size = cellsize)
+  }
+  list(polygon = Polygon1, grid_xy = Grid[[1]], grid_poly = Grid[[2]])
+}
+
+maybe_plotly <- function(plots, use) {
+  if (!isTRUE(use) || !is_plotly_installed()) {
+    return(NULL)
+  }
+  tryCatch({
+    ply <- lapply(plots, function(p) {
+      plotly::ggplotly(p, tooltip = c("x", "y", "colour"))
+    })
+    if (length(ply) == 1L) {
+      return(ply[[1]])
+    }
+    plotly::layout(
+      plotly::subplot(
+        ply, nrows = length(ply), shareX = TRUE, titleY = TRUE, margin = 0.08
+      ),
+      legend = list(orientation = "v", x = 1.02, y = 1, xanchor = "left")
+    )
+  }, error = function(e) NULL)
+}
+
+use_plotly <- function(flag) {
+  if (is.null(flag)) {
+    is_plotly_installed()
+  } else {
+    isTRUE(flag) && is_plotly_installed()
+  }
+}
+
+pause_next_plot <- function(ask) {
+  if (isTRUE(ask)) {
+    invisible(readline("Press [enter] for the next plot"))
+  }
+}
+
+show_plot_pages <- function(plots, ask = FALSE, plotly = FALSE) {
+  plots <- plots[!vapply(plots, is.null, logical(1))]
+  if (!length(plots)) {
+    return(invisible(plots))
+  }
+  use_ply <- isTRUE(plotly) && !isTRUE(ask)
+  if (use_ply) {
+    ply <- maybe_plotly(plots, TRUE)
+    if (!is.null(ply)) {
+      print(ply)
+      return(invisible(ply))
+    }
+  }
+  for (i in seq_along(plots)) {
+    if (i > 1L) {
+      pause_next_plot(ask)
+    }
+    print(plots[[i]])
+  }
+  invisible(plots)
+}
+
 #' @title Plot the results of an optimization run
 #' @name plot_windfarmGA
-#' @description  Plot the results of a genetic algorithm run with given inputs.
-#'   Several plots try to show all relevant effects and outcomes of the
-#'   algorithm. 6 plot methods are available that can be selected individually.
+#' @description Draw the useful summary plots of a GA run, one after another:
+#'   best layout, fitness, operator rates, population, cells, efficiency,
+#'   and the cell heatmap. In an interactive session every page waits for
+#'   Enter so nothing is overwritten in the Plots pane.
 #'
 #' @export
 #'
 #' @inheritParams plot_result
-#' @param whichPl Which plots should be shown: 1-6 are possible. The default is
-#'   "all" which shows all available plots
+#' @param whichPl `"all"` (default) shows `result`, `progress`, `population`
+#'   and `heatmap`. Or a character vector (`"result"`, `"progress"`,
+#'   `"population"`, `"heatmap"`, `"evolution"`) or the numbers 1–4.
+#' @param ask If `TRUE`, wait for Enter between pages. Default is `TRUE`
+#'   in an interactive session.
+#' @param plotly If `TRUE`, draw fitness and rates with plotly (hover).
+#'   Default is `TRUE` when the plotly package is installed.
 #'
 #' @family Plotting Functions
 #' @return Returns NULL. Used for plotting
@@ -587,60 +753,720 @@ plot_terrain <- function(inputs, sel1, polygon1, orogr1, srtm_crop, cclRaster) {
 #'   crs = 3035
 #' ))
 #'
-#' ## Plot the results of a hexagonal grid optimization
-#' plot_windfarmGA(resulthex, Polygon1, whichPl = "all", best = 1, plotEn = 1)
-#'
-#' ## Plot the results of a rectangular grid optimization
-#' plot_windfarmGA(resultrect, Polygon1, whichPl = "all", best = 1, plotEn = 1)
+#' plot_windfarmGA(resulthex, Polygon1)
+#' plot_windfarmGA(resultrect, Polygon1, whichPl = "progress")
 #' }
 plot_windfarmGA <- function(result, Polygon1, whichPl = "all",
                             best = 1, plotEn = 1,
-                            weibullsrc) {
-  parpplotWindGa <- par(ask = FALSE, no.readonly = TRUE)
-  on.exit(par(parpplotWindGa))
+                            weibullsrc, ask = NULL, plotly = NULL) {
+  oldpar <- graphics::par(ask = FALSE, no.readonly = TRUE)
+  on.exit(graphics::par(oldpar))
 
-  ## DATA #################
-  if (any(whichPl == "all")) {
-    whichPl <- 1:6
+  if (is.null(ask)) {
+    ask <- interactive()
   }
   Polygon1 <- isSpatial(Polygon1)
-  if (nrow(result) < 4) {
-    if (any(2:5 %in% whichPl)) {
-      message("Cannot plot option 2,3,4,5. \n Only option 1,6 are available.")
-      whichPl <- c(1, 6)
+
+  if (length(whichPl) == 1 && identical(tolower(as.character(whichPl)), "all")) {
+    whichPl <- c("result", "progress", "population", "heatmap")
+  }
+  if (is.numeric(whichPl)) {
+    lab <- c("result", "progress", "population", "heatmap")
+    whichPl <- unique(lab[pmin(pmax(as.integer(whichPl), 1L), 4L)])
+  }
+  whichPl <- unique(tolower(as.character(whichPl)))
+  whichPl[whichPl %in% c("parkfitness", "fitness")] <- "progress"
+  whichPl[whichPl %in% c("cell", "cells")] <- "heatmap"
+  whichPl[whichPl %in% c("census", "pop")] <- "population"
+  whichPl <- whichPl[whichPl %in% c(
+    "result", "progress", "population", "evolution", "heatmap"
+  )]
+
+  for (i in seq_along(whichPl)) {
+    pg <- whichPl[[i]]
+    if (pg == "result") {
+      plot_result(
+        result = result, Polygon1 = Polygon1, best = best, plotEn = plotEn,
+        topographie = FALSE, Grid = TRUE, weibullsrc = weibullsrc
+      )
+    } else if (pg == "progress") {
+      plot_parkfitness(result, interactive = use_plotly(plotly), ask = ask)
+    } else if (pg == "population") {
+      plot_population(result, interactive = use_plotly(plotly), ask = ask)
+    } else if (pg == "evolution") {
+      plot_evolution(result, ask = FALSE)
+    } else if (pg == "heatmap") {
+      plot_cell_heatmap(result, Polygon1)
+    }
+    if (i < length(whichPl)) {
+      pause_next_plot(ask)
     }
   }
-  #################
+  invisible(NULL)
+}
 
-  ## PLOTTING OUTPUTS ####################
-  if (any(whichPl == 1)) {
-    message("plot_result: Plot the 'best' Individuals of the GA:")
-    plot_result(
-      result = result, Polygon1 = Polygon1, best = best, plotEn = plotEn,
-      topographie = FALSE, Grid = TRUE, weibullsrc = weibullsrc
+#' @title Heatmap of probed grid cells
+#' @name plot_cell_heatmap
+#' @description Count how often each grid cell appeared in an evaluated layout
+#'   over all generations (`allCoords` in the GA result). Never-tried cells
+#'   stay light gray. Useful to see whether the search covered the area or
+#'   stuck to a few sites.
+#'
+#' @export
+#'
+#' @inheritParams plot_result
+#' @param log If `TRUE`, color the counts on a `log1p` scale so a few elite
+#'   cells do not dominate the palette. Default is `TRUE`
+#' @param plotit If `FALSE`, only return the counts. Default is `TRUE`
+#'
+#' @family Plotting Functions
+#' @return A `data.frame` with grid ID, coordinates and visit count
+#'   (`n_probed`), returned invisibly.
+#' @examples \donttest{
+#' plot_cell_heatmap(resultrect, sp_polygon)
+#' }
+plot_cell_heatmap <- function(result, Polygon1, log = TRUE, plotit = TRUE) {
+  if (!"allCoords" %in% colnames(result)) {
+    stop("result has no allCoords column. Run genetic_algorithm() first.")
+  }
+  parks <- do.call("rbind", result[, "allCoords"])
+  if (is.null(parks) || !nrow(parks) || !"Rect_ID" %in% colnames(parks)) {
+    stop("allCoords has no Rect_ID column.")
+  }
+  counts <- table(as.integer(parks[, "Rect_ID"]))
+
+  result_inputs <- result[1, "inputData"][[1]]
+  Polygon1 <- isSpatial(Polygon1)
+  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
+  Projection <- result_inputs["Projection", ][[1]]
+  if (PROJ6) {
+    Projection <- tryCatch(as.integer(Projection),
+      warning = function(e) Projection,
+      error = function(e) Projection
     )
-    readline(prompt = "Press [enter] to continue")
   }
-  if (any(whichPl == 2)) {
-    message("plot_evolution: Plot the Evolution of the Efficiency and Energy Values:")
-    plot_evolution(result, TRUE, 0.3)
+  if (is.na(sf::st_crs(Polygon1))) {
+    if (PROJ6) {
+      sf::st_crs(Polygon1) <- 4326
+    } else {
+      sf::st_crs(Polygon1) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
+    }
   }
-  if (any(whichPl == 3)) {
-    message("plot_parkfitness: Plot the Influence of Population Size, Selection, Crossover, Mutation:")
-    plot_parkfitness(result, 0.1)
-    readline(prompt = "Press [enter] to continue")
+  Polygon1 <- sf::st_transform(Polygon1, sf::st_crs(Projection))
+
+  cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
+  prop <- as.numeric(result_inputs["Percentage of Polygon", ][[1]])
+  if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
+    Grid <- grid_area(Polygon1, size = cellsize, prop = prop)
+  } else {
+    Grid <- hexa_area(Polygon1, size = cellsize)
   }
-  if (any(whichPl == 4)) {
-    message("plot_fitness_evolution: Plot the Changes in Fitness Values:")
-    plot_fitness_evolution(result)
-    readline(prompt = "Press [enter] to continue")
+  grid_xy <- Grid[[1]]
+  grid_poly <- Grid[[2]]
+  ncell <- nrow(grid_xy)
+  vis <- integer(ncell)
+  m <- match(as.integer(names(counts)), grid_xy[, "ID"])
+  ok <- !is.na(m)
+  vis[m[ok]] <- as.integer(counts)[ok]
+
+  out <- data.frame(
+    ID = grid_xy[, "ID"],
+    X = grid_xy[, "X"],
+    Y = grid_xy[, "Y"],
+    n_probed = vis
+  )
+
+  if (isTRUE(plotit)) {
+    oldpar <- graphics::par(no.readonly = TRUE)
+    on.exit(graphics::par(oldpar))
+    graphics::par(mar = c(4, 4, 4, 6) + 0.1)
+
+    cols <- rep("#F0F0F0", ncell)
+    pal <- grDevices::colorRampPalette(c("#FEE8C8", "#FDBB84", "#E34A33", "#7F0000"))
+    pos <- vis > 0
+    if (any(pos)) {
+      v <- vis[pos]
+      if (isTRUE(log)) {
+        v <- log1p(v)
+      }
+      pal_n <- 100
+      ramp <- pal(pal_n)
+      if (length(unique(v)) == 1) {
+        cols[pos] <- ramp[pal_n]
+      } else {
+        idx <- as.integer(cut(v, breaks = pal_n, include.lowest = TRUE))
+        cols[pos] <- ramp[idx]
+      }
+    }
+
+    n_zero <- sum(vis == 0)
+    main <- "Grid cells probed during the GA"
+    sub <- sprintf(
+      "%d / %d cells never tried (%.0f%%)",
+      n_zero, ncell, 100 * n_zero / ncell
+    )
+    plot(sf::st_geometry(Polygon1), col = "white", border = "grey30",
+         main = main, sub = sub)
+    plot(grid_poly, col = cols, border = "white", lwd = 0.4, add = TRUE)
+    plot(sf::st_geometry(Polygon1), add = TRUE, border = "grey20", col = NA)
+
+    n_leg <- 6
+    mx <- max(vis)
+    leg_vals <- unique(round(seq(0, mx, length.out = n_leg)))
+    if (isTRUE(log)) {
+      leg_v <- log1p(leg_vals)
+      if (max(leg_v) > 0) {
+        leg_idx <- pmax(1L, pmin(100L, as.integer(1 + 99 * leg_v / max(leg_v))))
+      } else {
+        leg_idx <- rep(1L, length(leg_vals))
+      }
+    } else {
+      if (mx > 0) {
+        leg_idx <- pmax(1L, pmin(100L, as.integer(1 + 99 * leg_vals / mx)))
+      } else {
+        leg_idx <- rep(1L, length(leg_vals))
+      }
+    }
+    leg_cols <- pal(100)[leg_idx]
+    leg_cols[leg_vals == 0] <- "#F0F0F0"
+    graphics::legend(
+      "topright", legend = as.character(leg_vals), fill = leg_cols,
+      title = if (isTRUE(log)) "n (log colors)" else "n probed",
+      bty = "n", cex = 0.8, inset = 0.02
+    )
   }
-  if (any(whichPl == 5)) {
-    message("plot_cloud: Plot all individual Values of the whole Evolution:")
-    plot_cloud(result, TRUE)
-    readline(prompt = "Press [enter] to continue")
+  invisible(out)
+}
+
+#' @title Layouts evaluated in one generation
+#' @name generation_layouts
+#' @description Return every individual that was fitness-evaluated in a given
+#'   generation (`allCoords`). Duplicate layouts (same cell IDs) are flagged.
+#' @export
+#'
+#' @inheritParams plot_result
+#' @param generation Generation index (1 = first). Default is the last
+#'   generation in `result`.
+#'
+#' @family Plotting Functions
+#' @return A list with `turbines` (one row per turbine), `layouts` (one row
+#'   per individual) and `generation`.
+#' @examples \donttest{
+#' generation_layouts(resultrect, generation = 10)
+#' }
+generation_layouts <- function(result, generation = NULL) {
+  if (!"allCoords" %in% colnames(result)) {
+    stop("result has no allCoords column. Run genetic_algorithm() first.")
   }
-  return()
+  n_gen <- nrow(result)
+  if (is.null(generation)) {
+    generation <- n_gen
+  }
+  generation <- as.integer(generation)
+  if (generation < 1L || generation > n_gen) {
+    stop("generation must be between 1 and ", n_gen, ".")
+  }
+  parks <- result[generation, "allCoords"][[1]]
+  if (is.null(parks) || !nrow(parks)) {
+    stop("Generation ", generation, " has no stored layouts.")
+  }
+  parks <- as.data.frame(parks)
+  if (!"Run" %in% names(parks)) {
+    stop("allCoords has no Run column.")
+  }
+  runs <- unique(parks$Run)
+  layouts <- do.call(rbind, lapply(runs, function(r) {
+    one <- parks[parks$Run == r, , drop = FALSE]
+    data.frame(
+      Run = r,
+      EnergyOverall = one$EnergyOverall[[1]],
+      EfficAllDir = one$EfficAllDir[[1]],
+      Parkfitness = one$Parkfitness[[1]],
+      n_turb = nrow(one),
+      ids = paste(sort(as.integer(one$Rect_ID)), collapse = ","),
+      stringsAsFactors = FALSE
+    )
+  }))
+  layouts <- layouts[order(layouts$Parkfitness, decreasing = TRUE), , drop = FALSE]
+  layouts$rank <- seq_len(nrow(layouts))
+  layouts$unique <- !duplicated(layouts$ids)
+  layouts$elite <- layouts$rank <= ga_elite_n(result)
+  list(turbines = parks, layouts = layouts, generation = generation)
+}
+
+#' @title Plot all layouts of one generation
+#' @name plot_generation
+#' @description Occupancy map of one generation, then the distinct layouts
+#'   as small maps. In an interactive session each page waits for Enter so
+#'   you can step through every distinct layout (`n_show` maps per page).
+#'   Non-interactive calls only draw the first `n_show` maps.
+#' @export
+#'
+#' @inheritParams plot_result
+#' @param generation Generation index (1 = first). Default is the last
+#'   generation.
+#' @param n_show Distinct layouts per page (and, if `ask` is `FALSE`, how
+#'   many to draw in total). Default is 6. Set to 0 to skip the maps.
+#' @param interactive Use plotly for the occupancy map when available.
+#' @param ask If `TRUE`, wait for Enter and page through all distinct
+#'   layouts. Default is `TRUE` in an interactive session.
+#'
+#' @family Plotting Functions
+#' @return The list from \code{\link{generation_layouts}}, invisibly.
+#' @examples \donttest{
+#' plot_generation(resultrect, sp_polygon, generation = 10)
+#' }
+plot_generation <- function(result, Polygon1, generation = NULL,
+                            n_show = 6, interactive = NULL, ask = NULL) {
+  dat <- generation_layouts(result, generation)
+  if (is.null(ask)) {
+    ask <- interactive()
+  }
+  interactive <- if (isTRUE(ask)) FALSE else use_plotly(interactive)
+  site <- ga_result_grid(result, Polygon1)
+  parks <- dat$turbines
+  lay <- dat$layouts
+  best_run <- lay$Run[1]
+  best_xy <- parks[parks$Run == best_run, , drop = FALSE]
+
+  counts <- table(as.integer(parks$Rect_ID))
+  grid_xy <- site$grid_xy
+  vis <- integer(nrow(grid_xy))
+  m <- match(as.integer(names(counts)), grid_xy[, "ID"])
+  ok <- !is.na(m)
+  vis[m[ok]] <- as.integer(counts)[ok]
+  n_unique <- sum(lay$unique)
+  n_ind <- nrow(lay)
+  n_show <- as.integer(n_show)
+
+  if (is_ggplot2_installed()) {
+    grid_sf <- sf::st_as_sf(site$grid_poly)
+    grid_sf$n_used <- vis[seq_len(nrow(grid_sf))]
+    p_occ <- ggplot2::ggplot() +
+      ggplot2::geom_sf(data = site$polygon, fill = "white", color = "grey30") +
+      ggplot2::geom_sf(
+        data = grid_sf, ggplot2::aes(fill = n_used),
+        color = "white", linewidth = 0.25
+      ) +
+      ggplot2::geom_point(
+        data = parks, ggplot2::aes(X, Y, color = Parkfitness),
+        alpha = 0.25, size = 1.4
+      ) +
+      ggplot2::geom_point(
+        data = best_xy, ggplot2::aes(X, Y),
+        color = "black", size = 2.4
+      ) +
+      ggplot2::scale_fill_gradient(
+        low = "#F0F0F0", high = "#E34A33", name = "Individuals\nusing cell"
+      ) +
+      ggplot2::scale_color_gradient(
+        low = "#AED6F1", high = "#1B4F72", name = "Fitness"
+      ) +
+      ggplot2::coord_sf() +
+      ggplot2::labs(
+        x = NULL, y = NULL,
+        title = sprintf(
+          "Generation %d   %d individuals   %d distinct layouts",
+          dat$generation, n_ind, n_unique
+        ),
+        subtitle = paste(
+          "Fill = how many layouts used the cell. Points = all turbines (best in black).",
+          if (isTRUE(ask) && n_show > 0L) "Enter for the next page of layouts." else ""
+        )
+      ) +
+      ga_plot_theme()
+
+    ply <- maybe_plotly(list(p_occ), interactive)
+    if (!is.null(ply)) {
+      print(ply)
+    } else {
+      print(p_occ)
+    }
+
+    uniq <- lay[lay$unique, , drop = FALSE]
+    n_draw <- if (isTRUE(ask)) nrow(uniq) else min(n_show, nrow(uniq))
+    if (n_show > 0L && n_draw > 0L) {
+      n_pages <- as.integer(ceiling(n_draw / n_show))
+      for (pg in seq_len(n_pages)) {
+        pause_next_plot(ask)
+        from <- (pg - 1L) * n_show + 1L
+        to <- min(pg * n_show, n_draw)
+        top <- uniq[from:to, , drop = FALSE]
+        top_turb <- parks[parks$Run %in% top$Run, , drop = FALSE]
+        top_turb$rank <- top$rank[match(top_turb$Run, top$Run)]
+        top_turb$lab <- sprintf(
+          "#%d  fit %.3f%s",
+          top_turb$rank, top_turb$Parkfitness,
+          ifelse(top$elite[match(top_turb$Run, top$Run)], "  elite", "")
+        )
+        p_small <- ggplot2::ggplot() +
+          ggplot2::geom_sf(data = site$polygon, fill = "grey96", color = "grey40") +
+          ggplot2::geom_point(
+            data = top_turb, ggplot2::aes(X, Y),
+            color = "#1B4F72", size = 2
+          ) +
+          ggplot2::facet_wrap(~lab) +
+          ggplot2::coord_sf() +
+          ggplot2::labs(
+            x = NULL, y = NULL,
+            title = sprintf(
+              "Generation %d  layouts %d–%d of %d%s",
+              dat$generation, from, to, n_unique,
+              if (n_pages > 1L) sprintf("  (page %d/%d)", pg, n_pages) else ""
+            )
+          ) +
+          ga_plot_theme() +
+          ggplot2::theme(legend.position = "none")
+        print(p_small)
+      }
+    }
+  } else {
+    oldpar <- graphics::par(no.readonly = TRUE)
+    on.exit(graphics::par(oldpar))
+    plot(sf::st_geometry(site$polygon), col = "white", border = "grey30",
+         main = sprintf("Generation %d  (%d layouts)", dat$generation, n_ind))
+    plot(site$grid_poly, add = TRUE, border = "grey80")
+    graphics::points(parks$X, parks$Y, pch = 16, cex = 0.6, col = "#2980B980")
+    graphics::points(best_xy$X, best_xy$Y, pch = 16, cex = 1.4, col = "black")
+  }
+  invisible(dat)
+}
+
+nindiv_vec <- function(x) {
+  if (is.null(x)) {
+    return(numeric(0))
+  }
+  nms <- names(x)
+  if (is.null(nms) && !is.null(dim(x))) {
+    nms <- colnames(x)
+  }
+  v <- as.numeric(x)
+  names(v) <- nms
+  v
+}
+
+nindiv_pick <- function(v, key, legacy, pos) {
+  if (key %in% names(v)) {
+    return(unname(v[[key]]))
+  }
+  if (legacy %in% names(v)) {
+    return(unname(v[[legacy]]))
+  }
+  if (length(v) >= pos) {
+    return(unname(v[[pos]]))
+  }
+  NA_real_
+}
+
+census_from_parks <- function(parks, n_el, need_keys = TRUE) {
+  if (is.null(parks) || !length(parks)) {
+    return(NULL)
+  }
+  parks <- as.data.frame(parks)
+  if (!nrow(parks) || !"Run" %in% names(parks) || !"Rect_ID" %in% names(parks)) {
+    return(NULL)
+  }
+  rid <- as.integer(parks$Rect_ID)
+  run <- parks$Run
+  id_by_run <- split(rid, run)
+  n_ind <- length(id_by_run)
+  keys <- NULL
+  if (isTRUE(need_keys)) {
+    keys <- vapply(
+      id_by_run, function(x) paste(sort.int(x), collapse = ","), character(1)
+    )
+  }
+  fit_col <- if ("Parkfitness" %in% names(parks)) {
+    "Parkfitness"
+  } else if ("EnergyOverall" %in% names(parks)) {
+    "EnergyOverall"
+  } else {
+    NA_character_
+  }
+  cells_elite <- NA_real_
+  if (!is.na(fit_col)) {
+    fit_first <- vapply(split(parks[[fit_col]], run), function(z) z[[1]], numeric(1))
+    ord <- order(fit_first, decreasing = TRUE)
+    if (!is.null(keys)) {
+      ord <- ord[!duplicated(keys[ord])]
+    }
+    top <- ord[seq_len(min(as.integer(n_el), length(ord)))]
+    cells_elite <- length(unique(unlist(id_by_run[top], use.names = FALSE)))
+  }
+  n_dist <- if (is.null(keys)) NA_real_ else length(unique(keys))
+  list(
+    evaluated = n_ind,
+    distinct = n_dist,
+    duplicates = if (is.na(n_dist)) NA_real_ else n_ind - n_dist,
+    cells = length(unique(rid)),
+    cells_elite = cells_elite
+  )
+}
+
+#' @title Population size and diversity per generation
+#' @name population_census
+#' @description Counts evaluated individuals, distinct layouts, duplicates
+#'   dropped before the next generation, selected parents, elites, elite
+#'   offspring and grid cells (this generation and cumulative).
+#' @export
+#'
+#' @inheritParams plot_result
+#'
+#' @family Plotting Functions
+#' @return A data.frame with one row per generation.
+#' @examples \donttest{
+#' population_census(resultrect)
+#' }
+population_census <- function(result) {
+  n <- nrow(result)
+  out <- data.frame(
+    generation = seq_len(n),
+    evaluated = NA_real_,
+    distinct = NA_real_,
+    duplicates = NA_real_,
+    selected = NA_real_,
+    crossover = NA_real_,
+    mutated = NA_real_,
+    elites = NA_real_,
+    elite_kids = NA_real_,
+    cells = NA_real_,
+    cells_elite = NA_real_,
+    cells_cum = NA_real_,
+    stringsAsFactors = FALSE
+  )
+  has_dropped <- FALSE
+  if ("nindiv" %in% colnames(result)) {
+    for (i in seq_len(n)) {
+      v <- nindiv_vec(tryCatch(result[i, "nindiv"][[1]], error = function(e) NULL))
+      out$evaluated[i] <- nindiv_pick(v, "evaluated", "nindivfit", 1L)
+      out$selected[i] <- nindiv_pick(v, "selected", "nindivsel", 2L)
+      out$crossover[i] <- nindiv_pick(v, "crossover", "nindivcros", 3L)
+      out$mutated[i] <- nindiv_pick(v, "mutated", "nindivmut", 4L)
+      if ("duplicates" %in% names(v)) {
+        out$duplicates[i] <- unname(v[["duplicates"]])
+        has_dropped <- TRUE
+      }
+      if ("elites" %in% names(v)) {
+        out$elites[i] <- unname(v[["elites"]])
+      }
+      if ("elite_kids" %in% names(v)) {
+        out$elite_kids[i] <- unname(v[["elite_kids"]])
+      }
+      if ("cells_cum" %in% names(v)) {
+        out$cells_cum[i] <- unname(v[["cells_cum"]])
+      }
+      if ("cells" %in% names(v)) {
+        out$cells[i] <- unname(v[["cells"]])
+      }
+      if ("cells_elite" %in% names(v)) {
+        out$cells_elite[i] <- unname(v[["cells_elite"]])
+      }
+    }
+  }
+  if (all(is.na(out$elites))) {
+    out$elites <- as.numeric(ga_elite_n(result))
+  }
+  need_keys <- !has_dropped && anyNA(out$duplicates)
+  need_cells <- anyNA(out$cells) || anyNA(out$cells_elite) || anyNA(out$cells_cum)
+  if ("allCoords" %in% colnames(result) && (need_keys || need_cells)) {
+    seen <- integer(0)
+    n_el <- ga_elite_n(result)
+    have_cum <- !anyNA(out$cells_cum)
+    for (i in seq_len(n)) {
+      fill_i <- (need_keys && is.na(out$distinct[i])) ||
+        is.na(out$cells[i]) || is.na(out$cells_elite[i]) ||
+        (!have_cum && is.na(out$cells_cum[i]))
+      if (!fill_i) {
+        next
+      }
+      parks <- tryCatch(result[i, "allCoords"][[1]], error = function(e) NULL)
+      one <- census_from_parks(parks, n_el, need_keys = need_keys)
+      if (is.null(one)) {
+        next
+      }
+      if (is.na(out$evaluated[i])) {
+        out$evaluated[i] <- one$evaluated
+      }
+      if (is.na(out$distinct[i])) {
+        out$distinct[i] <- one$distinct
+      }
+      if (!has_dropped && is.na(out$duplicates[i])) {
+        out$duplicates[i] <- one$duplicates
+      }
+      if (is.na(out$cells[i])) {
+        out$cells[i] <- one$cells
+      }
+      if (is.na(out$cells_elite[i])) {
+        out$cells_elite[i] <- one$cells_elite
+      }
+      if (!have_cum) {
+        parks <- as.data.frame(parks)
+        seen <- union(seen, unique(as.integer(parks$Rect_ID)))
+        out$cells_cum[i] <- length(seen)
+      }
+    }
+  }
+  out$dup_share <- ifelse(
+    is.finite(out$evaluated) & out$evaluated > 0 & is.finite(out$duplicates),
+    100 * out$duplicates / pmax(out$evaluated + out$duplicates, 1),
+    NA_real_
+  )
+  out
+}
+
+#' @title Plot population size, cells and efficiency
+#' @name plot_population
+#' @description Three pages: (1) individuals / parents / elites,
+#'   (2) unique grid cells this generation, in the elites, and ever probed,
+#'   (3) park efficiency. Each page waits for Enter in an interactive session.
+#'   If the grid has e.g. 70 cells and the whole population still touches
+#'   every cell, "this generation" and "ever probed" both sit at 70; the
+#'   elite line is then the one that shrinks toward the best sites.
+#' @export
+#'
+#' @inheritParams plot_result
+#' @param interactive Use plotly when `ask` is `FALSE` and plotly is installed.
+#' @param ask If `TRUE`, wait for Enter between pages (Plots pane). Default
+#'   is `TRUE` in an interactive session.
+#'
+#' @family Plotting Functions
+#' @return A plotly object, or a list of ggplots, invisibly. The census
+#'   table is attached as attribute `census`.
+#' @examples \donttest{
+#' plot_population(resultrect)
+#' }
+plot_population <- function(result, interactive = NULL, ask = NULL) {
+  cen <- population_census(result)
+  if (is.null(ask)) {
+    ask <- interactive()
+  }
+  interactive <- use_plotly(interactive)
+  if (!is_ggplot2_installed()) {
+    stop(
+      "The package 'ggplot2' is required for this function, but it is not installed.\n",
+      "Please install it with `install.packages('ggplot2')`"
+    )
+  }
+
+  series <- list(
+    Evaluated = cen$evaluated,
+    Selected = cen$selected,
+    `Duplicates dropped` = cen$duplicates,
+    Elites = cen$elites,
+    `Elite offspring` = cen$elite_kids
+  )
+  if (!any(cen$duplicates > 0, na.rm = TRUE)) {
+    series$`Duplicates dropped` <- NULL
+  }
+  if (!any(is.finite(cen$elite_kids))) {
+    series$`Elite offspring` <- NULL
+  }
+  pop_df <- do.call(rbind, lapply(names(series), function(nm) {
+    data.frame(
+      generation = cen$generation,
+      count = series[[nm]],
+      series = nm,
+      stringsAsFactors = FALSE
+    )
+  }))
+  pop_df$series <- factor(pop_df$series, levels = names(series))
+  pop_df <- pop_df[is.finite(pop_df$count), , drop = FALSE]
+
+  pal <- c(
+    Evaluated = "#1B4F72",
+    Selected = "#8E44AD",
+    `Duplicates dropped` = "#C0392B",
+    Elites = "#E67E22",
+    `Elite offspring` = "#27AE60"
+  )
+
+  p_pop <- ggplot2::ggplot(
+    pop_df, ggplot2::aes(generation, count, color = series)
+  ) +
+    ggplot2::geom_line(linewidth = 0.9) +
+    ggplot2::scale_color_manual(values = pal[names(series)]) +
+    ggplot2::labs(
+      x = "Generation", y = "Count",
+      title = "Population"
+    ) +
+    ga_plot_theme(legend = "bottom")
+
+  n_grid <- suppressWarnings(max(cen$cells_cum, cen$cells, na.rm = TRUE))
+  cell_series <- list(
+    `This generation` = cen$cells,
+    Elites = cen$cells_elite,
+    `Ever probed` = cen$cells_cum
+  )
+  if (!any(is.finite(cen$cells_elite))) {
+    cell_series$Elites <- NULL
+  }
+  cell_df <- do.call(rbind, lapply(names(cell_series), function(nm) {
+    data.frame(
+      generation = cen$generation,
+      value = cell_series[[nm]],
+      series = nm,
+      stringsAsFactors = FALSE
+    )
+  }))
+  cell_df$series <- factor(cell_df$series, levels = names(cell_series))
+  cell_df <- cell_df[is.finite(cell_df$value), , drop = FALSE]
+  cell_pal <- c(
+    `This generation` = "#2980B9",
+    Elites = "#E67E22",
+    `Ever probed` = "#1A7A4C"
+  )
+
+  p_div <- ggplot2::ggplot(
+    cell_df, ggplot2::aes(generation, value, color = series)
+  ) +
+    ggplot2::geom_line(linewidth = 0.9) +
+    ggplot2::scale_color_manual(values = cell_pal[names(cell_series)]) +
+    ggplot2::labs(
+      x = "Generation", y = "Grid cells",
+      title = if (is.finite(n_grid)) {
+        sprintf("Cells used   (grid has %d cells)", as.integer(n_grid))
+      } else {
+        "Cells used"
+      },
+      subtitle = paste(
+        "This generation: distinct sites in the whole population.",
+        "Elites: sites in the best few layouts (shrinks when they agree).",
+        "Ever probed: running union over the run. Both pop and cumulative",
+        "sit at the grid size once every cell has been tried."
+      )
+    ) +
+    ga_plot_theme(legend = "bottom") +
+    ggplot2::theme(plot.subtitle = ggplot2::element_text(size = 8, color = "grey30"))
+
+  s <- tryCatch(ga_series(result), error = function(e) NULL)
+  p_eff <- NULL
+  if (!is.null(s)) {
+    eff_df <- data.frame(
+      generation = rep(s$gen, 3),
+      efficiency = c(s$eff_max, s$eff_mean, s$eff_min),
+      series = factor(
+        rep(c("Max", "Mean", "Min"), each = s$n),
+        levels = c("Max", "Mean", "Min")
+      )
+    )
+    p_eff <- ggplot2::ggplot(
+      eff_df, ggplot2::aes(generation, efficiency, color = series)
+    ) +
+      ggplot2::geom_line(linewidth = 0.9) +
+      ggplot2::scale_color_manual(
+        values = c(Max = "#1B4F72", Mean = "#2980B9", Min = "#7FB3D5")
+      ) +
+      ggplot2::labs(
+        x = "Generation", y = "Efficiency (%)",
+        title = "Park efficiency"
+      ) +
+      ga_plot_theme(legend = "bottom")
+  }
+
+  plots <- list(population = p_pop, cells = p_div, efficiency = p_eff)
+  shown <- show_plot_pages(plots, ask = ask, plotly = interactive)
+  attr(shown, "census") <- cen
+  invisible(shown)
 }
 
 #' @title Plot a wind warm with leaflet
@@ -871,338 +1697,123 @@ plot_leaflet <- function(result, Polygon1, which = 1, orderitems = TRUE, GridPol
   map
 }
 
-#' @title Plot the genetic algorithm results
+#' @title Fitness and operator rates
 #' @name plot_parkfitness
-#' @description Plot the evolution of fitness values with the influences of
-#'   selection, crossover and mutation.
+#' @description Fitness (max / mean / min) and the three operator rates.
+#'   Rates are percentages: **Selection** = share of the population used as
+#'   parents, **Crossover inject** = unused cells mixed into children,
+#'   **Mutation** = chance that a turbine is swapped to a free cell.
+#'   The legend sits outside and follows the typical vertical order of the
+#'   lines (selection highest, then inject, mutation lowest). Uses plotly
+#'   (hover) when the package is installed.
 #' @export
 #'
 #' @inheritParams plot_result
-#' @param spar A numeric value determining how exact a spline should be drawn.
-#'   Default is 0.1
+#' @param spar Unused, kept so existing calls do not break.
+#' @param interactive Use plotly when `ask` is `FALSE` and plotly is installed.
+#' @param ask If `TRUE`, wait for Enter between the fitness page and the
+#'   rates page. Default is `TRUE` in an interactive session.
 #'
 #' @family Plotting Functions
-#' @return Returns NULL. Used for plotting
+#' @return A plotly object, or a list of ggplots, invisibly.
 #' @examples \donttest{
-#' ## Plot the results of a hexagonal grid optimization
 #' plot_parkfitness(resulthex)
 #' }
-plot_parkfitness <- function(result, spar = 0.1) {
-  ## Data #####################
-  rslt <- as.data.frame(do.call("rbind", result[, "allparkcoeff"]))
-  mutres <- as.data.frame(do.call("rbind", result[, "mut_rate"]))
-  nindiv1 <- as.data.frame(do.call("cbind", result[, "nindiv"]))
-  nindiv1 <- nindiv1[-seq(4, length(nindiv1), 4)]
+plot_parkfitness <- function(result, spar = 0.1, interactive = NULL,
+                             ask = NULL) {
+  s <- ga_series(result)
+  if (is.null(ask)) {
+    ask <- interactive()
+  }
+  interactive <- use_plotly(interactive)
+  last_imp <- max(which(s$improved))
+  n_imp <- sum(s$improved)
 
-  selcross <- unlist(result[, "selcross"])
-  selteil <- selcross[seq(2, length(selcross), 2)]
-  crossteil <- selcross[seq(1, length(selcross), 2)]
-  #######################
-
-  ## set Graphic Params ###############
-  oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  graphics::layout(matrix(c(1, 1, 1, 1, 2, 3, 4, 5), 2, 4, byrow = TRUE))
-  rbPal <- grDevices::colorRampPalette(c("red", "green"))
-  # Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
-  #######################
-
-  ## Plot All together (5 Plots) #####################
-  plot(rslt$minparkfitness,
-    xaxt = "n", main = "Parkfitness per Generation", pch = 20,
-    ylab = "Parkfitness", xlab = "Generation", cex = 1, cex.main = 1,
-    col = "red", ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness))
-  )
-  graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
-  graphics::points(rslt$meanparkfitness, ylab = "MeanParkF", cex = 1.2, col = "blue", pch = 20)
-  graphics::points(rslt$maxparkfitness, ylab = "maxParkF", cex = 1.2, col = "green", pch = 20)
-  x <- 1:length(rslt$maxparkfitness)
-
-  if (nrow(result) >= 4) {
-    lmin <- stats::smooth.spline(x, rslt$minparkfitness, spar = spar)
-    graphics::lines(lmin, col = "red", lwd = 1.2)
-    lmea <- stats::smooth.spline(x, rslt$meanparkfitness, spar = spar)
-    graphics::lines(lmea, col = "blue", lwd = 1.2)
-    lmax <- stats::smooth.spline(x, rslt$maxparkfitness, spar = spar)
-    graphics::lines(lmax, col = "green", lwd = 1.2)
-    graphics::grid(col = "gray")
+  if (!is_ggplot2_installed()) {
+    stop(
+      "The package 'ggplot2' is required for this function, but it is not installed.\n",
+      "Please install it with `install.packages('ggplot2')`"
+    )
   }
 
-  par(ask = TRUE)
-  par(mar = c(5, 5, 3, 2))
-  farbe <- rep(seq(1, 3, 1), length(nindiv1) / 3)
-  ndindiplot <- as.integer(nindiv1)
-  plot(ndindiplot,
-    type = "b", col = farbe, cex = 1.5, cex.main = 1, pch = 20,
-    main = "Population Size", axes = FALSE, xlab = "Generation",
-    ylab = "Amount of Individuals", ylim = c(0, max(ndindiplot) + 100)
+  fit_df <- data.frame(
+    generation = s$gen,
+    Max = s$fit_max,
+    Mean = s$fit_mean,
+    Min = s$fit_min
   )
-  axis(side = 2, tick = TRUE)
-  axis(
-    side = 1, tick = TRUE, at = seq(1, length(ndindiplot), 3),
-    labels = (1:(length(ndindiplot) / 3))
-  )
-  legend("topleft",
-    title = "Amount of Individuals in: ", lty = c(1, 1, 1),
-    cex = 0.5, inset = c(0.01, 0.01),
-    box.lty = 0, box.lwd = 0, c("Fitness", "Selection", "Crossover"),
-    col = farbe[1:3], xjust = 0
-  )
-
-  plot(1 * 100 / selteil,
-    ylim = c(20, 110), type = "b", cex = 2, cex.main = 1,
-    col = "green", pch = 20, main = "Selection",
-    ylab = "Percentage", xlab = "Generation"
-  )
-  graphics::grid(col = "gray")
-  selrpl <- 1 * 100 / selteil
-  timeticksel <- which(selrpl > 75)
-  selrplval <- selrpl[selrpl > 75]
-  calibrate::textxy(timeticksel, selrplval, labs = timeticksel, cex = 0.7)
-
-
-  plot(crossteil,
-    col = crossteil, main = "Crossover",
-    xlab = "Generation", ylab = "Crossover Points",
-    ylim = c(1, 8), cex = 1, cex.main = 1, pch = 15
-  )
-  graphics::grid(col = "gray")
-  timetickcro <- which(crossteil > median(crossteil))
-  crorplval <- crossteil[crossteil > median(crossteil)]
-  calibrate::textxy(timetickcro, crorplval, labs = timetickcro, cex = 0.5)
-
-  plot(as.numeric(t(mutres)),
-    type = "b", main = "Mutation", xlab = "Generation",
-    ylab = "Mutation Percentage", cex = 1, cex.main = 1, pch = 15
-  )
-  mutrpl <- as.numeric(t(mutres))
-  timetick <- which(mutrpl > median(mutrpl))
-  mutrplval <- mutrpl[mutrpl > median(mutrpl)]
-  calibrate::textxy(timetick, mutrplval, labs = timetick, cex = 0.7)
-  grid(col = "gray")
-  #######################
-
-  ## Plot Count Individuals #####################
-  par(mfrow = c(1, 1))
-  plot(ndindiplot,
-    type = "b", col = farbe, cex = 1.5, cex.main = 1, pch = 20,
-    main = "Population Size", axes = FALSE, xlab = "Generation",
-    ylab = "Amount of Individuals", ylim = c(0, max(ndindiplot) + 100)
-  )
-  axis(side = 2, tick = TRUE)
-  axis(
-    side = 1, tick = TRUE, at = seq(1, length(ndindiplot), 3),
-    labels = (1:(length(ndindiplot) / 3))
-  )
-
-  graphics::legend("topleft",
-    title = "Amount of Individuals in: ", pch = c(20, 20, 20),
-    cex = 1, inset = c(0.01, 0.01),
-    box.lty = 0, box.lwd = 0, c("Fitness", "Selection", "Crossover"),
-    text.col = farbe[1:3], col = farbe[1:3], xjust = 0
-  )
-  #######################
-
-  ## Plot Selection / Crossover Params #####################
-  graphics::par(mfrow = c(2, 1))
-  plot(1 * 100 / selteil,
-    ylim = c(20, 110), type = "b", cex = 2, col = "green",
-    pch = 20, main = "Selection",
-    ylab = "Percentage", xlab = "Generation"
-  )
-  graphics::grid(col = "gray")
-  selrpl <- 1 * 100 / selteil
-  timeticksel <- which(selrpl > 75)
-  selrplval <- selrpl[selrpl > 75]
-  calibrate::textxy(timeticksel, selrplval, labs = timeticksel, cex = 0.5)
-  plot(crossteil,
-    col = crossteil, main = "Crossover", xlab = "Generation",
-    ylab = "Crossover Points", ylim = c(1, 8), cex = 1, pch = 15
-  )
-  grid(col = "gray")
-  timetickcro <- which(crossteil > median(crossteil))
-  crorplval <- crossteil[crossteil > median(crossteil)]
-  calibrate::textxy(timetickcro, crorplval, labs = timetickcro, cex = 0.5)
-  #######################
-  ## Add Special Events #######################
-  if (length(timetick) != 0) {
-    graphics::par(mfrow = c(1, 1))
-    rbPal <- grDevices::colorRampPalette(c("red", "green"))
-    Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
-    plot(rslt$minParkwirkungsg,
-      xaxt = "n", main = "Mutation Influence",
-      ylab = " in %", cex = 1.2, cex.main = 1,
-      col = "red", pch = 20, xlab = "Generation",
-      ylim = c(min(rslt$minParkwirkungsg), max(rslt$maxParkwirkungsg))
+  fit_long <- data.frame(
+    generation = rep(s$gen, 3),
+    fitness = c(s$fit_max, s$fit_mean, s$fit_min),
+    series = factor(
+      rep(c("Max", "Mean", "Min"), each = s$n),
+      levels = c("Max", "Mean", "Min")
     )
-    graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
-    graphics::points(rslt$meanParkwirkungsg,
-      ylab = "MeanParkEff", cex = 1.2,
-      col = "blue", pch = 20
-    )
-    graphics::points(rslt$maxParkwirkungsg,
-      ylab = "maxParkEff", cex = 1.2,
-      col = "green", pch = 20
-    )
-    x <- 1:length(rslt$maxparkfitness)
-    if (nrow(result) >= 4) {
-      lmin <- stats::smooth.spline(x, rslt$minParkwirkungsg, spar = spar)
-      graphics::lines(lmin, col = "red", lwd = 1.2)
-      lmea <- stats::smooth.spline(x, rslt$meanParkwirkungsg, spar = spar)
-      graphics::lines(lmea, col = "blue", lwd = 1.2)
-      lmax <- stats::smooth.spline(x, rslt$maxParkwirkungsg, spar = spar)
-      graphics::lines(lmax, col = "green", lwd = 1.2)
-      graphics::grid(col = "gray")
-    }
-    graphics::abline(v = timetick, col = "black")
-    graphics::mtext(mutrplval, side = 3, at = timetick, cex = 0.8)
-  }
-  if (length(timeticksel) != 0) {
-    graphics::par(mfrow = c(1, 1))
-    rbPal <- grDevices::colorRampPalette(c("red", "green"))
-    Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness), breaks = 4))]
-    graphics::plot(rslt$minParkwirkungsg,
-      xaxt = "n",
-      main = "Selection Influence", ylab = " in %", cex = 1,
-      cex.main = 1, col = "red", xlab = "Generation",
-      pch = 20, ylim = c(min(rslt$minParkwirkungsg), max(rslt$maxParkwirkungsg))
-    )
-    graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
-    graphics::points(rslt$meanParkwirkungsg,
-      ylab = "MeanParkEff",
-      cex = 1.2, col = "blue", pch = 20
-    )
-    graphics::points(rslt$maxParkwirkungsg,
-      ylab = "maxParkEff",
-      cex = 1.2, col = "green", pch = 20
-    )
-    x <- 1:length(rslt$maxparkfitness)
-    if (nrow(result) >= 4) {
-      lmin <- stats::smooth.spline(x, rslt$minParkwirkungsg, spar = spar)
-      graphics::lines(lmin, col = "red", lwd = 1.2)
-      lmea <- stats::smooth.spline(x, rslt$meanParkwirkungsg, spar = spar)
-      graphics::lines(lmea, col = "blue", lwd = 1.2)
-      lmax <- stats::smooth.spline(x, rslt$maxParkwirkungsg, spar = spar)
-      graphics::lines(lmax, col = "green", lwd = 1.2)
-      graphics::grid(col = "gray")
-    }
-    abline(v = timeticksel, col = "green")
-    mtext(selrplval, side = 3, at = timeticksel, col = "green", cex = 0.8)
-  }
-  if (length(timetickcro) != 0) {
-    par(mfrow = c(1, 1))
-    rbPal <- colorRampPalette(c("red", "green"))
-    Col <- rbPal(4)[as.numeric(cut(as.numeric(rslt$maxparkfitness),
-      breaks = 4
-    ))]
-    plot(rslt$minParkwirkungsg,
-      xaxt = "n", main = "Crossover Influence",
-      ylab = " in %", cex = 1, cex.main = 1, col = "red", xlab = "Generation",
-      pch = 20, ylim = c(min(rslt$minParkwirkungsg), max(rslt$maxParkwirkungsg))
-    )
-    axis(1, at = 1:nrow(rslt), tick = TRUE)
-    points(rslt$meanParkwirkungsg,
-      ylab = "MeanParkEff", cex = 1.2,
-      col = "blue", pch = 20
-    )
-    points(rslt$maxParkwirkungsg,
-      ylab = "maxParkEff", cex = 1.2,
-      col = "green", pch = 20
-    )
-    x <- 1:length(rslt$maxparkfitness)
-    if (nrow(result) >= 4) {
-      lmin <- stats::smooth.spline(x, rslt$minParkwirkungsg, spar = spar)
-      graphics::lines(lmin, col = "red", lwd = 1.2)
-      lmea <- stats::smooth.spline(x, rslt$meanParkwirkungsg, spar = spar)
-      graphics::lines(lmea, col = "blue", lwd = 1.2)
-      lmax <- stats::smooth.spline(x, rslt$maxParkwirkungsg, spar = spar)
-      graphics::lines(lmax, col = "green", lwd = 1.2)
-      graphics::grid(col = "gray")
-    }
-    graphics::abline(v = timetickcro, col = "red")
-    graphics::mtext(crorplval, side = 3, at = timetickcro, col = "red", cex = 0.8)
-  }
-  #######################
+  )
+  imp_df <- fit_df[s$improved, , drop = FALSE]
 
-  ## Plot Fitness, Selection, Crossover and Fitness Deviation #####################
-  sddata <- plot_cloud(result)
-  fitsd <- sddata[, grep(pattern = "Fit", colnames(sddata)), drop = FALSE]
-  effsd <- sddata[, grep(pattern = "Eff", colnames(sddata)), drop = FALSE]
-  enesd <- sddata[, grep(pattern = "Ene", colnames(sddata)), drop = FALSE]
-  graphics::par(mfrow = c(4, 1))
-  plot(rslt$minparkfitness,
-    xaxt = "n", main = "Parkfitness per Generation",
-    ylab = "Parkfitness", xlab = "Generation",
-    cex = 1, cex.main = 1, col = "red", pch = 20,
-    ylim = c(min(rslt$minparkfitness), max(rslt$maxparkfitness))
-  )
-  graphics::axis(1, at = 1:nrow(rslt), tick = TRUE)
-  graphics::grid(col = "black")
-  graphics::points(rslt$meanparkfitness,
-    ylab = "MeanParkF",
-    cex = 1.2, col = "blue", pch = 20
-  )
-  graphics::points(rslt$maxparkfitness,
-    ylab = "maxParkF",
-    cex = 1.2, col = "green", pch = 20
-  )
-  x <- 1:length(rslt$maxparkfitness)
-  if (nrow(result) >= 4) {
-    lmin <- smooth.spline(x, rslt$minparkfitness, spar = spar)
-    graphics::lines(lmin, col = "red", lwd = 1.2)
-    lmea <- smooth.spline(x, rslt$meanparkfitness, spar = spar)
-    graphics::lines(lmea, col = "blue", lwd = 1.2)
-    lmax <- smooth.spline(x, rslt$maxparkfitness, spar = spar)
-    graphics::lines(lmax, col = "green", lwd = 1.2)
-    graphics::grid(col = "gray")
-  }
+  p_fit <- ggplot2::ggplot(fit_long, ggplot2::aes(generation, fitness, color = series)) +
+    ggplot2::geom_line(linewidth = 0.9) +
+    ggplot2::geom_point(
+      data = imp_df, ggplot2::aes(generation, Max, color = "New max"),
+      size = 2, inherit.aes = FALSE
+    ) +
+    ggplot2::scale_color_manual(
+      values = c(
+        Max = "#1B4F72", Mean = "#2980B9", Min = "#7FB3D5", `New max` = "#E67E22"
+      ),
+      breaks = c("Max", "Mean", "Min", "New max")
+    ) +
+    ggplot2::labs(
+      x = "Generation", y = "Fitness",
+      title = sprintf(
+        "Fitness   last new max: gen %d / %d   (%d improvements)",
+        last_imp, s$n, n_imp
+      )
+    ) +
+    ga_plot_theme()
 
-  plot(100 / selteil,
-    ylim = c(20, 110), type = "b", lwd = 2, col = "green",
-    pch = 20, main = "Selection",
-    ylab = "Percentage", xlab = "Generation", cex.main = 1
+  rate_df <- data.frame(
+    generation = rep(s$gen, 3),
+    rate = c(s$sel_pct, s$inject * 100, s$mut * 100),
+    operator = factor(
+      rep(c("Selection", "Crossover inject", "Mutation"), each = s$n),
+      levels = c("Selection", "Crossover inject", "Mutation")
+    )
   )
-  graphics::grid(lty = 2)
+  p_rate <- ggplot2::ggplot(
+    rate_df, ggplot2::aes(generation, rate, color = operator)
+  ) +
+    ggplot2::geom_line(linewidth = 1) +
+    ggplot2::scale_color_manual(
+      values = c(
+        Selection = "#1A7A4C",
+        `Crossover inject` = "#C0392B",
+        Mutation = "#7D3C98"
+      )
+    ) +
+    ggplot2::labs(
+      x = "Generation", y = "Rate (%)",
+      title = "Operator rates",
+      subtitle = paste(
+        "Selection: % of the population used as parents.",
+        "Crossover inject: % of free slots filled from unused cells.",
+        "Mutation: % chance a turbine swaps to a free cell.",
+        "Explore, refine, then a short disturbance pulse if refine lasts."
+      )
+    ) +
+    ga_plot_theme() +
+    ggplot2::theme(plot.subtitle = ggplot2::element_text(size = 8, color = "grey30"))
 
-  plot(crossteil,
-    col = crossteil, pch = 20, cex.main = 1, cex = 2,
-    main = "Crossover", xlab = "Generation", ylab = "Crossover Points",
-    ylim = c(1, 6)
-  )
-  graphics::grid(lty = 2)
-
-  plot(enesd[, "EneSD"],
-    type = "b", col = "blue", pch = 20, lwd = 2,
-    ylab = "Energy/Efficiency/Fitness Deviation", xlab = "Generation",
-    cex.main = 1, main = "Standard Deviation"
-  )
-  graphics::grid(lty = 2)
-  graphics::par(new = TRUE)
-  plot(effsd[, "EffSD"],
-    type = "b", col = "orange", lwd = 2, axes = FALSE,
-    bty = "n", xlab = "", ylab = "", pch = 20
-  )
-  graphics::par(new = TRUE)
-  plot(fitsd[, "FitSD"],
-    type = "b", col = "red", lwd = 2, axes = FALSE,
-    bty = "n", xlab = "", ylab = "", pch = 20
-  )
-
-  timeticksd <- which(mutrpl > median(mutrpl))
-  sdrplval <- fitsd[, "FitSD"][timeticksd]
-  if (length(timeticksd) != 0) {
-    calibrate::textxy(timeticksd, sdrplval, labs = timeticksd, cex = 0.5)
-    graphics::abline(v = timeticksd)
-    graphics::mtext(mutrplval, side = 3, at = timetick, cex = 0.8)
-  }
-
-  return()
+  plots <- list(fitness = p_fit, rates = p_rate)
+  show_plot_pages(plots, ask = ask, plotly = interactive)
 }
 
-#' @title Plot the progress of populations
+#' @title When the best layout improved
 #' @name plot_development
-#' @description Plot the changes in mean and max fitness values to previous
-#' generation.
+#' @description Change of the generation-best fitness. Green = new record,
+#'   orange = flat, red = worse. Blue line is the share of grid cells visited
+#'   so far.
 #'
 #' @export
 #'
@@ -1214,354 +1825,157 @@ plot_parkfitness <- function(result, spar = 0.1) {
 #' plot_development(resultrect)
 #' }
 plot_development <- function(result) {
-  ## set Graphic Params
+  s <- ga_series(result)
   oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  par(mfrow = c(2, 1))
+  on.exit(graphics::par(oldpar))
+  graphics::par(mar = c(4, 4.2, 2.5, 4.2))
 
-  beorworse <- do.call("rbind", result[, 9])
-  maxdif <- data.frame(
-    diff = beorworse[, 1],
-    farbe = 0
+  dmax <- c(0, diff(s$fit_max))
+  col <- ifelse(dmax > 1e-8, "#27AE60", ifelse(dmax < -1e-8, "#C0392B", "#F39C12"))
+  graphics::plot(
+    s$gen, dmax, type = "h", lwd = 2, col = col,
+    xlab = "Generation", ylab = "Change in max fitness",
+    main = "When the best layout improved"
   )
-
-  maxdif$farbe[maxdif$diff < 0] <- "red"
-  maxdif$farbe[maxdif$diff > 0] <- "green"
-  maxdif$farbe[maxdif$diff == 0] <- "orange"
-  plot(maxdif$diff, type = "b", col = maxdif$farbe, pch = 20, cex = 2)
-  abline(0, 0)
-  title("Max Difference to previous generation")
-
-
-  meandif <- data.frame(
-    diff = beorworse[, 2],
-    farbe = 0
-  )
-  meandif$farbe[meandif$diff < 0] <- "red"
-  meandif$farbe[meandif$diff > 0] <- "green"
-  meandif$farbe[meandif$diff == 0] <- "orange"
-  plot(meandif$diff, type = "b", col = meandif$farbe, pch = 20, cex = 2)
-  abline(0, 0)
-  title("Mean Difference to previous generation")
-
-  return()
+  graphics::abline(h = 0, col = "grey50")
+  if (any(is.finite(s$coverage))) {
+    graphics::par(new = TRUE)
+    graphics::plot(
+      s$gen, s$coverage, type = "l", lwd = 2, col = "#2980B9",
+      axes = FALSE, xlab = "", ylab = "", ylim = c(0, 100)
+    )
+    graphics::axis(4, col = "#2980B9", col.axis = "#2980B9")
+    graphics::mtext("Cells visited (%)", side = 4, line = 2.5, col = "#2980B9")
+  }
+  invisible(NULL)
 }
 
-#' @title Plot the evolution of fitness values
+#' @title Energy and efficiency over generations
 #' @name plot_evolution
-#' @description  Plot the evolution of energy outputs and efficiency rates over
-#'   the whole generations. Plots min, mean and max values.
+#' @description Max and mean park efficiency and energy yield on one page.
+#'
 #' @export
 #'
 #' @inheritParams plot_result
-#' @param ask Should R wait for interaction for subsequent plotting. Default is
-#'   TRUE
-#' @param spar A numeric value determining how exact a spline should be drawn.
-#'   Default is 0.1
+#' @param ask Unused, kept so existing calls do not break.
+#' @param spar Unused, kept so existing calls do not break.
 #'
 #' @family Plotting Functions
 #' @return Returns NULL. Used for plotting
 #' @examples \donttest{
-#' ## Plot the results of a rectangular grid optimization
-#' plot_evolution(resultrect, ask = TRUE, spar = 0.1)
+#' plot_evolution(resultrect)
 #' }
-plot_evolution <- function(result, ask = TRUE, spar = 0.1) {
-  ## set Graphic Params
+plot_evolution <- function(result, ask = FALSE, spar = 0.1) {
+  s <- ga_series(result)
   oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  par(mfrow = c(1, 1))
+  on.exit(graphics::par(oldpar))
+  graphics::par(mfrow = c(1, 2), mar = c(4, 4.2, 2.5, 1))
 
-  result1 <- as.data.frame(do.call("rbind", result[, 1]))
-
-  plot(result1$minParkwirkungsg,
-    xaxt = "n",
-    main = "Park Efficiency per Generation",
-    xlab = "Generation",
-    ylab = "Park Efficiency in %", cex = 0.8, cex.main = 0.8,
-    col = "red", pch = 20,
-    ylim = c(min(result1$minParkwirkungsg), max(result1$maxParkwirkungsg))
+  yr <- range(c(s$eff_mean, s$eff_max), finite = TRUE)
+  graphics::plot(
+    s$gen, s$eff_max, type = "l", lwd = 2.2, col = "#1B4F72",
+    xlab = "Generation", ylab = "Efficiency (%)",
+    ylim = yr, main = "Park efficiency"
   )
-  axis(1, at = 1:nrow(result1), tick = TRUE)
-  grid(col = "black")
-  points(result1$meanParkwirkungsg, cex = 1.2, col = "blue", pch = 20)
-  points(result1$maxParkwirkungsg, cex = 1.2, col = "green", pch = 20)
-  x <- 1:length(result1$MaxEnergyRedu)
-
-  if (nrow(result) >= 4) {
-    lmin <- smooth.spline(x, result1$minParkwirkungsg, spar = spar)
-    lines(lmin, col = "red", lwd = 1.2)
-    lmea <- smooth.spline(x, result1$meanParkwirkungsg, spar = spar)
-    lines(lmea, col = "blue", lwd = 1.2)
-    lmax <- smooth.spline(x, result1$maxParkwirkungsg, spar = spar)
-    lines(lmax, col = "green", lwd = 1.2)
-  }
-
-  par(ask = ask)
-
-  plot(result1$MeanEnergyRedu,
-    xaxt = "n",
-    main = "Energy Yield per Generation",
-    xlab = "Generation",
-    ylab = "Energy in kW", cex = 0.8, cex.main = 0.8,
-    col = "blue", pch = 20,
-    ylim = c(min(result1$MinEnergyRedu), max(result1$MaxEnergyRedu))
+  graphics::grid(col = "grey85", lty = 1)
+  graphics::lines(s$gen, s$eff_mean, lwd = 1.6, col = "#2980B9")
+  graphics::legend(
+    "bottomright", c("Max", "Mean"),
+    col = c("#1B4F72", "#2980B9"), lty = 1, lwd = c(2.2, 1.6),
+    bty = "n", cex = 0.85
   )
-  axis(1, at = 1:nrow(result1), tick = TRUE)
-  grid(col = "black")
-  points(result1$MaxEnergyRedu, cex = 1.2, col = "green", pch = 20)
-  points(result1$MinEnergyRedu, cex = 1.2, col = "red", pch = 20)
 
-  if (nrow(result) >= 4) {
-    emean <- smooth.spline(x, result1$MeanEnergyRedu, spar = spar)
-    lines(emean, col = "blue", lwd = 1.2)
-    emax <- smooth.spline(x, result1$MaxEnergyRedu, spar = spar)
-    lines(emax, col = "green", lwd = 1.2)
-    emin <- smooth.spline(x, result1$MinEnergyRedu, spar = spar)
-    lines(emin, col = "red", lwd = 1.2)
-  }
-
-  return()
+  yr <- range(c(s$ene_mean, s$ene_max), finite = TRUE)
+  graphics::plot(
+    s$gen, s$ene_max, type = "l", lwd = 2.2, col = "#1B4F72",
+    xlab = "Generation", ylab = "Energy (kW)",
+    ylim = yr, main = "Energy yield"
+  )
+  graphics::grid(col = "grey85", lty = 1)
+  graphics::lines(s$gen, s$ene_mean, lwd = 1.6, col = "#2980B9")
+  graphics::legend(
+    "bottomright", c("Max", "Mean"),
+    col = c("#1B4F72", "#2980B9"), lty = 1, lwd = c(2.2, 1.6),
+    bty = "n", cex = 0.85
+  )
+  invisible(NULL)
 }
 
-#' @title Plot outputs of all generations with standard deviations
+#' @title Per-generation fitness / efficiency / energy
 #' @name plot_cloud
-#' @description  Plot the fitness, efficiency and energy outputs of all
-#'   generations and the corresponding standard deviations.
+#' @description Summarise every evaluated individual. With \code{pl = TRUE}
+#'   draw three panels of points (max as a line). The returned table has
+#'   min / mean / max / sd per generation.
 #'
 #' @export
 #'
 #' @inheritParams plot_result
-#' @param pl Should the results be plotted? Default is FALSE
+#' @param pl Draw the three panels? Default is FALSE
 #'
 #' @family Plotting Functions
-#' @return Returns a data.frame with the values for fitness, efficiency and
-#'   energy for all evaluated individuals
+#' @return A data.frame with fitness, efficiency and energy summaries
 #'
 #' @examples \donttest{
-#' ## Plot the results of a hexagonal grid optimization
 #' plcdf <- plot_cloud(resulthex, TRUE)
 #' }
 plot_cloud <- function(result, pl = FALSE) {
-  ## set Graphic Params
   oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  ## Data Aggregation ##########
+  on.exit(graphics::par(oldpar))
   clouddata <- result[, 7]
-  efficiency_cloud <- lapply(clouddata, function(x) x <- x[, 1])
-  energy_cloud <- lapply(clouddata, function(x) x <- x[, 2])
-  fitness_cloud <- lapply(clouddata, function(x) x <- x[, 3])
+  efficiency_cloud <- lapply(clouddata, function(x) x[, 1])
+  energy_cloud <- lapply(clouddata, function(x) x[, 2])
+  fitness_cloud <- lapply(clouddata, function(x) x[, 3])
 
   efficiency_per_gen <- energy_per_gen <- fitness_per_gen <- list()
-  for (i in 1:length(clouddata)) {
+  for (i in seq_along(clouddata)) {
     l <- length(clouddata[[i]][, "EfficAllDir"])
-    efficiency_per_gen[[i]] <- t(as.matrix(rbind(
-      rep(i, l),
-      efficiency_cloud[[i]]
-    )))
-    energy_per_gen[[i]] <- t(as.matrix(rbind(
-      rep(i, l),
-      energy_cloud[[i]]
-    )))
-    fitness_per_gen[[i]] <- t(as.matrix(rbind(
-      rep(i, l),
-      fitness_cloud[[i]]
-    )))
+    efficiency_per_gen[[i]] <- t(as.matrix(rbind(rep(i, l), efficiency_cloud[[i]])))
+    energy_per_gen[[i]] <- t(as.matrix(rbind(rep(i, l), energy_cloud[[i]])))
+    fitness_per_gen[[i]] <- t(as.matrix(rbind(rep(i, l), fitness_cloud[[i]])))
   }
 
+  summarise_gen <- function(mat) {
+    df <- data.frame(mat)
+    cbind(
+      X1 = stats::aggregate(df, list(df$X1), max)[, 2],
+      max = stats::aggregate(df, list(df$X1), max)[, 3],
+      mean = stats::aggregate(df, list(df$X1), mean)[, 3],
+      min = stats::aggregate(df, list(df$X1), min)[, 3],
+      sd = stats::aggregate(df, list(df$X1), sd)[, 3]
+    )
+  }
 
   efficiency_per_gen <- do.call("rbind", efficiency_per_gen)
-  efficiency_per_genmax <- data.frame(efficiency_per_gen)
-  max_effic_per_gen <- aggregate(
-    efficiency_per_genmax,
-    list(efficiency_per_genmax$X1), max
-  )
-  mean_effic_per_gen <- aggregate(
-    efficiency_per_genmax,
-    list(efficiency_per_genmax$X1), mean
-  )
-  min_effic_per_gen <- aggregate(
-    efficiency_per_genmax,
-    list(efficiency_per_genmax$X1), min
-  )
-  sd_effic_per_gen <- aggregate(
-    efficiency_per_genmax,
-    list(efficiency_per_genmax$X1), sd
-  )
-  efficiency_per_genmax <- cbind(
-    "X1" = max_effic_per_gen[, 2],
-    "max" = max_effic_per_gen[, 3],
-    "mean" = mean_effic_per_gen[, 3],
-    "min" = min_effic_per_gen[, 3],
-    "sd" = sd_effic_per_gen[, 3]
-  )
-
   energy_per_gen <- do.call("rbind", energy_per_gen)
-  energy_per_genmax <- data.frame(energy_per_gen)
-  max_energy_per_gen <- aggregate(
-    energy_per_genmax,
-    list(energy_per_genmax$X1), max
-  )
-  mean_energy_per_gen <- aggregate(
-    energy_per_genmax,
-    list(energy_per_genmax$X1), mean
-  )
-  min_energy_per_gen <- aggregate(
-    energy_per_genmax,
-    list(energy_per_genmax$X1), min
-  )
-  sd_energy_per_gen <- aggregate(
-    energy_per_genmax,
-    list(energy_per_genmax$X1), sd
-  )
-  energy_per_genmax <- cbind(
-    "X1" = max_energy_per_gen[, 2],
-    "max" = max_energy_per_gen[, 3],
-    "mean" = mean_energy_per_gen[, 3],
-    "min" = min_energy_per_gen[, 3],
-    "sd" = sd_energy_per_gen[, 3]
-  )
-
   fitness_per_gen <- do.call("rbind", fitness_per_gen)
-  fitness_per_genmax <- data.frame(fitness_per_gen)
-  max_fit_per_gen <- aggregate(
-    fitness_per_genmax,
-    list(fitness_per_genmax$X1), max
-  )
-  mean_fit_per_gen <- aggregate(
-    fitness_per_genmax,
-    list(fitness_per_genmax$X1), mean
-  )
-  min_fit_per_gen <- aggregate(
-    fitness_per_genmax,
-    list(fitness_per_genmax$X1), min
-  )
-  sd_fit_per_gen <- aggregate(
-    fitness_per_genmax,
-    list(fitness_per_genmax$X1), sd
-  )
-  fitness_per_genmax <- cbind(
-    "X1" = max_fit_per_gen[, 2],
-    "max" = max_fit_per_gen[, 3],
-    "mean" = mean_fit_per_gen[, 3],
-    "min" = min_fit_per_gen[, 3],
-    "sd" = sd_fit_per_gen[, 3]
-  )
+  efficiency_per_genmax <- summarise_gen(efficiency_per_gen)
+  energy_per_genmax <- summarise_gen(energy_per_gen)
+  fitness_per_genmax <- summarise_gen(fitness_per_gen)
 
-  ## Plots ##########
-  if (pl) {
-    par(mfrow = c(2, 3))
-    ## Fitness #######
-    df <- data.frame(fitness_per_gen)
-    colnames(df) <- c("generation", "values")
-    boxplot(values ~ generation,
-      data = df, main = "Fitness",
-      xlab = "Generation",
-      ylab = "Fitnessvalue",
-      pch = 20, col = "red", cex = 1.3
+  if (isTRUE(pl)) {
+    graphics::par(mfrow = c(1, 3), mar = c(4, 4.2, 2.4, 1))
+    fade <- grDevices::adjustcolor("#1B4F72", alpha.f = 0.22)
+    panels <- list(
+      list(fitness_per_gen, fitness_per_genmax, "Fitness", "Fitness"),
+      list(efficiency_per_gen, efficiency_per_genmax, "Efficiency", "Efficiency (%)"),
+      list(energy_per_gen, energy_per_genmax, "Energy", "Energy (kW)")
     )
-
-    if (length(clouddata) >= 4) {
-      lf <- stats::smooth.spline(
-        x = fitness_per_gen[, 1],
-        y = fitness_per_gen[, 2],
-        spar = 0.1
+    for (pn in panels) {
+      graphics::plot(
+        pn[[1]][, 1], pn[[1]][, 2], pch = 16, cex = 0.35, col = fade,
+        xlab = "Generation", ylab = pn[[4]], main = pn[[3]]
       )
-      graphics::lines(lf, col = "red", lwd = 1.2)
+      graphics::lines(pn[[2]][, "X1"], pn[[2]][, "max"], lwd = 2, col = "#E67E22")
+      graphics::lines(pn[[2]][, "X1"], pn[[2]][, "mean"], lwd = 1.4, col = "#2980B9")
     }
-    graphics::points(
-      x = fitness_per_genmax[, "X1"],
-      y = fitness_per_genmax[, "max"],
-      type = "l", col = "red"
-    )
-    graphics::points(
-      x = fitness_per_genmax[, "X1"],
-      y = fitness_per_genmax[, "min"],
-      type = "l", col = "red"
-    )
-
-    ## Efficiency #######
-    df <- data.frame(efficiency_per_gen)
-    colnames(df) <- c("generation", "values")
-    boxplot(values ~ generation,
-      data = df, main = "Efficiency",
-      xlab = "Generation",
-      ylab = "Efficiency in %",
-      pch = 20, col = "orange", cex = 1.3
-    )
-    if (length(clouddata) >= 4) {
-      le <- stats::smooth.spline(
-        x = efficiency_per_gen[, 1],
-        y = efficiency_per_gen[, 2],
-        spar = 0.1
-      )
-      graphics::lines(le, col = "orange", lwd = 1.2)
-    }
-    graphics::points(
-      x = efficiency_per_genmax[, "X1"],
-      y = efficiency_per_genmax[, "max"],
-      type = "l", col = "orange"
-    )
-    graphics::points(
-      x = efficiency_per_genmax[, "X1"],
-      y = efficiency_per_genmax[, "min"],
-      type = "l", col = "orange"
-    )
-
-    ## Energy #######
-    df <- data.frame(energy_per_gen)
-    colnames(df) <- c("generation", "values")
-    boxplot(values ~ generation,
-      data = df, main = "Energy",
-      xlab = "Generation",
-      ylab = "Energy in kW",
-      pch = 20, col = "blue", cex = 1.3
-    )
-    if (length(clouddata) >= 4) {
-      len <- stats::smooth.spline(
-        x = energy_per_gen[, 1],
-        y = energy_per_gen[, 2],
-        spar = 0.1
-      )
-      graphics::lines(len, col = "blue", lwd = 1.2)
-    }
-    graphics::points(
-      x = energy_per_genmax[, "X1"],
-      y = energy_per_genmax[, "max"],
-      type = "l", col = "blue"
-    )
-    graphics::points(
-      x = energy_per_genmax[, "X1"],
-      y = energy_per_genmax[, "min"],
-      type = "l", col = "blue"
-    )
-
-    graphics::plot(
-      x = fitness_per_genmax[, "X1"],
-      y = fitness_per_genmax[, "sd"],
-      main = "Standard Deviation Fitness",
-      xlab = "Generation",
-      ylab = "Standard Deviation of Population", col = "red",
-      type = "b"
-    )
-    graphics::plot(
-      x = efficiency_per_genmax[, "X1"],
-      y = efficiency_per_genmax[, "sd"],
-      main = "Standard Deviation Efficiency",
-      xlab = "Generation",
-      ylab = "Standard Deviation of Population", col = "orange",
-      type = "b"
-    )
-    graphics::plot(
-      x = energy_per_genmax[, "X1"],
-      y = energy_per_genmax[, "sd"],
-      main = "Standard Deviation Energy",
-      xlab = "Generation",
-      ylab = "Standard Deviation of Population", col = "blue",
-      type = "b"
+    graphics::legend(
+      "bottomright", c("Individuals", "Max", "Mean"),
+      col = c(fade, "#E67E22", "#2980B9"),
+      pch = c(16, NA, NA), lty = c(NA, 1, 1), lwd = c(NA, 2, 1.4),
+      bty = "n", cex = 0.8
     )
   }
 
-  ## Output ##########
   clouddatafull <- cbind(
     Fitn = fitness_per_genmax,
     Eff = efficiency_per_genmax,
@@ -1575,10 +1989,9 @@ plot_cloud <- function(result, pl = FALSE) {
   invisible(clouddatafull)
 }
 
-#' @title Plot the changes of min/mean/max fitness values
+#' @title Fitness and operator rates
 #' @name plot_fitness_evolution
-#' @description  Plot the evolution of fitness values and the change in the min,
-#'   mean and max fitness values to the former generations.
+#' @description Same figure as \code{\link{plot_parkfitness}}.
 #' @export
 #'
 #' @inheritParams plot_evolution
@@ -1586,112 +1999,11 @@ plot_cloud <- function(result, pl = FALSE) {
 #' @family Plotting Functions
 #' @return Returns NULL. Used for plotting
 #' @examples \donttest{
-#' ## Plot the results of a hexagonal grid optimization
-#' plot_fitness_evolution(resulthex, 0.1)
+#' plot_fitness_evolution(resulthex)
 #' }
-plot_fitness_evolution <- function(result, spar = 0.1) {
-  ## set Graphic Params
-  oldpar <- graphics::par(no.readonly = TRUE)
-  on.exit(par(oldpar))
-  par(mfrow = c(1, 1), ask = FALSE, mar = c(4, 5, 4, 2))
-  layout(mat = matrix(c(1, 2, 3, 4, 4, 4), nrow = 2, ncol = 3, byrow = TRUE))
-
-  x <- result[, 4]
-  x <- x[-c(1)]
-  x1 <- do.call("rbind", x)
-  result <- as.data.frame(do.call("rbind", result[, 1]))
-
-  ## Minimal Fitness #########
-  minge <- x1[seq(1, length(x1[, 1]), 2), 1]
-  minge2 <- x1[seq(2, length(x1[, 2]), 2), 1]
-  ming3 <- minge - minge2
-  ming3 <- c(0, ming3)
-  ming3 <- as.data.frame(ming3)
-  ming3$farbe <- 0
-  ming3$farbe[ming3$ming3 < 0] <- "red"
-  ming3$farbe[ming3$ming3 > 0] <- "green"
-  ming3$farbe[ming3$ming3 == 0] <- "orange"
-  plot(ming3$ming3,
-    type = "b", col = ming3$farbe, pch = 20, cex = 2,
-    xlab = "Generation", ylab = "Change"
-  )
-  title(
-    main = "Minimal Fitness Values", sub = "compared to previous generation",
-    col.main = "red"
-  )
-  abline(0, 0)
-  grid(col = "black")
-
-  ## Mean Fitness #########
-  meange <- x1[seq(1, length(x1[, 1]), 2), 3]
-  meange2 <- x1[seq(2, length(x1[, 2]), 2), 3]
-  meag3 <- meange - meange2
-  meag3 <- c(0, meag3)
-  meag3 <- as.data.frame(meag3)
-  meag3$farbe <- 0
-  meag3$farbe[meag3$meag3 < 0] <- "red"
-  meag3$farbe[meag3$meag3 > 0] <- "green"
-  meag3$farbe[meag3$meag3 == 0] <- "orange"
-  plot(meag3$meag3,
-    type = "b", col = meag3$farbe, pch = 20, cex = 2,
-    xlab = "Generation", ylab = "Change"
-  )
-  title(
-    main = "Mean Fitness Values", sub = "compared to previous generation",
-    col.main = "orange"
-  )
-  abline(0, 0)
-  grid(col = "black")
-
-  ## Maximum Fitness #########
-  maxge <- x1[seq(1, length(x1[, 1]), 2), 2]
-  maxge2 <- x1[seq(2, length(x1[, 2]), 2), 2]
-  mg3 <- maxge - maxge2
-  mg3 <- c(0, mg3)
-  mg3 <- as.data.frame(mg3)
-  mg3$farbe <- 0
-  mg3$farbe[mg3$mg3 < 0] <- "red"
-  mg3$farbe[mg3$mg3 > 0] <- "green"
-  mg3$farbe[mg3$mg3 == 0] <- "orange"
-  plot(mg3$mg3,
-    type = "b", col = mg3$farbe, pch = 20, cex = 2,
-    xlab = "Generation", ylab = "Change"
-  )
-  title(
-    main = "Maximal Fitness Values", sub = "compared to previous generation",
-    col.main = "darkgreen"
-  )
-  abline(0, 0)
-  grid(col = "black")
-
-  ## Fitness Values per Generation #########
-  plot(result$minparkfitness,
-    xaxt = "n", main = "Parkfitness per Generation",
-    ylab = "Parkfitness in %", xlab = "Generation", cex = 2, col = "red",
-    pch = 20, ylim = c(min(result$minparkfitness), max(result$maxparkfitness))
-  )
-  axis(1, at = 1:nrow(result), tick = TRUE)
-  grid(col = "black")
-  points(result$meanparkfitness,
-    ylab = "MeanParkF", cex = 2,
-    col = "blue", pch = 20
-  )
-  points(result$maxparkfitness,
-    ylab = "maxParkF", cex = 2,
-    col = "green", pch = 20
-  )
-  x <- 1:length(result$maxparkfitness)
-
-  if (nrow(result) >= 4) {
-    lmin <- smooth.spline(x, result$minparkfitness, spar = spar)
-    lines(lmin, col = "red", lwd = 1.6)
-    lmea <- smooth.spline(x, result$meanparkfitness, spar = spar)
-    lines(lmea, col = "blue", lwd = 1.6)
-    lmax <- smooth.spline(x, result$maxparkfitness, spar = spar)
-    lines(lmax, col = "green", lwd = 1.6)
-  }
-
-  return()
+plot_fitness_evolution <- function(result, spar = 0.1, interactive = NULL,
+                                   ask = NULL) {
+  plot_parkfitness(result, spar = spar, interactive = interactive, ask = ask)
 }
 
 

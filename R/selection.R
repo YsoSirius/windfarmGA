@@ -16,9 +16,10 @@
 #' @param verbose If TRUE, will print out further information.
 #'
 #' @family Genetic Algorithm Functions
-#' @return Returns list with 2 elements. Element 1 is the binary encoded matrix
-#'   which shows all selected individuals. Element 2 represent the mean fitness
-#'   values of each parental team.
+#' @return Returns a list with 2 elements. Element 1 is an integer matrix of
+#'   selected layouts (`n` turbines × selected individuals), each column a
+#'   set of unique grid cell IDs. Element 2 is the fitness of each selected
+#'   individual.
 #' @examples \donttest{
 #' ## Exemplary input Polygon with 2km x 2km:
 #' library(sf)
@@ -116,7 +117,7 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
   }
 
   ## Upper Limit of selected individuals is 100.
-  max_selec <- getOption("windfarmGA.max_selection")
+  max_selec <- getOption("windfarmGA.max_selection", 300)
   if (nPar > max_selec) {
     nPar <- max_selec
   }
@@ -144,58 +145,22 @@ selection <- function(fit, Grid, teil, elitism, nelit, selstate, verbose) {
     )
   }
 
-  ## Pick the parks with those list indeces.
-  ## (park with all config) and return Run and Rect_ID
+  ## Pick layouts as unique grid-cell IDs (combinatorial genome)
   chile <- seq_len(length(childsRunID))
-  child <- lapply(chile, function(z) {
-    subset.matrix(fit[[childsRunID[z]]],
-      select = c("Run", "Rect_ID", "Parkfitness")
-    )
-  })
-
-  ## Create binary code for every parkconfiguration (individual)
-  ## (Turbine yes = 1, Turbine no = 0)
-  childbin <- lapply(chile, function(i) {
-    ## For every Child element, assign the total Grid to a binaryvariable[i],
-    ## and set all binary =0. Assign Run Value as well
-    tmp <- cbind(Grid,
-      "Run" = child[[i]][1, "Run"],
-      "bin" = 0,
-      "Fitness" = child[[i]][1, "Parkfitness"]
-    )
-
-    for (e in 1:length(child[[i]][, 1])) {
-      ## For every element in a child (turbines) get his Rect_ID and
-      ## set binary to 1, where GridId = Rect_ID
-      rectid <- child[[i]][e, 2]
-      tmp[tmp[, "ID"] == rectid, "bin"] <- 1
-    }
-    tmp
-  })
-
-  ## Create the parents
-  parents <- vector("list", length(childsRunID) / 2)
-  for (i in 1:(length(childsRunID) / 2)) {
-    parents[[i]] <- sample(x = childsRunID, 2, replace = FALSE)
-    childsRunID <- childsRunID[!(childsRunID %in% parents[[i]])]
+  n_turb <- nrow(fit[[childsRunID[1]]])
+  ids <- vapply(chile, function(z) {
+    sort(as.integer(fit[[childsRunID[z]]][, "Rect_ID"]))
+  }, integer(n_turb))
+  if (!is.matrix(ids)) {
+    ids <- matrix(ids, nrow = n_turb)
   }
-  parall <- unlist(parents)
+  fitness_sel <- vapply(chile, function(z) {
+    as.numeric(fit[[childsRunID[z]]][1, "Parkfitness"])
+  }, numeric(1))
 
-  ## Create the children
-  childbindf <- do.call("rbind", childbin)
-  paralli <- lapply(1:length(parall), function(i) {
-    subset.matrix(childbindf[which(childbindf[, "Run"] %in% parall[i]), ],
-      select = c("ID", "Run", "bin", "Fitness")
-    )
-  })
+  if (!all(ids %in% Grid[, "ID"])) {
+    stop("Selected layouts contain grid IDs that are not in Grid.")
+  }
 
-  ## Squeeze list to data.frame and remove unnecessary columns
-  parentsall <- data.frame(paralli)
-
-  lePar <- length(parentsall)
-
-  ## Select the binary matrix and the fitness values of the parents and return as list
-  parentsFitness <- parentsall[1, c(1, seq(4, lePar, 4))]
-  parentsall <- parentsall[, c(1, seq(3, lePar, 4))]
-  return(list(parentsall, parentsFitness))
+  return(list(ids, fitness_sel))
 }

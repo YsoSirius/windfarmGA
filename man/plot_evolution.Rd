@@ -2,41 +2,42 @@
 % Please edit documentation in R/plots.R
 \name{plot_evolution}
 \alias{plot_evolution}
-\title{Plot the evolution of fitness values}
+\title{Energy and efficiency over generations}
 \usage{
-plot_evolution(result, ask = TRUE, spar = 0.1)
+plot_evolution(result, ask = FALSE, spar = 0.1)
 }
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
 
-\item{ask}{Should R wait for interaction for subsequent plotting. Default is
-TRUE}
+\item{ask}{Unused, kept so existing calls do not break.}
 
-\item{spar}{A numeric value determining how exact a spline should be drawn.
-Default is 0.1}
+\item{spar}{Unused, kept so existing calls do not break.}
 }
 \value{
 Returns NULL. Used for plotting
 }
 \description{
-Plot the evolution of energy outputs and efficiency rates over
-the whole generations. Plots min, mean and max values.
+Max and mean park efficiency and energy yield on one page.
 }
 \examples{
 \donttest{
-## Plot the results of a rectangular grid optimization
-plot_evolution(resultrect, ask = TRUE, spar = 0.1)
+plot_evolution(resultrect)
 }
 }
 \seealso{
 Other Plotting Functions: 
+\code{\link{generation_layouts}()},
+\code{\link{plot_cell_heatmap}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_fitness_evolution}()},
+\code{\link{plot_generation}()},
 \code{\link{plot_parkfitness}()},
+\code{\link{plot_population}()},
 \code{\link{plot_result}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
+\code{\link{population_census}()},
 \code{\link{random_search_single}()}
 }
 \concept{Plotting Functions}

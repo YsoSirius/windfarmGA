@@ -63,7 +63,9 @@ Default is \code{1}}
 
 \item{iteration}{The number of iterations. Default is \code{20}}
 
-\item{mutr}{A numeric mutation rate. Default is \code{0.008}}
+\item{mutr}{Mutation probability per turbine (swap with an unused cell).
+Default is \code{2/n}. Each individual swaps at least
+\code{getOption("windfarmGA.min_swaps")} cells (default 1).}
 
 \item{vdirspe}{A data.frame containing the wind speeds, directions and
 probabilities. See \code{\link{windata_format}}.}
@@ -72,23 +74,29 @@ probabilities. See \code{\link{windata_format}}.}
 should be enabled or not. Default is \code{FALSE}}
 
 \item{elitism}{Boolean value, which indicates whether elitism should be
-activated or not. If \code{TRUE}, the best \code{nelit} layouts are copied
-unchanged into the next generation. Default is \code{TRUE}}
+activated or not. If \code{TRUE}, the current best layout is archived
+unchanged and each elite produces several mutated copies plus mixes with
+weaker layouts (\code{windfarmGA.elite_children} /
+\code{windfarmGA.elite_mix}). The elite count starts at \code{nelit} and
+rises while refining a stall, then drops by one during a disturbance
+pulse. Default is \code{TRUE}}
 
 \item{nelit}{If \code{elitism} is TRUE, this input determines the amount
-of individuals in the elite group. Default is 7}
+of individuals in the elite group. Default is 3}
 
 \item{selstate}{Determines which selection method is used, "FIX" selects a
 constant percentage and "VAR" selects a variable percentage, depending on
-the development of the fitness values. Default is "FIX"}
+the development of the fitness values. Default is "VAR"}
 
-\item{crossPart1}{Determines which crossover method is used, "EQU" divides
-the genetic code at equal intervals and "RAN" divides the genetic code at
-random locations. Default is \code{"EQU"}}
+\item{crossPart1}{Unused by the combinatorial genome (set crossover).
+Kept for API compatibility with the legacy binary operators
+\code{\link{crossover}} (\code{EQU} / \code{RAN}). Default is \code{"EQU"}}
 
 \item{trimForce}{If \code{TRUE} the algorithm will use a probabilistic
 approach to correct the windfarms to the desired amount of turbines.
-If \code{FALSE} the adjustment will be random. Default is \code{FALSE}}
+If \code{FALSE} the adjustment will be random. Default is \code{FALSE}.
+Unused by the combinatorial genome; kept for compatibility with
+\code{\link{trimton}}.}
 
 \item{Projection}{A spatial reference system. Depending on your PROJ-version,
 it should either be a numeric \code{EPSG-code} or a \code{Proj4-string}.
@@ -164,7 +172,29 @@ Fitness is \eqn{EnergyOverall \times (EfficAllDir/100)^w} with
 wind speeds use a logarithmic profile unless
 \code{options(windfarmGA.wind_profile = "power")} restores the legacy
 power law. Power uses \code{options(windfarmGA.Cp)} (default 0.45) and
-optional cut-in / rated / cut-out speeds.
+optional cut-in / rated / cut-out speeds. Layouts are encoded as \code{n}
+unique grid-cell IDs (set crossover and swap mutation). Selection defaults
+to \code{VAR} (percentage follows fitness progress). Mutation, immigrants
+and unused-cell injection prefer rarely visited cells. Crossover is spatial
+with probability \code{options(windfarmGA.spatial_crossover)} (default 0.5).
+Evaluated layouts are cached. A flat global max is not a stop signal.
+The run ends at \code{iteration}, or earlier only after
+\code{options(windfarmGA.stall_generations)} consecutive generations
+with no new layout, no newly visited cell and no new best fitness
+(set to \code{0} to disable). Operator rates cycle like seasons, still
+only selection / set-crossover / swap-mutation: explore (rates rise on
+stall) until \code{options(windfarmGA.refine_min_gen)} (default 18) and
+\code{options(windfarmGA.refine_after)} (default 12) generations without
+a new max at coverage \eqn{\ge 0.35}; then refine (inject toward 0.15,
+mutation toward \code{2/n}, selection toward about 45\\%). After
+\code{options(windfarmGA.refine_hold)} generations in refine (default 25),
+a short disturbance pulse of \code{options(windfarmGA.explore_pulse)}
+generations (default 10) raises the same rates even if new maxes are
+still trickling in, then refine resumes. Elites get a short local search
+each generation: one turbine slides to a neighbouring empty cell
+(not a random cell anywhere on the grid). The legacy binary operators
+\code{\link{crossover}}, \code{\link{mutation}} and
+\code{\link{trimton}} remain available.
 }
 \examples{
 \dontrun{
@@ -207,6 +237,8 @@ Other Genetic Algorithm Functions:
 \code{\link{init_population}()},
 \code{\link{mutation}()},
 \code{\link{selection}()},
+\code{\link{set_crossover}()},
+\code{\link{swap_mutation}()},
 \code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

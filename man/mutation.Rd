@@ -17,7 +17,9 @@ mutation(a, p, seed = NULL)
 Returns a binary matrix with mutated genes.
 }
 \description{
-The function randomly mutates an individual's genetic code
+Legacy bit-flip mutation on 0/1 chromosomes. The GA loop uses
+\code{\link{swap_mutation}} so that every individual keeps exactly \code{n}
+turbines.
 }
 \examples{
 ## Create 4 random individuals with binary values
@@ -47,6 +49,8 @@ Other Genetic Algorithm Functions:
 \code{\link{genetic_algorithm}()},
 \code{\link{init_population}()},
 \code{\link{selection}()},
+\code{\link{set_crossover}()},
+\code{\link{swap_mutation}()},
 \code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

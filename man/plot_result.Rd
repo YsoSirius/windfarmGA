@@ -7,7 +7,7 @@
 plot_result(
   result,
   Polygon1,
-  best = 3,
+  best = 1,
   plotEn = 1,
   topographie = FALSE,
   Grid = TRUE,
@@ -22,8 +22,7 @@ plot_result(
 \item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
 or coordinates as matrix/data.frame}
 
-\item{best}{A numeric value indicating how many of the best individuals
-should be plotted}
+\item{best}{How many distinct best layouts to draw. Default is 1.}
 
 \item{plotEn}{A numeric value that indicates if the best energy or efficiency
 output should be plotted. \code{1} plots the best energy solutions
@@ -55,9 +54,8 @@ Returns a data.frame of the best (energy/efficiency) individual
 during all iterations
 }
 \description{
-Plot the best solutions of the genetic algorithm.
-Depending on \code{plotEn}, either the best energy or efficiency solutions
-can be plotted. \code{best} indicates the amount of best solutions to plot.
+Draw the best layout(s) on the site. Turbine labels are the
+total wake in percent. Default is the single best energy layout.
 }
 \examples{
 \dontrun{
@@ -80,13 +78,18 @@ plot_result(resultrect, Polygon1, best = 1, plotEn = 1, topographie = FALSE)
 }
 \seealso{
 Other Plotting Functions: 
+\code{\link{generation_layouts}()},
+\code{\link{plot_cell_heatmap}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
+\code{\link{plot_generation}()},
 \code{\link{plot_parkfitness}()},
+\code{\link{plot_population}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
+\code{\link{population_census}()},
 \code{\link{random_search_single}()}
 }
 \concept{Plotting Functions}

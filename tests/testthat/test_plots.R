@@ -127,8 +127,39 @@ test_that("Test Plotting Functions", {
 
 
   ## plot_parkfitness ###############
-  respf <- plot_parkfitness(resultrect)
-  expect_true(is.null(respf))
+  respf <- plot_parkfitness(resultrect, interactive = FALSE)
+  expect_true(is.list(respf) || inherits(respf, c("ggplot", "plotly", "plotly_hash")))
+  expect_true(is.list(plot_fitness_evolution(resultrect, interactive = FALSE)))
+
+  result_neg <- resultrect
+  sc <- result_neg[[1, "selcross"]]
+  sc[1, 1] <- -1
+  result_neg[[1, "selcross"]] <- sc
+  expect_true(is.list(plot_parkfitness(result_neg, interactive = FALSE)))
+
+  ## plot_generation ###############
+  gl <- generation_layouts(resultrect, generation = 2)
+  expect_true(is.list(gl))
+  expect_true(all(c("turbines", "layouts", "generation") %in% names(gl)))
+  expect_true(nrow(gl$layouts) >= 1)
+  expect_equal(gl$generation, 2)
+  glp <- plot_generation(resultrect, sp_polygon, generation = 2,
+                         n_show = 2, interactive = FALSE, ask = FALSE)
+  expect_equal(glp$generation, 2)
+  expect_true("elite" %in% names(gl$layouts))
+
+  ## plot_population ###############
+  cen <- population_census(resultrect)
+  expect_true(is.data.frame(cen))
+  expect_true(all(c(
+    "generation", "evaluated", "distinct", "duplicates",
+    "selected", "elites", "cells", "cells_cum", "cells_elite", "elite_kids"
+  ) %in% names(cen)))
+  expect_equal(nrow(cen), nrow(resultrect))
+  expect_true(all(cen$evaluated >= cen$distinct, na.rm = TRUE))
+  popp <- plot_population(resultrect, interactive = FALSE, ask = FALSE)
+  expect_true(is.list(popp) || inherits(popp, c("ggplot", "plotly", "plotly_hash")))
+  expect_true(is.data.frame(attr(popp, "census")))
 
   ## plot_result ###############
   sp_polygonnp <- sf::st_as_sf(sf::st_sfc(
@@ -215,19 +246,28 @@ test_that("Test Plotting Functions", {
   ## plot_windfarmGA ###############
   respwf <- plot_windfarmGA(resultrect, sp_polygon,
     whichPl = "all",
-    best = 1, plotEn = 1
+    best = 1, plotEn = 1, plotly = FALSE
   )
   expect_true(is.null(respwf))
   respwf <- plot_windfarmGA(resultrect[1:3, ], sp_polygon,
     whichPl = "all",
-    best = 1, plotEn = 1
+    best = 1, plotEn = 1, plotly = FALSE
   )
   expect_true(is.null(respwf))
   respwf <- plot_windfarmGA(resultrect[1:3, ], sp_polygon,
     whichPl = "all",
-    best = 1, plotEn = 1
+    best = 1, plotEn = 1, plotly = FALSE
   )
   expect_true(is.null(respwf))
+
+  ## plot_cell_heatmap ###############
+  hm <- plot_cell_heatmap(resultrect, sp_polygon, plotit = TRUE)
+  expect_true(is.data.frame(hm))
+  expect_true(all(c("ID", "X", "Y", "n_probed") %in% names(hm)))
+  expect_true(all(hm$n_probed >= 0))
+  expect_true(sum(hm$n_probed) > 0)
+  hm_nolog <- plot_cell_heatmap(resultrect, sp_polygon, log = FALSE, plotit = FALSE)
+  expect_equal(hm$n_probed, hm_nolog$n_probed)
 
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
     sf::st_polygon(list(cbind(
@@ -238,7 +278,7 @@ test_that("Test Plotting Functions", {
   ))
   respwf <- plot_windfarmGA(resulthex, Polygon1,
     whichPl = "all",
-    best = 2, plotEn = 1
+    best = 2, plotEn = 1, plotly = FALSE
   )
   expect_true(is.null(respwf))
 
@@ -257,8 +297,8 @@ test_that("Test Plotting Functions", {
   expect_true(is.null(beor_res))
 
   ## plot_fitness_evolution ###############
-  fitnes_res <- plot_fitness_evolution(resultrect)
-  expect_true(is.null(fitnes_res))
+  fitnes_res <- plot_fitness_evolution(resultrect, interactive = FALSE)
+  expect_true(is.list(fitnes_res) || inherits(fitnes_res, c("ggplot", "plotly", "plotly_hash")))
 
   ## plot_evolution ###############
   evo_res <- plot_evolution(resultrect, ask = FALSE)

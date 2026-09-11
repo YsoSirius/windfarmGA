@@ -2,38 +2,42 @@
 % Please edit documentation in R/plots.R
 \name{plot_cloud}
 \alias{plot_cloud}
-\title{Plot outputs of all generations with standard deviations}
+\title{Per-generation fitness / efficiency / energy}
 \usage{
 plot_cloud(result, pl = FALSE)
 }
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
 
-\item{pl}{Should the results be plotted? Default is FALSE}
+\item{pl}{Draw the three panels? Default is FALSE}
 }
 \value{
-Returns a data.frame with the values for fitness, efficiency and
-energy for all evaluated individuals
+A data.frame with fitness, efficiency and energy summaries
 }
 \description{
-Plot the fitness, efficiency and energy outputs of all
-generations and the corresponding standard deviations.
+Summarise every evaluated individual. With \code{pl = TRUE}
+draw three panels of points (max as a line). The returned table has
+min / mean / max / sd per generation.
 }
 \examples{
 \donttest{
-## Plot the results of a hexagonal grid optimization
 plcdf <- plot_cloud(resulthex, TRUE)
 }
 }
 \seealso{
 Other Plotting Functions: 
+\code{\link{generation_layouts}()},
+\code{\link{plot_cell_heatmap}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
+\code{\link{plot_generation}()},
 \code{\link{plot_parkfitness}()},
+\code{\link{plot_population}()},
 \code{\link{plot_result}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
+\code{\link{population_census}()},
 \code{\link{random_search_single}()}
 }
 \concept{Plotting Functions}

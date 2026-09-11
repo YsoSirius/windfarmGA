@@ -1,7 +1,9 @@
 #' @title Adjust the amount of turbines per windfarm
 #' @name trimton
-#' @description  Adjust the mutated individuals to the required amount of
-#'   turbines.
+#' @description Legacy repair for binary chromosomes. The GA loop encodes
+#'   layouts as \code{n} unique grid IDs, so this function is not called there.
+#'   It remains exported for the old 0/1 pipeline
+#'   (\code{\link{crossover}} / \code{\link{mutation}}).
 #'
 #' @export
 #'
@@ -46,26 +48,19 @@
 #'   dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
 #' )
 #' allparks <- do.call("rbind", fit)
-#' ## SELECTION
-#' ## print the amount of Individuals selected.
-#' ## Check if the amount of Turbines is as requested.
-#' selec6best <- selection(fit, Grid, 2, TRUE, 6, "VAR")
-#' selec6best <- selection(fit, Grid, 2, TRUE, 6, "FIX")
-#' selec6best <- selection(fit, Grid, 4, FALSE, 6, "FIX")
-#' ## CROSSOVER
-#' ## u determines the amount of crossover points,
-#' ## crossPart determines the method used (Equal/Random),
-#' ## uplimit is the maximum allowed permutations
+#' ## selection() returns ID matrices; crossover()/trimton() expect 0/1.
+#' sel <- selection(fit, Grid, 2, TRUE, 6, "FIX")
+#' ids <- sel[[1]]
+#' bins <- matrix(0, nrow(Grid), ncol(ids))
+#' for (j in seq_len(ncol(ids))) {
+#'   bins[match(ids[, j], Grid[, "ID"]), j] <- 1
+#' }
+#' selec6best <- list(
+#'   data.frame(ID = Grid[, "ID"], bins),
+#'   data.frame(ID = 1, t(sel[[2]]))
+#' )
 #' crossOut <- crossover(selec6best, 2, uplimit = 300, crossPart = "RAN")
-#' crossOut <- crossover(selec6best, 7, uplimit = 500, crossPart = "RAN")
-#' crossOut <- crossover(selec6best, 3, uplimit = 300, crossPart = "EQU")
-#' ## MUTATION
-#' ## Variable Mutation Rate is activated if more than 2 individuals represent
-#' ## the current best solution.
 #' mut <- mutation(a = crossOut, p = 0.3, NULL)
-#' ## TRIMTON
-#' ## After Crossover and Mutation, the amount of turbines in a windpark change and have to be
-#' ## corrected to the required amount of turbines.
 #' mut1 <- trimton(
 #'   mut = mut, nturb = 10, allparks = allparks, nGrids = AmountGrids,
 #'   trimForce = FALSE

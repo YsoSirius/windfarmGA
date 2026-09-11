@@ -50,6 +50,8 @@ Other Genetic Algorithm Functions:
 \code{\link{genetic_algorithm}()},
 \code{\link{mutation}()},
 \code{\link{selection}()},
+\code{\link{set_crossover}()},
+\code{\link{swap_mutation}()},
 \code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

@@ -10,7 +10,9 @@ plot_windfarmGA(
   whichPl = "all",
   best = 1,
   plotEn = 1,
-  weibullsrc
+  weibullsrc,
+  ask = NULL,
+  plotly = NULL
 )
 }
 \arguments{
@@ -19,11 +21,11 @@ plot_windfarmGA(
 \item{Polygon1}{The considered area as SpatialPolygon, SimpleFeature Polygon
 or coordinates as matrix/data.frame}
 
-\item{whichPl}{Which plots should be shown: 1-6 are possible. The default is
-"all" which shows all available plots}
+\item{whichPl}{\code{"all"} (default) shows \code{result}, \code{progress}, \code{population}
+and \code{heatmap}. Or a character vector (\code{"result"}, \code{"progress"},
+\code{"population"}, \code{"heatmap"}, \code{"evolution"}) or the numbers 1–4.}
 
-\item{best}{A numeric value indicating how many of the best individuals
-should be plotted}
+\item{best}{How many distinct best layouts to draw. Default is 1.}
 
 \item{plotEn}{A numeric value that indicates if the best energy or efficiency
 output should be plotted. \code{1} plots the best energy solutions
@@ -35,14 +37,21 @@ scale parameter raster \code{a} of the Weibull distribution. If no list is
 given, then rasters included in the package are used instead, which
 currently only cover Austria. This variable is only used
 if \code{weibull = TRUE}.}
+
+\item{ask}{If \code{TRUE}, wait for Enter between pages. Default is \code{TRUE}
+in an interactive session.}
+
+\item{plotly}{If \code{TRUE}, draw fitness and rates with plotly (hover).
+Default is \code{TRUE} when the plotly package is installed.}
 }
 \value{
 Returns NULL. Used for plotting
 }
 \description{
-Plot the results of a genetic algorithm run with given inputs.
-Several plots try to show all relevant effects and outcomes of the
-algorithm. 6 plot methods are available that can be selected individually.
+Draw the useful summary plots of a GA run, one after another:
+best layout, fitness, operator rates, population, cells, efficiency,
+and the cell heatmap. In an interactive session every page waits for
+Enter so nothing is overwritten in the Plots pane.
 }
 \examples{
 \dontrun{
@@ -55,22 +64,24 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
   crs = 3035
 ))
 
-## Plot the results of a hexagonal grid optimization
-plot_windfarmGA(resulthex, Polygon1, whichPl = "all", best = 1, plotEn = 1)
-
-## Plot the results of a rectangular grid optimization
-plot_windfarmGA(resultrect, Polygon1, whichPl = "all", best = 1, plotEn = 1)
+plot_windfarmGA(resulthex, Polygon1)
+plot_windfarmGA(resultrect, Polygon1, whichPl = "progress")
 }
 }
 \seealso{
 Other Plotting Functions: 
+\code{\link{generation_layouts}()},
+\code{\link{plot_cell_heatmap}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
+\code{\link{plot_generation}()},
 \code{\link{plot_parkfitness}()},
+\code{\link{plot_population}()},
 \code{\link{plot_result}()},
 \code{\link{plot_windrose}()},
+\code{\link{population_census}()},
 \code{\link{random_search_single}()}
 }
 \concept{Plotting Functions}

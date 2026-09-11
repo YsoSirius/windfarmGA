@@ -7,7 +7,9 @@
 crossover(se6, u, uplimit, crossPart = c("EQU", "RAN"), verbose, seed)
 }
 \arguments{
-\item{se6}{The selected individuals. The output of \code{\link{selection}}}
+\item{se6}{Legacy binary selection: a list with a grid-ID column plus 0/1
+layout columns, and a fitness row. Current \code{\link{selection}}
+returns ID matrices; use \code{\link{set_crossover}} in the GA loop.}
 
 \item{u}{The crossover point rate}
 
@@ -24,8 +26,10 @@ Returns a binary coded matrix of all permutations and all grid cells,
 where 0 indicates no turbine and 1 indicates a turbine in the grid cell.
 }
 \description{
-The crossover method creates new offspring with the selected
-individuals by permutating their genetic codes.
+Legacy binary crossover. The GA loop uses
+\code{\link{set_crossover}} on unique grid-cell IDs instead. This function
+still permutes 0/1 chromosomes (EQU/RAN) and typically needs
+\code{\link{trimton}} afterwards.
 }
 \examples{
 ## Create two random parents with an index and random binary values
@@ -57,6 +61,8 @@ Other Genetic Algorithm Functions:
 \code{\link{init_population}()},
 \code{\link{mutation}()},
 \code{\link{selection}()},
+\code{\link{set_crossover}()},
+\code{\link{swap_mutation}()},
 \code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

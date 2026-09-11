@@ -31,25 +31,33 @@
 #'   determines the percentage a grid cell must overlay the area.
 #'   Default is \code{1}
 #' @param iteration The number of iterations. Default is \code{20}
-#' @param mutr A numeric mutation rate. Default is \code{0.008}
+#' @param mutr Mutation probability per turbine (swap with an unused cell).
+#'   Default is \code{2/n}. Each individual swaps at least
+#'   \code{getOption("windfarmGA.min_swaps")} cells (default 1).
 #' @param vdirspe A data.frame containing the wind speeds, directions and
 #'   probabilities. See \code{\link{windata_format}}.
 #' @param topograp Boolean value, which indicates if the terrain effect model
 #'   should be enabled or not. Default is \code{FALSE}
 #' @param elitism Boolean value, which indicates whether elitism should be
-#'   activated or not. If \code{TRUE}, the best \code{nelit} layouts are copied
-#'   unchanged into the next generation. Default is \code{TRUE}
+#'   activated or not. If \code{TRUE}, the current best layout is archived
+#'   unchanged and each elite produces several mutated copies plus mixes with
+#'   weaker layouts (\code{windfarmGA.elite_children} /
+#'   \code{windfarmGA.elite_mix}). The elite count starts at \code{nelit} and
+#'   rises while refining a stall, then drops by one during a disturbance
+#'   pulse. Default is \code{TRUE}
 #' @param nelit If \code{elitism} is TRUE, this input determines the amount
-#'   of individuals in the elite group. Default is 7
+#'   of individuals in the elite group. Default is 3
 #' @param selstate Determines which selection method is used, "FIX" selects a
 #'   constant percentage and "VAR" selects a variable percentage, depending on
-#'   the development of the fitness values. Default is "FIX"
-#' @param crossPart1 Determines which crossover method is used, "EQU" divides
-#'   the genetic code at equal intervals and "RAN" divides the genetic code at
-#'   random locations. Default is \code{"EQU"}
+#'   the development of the fitness values. Default is "VAR"
+#' @param crossPart1 Unused by the combinatorial genome (set crossover).
+#'   Kept for API compatibility with the legacy binary operators
+#'   \code{\link{crossover}} (`EQU` / `RAN`). Default is \code{"EQU"}
 #' @param trimForce If \code{TRUE} the algorithm will use a probabilistic
 #'   approach to correct the windfarms to the desired amount of turbines.
-#'   If \code{FALSE} the adjustment will be random. Default is \code{FALSE}
+#'   If \code{FALSE} the adjustment will be random. Default is \code{FALSE}.
+#'   Unused by the combinatorial genome; kept for compatibility with
+#'   \code{\link{trimton}}.
 #' @param Projection A spatial reference system. Depending on your PROJ-version,
 #'   it should either be a numeric `EPSG-code` or a `Proj4-string`.
 #'   Default is \code{EPSG:3035}
@@ -103,7 +111,29 @@
 #'   wind speeds use a logarithmic profile unless
 #'   \code{options(windfarmGA.wind_profile = "power")} restores the legacy
 #'   power law. Power uses \code{options(windfarmGA.Cp)} (default 0.45) and
-#'   optional cut-in / rated / cut-out speeds.
+#'   optional cut-in / rated / cut-out speeds. Layouts are encoded as \code{n}
+#'   unique grid-cell IDs (set crossover and swap mutation). Selection defaults
+#'   to \code{VAR} (percentage follows fitness progress). Mutation, immigrants
+#'   and unused-cell injection prefer rarely visited cells. Crossover is spatial
+#'   with probability \code{options(windfarmGA.spatial_crossover)} (default 0.5).
+#'   Evaluated layouts are cached. A flat global max is not a stop signal.
+#'   The run ends at \code{iteration}, or earlier only after
+#'   \code{options(windfarmGA.stall_generations)} consecutive generations
+#'   with no new layout, no newly visited cell and no new best fitness
+#'   (set to \code{0} to disable). Operator rates cycle like seasons, still
+#'   only selection / set-crossover / swap-mutation: explore (rates rise on
+#'   stall) until \code{options(windfarmGA.refine_min_gen)} (default 18) and
+#'   \code{options(windfarmGA.refine_after)} (default 12) generations without
+#'   a new max at coverage \eqn{\ge 0.35}; then refine (inject toward 0.15,
+#'   mutation toward \code{2/n}, selection toward about 45\%). After
+#'   \code{options(windfarmGA.refine_hold)} generations in refine (default 25),
+#'   a short disturbance pulse of \code{options(windfarmGA.explore_pulse)}
+#'   generations (default 10) raises the same rates even if new maxes are
+#'   still trickling in, then refine resumes. Elites get a short local search
+#'   each generation: one turbine slides to a neighbouring empty cell
+#'   (not a random cell anywhere on the grid). The legacy binary operators
+#'   \code{\link{crossover}}, \code{\link{mutation}} and
+#'   \code{\link{trimton}} remain available.
 #'
 #' @examples \dontrun{
 #' ## Create a random rectangular shapefile
@@ -174,7 +204,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
     weibull <- FALSE
   }
   if (missing(selstate)) {
-    selstate <- "FIX"
+    selstate <- "VAR"
   }
   if (missing(crossPart1)) {
     crossPart1 <- "EQU"
@@ -186,13 +216,13 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
     Proportionality <- 1
   }
   if (missing(mutr)) {
-    mutr <- 0.008
+    mutr <- NULL
   }
   if (missing(elitism)) {
     elitism <- TRUE
   }
   if (missing(nelit)) {
-    nelit <- 7
+    nelit <- 3
   }
   if (missing(trimForce)) {
     trimForce <- FALSE
@@ -221,6 +251,9 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
   if (missing(n)) {
     stop("The variable 'n' is not defined. Assign the number of turbines to 'n'.")
   }
+  if (is.null(mutr)) {
+    mutr <- 2 / n
+  }
   if (missing(Rotor)) {
     stop("The variable 'Rotor' is not defined. Assign the rotor radius to 'Rotor'.")
   }
@@ -240,7 +273,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
   resol2 <- fcrR * Rotor
 
   ## Max Amount of individuals in the Crossover-Method
-  CrossUpLimit <- getOption("windfarmGA.max_population")
+  CrossUpLimit <- getOption("windfarmGA.max_population", 300)
 
   ## Start Parallel Cluster ###############
   ## Is Parallel processing activated? Check the max number of cores and set to max-1 if value exceeds.
@@ -333,6 +366,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
       "Percentage of Polygon" = Proportionality,
       "Topographie" = topgraphie_text,
       "Elitarism" = elitism,
+      "Elite count" = nelit,
       "Selection Method" = selstate,
       "Trim Force Method Used" = trimForce,
       "Crossover Method Used" = crossPart1,
@@ -387,6 +421,7 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
     grid_filtered <- Grid1[[2]]
   }
   n_gridcells <- nrow(Grid)
+  grid_nbr <- grid_neighbors(Grid)
 
   ## INIT VARIABLES 2 ###############
   ## Determine the amount of initial individuals and create initial population.
@@ -394,8 +429,8 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
   if (nStart < 100) {
     nStart <- 100
   }
-  if (nStart > 300) {
-    nStart <- 300
+  if (nStart > CrossUpLimit) {
+    nStart <- CrossUpLimit
   }
   nStart <- ceiling(nStart)
   startsel <- init_population(Grid, n, nStart)
@@ -434,35 +469,59 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
     message("\nStart Genetic Algorithm ...")
   }
   rbPal <- grDevices::colorRampPalette(c("red", "green"))
+  mut_adapt <- mutr
+  p_inj <- getOption("windfarmGA.crossover_inject", 0.25)
+  mut_floor <- max(1 / n, mutr * 0.5)
+  mut_ceil <- min(0.15, max(mutr, 3 / n))
+  mut_target <- mutr
+  ga_phase <- "explore"
+  ga_phase_age <- 0L
+  refine_after <- as.integer(getOption("windfarmGA.refine_after", 12L))
+  refine_min_gen <- as.integer(getOption("windfarmGA.refine_min_gen", 18L))
+  refine_hold <- as.integer(getOption("windfarmGA.refine_hold", 25L))
+  explore_pulse <- as.integer(getOption("windfarmGA.explore_pulse", 10L))
+  fit_cache <- new.env(parent = emptyenv())
+  visit <- stats::setNames(integer(nrow(Grid)), as.character(Grid[, "ID"]))
+  best_so_far <- -Inf
+  stall <- 0L
+  idle <- 0L
+  stall_limit <- as.integer(getOption("windfarmGA.stall_generations", 40L))
+  eval_fit <- function(selection) {
+    fitness_with_cache(
+      cache = fit_cache,
+      selection = selection,
+      referenceHeight = referenceHeight,
+      RotorHeight = RotorHeight,
+      SurfaceRoughness = SurfaceRoughness,
+      Polygon = Polygon1,
+      resol1 = resol2,
+      rot = Rotor,
+      dirspeed = winddata,
+      srtm_crop = srtm_crop,
+      topograp = topograp,
+      cclRaster = cclRaster,
+      weibull = estim_speed_raster,
+      Parallel = Parallel,
+      numCluster = numCluster
+    )
+  }
   i <- 1
   while (i <= iteration) {
     if (!verbose) {
       message(".", appendLF = FALSE)
     }
+    used_at_start <- sum(visit > 0)
+    n_new_ls <- 0L
     ## FITNESS (and get_grids) ###############
     if (i == 1) {
-      fit <- fitness(
-        selection = startsel, referenceHeight = referenceHeight,
-        RotorHeight = RotorHeight,
-        SurfaceRoughness = SurfaceRoughness,
-        Polygon = Polygon1, resol1 = resol2, rot = Rotor,
-        dirspeed = winddata, srtm_crop = srtm_crop,
-        topograp = topograp, cclRaster = cclRaster,
-        weibull = estim_speed_raster,
-        Parallel = Parallel, numCluster = numCluster
-      )
+      fit <- eval_fit(startsel)
     } else {
       getRectV <- get_grids(mut1, Grid)
-      fit <- fitness(
-        selection = getRectV, referenceHeight = referenceHeight,
-        RotorHeight = RotorHeight,
-        SurfaceRoughness = SurfaceRoughness,
-        Polygon = Polygon1, resol1 = resol2, rot = Rotor,
-        dirspeed = winddata, srtm_crop = srtm_crop,
-        topograp = topograp, cclRaster = cclRaster,
-        weibull = estim_speed_raster,
-        Parallel = Parallel, numCluster = numCluster
-      )
+      fit <- eval_fit(getRectV)
+    }
+    n_new_pop <- attr(fit, "n_new")
+    if (is.null(n_new_pop)) {
+      n_new_pop <- 0L
     }
 
     ## Fitness Result Processing ###############
@@ -486,6 +545,17 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
       MaxEnergyRedu, MeanEnergyRedu, MinEnergyRedu,
       maxParkwirkungsg, meanParkwirkungsg, minParkwirkungsg
     )
+
+    tb_vis <- table(as.integer(allparks[, "Rect_ID"]))
+    nm_vis <- as.character(as.integer(names(tb_vis)))
+    hit_vis <- nm_vis %in% names(visit)
+    visit[nm_vis[hit_vis]] <- visit[nm_vis[hit_vis]] + as.integer(tb_vis)[hit_vis]
+    if (maxparkfitness > best_so_far + 1e-8) {
+      best_so_far <- maxparkfitness
+      stall <- 0L
+    } else {
+      stall <- stall + 1L
+    }
 
     clouddata[[i]] <- subset.matrix(allparksUni,
       select = c(
@@ -622,73 +692,71 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
       colnames(fuzzycontr[[i]]) <- c("Min", "Max", "Mean")
       teil <- 2
       if (selstate == "VAR") {
-        teil <- 1.35
+        teil <- 1.8
       }
-      u <- 1.1
       beorwor[[i]] <- cbind(0, 0)
     }
-    ## TODO - better fuzzy model and expose weights and values by options?
+    ## Seasonal rates: explore, refine, then a disturbance pulse if refine lasts.
     if (i >= 2 && i <= iteration) {
       t0 <- subset.matrix(allparks, !duplicated(allparks[, "Run"]))
       t0 <- t0[, "Parkfitness"]
       fitnessValues[[i]] <- t0
       rangeFitnessVt0 <- range(t0)
-      maxt0 <- max(t0)
       meant0 <- mean(t0)
-      mint0 <- min(t0)
       t1 <- fitnessValues[[i - 1]]
       rangeFitnessVt1 <- range(t1)
-      maxt1 <- max(t1)
       meant1 <- mean(t1)
-      mint1 <- min(t1)
-      maxDif <- maxt0 - maxt1
-      meanDif <- meant0 - meant1
-      minDif <- mint0 - mint1
-      WeightDif <- c(0.80, 0.2, 0.0)
-      maxunt <- (maxDif * WeightDif[1]) +
-        (meanDif * WeightDif[2]) + (minDif * WeightDif[3])
+      n_used <- length(unique(as.integer(allparks[, "Rect_ID"])))
+      coverage <- n_used / n_gridcells
       allcoef1 <- c(rangeFitnessVt0, meant0)
       allcoef2 <- c(rangeFitnessVt1, meant1)
       fuzzycontr[[i]] <- rbind(allcoef1, allcoef2)
       colnames(fuzzycontr[[i]]) <- c("Min", "Max", "Mean")
 
-      if (maxunt <= 0) {
-        pri <- "deteriorated"
-        teil <- teil - 0.02
-        u <- u - 0.06
-      } else {
-        pri <- "improved"
-        teil <- teil + 0.017
-        u <- u + 0.03
-      }
+      rates <- adapt_operator_rates(
+        phase = ga_phase,
+        stall = stall,
+        coverage = coverage,
+        generation = i,
+        teil = teil,
+        mut_adapt = mut_adapt,
+        p_inj = p_inj,
+        mut_floor = mut_floor,
+        mut_ceil = mut_ceil,
+        mut_target = mut_target,
+        refine_after = refine_after,
+        refine_min_gen = refine_min_gen,
+        phase_age = ga_phase_age,
+        refine_hold = refine_hold,
+        explore_pulse = explore_pulse
+      )
+      ga_phase <- rates$phase
+      ga_phase_age <- rates$phase_age
+      pri <- rates$pri
+      teil <- rates$teil
+      mut_adapt <- rates$mut_adapt
+      p_inj <- rates$p_inj
 
-      if (teil <= 4 / 3) {
-        teil <- 4 / 3
-        if (verbose) message(paste("Max 75% selected. SP: ", teil))
+      if (teil <= 4 / 3 + 1e-8 && verbose) {
+        message(paste("Max 75% selected. SP: ", teil))
       }
       if (length(fit) <= 20) {
         teil <- 1
-        u <- u + 0.1
         if (verbose) {
-          message(paste(
-            "Less than 20 individuals. Select all and increase ",
-            "Crossover-point rate. CPR: ", u, "SP: ", teil
-          ))
+          message(paste("Less than 20 individuals. Select all. SP: ", teil))
         }
       }
 
-      u <- round(u, 2)
-      teil <- round(teil, 3)
-
       if (verbose) {
         message(paste(
-          "Fitness of this population (", i,
-          "), compared to the prior,", pri,
-          "by", round(maxunt, 2), "W"
+          "Fitness of this population (", i, "), ", pri,
+          ". phase=", ga_phase, " age=", ga_phase_age,
+          " stall=", stall, " inject=", p_inj,
+          " mut=", mut_adapt, " sel=", round(100 / teil, 1),
+          "% coverage=", round(coverage, 2)
         ))
       }
-      meanunt <- meant0 - meant1
-      beorwor[[i]] <- cbind(maxunt, meanunt)
+      beorwor[[i]] <- cbind(max(t0) - max(t1), coverage)
     }
 
     ## SELECTION #################
@@ -699,106 +767,205 @@ genetic_algorithm <- function(Polygon1, GridMethod, Rotor, n, fcrR,
         teil <- 2
       }
     }
-    if (crossPart1 == "EQU") {
-      u <- round(u, 2)
+
+    p_i <- p_inj
+    mut_i <- mut_adapt
+    n_elite_used <- 0L
+    if (isTRUE(elitism)) {
+      n_elite_used <- adapt_elite_n(nelit, length(fit), ga_phase, stall)
     }
 
-    ## How many are selected and how much crossover points are used?
-    selcross[[i]] <- cbind(cross = trunc(u + 1), teil)
     selec6best <- selection(
       fit = fit, Grid = Grid, teil = teil,
-      elitism = elitism, nelit = nelit,
+      elitism = elitism, nelit = max(1L, n_elite_used),
       selstate = selstate, verbose = verbose
     )
 
-    selec6best_bin <- selec6best[[1]]
+    ids_sel <- selec6best[[1]]
     if (verbose) {
       message(paste(
         "Selection  -  Amount of Individuals: ",
-        length(selec6best_bin[1, -1])
+        ncol(ids_sel)
       ))
     }
-    nindivsel <- length(selec6best_bin[1, -1])
+    nindivsel <- ncol(ids_sel)
 
     ## CROSSOVER #################
-    ## u determines the amount of crossover points,
-    ## crossPart determines the method used (Equal/Random),
-    ## uplimit is the maximum allowed permutations
-    crossOut <- crossover(
-      se6 = selec6best, u = u, uplimit = CrossUpLimit,
-      crossPart = crossPart1,
-      verbose = verbose, seed = NULL
+    crossOut <- set_crossover(
+      ids = ids_sel, grid_ids = Grid[, "ID"],
+      uplimit = CrossUpLimit, verbose = verbose, seed = NULL,
+      p_inject = p_i, grid_xy = Grid, visit = visit
     )
     if (verbose) {
       message(paste(
         "Crossover  -  Amount of Individuals: ",
-        length(crossOut[1, ])
+        ncol(crossOut)
       ))
     }
-    nindivcros <- length(crossOut[1, ])
+    nindivcros <- ncol(crossOut)
+    selcross[[i]] <- cbind(cross = round(p_i, 4), teil)
 
     ## MUTATION #################
-    ## Variable Mutation Rate is activated if more than 2 individuals
-    ## represent the current best solution.
-    loOp <- (length(afvs[, 1]) / n)
-    if (loOp > 2) {
-      mutrn <- round(runif(1, 0.03, 0.1), 2)
-      t1 <- (loOp * 1.25) / 42
-      mutrn <- mutrn * (1 + t1)
-      mutrn <- round(mutrn + ((i) / (20 * iteration)), 5)
-      mut <- mutation(a = crossOut, p = mutrn, seed = NULL)
-      mut_rat <- mutrn
-      if (verbose) {
-        message(paste("Variable Mutation Rate is", mutrn))
-      }
-    } else {
-      mut <- mutation(a = crossOut, p = mutr, seed = NULL)
-      mut_rat <- mutr
-    }
-    mut_rate[[i]] <- mut_rat
-    if (verbose) {
-      message(paste("Mutation   -  Amount of Individuals: ", length(mut[1, ])))
-    }
-    nindivmut <- length(mut[1, ])
-
-    ## TRIMTON #################
-    ## After Crossover and Mutation, the amount of turbines in a windpark
-    ## change and have to be corrected to the required amount of turbines.
-    mut1 <- trimton(
-      mut = mut, nturb = n, allparks = allparks,
-      nGrids = n_gridcells, trimForce = trimForce,
-      seed = NULL
+    mut <- swap_mutation(
+      ids = crossOut, grid_ids = Grid[, "ID"], p = mut_i, visit = visit
     )
+    mut_rate[[i]] <- mut_i
+    if (verbose) {
+      message(paste("Mutation   -  Amount of Individuals: ", ncol(mut),
+                    " p=", mut_i))
+    }
+    nindivmut <- ncol(mut)
 
-    ## Keep the current best layouts unchanged for the next generation
-    if (elitism) {
-      n_elite <- min(nelit, length(fit))
+    mut1 <- mut
+    n_imm <- as.integer(getOption("windfarmGA.immigrants", 3L))
+    if (n_imm > 0) {
+      gids <- as.integer(Grid[, "ID"])
+      imm_w <- 1 / (1 + as.numeric(visit[as.character(gids)]))
+      imm_w[!is.finite(imm_w)] <- 1
+      if (sum(imm_w) <= 0) {
+        imm_w[] <- 1
+      }
+      imm <- vapply(seq_len(n_imm), function(k) {
+        sort(sample(gids, n, prob = imm_w))
+      }, integer(n))
+      if (!is.matrix(imm)) {
+        imm <- matrix(imm, nrow = n)
+      }
+      mut1 <- cbind(mut1, imm)
+    }
+
+    ## Archive the best; breed extra children from the elite
+    n_elite_kids <- 0L
+    if (elitism && n_elite_used > 0L) {
+      n_elite <- min(n_elite_used, length(fit))
       fit_order <- order(vapply(fit, function(x) x[1, "Parkfitness"], 1),
                          decreasing = TRUE)
-      elite_bin <- do.call(cbind, lapply(fit_order[seq_len(n_elite)], function(idx) {
-        bin <- integer(n_gridcells)
-        bin[fit[[idx]][, "Rect_ID"]] <- 1L
-        bin
-      }))
-      mut1 <- cbind(mut1, elite_bin)
+      elite_ids <- vapply(fit_order[seq_len(n_elite)], function(idx) {
+        sort(as.integer(fit[[idx]][, "Rect_ID"]))
+      }, integer(n))
+      if (!is.matrix(elite_ids)) {
+        elite_ids <- matrix(elite_ids, nrow = n)
+      }
+      worse_ids <- NULL
+      rest <- fit_order[-seq_len(n_elite)]
+      if (length(rest)) {
+        half <- rest[seq.int(from = max(1L, ceiling(length(rest) / 2)),
+                             to = length(rest))]
+        worse_ids <- vapply(half, function(idx) {
+          sort(as.integer(fit[[idx]][, "Rect_ID"]))
+        }, integer(n))
+        if (!is.matrix(worse_ids)) {
+          worse_ids <- matrix(worse_ids, nrow = n)
+        }
+      }
+      n_mut_el <- as.integer(getOption("windfarmGA.elite_children", 3L))
+      n_mix_el <- as.integer(getOption("windfarmGA.elite_mix", 2L))
+      if (stall >= 10L) {
+        n_mut_el <- n_mut_el + 2L
+      }
+      kids <- elite_offspring(
+        elite_ids, worse_ids, Grid[, "ID"],
+        n_mut = n_mut_el, n_mix = n_mix_el,
+        mut_p = max(mut_i, 1 / n)
+      )
+      if (!is.null(kids) && ncol(as.matrix(kids)) > 0) {
+        n_elite_kids <- ncol(as.matrix(kids))
+      }
+      mut1 <- cbind(mut1, elite_ids[, 1, drop = FALSE], kids)
     }
-    if (ncol(mut1) > 1) {
-      mut1 <- mut1[, !duplicated(t(mut1)), drop = FALSE]
+
+    n_ls <- as.integer(getOption("windfarmGA.local_search_elites", 5L))
+    n_try <- as.integer(getOption("windfarmGA.local_search_tries", 6L))
+    if (stall >= 5L) {
+      n_try <- n_try + 2L
     }
+    if (stall >= 15L) {
+      n_try <- n_try + 2L
+    }
+    n_ls <- min(n_ls, length(fit))
+    if (n_ls > 0 && n_try > 0) {
+      fo <- order(vapply(fit, function(x) x[1, "Parkfitness"], 1),
+                  decreasing = TRUE)
+      ls_mat <- NULL
+      for (e in seq_len(n_ls)) {
+        cur <- as.integer(fit[[fo[e]]][, "Rect_ID"])
+        best_f <- fit[[fo[e]]][1, "Parkfitness"]
+        best_ids <- cur
+        for (t in seq_len(n_try)) {
+          cand <- matrix(
+            neighbor_swap(best_ids, grid_nbr, n_moves = 1L),
+            ncol = 1
+          )
+          fnew <- eval_fit(get_grids(cand, Grid))
+          n_ls_new <- attr(fnew, "n_new")
+          if (!is.null(n_ls_new)) {
+            n_new_ls <- n_new_ls + as.integer(n_ls_new)
+          }
+          pf <- fnew[[1]][1, "Parkfitness"]
+          if (isTRUE(pf > best_f)) {
+            best_f <- pf
+            best_ids <- as.integer(cand[, 1])
+          }
+        }
+        ls_mat <- cbind(ls_mat, sort(best_ids))
+      }
+      mut1 <- cbind(mut1, ls_mat)
+    }
+
+    n_before <- ncol(mut1)
+    if (n_before > 1) {
+      keys <- apply(mut1, 2, function(x) paste(sort(x), collapse = ","))
+      mut1 <- mut1[, !duplicated(keys), drop = FALSE]
+    }
+    n_dup <- n_before - ncol(mut1)
 
     if (verbose) {
       message(paste(
-        "TrimToN    -  Amount of Individuals: ",
-        ncol(mut1)
+        "Population -  Amount of Individuals: ",
+        ncol(mut1), " duplicates dropped: ", n_dup,
+        " elites: ", n_elite_used
       ))
     }
 
-    nindiv[[i]] <- cbind(nindivfit, nindivsel, nindivcros, nindivmut)
-    if (maxParkwirkungsg == 100) {
-      i <- iteration + 1
-    } else {
-      i <- i + 1
+    n_cells_now <- length(unique(as.integer(allparks[, "Rect_ID"])))
+    n_cells_elite <- NA_real_
+    n_take <- min(max(0L, as.integer(n_elite_used)), nrow(allparksUni))
+    if (n_take > 0L) {
+      ord_el <- order(allparksUni[, "Parkfitness"], decreasing = TRUE)
+      top_run <- allparksUni[ord_el[seq_len(n_take)], "Run"]
+      n_cells_elite <- length(unique(as.integer(
+        allparks[allparks[, "Run"] %in% top_run, "Rect_ID"]
+      )))
     }
+    nindiv[[i]] <- cbind(
+      evaluated = nindivfit,
+      selected = nindivsel,
+      crossover = nindivcros,
+      mutated = nindivmut,
+      duplicates = n_dup,
+      elites = n_elite_used,
+      elite_kids = n_elite_kids,
+      cells = n_cells_now,
+      cells_elite = n_cells_elite,
+      cells_cum = sum(visit > 0)
+    )
+
+    n_used <- sum(visit > 0)
+    if (stall == 0L || (n_new_pop + n_new_ls) > 0 || n_used > used_at_start) {
+      idle <- 0L
+    } else {
+      idle <- idle + 1L
+    }
+    if (stall_limit > 0 && idle >= stall_limit) {
+      if (verbose) {
+        message(
+          "Stop: no new layouts or cells for ", idle,
+          " generations (max still ", best_so_far, ")."
+        )
+      }
+      break
+    }
+    i <- i + 1
   }
 
   ## Reduce list, if algorithm didnt run all iterations #################

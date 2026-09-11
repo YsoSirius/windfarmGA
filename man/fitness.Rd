@@ -113,6 +113,8 @@ Other Genetic Algorithm Functions:
 \code{\link{init_population}()},
 \code{\link{mutation}()},
 \code{\link{selection}()},
+\code{\link{set_crossover}()},
+\code{\link{swap_mutation}()},
 \code{\link{trimton}()}
 }
 \concept{Genetic Algorithm Functions}

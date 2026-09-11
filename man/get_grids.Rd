@@ -2,12 +2,13 @@
 % Please edit documentation in R/get_grids.R
 \name{get_grids}
 \alias{get_grids}
-\title{Get the Grid-IDs from binary matrix}
+\title{Map layouts to grid coordinates}
 \usage{
 get_grids(trimtonOut, Grid)
 }
 \arguments{
-\item{trimtonOut}{Input matrix with binary values}
+\item{trimtonOut}{Binary matrix (legacy) or integer matrix of grid IDs
+(\code{n} turbines × individuals)}
 
 \item{Grid}{Grid of the considered area}
 }
@@ -16,9 +17,9 @@ Returns a list of all individuals with X and Y coordinates and the
 grid cell ID.
 }
 \description{
-Retrieve the grid ID's from the binary matrix, where the
-binary code indicates which grid cells are used in the current wind farm
-constellation.
+Map a population of layouts to grid coordinates. Accepts either
+an integer matrix of unique cell IDs (\code{n} turbines × individuals) or a
+legacy binary matrix (\code{n_gridcells} × individuals).
 }
 \examples{
 \donttest{
@@ -36,7 +37,6 @@ Polygon1 <- sf::st_as_sf(sf::st_sfc(
 ## grid cell Ids.
 Grid1 <- grid_area(shape = Polygon1, size = 200, prop = 1)
 Grid <- Grid1[[1]]
-AmountGrids <- nrow(Grid)
 
 startsel <- init_population(Grid, 10, 20)
 wind <- data.frame(ws = 12, wd = 0)
@@ -48,32 +48,15 @@ fit <- fitness(
 )
 allparks <- do.call("rbind", fit)
 
-## SELECTION
-## print the amount of Individuals selected.
-## Check if the amount of Turbines is as requested.
+## SELECTION (n unique cell IDs per individual)
 selec6best <- selection(fit, Grid, 2, TRUE, 6, "VAR")
 
-## CROSSOVER
-## u determines the amount of crossover points,
-## crossPart determines the method used (Equal/Random),
-## uplimit is the maximum allowed permutations
-crossOut <- crossover(selec6best, 2, uplimit = 300, crossPart = "RAN")
+## Set-crossover and swap-mutation keep exactly n turbines.
+cross_ids <- set_crossover(selec6best[[1]], Grid[, "ID"], uplimit = 20)
+mut_ids <- swap_mutation(cross_ids, Grid[, "ID"], p = 0.2)
 
-## MUTATION
-## Variable Mutation Rate is activated if more than 2 individuals represent
-## the current best solution.
-mut <- mutation(a = crossOut, p = 0.3)
-
-## TRIMTON
-## After Crossover and Mutation, the amount of turbines in a windpark change
-## and have to be corrected to the required amount of turbines.
-mut1 <- trimton(
-  mut = mut, nturb = 10, allparks = allparks,
-  nGrids = AmountGrids, trimForce = FALSE
-)
-
-## Get the new Grid-Ids and run a new fitness run.
-getRectV <- get_grids(mut1, Grid)
+## Look up XY coordinates for the next fitness evaluation.
+getRectV <- get_grids(mut_ids, Grid)
 fit <- fitness(
   selection = getRectV, referenceHeight = 100, RotorHeight = 100,
   SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,

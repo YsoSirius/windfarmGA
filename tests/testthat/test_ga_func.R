@@ -6,6 +6,31 @@ quiet <- function(x) {
   invisible(force(x))
 }
 
+expect_selected_ids <- function(sel, n_turb, grid_ids) {
+  expect_type(sel, "list")
+  expect_length(sel, 2)
+  ids <- sel[[1]]
+  expect_true(is.matrix(ids))
+  expect_equal(nrow(ids), n_turb)
+  expect_true(all(apply(ids, 2, function(x) length(unique(x)) == n_turb)))
+  expect_true(all(ids %in% grid_ids))
+  expect_true(all(sel[[2]] > 0))
+  expect_false(anyNA(ids))
+}
+
+selection_as_binary <- function(sel, Grid) {
+  ids <- sel[[1]]
+  k <- ncol(ids)
+  bins <- matrix(0, nrow = nrow(Grid), ncol = k)
+  for (j in seq_len(k)) {
+    bins[match(ids[, j], Grid[, "ID"]), j] <- 1
+  }
+  list(
+    data.frame(ID = Grid[, "ID"], bins, check.names = FALSE),
+    data.frame(ID = 1, matrix(sel[[2]], nrow = 1), check.names = FALSE)
+  )
+}
+
 test_that("Test Genetic Algorithm Function", {
   ## Data ##############
   Polygon1 <- sf::st_as_sf(sf::st_sfc(
@@ -197,20 +222,16 @@ test_that("Test Genetic Algorithm Function", {
 
   ## SELECTION ################################
   allparks <- do.call("rbind", fit)
+  grid_ids <- Grid[[1]][, "ID"]
+  n_turb <- 10
   selec6best <- selection(fit, Grid[[1]], 2, TRUE, 6, "VAR")
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
   rm(selec6best)
 
 
   allparks <- do.call("rbind", fit)
   selec6best <- selection(fit, Grid[[1]], 2, TRUE, 600, "VAR")
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
   rm(selec6best)
 
   ## Produce error
@@ -223,53 +244,121 @@ test_that("Test Genetic Algorithm Function", {
   expect_error(selection(fitNA, Grid[[1]], 2, TRUE, 6, "VAR"))
 
   selec6best <- selection(fit, Grid[[1]], teil = 1, TRUE, 6, "FIX")
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
   rm(selec6best)
 
   selec6best <- selection(fit, Grid[[1]], 2, TRUE, 6, "FIX")
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
   rm(selec6best)
 
   selec6best <- selection(fit, Grid[[1]], 2, TRUE, 6, "FIX")
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
   rm(selec6best)
 
   selec6best <- quiet(selection(fit, Grid[[1]], 4, FALSE, 6,
     selstate = "VAR",
     verbose = TRUE
   ))
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
   rm(selec6best)
 
   selec6best <- quiet(selection(fit, Grid[[1]], 4, FALSE, 6, "FIX",
     verbose = TRUE
   ))
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
 
   selec6best <- quiet(selection(fit, Grid[[1]], 4, TRUE, 6, "FIX",
     verbose = TRUE
   ))
-  expect_output(str(selec6best), "List of 2")
-  expect_false(any(unlist(sapply(selec6best, is.na))))
-  expect_true(all(unlist(selec6best[[1]][, -1]) %in% c(0, 1)))
-  expect_true(all(selec6best[[2]][, -1] > 0))
+  expect_selected_ids(selec6best, n_turb, grid_ids)
 
-  ## CROSSOVER #####################
+  ## SET CROSSOVER / SWAP MUTATION #####################
+  cross_ids <- set_crossover(
+    selec6best[[1]], grid_ids, uplimit = 12, seed = 11, verbose = TRUE
+  )
+  expect_equal(nrow(cross_ids), n_turb)
+  expect_equal(ncol(cross_ids), 12)
+  expect_true(all(apply(cross_ids, 2, function(x) length(unique(x)) == n_turb)))
+  expect_true(all(cross_ids %in% grid_ids))
+  cross_ids1 <- set_crossover(selec6best[[1]], grid_ids, uplimit = 8, seed = 22)
+  cross_ids2 <- set_crossover(selec6best[[1]], grid_ids, uplimit = 8, seed = 22)
+  expect_identical(cross_ids1, cross_ids2)
+
+  mut_ids <- swap_mutation(cross_ids, grid_ids, p = 0.4, seed = 7)
+  expect_equal(dim(mut_ids), dim(cross_ids))
+  expect_true(all(apply(mut_ids, 2, function(x) length(unique(x)) == n_turb)))
+  expect_true(all(mut_ids %in% grid_ids))
+  mut_ids1 <- swap_mutation(cross_ids, grid_ids, p = 0.4, seed = 7)
+  expect_identical(mut_ids, mut_ids1)
+
+  ## Unused cells must enter via crossover / min swaps
+  ids_closed <- cbind(c(1L, 2L, 3L, 4L), c(1L, 2L, 5L, 6L))
+  ch_open <- set_crossover(
+    ids_closed, grid_ids = 1:20, uplimit = 30, seed = 3, p_inject = 0.5
+  )
+  expect_true(any(!as.vector(ch_open) %in% unique(as.vector(ids_closed))))
+
+  ids_same <- cbind(c(1L, 2L, 3L, 4L), c(1L, 2L, 3L, 4L))
+  ch_same <- set_crossover(ids_same, grid_ids = 1:20, uplimit = 4, seed = 9)
+  expect_true(any(!as.vector(ch_same) %in% 1:4))
+
+  mut_min <- swap_mutation(ids_closed, grid_ids = 1:20, p = 0, seed = 4, min_swaps = 1)
+  expect_true(all(vapply(seq_len(ncol(mut_min)), function(j) {
+    length(setdiff(mut_min[, j], ids_closed[, j])) >= 1
+  }, logical(1))))
+
+  gxy <- cbind(ID = 1:20, X = rep(1:5, 4), Y = rep(1:4, each = 5))
+  ch_sp <- set_crossover(
+    ids_closed, grid_ids = 1:20, uplimit = 8, seed = 12,
+    grid_xy = gxy, p_spatial = 1
+  )
+  expect_equal(nrow(ch_sp), 4)
+  expect_true(all(apply(ch_sp, 2, function(x) length(unique(x)) == 4)))
+
+  vis <- stats::setNames(rep(1e6, 20), as.character(1:20))
+  vis[c("18", "19", "20")] <- 0
+  mut_w <- swap_mutation(
+    matrix(1:4, ncol = 1), grid_ids = 1:20, p = 1, min_swaps = 4,
+    visit = vis, seed = 8
+  )
+  expect_true(any(mut_w[, 1] %in% c(18L, 19L, 20L)))
+
+  id_layouts <- get_grids(mut_ids, Grid[[1]])
+  expect_type(id_layouts, "list")
+  expect_true(all(sapply(id_layouts, nrow) == n_turb))
+  expect_true(all(sapply(id_layouts, ncol) == 3))
+
+  cache <- new.env(parent = emptyenv())
+  sel2 <- list(id_layouts[[1]], id_layouts[[1]])
+  fit_c <- windfarmGA:::fitness_with_cache(
+    cache, sel2,
+    referenceHeight = 100, RotorHeight = 100,
+    SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
+    dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+  )
+  expect_length(ls(cache), 1)
+  expect_equal(attr(fit_c, "n_new"), 1L)
+  expect_equal(fit_c[[1]][1, "Parkfitness"], fit_c[[2]][1, "Parkfitness"])
+  fit_c2 <- windfarmGA:::fitness_with_cache(
+    cache, sel2,
+    referenceHeight = 100, RotorHeight = 100,
+    SurfaceRoughness = 0.3, Polygon = Polygon1, resol1 = 200, rot = 20,
+    dirspeed = wind, srtm_crop = "", topograp = FALSE, cclRaster = ""
+  )
+  expect_equal(attr(fit_c2, "n_new"), 0L)
+
+  elite <- cbind(1:4, 2:5)
+  worse <- cbind(10:13, 11:14)
+  ekids <- windfarmGA:::elite_offspring(
+    elite, worse, 1:20, n_mut = 2, n_mix = 1, mut_p = 1
+  )
+  expect_true(is.matrix(ekids))
+  expect_equal(nrow(ekids), 4)
+  expect_equal(ncol(ekids), 6)
+  expect_true(all(apply(ekids, 2, function(x) length(unique(x)) == 4)))
+
+  ## CROSSOVER (legacy binary) #####################
+  selec6best <- selection_as_binary(selec6best, Grid[[1]])
   crossOut <- quiet(crossover(selec6best, 2,
     uplimit = 300, crossPart = "RAN",
     verbose = TRUE

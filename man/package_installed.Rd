@@ -8,6 +8,7 @@
 \alias{is_ggplot2_installed}
 \alias{is_leaflet_installed}
 \alias{is_elevatr_installed}
+\alias{is_plotly_installed}
 \title{Is the package installed or not}
 \usage{
 is_foreach_installed()
@@ -21,6 +22,8 @@ is_ggplot2_installed()
 is_leaflet_installed()
 
 is_elevatr_installed()
+
+is_plotly_installed()
 }
 \value{
 An invisible boolean value, indicating if the package is

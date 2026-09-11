@@ -9,8 +9,6 @@
 The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined amount of turbines, a unified rotor radius and an average wind speed value for each incoming wind direction. A terrain effect model can be included that downloads an 'SRTM' elevation model and loads a Corine Land Cover raster to approximate surface roughness.
 }
 \details{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
 \if{html}{\figure{windfarmGA.png}{options: width="25\%" alt="Figure: windfarmGA.png"}}
 \if{latex}{\figure{windfarmGA.png}{options: width=0.2in}}
 A package to optimize small wind farms with irregular shapes

@@ -1,6 +1,6 @@
 Package: windfarmGA
 Title: Genetic Algorithm for Wind Farm Layout Optimization
-Version: 4.0.1
+Version: 5.0.0
 Authors@R: c(
     person("Sebastian", "Gatscha", , email="sebastian_gatscha@gmx.at", c("aut", "cre", "cph"))
     )
@@ -38,6 +38,7 @@ Suggests:
     leaflet,
     elevatr (>= 0.99.0),
     ggplot2,
+    plotly,
     gstat,
     rworldmap
 X-schema.org-keywords: windfarm-layout, optimization, genetic-algorithm, renewable-energy, r, rstats, r-package

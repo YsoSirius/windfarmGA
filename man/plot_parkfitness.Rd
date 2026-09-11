@@ -2,38 +2,51 @@
 % Please edit documentation in R/plots.R
 \name{plot_parkfitness}
 \alias{plot_parkfitness}
-\title{Plot the genetic algorithm results}
+\title{Fitness and operator rates}
 \usage{
-plot_parkfitness(result, spar = 0.1)
+plot_parkfitness(result, spar = 0.1, interactive = NULL, ask = NULL)
 }
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
 
-\item{spar}{A numeric value determining how exact a spline should be drawn.
-Default is 0.1}
+\item{spar}{Unused, kept so existing calls do not break.}
+
+\item{interactive}{Use plotly when \code{ask} is \code{FALSE} and plotly is installed.}
+
+\item{ask}{If \code{TRUE}, wait for Enter between the fitness page and the
+rates page. Default is \code{TRUE} in an interactive session.}
 }
 \value{
-Returns NULL. Used for plotting
+A plotly object, or a list of ggplots, invisibly.
 }
 \description{
-Plot the evolution of fitness values with the influences of
-selection, crossover and mutation.
+Fitness (max / mean / min) and the three operator rates.
+Rates are percentages: \strong{Selection} = share of the population used as
+parents, \strong{Crossover inject} = unused cells mixed into children,
+\strong{Mutation} = chance that a turbine is swapped to a free cell.
+The legend sits outside and follows the typical vertical order of the
+lines (selection highest, then inject, mutation lowest). Uses plotly
+(hover) when the package is installed.
 }
 \examples{
 \donttest{
-## Plot the results of a hexagonal grid optimization
 plot_parkfitness(resulthex)
 }
 }
 \seealso{
 Other Plotting Functions: 
+\code{\link{generation_layouts}()},
+\code{\link{plot_cell_heatmap}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
+\code{\link{plot_generation}()},
+\code{\link{plot_population}()},
 \code{\link{plot_result}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
+\code{\link{population_census}()},
 \code{\link{random_search_single}()}
 }
 \concept{Plotting Functions}

@@ -42,3 +42,9 @@ is_leaflet_installed <- function() {
 is_elevatr_installed <- function() {
   requireNamespace("elevatr", quietly = TRUE)
 }
+
+##' @rdname package_installed
+##' @export
+is_plotly_installed <- function() {
+  requireNamespace("plotly", quietly = TRUE)
+}

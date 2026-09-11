@@ -1,11 +1,15 @@
 #' @title Crossover Method
 #' @name crossover
-#' @description The crossover method creates new offspring with the selected
-#'   individuals by permutating their genetic codes.
+#' @description Legacy binary crossover. The GA loop uses
+#'   \code{\link{set_crossover}} on unique grid-cell IDs instead. This function
+#'   still permutes 0/1 chromosomes (EQU/RAN) and typically needs
+#'   \code{\link{trimton}} afterwards.
 #'
 #' @export
 #'
-#' @param se6 The selected individuals. The output of \code{\link{selection}}
+#' @param se6 Legacy binary selection: a list with a grid-ID column plus 0/1
+#'   layout columns, and a fitness row. Current \code{\link{selection}}
+#'   returns ID matrices; use \code{\link{set_crossover}} in the GA loop.
 #' @param u The crossover point rate
 #' @param uplimit The upper limit of allowed permutations
 #' @param crossPart The crossover method. Either "EQU" or "RAN"
@@ -210,4 +214,186 @@ permutations <- function(n, r, v = 1:n) {
     }
   }
   sub(n, r, v[1:n])
+}
+
+#' @title Set crossover of turbine layouts
+#' @name set_crossover
+#' @description Combine two layouts of `n` unique grid-cell IDs. Shared sites
+#'   are kept; remaining sites are sampled from the parents' exclusive cells
+#'   and, with rate `p_inject`, from grid cells that neither parent uses.
+#'   Identical parents still get unused cells injected so the search does not
+#'   freeze. Every child has exactly `n` turbines.
+#'
+#' @export
+#'
+#' @param ids Integer matrix with `n` rows (turbines) and one column per parent
+#' @param grid_ids All valid grid cell IDs
+#' @param uplimit Maximum number of children. Default is 300
+#' @param seed Set a seed for comparability. Default is `NULL`
+#' @param verbose If `TRUE`, print the number of children
+#' @param p_inject Fraction of non-shared slots filled from unused grid cells.
+#'   Default is `getOption("windfarmGA.crossover_inject")` (0.3). At least one
+#'   unused cell is injected when any are available.
+#' @param grid_xy Optional matrix/data.frame with columns `ID`, `X`, `Y`. If
+#'   given, a spatial half-plane crossover is used with probability
+#'   `p_spatial`.
+#' @param visit Named visit counts per grid ID (undersampled cells preferred)
+#' @param p_spatial Probability of spatial (vs set) crossover when `grid_xy`
+#'   is given. Default is `getOption("windfarmGA.spatial_crossover")` (0.5)
+#'
+#' @family Genetic Algorithm Functions
+#' @return Integer matrix of unique grid IDs (`n` × children)
+#'
+#' @examples
+#' ids <- cbind(c(1, 3, 5, 7), c(1, 4, 5, 9))
+#' set_crossover(ids, grid_ids = 1:20, uplimit = 4, seed = 1)
+set_crossover <- function(ids, grid_ids, uplimit = 300, seed = NULL,
+                          verbose = FALSE, p_inject = NULL,
+                          grid_xy = NULL, visit = NULL, p_spatial = NULL) {
+  if (!is.null(seed)) {
+    set.seed(as.integer(seed))
+  }
+  if (is.null(p_inject)) {
+    p_inject <- getOption("windfarmGA.crossover_inject", 0.3)
+  }
+  if (is.null(p_spatial)) {
+    p_spatial <- getOption("windfarmGA.spatial_crossover", 0.5)
+  }
+  if (!is.matrix(ids)) {
+    ids <- matrix(ids, ncol = 1)
+  }
+  n_par <- ncol(ids)
+  if (n_par < 2) {
+    return(ids)
+  }
+  if (n_par %% 2 == 1) {
+    ids <- ids[, -n_par, drop = FALSE]
+    n_par <- ncol(ids)
+  }
+  idx <- sample(seq_len(n_par))
+  npairs <- n_par / 2
+  children <- vector("list", uplimit)
+  k <- 0
+  pair_i <- 1
+  use_xy <- !is.null(grid_xy)
+  while (k < uplimit) {
+    a <- idx[2 * pair_i - 1]
+    b <- idx[2 * pair_i]
+    k <- k + 1
+    children[[k]] <- set_cross_pick(
+      ids[, a], ids[, b], grid_ids, p_inject, grid_xy, visit, p_spatial, use_xy
+    )
+    if (k >= uplimit) {
+      break
+    }
+    k <- k + 1
+    children[[k]] <- set_cross_pick(
+      ids[, b], ids[, a], grid_ids, p_inject, grid_xy, visit, p_spatial, use_xy
+    )
+    pair_i <- pair_i %% npairs + 1
+  }
+  out <- do.call(cbind, children)
+  if (verbose) {
+    message("Set-crossover children: ", ncol(out))
+  }
+  out
+}
+
+set_cross_pick <- function(a, b, grid_ids, p_inject, grid_xy, visit,
+                           p_spatial, use_xy) {
+  if (use_xy && stats::runif(1) < p_spatial) {
+    spatial_cross_one(a, b, grid_xy, grid_ids, p_inject, visit)
+  } else {
+    set_cross_one(a, b, grid_ids, p_inject, visit)
+  }
+}
+
+set_cross_one <- function(a, b, grid_ids, p_inject = 0.3, visit = NULL) {
+  n <- length(a)
+  a <- unique(as.integer(a))
+  b <- unique(as.integer(b))
+  grid_ids <- as.integer(grid_ids)
+  common <- intersect(a, b)
+  unused <- setdiff(grid_ids, union(a, b))
+  exclusive <- setdiff(union(a, b), common)
+  keep <- common
+  if (length(keep) > n) {
+    keep <- keep[seq_len(n)]
+  }
+  need <- n - length(keep)
+
+  if (need == 0) {
+    n_inj <- max(1L, as.integer(round(n * p_inject)))
+    n_inj <- min(n_inj, length(unused), n)
+    if (n_inj > 0 && p_inject > 0) {
+      drop <- sample_weighted_ids(keep, n_inj, visit)
+      add <- sample_weighted_ids(unused, n_inj, visit)
+      keep <- c(setdiff(keep, drop), add)
+    }
+    return(sort(keep))
+  }
+
+  n_inj <- as.integer(round(need * p_inject))
+  if (p_inject > 0 && length(unused) > 0) {
+    n_inj <- max(n_inj, 1L)
+  }
+  n_inj <- min(n_inj, length(unused), need)
+  n_ex <- need - n_inj
+  if (n_ex > length(exclusive)) {
+    n_ex <- length(exclusive)
+    n_inj <- min(need - n_ex, length(unused))
+  }
+  extra <- integer(0)
+  if (n_ex > 0) {
+    extra <- c(extra, sample_weighted_ids(exclusive, n_ex, visit))
+  }
+  if (n_inj > 0) {
+    extra <- c(extra, sample_weighted_ids(unused, n_inj, visit))
+  }
+  still <- n - length(keep) - length(extra)
+  if (still > 0) {
+    leftover <- setdiff(grid_ids, c(keep, extra))
+    if (length(leftover) > 0) {
+      extra <- c(extra, sample_weighted_ids(leftover, still, visit))
+    }
+  }
+  sort(c(keep, extra))
+}
+
+spatial_cross_one <- function(a, b, grid_xy, grid_ids, p_inject, visit) {
+  n <- length(a)
+  a <- unique(as.integer(a))
+  b <- unique(as.integer(b))
+  grid_ids <- as.integer(grid_ids)
+  xs <- as.numeric(grid_xy[, "X"])
+  ys <- as.numeric(grid_xy[, "Y"])
+  names(xs) <- names(ys) <- as.character(as.integer(grid_xy[, "ID"]))
+  if (stats::runif(1) < 0.5) {
+    cut <- stats::runif(1, min(xs), max(xs))
+    in_reg <- function(ids) xs[as.character(ids)] >= cut
+  } else {
+    cut <- stats::runif(1, min(ys), max(ys))
+    in_reg <- function(ids) ys[as.character(ids)] >= cut
+  }
+  child <- unique(c(a[in_reg(a)], b[!in_reg(b)]))
+  if (length(child) > n) {
+    child <- child[sample.int(length(child), n)]
+  }
+  if (length(child) < n) {
+    need <- n - length(child)
+    pool <- setdiff(union(a, b), child)
+    n_ex <- min(need, length(pool))
+    if (n_ex > 0) {
+      child <- c(child, sample_weighted_ids(pool, n_ex, visit))
+      need <- n - length(child)
+    }
+    if (need > 0) {
+      rest <- setdiff(grid_ids, child)
+      n_inj <- min(need, length(rest))
+      if (n_inj > 0) {
+        child <- c(child, sample_weighted_ids(rest, n_inj, visit))
+      }
+    }
+  }
+  sort(as.integer(child)[seq_len(min(n, length(child)))])
 }

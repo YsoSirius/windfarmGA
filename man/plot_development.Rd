@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{plot_development}
 \alias{plot_development}
-\title{Plot the progress of populations}
+\title{When the best layout improved}
 \usage{
 plot_development(result)
 }
@@ -13,8 +13,9 @@ plot_development(result)
 Returns NULL. Used for plotting
 }
 \description{
-Plot the changes in mean and max fitness values to previous
-generation.
+Change of the generation-best fitness. Green = new record,
+orange = flat, red = worse. Blue line is the share of grid cells visited
+so far.
 }
 \examples{
 \donttest{
@@ -23,13 +24,18 @@ plot_development(resultrect)
 }
 \seealso{
 Other Plotting Functions: 
+\code{\link{generation_layouts}()},
+\code{\link{plot_cell_heatmap}()},
 \code{\link{plot_cloud}()},
 \code{\link{plot_evolution}()},
 \code{\link{plot_fitness_evolution}()},
+\code{\link{plot_generation}()},
 \code{\link{plot_parkfitness}()},
+\code{\link{plot_population}()},
 \code{\link{plot_result}()},
 \code{\link{plot_windfarmGA}()},
 \code{\link{plot_windrose}()},
+\code{\link{population_census}()},
 \code{\link{random_search_single}()}
 }
 \concept{Plotting Functions}

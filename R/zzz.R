@@ -28,7 +28,20 @@ utils::globalVariables(
     windfarmGA.max_angle = 20,
     windfarmGA.max_distance = 100000,
     windfarmGA.max_population = 300,
-    windfarmGA.max_selection = 100
+    windfarmGA.max_selection = 300,
+    windfarmGA.crossover_inject = 0.25,
+    windfarmGA.min_swaps = 1L,
+    windfarmGA.immigrants = 3L,
+    windfarmGA.stall_generations = 40L,
+    windfarmGA.refine_after = 12L,
+    windfarmGA.refine_min_gen = 18L,
+    windfarmGA.refine_hold = 25L,
+    windfarmGA.explore_pulse = 10L,
+    windfarmGA.spatial_crossover = 0.5,
+    windfarmGA.local_search_elites = 5L,
+    windfarmGA.local_search_tries = 6L,
+    windfarmGA.elite_children = 3L,
+    windfarmGA.elite_mix = 2L
   )
 }
 
