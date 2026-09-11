@@ -15,7 +15,7 @@ matching data.frame when a thrust column is present.
 }
 \description{
 Parse a CSV (or data.frame) with wind speed and power
-in kW. Understands NREL/IEA headers such as \code{Wind Speed [m/s]}
+in kW. Understands NREL/IEA headers such as \verb{Wind Speed [m/s]}
 and \code{Power [kW]}. Optional \code{Ct} is returned as an attribute.
 Does not ship manufacturer curves; pass your own file or an open
 IEA/NREL reference CSV. See \code{experimental/climate_helpers.R}.
@@ -27,11 +27,18 @@ curve <- data.frame(
   check.names = FALSE
 )
 read_power_curve(curve)
+
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{wind_from_uv}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
+\code{\link{splitAt}()},
 \code{\link{wind_from_series}()},
-\code{\link{plot_power_curve}()}
+\code{\link{wind_from_uv}()},
+\code{\link{windata_format}()}
 }
 \concept{Helper Functions}

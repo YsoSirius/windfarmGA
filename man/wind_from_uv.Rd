@@ -19,7 +19,7 @@ A data.frame with \code{ws}, \code{wd}, \code{probab} (probabilities sum to 100)
 \description{
 Bin ERA5-style eastward (\code{u}) and northward (\code{v}) wind
 components into the \code{ws} / \code{wd} / \code{probab} table that
-\code{\link{windata_format}} and \code{\link{genetic_algorithm}} expect.
+\code{\link[=windata_format]{windata_format()}} and \code{\link[=genetic_algorithm]{genetic_algorithm()}} expect.
 Direction is meteorological (where the wind comes from; 0 = north).
 Each direction bin gets the mean speed and the hour share.
 }
@@ -28,11 +28,18 @@ set.seed(1)
 u <- rnorm(200, 2)
 v <- rnorm(200, -3)
 wind_from_uv(u, v, dir_width = 30)
+
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{wind_from_series}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
 \code{\link{read_power_curve}()},
+\code{\link{splitAt}()},
+\code{\link{wind_from_series}()},
 \code{\link{windata_format}()}
 }
 \concept{Helper Functions}

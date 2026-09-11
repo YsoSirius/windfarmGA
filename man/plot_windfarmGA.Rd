@@ -31,8 +31,8 @@ and \code{heatmap}. Or a character vector (\code{"result"}, \code{"progress"},
 output should be plotted. \code{1} plots the best energy solutions
 and \code{2} plots the best efficiency solutions}
 
-\item{weibull_src}{\code{list(k, a)} shape and scale rasters. Package data
-cover Austria.}
+\item{weibull_src}{\code{list(k, a)} shape and scale rasters (e.g. Global
+Wind Atlas \code{combined-Weibull-k} / \code{combined-Weibull-A}).}
 
 \item{ask}{If \code{TRUE}, wait for Enter between pages. Default is \code{TRUE}
 in an interactive session.}

@@ -31,7 +31,10 @@ Other Helper Functions:
 \code{\link{grid_area}()},
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
+\code{\link{read_power_curve}()},
 \code{\link{splitAt}()},
+\code{\link{wind_from_series}()},
+\code{\link{wind_from_uv}()},
 \code{\link{windata_format}()}
 }
 \author{

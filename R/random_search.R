@@ -1,7 +1,10 @@
 #' @title Randomize the output of the Genetic Algorithm
 #' @name random_search
-#' @description Perform a random search in the grid cells, to further optimize
-#'   the output of the wind farm layout.
+#' @description Jitter the best GA layouts inside their grid cells and
+#'   re-evaluate energy. Use this as a short post-search after
+#'   [genetic_algorithm()]. Terrain and Weibull follow the GA flags
+#'   when `terrain` / `weibull` are `NULL`; pass `weibull_src` again
+#'   because rasters are not stored in `result`.
 #'
 #' @export
 #' @inheritParams genetic_algorithm
@@ -12,6 +15,12 @@
 #' @param plot Draw the random-search layouts
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #'   collision checks. Default is \code{2.2}
+#' @param terrain `NULL` follows the GA `Topographie` flag. `TRUE` (or a
+#'   DEM raster) rebuilds elevation + land cover via [terrain_model()].
+#'   `FALSE` skips terrain even if the GA used it.
+#' @param weibull `NULL` follows the GA `Active Weibull` flag. A speed
+#'   raster is used as-is. `TRUE` needs `weibull_src`. The GA does not
+#'   store rasters in `result`.
 #'
 #' @family Randomization
 #' @return Returns a list.
@@ -20,12 +29,15 @@
 #' new <- random_search(resultrect, sp_polygon, n = 20, best = 4)
 #' plot_random_search(resultRS = new, result = resultrect, area = sp_polygon, best = 2)
 #' }
-random_search <- function(result, area, n = 20, best = 1, plot = FALSE, max_dist = 2.2) {
-  ## TODO - Performance and structure ---
+random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
+                          max_dist = 2.2, terrain = NULL, weibull = NULL,
+                          weibull_src = NULL, ccl = NULL,
+                          ccl_roughness = NULL) {
   ## Data Config ############################
   # Order the resulting layouts with highest Energy output
   resldat <- do.call("rbind", result[, "bestPaEn"])
-  maxDist <- as.numeric(result[, "inputData"][[1]]["Rotorradius", ]) * max_dist
+  inp0 <- ga_input_matrix(result)
+  maxDist <- as.numeric(inp0["Rotorradius", 1]) * max_dist
 
   ## Remove duplicated layouts based on x, y energy / efficiency
   resldat <- resldat[!duplicated(resldat[, 1:4]), ]
@@ -54,19 +66,19 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE, max_dist
   }
   bestGARunIn <- resldat$GARun[1:best]
 
-  resolu <- max(as.numeric(result[bestGARunIn[1], ]$inputData["Resolution", ][1]))
-  rotRad <- max(as.numeric(result[bestGARunIn[1], ]$inputData["Rotorradius", ][1]))
+  inp <- ga_input_matrix(result, bestGARunIn[1])
+  resolu <- as.numeric(inp["Resolution", 1])
+  rotRad <- as.numeric(inp["Rotorradius", 1])
   winddata <- result[bestGARunIn[1], ]$inputWind
   ## Get max factor for alteration of coordination
   maxFac <- rotRad * (resolu / (rotRad * 2))
 
   ## Grid the Polygon ############
   area <- isSpatial(area = area)
-  grid_method <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
-  grid_method <- toupper(grid_method)
+  grid_method <- toupper(as.character(inp["Grid Method", 1]))
   if (grid_method != "HEXAGON" && grid_method != "H") {
     # Calculate a Grid and an indexed data.frame with coordinates and grid cell Ids.
-    propu <- as.numeric(result[bestGARunIn[1], ]$inputData["Percentage of Polygon", ][1])
+    propu <- as.numeric(inp["Percentage of Polygon", 1])
     Grid <- grid_area(area = area, size = resolu, prop = propu)
   } else {
     # Calculate a Grid with hexagonal grid cells
@@ -78,13 +90,16 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE, max_dist
   probabDir <- winddata[[2]]
   winddata <- winddata[[1]]
 
-  ## Init arguments ########
-  ## Get reference / turbine height and rotor radius of 1 individual.
-  # TODO - if 3D-wake possible, turbine height must be evaluated in the loop
-  ## If different rotor radii, it must also go in the loop
-  ref_height <- as.numeric(result[1, ]$inputData[12, ])
-  rotor_height <- as.numeric(result[1, ]$inputData[13, ])
-  rotor_radius <- as.numeric(result[1, ]$inputData[1, ])
+  ## Heights by name: 5.0.0 dropped Trim/Crossover rows, so [12]/[13] are wrong.
+  phys <- random_search_physics(
+    result, area,
+    run = bestGARunIn[1],
+    terrain = terrain, weibull = weibull, weibull_src = weibull_src,
+    ccl = ccl, ccl_roughness = ccl_roughness
+  )
+  ref_height <- phys$ref_height
+  rotor_height <- phys$rotor_height
+  rotor_radius <- phys$rotor_radius
 
   max_angle <- getOption("windfarmGA.max_angle")
   max_dist <- getOption("windfarmGA.max_distance")
@@ -191,9 +206,9 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE, max_dist
         wake_angle = max_angle, wake_distance = max_dist,
         wind = winddata,
         rotor = rotor_radius,
-        area = area, terrain = FALSE,
-        elevation = NULL, ccl_raster = NULL,
-        weibull = FALSE
+        area = area, terrain = phys$terrain,
+        elevation = phys$elevation, ccl_raster = phys$ccl_raster,
+        weibull = phys$weibull
       )
 
       ## Process Result ###################
@@ -292,12 +307,15 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE, max_dist
 #' @family Randomization
 #' @family Plotting Functions
 #' @return Returns a list
-random_search_single <- function(result, area, n = 20, plot = FALSE, max_dist = 2.2) {
-  ## TODO - Performance and structure ---
+random_search_single <- function(result, area, n = 20, plot = FALSE,
+                                 max_dist = 2.2, terrain = NULL,
+                                 weibull = NULL, weibull_src = NULL,
+                                 ccl = NULL, ccl_roughness = NULL) {
   ## Data Config ############################
   # Order the resulting layouts with highest Energy output
   resldat <- do.call("rbind", result[, "bestPaEn"])
-  maxDist <- as.numeric(result[, "inputData"][[1]]["Rotorradius", ]) * max_dist
+  inp0 <- ga_input_matrix(result)
+  maxDist <- as.numeric(inp0["Rotorradius", 1]) * max_dist
 
   if (plot) {
     plot.new()
@@ -316,19 +334,19 @@ random_search_single <- function(result, area, n = 20, plot = FALSE, max_dist = 
   ## Get the GA-run of the best layout
   bestGARun <- resldat$GARun[1]
 
-  resolu <- as.numeric(result[bestGARun, ]$inputData["Resolution", ][1])
-  rotRad <- as.numeric(result[bestGARun, ]$inputData["Rotorradius", ][1])
+  inp <- ga_input_matrix(result, bestGARun)
+  resolu <- as.numeric(inp["Resolution", 1])
+  rotRad <- as.numeric(inp["Rotorradius", 1])
   winddata <- result[bestGARun, ]$inputWind
   ## Get max factor for alteration of coordination
   maxFac <- rotRad * (resolu / (rotRad * 2))
 
   ## Grid the Polygon ############
   area <- isSpatial(area = area)
-  grid_method <- result[1, "inputData"][[1]]["Grid Method", ][[1]]
-  grid_method <- toupper(grid_method)
+  grid_method <- toupper(as.character(inp["Grid Method", 1]))
   if (grid_method != "HEXAGON" && grid_method != "H") {
     # Calculate a Grid and indexed coordinates of all grid cell centers
-    propu <- as.numeric(result[bestGARun, ]$inputData["Percentage of Polygon", ][1])
+    propu <- as.numeric(inp["Percentage of Polygon", 1])
     Grid <- grid_area(area = area, size = resolu, prop = propu)
   } else {
     # Calculate a Grid with hexagonal grid cells
@@ -340,13 +358,15 @@ random_search_single <- function(result, area, n = 20, plot = FALSE, max_dist = 
   probabDir <- winddata[[2]]
   winddata <- winddata[[1]]
 
-  ## Init arguments ########
-  ## Get reference / turbine height and rotor radius of 1 individual.
-  # TODO - if 3D-wake possible, turbine height must be evaluated in the loop
-  ## If different rotor radii, it must also go in the loop
-  ref_height <- as.numeric(result[bestGARun, ]$inputData[12, ])
-  rotor_height <- as.numeric(result[bestGARun, ]$inputData[13, ])
-  rotor_radius <- as.numeric(result[bestGARun, ]$inputData[1, ])
+  phys <- random_search_physics(
+    result, area,
+    run = bestGARun,
+    terrain = terrain, weibull = weibull, weibull_src = weibull_src,
+    ccl = ccl, ccl_roughness = ccl_roughness
+  )
+  ref_height <- phys$ref_height
+  rotor_height <- phys$rotor_height
+  rotor_radius <- phys$rotor_radius
 
   max_angle <- getOption("windfarmGA.max_angle")
   max_dist <- getOption("windfarmGA.max_distance")
@@ -466,8 +486,9 @@ random_search_single <- function(result, area, n = 20, plot = FALSE, max_dist = 
       surface_roughness = 0.3, wake_angle = max_angle, wake_distance = max_dist,
       wind = winddata,
       rotor = rotor_radius,
-      area = area, terrain = FALSE,
-      elevation = NULL, ccl_raster = NULL, weibull = FALSE
+      area = area, terrain = phys$terrain,
+      elevation = phys$elevation, ccl_raster = phys$ccl_raster,
+      weibull = phys$weibull
     )
 
     ## Process Data ###################
@@ -537,4 +558,93 @@ random_search_single <- function(result, area, n = 20, plot = FALSE, max_dist = 
     RandResult[[i]] <- dt
   }
   return(RandResult)
+}
+
+ga_input_matrix <- function(result, run = 1) {
+  cell <- result[run, "inputData"][[1]]
+  if (is.list(cell) && is.matrix(cell[[1]])) {
+    return(cell[[1]])
+  }
+  cell
+}
+
+ga_flag_true <- function(x) {
+  if (is.logical(x) && length(x) == 1L) {
+    return(isTRUE(x))
+  }
+  identical(toupper(trimws(as.character(x))), "TRUE")
+}
+
+random_search_physics <- function(result, area, run = 1,
+                                  terrain = NULL, weibull = NULL,
+                                  weibull_src = NULL, ccl = NULL,
+                                  ccl_roughness = NULL) {
+  inp <- ga_input_matrix(result, run)
+  ref_height <- as.numeric(inp["Reference Height", 1])
+  rotor_height <- as.numeric(inp["Rotor Height", 1])
+  rotor_radius <- as.numeric(inp["Rotorradius", 1])
+
+  ga_terrain <- FALSE
+  if ("Topographie" %in% rownames(inp)) {
+    ga_terrain <- ga_flag_true(inp["Topographie", 1])
+  }
+  ga_weibull <- FALSE
+  if ("Active Weibull" %in% rownames(inp)) {
+    ga_weibull <- ga_flag_true(inp["Active Weibull", 1])
+  }
+
+  if (is.null(terrain)) {
+    terrain <- ga_terrain
+  }
+  elevation <- NULL
+  ccl_raster <- NULL
+  terrain_on <- !isFALSE(terrain)
+  if (terrain_on) {
+    td <- terrain_model(terrain, area, ccl, ccl_roughness, plot = FALSE)
+    elevation <- td$srtm_crop
+    ccl_raster <- td$cclRaster
+    terrain <- TRUE
+  }
+
+  weibull_ras <- FALSE
+  if (inherits(weibull, c("SpatRaster", "RasterLayer", "stars"))) {
+    weibull_ras <- if (inherits(weibull, "SpatRaster")) {
+      weibull
+    } else {
+      terra::rast(weibull)
+    }
+  } else {
+    want_weibull <- isTRUE(weibull) || (is.null(weibull) && ga_weibull)
+    if (want_weibull) {
+      if (is.null(weibull_src)) {
+        warning(
+          "random_search: Weibull was requested, but weibull_src is missing. ",
+          "The GA does not store the rasters in result. Using the wind rose.",
+          call. = FALSE
+        )
+      } else {
+        if (!inherits(weibull_src[[1]], "SpatRaster")) {
+          weibull_src[[1]] <- terra::rast(weibull_src[[1]])
+        }
+        if (!inherits(weibull_src[[2]], "SpatRaster")) {
+          weibull_src[[2]] <- terra::rast(weibull_src[[2]])
+        }
+        shape_project <- sf::st_transform(area, crs = sf::st_crs(weibull_src[[2]]))
+        weibl_k <- terra::crop(x = weibull_src[[1]], y = shape_project, mask = TRUE)
+        weibl_a <- terra::crop(x = weibull_src[[2]], y = shape_project, mask = TRUE)
+        estim <- weibl_a * gamma(1 + (1 / terra::values(weibl_k)))
+        weibull_ras <- terra::project(estim, terra::crs(area))
+      }
+    }
+  }
+
+  list(
+    ref_height = ref_height,
+    rotor_height = rotor_height,
+    rotor_radius = rotor_radius,
+    terrain = isTRUE(terrain),
+    elevation = elevation,
+    ccl_raster = ccl_raster,
+    weibull = weibull_ras
+  )
 }

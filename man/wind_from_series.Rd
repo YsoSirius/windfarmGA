@@ -23,8 +23,14 @@ direction into \code{ws} / \code{wd} / \code{probab}.
 }
 \seealso{
 Other Helper Functions: 
-\code{\link{wind_from_uv}()},
+\code{\link{get_grids}()},
+\code{\link{grid_area}()},
+\code{\link{hexa_area}()},
+\code{\link{isSpatial}()},
+\code{\link{permutations}()},
 \code{\link{read_power_curve}()},
+\code{\link{splitAt}()},
+\code{\link{wind_from_uv}()},
 \code{\link{windata_format}()}
 }
 \concept{Helper Functions}

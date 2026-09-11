@@ -71,7 +71,10 @@ Other Helper Functions:
 \code{\link{hexa_area}()},
 \code{\link{isSpatial}()},
 \code{\link{permutations}()},
+\code{\link{read_power_curve}()},
 \code{\link{splitAt}()},
+\code{\link{wind_from_series}()},
+\code{\link{wind_from_uv}()},
 \code{\link{windata_format}()}
 }
 \concept{Helper Functions}

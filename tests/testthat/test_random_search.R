@@ -82,4 +82,19 @@ test_that("Test Random Search Functions", {
     area = area, best = 100
   )
   expect_true(is.null(res))
+
+  ## 5.0.0 inputData row order != resultrect; heights must be named
+  resultH <- genetic_algorithm(
+    area = area,
+    n = 5, iteration = 2,
+    wind = vdata, rotor = 35,
+    reference_height = 50, rotor_height = 80
+  )
+  phys <- windfarmGA:::random_search_physics(resultH, area, terrain = FALSE, weibull = FALSE)
+  expect_equal(phys$ref_height, 50)
+  expect_equal(phys$rotor_height, 80)
+  expect_false(phys$terrain)
+  refined <- random_search(resultH, area, n = 2, best = 1, terrain = FALSE)
+  expect_type(refined, "list")
+  expect_false(anyNA(unlist(refined)))
 })

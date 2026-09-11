@@ -37,8 +37,8 @@ pass another Simple Feature object}
 
 \item{ccl}{Path to a Corine Land Cover raster when \code{terrain} is on.}
 
-\item{weibull_src}{\code{list(k, a)} shape and scale rasters. Package data
-cover Austria.}
+\item{weibull_src}{\code{list(k, a)} shape and scale rasters (e.g. Global
+Wind Atlas \code{combined-Weibull-k} / \code{combined-Weibull-A}).}
 }
 \value{
 Returns a data.frame of the best (energy/efficiency) individual
