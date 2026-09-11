@@ -49,7 +49,7 @@
 <div class="section level3">
 <h3 id="fixes-5-0-0">Fixes<a class="anchor" aria-label="anchor" href="#fixes-5-0-0"></a></h3>
 <ul><li>
-<code>test-coverage</code> workflow was invalid YAML (<code>with:</code> missing under <code>setup-r-dependencies</code>), so GitHub skipped the job in 0s and the Codecov badge never updated.</li>
+<code>test-coverage</code> workflow was invalid YAML (<code>with:</code> missing under <code>setup-r-dependencies</code>), so GitHub skipped the job in 0s and the Codecov badge never updated. Upload now uses <code>codecov-action</code> plus <code>CODECOV_TOKEN</code> (anonymous <code>covr::codecov()</code> hits HTTP 429).</li>
 <li>
 <code>ga_options(...)</code> is silent when setting; only <code><a href="../reference/ga_options.html">ga_options()</a></code> prints the table. The climate-helper demo no longer dumps options twice.</li>
 <li>
