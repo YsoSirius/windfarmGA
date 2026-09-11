@@ -54,6 +54,18 @@ turbine_influences <- function(t, wnkl, dist, area, dirct,
   turbine_influences_CPP(as_xy_matrix(t), wnkl, dist, dirct)
 }
 
+as_xy_matrix <- function(t) {
+  tm <- unname(as.matrix(t))
+  if (ncol(tm) < 2L) {
+    stop("Turbine locations need X and Y columns.")
+  }
+  if (ncol(tm) == 2L) {
+    tm <- cbind(tm, 1)
+  } else if (ncol(tm) > 3L) {
+    tm <- tm[, 1:3, drop = FALSE]
+  }
+  tm
+}
 
 #' @title Calculate distances and angles of possibly influencing turbines
 #' @name get_dist_angles
@@ -95,19 +107,6 @@ turbine_influences <- function(t, wnkl, dist, area, dirct,
 #' }
 #' potInfTur
 #'
-as_xy_matrix <- function(t) {
-  tm <- unname(as.matrix(t))
-  if (ncol(tm) < 2L) {
-    stop("Turbine locations need X and Y columns.")
-  }
-  if (ncol(tm) == 2L) {
-    tm <- cbind(tm, 1)
-  } else if (ncol(tm) > 3L) {
-    tm <- tm[, 1:3, drop = FALSE]
-  }
-  tm
-}
-
 get_dist_angles <- function(t, o, wnkl, dist, area, plot_angles = FALSE) {
   tm <- as_xy_matrix(t)
   if (plot_angles) {

@@ -2,15 +2,24 @@
 % Please edit documentation in R/turbine_influences.R
 \name{get_dist_angles}
 \alias{get_dist_angles}
-\alias{as_xy_matrix}
 \title{Calculate distances and angles of possibly influencing turbines}
 \usage{
-as_xy_matrix(t)
+get_dist_angles(t, o, wnkl, dist, area, plot_angles = FALSE)
 }
 \arguments{
 \item{t}{A data.frame of the current individual with X and Y coordinates}
 
 \item{o}{A numeric value indicating the index of the current turbine}
+
+\item{wnkl}{Wake opening angle in degrees. Turbines outside this cone
+are ignored.}
+
+\item{dist}{A numeric value indicating the distance, after which the wake
+effects are considered to be eliminated.}
+
+\item{area}{Site polygon}
+
+\item{plot_angles}{Plot distances and angles}
 }
 \value{
 Returns a matrix with the distances, angles and heights of potentially

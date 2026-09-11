@@ -10,7 +10,7 @@
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom calibrate textxy
 #' @importFrom stats runif smooth.spline sd aggregate median dist complete.cases
-#'   quantile
+#'   quantile ave
 #' @importFrom utils download.file unzip read.csv globalVariables
 #' @importFrom methods as is
 #' @importFrom Rcpp sourceCpp
