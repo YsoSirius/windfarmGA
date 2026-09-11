@@ -104,9 +104,9 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   folder under `tempdir()` unless `out_dir` is set. The helper walkthrough is local:
   `source("_experiment/test_climate_helpers.R"); test_climate_helpers()`.
   Profile `calculate_energy()` with `experimental/profile_energy.R`.
-  The README has an end-to-end example: draw a site, pick an IEA/NREL
-  turbine ([NREL archive](https://natlabrockies.github.io/turbine-models/)),
-  build a wind rose from u/v, optimize, plot.
+  The README realistic workflow uses ERA5 (`get_era5_wind` →
+  `wind_from_era5`) for the rose and GWA Weibull for spatial speed,
+  not random u/v.
 * Combinatorial genome: each individual is `n` unique grid-cell IDs, not a
   0/1 string over all cells. `genetic_algorithm` now runs
   `selection` → `set_crossover` → `swap_mutation` → `get_grids` → `fitness`.
