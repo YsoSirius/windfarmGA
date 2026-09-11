@@ -391,7 +391,6 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     }
 
     ## Calculate the wake Radius and the rotor area for every turbine ##################
-    lnro <- length(windlist[, 1])
     windlist <- cbind(windlist,
       "WakeR" = as.numeric(windlist[, "Laenge_B"] > 0) *
         (windlist[, "RotorR"] * 2 + 2 * k1 *
@@ -400,26 +399,17 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     )
 
     ## Calculate the overlapping area and the overlapping percentage. ##################
-    tmp <- sapply(1:lnro, function(o) {
-      Rotorf <- windlist[o, "RotorR"]
-      leA <- windlist[o, "Laenge_A"]
-      wakr <- windlist[o, "WakeR"]
-      if (windlist[o, "Laenge_B"] == 0) {
-        aov <- 0
-      } else {
-        aov <- circle_intersection(Rotorf, wakr, windlist[o, "height1"], windlist[o, "height2"], leA)
-      }
-
-      if (aov != 0) {
-        absch <- ((aov / windlist[o, "Rotorflaeche"]) * 100)
-      } else {
-        absch <- 0
-      }
-      c(aov, absch)
-    })
+    aov <- circle_intersection(
+      windlist[, "RotorR"], windlist[, "WakeR"],
+      windlist[, "height1"], windlist[, "height2"],
+      windlist[, "Laenge_A"]
+    )
+    aov[windlist[, "Laenge_B"] == 0] <- 0
+    absch <- (aov / windlist[, "Rotorflaeche"]) * 100
+    absch[aov == 0] <- 0
     windlist <- cbind(windlist,
-      "A_ov" = round(tmp[1, ], 4),
-      "AbschatInProz" = round(tmp[2, ], 4)
+      "A_ov" = round(aov, 4),
+      "AbschatInProz" = round(absch, 4)
     )
 
     ## Calculate the wind velocity reduction. ##################
@@ -432,34 +422,18 @@ calculate_energy <- function(layout, reference_height, rotor_height,
       "V_red" = vredu
     )
 
-    ## Calculate multiple wake effects, total wake influence, ##################
-    ## the new resulting wind velocity and add the Grid IDs.
-    whichh <- windlist[, "Punkt_id"]
-    windlist <- cbind(windlist,
-      "V_i" = 0,
-      "TotAbschProz" = 0,
-      "V_New" = 0,
-      "Rect_ID" = 0
+    ## Per turbine: RMS of V_red, sum of wake %, reduced speed, grid ID.
+    ## ave() writes back in row order (safer than unlist(unique())).
+    id <- windlist[, "Punkt_id"]
+    v_i <- ave(windlist[, "V_red"], id, FUN = function(x) sqrt(sum(x^2)))
+    tot_ab <- ave(windlist[, "AbschatInProz"], id, FUN = sum)
+    windlist <- cbind(
+      windlist,
+      "V_i" = v_i,
+      "TotAbschProz" = tot_ab,
+      "V_New" = windlist[, "Windmean"] - v_i,
+      "Rect_ID" = sel[id, "ID"]
     )
-
-    ## Sum up the wind speed reduction from all possible influental turbines ##################
-    windlist[, "V_i"] <- unlist(lapply(unique(whichh), function(i) {
-      sums <- sqrt(sum(windlist[whichh == i, "V_red"]^2))
-      rep(sums, length(windlist[whichh == i, "V_red"]))
-    }))
-    ## Sum up the wake effects from all possible influental turbines ##################
-    windlist[, "TotAbschProz"] <- unlist(lapply(unique(whichh), function(i) {
-      absch <- windlist[whichh == i, "AbschatInProz"]
-      rep(sum(absch), length(absch))
-    }))
-    ## Caluclate new wind speed, after reduction ##################
-    windlist[, "V_New"] <- unlist(lapply(unique(whichh), function(i) {
-      windlist[whichh == i, "Windmean"] - windlist[whichh == i, "V_i"]
-    }))
-    ## Assign the Grid-ID to all influential turbines ##################
-    windlist[, "Rect_ID"] <- unlist(lapply(unique(whichh), function(i) {
-      rep(sel[i, "ID"], length(windlist[whichh == i, 1]))
-    }))
 
     ## Get a reduced dataframe and split duplicated Point_id, since a ##################
     ## turbine with fixed Point_id, can have several influencing turbines
@@ -538,26 +512,11 @@ calculate_energy <- function(layout, reference_height, rotor_height,
 #' @param dx The distance on the x-axis between both centers
 #'
 #' @family Wind Energy Calculation Functions
-#' @return A numeric value
+#' @return A numeric vector; one intersection area per pair. Scalars
+#'   stay length 1.
 #'
 circle_intersection <- function(r1, r2, h1, h2, dx) {
-  rr1 <- r1 * r1
-  rr2 <- r2 * r2
-  d <- sqrt((dx^2 + (h1 - h2)^2))
-
-  if (d >= r2 + r1) {
-    return(0)
-  } else if (d <= abs(r1 - r2) && r1 >= r2) {
-    return(pi * rr2)
-  } else if (d <= abs(r1 - r2) && r1 < r2) {
-    return(pi * rr1)
-  } else {
-    phi <- (acos((rr1 + (d * d) - rr2) / (2 * r1 * d))) * 2
-    theta <- (acos((rr2 + (d * d) - rr1) / (2 * r2 * d))) * 2
-    area2 <- 0.5 * theta * rr2 - 0.5 * rr2 * sin(theta)
-    area1 <- 0.5 * phi * rr1 - 0.5 * rr1 * sin(phi)
-    return(area1 + area2)
-  }
+  circle_intersection_CPP(r1, r2, h1, h2, dx)
 }
 
 wind_shear_factor <- function(hub, ref, z0) {

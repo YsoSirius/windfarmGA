@@ -18,7 +18,8 @@ circle_intersection(r1, r2, h1, h2, dx)
 \item{dx}{The distance on the x-axis between both centers}
 }
 \value{
-A numeric value
+A numeric vector; one intersection area per pair. Scalars
+stay length 1.
 }
 \description{
 Calculate the intersection area of two circles with different

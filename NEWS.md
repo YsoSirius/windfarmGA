@@ -92,6 +92,16 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   Elite offspring is green (`#27AE60`), elites stay orange.
 
 ## Features
+* Wake-pair search (`get_dist_angles` / `turbine_influences`) runs in
+  Rcpp instead of an R loop around `point_2_line_CPP` / `angles_CPP`.
+  Turbines exactly upwind (same X after rotation, e.g. a grid column
+  with `wd = 0`) are kept with `alpha = 0`. The old triangle test
+  dropped them (`Laenge_A = 0` → NaN angles), so `plot = TRUE` showed
+  only green markers and 100% efficiency.
+* `circle_intersection()` is vectorized C++ (`circle_intersection_CPP`).
+  `calculate_energy()` no longer runs an R `sapply` per wake row.
+  Wake totals per turbine (`V_i`, `TotAbschProz`, `V_New`, `Rect_ID`)
+  use `ave()` / index instead of four `lapply` loops.
 * Wind-climate helpers (no extra Suggests): `wind_from_uv()` bins ERA5-style
   u/v into `ws`/`wd`/`probab`; `wind_from_series()` does the same from a
   mast time series; `read_power_curve()` parses NREL/IEA CSVs
@@ -212,11 +222,10 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   add them to Suggests.
 * With a manufacturer curve, run the GA at hub winds in the rising part
   (or a Weibull climate), not only on the rated plateau.
-* `calculate_energy()` is about 0.05 s per call for 15 turbines and 12
-  directions. ~60% is `turbine_influences` / `get_dist_angles` (R loops,
-  `subset.matrix`, `lapply`). `energy_calc_CPP` does not show up.
-  Next speed-up is that inner loop in Rcpp; more `n_cluster` only helps
-  a large population.
+* `turbine_influences()` / `get_dist_angles()` now do the wake-pair
+  search in Rcpp (`turbine_influences_CPP`). `circle_intersection()`
+  is vectorized C++ as well. \(V_i\) / `TotAbschProz` use `ave()`
+  (same RMS and sums, in row order) instead of `unlist(lapply(unique()))`.
 * Optional Bastankhah wake beside Jensen (`ga_options(wake_model)`).
 * Use GWA `air-density` over the site for `windfarmGA.air_rh` instead of
   the ISA default 1.225.

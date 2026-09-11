@@ -21,3 +21,15 @@ point_2_line_CPP <- function(x, y) {
     .Call(`_windfarmGA_point_2_line_CPP`, x, y)
 }
 
+circle_intersection_CPP <- function(r1, r2, h1, h2, dx) {
+    .Call(`_windfarmGA_circle_intersection_CPP`, r1, r2, h1, h2, dx)
+}
+
+get_dist_angles_CPP <- function(t, o, wnkl, dist) {
+    .Call(`_windfarmGA_get_dist_angles_CPP`, t, o, wnkl, dist)
+}
+
+turbine_influences_CPP <- function(t, wnkl, dist, dirct) {
+    .Call(`_windfarmGA_turbine_influences_CPP`, t, wnkl, dist, dirct)
+}
+

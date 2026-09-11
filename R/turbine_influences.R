@@ -42,13 +42,16 @@
 #'
 turbine_influences <- function(t, wnkl, dist, area, dirct,
                                plot_angles = FALSE) {
-  lapply(seq_along(t[, 1]), function(i) {
-    ee <- get_dist_angles(
-      t = t, o = i, wnkl = wnkl, dist = dist,
-      area = area, plot_angles = plot_angles
-    )
-    cbind(ee, "Windrichtung" = dirct, "Punkt_id" = i)
-  })
+  if (isTRUE(plot_angles)) {
+    return(lapply(seq_len(nrow(t)), function(i) {
+      ee <- get_dist_angles(
+        t = t, o = i, wnkl = wnkl, dist = dist,
+        area = area, plot_angles = TRUE
+      )
+      cbind(ee, "Windrichtung" = dirct, "Punkt_id" = i)
+    }))
+  }
+  turbine_influences_CPP(as_xy_matrix(t), wnkl, dist, dirct)
 }
 
 
@@ -92,81 +95,67 @@ turbine_influences <- function(t, wnkl, dist, area, dirct,
 #' }
 #' potInfTur
 #'
+as_xy_matrix <- function(t) {
+  tm <- unname(as.matrix(t))
+  if (ncol(tm) < 2L) {
+    stop("Turbine locations need X and Y columns.")
+  }
+  if (ncol(tm) == 2L) {
+    tm <- cbind(tm, 1)
+  } else if (ncol(tm) > 3L) {
+    tm <- tm[, 1:3, drop = FALSE]
+  }
+  tm
+}
+
 get_dist_angles <- function(t, o, wnkl, dist, area, plot_angles = FALSE) {
-  col_names <- c(
-    "Ax", "Ay", "Bx", "By", "Cx", "Cy",
-    "Laenge_C", "Laenge_B", "Laenge_A",
-    "alpha", "betha", "gamma",
-    "height1", "height2"
-  )
+  tm <- as_xy_matrix(t)
+  if (plot_angles) {
+    plot_dist_angles(tm, o, wnkl, dist, area)
+  }
+  res <- get_dist_angles_CPP(tm, as.integer(o), wnkl, dist)
+  if (plot_angles && any(res[, "Ax"] != 0)) {
+    points(res[, "Ax"], res[, "Ay"], col = "orange", pch = 20, cex = 2)
+    calibrate::textxy(res[, "Ax"], res[, "Ay"], rep("Points A", nrow(res)))
+  }
+  res
+}
+
+plot_dist_angles <- function(t, o, wnkl, dist, area) {
   turbine_loc <- c(x = t[o, 1L], y = t[o, 2L], z = t[o, 3L])
   turbines_ahead <- subset.matrix(x = t, subset = (t[o, 2L] < t[, 2L]))
-
-  if (plot_angles) {
-    graphics::plot(t[, 1], t[, 2],
-      col.axis = "darkblue",
-      xlab = "X-Coordinates", ylab = "Y-Coordinates"
+  graphics::plot(t[, 1], t[, 2],
+    col.axis = "darkblue",
+    xlab = "X-Coordinates", ylab = "Y-Coordinates"
+  )
+  title(
+    main = "Potentially Influential Turbines",
+    sub = paste(
+      "PointNr: ", o, ";", "Distance: ",
+      dist, "Meter", ";", "Angle: ", wnkl, "Degrees"
+    ),
+    outer = FALSE, cex.main = 1, cex.sub = 1
+  )
+  plot(st_geometry(area), add = TRUE)
+  points(x = turbine_loc[1], y = turbine_loc[2], col = "green", pch = 20, cex = 2)
+  calibrate::textxy(turbine_loc[1], turbine_loc[2], "Point B")
+  angles_min <- rbind(
+    turbine_loc[1:2],
+    cbind(
+      turbine_loc[1] + dist * cos((90 - wnkl) * pi / 180),
+      turbine_loc[2] + dist * sin((90 - wnkl) * pi / 180)
     )
-    title(
-      main = "Potentially Influential Turbines",
-      sub = paste(
-        "PointNr: ", o, ";", "Distance: ",
-        dist, "Meter", ";", "Angle: ", wnkl, "Degrees"
-      ),
-      outer = FALSE, cex.main = 1, cex.sub = 1
+  )
+  angles_plu <- rbind(
+    turbine_loc[1:2],
+    cbind(
+      turbine_loc[1] + dist * cos((90 + wnkl) * pi / 180),
+      turbine_loc[2] + dist * sin((90 + wnkl) * pi / 180)
     )
-    plot(st_geometry(area), add = TRUE)
-    points(x = turbine_loc[1], y = turbine_loc[2], col = "green", pch = 20, cex = 2)
-    calibrate::textxy(turbine_loc[1], turbine_loc[2], "Point B")
-    angles_min <- rbind(
-      turbine_loc[1:2],
-      cbind(
-        turbine_loc[1] + dist * cos((90 - wnkl) * pi / 180),
-        turbine_loc[2] + dist * sin((90 - wnkl) * pi / 180)
-      )
-    )
-    angles_plu <- rbind(
-      turbine_loc[1:2],
-      cbind(
-        turbine_loc[1] + dist * cos((90 + wnkl) * pi / 180),
-        turbine_loc[2] + dist * sin((90 + wnkl) * pi / 180)
-      )
-    )
-    lines(angles_min[, 1], angles_min[, 2])
-    lines(angles_plu[, 1], angles_plu[, 2])
+  )
+  lines(angles_min[, 1], angles_min[, 2])
+  lines(angles_plu[, 1], angles_plu[, 2])
+  if (NROW(turbines_ahead)) {
     points(x = turbines_ahead[, 1], y = turbines_ahead[, 2], col = "red", pch = 20)
   }
-
-  len2 <- length(turbines_ahead[, 1L])
-  if (len2 != 0L) {
-    datalist <- lapply(1:len2, function(i) {
-      turb_tmp <- turbines_ahead[i, ]
-      P2LFu <- point_2_line_CPP(turbine_loc, turb_tmp)
-      winkel <- angles_CPP(turb_tmp, turbine_loc, P2LFu[5:6])
-      c(P2LFu, winkel, "Height1" = turbine_loc[[3]], "Height2" = turb_tmp[["Z"]])
-    })
-    res <- matrix(unlist(datalist), ncol = 14, byrow = TRUE)
-    colnames(res) <- col_names
-
-    dl <- subset.matrix(res,
-      subset = res[, "alpha"] < wnkl & res[, "Laenge_B"] < dist
-    )
-
-    if (plot_angles) {
-      points(dl[, "Ax"], dl[, "Ay"], col = "orange", pch = 20, cex = 2)
-      calibrate::textxy(dl[, "Ax"], dl[, "Ay"], rep("Points A", nrow(dl)))
-    }
-
-    if (nrow(dl) != 0) {
-      DataLun3 <- dl
-    } else {
-      DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 10)), nrow = 1, ncol = 14)
-      colnames(DataLun3) <- col_names
-    }
-  } else {
-    DataLun3 <- matrix(data = c(0, 0, t[o, 1], t[o, 2], rep(0, 10)), nrow = 1, ncol = 14)
-    colnames(DataLun3) <- col_names
-  }
-
-  return(DataLun3)
 }

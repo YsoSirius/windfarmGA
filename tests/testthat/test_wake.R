@@ -39,6 +39,18 @@ test_that("Test Wake Functions", {
   aov <- circle_intersection(40, 30, 10, 10, 0)
   expect_type(aov, "double")
   expect_identical(aov, 30^2 * pi)
+  aov_vec <- circle_intersection(
+    c(10, 10, 10),
+    c(20, 20, 30),
+    c(10, 10, 10),
+    c(20, 20, 10),
+    c(10, 100, 0)
+  )
+  expect_length(aov_vec, 3)
+  expect_gt(aov_vec[1], 250)
+  expect_lt(aov_vec[1], 260)
+  expect_identical(aov_vec[2], 0)
+  expect_identical(aov_vec[3], 10^2 * pi)
 
 
   ## Test get_dist_angles Function --------------
@@ -76,7 +88,27 @@ test_that("Test Wake Functions", {
   expect_true(all((dr[dr[, "Cy"] == 0, colnms]) == 0))
   expect_true(all((dr[dr[, "Ax"] != 0, colnms]) != 0))
 
-
+  ## Fixed geometry: wake cone from upwind (higher Y)
+  tfix <- cbind(
+    X = c(0, 10, 50, 0),
+    Y = c(0, 100, 100, 200),
+    Z = 1
+  )
+  in_cone <- get_dist_angles(tfix, 1, 20, 100000, polYgon)
+  expect_equal(nrow(in_cone), 2L)
+  expect_equal(unname(in_cone[1, "Ax"]), 10)
+  expect_equal(unname(in_cone[1, "Ay"]), 100)
+  expect_lt(unname(in_cone[1, "alpha"]), 20)
+  expect_equal(unname(in_cone[2, "Ax"]), 0)
+  expect_equal(unname(in_cone[2, "Ay"]), 200)
+  expect_equal(unname(in_cone[2, "alpha"]), 0)
+  expect_equal(get_dist_angles(tfix, 1, 20, 100000, polYgon), in_cone)
+  wide <- get_dist_angles(tfix, 1, 40, 100000, polYgon)
+  expect_equal(nrow(wide), 3L)
+  dummy <- get_dist_angles(tfix, 4, 20, 100000, polYgon)
+  expect_equal(unname(dummy[1, "Ax"]), 0)
+  expect_equal(unname(dummy[1, "Bx"]), 0)
+  expect_equal(unname(dummy[1, "By"]), 200)
 
   ## Test turbine_influences Function --------------
   ###########################################
@@ -180,9 +212,36 @@ test_that("Test Wake Functions", {
   expect_true(all(df[df[, "A_ov"] != 0, "TotAbschProz"] != 0))
   expect_true(all(df[df[, "TotAbschProz"] != 0, "V_New"] <
     df[df[, "TotAbschProz"] != 0, "Windmean"]))
+  expect_true(all(tapply(df[, "TotAbschProz"], df[, "Punkt_id"], function(x) {
+    diff(range(x)) < 1e-10
+  })))
+  expect_true(all(tapply(df[, "V_New"], df[, "Punkt_id"], function(x) {
+    diff(range(x)) < 1e-10
+  })))
 
   expect_false(any(unlist(sapply(resCalcEn, is.na))))
   expect_true(all(df[, "Rect_ID"] %in% resGrid[[1]][, "ID"]))
+
+  ## North wind + rectangular grid: same-X column is directly upwind (alpha = 0)
+  options(windfarmGA.power_curve = NULL)
+  site <- sf::st_as_sf(sf::st_sfc(
+    sf::st_polygon(list(cbind(
+      c(4498482, 4498482, 4499991, 4499991, 4498482),
+      c(2668272, 2669343, 2669343, 2668272, 2668272)
+    ))),
+    crs = 3035
+  ))
+  grid_n <- grid_area(area = site, size = 30 * 5, prop = 1, plot_grid = FALSE)
+  lay_n <- init_population(grid = grid_n[[1]], n = 20, n_start = 1)[[1]]
+  en_n <- calculate_energy(
+    layout = lay_n, reference_height = 100, rotor_height = 100,
+    surface_roughness = 0.3, wake_angle = 20, wake_distance = 100000,
+    wind = data.frame(ws = 12, wd = 0), rotor = 30, area = site,
+    terrain = FALSE, weibull = FALSE
+  )
+  df_n <- do.call(rbind, en_n)
+  expect_gt(max(df_n[, "TotAbschProz"]), 0)
+  expect_lt(unname(df_n[1, "Parkwirkungsgrad"]), 100)
 
   ## Logarithmic wind profile: hub above reference height increases wind speed
   resEq <- calculate_energy(

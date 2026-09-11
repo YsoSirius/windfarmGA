@@ -77,6 +77,49 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// circle_intersection_CPP
+NumericVector circle_intersection_CPP(NumericVector r1, NumericVector r2, NumericVector h1, NumericVector h2, NumericVector dx);
+RcppExport SEXP _windfarmGA_circle_intersection_CPP(SEXP r1SEXP, SEXP r2SEXP, SEXP h1SEXP, SEXP h2SEXP, SEXP dxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type r1(r1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type r2(r2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type h1(h1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type h2(h2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type dx(dxSEXP);
+    rcpp_result_gen = Rcpp::wrap(circle_intersection_CPP(r1, r2, h1, h2, dx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_dist_angles_CPP
+NumericMatrix get_dist_angles_CPP(NumericMatrix t, int o, double wnkl, double dist);
+RcppExport SEXP _windfarmGA_get_dist_angles_CPP(SEXP tSEXP, SEXP oSEXP, SEXP wnklSEXP, SEXP distSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type t(tSEXP);
+    Rcpp::traits::input_parameter< int >::type o(oSEXP);
+    Rcpp::traits::input_parameter< double >::type wnkl(wnklSEXP);
+    Rcpp::traits::input_parameter< double >::type dist(distSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_dist_angles_CPP(t, o, wnkl, dist));
+    return rcpp_result_gen;
+END_RCPP
+}
+// turbine_influences_CPP
+List turbine_influences_CPP(NumericMatrix t, double wnkl, double dist, double dirct);
+RcppExport SEXP _windfarmGA_turbine_influences_CPP(SEXP tSEXP, SEXP wnklSEXP, SEXP distSEXP, SEXP dirctSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type t(tSEXP);
+    Rcpp::traits::input_parameter< double >::type wnkl(wnklSEXP);
+    Rcpp::traits::input_parameter< double >::type dist(distSEXP);
+    Rcpp::traits::input_parameter< double >::type dirct(dirctSEXP);
+    rcpp_result_gen = Rcpp::wrap(turbine_influences_CPP(t, wnkl, dist, dirct));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_windfarmGA_rotate_CPP", (DL_FUNC) &_windfarmGA_rotate_CPP, 5},
@@ -84,6 +127,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_windfarmGA_energy_calc_CPP", (DL_FUNC) &_windfarmGA_energy_calc_CPP, 3},
     {"_windfarmGA_euc_CPP", (DL_FUNC) &_windfarmGA_euc_CPP, 4},
     {"_windfarmGA_point_2_line_CPP", (DL_FUNC) &_windfarmGA_point_2_line_CPP, 2},
+    {"_windfarmGA_circle_intersection_CPP", (DL_FUNC) &_windfarmGA_circle_intersection_CPP, 5},
+    {"_windfarmGA_get_dist_angles_CPP", (DL_FUNC) &_windfarmGA_get_dist_angles_CPP, 4},
+    {"_windfarmGA_turbine_influences_CPP", (DL_FUNC) &_windfarmGA_turbine_influences_CPP, 4},
     {NULL, NULL, 0}
 };
 
