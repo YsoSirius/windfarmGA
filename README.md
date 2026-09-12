@@ -129,19 +129,35 @@ HexGrid <- hexa_area(area, size = (Rotor * fcr), plot_grid = TRUE)
 str(HexGrid)
 ```
 <p align="center">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="300"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="600"/>
 </p>
 
 
 ## Terrain Effect Model
 If **terrain** is `TRUE` in `genetic_algorithm`, terrain effects are taken
-into account. An elevation model and a Corine Land Cover raster are
-downloaded automatically, but can also be given manually.
+into account. An Digital Elevation Model and a CORINE Land Cover raster are
+downloaded automatically, but can also be provided manually.
 ([Download a CLC raster](https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4)).
-            
 
-If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable **ccl**. The algorithm uses an adapted version of the Raster legend ("clc_legend.csv"), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named **Rauhigkeit_z** to the .csv file. Assign a surface roughness length to all land cover types. 
-Be sure that all rows are filled with numeric values and save the .csv file with ";" delimiter. Assign the .csv file path to the input variable **ccl_roughness**.
+
+To use your own land cover raster, provide its path via **ccl**.
+Surface roughness values are taken from **extdata/clc_legend.csv**. To use custom values, add a numeric **Rauhigkeit_z** column for all land cover classes, save the file with ; as delimiter, and provide its path via **ccl_roughness**.
+
+`plot_result(..., terrain = TRUE)` shows the full chain (same as
+`calculate_energy`):
+
+- Elevation → wind-speed multiplier (DEM / mean DEM)
+- Elevation → air density (barometric; labels vs 1.225 kg/m³)
+- CORINE Land Cover → land-cover roughness \(z_0\)
+- Elevation roughness (`terra::terrain`) × CLC \(z_0\) → modified \(z_0\)
+- Modified \(z_0\) + hub height → wake decay \(k = 0.5 / \log(h/z_0)\)
+
+The modified \(z_0\) also scales hub-height wind via the log profile
+(not a separate `plot_result` panel).
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png" width="600"/>
+</p>   
 
 
 ## Realistic workflow (site, turbine, wind)
