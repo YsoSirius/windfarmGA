@@ -238,7 +238,12 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
       weibl_k <- terra::crop(x = weibull_src[[1]], y = shape_project, mask = TRUE)
       weibl_a <- terra::crop(x = weibull_src[[2]], y = shape_project, mask = TRUE)
 
-    estim_speed_raster <- weibl_a * gamma(1 + (1 / values(weibl_k)))
+    estim_speed_raster <- weibl_a * terra::app(weibl_k, function(x) {
+      ok <- is.finite(x) & x > 0
+      out <- rep(NA_real_, length(x))
+      out[ok] <- gamma(1 + (1 / x[ok]))
+      out
+    })
     estim_speed_raster <- terra::project(
       estim_speed_raster,
       terra::crs(area)

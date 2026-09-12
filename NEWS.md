@@ -36,7 +36,13 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   was dropping every `*.csv`, so `inst/extdata/clc_legend.csv` never
   reached the check install and `terrain_model()` failed with
   "cannot open the connection". The legend stays in the tarball;
-  offline tests pass their own roughness CSV.
+  offline tests pass their own roughness CSV. Extra branch tests
+  (`test_coverage_branches.R`) walk Weibull-from-file, the power-law
+  profile, `plot_power_curve`, set-crossover / mutation / trimton
+  edges, `fitness(parallel=TRUE)` via `registerDoSEQ()`, a short GA
+  with terrain+Weibull+FIX, plot helpers, and `random_search(terrain)`.
+  Weibull speed in `genetic_algorithm()` used `values(k)` on a masked
+  raster, so every cell became NA and fitness crashed.
 * `plot_farm_3d` pins use heightmap column/row. Lon/lat + a numeric
   `extent` attached the label line at z = 0, so turbines ran down
   through the DEM. 3ds Max OBJs are Z-up while rayshader rgl is Y-up:
