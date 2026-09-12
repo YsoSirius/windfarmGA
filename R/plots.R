@@ -1495,9 +1495,153 @@ plot_population <- function(result, interactive = NULL, ask = NULL) {
   invisible(shown)
 }
 
+wake_cone_one <- function(x, y, wd_from, half_deg, length_m, n = 16L) {
+  down <- (as.numeric(wd_from) + 180) %% 360
+  angs <- seq(down - half_deg, down + half_deg, length.out = n)
+  rad <- angs * pi / 180
+  sf::st_polygon(list(cbind(
+    c(x, x + length_m * sin(rad), x),
+    c(y, y + length_m * cos(rad), y)
+  )))
+}
+
+leaflet_wind_for_cones <- function(wind) {
+  if (is.null(wind) || !is.data.frame(wind) || !nrow(wind)) {
+    return(NULL)
+  }
+  nms <- names(wind)
+  wd <- if (any(grepl("^(wd|dir)", nms, ignore.case = TRUE))) {
+    wind[[grep("^(wd|dir)", nms, ignore.case = TRUE)[1]]]
+  } else if (ncol(wind) >= 2L) {
+    wind[[2]]
+  } else {
+    return(NULL)
+  }
+  pr <- if (any(grepl("prob", nms, ignore.case = TRUE))) {
+    as.numeric(wind[[grep("prob", nms, ignore.case = TRUE)[1]]])
+  } else {
+    rep(1, length(wd))
+  }
+  pr[!is.finite(pr)] <- 0
+  if (sum(pr) <= 0) {
+    pr[] <- 1
+  }
+  pr <- pr / sum(pr)
+  tab <- data.frame(wd = as.numeric(wd), prob = pr)
+  tab <- tab[is.finite(tab$wd), , drop = FALSE]
+  if (!nrow(tab)) {
+    return(NULL)
+  }
+  if (nrow(tab) > 6L) {
+    tab <- tab[order(tab$prob, decreasing = TRUE), , drop = FALSE]
+    tab <- tab[seq_len(6L), , drop = FALSE]
+    tab$prob <- tab$prob / sum(tab$prob)
+  }
+  tab
+}
+
+leaflet_wake_length <- function(poly, rotor) {
+  rotor <- as.numeric(rotor)
+  if (!is.finite(rotor) || rotor <= 0) {
+    rotor <- 50
+  }
+  bb <- sf::st_bbox(poly)
+  diag <- sqrt((bb$xmax - bb$xmin)^2 + (bb$ymax - bb$ymin)^2)
+  if (!is.finite(diag) || diag <= 0) {
+    return(12 * 2 * rotor)
+  }
+  max(200, min(12 * 2 * rotor, 0.45 * diag))
+}
+
+leaflet_wake_cones <- function(xy, wind_tab, half_deg, length_m, crs, farbe) {
+  n <- nrow(xy)
+  n_dir <- nrow(wind_tab)
+  geom <- vector("list", n * n_dir)
+  turb <- integer(n * n_dir)
+  wd <- numeric(n * n_dir)
+  prob <- numeric(n * n_dir)
+  col <- character(n * n_dir)
+  k <- 0L
+  for (i in seq_len(n)) {
+    for (j in seq_len(n_dir)) {
+      k <- k + 1L
+      geom[[k]] <- wake_cone_one(
+        xy[i, 1], xy[i, 2], wind_tab$wd[j], half_deg, length_m
+      )
+      turb[k] <- i
+      wd[k] <- wind_tab$wd[j]
+      prob[k] <- wind_tab$prob[j]
+      col[k] <- farbe[i]
+    }
+  }
+  sf::st_sf(
+    turb = turb,
+    wd = wd,
+    prob = prob,
+    farbe = col,
+    geometry = sf::st_sfc(geom, crs = crs)
+  )
+}
+
+leaflet_match_cells <- function(layout_df, cells) {
+  if (is.null(cells) || !is.data.frame(cells) || !nrow(cells)) {
+    return(NULL)
+  }
+  ids <- if ("Rect_ID" %in% names(layout_df)) {
+    layout_df$Rect_ID
+  } else if ("ID" %in% names(layout_df)) {
+    layout_df$ID
+  } else {
+    return(NULL)
+  }
+  cells[match(as.integer(ids), as.integer(cells$ID)), , drop = FALSE]
+}
+
+leaflet_turbine_popup <- function(wake_pct, cells_row = NULL) {
+  lines <- sprintf("Total wake: <b>%s%%</b>", format(as.numeric(wake_pct), digits = 3))
+  if (is.null(cells_row) || !NROW(cells_row)) {
+    return(paste(lines, collapse = "<br/>"))
+  }
+  r <- cells_row[1, ]
+  add <- function(ok, txt) {
+    if (isTRUE(ok)) {
+      lines <<- c(lines, txt)
+    }
+  }
+  add(is.finite(r$elevation), sprintf("Elevation: %s m", round(r$elevation, 0)))
+  add(is.finite(r$wind_mult), sprintf("Wind multiplier: %s", format(r$wind_mult, digits = 3)))
+  add(is.finite(r$z0), sprintf("z<sub>0</sub>: %s m", format(r$z0, digits = 3)))
+  add(is.finite(r$k), sprintf("Wake decay k: %s", format(r$k, digits = 3)))
+  add(is.finite(r$air_rh), sprintf("Air density: %s kg/m<sup>3</sup>", format(r$air_rh, digits = 3)))
+  paste(lines, collapse = "<br/>")
+}
+
+leaflet_prepare_terrain <- function(tm) {
+  if (is.null(tm) || !is.list(tm) || is.null(tm$srtm_crop)) {
+    return(NULL)
+  }
+  if (!requireNamespace("raster", quietly = TRUE)) {
+    return(list(cells = terrain_cells_of(tm$srtm_crop)))
+  }
+  to_ll <- function(r) {
+    if (!inherits(r, "SpatRaster")) {
+      return(NULL)
+    }
+    r <- terra::project(r, "EPSG:4326")
+    raster::raster(r)
+  }
+  list(
+    elevation = to_ll(tm$srtm_crop[[1]]),
+    wind_mult = to_ll(tm$srtm_crop[[2]]),
+    cells = terrain_cells_of(tm$srtm_crop)
+  )
+}
+
 #' @title Plot a wind warm with leaflet
 #' @name plot_leaflet
-#' @description  Plot a resulting wind farm on a leaflet map.
+#' @description Plot a resulting wind farm on a leaflet map. Wakes are
+#'   downwind cones (Jensen search angle), not circles. Terrain rasters
+#'   from `result$terrainModel` are optional overlay layers.
 #'
 #' @export
 #'
@@ -1510,6 +1654,10 @@ plot_population <- function(result, interactive = NULL, ask = NULL) {
 #' @param grid Optional grid polygons. By default they are rebuilt from
 #'   `result` and `area`. You can pass the polygon element of
 #'   [grid_area()] or [hexa_area()].
+#' @param wind Optional wind table (`ws`, `wd`, `probab`). Defaults to
+#'   the table stored in `result`.
+#' @param terrain Optional output of `leaflet_prepare_terrain()`.
+#'   Defaults to `result$terrainModel` when present.
 #'
 #' @return Returns a leaflet map.
 #'
@@ -1537,7 +1685,8 @@ plot_population <- function(result, interactive = NULL, ask = NULL) {
 #'   grid = Grid[[2]]
 #' )
 #' }
-plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL) {
+plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL,
+                         wind = NULL, terrain = NULL) {
   GridPol <- grid
   if (!is_leaflet_installed()) {
     stop(
@@ -1586,6 +1735,16 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
     proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
   }
 
+  if (is.null(wind)) {
+    wind <- ga_result_wind(result)
+  }
+  if (is.null(terrain)) {
+    terrain <- leaflet_prepare_terrain(ga_result_terrain(result))
+  }
+  inp <- ga_result_inputs(result)
+  rotor <- suppressWarnings(as.numeric(ga_inp(inp, "Rotorradius")))
+  half_wake <- getOption("windfarmGA.max_angle", 20)
+
   ## Grid-Function ##############
   if (!is.null(GridPol)) {
     if (is.na(st_crs(GridPol))) {
@@ -1606,13 +1765,13 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
 
   ## Pick a Windfarm and Project to WGS84 ##############
   result <- result[, "bestPaEn"][[which]]
-  xysp <- st_as_sf(data.frame(result), coords = c("X", "Y"))
+  result <- data.frame(result, stringsAsFactors = FALSE)
+  xy_m <- cbind(as.numeric(result$X), as.numeric(result$Y))
+  xysp <- st_as_sf(result, coords = c("X", "Y"))
   st_crs(xysp) <- proj_pol
   resultxy <- st_coordinates(st_transform(xysp, proj_longlat))
-  result <- data.frame(result, stringsAsFactors = FALSE)
   result$X <- resultxy[, 1]
   result$Y <- resultxy[, 2]
-  result$wake_radius <- round(result$AbschGesamt, 2) / 10
 
   poly1 <- st_transform(poly1, proj_longlat)
 
@@ -1621,6 +1780,7 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
   title_locat <- c(mean(bbx[c(1, 3)]), max(bbx[c(2, 4)]))
 
   ## Color Coding ##############
+  result$AbschGesamt <- round(result$AbschGesamt, 1)
   col_cir <- grDevices::colorRampPalette(c(
     "green", "yellow",
     "red", "darkred"
@@ -1649,14 +1809,32 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
       iconWidth = 30, iconHeight = 50
     )
   )
-  list_popup <- paste(
-    "Total Wake Effect: ", as.character(result$AbschGesamt),
-    "% </dd>"
-  )
+  cells_at <- leaflet_match_cells(result, if (is.list(terrain)) terrain$cells else NULL)
+  list_popup <- vapply(seq_len(nrow(result)), function(i) {
+    cr <- if (is.null(cells_at)) NULL else cells_at[i, , drop = FALSE]
+    leaflet_turbine_popup(result$AbschGesamt[i], cr)
+  }, character(1))
 
+  wind_tab <- leaflet_wind_for_cones(wind)
+  cones <- NULL
+  if (!is.null(wind_tab) && nrow(xy_m)) {
+    poly_m <- st_transform(poly1, proj_pol)
+    cones <- leaflet_wake_cones(
+      xy_m, wind_tab, half_wake,
+      leaflet_wake_length(poly_m, rotor),
+      proj_pol, result$farbe
+    )
+    cones <- st_transform(cones, st_crs(proj_longlat))
+  }
 
   ## Plot a Leaflet Map ###################
-  overlay_group <- c("Wake Circles", "Title", "Polygon", "Turbines", "Grid")
+  overlay_group <- c("Wake cones", "Title", "Polygon", "Turbines", "Grid")
+  if (!is.null(terrain$elevation)) {
+    overlay_group <- c("Elevation", overlay_group)
+  }
+  if (!is.null(terrain$wind_mult)) {
+    overlay_group <- c("Wind multiplier", overlay_group)
+  }
   opaycity <- 0.4
   map <-
     leaflet::leaflet() %>%
@@ -1687,14 +1865,6 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
       opacity = opaycity,
       fill = TRUE, fillOpacity = 0
     ) %>%
-    ## Create Circles in Map
-    leaflet::addCircleMarkers(
-      lng = result$X, lat = result$Y,
-      radius = result$wake_radius,
-      color = result$farbe,
-      stroke = TRUE, fillOpacity = 0.8,
-      group = "Wake Circles"
-    ) %>%
     ## Add the turbine symbols
     leaflet::addMarkers(
       lng = result$X, lat = result$Y,
@@ -1719,7 +1889,68 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
       options = leaflet::layersControlOptions(collapsed = TRUE)
     )
 
-  # Plot the map
+  if (!is.null(cones) && nrow(cones)) {
+    max_p <- max(cones$prob, na.rm = TRUE)
+    if (!is.finite(max_p) || max_p <= 0) {
+      max_p <- 1
+    }
+    map <- leaflet::addPolygons(
+      map,
+      data = cones,
+      group = "Wake cones",
+      fillColor = cones$farbe,
+      color = cones$farbe,
+      weight = 1,
+      opacity = 0.35,
+      fillOpacity = 0.16 + 0.15 * (cones$prob / max_p),
+      stroke = TRUE
+    )
+  } else {
+    map <- leaflet::addCircleMarkers(
+      map,
+      lng = result$X, lat = result$Y,
+      radius = pmax(6, round(as.numeric(result$AbschGesamt), 2) / 10),
+      color = result$farbe,
+      stroke = TRUE, fillOpacity = 0.8,
+      group = "Wake cones"
+    )
+  }
+  if (is.list(terrain)) {
+    add_ll_raster <- function(map, r, group, pal) {
+      if (is.null(r) || !inherits(r, "Raster")) {
+        return(map)
+      }
+      v <- raster::values(r)
+      v <- v[is.finite(v)]
+      if (!length(v)) {
+        return(map)
+      }
+      rng <- range(v)
+      pad <- max(diff(rng) * 0.1, 1e-6)
+      leaflet::addRasterImage(
+        map, r,
+        colors = leaflet::colorNumeric(
+          pal,
+          domain = c(rng[1] - pad, rng[2] + pad),
+          na.color = "transparent"
+        ),
+        opacity = 0.5, group = group
+      )
+    }
+    map <- add_ll_raster(
+      map, terrain$elevation, "Elevation", grDevices::terrain.colors(12)
+    )
+    map <- add_ll_raster(
+      map, terrain$wind_mult, "Wind multiplier", "YlOrRd"
+    )
+    if (!is.null(terrain$elevation)) {
+      map <- leaflet::hideGroup(map, "Elevation")
+    }
+    if (!is.null(terrain$wind_mult)) {
+      map <- leaflet::hideGroup(map, "Wind multiplier")
+    }
+  }
+
   map
 }
 

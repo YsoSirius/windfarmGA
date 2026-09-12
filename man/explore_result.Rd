@@ -17,12 +17,11 @@ The Shiny app object, invisibly. Called for its side effect.
 }
 \description{
 One-page viewer for a \code{\link[=genetic_algorithm]{genetic_algorithm()}} result: Leaflet
-map of that generation's best layout, and one plotly figure with
-fitness, operator rates and population (subplots). New fitness
-maxima are marked; click a marker to jump to that generation.
-The cell heatmap is not included: it rebuilds
-the site grid on every draw and adds little next to the map.
-Use \code{\link[=plot_cell_heatmap]{plot_cell_heatmap()}} or \code{\link[=plot_generation]{plot_generation()}} for that offline.
+map of that generation's best layout (downwind wake cones, optional
+terrain layers), a wind rose, and one plotly figure with fitness,
+operator rates and population. New fitness maxima are marked; click
+a marker to jump to that generation. The cell heatmap is not
+included: use \code{\link[=plot_cell_heatmap]{plot_cell_heatmap()}} or \code{\link[=plot_generation]{plot_generation()}} offline.
 Requires Suggests \code{shiny}. Plotly is used when installed.
 }
 \examples{

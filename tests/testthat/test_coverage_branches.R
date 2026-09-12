@@ -413,3 +413,82 @@ test_that("random_search follows terrain and missing weibull_src", {
   expect_type(rs, "list")
   expect_false(anyNA(unlist(rs)))
 })
+
+test_that("terrain_model guards, hex GA, crossover cap, leaflet helpers", {
+  area <- synth_site()
+  dem <- synth_dem(area)
+  ccl <- synth_ccl(area)
+  rough <- synth_roughness_csv()
+
+  with_mocked_bindings(
+    is_elevatr_installed = function() FALSE,
+    expect_error(
+      terrain_model(TRUE, area, ccl = ccl, ccl_roughness = rough),
+      "elevatr"
+    )
+  )
+  tm_file <- terrain_model(
+    write_rast(dem), area,
+    ccl = write_rast(ccl),
+    ccl_roughness = rough,
+    plot = FALSE
+  )
+  expect_s4_class(tm_file$cclRaster, "SpatRaster")
+  if (requireNamespace("raster", quietly = TRUE)) {
+    tm_rl <- terrain_model(
+      raster::raster(dem), area,
+      ccl = ccl, ccl_roughness = rough, plot = FALSE
+    )
+    expect_s4_class(tm_rl$srtm_crop[[1]], "SpatRaster")
+  }
+
+  with_mocked_bindings(
+    is_parallel_installed = function() FALSE,
+    expect_error(
+      genetic_algorithm(
+        area = area, n = 4, iteration = 1,
+        wind = data.frame(ws = 8, wd = 0),
+        rotor = 30, rotor_height = 80, parallel = TRUE
+      ),
+      "parallel"
+    )
+  )
+
+  res_h <- suppressMessages(genetic_algorithm(
+    area = area, n = 4, iteration = 2,
+    wind = data.frame(ws = 8, wd = 0),
+    rotor = 30, rotor_height = 80, reference_height = 50,
+    grid_method = "h", elitism = FALSE, plot = FALSE, verbose = FALSE
+  ))
+  expect_true(is.matrix(res_h))
+
+  parents <- data.frame(
+    ID = 1:12,
+    bin = c(1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1),
+    bin.1 = c(0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0)
+  )
+  fitp <- data.frame(ID = 1, Fitness = 10, Fitness.1 = 8)
+  expect_message(
+    crossover(list(parents, fitp), u = 2, uplimit = 2, crossPart = "EQU", verbose = TRUE),
+    "limit|permutations|pairs"
+  )
+  expect_equal(nrow(windfarmGA:::permutations(4, 1)), 4)
+
+  many <- data.frame(wd = seq(0, 330, 30), ws = 8, probab = 1)
+  expect_equal(nrow(windfarmGA:::leaflet_wind_for_cones(many)), 6L)
+  expect_gt(windfarmGA:::leaflet_wake_length(area, 30), 200)
+  expect_null(windfarmGA:::leaflet_prepare_terrain(NULL))
+  expect_null(windfarmGA:::leaflet_match_cells(data.frame(X = 1), NULL))
+  expect_true(inherits(
+    plot_windrose(data.frame(ws = c(5, 40), wd = c(0, 90)), spdmax = 30, plot = FALSE),
+    "ggplot"
+  ))
+
+  speed <- synth_dem(area)
+  terra::values(speed) <- 7
+  rs_w <- random_search(
+    resultrect, area, n = 1, best = 1, plot = FALSE,
+    terrain = FALSE, weibull = speed
+  )
+  expect_type(rs_w, "list")
+})

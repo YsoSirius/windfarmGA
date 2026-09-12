@@ -4,7 +4,15 @@
 \alias{plot_leaflet}
 \title{Plot a wind warm with leaflet}
 \usage{
-plot_leaflet(result, area, which = 1, orderitems = TRUE, grid = NULL)
+plot_leaflet(
+  result,
+  area,
+  which = 1,
+  orderitems = TRUE,
+  grid = NULL,
+  wind = NULL,
+  terrain = NULL
+)
 }
 \arguments{
 \item{result}{The output of \code{\link{genetic_algorithm}}}
@@ -22,12 +30,20 @@ ordered by energy values \code{TRUE} or chronologically \code{FALSE}}
 \item{grid}{Optional grid polygons. By default they are rebuilt from
 \code{result} and \code{area}. You can pass the polygon element of
 \code{\link[=grid_area]{grid_area()}} or \code{\link[=hexa_area]{hexa_area()}}.}
+
+\item{wind}{Optional wind table (\code{ws}, \code{wd}, \code{probab}). Defaults to
+the table stored in \code{result}.}
+
+\item{terrain}{Optional output of \code{leaflet_prepare_terrain()}.
+Defaults to \code{result$terrainModel} when present.}
 }
 \value{
 Returns a leaflet map.
 }
 \description{
-Plot a resulting wind farm on a leaflet map.
+Plot a resulting wind farm on a leaflet map. Wakes are
+downwind cones (Jensen search angle), not circles. Terrain rasters
+from \code{result$terrainModel} are optional overlay layers.
 }
 \examples{
 \dontrun{

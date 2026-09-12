@@ -23,6 +23,43 @@ test_that("as_windfarmGA print and plot dispatch", {
   expect_match(out, "New best")
   expect_match(out, "generation")
   expect_error(plot(res), "polygon")
+  expect_s3_class(as_windfarmGA(res), "windfarmGA")
+
+  empty <- matrix(list(NULL), ncol = 1, dimnames = list(NULL, "allparkcoeff"))
+  expect_null(windfarmGA:::ga_result_records(empty))
+  expect_null(windfarmGA:::ga_result_best(empty))
+  expect_null(windfarmGA:::ga_result_inputs(empty))
+  expect_true(is.na(windfarmGA:::ga_inp(NULL, "x")))
+
+  w_wrap <- matrix(
+    list(list(Windspeed_Data = data.frame(ws = 7, wd = 90))),
+    ncol = 1, dimnames = list(NULL, "inputWind")
+  )
+  expect_equal(windfarmGA:::ga_result_wind(w_wrap)$wd, 90)
+  w_lst <- matrix(
+    list(list(data.frame(ws = 6, wd = 45), 100)),
+    ncol = 1, dimnames = list(NULL, "inputWind")
+  )
+  expect_equal(windfarmGA:::ga_result_wind(w_lst)$probab, 100)
+  w_mat <- matrix(
+    list(matrix(c(5, 180), nrow = 1, dimnames = list(NULL, c("ws", "wd")))),
+    ncol = 1, dimnames = list(NULL, "inputWind")
+  )
+  expect_equal(windfarmGA:::ga_result_wind(w_mat)$ws, 5)
+  expect_null(windfarmGA:::ga_result_wind(
+    matrix(list(data.frame()), ncol = 1, dimnames = list(NULL, "inputWind"))
+  ))
+
+  out_w <- paste(capture.output(windfarmGA:::print_ga_wind(NULL)), collapse = "\n")
+  expect_match(out_w, "none stored")
+  many <- data.frame(wd = seq_len(20) * 10, ws = 8, probab = 5)
+  out_m <- paste(capture.output(windfarmGA:::print_ga_wind(many)), collapse = "\n")
+  expect_match(out_m, "20 directions")
+  capture.output(windfarmGA:::print_ga_inputs(NULL))
+  inp <- resultrect[1, "inputData"][[1]]
+  inp["Percentage of Polygon", 1] <- 80
+  out_i <- paste(capture.output(windfarmGA:::print_ga_inputs(inp)), collapse = "\n")
+  expect_match(out_i, "80")
 })
 
 test_that("power curve lookup and plot", {

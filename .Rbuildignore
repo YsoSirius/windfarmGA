@@ -16,6 +16,7 @@ release_to_cran.R
 ^docs$
 ^pkgdown$
 ^cran-comments\.md$
+^DEVELOPMENT\.md$
 ^_experiment$
 ^experimental$
 ^revdep$

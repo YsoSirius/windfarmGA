@@ -566,35 +566,6 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
     }
 
     ## Fuzzy Control ###############
-    if (i > 20) {
-      besPE <- do.call("rbind", lapply(bestPaEn[1:i], function(x) {
-        max(x[, "EnergyOverall"])
-      }))
-      maxBisher <- max(besPE)
-      WhichMaxBs <- which(besPE == max(besPE))
-
-      if (length(WhichMaxBs) >= 2) {
-        BestForNo <- bestPaEn[sample(WhichMaxBs, 2)]
-        BestForNo[[1]][, "Run"] <- length(fit) + 1
-        BestForNo[[2]][, "Run"] <- length(fit) + 2
-      } else {
-        BestForNo <- bestPaEn[WhichMaxBs]
-        BestForNo <- append(BestForNo, BestForNo)
-        BestForNo[[1]][, "Run"] <- length(fit) + 1
-        BestForNo[[2]][, "Run"] <- length(fit) + 2
-      }
-
-      last7 <- besPE[i:(i - 5)]
-      if (!any(last7 == maxBisher)) {
-        if (verbose) {
-          message(paste(
-            "Park with highest Fitness level to date ",
-            "is replaced in the list.", "\n"
-          ))
-        }
-        fit <- append(fit, BestForNo)
-      }
-    }
     if (i == 1) {
       ## TODO I do have such a matrix already with that info or??
       t0 <- subset.matrix(allparks, !duplicated(allparks[, "Run"]))

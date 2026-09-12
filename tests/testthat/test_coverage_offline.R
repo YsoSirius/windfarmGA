@@ -109,6 +109,15 @@ test_that("terrain_model works from synthetic rasters (no download)", {
   reused <- windfarmGA:::terrain_resolve(stored, TRUE, area)
   expect_identical(reused$cclRaster, res$cclRaster)
 
+  skip_if_not(is_leaflet_installed())
+  prep <- windfarmGA:::leaflet_prepare_terrain(list(
+    srtm_crop = elev_cells, cclRaster = res$cclRaster
+  ))
+  p <- plot_leaflet(
+    resultrect, area, which = 1, orderitems = FALSE, terrain = prep
+  )
+  expect_s3_class(p, "leaflet")
+
   na_dem <- dem
   terra::values(na_dem) <- NA
   expect_warning(terrain_model(

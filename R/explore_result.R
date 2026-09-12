@@ -1,12 +1,11 @@
 #' @title Shiny explorer for a GA result
 #' @name explore_result
 #' @description One-page viewer for a [genetic_algorithm()] result: Leaflet
-#'   map of that generation's best layout, and one plotly figure with
-#'   fitness, operator rates and population (subplots). New fitness
-#'   maxima are marked; click a marker to jump to that generation.
-#'   The cell heatmap is not included: it rebuilds
-#'   the site grid on every draw and adds little next to the map.
-#'   Use [plot_cell_heatmap()] or [plot_generation()] for that offline.
+#'   map of that generation's best layout (downwind wake cones, optional
+#'   terrain layers), a wind rose, and one plotly figure with fitness,
+#'   operator rates and population. New fitness maxima are marked; click
+#'   a marker to jump to that generation. The cell heatmap is not
+#'   included: use [plot_cell_heatmap()] or [plot_generation()] offline.
 #'   Requires Suggests `shiny`. Plotly is used when installed.
 #' @export
 #'
@@ -35,7 +34,15 @@ explore_result <- function(result, area) {
   s <- ga_series(result)
   cen <- tryCatch(population_census(result), error = function(e) NULL)
   has_leaflet <- is_leaflet_installed()
+  has_ggplot <- is_ggplot2_installed()
   overall <- ga_result_best(result)
+  wind <- ga_result_wind(result)
+  terrain_ll <- leaflet_prepare_terrain(ga_result_terrain(result))
+  rose <- if (has_ggplot) {
+    tryCatch(explore_windrose_plot(wind), error = function(e) NULL)
+  } else {
+    NULL
+  }
 
   ui <- shiny::fluidPage(
     shiny::titlePanel("windfarmGA"),
@@ -46,21 +53,27 @@ explore_result <- function(result, area) {
           "gen", "Generation",
           min = 1L, max = s$n, value = s$n, step = 1L, width = "100%"
         ),
-        shiny::verbatimTextOutput("stats")
+        shiny::verbatimTextOutput("stats"),
+        if (!is.null(rose)) {
+          shiny::tagList(
+            shiny::h5("Wind rose"),
+            shiny::plotOutput("windrose", height = "180px")
+          )
+        }
       ),
       shiny::column(
         9,
         if (has_leaflet) {
-          leaflet::leafletOutput("map", height = "440px")
+          leaflet::leafletOutput("map", height = "540px")
         } else {
           shiny::plotOutput("map_static", height = "440px")
         }
       )
     ),
     if (has_plotly) {
-      plotly::plotlyOutput("series", height = "700px")
+      plotly::plotlyOutput("series", height = "900px")
     } else {
-      shiny::plotOutput("series_gg", height = "640px")
+      shiny::plotOutput("series_gg", height = "900px")
     }
   )
 
@@ -100,6 +113,9 @@ explore_result <- function(result, area) {
           sprintf("Fitness:        %s", format(cur$fitness, digits = 6))
         )
       }
+      if (!is.null(terrain_ll)) {
+        lines <- c(lines, "Terrain: toggle Elevation / Wind multiplier")
+      }
       if (!is.null(overall)) {
         lines <- c(
           lines,
@@ -117,7 +133,9 @@ explore_result <- function(result, area) {
         plot_leaflet(
           result, area,
           which = input$gen,
-          orderitems = FALSE
+          orderitems = FALSE,
+          wind = wind,
+          terrain = terrain_ll
         )
       })
     } else {
@@ -128,6 +146,12 @@ explore_result <- function(result, area) {
           best = 1, plot_en = 1,
           terrain = FALSE, plot_grid = TRUE
         )
+      })
+    }
+
+    if (!is.null(rose)) {
+      output$windrose <- shiny::renderPlot({
+        print(rose)
       })
     }
 
@@ -173,6 +197,13 @@ explore_result <- function(result, area) {
   invisible(app)
 }
 
+explore_windrose_plot <- function(wind) {
+  if (is.null(wind) || !is.data.frame(wind) || !nrow(wind)) {
+    return(NULL)
+  }
+  plot_windrose(wind, plot = FALSE)
+}
+
 explore_gen_shape <- function(gen) {
   list(list(
     type = "line",
@@ -205,15 +236,15 @@ explore_series_plotly <- function(s, cen, gen, source = "explore_ga") {
   improved <- which(s$improved)
   p_fit <- plotly::plot_ly(source = source)
   p_fit <- plotly::add_lines(
-    p_fit, x = s$gen, y = s$fit_max, name = "Max",
+    p_fit, x = s$gen, y = s$fit_max, name = "Max Fitness",
     legendgroup = "fit", line = list(color = "#1B4F72", width = 2)
   )
   p_fit <- plotly::add_lines(
-    p_fit, x = s$gen, y = s$fit_mean, name = "Mean",
+    p_fit, x = s$gen, y = s$fit_mean, name = "Mean Fitness",
     legendgroup = "fit", line = list(color = "#2980B9", width = 1.6)
   )
   p_fit <- plotly::add_lines(
-    p_fit, x = s$gen, y = s$fit_min, name = "Min",
+    p_fit, x = s$gen, y = s$fit_min, name = "Min Fitness",
     legendgroup = "fit", line = list(color = "#AED6F1", width = 1.4)
   )
   if (length(improved)) {
@@ -270,22 +301,22 @@ explore_series_plotly <- function(s, cen, gen, source = "explore_ga") {
     nrows = length(plots),
     shareX = TRUE,
     titleY = TRUE,
-    margin = 0.06
+    margin = 0.04
   )
   ply <- plotly::layout(
     ply,
-    hovermode = "closest",
+    hovermode = "x unified",
     legend = list(
       orientation = "h",
       x = 0,
-      y = 1.22,
+      y = 1.1,
       yanchor = "bottom",
       xanchor = "left",
       font = list(size = 11),
       bgcolor = "rgba(255,255,255,0.95)",
       tracegroupgap = 8
     ),
-    margin = list(t = 140, l = 55, r = 24, b = 48),
+    margin = list(t = 10, l = 55, r = 24, b = 48),
     xaxis = list(title = "Generation"),
     shapes = explore_gen_shape(gen)
   )

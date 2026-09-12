@@ -1,309 +1,61 @@
 # windfarmGA 5.0.0
 
-Breaking release: the layout chromosome is no longer a 0/1 string.
+Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 
 ## Breaking
-* Each individual is `n` unique grid-cell IDs, not a binary vector over all
-  cells. `genetic_algorithm` runs
+* Genome is `n` cell IDs. The loop is
   `selection` → `set_crossover` → `swap_mutation` → `get_grids` → `fitness`.
-  `trimton` is not in the loop.
-* `selection()` returns an ID matrix (`n` × selected) plus fitness. Code that
-  piped `selection()` into `crossover()` must convert IDs to binary or switch
-  to `set_crossover()`.
-* Public API is snake_case. `Polygon1` → `area`, `vdirspe` → `wind`,
-  `Rotor` → `rotor`, `mutr` → `mutation_rate`, `selstate` → `selection_mode`,
-  `Projection` → `crs`. `plotit` is gone (`plot` only).
-* Unused loop args `crossPart1` and `trimForce` are removed from
-  `genetic_algorithm()`. Invalid `selection_mode` errors (no interactive
-  `readinteger` prompt). Defaults live in the function signature, not in
-  `if (missing())` or the Rd file.
-* Related formals: `fitness(population, area, rotor, wind, ...)`,
-  `calculate_energy(layout, area, rotor, wind, wake_angle, wake_distance, ...)`,
-  `selection(fit, grid, share, ...)`, `grid_area(area, ...)`,
-  `random_search(..., plot)`, `plot_windfarmGA(..., which_plot)`,
-  `plot_result(..., terrain, plot_grid)`.
-* Defaults: `selection_mode = "VAR"`, mutation `2/n` (was often `0.8`), `n_elite = 3`.
-  New session options (inject, immigrants, seasons, neighbour local search)
-  change search behaviour even if you call `genetic_algorithm()` the same way.
+  `trimton` is not in the loop. `selection()` returns an ID matrix;
+  pipe it into `set_crossover()`, not the old binary `crossover()`.
+* Public API is snake_case: `area`, `wind`, `rotor`, `mutation_rate`,
+  `selection_mode`, `crs`. `plotit` is now `plot`. Unused loop args
+  `crossPart1` and `trimForce` are gone. Invalid `selection_mode` errors
+  (no interactive prompt).
+* Defaults that change a run: `selection_mode = "VAR"`, mutation `2/n`
+  (was often `0.8`), `n_elite = 3`. Session options (inject, immigrants,
+  seasons, local search) also change search behaviour.
 * Legacy `crossover()`, `mutation()` and `trimton()` still accept 0/1
   chromosomes. New exports: `set_crossover()`, `swap_mutation()`.
 
+## New
+* Results have class `windfarmGA` (`print` / `plot`). `ga_options()`
+  lists or sets `options(windfarmGA.*)`.
+* `explore_result()`: Shiny map of a generation, wind rose, downwind
+  wake cones, optional terrain layers + turbine popups. Click a new
+  fitness max to jump the slider.
+* Fitness is \(E \times (\eta/100)^w\) (`windfarmGA.fitness_efficiency_weight`,
+  default 1). Log hub-height profile (power law via
+  `windfarmGA.wind_profile = "power"`). Optional manufacturer curve
+  (`ga_options(power_curve = …)`, `read_power_curve()`, `plot_power_curve()`).
+  `Cp` default 0.45; optional cut-in / rated / cut-out.
+* Elitism archives the best layout (no fitness × 10). Elite children,
+  neighbour local search, fitness cache, immigrants, spatial crossover.
+  Early stop only after `stall_generations` idle gens (no new layout,
+  cell, or best).
+* Terrain: pass a DEM (`terrain = dem`) to skip the download. Per-cell
+  height / \(z_0\) / \(k\) / air density are computed once and stored
+  as `terrainModel` for `plot_result` and `random_search`.
+* `random_search()` jitters turbines inside their cells. Heights are
+  read by name. `terrain` / `weibull = NULL` follow the GA flags.
+* Wake search and circle overlap run in C++. Turbines exactly upwind
+  (`alpha = 0`) are kept (old triangle test dropped them).
+* Wind helpers: `wind_from_uv()`, `wind_from_series()`. GitHub-only
+  extras in `experimental/` (ERA5/GWA, noise, rayshader) are not in
+  the CRAN tarball.
+* Plots wait for Enter between pages when interactive. `plot_generation()`
+  shows every layout in a generation. `plot_viewshed()` projects lon/lat
+  DEMs first.
+
 ## Fixes
-* `print.windfarmGA` lists turbines, rotor, hub, grid, GA settings,
-  terrain/Weibull, the stored wind table, and a "New best" table
-  (generation, energy, efficiency, fitness) plus the generation of
-  the overall maximum.
-* Codecov: ignore the Shiny explorer (`R/explore_result.R`). Offline
-  tests cover `terrain_model` / `calculate_energy` terrain+Weibull
-  (CI used to `skip_on_ci` the download file), `pkg_installed`,
-  wind-helper errors, and more viewshed / wake edges. `.Rbuildignore`
-  was dropping every `*.csv`, so `inst/extdata/clc_legend.csv` never
-  reached the check install and `terrain_model()` failed with
-  "cannot open the connection". The legend stays in the tarball;
-  offline tests pass their own roughness CSV. Extra branch tests
-  (`test_coverage_branches.R`) walk Weibull-from-file, the power-law
-  profile, `plot_power_curve`, set-crossover / mutation / trimton
-  edges, `fitness(parallel=TRUE)` via `registerDoSEQ()`, a short GA
-  with terrain+FIX, plot helpers, and `random_search(terrain)`.
-  Weibull speed in `genetic_algorithm()` used `values(k)` on a masked
-  raster, so every cell became NA and fitness crashed.
-* Terrain fitness looks up height, wind multiplier, \(z_0\), \(k\) and
-  air density from a per-cell table built once after `terrain_model()`.
-  Pass a DEM (`terrain = dem`) to skip the `elevatr` download. The GA
-  stores rasters + the table in `terrainModel`; `plot_result` and
-  `random_search` reuse it instead of downloading again. `plot = TRUE`
-  still draws the debug rasters.
-* Unused Rcpp leftovers `angles_CPP`, `euc_CPP` and `point_2_line_CPP`
-  are gone. Wake geometry lives in `pair_in_wake` / `dist_angles_one`.
-  Wake tests now hit the empty-arg and index guards in
-  `circle_intersection_CPP`, `get_dist_angles_CPP` and
-  `turbine_influences_CPP`, plus `pair_in_wake` when `lb` is too far
-  or not finite. The old `calculate_energy` NA-fill for `betha` /
-  `gamma` is gone (`acos` is clamped in C++). Viewshed reuses a
-  projected turbine CRS when the DEM is lon/lat; empty WKT falls
-  through to UTM instead of a stale `proj4string`. Tests cover
-  `swap_mutation` with `min_swaps = 0` and prefix column names in
-  `read_power_curve`.
-* `plot_farm_3d` pins use heightmap column/row. Lon/lat + a numeric
-  `extent` attached the label line at z = 0, so turbines ran down
-  through the DEM. 3ds Max OBJs are Z-up while rayshader rgl is Y-up:
-  without a 90° tilt they lay flat and sank into the mesh. Towers are
-  now vertical (cylinder along Y, OBJ rotated +90° about X) and scaled
-  in rgl units (`hub / zscale`). The wind arrow sits on the upwind DEM
-  rim, above the highest terrain, not across the park. Jensen cones
-  stay at hub height (two outer Jensen lines, no centre ray);
-  turbines stay black. The site outline is densified and draped on the
-  DEM so long edges no longer cut through hills. `title3d` no longer
-  uses a degree sign (rgl `text3d` rejected it).
-* R CMD check: import `stats::ave` (used in `calculate_energy`).
-  `@export` on `get_dist_angles` was attached to `as_xy_matrix`, so the
-  function was not exported, the Rd `\usage` only listed `as_xy_matrix(t)`,
-  and the examples failed with "could not find function".
-* `test-coverage` workflow was invalid YAML (`with:` missing under
-  `setup-r-dependencies`), so GitHub skipped the job in 0s and the
-  Codecov badge never updated. Upload now uses `codecov-action` plus
-  `CODECOV_TOKEN` (anonymous `covr::codecov()` hits HTTP 429).
-* `ga_options(...)` is silent when setting; only `ga_options()` prints
-  the table. The climate-helper demo no longer dumps options twice.
-* `plot_windrose()` explains the ggplot2-4 / old-systemfonts clash
-  (`font_info(..., weight=)`). Update with `install.packages("systemfonts")`.
-* With `elitism = FALSE`, `nindiv$cells_elite` is 0 instead of `NA`. The GA
-  input tests treat any `NA` in the result as a failure.
-* pkgdown reference lists the new exports (`as_windfarmGA`, `explore_result`,
-  `ga_options`, `generation_layouts`, `population_census`, `set_crossover`,
-  `swap_mutation`). `plot_power_curve()` Rd no longer uses `\cdot`.
-  `plots.R` is ASCII-only. ggplot aesthetics are in `globalVariables`.
-  Rd documents `wnkl`, `trimForce` and `plot_fitness_evolution(interactive)`.
-* `experimental/draw_shape()` uses `mapedit::editMap(..., editor = "leafpm")`.
-  mapedit 0.8 dropped leaflet.extras (off CRAN); older mapedit still calls
-  `dplyr::select_()`, which current dplyr rejects.
-* Power-curve energy was the first turbine's kW (often rated power and 100%
-  efficiency), not the park sum. `energy_calc_CPP` already summed; table
-  lookup now does the same. Cut-in / rated / cut-out apply only when no
-  table is set (as documented). On the rated plateau, wakes may still leave
-  every turbine at rated power — then layouts look identical and the GA
-  cannot improve energy. Use hub wind in the rising part of the curve.
-* CRAN tests for `plot_windrose()` failed on r-devel with ggplot2 >= 4.0.0.
-  ggplot2 4.0 uses S7 plot objects, so they are no longer recursive lists and
-  `class(.)[1]` is no longer `"gg"`. Checks now use
-  `inherits(., c("ggplot", "ggplot2::ggplot"))`, which works with ggplot2 3.x
-  and 4.x.
-* `crossover`: parent fitness is now `(a + b) / 2` (operator precedence bug).
-* `isSpatial`: assigned CRS is the given `proj`, not hardcoded EPSG:3035.
-* Fitness is `EnergyOverall * (EfficAllDir/100)^w` with
-  `options(windfarmGA.fitness_efficiency_weight)` (default 1).
-* Elitism copies the best layouts into the next generation instead of
-  multiplying their fitness by 10.
-* Duplicate layouts after crossover/mutation (sorted ID keys) are dropped.
-* Logarithmic hub-height wind profile (legacy power law via
-  `options(windfarmGA.wind_profile = "power")`).
-* Power coefficient `options(windfarmGA.Cp)` defaults to 0.45; optional
-  cut-in / rated / cut-out speeds.
-* parallel clusters are always stopped via `on.exit`; dead Weibull crop
-  call removed.
-* Diagnostic plots no longer crash on negative leftover EQU values; rates
-  are drawn as percentages, not as palette indices.
-* Plot flags are named `plot` (`plotit` removed).
-* `genetic_algorithm()` results have class `windfarmGA` with `print()` /
-  `plot()`. `ga_options()` lists or sets `windfarmGA.*` options.
-  `explore_result()` is a one-page Shiny viewer (Suggests): Leaflet map
-  of the selected generation's best layout, plus one plotly figure
-  (fitness / rates / population subplots). New fitness maxima are
-  marked; click a marker to jump the slider to that generation. The
-  plotly legend sits further above the figure so it does not cover the
-  series. The cell heatmap is omitted there (it rebuilds the grid and
-  is slower than the map). `plot_viewshed()` projects lon/lat DEMs
-  (e.g. elevatr) before `terra::viewshed`.
-* Optional manufacturer `data.frame(ws, power)` via
-  `ga_options(power_curve = ...)` / `plot_power_curve()`. GitHub-only
-  extras live in `experimental/` (not the CRAN tarball): draw a site
-  polygon, circle-overlap app. rayshader and noise stay local.
-* `plot_windrose()` uses a white panel instead of the gray fill and thick
-  minor rings.
-* `plot_population()` was slow because `population_census()` rescanned
-  every layout with `Run == r` per individual. Counts now come from `nindiv`
-  (`cells`, `cells_elite` stored during the run); the fallback uses `split()`.
-  Elite offspring is green (`#27AE60`), elites stay orange.
-
-## Features
-* `experimental/noise.R` and `experimental/rayshader.R` replace the old
-  `_experiment/` sketches: ISO 9613-2 Adiv+Aatm+Agr on a terra grid
-  (`noise_from_result`), and rayshader labels via `raster_to_matrix`
-  + extent (`plot_farm_3d_from_result`). Wind rose / `wind` adds an
-  upwind shadow (ISO itself is downwind only). Still not Suggests / fitness.
-* `random_search()` / `random_search_single()` still take a 5.0.0
-  `genetic_algorithm()` result. Turbines are jittered inside their
-  cells (continuous Feinoptimierung after the discrete GA). Heights
-  are read by name (`Reference Height`, `Rotor Height`); the old
-  row indices 12/13 pointed at the wrong rows after Trim/Crossover
-  were dropped from `inputData`. `terrain = NULL` / `weibull = NULL`
-  follow the GA flags. Pass `weibull_src` again (rasters are not
-  stored in `result`). README realistic workflow step 6.
-* Wake-pair search (`get_dist_angles` / `turbine_influences`) runs in
-  Rcpp instead of an R loop around `point_2_line_CPP` / `angles_CPP`.
-  Turbines exactly upwind (same X after rotation, e.g. a grid column
-  with `wd = 0`) are kept with `alpha = 0`. The old triangle test
-  dropped them (`Laenge_A = 0` → NaN angles), so `plot = TRUE` showed
-  only green markers and 100% efficiency.
-* `circle_intersection()` is vectorized C++ (`circle_intersection_CPP`).
-  `calculate_energy()` no longer runs an R `sapply` per wake row.
-  Wake totals per turbine (`V_i`, `TotAbschProz`, `V_New`, `Rect_ID`)
-  use `ave()` / index instead of four `lapply` loops.
-* Wind-climate helpers (no extra Suggests): `wind_from_uv()` bins ERA5-style
-  u/v into `ws`/`wd`/`probab`; `wind_from_series()` does the same from a
-  mast time series; `read_power_curve()` parses NREL/IEA CSVs
-  (`Wind Speed [m/s]`, `Power [kW]`, optional `Ct`). Wrappers for bReeze,
-  ecmwfr/mcera5 and `nrel_fetch_curve()` live in
-  `experimental/climate_helpers.R` (plus `gwa_download_country()` for
-  Global Wind Atlas country GeoTIFFs). `wind_from_era5()` accepts the
-  list from `get_era5_wind()` (`experimental/download_ERA5_historic.R`)
-  or its `$hourly` table with `u100`/`v100`. Downloads go to a unique
-  folder under `tempdir()` unless `out_dir` is set. The helper walkthrough is local:
-  `source("_experiment/test_climate_helpers.R"); test_climate_helpers()`.
-  Profile `calculate_energy()` with `experimental/profile_energy.R`.
-  The README realistic workflow uses ERA5 (`get_era5_wind` →
-  `wind_from_era5`) for the rose and GWA Weibull for spatial speed,
-  not random u/v.
-* Combinatorial genome: each individual is `n` unique grid-cell IDs, not a
-  0/1 string over all cells. `genetic_algorithm` now runs
-  `selection` → `set_crossover` → `swap_mutation` → `get_grids` → `fitness`.
-  `trimton` is no longer in the loop (always exactly `n` turbines).
-* `plot_windfarmGA()`, `plot_parkfitness()`, `plot_population()` and
-  `plot_generation()` wait for Enter between every page in an interactive
-  session (Plots pane, so pages are not overwritten). plotly is only used
-  when `ask = FALSE`. `plot_population()` has a bottom legend, an elite
-  cell-count line (the population can sit at the full grid size, e.g. 70,
-  while elites shrink), and a park-efficiency page.
-* `plot_generation(result, area, generation = 122)` shows every layout
-  evaluated in that generation (cell occupancy + all turbines, best in
-  black, plus the top distinct maps). `generation_layouts()` returns the
-  table. `plot_parkfitness()` is ggplot2 with the legend outside; rates
-  are ordered Selection / Crossover inject / Mutation. Hoverable via
-  plotly in an interactive session.
-* Fitness cache: identical layouts (sorted cell IDs) are not re-evaluated.
-  Early stop is not "max unchanged". The run uses the full `iteration`
-  budget unless `options(windfarmGA.stall_generations)` consecutive
-  generations produce no new layout, no new cell and no new best
-  (set to 0 to never stop early). A flat maximum while new sites are
-  still tried is treated as ongoing search.
-* Weak elitism: the current best layout is archived unchanged. Each elite
-  then produces several mutated copies
-  (`options(windfarmGA.elite_children)`, default 3) and mixes with weaker
-  layouts (`windfarmGA.elite_mix`, default 2, inject 0 so elite structure
-  stays). Extra mutants when the max has been flat for 10 generations.
-  Elite count starts at `n_elite` (default 3), grows by 2–3 during a long
-  refine stall, and drops by 1 in a disturbance pulse.
-  Operator rates follow seasons with the same three operators.
-  Explore: inject in `[0.20, 0.40]` and mutation rise while the max is
-  stalling (VAR selection starts near 55%). Refine: after
-  `options(windfarmGA.refine_min_gen)` (18) and
-  `options(windfarmGA.refine_after)` (12) generations without a new max
-  at cell coverage ≥ 0.35, inject decays toward 0.15, mutation toward
-  `2/n`, selection toward ~45%. Refine is not a trap: after
-  `options(windfarmGA.refine_hold)` (25) generations a disturbance pulse
-  of `options(windfarmGA.explore_pulse)` (10) gens raises inject/mutation
-  again even if new maxes still appear, then refine resumes. Local search
-  slides one elite turbine to a neighbouring empty cell (rook / hex),
-  not to a random cell anywhere on the grid.
-* Mutation and immigrants prefer rarely visited cells. Crossover is spatial
-  (half-plane) with probability `options(windfarmGA.spatial_crossover)`
-  (default 0.5). Elites get a memetic local search
-  (`windfarmGA.local_search_elites` default 5 /
-  `local_search_tries` default 6).
-* Default `selection_mode` is `VAR` (selection share follows fitness). Mutation
-  and crossover inject rates adapt each generation from max fitness and
-  the top quartile (immigrants no longer freeze the controller).
-* `options(windfarmGA.max_selection)` default is 300 (was 100), matching
-  `max_population`.
-* Default mutation rate is `2/n` per turbine, with at least one swap
-  (`options(windfarmGA.min_swaps)`). Set-crossover injects unused cells
-  (`options(windfarmGA.crossover_inject)`, default 0.25) so the search is
-  not trapped in the parental union. Each generation adds random immigrant
-  layouts (`options(windfarmGA.immigrants)`, default 3). Default elite
-  count is 3.
-* Report `inst/reports/memetic-layout-ga.md`: short English note on the
-  combinatorial genome, neighbourhood local search, and the north-wind
-  benchmark (defaults after that: LS 5×6). Figure: `fig-north-gold.png`.
-* README documents all `genetic_algorithm()` arguments and
-  `options(windfarmGA.*)` (physics, inject, immigrants, seasons, neighbour
-  local search). Examples no longer pass leftover `FIX` / `mutation_rate = 0.8` /
-  `trimForce` as if they were still the recommended setup. Plotting
-  examples match the current functions (`plot_population`, last-generation
-  `plot_generation`, no removed `windfarmGA()` entry point).
-* `selection()` returns an ID matrix (`n` × selected) plus fitness; it no
-  longer expands layouts to a binary grid.
-* `get_grids()` accepts ID matrices and still accepts legacy binary matrices.
-* Exported legacy API kept: `crossover()`, `mutation()`, `trimton()` still
-  work on 0/1 chromosomes. New exports: `set_crossover()`, `swap_mutation()`.
-
-## Open / Todos
-* Submit 5.0.0 to CRAN (ggplot2 4.x tests plus combinatorial genome).
-  Re-check pkgdown and Rd after the reference-index / `\cdot` / ASCII fixes.
-* parallel and terrain tests remain skipped on CRAN (`skip_on_cran`).
-* Consider splitting the large `test_plots.R` block so a single assertion
-  failure does not hide later plot checks.
-* `plot_heatmap()` was never reimplemented; use `plot_cell_heatmap()`.
-* Callers that piped `selection()` into `crossover()` must convert IDs to
-  binary or switch to `set_crossover()`.
-* Tune `iteration` as the real runtime budget. `stall_generations` now
-  only fires when the search is idle (no new layouts/cells), not when
-  the record is merely flat. If rates freeze at the refine floor while
-  the max still creeps, the disturbance pulse should lift them; shorten
-  `windfarmGA.refine_hold` or lengthen `explore_pulse` if it still feels
-  stuck. Local search now slides to a neighbour cell.
-* Spatial EQU/RAN crossover is unused; set-crossover can use a half-plane
-  split when coordinates are passed.
-* `windfarmGA.fitness_efficiency_weight` is a user preference, not a
-  search parameter. Default `w = 1` is un-tuned. Try `0` (energy only)
-  vs `1` vs `2` on the same site if wake vs yield trade-off matters.
-* ERA5 / Copernicus (`COPERNICUS_CLIMATE_DATA`) stays for the directional
-  rose only. Spatial mean speed should come from GWA Weibull A/k
-  (`gwa_download_country()`), not the ERA5 grid.
-* `experimental/noise.R` is an ISO 9613-2 sketch (Adiv + Aatm + Agr)
-  plus an optional upwind extra from the wind rose. No octave spectrum.
-  Do not treat it as a TA-Lärm report or add it to the GA fitness.
-* Do not chase 100% on `explore_result.R` — it is a Shiny UI. Codecov
-  ignores that file. Terrain coverage on CI needs synthetic rasters,
-  not `skip_on_ci` downloads.
-
-## Ideas
-* Census could also show immigrants, cache hits and local-search tries if
-  those counts are stored per generation.
-* Pin or document ggplot2 compatibility in `Suggests` if further S7 class
-  cleanup removes the legacy `"ggplot"` S3 class.
-* Noise (ISO 9613-2 sketch) and rayshader 3D live in `experimental/`
-  (`noise_from_result`, `plot_farm_3d_from_result`). Not in Suggests,
-  not in fitness. The old `_experiment/` scripts stretched distances
-  by wind bearing and overwrote `plot_farm_3d` arguments.
-* With a manufacturer curve, run the GA at hub winds in the rising part
-  (or a Weibull climate), not only on the rated plateau.
-* `turbine_influences()` / `get_dist_angles()` now do the wake-pair
-  search in Rcpp (`turbine_influences_CPP`). `circle_intersection()`
-  is vectorized C++ as well. \(V_i\) / `TotAbschProz` use `ave()`
-  (same RMS and sums, in row order) instead of `unlist(lapply(unique()))`.
-* Optional Bastankhah wake beside Jensen (`ga_options(wake_model)`).
-* Use GWA `air-density` over the site for `windfarmGA.air_rh` instead of
-  the ISA default 1.225.
+* Weibull speed no longer becomes all-NA after masking (fitness crash).
+* Power-curve energy is the park sum, not the first turbine.
+* `clc_legend.csv` is in the tarball again (`.Rbuildignore` had dropped
+  every CSV).
+* `crossover` parent fitness is `(a + b) / 2`. `isSpatial` uses the
+  given CRS, not hardcoded 3035.
+* `plot_windrose()` works with ggplot2 4.x (S7). If ggplot2 4 meets an
+  old `systemfonts`, update `systemfonts`.
+* Parallel clusters always stop via `on.exit`.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0

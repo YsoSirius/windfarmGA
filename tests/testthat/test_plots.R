@@ -304,6 +304,24 @@ test_that("Test Plotting Functions", {
   evo_res <- plot_evolution(resultrect, ask = FALSE)
   expect_true(is.null(evo_res))
 
+  ## Wake cones (downwind of meteo wd) #######################
+  cone0 <- windfarmGA:::wake_cone_one(0, 0, 0, 20, 100)
+  expect_lt(mean(sf::st_coordinates(cone0)[, 2]), 0)
+  cone90 <- windfarmGA:::wake_cone_one(0, 0, 90, 20, 100)
+  expect_lt(mean(sf::st_coordinates(cone90)[, 1]), 0)
+  wtab <- windfarmGA:::leaflet_wind_for_cones(
+    data.frame(ws = 8, wd = 0, probab = 100)
+  )
+  expect_equal(nrow(wtab), 1L)
+  expect_match(windfarmGA:::leaflet_turbine_popup(12.5), "12.5")
+  cells <- data.frame(
+    ID = 1, elevation = 400, wind_mult = 1.05, z0 = 0.03, k = 0.07, air_rh = 1.2
+  )
+  expect_match(windfarmGA:::leaflet_turbine_popup(10, cells), "Elevation")
+  expect_true(inherits(windfarmGA:::explore_windrose_plot(
+    data.frame(ws = 8, wd = 0)
+  ), "ggplot"))
+
   ## plot_leaflet #######################
   skip_if(compareVersion("4.3.0", paste0(R.version$major,".",R.version$minor)) == 1,
           "Skip as the version is <= 4.3.0. Errors in test_plots unresolved (leaflet::addMarkers(...))")

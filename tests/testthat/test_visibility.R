@@ -59,4 +59,10 @@ test_that("Test Viewshed Functions", {
   plt_s <- plot_viewshed(r_s, cbind(-70.5, -33.5), h1 = 10, h2 = 0, plot = FALSE)
   expect_s4_class(plt_s, "SpatRaster")
   expect_false(isTRUE(terra::is.lonlat(plt_s)))
+
+  r_edge <- terra::rast(
+    xmin = 170, xmax = 179, ymin = 8, ymax = 12,
+    nrows = 6, ncols = 6, crs = "EPSG:4326"
+  )
+  expect_equal(windfarmGA:::viewshed_metric_crs(r_edge), "EPSG:32660")
 })

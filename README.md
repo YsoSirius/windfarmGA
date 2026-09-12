@@ -158,7 +158,7 @@ The modified \(z_0\) also scales hub-height wind via the log profile
 (not a separate `plot_result` panel).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png" width="600"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png"/>
 </p>   
 
 
@@ -228,7 +228,8 @@ result <- genetic_algorithm(
 
 ## 5. Plot
 print(result)
-plot_result(result, area)
+plot(result, area)
+plot_result(result, area, terrain = TRUE)
 plot_parkfitness(result)
 plot_leaflet(result, area, which = 1)
 explore_result(result, area)
