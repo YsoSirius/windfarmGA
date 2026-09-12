@@ -147,6 +147,10 @@ test_that("mutation, get_grids, selection, trimton edges", {
     swap_mutation(c(1L, 2L), 1:2, p = 0, min_swaps = 0),
     matrix(c(1L, 2L), ncol = 1)
   )
+  expect_equal(
+    swap_mutation(c(1L, 2L), 1:10, p = 0, min_swaps = 0),
+    matrix(c(1L, 2L), ncol = 1)
+  )
   expect_length(get_grids(ids[, 1], g$grid)[[1]][, 1], 4)
 
   wind <- list(data.frame(ws = 8, wd = 0), 100)

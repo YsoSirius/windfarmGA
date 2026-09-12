@@ -34,6 +34,15 @@ test_that("Test Viewshed Functions", {
   expect_s4_class(plt_ll, "SpatRaster")
   expect_false(isTRUE(terra::is.lonlat(plt_ll)))
 
+  ## lon/lat DEM + already projected turbine CRS → reuse that WKT
+  locs_m <- sf::st_as_sf(st_sample(shape, 3, type = "random"))
+  expect_false(sf::st_is_longlat(sf::st_crs(locs_m)))
+  target <- windfarmGA:::viewshed_metric_crs(r_ll, sf::st_crs(locs_m))
+  expect_identical(target, sf::st_crs(locs_m)$wkt)
+  plt_mix <- plot_viewshed(r_ll, locs_m, h1 = 0, h2 = 0, plot = FALSE)
+  expect_s4_class(plt_mix, "SpatRaster")
+  expect_false(isTRUE(terra::is.lonlat(plt_mix)))
+
   ## filename + per-turbine observer height (same CRS as the file)
   f <- system.file("ex/elev.tif", package = "terra")
   r0 <- terra::rast(f)

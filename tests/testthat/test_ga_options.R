@@ -17,7 +17,11 @@ test_that("as_windfarmGA print and plot dispatch", {
   expect_s3_class(res, "windfarmGA")
   out <- paste(capture.output(print(res)), collapse = "\n")
   expect_match(out, "windfarmGA result")
-  expect_match(out, "generations")
+  expect_match(out, "Inputs")
+  expect_match(out, "turbines")
+  expect_match(out, "Wind")
+  expect_match(out, "New best")
+  expect_match(out, "generation")
   expect_error(plot(res), "polygon")
 })
 

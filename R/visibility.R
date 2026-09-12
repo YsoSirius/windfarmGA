@@ -79,7 +79,6 @@ viewshed_metric_crs <- function(r, loc_crs = NULL) {
     if (!is.null(wkt) && nzchar(wkt)) {
       return(wkt)
     }
-    return(loc_crs$proj4string)
   }
   e <- terra::ext(r)
   lon <- mean(c(e$xmin, e$xmax))

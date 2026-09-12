@@ -356,11 +356,6 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     )
     df_all <- do.call("rbind", tmp)
 
-    ## Sometimes betha / gamma are NA - Set to 0
-    if (any(is.na(df_all))) {
-      df_all[which(is.na(df_all))] <- 0
-    }
-
     ## Create a list for every turbine ##################
     ## Assign Windspeed to a filtered list with all turbines and add
     ## the rotor radius

@@ -25,4 +25,6 @@ as_windfarmGA(x)
 \description{
 Attach the \code{windfarmGA} class so \code{\link[=print]{print()}} and \code{\link[=plot]{plot()}}
 dispatch. New runs from \code{\link[=genetic_algorithm]{genetic_algorithm()}} already have this class.
+\code{print()} shows run inputs, the wind table, and each generation that
+set a new fitness maximum.
 }

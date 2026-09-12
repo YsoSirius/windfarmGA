@@ -230,6 +230,15 @@ test_that("read_power_curve understands NREL headers", {
   expect_equal(curve$ws, c(4, 8, 12))
   expect_equal(curve$power, c(80, 1200, 2000))
   expect_equal(attr(curve, "ct")$ct, c(0.8, 0.7, 0.4))
+
+  prefix <- read_power_curve(data.frame(
+    windspeedms_hub = c(4, 8),
+    powerkw_rated = c(80, 1200),
+    thrustcoefficient_avg = c(0.8, 0.5)
+  ))
+  expect_equal(prefix$ws, c(4, 8))
+  expect_equal(prefix$power, c(80, 1200))
+  expect_equal(attr(prefix, "ct")$ct, c(0.8, 0.5))
 })
 
 test_that("explore_result click maps New max to a generation", {

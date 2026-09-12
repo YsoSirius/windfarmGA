@@ -51,6 +51,8 @@ test_that("Test Wake Functions", {
   expect_lt(aov_vec[1], 260)
   expect_identical(aov_vec[2], 0)
   expect_identical(aov_vec[3], 10^2 * pi)
+  expect_error(circle_intersection(numeric(0), 10, 10, 10, 10), "non-empty")
+  expect_error(circle_intersection(10, numeric(0), 10, 10, 10), "non-empty")
 
 
   ## Test get_dist_angles Function --------------
@@ -109,6 +111,25 @@ test_that("Test Wake Functions", {
   expect_equal(unname(dummy[1, "Ax"]), 0)
   expect_equal(unname(dummy[1, "Bx"]), 0)
   expect_equal(unname(dummy[1, "By"]), 200)
+
+  far <- cbind(X = c(0, 0), Y = c(0, 500), Z = 1)
+  expect_equal(unname(get_dist_angles(far, 1, 20, 100, polYgon)[1, "Ax"]), 0)
+  inf_xy <- cbind(X = c(0, Inf), Y = c(0, 80), Z = 1)
+  expect_equal(unname(get_dist_angles(inf_xy, 1, 20, 100000, polYgon)[1, "Ax"]), 0)
+  expect_error(get_dist_angles(tfix, 0, 20, 100000, polYgon), "turbine index")
+  expect_error(get_dist_angles(tfix, 9, 20, 100000, polYgon), "turbine index")
+  expect_error(
+    windfarmGA:::get_dist_angles_CPP(matrix(numeric(), ncol = 2), 1L, 20, 100),
+    "X/Y"
+  )
+  expect_error(
+    windfarmGA:::get_dist_angles_CPP(matrix(1:3, ncol = 1), 1L, 20, 100),
+    "X/Y"
+  )
+  expect_error(
+    windfarmGA:::turbine_influences_CPP(matrix(numeric(), ncol = 2), 20, 100, 0),
+    "X/Y"
+  )
 
   expect_error(windfarmGA:::as_xy_matrix(cbind(1:3)), "X and Y")
   expect_equal(ncol(windfarmGA:::as_xy_matrix(cbind(1:3, 4:6))), 3L)

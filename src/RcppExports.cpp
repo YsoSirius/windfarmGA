@@ -25,19 +25,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// angles_CPP
-NumericVector angles_CPP(NumericVector Aa, NumericVector Bb, NumericVector Cc);
-RcppExport SEXP _windfarmGA_angles_CPP(SEXP AaSEXP, SEXP BbSEXP, SEXP CcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type Aa(AaSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Bb(BbSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Cc(CcSEXP);
-    rcpp_result_gen = Rcpp::wrap(angles_CPP(Aa, Bb, Cc));
-    return rcpp_result_gen;
-END_RCPP
-}
 // energy_calc_CPP
 double energy_calc_CPP(NumericVector wind_speed, NumericVector rotor_radius, NumericVector air_rh);
 RcppExport SEXP _windfarmGA_energy_calc_CPP(SEXP wind_speedSEXP, SEXP rotor_radiusSEXP, SEXP air_rhSEXP) {
@@ -48,32 +35,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type rotor_radius(rotor_radiusSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type air_rh(air_rhSEXP);
     rcpp_result_gen = Rcpp::wrap(energy_calc_CPP(wind_speed, rotor_radius, air_rh));
-    return rcpp_result_gen;
-END_RCPP
-}
-// euc_CPP
-float euc_CPP(float x1, float x2, float y1, float y2);
-RcppExport SEXP _windfarmGA_euc_CPP(SEXP x1SEXP, SEXP x2SEXP, SEXP y1SEXP, SEXP y2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< float >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< float >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< float >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< float >::type y2(y2SEXP);
-    rcpp_result_gen = Rcpp::wrap(euc_CPP(x1, x2, y1, y2));
-    return rcpp_result_gen;
-END_RCPP
-}
-// point_2_line_CPP
-NumericVector point_2_line_CPP(NumericVector x, NumericVector y);
-RcppExport SEXP _windfarmGA_point_2_line_CPP(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(point_2_line_CPP(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -123,10 +84,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_windfarmGA_rotate_CPP", (DL_FUNC) &_windfarmGA_rotate_CPP, 5},
-    {"_windfarmGA_angles_CPP", (DL_FUNC) &_windfarmGA_angles_CPP, 3},
     {"_windfarmGA_energy_calc_CPP", (DL_FUNC) &_windfarmGA_energy_calc_CPP, 3},
-    {"_windfarmGA_euc_CPP", (DL_FUNC) &_windfarmGA_euc_CPP, 4},
-    {"_windfarmGA_point_2_line_CPP", (DL_FUNC) &_windfarmGA_point_2_line_CPP, 2},
     {"_windfarmGA_circle_intersection_CPP", (DL_FUNC) &_windfarmGA_circle_intersection_CPP, 5},
     {"_windfarmGA_get_dist_angles_CPP", (DL_FUNC) &_windfarmGA_get_dist_angles_CPP, 4},
     {"_windfarmGA_turbine_influences_CPP", (DL_FUNC) &_windfarmGA_turbine_influences_CPP, 4},
