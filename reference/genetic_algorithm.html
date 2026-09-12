@@ -134,7 +134,10 @@ the site (<code>prop</code> in <code><a href="grid_area.html">grid_area()</a></c
 
 
 <dt id="arg-terrain">terrain<a class="anchor" aria-label="anchor" href="#arg-terrain"></a></dt>
-<dd><p>Terrain model (elevation + land cover).</p></dd>
+<dd><p>Terrain model (elevation + land cover). <code>TRUE</code>
+downloads a DEM via <code>elevatr</code>. Pass a DEM raster to skip the
+download. Per-cell values are computed once and stored in the
+result as <code>terrainModel</code> for <code><a href="plot_result.html">plot_result()</a></code> / <code><a href="random_search.html">random_search()</a></code>.</p></dd>
 
 
 <dt id="arg-elitism">elitism<a class="anchor" aria-label="anchor" href="#arg-elitism"></a></dt>

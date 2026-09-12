@@ -83,15 +83,15 @@ collision checks. Default is 2.2</p></dd>
 
 
 <dt id="arg-terrain">terrain<a class="anchor" aria-label="anchor" href="#arg-terrain"></a></dt>
-<dd><p><code>NULL</code> follows the GA <code>Topographie</code> flag. <code>TRUE</code> (or a
-DEM raster) rebuilds elevation + land cover via <code><a href="terrain_model.html">terrain_model()</a></code>.
+<dd><p><code>NULL</code> follows the GA <code>Topographie</code> flag. A stored
+<code>terrainModel</code> in <code>result</code> is reused. <code>TRUE</code> downloads only if
+nothing is stored. A DEM raster rebuilds via <code><a href="terrain_model.html">terrain_model()</a></code>.
 <code>FALSE</code> skips terrain even if the GA used it.</p></dd>
 
 
 <dt id="arg-weibull">weibull<a class="anchor" aria-label="anchor" href="#arg-weibull"></a></dt>
 <dd><p><code>NULL</code> follows the GA <code>Active Weibull</code> flag. A speed
-raster is used as-is. <code>TRUE</code> needs <code>weibull_src</code>. The GA does not
-store rasters in <code>result</code>.</p></dd>
+raster is used as-is. <code>TRUE</code> needs <code>weibull_src</code>.</p></dd>
 
 
 <dt id="arg-weibull-src">weibull_src<a class="anchor" aria-label="anchor" href="#arg-weibull-src"></a></dt>

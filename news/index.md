@@ -63,11 +63,18 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   tests (`test_coverage_branches.R`) walk Weibull-from-file, the
   power-law profile, `plot_power_curve`, set-crossover / mutation /
   trimton edges, `fitness(parallel=TRUE)` via `registerDoSEQ()`, a short
-  GA with terrain+Weibull+FIX, plot helpers, and
-  `random_search(terrain)`. Weibull speed in
+  GA with terrain+FIX, plot helpers, and `random_search(terrain)`.
+  Weibull speed in
   [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
   used `values(k)` on a masked raster, so every cell became NA and
   fitness crashed.
+- Terrain fitness looks up height, wind multiplier, (z_0), (k) and air
+  density from a per-cell table built once after
+  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
+  Pass a DEM (`terrain = dem`) to skip the `elevatr` download. The GA
+  stores rasters + the table in `terrainModel`; `plot_result` and
+  `random_search` reuse it instead of downloading again. `plot = TRUE`
+  still draws the debug rasters.
 - Unused Rcpp leftovers `angles_CPP`, `euc_CPP` and `point_2_line_CPP`
   are gone. Wake geometry lives in `pair_in_wake` / `dist_angles_one`.
   Wake tests now hit the empty-arg and index guards in

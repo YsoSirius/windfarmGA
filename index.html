@@ -149,14 +149,25 @@
 <span><span class="va">HexGrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hexa_area.html">hexa_area</a></span><span class="op">(</span><span class="va">area</span>, size <span class="op">=</span> <span class="op">(</span><span class="va">Rotor</span> <span class="op">*</span> <span class="va">fcr</span><span class="op">)</span>, plot_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">HexGrid</span><span class="op">)</span></span></code></pre></div>
 <p align="center">
-<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="300"></p>
+<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="600"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="terrain-effect-model">Terrain Effect Model<a class="anchor" aria-label="anchor" href="#terrain-effect-model"></a>
 </h2>
-<p>If <strong>terrain</strong> is <code>TRUE</code> in <code>genetic_algorithm</code>, terrain effects are taken into account. An elevation model and a Corine Land Cover raster are downloaded automatically, but can also be given manually. (<a href="https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4" class="external-link">Download a CLC raster</a>).</p>
-<p>If you want to include your own Land Cover Raster, you must assign the Raster Image path to the input variable <strong>ccl</strong>. The algorithm uses an adapted version of the Raster legend (“clc_legend.csv”), which is stored in the package subdirectory (/extdata). To use own values for the land cover roughness lengths, insert a column named <strong>Rauhigkeit_z</strong> to the .csv file. Assign a surface roughness length to all land cover types. Be sure that all rows are filled with numeric values and save the .csv file with “;” delimiter. Assign the .csv file path to the input variable <strong>ccl_roughness</strong>.</p>
+<p>If <strong>terrain</strong> is <code>TRUE</code> in <code>genetic_algorithm</code>, terrain effects are taken into account. A digital elevation model and a CORINE Land Cover raster are downloaded automatically. Prefer <code>terrain = dem</code> (a SpatRaster) to skip the download. Per-cell height, wind multiplier, (z_0), (k) and air density are computed once; <code>plot_result</code> / <code>random_search</code> reuse the stored <code>terrainModel</code> instead of downloading again. (<a href="https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4" class="external-link">Download a CLC raster</a>).</p>
+<p>To use your own land cover raster, provide its path via <strong>ccl</strong>. Surface roughness values are taken from <strong>extdata/clc_legend.csv</strong>. To use custom values, add a numeric <strong>Rauhigkeit_z</strong> column for all land cover classes, save the file with ; as delimiter, and provide its path via <strong>ccl_roughness</strong>.</p>
+<p><code>plot_result(..., terrain = TRUE)</code> shows the full chain:</p>
+<ul>
+<li>Elevation → wind-speed multiplier (DEM / mean DEM)</li>
+<li>Elevation → air density (barometric; labels vs 1.225 kg/m³)</li>
+<li>CORINE Land Cover → land-cover roughness (z_0)</li>
+<li>Elevation roughness (<code><a href="https://rspatial.github.io/terra/reference/terrain.html" class="external-link">terra::terrain</a></code>) × CLC (z_0) → modified (z_0)</li>
+<li>Modified (z_0) + hub height → wake decay (k = 0.5 / (h/z_0))</li>
+</ul>
+<p>The modified (z_0) also scales hub-height wind via the log profile (not a separate <code>plot_result</code> panel).</p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png" width="600"></p>
 </div>
 <div class="section level2">
 <h2 id="realistic-workflow-site-turbine-wind">Realistic workflow (site, turbine, wind)<a class="anchor" aria-label="anchor" href="#realistic-workflow-site-turbine-wind"></a>

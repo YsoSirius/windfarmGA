@@ -92,7 +92,12 @@ genetic_algorithm(
 
 - terrain:
 
-  Terrain model (elevation + land cover).
+  Terrain model (elevation + land cover). `TRUE` downloads a DEM via
+  `elevatr`. Pass a DEM raster to skip the download. Per-cell values are
+  computed once and stored in the result as `terrainModel` for
+  [`plot_result()`](https://YsoSirius.github.io/windfarmGA/reference/plot_result.md)
+  /
+  [`random_search()`](https://YsoSirius.github.io/windfarmGA/reference/random_search.md).
 
 - elitism:
 

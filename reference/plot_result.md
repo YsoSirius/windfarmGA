@@ -43,7 +43,9 @@ plot_result(
 
 - terrain:
 
-  Draw terrain rasters for the best layout
+  Draw terrain rasters for the best layout. Reuses `result$terrainModel`
+  when present; `TRUE` downloads only if nothing is stored. A DEM raster
+  rebuilds the model.
 
 - plot_grid:
 

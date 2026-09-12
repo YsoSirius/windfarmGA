@@ -79,7 +79,9 @@ and <code>2</code> plots the best efficiency solutions</p></dd>
 
 
 <dt id="arg-terrain">terrain<a class="anchor" aria-label="anchor" href="#arg-terrain"></a></dt>
-<dd><p>Draw terrain rasters for the best layout</p></dd>
+<dd><p>Draw terrain rasters for the best layout. Reuses
+<code>result$terrainModel</code> when present; <code>TRUE</code> downloads only if
+nothing is stored. A DEM raster rebuilds the model.</p></dd>
 
 
 <dt id="arg-plot-grid">plot_grid<a class="anchor" aria-label="anchor" href="#arg-plot-grid"></a></dt>

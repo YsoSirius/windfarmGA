@@ -4,8 +4,9 @@ Jitter the best GA layouts inside their grid cells and re-evaluate
 energy. Use this as a short post-search after
 [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md).
 Terrain and Weibull follow the GA flags when `terrain` / `weibull` are
-`NULL`; pass `weibull_src` again because rasters are not stored in
-`result`.
+`NULL`. Terrain rasters from the GA are reused when stored in `result`;
+pass a DEM to rebuild. Weibull rasters are not stored — pass
+`weibull_src` again if needed.
 
 ## Usage
 
@@ -57,16 +58,16 @@ random_search(
 
 - terrain:
 
-  `NULL` follows the GA `Topographie` flag. `TRUE` (or a DEM raster)
-  rebuilds elevation + land cover via
+  `NULL` follows the GA `Topographie` flag. A stored `terrainModel` in
+  `result` is reused. `TRUE` downloads only if nothing is stored. A DEM
+  raster rebuilds via
   [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
   `FALSE` skips terrain even if the GA used it.
 
 - weibull:
 
   `NULL` follows the GA `Active Weibull` flag. A speed raster is used
-  as-is. `TRUE` needs `weibull_src`. The GA does not store rasters in
-  `result`.
+  as-is. `TRUE` needs `weibull_src`.
 
 - weibull_src:
 
