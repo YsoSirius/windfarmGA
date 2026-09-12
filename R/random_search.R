@@ -47,7 +47,10 @@ random_search <- function(result, area, runs = 20, best = 1, plot = FALSE,
     plot.new()
     opar <- par(no.readonly = TRUE)
     on.exit(par(opar), add = TRUE)
-    par(mfrow = c(1, 1))
+    par(
+      mfrow = c(1, 1),
+      mar = c(8, 4, 4, 2)
+    )
   }
 
   ## Process Data ########
@@ -129,11 +132,14 @@ random_search <- function(result, area, runs = 20, best = 1, plot = FALSE,
 
       legend(
         x = "bottom",
+        inset = c(0, -0.45),
+        xpd = NA,
         legend = c(
           "Starting Location", "Randomly generated Location",
           "Suitable Location", "Relocated due to Turbine Collision"
         ),
-        col = c("black", "blue", "green", "red"), lwd = 1, lty = c(0, 0),
+        col = c("black", "blue", "green", "red"),
+        lwd = 1, lty = c(0, 0),
         pch = c(15, 3, 1, 20)
       )
     }

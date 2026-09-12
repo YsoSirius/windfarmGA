@@ -252,6 +252,20 @@ refined <- random_search(
 plot_random_search(refined, result, area, best = 1)
 ```
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png"/>
+</p>
+
+With a north-only rose the best layout often sits in the first few
+upwind rows. In 2D that looks cramped; wakes are 3D, so a turbine on
+lower ground can sit under the hub-height cone of one further uphill
+and is not counted as shadowed. Those front rows are also higher, so
+the wind multiplier stays up and air density drops less. The Leaflet
+map and the rayshader view (bottom right) show the same run in 2D and
+on the DEM.
+
+
+
 
 ## Start an Optimization
 An optimization can be initiated with the function **genetic_algorithm**.

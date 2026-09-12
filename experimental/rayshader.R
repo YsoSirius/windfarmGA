@@ -4,9 +4,9 @@
 ##   plot_farm_3d_from_result(result, area, buffer = 4000, exaggerate = 1)
 ##   args(plot_farm_3d)  # must list exaggerate, turbine_obj
 ##
-## DEM: `plot_farm_3d_from_result` reuses `result$terrainModel` when
-## present (park crop only). Pass `dem` for a wider buffer download.
-## Surrounding terrain (`buffer`), black tower+rotor (or a user OBJ).
+## DEM: reuse `result$terrainModel` only if it covers the buffered
+## site. Otherwise `buffer` still downloads via elevatr. Pass `dem`
+## to skip that. Surrounding terrain, black tower+rotor (or a user OBJ).
 ## OBJ: 3ds Max Z-up is rotated +90° about X (rayshader is Y-up).
 ## Wind arrow on the upwind DEM rim, above the terrain; wake cones at
 ## hub height (colored by AbschGesamt). Default zscale is true scale
@@ -143,6 +143,19 @@ exp_wake_cols <- function(wake, n) {
     grDevices::colorRamp(c("#27ae60", "#f1c40f", "#c0392b"))(u),
     maxColorValue = 255
   )
+}
+
+exp_dem_covers <- function(dem, pad) {
+  if (is.null(dem) || !inherits(dem, "SpatRaster")) {
+    return(FALSE)
+  }
+  pad <- sf::st_transform(pad, terra::crs(dem))
+  e <- terra::ext(dem)
+  b <- sf::st_bbox(pad)
+  as.numeric(e[1]) <= b[["xmin"]] &&
+    as.numeric(e[2]) >= b[["xmax"]] &&
+    as.numeric(e[3]) <= b[["ymin"]] &&
+    as.numeric(e[4]) >= b[["ymax"]]
 }
 
 exp_site_dem <- function(area, dem = NULL, z = 11, buffer = 3000) {
@@ -452,8 +465,10 @@ plot_farm_3d_from_result <- function(result, area, which = NULL, dem = NULL,
   wind <- result[1, "inputWind"][[1]]
   if (is.null(dem)) {
     tm <- tryCatch(windfarmGA:::ga_result_terrain(result), error = function(e) NULL)
-    if (!is.null(tm) && !is.null(tm$srtm_crop)) {
-      dem <- tm$srtm_crop[[1]]
+    stored <- if (!is.null(tm) && !is.null(tm$srtm_crop)) tm$srtm_crop[[1]] else NULL
+    pad <- sf::st_buffer(windfarmGA::isSpatial(area), dist = buffer)
+    if (exp_dem_covers(stored, pad)) {
+      dem <- stored
     }
   }
   plot_farm_3d(
