@@ -50,7 +50,12 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 - Codecov: ignore the Shiny explorer (`R/explore_result.R`). Offline
   tests cover `terrain_model` / `calculate_energy` terrain+Weibull (CI
   used to `skip_on_ci` the download file), `pkg_installed`, wind-helper
-  errors, and more viewshed / wake edges.
+  errors, and more viewshed / wake edges. `.Rbuildignore` was dropping
+  every `*.csv`, so `inst/extdata/clc_legend.csv` never reached the
+  check install and
+  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md)
+  failed with “cannot open the connection”. The legend stays in the
+  tarball; offline tests pass their own roughness CSV.
 - `plot_farm_3d` pins use heightmap column/row. Lon/lat + a numeric
   `extent` attached the label line at z = 0, so turbines ran down
   through the DEM. 3ds Max OBJs are Z-up while rayshader rgl is Y-up:
@@ -70,7 +75,9 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 - `test-coverage` workflow was invalid YAML (`with:` missing under
   `setup-r-dependencies`), so GitHub skipped the job in 0s and the
   Codecov badge never updated. Upload now uses `codecov-action` plus
-  `CODECOV_TOKEN` (anonymous `covr::codecov()` hits HTTP 429).
+  `CODECOV_TOKEN` (anonymous
+  [`covr::codecov()`](http://covr.r-lib.org/reference/codecov.md) hits
+  HTTP 429).
 - `ga_options(...)` is silent when setting; only
   [`ga_options()`](https://YsoSirius.github.io/windfarmGA/reference/ga_options.md)
   prints the table. The climate-helper demo no longer dumps options
