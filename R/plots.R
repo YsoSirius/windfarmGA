@@ -218,7 +218,9 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 #' @param plot_en A numeric value that indicates if the best energy or efficiency
 #'   output should be plotted. \code{1} plots the best energy solutions
 #'   and \code{2} plots the best efficiency solutions
-#' @param terrain Draw terrain rasters for the best layout
+#' @param terrain Draw terrain rasters for the best layout. Reuses
+#'   `result$terrainModel` when present; `TRUE` downloads only if
+#'   nothing is stored. A DEM raster rebuilds the model.
 #' @param plot_grid If `TRUE` (default) the used grid is added. You can also
 #'   pass another Simple Feature object
 #'
@@ -328,9 +330,11 @@ plot_result <- function(result, area, best = 1, plot_en = 1,
 
 
   ## Check Terrain Modell #########
-  if (terrainhie == TRUE) {
-    terrain_data <- terrain_model(terrainhie, area, ccl, ccl_roughness,
-      plot = TRUE, verbose = FALSE
+  if (isTRUE(terrainhie) || terrain_is_dem(terrainhie)) {
+    terrain_data <- terrain_resolve(
+      result, terrainhie, area, ccl, ccl_roughness,
+      plot = is.null(ga_result_terrain(result)) && !terrain_is_dem(terrainhie),
+      verbose = FALSE
     )
     cclRaster <- terrain_data$cclRaster
     orogr1 <- terrain_data$srtm_crop$orogr1

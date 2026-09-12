@@ -147,3 +147,241 @@ terrain_model <- function(terrain = TRUE, area, ccl, ccl_roughness,
     "cclRaster" = cclRaster
   ))
 }
+
+terrain_fill_na <- function(v) {
+  v <- as.numeric(v)
+  if (anyNA(v)) {
+    m <- mean(v, na.rm = TRUE)
+    v[is.na(v)] <- if (is.finite(m)) m else 0
+  }
+  v
+}
+
+terrain_extract_col <- function(r, xy) {
+  ex <- terra::extract(x = r, y = xy)
+  terrain_fill_na(ex[[ncol(ex)]])
+}
+
+terrain_cell_lookup <- function(srtm_crop, ccl_raster, grid, rotor_height) {
+  xy <- cbind(as.numeric(grid[, "X"]), as.numeric(grid[, "Y"]))
+  elev <- terrain_extract_col(srtm_crop[[1]], xy)
+  wind_mult <- terrain_extract_col(srtm_crop[[2]], xy)
+  land_z0 <- terrain_extract_col(ccl_raster, xy)
+  elev_rough <- terrain_extract_col(srtm_crop[[3]], xy)
+  maxres <- max(terra::res(srtm_crop[[3]]))
+  z0 <- land_z0 * (1 + elev_rough / maxres)
+  k <- 0.5 / log(rotor_height / z0)
+  air_rh <- as.numeric(barometric_height(matrix(elev), elev)[, "rh"])
+  cells <- data.frame(
+    ID = as.integer(grid[, "ID"]),
+    X = xy[, 1],
+    Y = xy[, 2],
+    elevation = elev,
+    wind_mult = wind_mult,
+    land_z0 = land_z0,
+    elev_rough = elev_rough,
+    z0 = z0,
+    k = k,
+    air_rh = air_rh,
+    stringsAsFactors = FALSE
+  )
+  attr(cells, "maxres") <- maxres
+  cells
+}
+
+terrain_ensure_cells <- function(elevation, ccl_raster, grid, rotor_height) {
+  if (!is.list(elevation) || !is.null(elevation$cells)) {
+    return(elevation)
+  }
+  elevation$cells <- terrain_cell_lookup(
+    elevation, ccl_raster, grid, rotor_height
+  )
+  elevation
+}
+
+terrain_cells_of <- function(elevation) {
+  if (is.list(elevation) && !is.null(elevation$cells)) {
+    return(elevation$cells)
+  }
+  NULL
+}
+
+terrain_has_rasters <- function(elevation) {
+  is.list(elevation) &&
+    length(elevation) >= 3L &&
+    inherits(elevation[[1]], "SpatRaster")
+}
+
+layout_xy <- function(sel) {
+  nms <- colnames(sel)
+  if (!is.null(nms) && all(c("X", "Y") %in% nms)) {
+    return(cbind(X = as.numeric(sel[, "X"]), Y = as.numeric(sel[, "Y"])))
+  }
+  cbind(X = as.numeric(sel[, 2]), Y = as.numeric(sel[, 3]))
+}
+
+layout_ids <- function(sel) {
+  nms <- colnames(sel)
+  if (is.null(nms)) {
+    return(NULL)
+  }
+  col <- if ("ID" %in% nms) {
+    "ID"
+  } else if ("Rect_ID" %in% nms) {
+    "Rect_ID"
+  } else {
+    return(NULL)
+  }
+  as.integer(sel[, col])
+}
+
+match_terrain_rows <- function(xy, ids, cells) {
+  if (!is.null(ids) && length(ids) == nrow(xy)) {
+    row <- match(ids, as.integer(cells$ID))
+    if (!anyNA(row) && length(unique(ids)) == length(ids)) {
+      return(row)
+    }
+  }
+  cx <- cells$X
+  cy <- cells$Y
+  x <- xy[, 1]
+  y <- xy[, 2]
+  vapply(seq_len(nrow(xy)), function(i) {
+    which.min((cx - x[i])^2 + (cy - y[i])^2)
+  }, integer(1))
+}
+
+terrain_from_extract <- function(xy, elevation, ccl_raster, rotor_height) {
+  elev <- terrain_extract_col(elevation[[1]], xy)
+  wind_mult <- terrain_extract_col(elevation[[2]], xy)
+  land_z0 <- terrain_extract_col(ccl_raster, xy)
+  elev_rough <- terrain_extract_col(elevation[[3]], xy)
+  maxres <- max(terra::res(elevation[[3]]))
+  z0 <- land_z0 * (1 + elev_rough / maxres)
+  list(
+    wind_mult = wind_mult,
+    elevation = elev,
+    z0 = z0,
+    k = 0.5 / log(rotor_height / z0),
+    air_rh = as.numeric(barometric_height(matrix(elev), elev)[, "rh"]),
+    land_z0 = land_z0,
+    elev_rough = elev_rough,
+    maxres = maxres
+  )
+}
+
+terrain_at_layout <- function(xy, ids, elevation, ccl_raster, rotor_height) {
+  cells <- terrain_cells_of(elevation)
+  if (!is.null(cells) && nrow(cells)) {
+    row <- match_terrain_rows(xy, ids, cells)
+    return(list(
+      wind_mult = cells$wind_mult[row],
+      elevation = cells$elevation[row],
+      z0 = cells$z0[row],
+      k = cells$k[row],
+      air_rh = cells$air_rh[row],
+      land_z0 = if ("land_z0" %in% names(cells)) cells$land_z0[row] else NA_real_,
+      elev_rough = if ("elev_rough" %in% names(cells)) cells$elev_rough[row] else NA_real_,
+      maxres = attr(cells, "maxres"),
+      from_cells = TRUE
+    ))
+  }
+  out <- terrain_from_extract(xy, elevation, ccl_raster, rotor_height)
+  out$from_cells <- FALSE
+  out
+}
+
+ga_result_terrain <- function(x) {
+  if (is.null(x) || !is.matrix(x) || !"terrainModel" %in% colnames(x)) {
+    return(NULL)
+  }
+  tm <- tryCatch(x[1, "terrainModel"][[1]], error = function(e) NULL)
+  if (!is.list(tm) || is.null(tm$srtm_crop)) {
+    return(NULL)
+  }
+  tm
+}
+
+terrain_is_dem <- function(terrain) {
+  inherits(terrain, c("SpatRaster", "RasterLayer", "stars"))
+}
+
+## Stored GA rasters, else a user DEM, else download (`terrain = TRUE`).
+terrain_resolve <- function(result, terrain, area, ccl = NULL,
+                            ccl_roughness = NULL, plot = FALSE,
+                            verbose = FALSE) {
+  if (isFALSE(terrain)) {
+    return(NULL)
+  }
+  if (terrain_is_dem(terrain)) {
+    return(terrain_model(terrain, area, ccl, ccl_roughness, plot, verbose))
+  }
+  stored <- ga_result_terrain(result)
+  if (!is.null(stored)) {
+    return(stored)
+  }
+  terrain_model(TRUE, area, ccl, ccl_roughness, plot, verbose)
+}
+
+plot_terrain_energy <- function(xy, polygon1, srtm_crop, ccl_raster, terr, cexa) {
+  x <- xy[, 1]
+  y <- xy[, 2]
+  maxres <- terr$maxres
+  if (!is.finite(maxres[1])) {
+    maxres <- max(terra::res(srtm_crop[[3]]))
+  }
+  land_z0 <- terr$land_z0
+  elev_rough <- terr$elev_rough
+  if (anyNA(land_z0) && inherits(ccl_raster, "SpatRaster")) {
+    land_z0 <- terrain_extract_col(ccl_raster, xy)
+  }
+  if (anyNA(elev_rough)) {
+    elev_rough <- terrain_extract_col(srtm_crop[[3]], xy)
+  }
+
+  par(mfrow = c(2, 1))
+  plot(srtm_crop[[1]], main = "SRTM Elevation Data")
+  points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = round(terr$elevation, 0), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+  plot(srtm_crop[[2]], main = "Wind Speed Multipliers")
+  points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = round(terr$wind_mult, 3), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+
+  par(mfrow = c(1, 1))
+  plot(srtm_crop[[1]], main = "Normal Air Density", col = topo.colors(10))
+  points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = rep(1.225, length(x)), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+  terra::plot(srtm_crop[[1]], main = "Corrected Air Density", col = topo.colors(10))
+  points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = round(terr$air_rh, 4), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+
+  terrain_rough_ras <- srtm_crop[[3]]
+  terrain_rough_resample <- terra::resample(terrain_rough_ras, ccl_raster, method = "near")
+  modified_rough <- terra::lapp(
+    x = c(ccl_raster, terrain_rough_resample),
+    fun = function(a, b) a * (1 + b / maxres)
+  )
+  graphics::par(mfrow = c(1, 1))
+  plot(ccl_raster, main = "Corine Land Cover Roughness")
+  graphics::points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = round(land_z0, 2), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+  plot(x = terrain_rough_ras, main = "Elevation Roughness Indicator")
+  graphics::points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = round(1 + (elev_rough / maxres), 2), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+  plot(modified_rough, main = "Modified Surface Roughness")
+  graphics::points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = round(terr$z0, 2), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+
+  graphics::par(mfrow = c(1, 1))
+  plot(x = terrain_rough_ras, main = "Adapted Wake Decay Values - K")
+  graphics::points(x, y, pch = 20)
+  calibrate::textxy(x, y, labs = round(terr$k, 3), cex = cexa)
+  plot(sf::st_geometry(polygon1), add = TRUE)
+}

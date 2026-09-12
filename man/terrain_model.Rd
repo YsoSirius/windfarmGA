@@ -14,7 +14,10 @@ terrain_model(
 )
 }
 \arguments{
-\item{terrain}{Terrain model (elevation + land cover).}
+\item{terrain}{Terrain model (elevation + land cover). \code{TRUE}
+downloads a DEM via \code{elevatr}. Pass a DEM raster to skip the
+download. Per-cell values are computed once and stored in the
+result as \code{terrainModel} for \code{\link[=plot_result]{plot_result()}} / \code{\link[=random_search]{random_search()}}.}
 
 \item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
 Must be projected in metres.}

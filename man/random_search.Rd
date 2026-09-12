@@ -34,13 +34,13 @@ random search. The default is 1.}
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
 collision checks. Default is \code{2.2}}
 
-\item{terrain}{\code{NULL} follows the GA \code{Topographie} flag. \code{TRUE} (or a
-DEM raster) rebuilds elevation + land cover via \code{\link[=terrain_model]{terrain_model()}}.
+\item{terrain}{\code{NULL} follows the GA \code{Topographie} flag. A stored
+\code{terrainModel} in \code{result} is reused. \code{TRUE} downloads only if
+nothing is stored. A DEM raster rebuilds via \code{\link[=terrain_model]{terrain_model()}}.
 \code{FALSE} skips terrain even if the GA used it.}
 
 \item{weibull}{\code{NULL} follows the GA \verb{Active Weibull} flag. A speed
-raster is used as-is. \code{TRUE} needs \code{weibull_src}. The GA does not
-store rasters in \code{result}.}
+raster is used as-is. \code{TRUE} needs \code{weibull_src}.}
 
 \item{weibull_src}{\code{list(k, a)} shape and scale rasters (e.g. Global
 Wind Atlas \code{combined-Weibull-k} / \code{combined-Weibull-A}).}
@@ -56,8 +56,9 @@ Returns a list.
 Jitter the best GA layouts inside their grid cells and
 re-evaluate energy. Use this as a short post-search after
 \code{\link[=genetic_algorithm]{genetic_algorithm()}}. Terrain and Weibull follow the GA flags
-when \code{terrain} / \code{weibull} are \code{NULL}; pass \code{weibull_src} again
-because rasters are not stored in \code{result}.
+when \code{terrain} / \code{weibull} are \code{NULL}. Terrain rasters from the GA
+are reused when stored in \code{result}; pass a DEM to rebuild. Weibull
+rasters are not stored — pass \code{weibull_src} again if needed.
 }
 \examples{
 \donttest{

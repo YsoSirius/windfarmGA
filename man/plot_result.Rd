@@ -28,7 +28,9 @@ Must be projected in metres.}
 output should be plotted. \code{1} plots the best energy solutions
 and \code{2} plots the best efficiency solutions}
 
-\item{terrain}{Draw terrain rasters for the best layout}
+\item{terrain}{Draw terrain rasters for the best layout. Reuses
+\code{result$terrainModel} when present; \code{TRUE} downloads only if
+nothing is stored. A DEM raster rebuilds the model.}
 
 \item{plot_grid}{If \code{TRUE} (default) the used grid is added. You can also
 pass another Simple Feature object}

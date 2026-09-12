@@ -135,16 +135,18 @@ str(HexGrid)
 
 ## Terrain Effect Model
 If **terrain** is `TRUE` in `genetic_algorithm`, terrain effects are taken
-into account. An Digital Elevation Model and a CORINE Land Cover raster are
-downloaded automatically, but can also be provided manually.
+into account. A digital elevation model and a CORINE Land Cover raster are
+downloaded automatically. Prefer `terrain = dem` (a SpatRaster) to skip
+the download. Per-cell height, wind multiplier, \(z_0\), \(k\) and air
+density are computed once; `plot_result` / `random_search` reuse the
+stored `terrainModel` instead of downloading again.
 ([Download a CLC raster](https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4)).
 
 
 To use your own land cover raster, provide its path via **ccl**.
 Surface roughness values are taken from **extdata/clc_legend.csv**. To use custom values, add a numeric **Rauhigkeit_z** column for all land cover classes, save the file with ; as delimiter, and provide its path via **ccl_roughness**.
 
-`plot_result(..., terrain = TRUE)` shows the full chain (same as
-`calculate_energy`):
+`plot_result(..., terrain = TRUE)` shows the full chain:
 
 - Elevation → wind-speed multiplier (DEM / mean DEM)
 - Elevation → air density (barometric; labels vs 1.225 kg/m³)

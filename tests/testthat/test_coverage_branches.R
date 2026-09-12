@@ -282,7 +282,7 @@ test_that("genetic_algorithm terrain, weibull, FIX, verbose, stall", {
     error = function(e) NULL
   )
 
-  tryCatch(
+  res_t <- tryCatch(
     suppressMessages(genetic_algorithm(
       area = area, n = 4, iteration = 1,
       wind = data.frame(ws = 8, wd = 0),
@@ -292,6 +292,11 @@ test_that("genetic_algorithm terrain, weibull, FIX, verbose, stall", {
     )),
     error = function(e) NULL
   )
+  if (is.matrix(res_t)) {
+    stored <- windfarmGA:::ga_result_terrain(res_t)
+    expect_false(is.null(stored))
+    expect_true(!is.null(stored$srtm_crop$cells))
+  }
 
   res <- suppressMessages(genetic_algorithm(
     area = area, n = 4, iteration = 3,

@@ -67,6 +67,48 @@ test_that("terrain_model works from synthetic rasters (no download)", {
   expect_s4_class(res$cclRaster, "SpatRaster")
   expect_s4_class(res$srtm_crop[[1]], "SpatRaster")
 
+  grid <- grid_area(area, size = 180, prop = 1, plot_grid = FALSE)
+  cells <- windfarmGA:::terrain_cell_lookup(
+    res$srtm_crop, res$cclRaster, grid[[1]], 80
+  )
+  expect_equal(nrow(cells), nrow(grid[[1]]))
+  expect_true(all(c("elevation", "wind_mult", "z0", "k", "air_rh") %in% names(cells)))
+  expect_true(all(is.finite(cells$k)))
+
+  pop <- init_population(grid[[1]], n = 6, n_start = 1)
+  wind <- data.frame(ws = 8, wd = 0)
+  args <- list(
+    layout = pop[[1]], reference_height = 50, rotor_height = 80,
+    surface_roughness = 0.14, wake_angle = 20, wake_distance = 100000,
+    wind = wind, rotor = 30, area = area, terrain = TRUE, plot = FALSE
+  )
+  en_ex <- do.call(calculate_energy, c(args, list(
+    elevation = res$srtm_crop, ccl_raster = res$cclRaster
+  )))
+  elev_cells <- res$srtm_crop
+  elev_cells$cells <- cells
+  en_lu <- do.call(calculate_energy, c(args, list(
+    elevation = list(cells = cells), ccl_raster = NULL
+  )))
+  e_ex <- as.numeric(do.call(rbind, en_ex)[1, "Energy_Output_Red"])
+  e_lu <- as.numeric(do.call(rbind, en_lu)[1, "Energy_Output_Red"])
+  expect_equal(e_lu, e_ex, tolerance = 1e-6)
+
+  dummy_args <- args
+  dummy_args$layout[, "ID"] <- 1L
+  en_near <- do.call(calculate_energy, c(dummy_args, list(
+    elevation = list(cells = cells)
+  )))
+  expect_true(as.numeric(do.call(rbind, en_near)[1, "Energy_Output_Red"]) > 0)
+
+  stored <- matrix(
+    list(list(srtm_crop = elev_cells, cclRaster = res$cclRaster)),
+    nrow = 1, dimnames = list(NULL, "terrainModel")
+  )
+  expect_false(is.null(windfarmGA:::ga_result_terrain(stored)))
+  reused <- windfarmGA:::terrain_resolve(stored, TRUE, area)
+  expect_identical(reused$cclRaster, res$cclRaster)
+
   na_dem <- dem
   terra::values(na_dem) <- NA
   expect_warning(terrain_model(

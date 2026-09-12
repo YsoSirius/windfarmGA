@@ -23,7 +23,10 @@
 #'   the site (`prop` in [grid_area()]).
 #' @param iteration Generation budget.
 #' @param mutation_rate Swap probability per turbine. `NULL` means `2/n`.
-#' @param terrain Terrain model (elevation + land cover).
+#' @param terrain Terrain model (elevation + land cover). `TRUE`
+#'   downloads a DEM via `elevatr`. Pass a DEM raster to skip the
+#'   download. Per-cell values are computed once and stored in the
+#'   result as `terrainModel` for [plot_result()] / [random_search()].
 #' @param elitism Archive the best layout and breed elite children.
 #' @param n_elite Base elite count (grows/shrinks with search phase).
 #' @param selection_mode `"VAR"` (parent share follows fitness) or `"FIX"` (50 %).
@@ -351,6 +354,7 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
 
   ## TERRAIN EFFECT MODEL ###############
   ## Checks if terrain effect model is activated, and makes necessary caluclations.
+  terrainModel <- list(NULL)
   if (isFALSE(terrain)) {
     if (verbose) {
       message("Topography and orography are not taken into account.")
@@ -361,7 +365,11 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
     terrain_data <- terrain_model(terrain, area, ccl, ccl_roughness, plot, verbose)
     srtm_crop <- terrain_data$srtm_crop
     cclRaster <- terrain_data$cclRaster
+    srtm_crop$cells <- terrain_cell_lookup(
+      srtm_crop, cclRaster, Grid, rotor_height
+    )
     terrain <- TRUE
+    terrainModel <- list(list(srtm_crop = srtm_crop, cclRaster = cclRaster))
   }
 
 
@@ -387,6 +395,10 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
   stall <- 0L
   idle <- 0L
   stall_limit <- as.integer(getOption("windfarmGA.stall_generations", 40L))
+  elevation_fit <- srtm_crop
+  if (isTRUE(terrain) && !isTRUE(plot) && !is.null(srtm_crop$cells)) {
+    elevation_fit <- list(cells = srtm_crop$cells)
+  }
   eval_fit <- function(selection) {
     fitness_with_cache(
       cache = fit_cache,
@@ -397,9 +409,13 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
       area = area,
       rotor = rotor,
       wind = winddata,
-      elevation = srtm_crop,
+      elevation = elevation_fit,
       terrain = terrain,
-      ccl_raster = cclRaster,
+      ccl_raster = if (is.list(elevation_fit) && !is.null(elevation_fit$cells)) {
+        NULL
+      } else {
+        cclRaster
+      },
       weibull = estim_speed_raster,
       parallel = parallel,
       n_cluster = n_cluster
@@ -886,7 +902,7 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
     allparkcoeff, bestPaEn, bestPaEf,
     fuzzycontr, fitnessValues, nindiv,
     clouddata, selcross, beorwor,
-    inputData, inputWind, mut_rate, allCoords
+    inputData, inputWind, mut_rate, allCoords, terrainModel
   )
 
   return(as_windfarmGA(alldata))

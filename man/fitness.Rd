@@ -40,7 +40,10 @@ Must be projected in metres.}
 \item{elevation}{Terrain list from \code{\link[=terrain_model]{terrain_model()}} (elevation, orography,
 roughness). Unused when \code{terrain} is \code{FALSE}.}
 
-\item{terrain}{Terrain model (elevation + land cover).}
+\item{terrain}{Terrain model (elevation + land cover). \code{TRUE}
+downloads a DEM via \code{elevatr}. Pass a DEM raster to skip the
+download. Per-cell values are computed once and stored in the
+result as \code{terrainModel} for \code{\link[=plot_result]{plot_result()}} / \code{\link[=random_search]{random_search()}}.}
 
 \item{ccl_raster}{Land-cover roughness raster from \code{\link[=terrain_model]{terrain_model()}}.}
 

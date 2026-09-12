@@ -3,8 +3,9 @@
 #' @description Jitter the best GA layouts inside their grid cells and
 #'   re-evaluate energy. Use this as a short post-search after
 #'   [genetic_algorithm()]. Terrain and Weibull follow the GA flags
-#'   when `terrain` / `weibull` are `NULL`; pass `weibull_src` again
-#'   because rasters are not stored in `result`.
+#'   when `terrain` / `weibull` are `NULL`. Terrain rasters from the GA
+#'   are reused when stored in `result`; pass a DEM to rebuild. Weibull
+#'   rasters are not stored — pass `weibull_src` again if needed.
 #'
 #' @export
 #' @inheritParams genetic_algorithm
@@ -15,12 +16,12 @@
 #' @param plot Draw the random-search layouts
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #'   collision checks. Default is \code{2.2}
-#' @param terrain `NULL` follows the GA `Topographie` flag. `TRUE` (or a
-#'   DEM raster) rebuilds elevation + land cover via [terrain_model()].
+#' @param terrain `NULL` follows the GA `Topographie` flag. A stored
+#'   `terrainModel` in `result` is reused. `TRUE` downloads only if
+#'   nothing is stored. A DEM raster rebuilds via [terrain_model()].
 #'   `FALSE` skips terrain even if the GA used it.
 #' @param weibull `NULL` follows the GA `Active Weibull` flag. A speed
-#'   raster is used as-is. `TRUE` needs `weibull_src`. The GA does not
-#'   store rasters in `result`.
+#'   raster is used as-is. `TRUE` needs `weibull_src`.
 #'
 #' @family Randomization
 #' @return Returns a list.
@@ -97,6 +98,11 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
     terrain = terrain, weibull = weibull, weibull_src = weibull_src,
     ccl = ccl, ccl_roughness = ccl_roughness
   )
+  if (isTRUE(phys$terrain)) {
+    phys$elevation <- terrain_ensure_cells(
+      phys$elevation, phys$ccl_raster, Grid[[1]], phys$rotor_height
+    )
+  }
   ref_height <- phys$ref_height
   rotor_height <- phys$rotor_height
   rotor_radius <- phys$rotor_radius
@@ -364,6 +370,11 @@ random_search_single <- function(result, area, n = 20, plot = FALSE,
     terrain = terrain, weibull = weibull, weibull_src = weibull_src,
     ccl = ccl, ccl_roughness = ccl_roughness
   )
+  if (isTRUE(phys$terrain)) {
+    phys$elevation <- terrain_ensure_cells(
+      phys$elevation, phys$ccl_raster, Grid[[1]], phys$rotor_height
+    )
+  }
   ref_height <- phys$ref_height
   rotor_height <- phys$rotor_height
   rotor_radius <- phys$rotor_radius
@@ -600,7 +611,10 @@ random_search_physics <- function(result, area, run = 1,
   ccl_raster <- NULL
   terrain_on <- !isFALSE(terrain)
   if (terrain_on) {
-    td <- terrain_model(terrain, area, ccl, ccl_roughness, plot = FALSE)
+    td <- terrain_resolve(
+      result, terrain, area, ccl, ccl_roughness,
+      plot = FALSE, verbose = FALSE
+    )
     elevation <- td$srtm_crop
     ccl_raster <- td$cclRaster
     terrain <- TRUE
