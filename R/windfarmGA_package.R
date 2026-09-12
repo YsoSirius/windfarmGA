@@ -2,7 +2,7 @@
 #' @importFrom terra xyFromCell extract plot res resample lapp rast crop crs
 #'   project terrain app values global classify mosaic viewshed sprc add_legend
 #' @importFrom sf st_as_sf st_geometry st_coordinates st_transform st_crs
-#'   st_make_grid st_intersection st_area sf_extSoftVersion st_centroid st_bbox
+#'   st_make_grid st_intersection st_area st_centroid st_bbox
 #'   st_cast st_combine `st_crs<-` st_distance st_is_valid
 #' @importFrom grDevices colorRampPalette topo.colors
 #' @importFrom graphics plot.new text plot par points abline title lines grid

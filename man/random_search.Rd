@@ -7,7 +7,7 @@
 random_search(
   result,
   area,
-  n = 20,
+  runs = 20,
   best = 1,
   plot = FALSE,
   max_dist = 2.2,
@@ -24,23 +24,23 @@ random_search(
 \item{area}{Site polygon (\code{sf}, SpatialPolygons, or coordinate matrix).
 Must be projected in metres.}
 
-\item{n}{The number of random searches to be performed. Default is 20.}
+\item{runs}{How many jittered layouts to try per \code{best} start.
+Default is 20.}
 
-\item{best}{Which best individuals should be the starting conditions for a
-random search. The default is 1.}
+\item{best}{How many distinct best layouts to refine. Default is 1.}
 
 \item{plot}{Draw the random-search layouts}
 
 \item{max_dist}{A numeric value multiplied by the rotor radius to perform
 collision checks. Default is \code{2.2}}
 
-\item{terrain}{\code{NULL} follows the GA \code{Topographie} flag. A stored
-\code{terrainModel} in \code{result} is reused. \code{TRUE} downloads only if
-nothing is stored. A DEM raster rebuilds via \code{\link[=terrain_model]{terrain_model()}}.
-\code{FALSE} skips terrain even if the GA used it.}
+\item{terrain}{\code{NULL} (default) follows the GA and reuses
+\code{result$terrainModel}. \code{TRUE} downloads only if nothing is stored.
+A DEM rebuilds the model. \code{FALSE} skips terrain.}
 
-\item{weibull}{\code{NULL} follows the GA \verb{Active Weibull} flag. A speed
-raster is used as-is. \code{TRUE} needs \code{weibull_src}.}
+\item{weibull}{\code{NULL} follows the GA flag. Weibull rasters are not
+stored — pass \code{weibull_src} (or a speed raster as \code{weibull}) again.
+Giving \code{weibull_src} is enough; you do not also need \code{weibull = TRUE}.}
 
 \item{weibull_src}{\code{list(k, a)} shape and scale rasters (e.g. Global
 Wind Atlas \code{combined-Weibull-k} / \code{combined-Weibull-A}).}
@@ -62,7 +62,7 @@ rasters are not stored — pass \code{weibull_src} again if needed.
 }
 \examples{
 \donttest{
-new <- random_search(resultrect, sp_polygon, n = 20, best = 4)
+new <- random_search(resultrect, sp_polygon, runs = 20, best = 4)
 plot_random_search(resultRS = new, result = resultrect, area = sp_polygon, best = 2)
 }
 }

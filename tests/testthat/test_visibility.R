@@ -65,4 +65,14 @@ test_that("Test Viewshed Functions", {
     nrows = 6, ncols = 6, crs = "EPSG:4326"
   )
   expect_equal(windfarmGA:::viewshed_metric_crs(r_edge), "EPSG:32660")
+
+  r_nocrs <- terra::rast(
+    xmin = 0, xmax = 100, ymin = 0, ymax = 100,
+    nrows = 5, ncols = 5
+  )
+  terra::crs(r_nocrs) <- ""
+  aligned <- suppressWarnings(
+    windfarmGA:::viewshed_project(r_nocrs, cbind(50, 50), loc_crs = NULL)
+  )
+  expect_equal(aligned$xy[1, ], c(50, 50), ignore_attr = TRUE)
 })

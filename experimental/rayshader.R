@@ -4,6 +4,8 @@
 ##   plot_farm_3d_from_result(result, area, buffer = 4000, exaggerate = 1)
 ##   args(plot_farm_3d)  # must list exaggerate, turbine_obj
 ##
+## DEM: `plot_farm_3d_from_result` reuses `result$terrainModel` when
+## present (park crop only). Pass `dem` for a wider buffer download.
 ## Surrounding terrain (`buffer`), black tower+rotor (or a user OBJ).
 ## OBJ: 3ds Max Z-up is rotated +90° about X (rayshader is Y-up).
 ## Wind arrow on the upwind DEM rim, above the terrain; wake cones at
@@ -440,11 +442,20 @@ plot_farm_3d_from_result <- function(result, area, which = NULL, dem = NULL,
                                      ...) {
   layout <- exp_layout_xy(result, which)
   inp <- result[1, "inputData"][[1]]
+  if (is.list(inp) && !is.null(inp$Input_Data)) {
+    inp <- inp$Input_Data
+  }
   hub <- as.numeric(inp["Rotor Height", 1])
   rotor <- as.numeric(inp["Rotorradius", 1])
   xy <- as.matrix(layout[, c("X", "Y")])
   wake <- if ("AbschGesamt" %in% names(layout)) layout$AbschGesamt else layout[, "AbschGesamt"]
   wind <- result[1, "inputWind"][[1]]
+  if (is.null(dem)) {
+    tm <- tryCatch(windfarmGA:::ga_result_terrain(result), error = function(e) NULL)
+    if (!is.null(tm) && !is.null(tm$srtm_crop)) {
+      dem <- tm$srtm_crop[[1]]
+    }
+  }
   plot_farm_3d(
     area, xy,
     hub_height = hub, dem = dem, z = z, buffer = buffer,

@@ -203,14 +203,18 @@ era5 <- get_era5_wind(area, "2021-01-01", "2025-12-31")
 wind <- wind_from_era5(era5)
 plot_windrose(wind, spd = "ws", dir = "wd")
 
-##    Mast instead of ERA5:
+##    Met mast instead of ERA5 (bReeze, or two numeric vectors):
+##    library(bReeze)
+##    data(winddata)
+##    s40 <- set(height = 40, v.avg = winddata[, 2], dir.avg = winddata[, 14])
+##    mast <- mast(timestamp(winddata[, 1]), s40)   # bReeze::mast
 ##    wind <- wind_from_breeze(mast)
-##    wind <- wind_from_series(dat$ws, dat$wd)
+##    wind <- wind_from_series(ws, wd)              # raw speed / direction
 
 ##    Spatial mean speed (GWA ~250 m); wind$ws is then ignored
 gwa <- gwa_download_country("AUT", height = 100)  # ISO3 of the site country
 
-## 4. Optimize: keep hub wind in the rising part of the curve
+## 4. Optimize
 result <- genetic_algorithm(
   area = area,
   wind = wind,
@@ -234,11 +238,15 @@ plot_parkfitness(result)
 plot_leaflet(result, area, which = 1)
 explore_result(result, area)
 
+source("experimental/rayshader.R")
+plot_farm_3d_from_result(result, area, buffer = 5000, turbine_obj = "./experimental/wind_turbine_v1.obj")
+
+
 ## 6. Optional: jitter turbines inside their cells (same physics as the GA)
-##    Weibull rasters are not stored in `result` — pass weibull_src again.
+##    Terrain is reused from result$terrainModel. Weibull rasters are not
+##    stored — pass weibull_src again (that is enough, no weibull = TRUE).
 refined <- random_search(
-  result, area, n = 20, best = 1, plot = FALSE,
-  terrain = TRUE,
+  result, area, runs = 20, best = 1, plot = FALSE,
   weibull_src = gwa$weibull_src
 )
 plot_random_search(refined, result, area, best = 1)

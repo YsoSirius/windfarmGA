@@ -157,11 +157,7 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
     mutation_rate <- 2 / n
   }
   if (is.null(crs)) {
-    if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-      crs <- 3035
-    } else {
-      crs <- "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-    }
+    crs <- 3035
   }
   ProjLAEA <- crs
 
@@ -225,32 +221,9 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
         "No weibull data is given in `weibull_src`.\nIt must be a list of 2 rasters:\n",
         "  - shape parameter raster\n", "  - scale parameter raster"
       )
-    } else {
-      if (verbose) message("Weibull data is used.\n")
-
-      ## Project Shapefile to raster, Crop/Mask and project raster back
-      if (!inherits(weibull_src[[1]], "SpatRaster")) {
-        weibull_src[[1]] <- terra::rast(weibull_src[[1]])
-      }
-      if (!inherits(weibull_src[[2]], "SpatRaster")) {
-        weibull_src[[2]] <- terra::rast(weibull_src[[2]])
-      }
     }
-      ## Project shapefile to raster CRS, then crop/mask both Weibull rasters
-      shape_project <- st_transform(area, crs = st_crs(weibull_src[[2]]))
-      weibl_k <- terra::crop(x = weibull_src[[1]], y = shape_project, mask = TRUE)
-      weibl_a <- terra::crop(x = weibull_src[[2]], y = shape_project, mask = TRUE)
-
-    estim_speed_raster <- weibl_a * terra::app(weibl_k, function(x) {
-      ok <- is.finite(x) & x > 0
-      out <- rep(NA_real_, length(x))
-      out[ok] <- gamma(1 + (1 / x[ok]))
-      out
-    })
-    estim_speed_raster <- terra::project(
-      estim_speed_raster,
-      terra::crs(area)
-    )
+    if (verbose) message("Weibull data is used.\n")
+    estim_speed_raster <- weibull_speed_raster(weibull_src, area)
   } else {
     estim_speed_raster <- FALSE
   }
@@ -296,17 +269,8 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
 
   #######################
   ## Project Polygon ###############
-  if (utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0) {
-    if (suppressWarnings(!isTRUE(all.equal(
-      st_crs(area),
-      st_crs(ProjLAEA)
-    )))) {
-      area <- sf::st_transform(area, ProjLAEA)
-    }
-  } else {
-    if (as.character(terra::crs(area)) != ProjLAEA) {
-      area <- sf::st_transform(area, ProjLAEA)
-    }
+  if (suppressWarnings(!isTRUE(all.equal(st_crs(area), st_crs(ProjLAEA))))) {
+    area <- sf::st_transform(area, ProjLAEA)
   }
 
   ## Make GRID ###############
@@ -979,6 +943,28 @@ isSpatial <- function(area, crs = NULL) {
     }
   }
   return(shape)
+}
+
+## Mean hub-height speed from Weibull k / A rasters (same as the GA).
+weibull_speed_raster <- function(weibull_src, area) {
+  k <- weibull_src[[1]]
+  a <- weibull_src[[2]]
+  if (!inherits(k, "SpatRaster")) {
+    k <- terra::rast(k)
+  }
+  if (!inherits(a, "SpatRaster")) {
+    a <- terra::rast(a)
+  }
+  shape_project <- sf::st_transform(area, crs = sf::st_crs(a))
+  weibl_k <- terra::crop(x = k, y = shape_project, mask = TRUE)
+  weibl_a <- terra::crop(x = a, y = shape_project, mask = TRUE)
+  estim <- weibl_a * terra::app(weibl_k, function(x) {
+    ok <- is.finite(x) & x > 0
+    out <- rep(NA_real_, length(x))
+    out[ok] <- gamma(1 + (1 / x[ok]))
+    out
+  })
+  terra::project(estim, terra::crs(area))
 }
 
 #' @title Transform Winddata

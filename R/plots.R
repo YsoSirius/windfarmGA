@@ -268,21 +268,14 @@ plot_result <- function(result, area, best = 1, plot_en = 1,
 
   ## Check Projections and reference systems ####
   area <- isSpatial(area)
-  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   Projection <- result_inputs["Projection", ][[1]]
-  if (PROJ6) {
-    Projection <- tryCatch(as.integer(Projection),
-      warning = function(e) Projection,
-      error = function(e) Projection
-    )
-  }
+  Projection <- tryCatch(as.integer(Projection),
+    warning = function(e) Projection,
+    error = function(e) Projection
+  )
   if (is.na(st_crs(area))) {
     message("Polygon is not projected. The spatial reference WGS 84 (EPSG:4326) is assumed.")
-    if (PROJ6) {
-      st_crs(area) <- 4326
-    } else {
-      st_crs(area) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
-    }
+    st_crs(area) <- 4326
   }
   area <- sf::st_transform(area, st_crs(Projection))
 
@@ -291,7 +284,11 @@ plot_result <- function(result, area, best = 1, plot_en = 1,
     weibull_src <- NULL
     col2res <- "lightblue"
   } else {
-    PolyCrop <- sf::st_transform(area, sf::st_crs(weibull_src[[1]]))
+    wbl_crs <- weibull_src[[1]]
+    if (!inherits(wbl_crs, "SpatRaster")) {
+      wbl_crs <- terra::rast(wbl_crs)
+    }
+    PolyCrop <- sf::st_transform(area, sf::st_crs(wbl_crs))
     if (inherits(weibull_src, "list") && length(weibull_src) == 2) {
       wblcroped <- lapply(weibull_src, function(x) {
         if (!inherits(x, "SpatRaster")) {
@@ -443,7 +440,7 @@ plot_result <- function(result, area, best = 1, plot_en = 1,
     )
 
     ## Plot Terrain Model  ###########
-    if (terrainhie == TRUE) {
+    if (isTRUE(terrainhie)) {
       par(ask = TRUE)
       sel1 <- best_result[, 1:2]
       plot_terrain(result_inputs, sel1, area, orogr1, srtm_crop, cclRaster)
@@ -665,20 +662,13 @@ ga_plot_theme <- function(legend = "right") {
 ga_result_grid <- function(result, area) {
   result_inputs <- result[1, "inputData"][[1]]
   area <- isSpatial(area)
-  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   Projection <- result_inputs["Projection", ][[1]]
-  if (PROJ6) {
-    Projection <- tryCatch(as.integer(Projection),
-      warning = function(e) Projection,
-      error = function(e) Projection
-    )
-  }
+  Projection <- tryCatch(as.integer(Projection),
+    warning = function(e) Projection,
+    error = function(e) Projection
+  )
   if (is.na(sf::st_crs(area))) {
-    if (PROJ6) {
-      sf::st_crs(area) <- 4326
-    } else {
-      sf::st_crs(area) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
-    }
+    sf::st_crs(area) <- 4326
   }
   area <- sf::st_transform(area, sf::st_crs(Projection))
   cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
@@ -863,20 +853,13 @@ plot_cell_heatmap <- function(result, area, log = TRUE, plot = TRUE) {
 
   result_inputs <- result[1, "inputData"][[1]]
   area <- isSpatial(area)
-  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
   Projection <- result_inputs["Projection", ][[1]]
-  if (PROJ6) {
-    Projection <- tryCatch(as.integer(Projection),
-      warning = function(e) Projection,
-      error = function(e) Projection
-    )
-  }
+  Projection <- tryCatch(as.integer(Projection),
+    warning = function(e) Projection,
+    error = function(e) Projection
+  )
   if (is.na(sf::st_crs(area))) {
-    if (PROJ6) {
-      sf::st_crs(area) <- 4326
-    } else {
-      sf::st_crs(area) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
-    }
+    sf::st_crs(area) <- 4326
   }
   area <- sf::st_transform(area, sf::st_crs(Projection))
 
@@ -1727,13 +1710,7 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
     beste <- ""
   }
 
-  ## WGS84 Projection for old and new GDAL ##############
-  PROJ6 <- utils::compareVersion(sf::sf_extSoftVersion()[[3]], "6") > 0
-  if (PROJ6) {
-    proj_longlat <- 4326
-  } else {
-    proj_longlat <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-  }
+  proj_longlat <- 4326
 
   if (is.null(wind)) {
     wind <- ga_result_wind(result)
@@ -2300,7 +2277,7 @@ plot_random_search <- function(resultRS, result, area, best) {
   on.exit(par(oldpar))
   par(mfrow = c(1, 2))
 
-  result_inputs <- result[1, "inputData"][[1]]
+  result_inputs <- ga_input_matrix(result)
   resultRS1 <- do.call("rbind", cbind(resultRS))
   a <- resultRS1[, "EnergyOverall"]
   order1 <- order(a, decreasing = TRUE)
@@ -2354,15 +2331,15 @@ plot_random_search <- function(resultRS, result, area, best) {
 
     bestrestGA[, "EnergyOverall"] <- round(bestrestGA[, "EnergyOverall"], 2)
     bestrestGA[, "EfficAllDir"] <- round(bestrestGA[, "EfficAllDir"], 2)
-    plot(area,
-      col = col2res,
+    plot(sf::st_geometry(area),
+      col = col2res, reset = FALSE,
       main = paste(
         "Original - Best Energy:", (best + 1) - i, "\n", "Energy Output",
         bestrestGA[, "EnergyOverall"][[1]], "kW", "\n", "Efficiency:",
         bestrestGA[, "EfficAllDir"][[1]]
       )
     )
-    plot(Grid, add = TRUE)
+    plot(sf::st_geometry(Grid), add = TRUE)
     graphics::mtext("Total Wake Effect in %", side = 2)
     graphics::points(bestrestGA[, "X"], bestrestGA[, "Y"],
       cex = 2, pch = 20, col = ColOri
@@ -2397,8 +2374,8 @@ plot_random_search <- function(resultRS, result, area, best) {
 
     EnergyBest[, "EnergyOverall"] <- round(EnergyBest[, "EnergyOverall"], 2)
     EnergyBest[, "EfficAllDir"] <- round(EnergyBest[, "EfficAllDir"], 2)
-    plot(area,
-      col = col2res,
+    plot(sf::st_geometry(area),
+      col = col2res, reset = FALSE,
       main = paste(
         "Random Search - Best Energy:", (best + 1) - i,
         "\n", "Energy Output",
@@ -2407,7 +2384,7 @@ plot_random_search <- function(resultRS, result, area, best) {
       )
     )
 
-    plot(Grid, add = TRUE)
+    plot(sf::st_geometry(Grid), add = TRUE)
     graphics::mtext("Total Wake Effect in %", side = 2)
     graphics::points(EnergyBest[, "X"], EnergyBest[, "Y"],
       cex = 2, pch = 20, col = Col

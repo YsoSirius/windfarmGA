@@ -15,17 +15,3 @@ installing any extra packages they need.
 | `noise.R` | ISO 9613-2 sketch (`noise_map`, `noise_from_result`). Downwind Adiv+Aatm+Agr plus optional upwind extra from the wind rose. Not a legal study, not in fitness. | terra, sf |
 | `rayshader.R` | `plot_farm_3d` / `plot_farm_3d_from_result` — buffered DEM, wind arrow, wake cones, pins colored by `AbschGesamt`. Heavy install. | rayshader, rgl, elevatr |
 
-**Already in the package (do not duplicate here)**
-
-- Viewsheds: `plot_viewshed()`
-- Result explorer: `explore_result()`
-- Power curve: `ga_options(power_curve = data.frame(ws, power))` or
-  `read_power_curve()` / `wind_from_uv()` in the package
-
-**Stay in local `_experiment/` (not on GitHub)**
-
-- `test_climate_helpers.R` — walkthrough of the climate helpers (`source("_experiment/test_climate_helpers.R")`).
-- `gwa/` — Global Wind Atlas country GeoTIFFs from `gwa_download_country()`.
-- Old scratch copies of `noise.R` / `rayshader.R` (the rewritten ones are in `experimental/`).
-
-Do not put these dependencies on the search loop.

@@ -10,27 +10,27 @@
 #' @export
 #' @inheritParams genetic_algorithm
 #' @param result The resulting matrix of the function \code{\link{genetic_algorithm}}
-#' @param best Which best individuals should be the starting conditions for a
-#'   random search. The default is 1.
-#' @param n The number of random searches to be performed. Default is 20.
+#' @param best How many distinct best layouts to refine. Default is 1.
+#' @param runs How many jittered layouts to try per `best` start.
+#'   Default is 20.
 #' @param plot Draw the random-search layouts
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #'   collision checks. Default is \code{2.2}
-#' @param terrain `NULL` follows the GA `Topographie` flag. A stored
-#'   `terrainModel` in `result` is reused. `TRUE` downloads only if
-#'   nothing is stored. A DEM raster rebuilds via [terrain_model()].
-#'   `FALSE` skips terrain even if the GA used it.
-#' @param weibull `NULL` follows the GA `Active Weibull` flag. A speed
-#'   raster is used as-is. `TRUE` needs `weibull_src`.
+#' @param terrain `NULL` (default) follows the GA and reuses
+#'   `result$terrainModel`. `TRUE` downloads only if nothing is stored.
+#'   A DEM rebuilds the model. `FALSE` skips terrain.
+#' @param weibull `NULL` follows the GA flag. Weibull rasters are not
+#'   stored — pass `weibull_src` (or a speed raster as `weibull`) again.
+#'   Giving `weibull_src` is enough; you do not also need `weibull = TRUE`.
 #'
 #' @family Randomization
 #' @return Returns a list.
 #'
 #' @examples \donttest{
-#' new <- random_search(resultrect, sp_polygon, n = 20, best = 4)
+#' new <- random_search(resultrect, sp_polygon, runs = 20, best = 4)
 #' plot_random_search(resultRS = new, result = resultrect, area = sp_polygon, best = 2)
 #' }
-random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
+random_search <- function(result, area, runs = 20, best = 1, plot = FALSE,
                           max_dist = 2.2, terrain = NULL, weibull = NULL,
                           weibull_src = NULL, ccl = NULL,
                           ccl_roughness = NULL) {
@@ -46,8 +46,8 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
   if (plot) {
     plot.new()
     opar <- par(no.readonly = TRUE)
+    on.exit(par(opar), add = TRUE)
     par(mfrow = c(1, 1))
-    on.exit(opar)
   }
 
   ## Process Data ########
@@ -117,10 +117,14 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
 
     ## Get the starting layout of windfarm[o]
     layout_start <- result[bestGARun, ]$bestPaEn
-    coordLay <- layout_start[, 1:2]
+    coordLay <- cbind(
+      X = as.numeric(layout_start[, "X"]),
+      Y = as.numeric(layout_start[, "Y"])
+    )
+    cell_id <- as.integer(layout_start[, "Rect_ID"])
 
     if (plot) {
-      plot(Grid[[2]])
+      plot(sf::st_geometry(Grid[[2]]), reset = FALSE)
       points(coordLay, pch = 15, col = "black")
 
       legend(
@@ -135,8 +139,8 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
     }
 
     ## Run n random searches on windfarm[o]
-    RandResult <- vector(mode = "list", length = n)
-    for (i in 1:n) {
+    RandResult <- vector(mode = "list", length = runs)
+    for (i in 1:runs) {
       coordLayTmp <- vector(mode = "list", length = length(coordLay[, 1]))
       ## For every turbine, alter x/y coordinates randomly
       for (j in 1:length(coordLay[, 1])) {
@@ -198,12 +202,12 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
 
       ## Arrange random points to input for calculate_energy
       coordsj <- cbind(coordsj,
-        "ID" = 1,
+        "ID" = cell_id,
         "bin" = 1
       )
       coordsj <- coordsj[, c("ID", "X", "Y", "bin")]
 
-      # Calculate energy and save in list with length n ################
+      # Calculate energy and save in list with length `runs` ################
       resCalcen <- calculate_energy(
         layout = coordsj,
         reference_height = ref_height,
@@ -313,7 +317,7 @@ random_search <- function(result, area, n = 20, best = 1, plot = FALSE,
 #' @family Randomization
 #' @family Plotting Functions
 #' @return Returns a list
-random_search_single <- function(result, area, n = 20, plot = FALSE,
+random_search_single <- function(result, area, runs = 20, plot = FALSE,
                                  max_dist = 2.2, terrain = NULL,
                                  weibull = NULL, weibull_src = NULL,
                                  ccl = NULL, ccl_roughness = NULL) {
@@ -385,7 +389,7 @@ random_search_single <- function(result, area, n = 20, plot = FALSE,
   ## Turbine Indexing by user input (Must be plotted) ################
   ## Get the starting layout of windfarm[o]
   layout_start <- result[bestGARun, ]$bestPaEn
-  plot(Grid[[2]])
+  plot(sf::st_geometry(Grid[[2]]), reset = FALSE)
   points(x = layout_start[, "X"], y = layout_start[, "Y"], pch = 15)
   calibrate::textxy(
     X = layout_start[, "X"], Y = layout_start[, "Y"],
@@ -398,9 +402,12 @@ random_search_single <- function(result, area, n = 20, plot = FALSE,
     turbInx <- readLines(n = 1, con = getOption("windfarmGA.connection"))
   }
   turbInx <- which(layout_start[, "Rect_ID"] == as.numeric(turbInx))
-  coordLay <- layout_start[, 1:2]
+  coordLay <- cbind(
+    X = as.numeric(layout_start[, "X"]),
+    Y = as.numeric(layout_start[, "Y"])
+  )
   if (plot) {
-    plot(Grid[[2]])
+    plot(sf::st_geometry(Grid[[2]]), reset = FALSE)
     points(coordLay, pch = 15, col = "black")
     points(coordLay[as.numeric(turbInx), ][1],
       coordLay[as.numeric(turbInx), ][2],
@@ -419,8 +426,8 @@ random_search_single <- function(result, area, n = 20, plot = FALSE,
   }
 
   ## Run Random Search  ################
-  RandResult <- vector(mode = "list", length = n)
-  for (i in 1:n) {
+  RandResult <- vector(mode = "list", length = runs)
+  for (i in 1:runs) {
     ## Copy the original layout (really need that?)
     coordLayRnd <- coordLay
     ## Get random steps for x/y and add to coords of "problematic" turbine
@@ -483,7 +490,7 @@ random_search_single <- function(result, area, n = 20, plot = FALSE,
 
     ## Arrange random points to input for calculate_energy
     coordLayRnd <- cbind(coordLayRnd,
-      "ID" = 1,
+      "ID" = as.integer(layout_start[, "Rect_ID"]),
       "bin" = 1
     )
     coordLayRnd <- coordLayRnd[, c("ID", "X", "Y", "bin")]
@@ -621,35 +628,22 @@ random_search_physics <- function(result, area, run = 1,
   }
 
   weibull_ras <- FALSE
-  if (inherits(weibull, c("SpatRaster", "RasterLayer", "stars"))) {
+  if (isFALSE(weibull)) {
+    weibull_ras <- FALSE
+  } else if (inherits(weibull, c("SpatRaster", "RasterLayer", "stars"))) {
     weibull_ras <- if (inherits(weibull, "SpatRaster")) {
       weibull
     } else {
       terra::rast(weibull)
     }
-  } else {
-    want_weibull <- isTRUE(weibull) || (is.null(weibull) && ga_weibull)
-    if (want_weibull) {
-      if (is.null(weibull_src)) {
-        warning(
-          "random_search: Weibull was requested, but weibull_src is missing. ",
-          "The GA does not store the rasters in result. Using the wind rose.",
-          call. = FALSE
-        )
-      } else {
-        if (!inherits(weibull_src[[1]], "SpatRaster")) {
-          weibull_src[[1]] <- terra::rast(weibull_src[[1]])
-        }
-        if (!inherits(weibull_src[[2]], "SpatRaster")) {
-          weibull_src[[2]] <- terra::rast(weibull_src[[2]])
-        }
-        shape_project <- sf::st_transform(area, crs = sf::st_crs(weibull_src[[2]]))
-        weibl_k <- terra::crop(x = weibull_src[[1]], y = shape_project, mask = TRUE)
-        weibl_a <- terra::crop(x = weibull_src[[2]], y = shape_project, mask = TRUE)
-        estim <- weibl_a * gamma(1 + (1 / terra::values(weibl_k)))
-        weibull_ras <- terra::project(estim, terra::crs(area))
-      }
-    }
+  } else if (!is.null(weibull_src)) {
+    weibull_ras <- weibull_speed_raster(weibull_src, area)
+  } else if (isTRUE(weibull) || ga_weibull) {
+    warning(
+      "random_search: Weibull was on in the GA, but weibull_src is missing. ",
+      "The rasters are not stored in result. Using the wind rose.",
+      call. = FALSE
+    )
   }
 
   list(

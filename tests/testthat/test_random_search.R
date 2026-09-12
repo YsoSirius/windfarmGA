@@ -10,7 +10,7 @@ test_that("Test Random Search Functions", {
   ))
 
   ## RandomSearch #########################
-  new <- random_search(resultrect, area, n = 20, best = 3, plot = TRUE)
+  new <- random_search(resultrect, area, runs = 20, best = 3, plot = TRUE)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -43,7 +43,7 @@ test_that("Test Random Search Functions", {
   expect_true(all(new_df[, "AbschGesamt"] >= 0))
 
   ## Test Plots with Hexagons
-  new <- random_search(resultrect, area, n = 10, best = 1)
+  new <- random_search(resultrect, area, runs = 10, best = 1)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
   new_df <- do.call(rbind, new)
@@ -58,11 +58,11 @@ test_that("Test Random Search Functions", {
   )
   expect_true(is.null(res))
 
-  new10 <- random_search(resulthex, area, n = 20, best = 3, plot = TRUE)
+  new10 <- random_search(resulthex, area, runs = 20, best = 3, plot = TRUE)
   respl <- plot_random_search(new10, resulthex, area = area)
   expect_true(is.null(respl))
 
-  new <- random_search(resultrect, area, n = 2, best = 1)
+  new <- random_search(resultrect, area, runs = 2, best = 1)
   res <- plot_random_search(
     resultRS = new, result = resultrect,
     area = area, best = 100
@@ -76,7 +76,7 @@ test_that("Test Random Search Functions", {
     wind = vdata, rotor = 35,
     rotor_height = 100
   )
-  new <- random_search(resultSP, area, n = 2, best = 1)
+  new <- random_search(resultSP, area, runs = 2, best = 1)
   res <- plot_random_search(
     resultRS = new, result = resultSP,
     area = area, best = 100
@@ -94,7 +94,7 @@ test_that("Test Random Search Functions", {
   expect_equal(phys$ref_height, 50)
   expect_equal(phys$rotor_height, 80)
   expect_false(phys$terrain)
-  refined <- random_search(resultH, area, n = 2, best = 1, terrain = FALSE)
+  refined <- random_search(resultH, area, runs = 2, best = 1, terrain = FALSE)
   expect_type(refined, "list")
   expect_false(anyNA(unlist(refined)))
 })

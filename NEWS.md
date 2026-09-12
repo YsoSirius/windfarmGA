@@ -35,8 +35,9 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 * Terrain: pass a DEM (`terrain = dem`) to skip the download. Per-cell
   height / \(z_0\) / \(k\) / air density are computed once and stored
   as `terrainModel` for `plot_result` and `random_search`.
-* `random_search()` jitters turbines inside their cells. Heights are
-  read by name. `terrain` / `weibull = NULL` follow the GA flags.
+* `random_search()` jitters turbines inside their cells (`runs`).
+  Terrain is reused from `result`; pass `weibull_src` again (not
+  stored). `plot_random_search()` draws both panels on the same grid.
 * Wake search and circle overlap run in C++. Turbines exactly upwind
   (`alpha = 0`) are kept (old triangle test dropped them).
 * Wind helpers: `wind_from_uv()`, `wind_from_series()`. GitHub-only
@@ -56,6 +57,8 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 * `plot_windrose()` works with ggplot2 4.x (S7). If ggplot2 4 meets an
   old `systemfonts`, update `systemfonts`.
 * Parallel clusters always stop via `on.exit`.
+* `plot_result(terrain = dem)` no longer errors on a SpatRaster.
+  Weibull file paths get a CRS before crop. PROJ < 6 branches are gone.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
