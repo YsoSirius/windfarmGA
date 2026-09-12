@@ -1,0 +1,5 @@
+comment: false
+ignore:
+  - "R/explore_result.R"
+  - "experimental/**/*"
+  - "_experiment/**/*"

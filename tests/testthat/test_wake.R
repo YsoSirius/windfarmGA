@@ -110,6 +110,14 @@ test_that("Test Wake Functions", {
   expect_equal(unname(dummy[1, "Bx"]), 0)
   expect_equal(unname(dummy[1, "By"]), 200)
 
+  expect_error(windfarmGA:::as_xy_matrix(cbind(1:3)), "X and Y")
+  expect_equal(ncol(windfarmGA:::as_xy_matrix(cbind(1:3, 4:6))), 3L)
+  expect_equal(ncol(windfarmGA:::as_xy_matrix(cbind(1:3, 4:6, 7, 8))), 3L)
+
+  plotted <- turbine_influences(tfix, 20, 100000, polYgon, 0, plot_angles = TRUE)
+  expect_type(plotted, "list")
+  expect_length(plotted, 4)
+
   ## Test turbine_influences Function --------------
   ###########################################
   resInfluPoi <- turbine_influences(t, wnkl, dist, polYgon, dirct)

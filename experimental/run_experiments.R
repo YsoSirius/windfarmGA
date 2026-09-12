@@ -122,7 +122,7 @@ run_experiments <- function(interactive = FALSE,
     message("\nInteractive apps skipped. run_experiments(interactive = TRUE)")
   }
 
-  message("\nDone. rayshader / noise stay in local _experiment/ — source those files yourself.")
+  message("\nDone. Optional: source(\"experimental/noise.R\"); source(\"experimental/rayshader.R\")")
   invisible(list(result = result, viewshed = if (inherits(vs, "try-error")) NULL else vs))
 }
 
