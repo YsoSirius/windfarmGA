@@ -241,7 +241,8 @@ result <- genetic_algorithm(
 
 ## 5. Plot
 print(result)
-plot_result(result, area)
+plot(result, area)
+plot_result(result, area, terrain = TRUE)
 plot_parkfitness(result)
 plot_leaflet(result, area, which = 1)
 explore_result(result, area)

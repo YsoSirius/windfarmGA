@@ -1,11 +1,21 @@
 # Plot a wind warm with leaflet
 
-Plot a resulting wind farm on a leaflet map.
+Plot a resulting wind farm on a leaflet map. Wakes are downwind cones
+(Jensen search angle), not circles. Terrain rasters from
+`result$terrainModel` are optional overlay layers.
 
 ## Usage
 
 ``` r
-plot_leaflet(result, area, which = 1, orderitems = TRUE, grid = NULL)
+plot_leaflet(
+  result,
+  area,
+  which = 1,
+  orderitems = TRUE,
+  grid = NULL,
+  wind = NULL,
+  terrain = NULL
+)
 ```
 
 ## Arguments
@@ -38,6 +48,16 @@ plot_leaflet(result, area, which = 1, orderitems = TRUE, grid = NULL)
   [`grid_area()`](https://YsoSirius.github.io/windfarmGA/reference/grid_area.md)
   or
   [`hexa_area()`](https://YsoSirius.github.io/windfarmGA/reference/hexa_area.md).
+
+- wind:
+
+  Optional wind table (`ws`, `wd`, `probab`). Defaults to the table
+  stored in `result`.
+
+- terrain:
+
+  Optional output of `leaflet_prepare_terrain()`. Defaults to
+  `result$terrainModel` when present.
 
 ## Value
 
