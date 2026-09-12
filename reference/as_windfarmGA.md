@@ -5,7 +5,9 @@ Attach the `windfarmGA` class so
 [`plot()`](https://r-spatial.github.io/sf/reference/plot.html) dispatch.
 New runs from
 [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
-already have this class.
+already have this class. [`print()`](https://rdrr.io/r/base/print.html)
+shows run inputs, the wind table, and each generation that set a new
+fitness maximum.
 
 ## Usage
 

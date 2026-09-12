@@ -47,6 +47,10 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ### Fixes
 
+- `print.windfarmGA` lists turbines, rotor, hub, grid, GA settings,
+  terrain/Weibull, the stored wind table, and a “New best” table
+  (generation, energy, efficiency, fitness) plus the generation of the
+  overall maximum.
 - Codecov: ignore the Shiny explorer (`R/explore_result.R`). Offline
   tests cover `terrain_model` / `calculate_energy` terrain+Weibull (CI
   used to `skip_on_ci` the download file), `pkg_installed`, wind-helper
@@ -64,6 +68,16 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md)
   used `values(k)` on a masked raster, so every cell became NA and
   fitness crashed.
+- Unused Rcpp leftovers `angles_CPP`, `euc_CPP` and `point_2_line_CPP`
+  are gone. Wake geometry lives in `pair_in_wake` / `dist_angles_one`.
+  Wake tests now hit the empty-arg and index guards in
+  `circle_intersection_CPP`, `get_dist_angles_CPP` and
+  `turbine_influences_CPP`, plus `pair_in_wake` when `lb` is too far or
+  not finite. The old `calculate_energy` NA-fill for `betha` / `gamma`
+  is gone (`acos` is clamped in C++). Viewshed reuses a projected
+  turbine CRS when the DEM is lon/lat; empty WKT falls through to UTM
+  instead of a stale `proj4string`. Tests cover `swap_mutation` with
+  `min_swaps = 0` and prefix column names in `read_power_curve`.
 - `plot_farm_3d` pins use heightmap column/row. Lon/lat + a numeric
   `extent` attached the label line at z = 0, so turbines ran down
   through the DEM. 3ds Max OBJs are Z-up while rayshader rgl is Y-up:
