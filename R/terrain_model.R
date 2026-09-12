@@ -109,8 +109,18 @@ terrain_model <- function(terrain = TRUE, area, ccl, ccl_roughness,
 
   # Include Corine Land Cover Raster to get an estimation of Surface Roughness
   if (missing(ccl_roughness) || is.null(ccl_roughness)) {
-    path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
-    ccl_roughness <- paste0(path, "clc_legend.csv")
+    ccl_roughness <- system.file(
+      "extdata", "clc_legend.csv",
+      package = "windfarmGA"
+    )
+    if (!nzchar(ccl_roughness) || !file.exists(ccl_roughness)) {
+      stop(
+        "CLC roughness legend not found in the package. ",
+        "Pass ccl_roughness to a semicolon-separated CSV with columns ",
+        "GRID_CODE and Rauhigkeit_z.",
+        call. = FALSE
+      )
+    }
   } else {
     if (verbose) {
       message("You are using your own Corine Land Cover legend.")

@@ -29,6 +29,12 @@ synth_ccl <- function(area, code = 12) {
   r
 }
 
+synth_roughness_csv <- function(code = 12, z0 = 0.03) {
+  f <- tempfile(fileext = ".csv")
+  writeLines(c("GRID_CODE;Rauhigkeit_z", paste(code, z0, sep = ";")), f)
+  f
+}
+
 test_that("package_installed helpers return a boolean", {
   expect_type(is_foreach_installed(), "logical")
   expect_type(is_parallel_installed(), "logical")
@@ -51,7 +57,11 @@ test_that("terrain_model works from synthetic rasters (no download)", {
   area <- synth_site()
   dem <- synth_dem(area)
   ccl <- synth_ccl(area)
-  res <- terrain_model(dem, area, ccl = ccl, plot = TRUE, verbose = TRUE)
+  res <- terrain_model(
+    dem, area,
+    ccl = ccl, ccl_roughness = synth_roughness_csv(),
+    plot = TRUE, verbose = TRUE
+  )
   expect_named(res, c("srtm_crop", "cclRaster"))
   expect_length(res$srtm_crop, 3)
   expect_s4_class(res$cclRaster, "SpatRaster")
@@ -59,12 +69,21 @@ test_that("terrain_model works from synthetic rasters (no download)", {
 
   na_dem <- dem
   terra::values(na_dem) <- NA
-  expect_warning(terrain_model(na_dem, area, ccl = ccl, plot = FALSE))
+  expect_warning(terrain_model(
+    na_dem, area,
+    ccl = ccl, ccl_roughness = synth_roughness_csv(),
+    plot = FALSE
+  ))
 })
 
 test_that("calculate_energy terrain and weibull paths (offline)", {
   area <- synth_site()
-  tm <- terrain_model(synth_dem(area), area, ccl = synth_ccl(area), plot = FALSE)
+  tm <- terrain_model(
+    synth_dem(area), area,
+    ccl = synth_ccl(area),
+    ccl_roughness = synth_roughness_csv(),
+    plot = FALSE
+  )
   grid <- grid_area(area, size = 180, prop = 1, plot_grid = FALSE)
   pop <- init_population(grid[[1]], n = 8, n_start = 4)
   wind <- data.frame(ws = 8, wd = 0)

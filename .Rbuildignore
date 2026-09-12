@@ -8,7 +8,7 @@
 ^.RData
 ^\.Rproj\.user$
 ^.gitignore
-[.](tif|csv|txt|ini|yml|yaml|Rmd|grd|hdr|tfw)$
+[.](tif|txt|ini|yml|yaml|Rmd|grd|hdr|tfw)$
 ^README-.*\.png$
 [.](gri|grs|vrt)$
 release_to_cran.R

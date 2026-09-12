@@ -16,6 +16,7 @@ docs/*
 *.tif
 *.zip
 *.csv
+!inst/extdata/clc_legend.csv
 release_to_cran.R
 _experiment
 *.RDS
