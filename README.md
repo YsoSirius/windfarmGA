@@ -240,6 +240,8 @@ explore_result(result, area)
 
 source("experimental/rayshader.R")
 plot_farm_3d_from_result(result, area, buffer = 5000, turbine_obj = "./experimental/wind_turbine_v1.obj")
+source("experimental/plot_mapgl.R")
+plot_mapgl_from_result(result, area, buffer = 8000, basemap = "satellite")
 
 
 ## 6. Optional: jitter turbines inside their cells (same physics as the GA)

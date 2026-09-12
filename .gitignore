@@ -22,3 +22,6 @@ _experiment
 *.RDS
 cclraster
 DEVELOPMENT.md
+terrain_tiles
+terrain_tiles.json
+terrain.mbtiles

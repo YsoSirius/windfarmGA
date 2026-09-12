@@ -41,8 +41,14 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 * Wake search and circle overlap run in C++. Turbines exactly upwind
   (`alpha = 0`) are kept (old triangle test dropped them).
 * Wind helpers: `wind_from_uv()`, `wind_from_series()`. GitHub-only
-  extras in `experimental/` (ERA5/GWA, noise, rayshader) are not in
-  the CRAN tarball.
+  extras in `experimental/` (ERA5/GWA, noise, rayshader, mapgl) are
+  not in the CRAN tarball. `plot_mapgl_from_result()` reuses
+  `terrain_tiles/` / `terrain.mbtiles`, draws wake cones colored by
+  `AbschGesamt` (0% green → max red) and the rayshader OBJ
+  (`wind_turbine_v1.obj`). Three.js is r149 UMD from localhost.
+  TileJSON Terrarium encoding; `maxzoom` is the highest tile folder.
+  Basemaps: `satellite`, `topo`, Carto. Port 8000 leftover servers
+  are freed (`rebuild = TRUE` remakes the tiles).
 * Plots wait for Enter between pages when interactive. `plot_generation()`
   shows every layout in a generation. `plot_viewshed()` projects lon/lat
   DEMs first.

@@ -22,3 +22,6 @@ release_to_cran.R
 ^revdep$
 ^\.github$
 ^CRAN-SUBMISSION$
+^terrain_tiles$
+^terrain_tiles\.json$
+^terrain\.mbtiles$
