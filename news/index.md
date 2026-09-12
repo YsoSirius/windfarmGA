@@ -47,6 +47,21 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ### Fixes
 
+- Codecov: ignore the Shiny explorer (`R/explore_result.R`). Offline
+  tests cover `terrain_model` / `calculate_energy` terrain+Weibull (CI
+  used to `skip_on_ci` the download file), `pkg_installed`, wind-helper
+  errors, and more viewshed / wake edges.
+- `plot_farm_3d` pins use heightmap column/row. Lon/lat + a numeric
+  `extent` attached the label line at z = 0, so turbines ran down
+  through the DEM. 3ds Max OBJs are Z-up while rayshader rgl is Y-up:
+  without a 90° tilt they lay flat and sank into the mesh. Towers are
+  now vertical (cylinder along Y, OBJ rotated +90° about X) and scaled
+  in rgl units (`hub / zscale`). The wind arrow sits on the upwind DEM
+  rim, above the highest terrain, not across the park. Jensen cones stay
+  at hub height (two outer Jensen lines, no centre ray); turbines stay
+  black. The site outline is densified and draped on the DEM so long
+  edges no longer cut through hills. `title3d` no longer uses a degree
+  sign (rgl `text3d` rejected it).
 - R CMD check: import [`stats::ave`](https://rdrr.io/r/stats/ave.html)
   (used in `calculate_energy`). `@export` on `get_dist_angles` was
   attached to `as_xy_matrix`, so the function was not exported, the Rd
@@ -146,6 +161,12 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 
 ### Features
 
+- `experimental/noise.R` and `experimental/rayshader.R` replace the old
+  `_experiment/` sketches: ISO 9613-2 Adiv+Aatm+Agr on a terra grid
+  (`noise_from_result`), and rayshader labels via `raster_to_matrix`
+  - extent (`plot_farm_3d_from_result`). Wind rose / `wind` adds an
+    upwind shadow (ISO itself is downwind only). Still not Suggests /
+    fitness.
 - [`random_search()`](https://YsoSirius.github.io/windfarmGA/reference/random_search.md)
   /
   [`random_search_single()`](https://YsoSirius.github.io/windfarmGA/reference/random_search_single.md)
@@ -314,6 +335,12 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
 - ERA5 / Copernicus (`COPERNICUS_CLIMATE_DATA`) stays for the
   directional rose only. Spatial mean speed should come from GWA Weibull
   A/k (`gwa_download_country()`), not the ERA5 grid.
+- `experimental/noise.R` is an ISO 9613-2 sketch (Adiv + Aatm + Agr)
+  plus an optional upwind extra from the wind rose. No octave spectrum.
+  Do not treat it as a TA-Lärm report or add it to the GA fitness.
+- Do not chase 100% on `explore_result.R` — it is a Shiny UI. Codecov
+  ignores that file. Terrain coverage on CI needs synthetic rasters, not
+  `skip_on_ci` downloads.
 
 ### Ideas
 
@@ -321,8 +348,10 @@ Breaking release: the layout chromosome is no longer a 0/1 string.
   if those counts are stored per generation.
 - Pin or document ggplot2 compatibility in `Suggests` if further S7
   class cleanup removes the legacy `"ggplot"` S3 class.
-- Noise (ISO 9613) and rayshader 3D stay experimental / local; do not
-  add them to Suggests.
+- Noise (ISO 9613-2 sketch) and rayshader 3D live in `experimental/`
+  (`noise_from_result`, `plot_farm_3d_from_result`). Not in Suggests,
+  not in fitness. The old `_experiment/` scripts stretched distances by
+  wind bearing and overwrote `plot_farm_3d` arguments.
 - With a manufacturer curve, run the GA at hub winds in the rising part
   (or a Weibull climate), not only on the rated plateau.
 - [`turbine_influences()`](https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.md)
