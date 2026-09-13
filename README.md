@@ -1,14 +1,16 @@
 # windfarmGA
 
-![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png)
+<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"/>
 
 
 
-![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)
-![CRAN status](https://www.r-pkg.org/badges/version/windfarmGA)
-![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)
-![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)
-![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)
+<!-- badges: start -->
+[![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)](https://github.com/YsoSirius/windfarmGA/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/windfarmGA)](https://CRAN.R-project.org/package=windfarmGA)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://cran.r-project.org/package=windfarmGA)
+[![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)](https://cran.r-project.org/package=windfarmGA)
+[![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)](https://app.codecov.io/gh/YsoSirius/windfarmGA)
+<!-- badges: end -->
 
 
 
@@ -43,9 +45,13 @@ To start an optimization use the function `genetic_algorithm`.
 A complete path — draw a site, pick an open IEA/NREL turbine, turn u/v or mast data into a rose, then optimize and plot — is in
 [Realistic workflow](#realistic-workflow-site-turbine-wind). 
 
-![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png)![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png)
-
-![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png)
+<div>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"/>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;"/>
+</div>
+<div>
+  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 98.5%;display: inline-block;"/>
+</div>
 
 Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. 
 Furthermore, rasters can be included, which contain information on the Weibull parameters (shape `k`, scale `a`). 
@@ -140,7 +146,7 @@ HexGrid <- hexa_area(area, size = (Rotor * fcr), plot_grid = TRUE)
 str(HexGrid)
 ```
 
-![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png)
+<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="480"/>
 
 ## Terrain Effect Model
 
