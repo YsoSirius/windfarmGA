@@ -502,7 +502,7 @@ test_that("terrain_model guards, hex GA, crossover cap, leaflet helpers", {
   speed <- synth_dem(area)
   terra::values(speed) <- 7
   rs_w <- random_search(
-    resultrect, area, n = 1, best = 1, plot = FALSE,
+    resultrect, area, runs = 1, best = 1, plot = FALSE,
     terrain = FALSE, weibull = speed
   )
   expect_type(rs_w, "list")
