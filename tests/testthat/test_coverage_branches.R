@@ -661,9 +661,11 @@ test_that("plot_cell_heatmap, generation, census and leaflet fallbacks", {
 
   with_mocked_bindings(
     is_ggplot2_installed = function() FALSE,
-    expect_error(plot_population(resultrect), "ggplot2"),
-    expect_error(plot_windrose(data.frame(ws = 8, wd = 0)), "ggplot2"),
-    expect_error(plot_fitness_evolution(resultrect), "ggplot2")
+    code = {
+      expect_error(plot_population(resultrect), "ggplot2")
+      expect_error(plot_windrose(data.frame(ws = 8, wd = 0)), "ggplot2")
+      expect_error(plot_fitness_evolution(resultrect), "ggplot2")
+    }
   )
 
   skip_if_not(is_leaflet_installed())

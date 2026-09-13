@@ -65,6 +65,9 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 * Parallel clusters always stop via `on.exit`.
 * `plot_result(terrain = dem)` no longer errors on a SpatRaster.
   Weibull file paths get a CRS before crop. PROJ < 6 branches are gone.
+* `with_mocked_bindings()` in `test_coverage_branches.R` wraps the
+  ggplot2-missing checks in `code = { … }` (testthat requires named
+  bindings).
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
