@@ -563,7 +563,7 @@ mg_wake_cones <- function(layout, area, wind, rotor, cols) {
   xy <- as.matrix(layout[, c("X", "Y")])
   half <- getOption("windfarmGA.max_angle", 20)
   len <- windfarmGA:::leaflet_wake_length(area, rotor)
-  cones <- windfarmGA:::leaflet_wake_cones(
+  cones <- windfarmGA:::wake_cone_polys(
     xy, wind_tab, half, len, sf::st_crs(area), cols
   )
   sf::st_transform(cones, 4326)

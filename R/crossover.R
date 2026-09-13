@@ -242,7 +242,7 @@ permutations <- function(n, r, v = 1:n) {
 #'   is given. Default is `getOption("windfarmGA.spatial_crossover")` (0.5)
 #'
 #' @family Genetic Algorithm Functions
-#' @return Integer matrix of unique grid IDs (`n` × children)
+#' @return Integer matrix of unique grid IDs (`n` x children)
 #'
 #' @examples
 #' ids <- cbind(c(1, 3, 5, 7), c(1, 4, 5, 9))

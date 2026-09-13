@@ -39,7 +39,7 @@ collision checks. Default is \code{2.2}}
 A DEM rebuilds the model. \code{FALSE} skips terrain.}
 
 \item{weibull}{\code{NULL} follows the GA flag. Weibull rasters are not
-stored — pass \code{weibull_src} (or a speed raster as \code{weibull}) again.
+stored; pass \code{weibull_src} (or a speed raster as \code{weibull}) again.
 Giving \code{weibull_src} is enough; you do not also need \code{weibull = TRUE}.}
 
 \item{weibull_src}{\code{list(k, a)} shape and scale rasters (e.g. Global
@@ -58,7 +58,7 @@ re-evaluate energy. Use this as a short post-search after
 \code{\link[=genetic_algorithm]{genetic_algorithm()}}. Terrain and Weibull follow the GA flags
 when \code{terrain} / \code{weibull} are \code{NULL}. Terrain rasters from the GA
 are reused when stored in \code{result}; pass a DEM to rebuild. Weibull
-rasters are not stored — pass \code{weibull_src} again if needed.
+rasters are not stored; pass \code{weibull_src} again if needed.
 }
 \examples{
 \donttest{

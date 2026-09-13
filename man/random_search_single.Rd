@@ -36,7 +36,7 @@ collision checks. Default is 2.2}
 A DEM rebuilds the model. \code{FALSE} skips terrain.}
 
 \item{weibull}{\code{NULL} follows the GA flag. Weibull rasters are not
-stored — pass \code{weibull_src} (or a speed raster as \code{weibull}) again.
+stored; pass \code{weibull_src} (or a speed raster as \code{weibull}) again.
 Giving \code{weibull_src} is enough; you do not also need \code{weibull = TRUE}.}
 
 \item{weibull_src}{\code{list(k, a)} shape and scale rasters (e.g. Global

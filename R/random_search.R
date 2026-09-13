@@ -5,7 +5,7 @@
 #'   [genetic_algorithm()]. Terrain and Weibull follow the GA flags
 #'   when `terrain` / `weibull` are `NULL`. Terrain rasters from the GA
 #'   are reused when stored in `result`; pass a DEM to rebuild. Weibull
-#'   rasters are not stored — pass `weibull_src` again if needed.
+#'   rasters are not stored; pass `weibull_src` again if needed.
 #'
 #' @export
 #' @inheritParams genetic_algorithm
@@ -20,7 +20,7 @@
 #'   `result$terrainModel`. `TRUE` downloads only if nothing is stored.
 #'   A DEM rebuilds the model. `FALSE` skips terrain.
 #' @param weibull `NULL` follows the GA flag. Weibull rasters are not
-#'   stored — pass `weibull_src` (or a speed raster as `weibull`) again.
+#'   stored; pass `weibull_src` (or a speed raster as `weibull`) again.
 #'   Giving `weibull_src` is enough; you do not also need `weibull = TRUE`.
 #'
 #' @family Randomization

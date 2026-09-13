@@ -20,7 +20,7 @@ selection(
 \item{grid}{Indexed grid from \code{\link[=grid_area]{grid_area()}}}
 
 \item{share}{Selection divisor: parents are about \code{nrow / share} of the
-population (\code{2} ≈ 50 \%).}
+population (\code{2} is about 50 \%).}
 
 \item{elitism}{Archive the best layout and breed elite children.}
 
@@ -32,7 +32,7 @@ population (\code{2} ≈ 50 \%).}
 }
 \value{
 Returns a list with 2 elements. Element 1 is an integer matrix of
-selected layouts (\code{n} turbines × selected individuals), each column a
+selected layouts (\code{n} turbines x selected individuals), each column a
 set of unique grid cell IDs. Element 2 is the fitness of each selected
 individual.
 }

@@ -41,7 +41,7 @@ given, a spatial half-plane crossover is used with probability
 is given. Default is \code{getOption("windfarmGA.spatial_crossover")} (0.5)}
 }
 \value{
-Integer matrix of unique grid IDs (\code{n} × children)
+Integer matrix of unique grid IDs (\code{n} x children)
 }
 \description{
 Combine two layouts of \code{n} unique grid-cell IDs. Shared sites

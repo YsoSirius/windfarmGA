@@ -60,6 +60,7 @@ reference:
     - wind_from_uv
     - wind_from_series
     - read_power_curve
+    - wake_cones
     - isSpatial
     - permutations
     - splitAt

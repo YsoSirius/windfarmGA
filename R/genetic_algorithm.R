@@ -41,6 +41,9 @@
 #' @param n_cluster Worker count when `parallel` is `TRUE`.
 #' @param verbose Print a line per generation.
 #' @param plot Plot the current best layout each generation.
+#' @param on_generation Optional callback after each generation:
+#'   `function(generation, iteration, energy, efficiency, fitness)`.
+#'   Used by Shiny for progress. Errors in the callback are ignored.
 #'
 #' @family Genetic Algorithm Functions
 #' @return The result is a matrix with aggregated values per generation; the
@@ -145,7 +148,8 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
                               parallel = FALSE,
                               n_cluster = 2,
                               verbose = FALSE,
-                              plot = FALSE) {
+                              plot = FALSE,
+                              on_generation = NULL) {
   if (plot) {
     oldpar <- graphics::par(no.readonly = TRUE)
     on.exit(par(oldpar))
@@ -491,6 +495,19 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
           breaks = lebre2
         ))]
       }
+    }
+
+    if (is.function(on_generation)) {
+      tryCatch(
+        on_generation(
+          i,
+          iteration,
+          allparkcoeff[[i]][, "MaxEnergyRedu"],
+          allparkcoeff[[i]][, "maxParkwirkungsg"],
+          maxparkfitness
+        ),
+        error = function(e) invisible(NULL)
+      )
     }
 
     x <- round(bestPaEn[[i]][, "EnergyOverall"][[1]], 2)

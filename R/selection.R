@@ -13,12 +13,12 @@
 #' @param fit A list of all fitness-evaluated individuals
 #' @param grid Indexed grid from [grid_area()]
 #' @param share Selection divisor: parents are about `nrow / share` of the
-#'   population (`2` ≈ 50 %).
+#'   population (`2` is about 50 %).
 #' @param verbose If TRUE, will print out further information.
 #'
 #' @family Genetic Algorithm Functions
 #' @return Returns a list with 2 elements. Element 1 is an integer matrix of
-#'   selected layouts (`n` turbines × selected individuals), each column a
+#'   selected layouts (`n` turbines x selected individuals), each column a
 #'   set of unique grid cell IDs. Element 2 is the fitness of each selected
 #'   individual.
 #' @examples \donttest{

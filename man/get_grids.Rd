@@ -8,7 +8,7 @@ get_grids(layouts, grid)
 }
 \arguments{
 \item{layouts}{Binary matrix (legacy) or integer matrix of grid IDs
-(\code{n} turbines × individuals)}
+(\code{n} turbines x individuals)}
 
 \item{grid}{Indexed grid from \code{\link[=grid_area]{grid_area()}}}
 }
@@ -18,8 +18,8 @@ grid cell ID.
 }
 \description{
 Map a population of layouts to grid coordinates. Accepts either
-an integer matrix of unique cell IDs (\code{n} turbines × individuals) or a
-legacy binary matrix (\code{n_gridcells} × individuals).
+an integer matrix of unique cell IDs (\code{n} turbines x individuals) or a
+legacy binary matrix (\code{n_gridcells} x individuals).
 }
 \examples{
 \donttest{

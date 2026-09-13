@@ -1,13 +1,13 @@
 #' @title Map layouts to grid coordinates
 #' @name get_grids
 #' @description Map a population of layouts to grid coordinates. Accepts either
-#'   an integer matrix of unique cell IDs (`n` turbines × individuals) or a
-#'   legacy binary matrix (`n_gridcells` × individuals).
+#'   an integer matrix of unique cell IDs (`n` turbines x individuals) or a
+#'   legacy binary matrix (`n_gridcells` x individuals).
 #'
 #' @export
 #'
 #' @param layouts Binary matrix (legacy) or integer matrix of grid IDs
-#'   (`n` turbines × individuals)
+#'   (`n` turbines x individuals)
 #' @param grid Indexed grid from [grid_area()]
 #'
 #' @family Helper Functions

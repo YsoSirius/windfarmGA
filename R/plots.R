@@ -1546,7 +1546,42 @@ leaflet_wake_length <- function(poly, rotor) {
   max(200, min(12 * 2 * rotor, 0.45 * diag))
 }
 
-leaflet_wake_cones <- function(xy, wind_tab, half_deg, length_m, crs, farbe) {
+#' @title Downwind wake search cones
+#' @name wake_cones
+#' @description Build sf polygons for the Jensen search cone of each turbine
+#'   and wind direction. Colour can encode wake loss (`AbschGesamt`).
+#' @export
+#'
+#' @param xy Matrix or data.frame of turbine X/Y in the site CRS.
+#' @param wind Wind table with `wd` (and optional `probab`), as stored in
+#'   a [genetic_algorithm()] result.
+#' @param rotor Rotor radius in metres (sets cone length together with `area`).
+#' @param area Site polygon (`sf`), projected in metres.
+#' @param half_deg Half search angle. Default `windfarmGA.max_angle`.
+#' @param colors Optional colour per turbine (recycled).
+#' @return An `sf` polygon layer with `turb`, `wd`, `prob`, `farbe`.
+wake_cones <- function(xy, wind, rotor, area, half_deg = NULL, colors = NULL) {
+  xy <- as.matrix(xy)[, 1:2, drop = FALSE]
+  wind_tab <- leaflet_wind_for_cones(wind)
+  if (is.null(wind_tab) || !nrow(wind_tab) || !nrow(xy)) {
+    return(NULL)
+  }
+  if (is.null(half_deg)) {
+    half_deg <- getOption("windfarmGA.max_angle", 20)
+  }
+  if (is.null(colors)) {
+    colors <- rep("#27ae60", nrow(xy))
+  }
+  colors <- rep(colors, length.out = nrow(xy))
+  area <- isSpatial(area)
+  wake_cone_polys(
+    xy, wind_tab, half_deg,
+    leaflet_wake_length(area, rotor),
+    sf::st_crs(area), colors
+  )
+}
+
+wake_cone_polys <- function(xy, wind_tab, half_deg, length_m, crs, farbe) {
   n <- nrow(xy)
   n_dir <- nrow(wind_tab)
   geom <- vector("list", n * n_dir)
@@ -1806,7 +1841,7 @@ plot_leaflet <- function(result, area, which = 1, orderitems = TRUE, grid = NULL
   cones <- NULL
   if (!is.null(wind_tab) && nrow(xy_m)) {
     poly_m <- st_transform(poly1, proj_pol)
-    cones <- leaflet_wake_cones(
+    cones <- wake_cone_polys(
       xy_m, wind_tab, half_wake,
       leaflet_wake_length(poly_m, rotor),
       proj_pol, result$farbe

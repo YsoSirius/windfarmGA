@@ -53,6 +53,12 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 * Plots wait for Enter between pages when interactive. `plot_generation()`
   shows every layout in a generation. `plot_viewshed()` projects lon/lat
   DEMs first.
+* `genetic_algorithm(on_generation = ...)` calls
+  `function(generation, iteration, energy, efficiency, fitness)` after
+  each generation so a Shiny app can show progress without forking the
+  GA. `wake_cones()` is the public name for the downwind search-cone
+  polygons (`plot_leaflet`, MapGL). Internal geometry is
+  `wake_cone_polys()`.
 
 ## Fixes
 * Weibull speed no longer becomes all-NA after masking (fitness crash).
@@ -77,6 +83,8 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
   `plot_leaflet()`). The 4326 round-trip broke the grid on macOS.
 * Roxygen: unused `@inheritParams` on `trimton()` and
   `turbine_influences()` removed (params were already documented).
+* Rd help is ASCII-only (`≈`, `×`, em-dash broke the CRAN PDF manual).
+  README no longer links to the archived check-results page (404).
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
