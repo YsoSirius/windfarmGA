@@ -9,7 +9,7 @@ output of the wind farm layout.
 random_search_single(
   result,
   area,
-  n = 20,
+  runs = 20,
   plot = FALSE,
   max_dist = 2.2,
   terrain = NULL,
@@ -32,9 +32,9 @@ random_search_single(
   Site polygon (`sf`, SpatialPolygons, or coordinate matrix). Must be
   projected in metres.
 
-- n:
+- runs:
 
-  The number of random searches to be performed. Default is 20.
+  How many jittered layouts to try per `best` start. Default is 20.
 
 - plot:
 
@@ -47,16 +47,15 @@ random_search_single(
 
 - terrain:
 
-  `NULL` follows the GA `Topographie` flag. A stored `terrainModel` in
-  `result` is reused. `TRUE` downloads only if nothing is stored. A DEM
-  raster rebuilds via
-  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
-  `FALSE` skips terrain even if the GA used it.
+  `NULL` (default) follows the GA and reuses `result$terrainModel`.
+  `TRUE` downloads only if nothing is stored. A DEM rebuilds the model.
+  `FALSE` skips terrain.
 
 - weibull:
 
-  `NULL` follows the GA `Active Weibull` flag. A speed raster is used
-  as-is. `TRUE` needs `weibull_src`.
+  `NULL` follows the GA flag. Weibull rasters are not stored — pass
+  `weibull_src` (or a speed raster as `weibull`) again. Giving
+  `weibull_src` is enough; you do not also need `weibull = TRUE`.
 
 - weibull_src:
 

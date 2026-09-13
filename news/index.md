@@ -55,15 +55,23 @@ string.
   height / (z_0) / (k) / air density are computed once and stored as
   `terrainModel` for `plot_result` and `random_search`.
 - [`random_search()`](https://YsoSirius.github.io/windfarmGA/reference/random_search.md)
-  jitters turbines inside their cells. Heights are read by name.
-  `terrain` / `weibull = NULL` follow the GA flags.
+  jitters turbines inside their cells (`runs`). Terrain is reused from
+  `result`; pass `weibull_src` again (not stored).
+  [`plot_random_search()`](https://YsoSirius.github.io/windfarmGA/reference/plot_random_search.md)
+  draws both panels on the same grid.
 - Wake search and circle overlap run in C++. Turbines exactly upwind
   (`alpha = 0`) are kept (old triangle test dropped them).
 - Wind helpers:
   [`wind_from_uv()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.md),
   [`wind_from_series()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_series.md).
-  GitHub-only extras in `experimental/` (ERA5/GWA, noise, rayshader) are
-  not in the CRAN tarball.
+  GitHub-only extras in `experimental/` (ERA5/GWA, noise, rayshader,
+  mapgl) are not in the CRAN tarball. `plot_mapgl_from_result()` reuses
+  `terrain_tiles/` / `terrain.mbtiles`, draws wake cones colored by
+  `AbschGesamt` (0% green → max red) and the rayshader OBJ
+  (`wind_turbine_v1.obj`). Three.js is r149 UMD from localhost. TileJSON
+  Terrarium encoding; `maxzoom` is the highest tile folder. Basemaps:
+  `satellite`, `topo`, Carto. Port 8000 leftover servers are freed
+  (`rebuild = TRUE` remakes the tiles).
 - Plots wait for Enter between pages when interactive.
   [`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md)
   shows every layout in a generation.
@@ -82,6 +90,8 @@ string.
   works with ggplot2 4.x (S7). If ggplot2 4 meets an old `systemfonts`,
   update `systemfonts`.
 - Parallel clusters always stop via `on.exit`.
+- `plot_result(terrain = dem)` no longer errors on a SpatRaster. Weibull
+  file paths get a CRS before crop. PROJ \< 6 branches are gone.
 
 ## windfarmGA 4.0.0
 

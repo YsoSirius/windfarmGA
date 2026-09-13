@@ -45,7 +45,7 @@ optimize the output of the wind farm layout.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">random_search_single</span><span class="op">(</span></span>
 <span>  <span class="va">result</span>,</span>
 <span>  <span class="va">area</span>,</span>
-<span>  n <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  runs <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  max_dist <span class="op">=</span> <span class="fl">2.2</span>,</span>
 <span>  terrain <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -69,8 +69,9 @@ optimize the output of the wind farm layout.</p>
 Must be projected in metres.</p></dd>
 
 
-<dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p>The number of random searches to be performed. Default is 20.</p></dd>
+<dt id="arg-runs">runs<a class="anchor" aria-label="anchor" href="#arg-runs"></a></dt>
+<dd><p>How many jittered layouts to try per <code>best</code> start.
+Default is 20.</p></dd>
 
 
 <dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
@@ -83,15 +84,15 @@ collision checks. Default is 2.2</p></dd>
 
 
 <dt id="arg-terrain">terrain<a class="anchor" aria-label="anchor" href="#arg-terrain"></a></dt>
-<dd><p><code>NULL</code> follows the GA <code>Topographie</code> flag. A stored
-<code>terrainModel</code> in <code>result</code> is reused. <code>TRUE</code> downloads only if
-nothing is stored. A DEM raster rebuilds via <code><a href="terrain_model.html">terrain_model()</a></code>.
-<code>FALSE</code> skips terrain even if the GA used it.</p></dd>
+<dd><p><code>NULL</code> (default) follows the GA and reuses
+<code>result$terrainModel</code>. <code>TRUE</code> downloads only if nothing is stored.
+A DEM rebuilds the model. <code>FALSE</code> skips terrain.</p></dd>
 
 
 <dt id="arg-weibull">weibull<a class="anchor" aria-label="anchor" href="#arg-weibull"></a></dt>
-<dd><p><code>NULL</code> follows the GA <code>Active Weibull</code> flag. A speed
-raster is used as-is. <code>TRUE</code> needs <code>weibull_src</code>.</p></dd>
+<dd><p><code>NULL</code> follows the GA flag. Weibull rasters are not
+stored — pass <code>weibull_src</code> (or a speed raster as <code>weibull</code>) again.
+Giving <code>weibull_src</code> is enough; you do not also need <code>weibull = TRUE</code>.</p></dd>
 
 
 <dt id="arg-weibull-src">weibull_src<a class="anchor" aria-label="anchor" href="#arg-weibull-src"></a></dt>

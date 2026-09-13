@@ -51,9 +51,9 @@
 <li>Elitism archives the best layout (no fitness × 10). Elite children, neighbour local search, fitness cache, immigrants, spatial crossover. Early stop only after <code>stall_generations</code> idle gens (no new layout, cell, or best).</li>
 <li>Terrain: pass a DEM (<code>terrain = dem</code>) to skip the download. Per-cell height / (z_0) / (k) / air density are computed once and stored as <code>terrainModel</code> for <code>plot_result</code> and <code>random_search</code>.</li>
 <li>
-<code><a href="../reference/random_search.html">random_search()</a></code> jitters turbines inside their cells. Heights are read by name. <code>terrain</code> / <code>weibull = NULL</code> follow the GA flags.</li>
+<code><a href="../reference/random_search.html">random_search()</a></code> jitters turbines inside their cells (<code>runs</code>). Terrain is reused from <code>result</code>; pass <code>weibull_src</code> again (not stored). <code><a href="../reference/plot_random_search.html">plot_random_search()</a></code> draws both panels on the same grid.</li>
 <li>Wake search and circle overlap run in C++. Turbines exactly upwind (<code>alpha = 0</code>) are kept (old triangle test dropped them).</li>
-<li>Wind helpers: <code><a href="../reference/wind_from_uv.html">wind_from_uv()</a></code>, <code><a href="../reference/wind_from_series.html">wind_from_series()</a></code>. GitHub-only extras in <code>experimental/</code> (ERA5/GWA, noise, rayshader) are not in the CRAN tarball.</li>
+<li>Wind helpers: <code><a href="../reference/wind_from_uv.html">wind_from_uv()</a></code>, <code><a href="../reference/wind_from_series.html">wind_from_series()</a></code>. GitHub-only extras in <code>experimental/</code> (ERA5/GWA, noise, rayshader, mapgl) are not in the CRAN tarball. <code>plot_mapgl_from_result()</code> reuses <code>terrain_tiles/</code> / <code>terrain.mbtiles</code>, draws wake cones colored by <code>AbschGesamt</code> (0% green → max red) and the rayshader OBJ (<code>wind_turbine_v1.obj</code>). Three.js is r149 UMD from localhost. TileJSON Terrarium encoding; <code>maxzoom</code> is the highest tile folder. Basemaps: <code>satellite</code>, <code>topo</code>, Carto. Port 8000 leftover servers are freed (<code>rebuild = TRUE</code> remakes the tiles).</li>
 <li>Plots wait for Enter between pages when interactive. <code><a href="../reference/plot_generation.html">plot_generation()</a></code> shows every layout in a generation. <code><a href="../reference/plot_viewshed.html">plot_viewshed()</a></code> projects lon/lat DEMs first.</li>
 </ul></div>
 <div class="section level3">
@@ -67,6 +67,8 @@
 <li>
 <code><a href="../reference/plot_windrose.html">plot_windrose()</a></code> works with ggplot2 4.x (S7). If ggplot2 4 meets an old <code>systemfonts</code>, update <code>systemfonts</code>.</li>
 <li>Parallel clusters always stop via <code>on.exit</code>.</li>
+<li>
+<code>plot_result(terrain = dem)</code> no longer errors on a SpatRaster. Weibull file paths get a CRS before crop. PROJ &lt; 6 branches are gone.</li>
 </ul></div>
 </div>
     <div class="section level2">

@@ -14,7 +14,7 @@ pass a DEM to rebuild. Weibull rasters are not stored — pass
 random_search(
   result,
   area,
-  n = 20,
+  runs = 20,
   best = 1,
   plot = FALSE,
   max_dist = 2.2,
@@ -38,14 +38,13 @@ random_search(
   Site polygon (`sf`, SpatialPolygons, or coordinate matrix). Must be
   projected in metres.
 
-- n:
+- runs:
 
-  The number of random searches to be performed. Default is 20.
+  How many jittered layouts to try per `best` start. Default is 20.
 
 - best:
 
-  Which best individuals should be the starting conditions for a random
-  search. The default is 1.
+  How many distinct best layouts to refine. Default is 1.
 
 - plot:
 
@@ -58,16 +57,15 @@ random_search(
 
 - terrain:
 
-  `NULL` follows the GA `Topographie` flag. A stored `terrainModel` in
-  `result` is reused. `TRUE` downloads only if nothing is stored. A DEM
-  raster rebuilds via
-  [`terrain_model()`](https://YsoSirius.github.io/windfarmGA/reference/terrain_model.md).
-  `FALSE` skips terrain even if the GA used it.
+  `NULL` (default) follows the GA and reuses `result$terrainModel`.
+  `TRUE` downloads only if nothing is stored. A DEM rebuilds the model.
+  `FALSE` skips terrain.
 
 - weibull:
 
-  `NULL` follows the GA `Active Weibull` flag. A speed raster is used
-  as-is. `TRUE` needs `weibull_src`.
+  `NULL` follows the GA flag. Weibull rasters are not stored — pass
+  `weibull_src` (or a speed raster as `weibull`) again. Giving
+  `weibull_src` is enough; you do not also need `weibull = TRUE`.
 
 - weibull_src:
 
@@ -96,10 +94,8 @@ Other Randomization:
 
 ``` r
 # \donttest{
-new <- random_search(resultrect, sp_polygon, n = 20, best = 4)
+new <- random_search(resultrect, sp_polygon, runs = 20, best = 4)
 plot_random_search(resultRS = new, result = resultrect, area = sp_polygon, best = 2)
-
-
 
 
 # }

@@ -61,7 +61,5 @@ Res <- random_search(result = resultrect, area = area)
 plot_random_search(resultRS = Res, result = resultrect, area = area, best = 2)
 
 
-
-
 # }
 ```

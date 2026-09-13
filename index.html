@@ -199,14 +199,18 @@
 <span><span class="va">wind</span> <span class="op">&lt;-</span> <span class="fu">wind_from_era5</span><span class="op">(</span><span class="va">era5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_windrose.html">plot_windrose</a></span><span class="op">(</span><span class="va">wind</span>, spd <span class="op">=</span> <span class="st">"ws"</span>, dir <span class="op">=</span> <span class="st">"wd"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">##    Mast instead of ERA5:</span></span>
+<span><span class="co">##    Met mast instead of ERA5 (bReeze, or two numeric vectors):</span></span>
+<span><span class="co">##    library(bReeze)</span></span>
+<span><span class="co">##    data(winddata)</span></span>
+<span><span class="co">##    s40 &lt;- set(height = 40, v.avg = winddata[, 2], dir.avg = winddata[, 14])</span></span>
+<span><span class="co">##    mast &lt;- mast(timestamp(winddata[, 1]), s40)   # bReeze::mast</span></span>
 <span><span class="co">##    wind &lt;- wind_from_breeze(mast)</span></span>
-<span><span class="co">##    wind &lt;- wind_from_series(dat$ws, dat$wd)</span></span>
+<span><span class="co">##    wind &lt;- wind_from_series(ws, wd)              # raw speed / direction</span></span>
 <span></span>
 <span><span class="co">##    Spatial mean speed (GWA ~250 m); wind$ws is then ignored</span></span>
 <span><span class="va">gwa</span> <span class="op">&lt;-</span> <span class="fu">gwa_download_country</span><span class="op">(</span><span class="st">"AUT"</span>, height <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>  <span class="co"># ISO3 of the site country</span></span>
 <span></span>
-<span><span class="co">## 4. Optimize: keep hub wind in the rising part of the curve</span></span>
+<span><span class="co">## 4. Optimize</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/genetic_algorithm.html">genetic_algorithm</a></span><span class="op">(</span></span>
 <span>  area <span class="op">=</span> <span class="va">area</span>,</span>
 <span>  wind <span class="op">=</span> <span class="va">wind</span>,</span>
@@ -230,14 +234,23 @@
 <span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/explore_result.html">explore_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
 <span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/rayshader.R"</span><span class="op">)</span></span>
+<span><span class="fu">plot_farm_3d_from_result</span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, buffer <span class="op">=</span> <span class="fl">5000</span>, turbine_obj <span class="op">=</span> <span class="st">"./experimental/wind_turbine_v1.obj"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"experimental/plot_mapgl.R"</span><span class="op">)</span></span>
+<span><span class="fu">plot_mapgl_from_result</span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, buffer <span class="op">=</span> <span class="fl">8000</span>, basemap <span class="op">=</span> <span class="st">"satellite"</span><span class="op">)</span></span>
+<span></span>
+<span></span>
 <span><span class="co">## 6. Optional: jitter turbines inside their cells (same physics as the GA)</span></span>
-<span><span class="co">##    Weibull rasters are not stored in `result` — pass weibull_src again.</span></span>
+<span><span class="co">##    Terrain is reused from result$terrainModel. Weibull rasters are not</span></span>
+<span><span class="co">##    stored — pass weibull_src again (that is enough, no weibull = TRUE).</span></span>
 <span><span class="va">refined</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/random_search.html">random_search</a></span><span class="op">(</span></span>
-<span>  <span class="va">result</span>, <span class="va">area</span>, n <span class="op">=</span> <span class="fl">20</span>, best <span class="op">=</span> <span class="fl">1</span>, plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  terrain <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">result</span>, <span class="va">area</span>, runs <span class="op">=</span> <span class="fl">20</span>, best <span class="op">=</span> <span class="fl">1</span>, plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  weibull_src <span class="op">=</span> <span class="va">gwa</span><span class="op">$</span><span class="va">weibull_src</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_random_search.html">plot_random_search</a></span><span class="op">(</span><span class="va">refined</span>, <span class="va">result</span>, <span class="va">area</span>, best <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p align="center">
+<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png"></p>
+<p>With a north-only rose the best layout often sits in the first few upwind rows. In 2D that looks cramped; wakes are 3D, so a turbine on lower ground can sit under the hub-height cone of one further uphill and is not counted as shadowed. Those front rows are also higher, so the wind multiplier stays up and air density drops less. The Leaflet map and the rayshader view (bottom right) show the same run in 2D and on the DEM.</p>
 </div>
 <div class="section level2">
 <h2 id="start-an-optimization">Start an Optimization<a class="anchor" aria-label="anchor" href="#start-an-optimization"></a>
