@@ -35,11 +35,11 @@ test_that("Test Genetic Algorithm with different Inputs", {
   ## Replace Park with highest Fitness level ################
   resultSP <- suppressMessages(
     genetic_algorithm(
-    area = area,
-    n = 16, iteration = 100,
-    wind = vdata,
-    rotor = 35, proportionality = 1,
-    rotor_height = 100, verbose = TRUE
+      area = area,
+      n = 16, iteration = 100,
+      wind = vdata,
+      rotor = 35, proportionality = 1,
+      rotor_height = 100, verbose = TRUE
   ))
   expect_true(is.matrix(resultSP))
   expect_false(any(unlist(sapply(resultSP, is.na))))

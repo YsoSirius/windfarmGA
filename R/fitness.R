@@ -84,9 +84,9 @@ fitness <- function(population, reference_height, rotor_height,
       )
     }
     `%dopar%` <- foreach::`%dopar%`
-    e <- foreach::foreach(
+    e <- suppressWarnings(foreach::foreach(
       k = 1:length(selection),
-      .packages = c("windfarmGA", "terra", "sf")
+      .packages = "windfarmGA"
     ) %dopar% {
       windfarmGA::calculate_energy(
         layout = selection[[k]], reference_height = reference_height,
@@ -96,7 +96,7 @@ fitness <- function(population, reference_height, rotor_height,
         elevation = srtm_crop, terrain = terrain, ccl_raster = cclRaster,
         weibull = weibull, park_center = park_center
       )
-    }
+    })
   }
 
   euniqu <- vector("list", length(selection))

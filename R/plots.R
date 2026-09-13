@@ -94,7 +94,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
       dir <- "dir"
     }
   } else if (!missing(spd) && !missing(dir) &&
-    is.numeric(spd) && is.numeric(dir)) {
+             is.numeric(spd) && is.numeric(dir)) {
     # assume that we've been given vectors of the speed and direction vectors
     data <- data.frame(spd = spd, dir = dir)
     spd <- "spd"
@@ -144,8 +144,7 @@ plot_windrose <- function(data, spd, dir, spdres = 2, dirres = 10, spdmin = 1,
 
   # figure out the wind direction bins #################
   dir_brks <- c(-dirres / 2, seq(dirres / 2, 360 - dirres / 2,
-    by = dirres
-  ), 360 + dirres / 2)
+                                 by = dirres), 360 + dirres / 2)
   dir_labls <- c(
     paste(360 - dirres / 2, "-", dirres / 2),
     paste(
@@ -2321,7 +2320,7 @@ plot_random_search <- function(resultRS, result, area, best) {
   resultRS2 <- list()
   for (nr in 1:nrow(resBest)) {
     resultRS2[[nr]] <- resultRS1[resultRS1[, "Run"] == resBest[, "Run"][nr] &
-      resultRS1[, "bestGARun"] == resBest[, "bestGARun"][nr], ]
+                                   resultRS1[, "bestGARun"] == resBest[, "bestGARun"][nr], ]
   }
   resultRS1 <- resultRS2
 

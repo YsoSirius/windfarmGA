@@ -505,7 +505,7 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
         Col <- "green"
       } else {
         Col <- rbPal(lebre)[as.numeric(cut(-bestPaEn[[i]][, "AbschGesamt"],
-          breaks = lebre
+                                           breaks = lebre
         ))]
       }
       lebre2 <- length(unique(bestPaEf[[i]][, "AbschGesamt"]))
@@ -513,7 +513,7 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
         Col1 <- "green"
       } else {
         Col1 <- rbPal(lebre2)[as.numeric(cut(-bestPaEf[[i]][, "AbschGesamt"],
-          breaks = lebre2
+                                             breaks = lebre2
         ))]
       }
     }
@@ -569,12 +569,10 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
 
     ## Fuzzy Control ###############
     if (i == 1) {
-      ## TODO I do have such a matrix already with that info or??
       t0 <- subset.matrix(allparks, !duplicated(allparks[, "Run"]))
       t0 <- t0[, "Parkfitness"]
       fitnessValues[[i]] <- t0
       rangeFitnessVt0 <- range(t0)
-      maxt0 <- max(t0)
       meant0 <- mean(t0)
       allcoef0 <- c(rangeFitnessVt0, meant0)
       fuzzycontr[[i]] <- rbind(allcoef0)
@@ -923,8 +921,7 @@ isSpatial <- function(area, crs = NULL) {
     shape <- st_as_sf(shape)
     ## This is needed for grid_area. Attribute names must have same length
     shape$names <- "layer"
-  } else if (class(shape)[1] == "data.frame" ||
-             class(shape)[1] == "matrix") {
+  } else if (class(shape)[1] == "data.frame" || class(shape)[1] == "matrix") {
     ## If coordinate names are found, take those columns,
     ## otherwise take the first 2
     if (length(colnames(shape))) {
@@ -1041,57 +1038,34 @@ weibull_speed_raster <- function(weibull_src, area) {
 #' }
 windata_format <- function(df) {
   wind_df <- data.frame(df)
-  if (!all(colnames(wind_df) %in% c("ws", "wd"))) {
-    # Assume that we've been given a wind_df frame.
-    # Lets find the correct columns
-    if (length(colnames(wind_df)) &&
-      all(!colnames(wind_df) %in% c("X1", "X2", "X3"))) {
+  cn <- colnames(wind_df)
+  if (!all(c("ws", "wd") %in% cn)) {
+    if (length(cn) && !all(cn %in% c("X1", "X2", "X3"))) {
       accep_speed <- c("SPEED", "GESCH", "V", "WS")
       accep_direc <- c("DIR", "RICHT", "WD")
       accep_proba <- c("PRO", "WAHR")
-      sum_col_match <- sum(sapply(
-        c(accep_speed, accep_direc, accep_proba),
-        grepl, toupper(colnames(wind_df))
-      ))
-      if (sum_col_match >= 2) {
-        speed_match <- which(sapply(
-          lapply(accep_speed, grepl, toupper(colnames(wind_df))),
-          any
-        ))
-        direc_match <- which(sapply(
-          lapply(accep_direc, grepl, toupper(colnames(wind_df))),
-          any
-        ))
-        probab_match <- which(sapply(
-          lapply(accep_proba, grepl, toupper(colnames(wind_df))),
-          any
-        ))
-        speed_index <- which(grepl(
-          accep_speed[speed_match],
-          toupper(colnames(wind_df))
-        ))
-        direc_index <- which(grepl(
-          accep_direc[direc_match],
-          toupper(colnames(wind_df))
-        ))
-        if (length(probab_match) != 0) {
-          probab_index <- which(grepl(
-            accep_proba[probab_match],
-            toupper(colnames(wind_df))
-          ))
-          wind_df[, c(speed_index[1], direc_index[1], probab_index[1])]
+      up <- toupper(cn)
+      hit <- function(pats) {
+        unique(unlist(lapply(pats, function(p) which(grepl(p, up)))))
+      }
+      speed_index <- hit(accep_speed)
+      direc_index <- hit(accep_direc)
+      probab_index <- hit(accep_proba)
+      if (length(speed_index) && length(direc_index)) {
+        if (length(probab_index)) {
+          wind_df <- wind_df[, c(speed_index[[1]], direc_index[[1]], probab_index[[1]])]
           colnames(wind_df) <- c("ws", "wd", "probab")
         } else {
-          wind_df[, c(speed_index[1], direc_index[1])]
+          wind_df <- wind_df[, c(speed_index[[1]], direc_index[[1]])]
           colnames(wind_df) <- c("ws", "wd")
         }
       } else {
-        col_numeric <- which(sapply(wind_df[1, ], is.numeric))
+        col_numeric <- which(vapply(wind_df[1, ], is.numeric, logical(1)))
         wind_df <- wind_df[, col_numeric]
         colnames(wind_df) <- c("ws", "wd")
       }
     } else {
-      col_numeric <- which(sapply(wind_df[1, ], is.numeric))
+      col_numeric <- which(vapply(wind_df[1, ], is.numeric, logical(1)))
       wind_df <- wind_df[, col_numeric]
       if (length(colnames(wind_df)) == 2) {
         colnames(wind_df) <- c("ws", "wd")

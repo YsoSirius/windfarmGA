@@ -102,15 +102,6 @@ calculate_energy <- function(layout, reference_height, rotor_height,
                              elevation = NULL, terrain = FALSE,
                              ccl_raster = NULL, weibull = FALSE,
                              park_center = NULL, plot = FALSE) {
-  sel <- layout
-  polygon1 <- area
-  RotorR <- rotor
-  dirSpeed <- wind
-  wnkl <- wake_angle
-  distanz <- wake_distance
-  srtm_crop <- elevation
-  cclRaster <- ccl_raster
-
   ## Get default values ###################
   cT <- getOption("windfarmGA.cT", 0.88)
   air_rh <- getOption("windfarmGA.air_rh", 1.225)
@@ -122,12 +113,12 @@ calculate_energy <- function(layout, reference_height, rotor_height,
   pcurve <- getOption("windfarmGA.power_curve", NULL)
 
   ## Get the Coordinates of the current individual / windfarm ###################
-  xy_individual <- layout_xy(sel)
+  xy_individual <- layout_xy(layout)
 
   ## Get Center of Polygon for rotating
   if (is.null(park_center)) {
     park_center <- apply(
-      matrix(sf::st_bbox(polygon1), ncol = 2, byrow = FALSE), 1, mean
+      matrix(sf::st_bbox(area), ncol = 2, byrow = FALSE), 1, mean
     )
   }
   pcent <- park_center
@@ -147,7 +138,7 @@ calculate_energy <- function(layout, reference_height, rotor_height,
   turb_elev <- rep(1, nrow(xy_individual))
   if (terrain) {
     terr <- terrain_at_layout(
-      xy_individual, layout_ids(sel), srtm_crop, cclRaster, rotor_height
+      xy_individual, layout_ids(layout), elevation, ccl_raster, rotor_height
     )
     windpo <- windpo * terr$wind_mult
     turb_elev <- terr$elevation
@@ -155,9 +146,9 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     k <- terr$k
     air_rh <- terr$air_rh
 
-    if (plot && terrain_has_rasters(srtm_crop)) {
+    if (plot && terrain_has_rasters(elevation)) {
       plot_terrain_energy(
-        xy_individual, polygon1, srtm_crop, cclRaster, terr, cexa
+        xy_individual, area, elevation, ccl_raster, terr, cexa
       )
     }
   }
@@ -171,7 +162,7 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     if (plot) {
       par(mfrow = c(1, 1), ask = FALSE)
       plot(weibull, main = "Weibull Raster")
-      plot(polygon1, add = TRUE)
+      plot(area, add = TRUE)
     }
     ## Extract Weibul values for turbine locations
     estim_speed <- terra::extract(weibull, xy_individual)[[1]]
@@ -188,10 +179,10 @@ calculate_energy <- function(layout, reference_height, rotor_height,
   ## Calculate Energy for all incoming wind directions ###################
   ## Rotate Polygon for all angles and analyze which turbine is affected by
   ## another one to calculate total energy output.
-  alllist <- vector("list", length(dirSpeed[, 1]))
-  for (index in 1:length(dirSpeed[, 2])) {
+  alllist <- vector("list", length(wind[, 1]))
+  for (index in 1:length(wind[, 2])) {
     ## Get mean windspeed for every turbine location from windraster ##################
-    point_wind <- windpo * dirSpeed[index, "ws"]
+    point_wind <- windpo * wind[index, "ws"]
 
     ## If Weibull is active/raster, multiply wind speeds with dummy vector ##################
     if (weibull_bool) {
@@ -206,30 +197,30 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     point_wind[is.na(point_wind)] <- 0
 
     ## Get the current incoming wind direction and assign to "angle"
-    angle <- -dirSpeed[index, "wd"]
+    angle <- -wind[index, "wd"]
     if (plot) {
       ## Plot turbine locations with angle 0 and open a
       ## second frame for rotated turbine locations
       par(mfrow = c(1, 2))
-      plot(st_geometry(polygon1), main = "Shape at angle 0")
+      plot(st_geometry(area), main = "Shape at angle 0")
       points(xy_individual[, 1], xy_individual[, 2], pch = 20)
       textxy(xy_individual[, 1], xy_individual[, 2],
         labs = dimnames(xy_individual)[[1]], cex = cexa
       )
 
       ## Rotate and Plot the Polygon
-      cordslist <- list(st_coordinates(polygon1))
+      cordslist <- list(st_coordinates(area))
       cordslist <- lapply(cordslist, function(x) {
         rotate_CPP(x[, 1], x[, 2], pcent[1], pcent[2], angle)
       })
       poly3 <- sf::st_as_sf(sf::st_sfc(
         sf::st_polygon(cordslist),
-        crs = st_crs(polygon1)
+        crs = st_crs(area)
       ))
       plot(st_geometry(poly3), main = c("Shape at angle:", round(-1 * angle, 2)))
       mtext(paste(
         "Direction: ", index, "\nfrom total: ",
-        nrow(dirSpeed)
+        nrow(wind)
       ), side = 1)
     }
 
@@ -251,8 +242,8 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     ## Get the influecing points given with incoming wind direction angle ##################
     ## and reduce then to data frame
     tmp <- turbine_influences(
-      t = xy_individual_rot, wnkl = wnkl, dist = distanz,
-      area = polygon1, dirct = angle
+      t = xy_individual_rot, wnkl = wake_angle, dist = wake_distance,
+      area = area, dirct = angle
     )
     df_all <- do.call("rbind", tmp)
 
@@ -273,7 +264,7 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     ), drop = FALSE]
     row.names(windlist) <- NULL
     windlist <- cbind(windlist,
-      "RotorR" = as.numeric(RotorR)
+      "RotorR" = as.numeric(rotor)
     )
 
     ## Change k to lenght of windlist. Repeat or Inflate vector k ##################
@@ -288,8 +279,7 @@ calculate_energy <- function(layout, reference_height, rotor_height,
     ## Calculate the wake Radius and the rotor area for every turbine ##################
     windlist <- cbind(windlist,
       "WakeR" = as.numeric(windlist[, "Laenge_B"] > 0) *
-        (windlist[, "RotorR"] * 2 + 2 * k1 *
-          windlist[, "Laenge_B"]) / 2,
+        (windlist[, "RotorR"] * 2 + 2 * k1 * windlist[, "Laenge_B"]) / 2,
       "Rotorflaeche" = (windlist[, "RotorR"]^2) * pi
     )
 
@@ -327,7 +317,7 @@ calculate_energy <- function(layout, reference_height, rotor_height,
       "V_i" = v_i,
       "TotAbschProz" = tot_ab,
       "V_New" = windlist[, "Windmean"] - v_i,
-      "Rect_ID" = sel[id, "ID"]
+      "Rect_ID" = layout[id, "ID"]
     )
 
     ## Get a reduced dataframe and split duplicated Point_id, since a ##################

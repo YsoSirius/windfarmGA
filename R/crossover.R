@@ -133,7 +133,7 @@ crossover <- function(se6, u, uplimit, crossPart = c("EQU", "RAN"), verbose, see
   if (verbose) {
     message(paste("How many parental pairs are at hand: ", length(z)))
     message(paste("How many permutations are possible: ", length(z) *
-      (2^(trunc(u) + 1))))
+                    (2^(trunc(u) + 1))))
   }
 
   partaksur <- ncol(nI)

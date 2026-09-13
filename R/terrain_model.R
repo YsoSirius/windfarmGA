@@ -133,8 +133,7 @@ terrain_model <- function(terrain = TRUE, area, ccl, ccl_roughness,
   cclRaster <- terra::classify(cclPoly, matrix(c(
     rauhigkeitz$GRID_CODE,
     rauhigkeitz$Rauhigkeit_z
-    ),
-    ncol = 2)
+    ), ncol = 2)
   )
 
   if (plot) {

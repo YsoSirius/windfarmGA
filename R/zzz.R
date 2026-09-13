@@ -11,7 +11,8 @@ utils::globalVariables(
     "k",
     "generation", "value", "series",
     "n_used", "Parkfitness", "Max",
-    "rate", "operator", "count", "efficiency"
+    "rate", "operator", "count", "efficiency",
+    "wd"
   )
 )
 

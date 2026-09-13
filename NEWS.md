@@ -97,6 +97,12 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
   windfarmGA/terra/sf on the workers. The bench catches dropped
   connections (often at 6–8 workers on this small site). README
   notes ~4 workers as the useful default on the demo site.
+* `calculate_energy()` uses its public arguments (`layout`, `area`,
+  `wind`, …) instead of internal aliases. Unused `maxt0` in the GA
+  first-generation fuzzy block is gone.
+* `windata_format()` column matching used a broken `sapply(grepl, …)`
+  (`--run-donttest` example). Frames that already have `ws`/`wd` skip
+  the matcher (so `probab` no longer triggers it).
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
