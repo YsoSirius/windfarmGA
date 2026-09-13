@@ -69,6 +69,8 @@
 <li>Parallel clusters always stop via <code>on.exit</code>.</li>
 <li>
 <code>plot_result(terrain = dem)</code> no longer errors on a SpatRaster. Weibull file paths get a CRS before crop. PROJ &lt; 6 branches are gone.</li>
+<li>
+<code>with_mocked_bindings()</code> in <code>test_coverage_branches.R</code> wraps the ggplot2-missing checks in <code>code = { … }</code> (testthat requires named bindings).</li>
 </ul></div>
 </div>
     <div class="section level2">
