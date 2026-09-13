@@ -1,5 +1,9 @@
-#' A resulting matrix of \code{genetic_algorithm} with 200 iterations
+#' A resulting matrix of \code{genetic_algorithm} with 50 generations
 #' and a rectangular grid derived from \code{sp_polygon}
+#'
+#' First 50 generations of a 200-iteration run, kept short so the
+#' installed package stays small. Do not recreate with the current GA
+#' (\code{n_start} and population size are larger; the \code{.rda} grows).
 "resultrect"
 
 #' A resulting matrix of \code{genetic_algorithm} with 10 iterations

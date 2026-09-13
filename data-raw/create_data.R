@@ -125,7 +125,10 @@ usethis::use_data(k_weibull, overwrite = TRUE)
 
 
 
-## Result with Rect and 200 Iteration ##################
+## Result with Rect (do not re-run the GA just to shrink the file) ######
+## The current GA starts with n_start >= 100 and keeps a large population
+## in allCoords. A fresh 50-gen run is *larger* than the old 200-gen
+## object. Trim the committed run instead, then save with xz.
 sp_polygon <- sf::st_as_sf(sf::st_sfc(
   sf::st_polygon(list(cbind(
     c(4498482, 4498482, 4499991, 4499991, 4498482),
@@ -135,15 +138,16 @@ sp_polygon <- sf::st_as_sf(sf::st_sfc(
 ))
 usethis::use_data(sp_polygon, overwrite = TRUE)
 
-winddat <- data.frame(ws = 12, wd = 0)
-resultrect <- genetic_algorithm(
-  area = sp_polygon,
-  n = 12, iteration = 200,
-  wind = winddat,
-  rotor = 30, rotor_height = 100
-)
-# plot_windfarmGA(resultrect, sp_polygon)
-usethis::use_data(resultrect, overwrite = TRUE)
+# winddat <- data.frame(ws = 12, wd = 0)
+# resultrect <- genetic_algorithm(
+#   area = sp_polygon,
+#   n = 20, iteration = 200,
+#   wind = winddat, plot = FALSE,
+#   rotor = 30, rotor_height = 100
+# )
+load("data/resultrect.rda")
+resultrect <- resultrect[seq_len(min(50L, nrow(resultrect))), , drop = FALSE]
+usethis::use_data(resultrect, overwrite = TRUE, compress = "xz")
 
 
 resulthex <- genetic_algorithm(

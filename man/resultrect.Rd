@@ -3,16 +3,20 @@
 \docType{data}
 \name{resultrect}
 \alias{resultrect}
-\title{A resulting matrix of \code{genetic_algorithm} with 200 iterations
+\title{A resulting matrix of \code{genetic_algorithm} with 50 generations
 and a rectangular grid derived from \code{sp_polygon}}
 \format{
-An object of class \code{matrix} (inherits from \code{array}) with 200 rows and 13 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 50 rows and 13 columns.
 }
 \usage{
 resultrect
 }
 \description{
-A resulting matrix of \code{genetic_algorithm} with 200 iterations
+A resulting matrix of \code{genetic_algorithm} with 50 generations
 and a rectangular grid derived from \code{sp_polygon}
+
+First 50 generations of a 200-iteration run, kept short so the
+installed package stays small. Do not recreate with the current GA
+(\code{n_start} and population size are larger; the \code{.rda} grows).
 }
 \keyword{datasets}
