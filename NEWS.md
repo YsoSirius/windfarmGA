@@ -85,6 +85,9 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
   `turbine_influences()` removed (params were already documented).
 * Rd help is ASCII-only (`≈`, `×`, em-dash broke the CRAN PDF manual).
   README no longer links to the archived check-results page (404).
+* Parallel: `n_cluster` is capped at 2 under `_R_CHECK_LIMIT_CORES_`
+  (R errors on `makeCluster(detectCores() - 1)`). Terrain tests no
+  longer need a local `g100_06.tif`.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0

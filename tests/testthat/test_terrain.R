@@ -1,7 +1,21 @@
-library(terra)
-library(elevatr)
-library(raster)
+suppressWarnings({
+  library(terra)
+  library(elevatr)
+  library(raster)
+})
 
+synth_ccl_path <- function(area, code = 12) {
+  path <- tempfile(fileext = ".tif")
+  bb <- sf::st_bbox(area)
+  r <- terra::rast(
+    xmin = as.numeric(bb$xmin), xmax = as.numeric(bb$xmax),
+    ymin = as.numeric(bb$ymin), ymax = as.numeric(bb$ymax),
+    resolution = 100, crs = terra::crs(area)
+  )
+  terra::values(r) <- code
+  terra::writeRaster(r, path, overwrite = TRUE)
+  path
+}
 
 test_that("Test Terrain and Weibull Effects", {
   # skip()
@@ -24,9 +38,10 @@ test_that("Test Terrain and Weibull Effects", {
     ))),
     crs = 3035
   ))
+  ccl_file <- synth_ccl_path(area)
   polygon_wgs84 <- sf::st_transform(area, st_crs(4326))
   srtm <- suppressMessages(elevatr::get_elev_raster(locations = polygon_wgs84, z = 11))
-  res <- terrain_model(srtm, area, ccl = terra::rast("g100_06.tif"))
+  res <- terrain_model(srtm, area, ccl = terra::rast(ccl_file))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
@@ -35,7 +50,7 @@ test_that("Test Terrain and Weibull Effects", {
   expect_s4_class(res[[1]][[2]], "SpatRaster")
   expect_s4_class(res[[1]][[3]], "SpatRaster")
 
-  res <- terrain_model(terra::rast(srtm), area, ccl = "g100_06.tif")
+  res <- terrain_model(terra::rast(srtm), area, ccl = ccl_file)
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
@@ -47,8 +62,8 @@ test_that("Test Terrain and Weibull Effects", {
 
   srtm_terra <- terra::rast(srtm)
   values(srtm_terra) <- NA
-  res <- expect_warning(terrain_model(srtm_terra, area, ccl = "g100_06.tif"))
-  res <- suppressWarnings(terrain_model(srtm_terra, area, ccl = "g100_06.tif"))
+  res <- expect_warning(terrain_model(srtm_terra, area, ccl = ccl_file))
+  res <- suppressWarnings(terrain_model(srtm_terra, area, ccl = ccl_file))
   expect_length(res, 2)
   expect_length(res[[1]], 3)
   expect_length(res[[2]], 1)
@@ -72,14 +87,14 @@ test_that("Test Terrain and Weibull Effects", {
         xmax = 5660619.11584955, ymax = 3437763.9404084), class = "bbox"))
   st_crs(polygon) <- 3035
   expect_error(
-    terrain_model(terrain = TRUE, polygon, ccl = "g100_06.tif")
+    terrain_model(terrain = TRUE, polygon, ccl = ccl_file)
   )
 
   ## Mock Packages not installed ############
   with_mocked_bindings(
     is_elevatr_installed = function() FALSE,
     expect_error(
-      terrain_model(terrain = TRUE, area, ccl = "g100_06.tif")
+      terrain_model(terrain = TRUE, area, ccl = ccl_file)
     )
   )
 
@@ -95,6 +110,7 @@ test_that("Test Terrain and Weibull Effects", {
     ))),
     crs = 3035
   ))
+  ccl_sp <- synth_ccl_path(sp_polygon)
 
   resultrect <- quiet(suppressWarnings(
     genetic_algorithm(
@@ -122,7 +138,7 @@ test_that("Test Terrain and Weibull Effects", {
       rotor = 30,
       rotor_height = 100,
       terrain = TRUE, verbose = TRUE,
-      plot = TRUE, ccl = "g100_06.tif",
+      plot = TRUE, ccl = ccl_sp,
       ccl_roughness = ccl_roughness
     )
   ))
@@ -306,7 +322,7 @@ test_that("Test Terrain and Weibull Effects", {
     roughness = roughrast
   )
 
-  ccl <- terra::rast("g100_06.tif")
+  ccl <- terra::rast(ccl_sp)
   ccl <- crop(ccl, area, mask = TRUE)
   path <- paste0(system.file(package = "windfarmGA"), "/extdata/")
   ccl_roughness <- paste0(path, "clc_legend.csv")
@@ -343,7 +359,7 @@ test_that("Test Terrain and Weibull Effects", {
       rotor = 30,
       rotor_height = 100,
       terrain = srtm_crop$strm_crop, verbose = TRUE,
-      plot = TRUE, ccl = "g100_06.tif",
+      plot = TRUE, ccl = ccl_sp,
       ccl_roughness = ccl_roughness
     )
   ))

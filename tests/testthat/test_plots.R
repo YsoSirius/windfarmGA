@@ -1,7 +1,9 @@
 
 test_that("Test Plotting Functions", {
-  library(terra)
-  library(stars)
+  suppressWarnings({
+    library(terra)
+    library(stars)
+  })
 
   skip_on_os("mac", arch = "aarch64")
 

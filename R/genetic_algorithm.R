@@ -205,9 +205,20 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
       )
     }
     max_cores <- parallel::detectCores()
-    if (n_cluster > max_cores) {
-      warning("Maximum number of cores is: ", max_cores, "\n'n_cluster' will be set to: ", max_cores - 1)
-      n_cluster <- max_cores - 1
+    if (is.na(max_cores) || max_cores < 1L) {
+      max_cores <- 1L
+    }
+    usable <- max(1L, max_cores - 1L)
+    chk <- tolower(Sys.getenv("_R_CHECK_LIMIT_CORES_", ""))
+    if (nzchar(chk) && chk != "false") {
+      usable <- min(usable, 2L)
+    }
+    if (n_cluster > usable) {
+      warning(
+        "Maximum number of cores is: ", max_cores,
+        "\n'n_cluster' will be set to: ", usable
+      )
+      n_cluster <- usable
     }
     type_cluster <- "PSOCK"
     cl <- parallel::makeCluster(n_cluster, type = type_cluster)

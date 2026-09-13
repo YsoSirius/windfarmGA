@@ -64,29 +64,18 @@ test_that("Test Parallelisation", {
   expect_true(is.matrix(res))
   expect_false(any(unlist(sapply(res, is.na))))
 
-  ## Too many Cluster
-  # skip("Too many clusters")
+  ## Too many workers: cap and warn, do not call makeCluster(100)
   res <- expect_warning(
     genetic_algorithm(
       area = area,
-      n = 12, iteration = 2,
+      n = 12, iteration = 1,
       wind = wind,
       rotor = 30,
       rotor_height = 100,
       parallel = TRUE, n_cluster = 100
     )
   )
-  res <- suppressWarnings(
-    genetic_algorithm(
-      area = area,
-      n = 12, iteration = 2,
-      wind = wind,
-      rotor = 30,
-      rotor_height = 100,
-      parallel = TRUE, n_cluster = 100
-    )
-  )
-  expect_true(nrow(res) == 2)
+  expect_true(nrow(res) == 1)
   expect_true(is.matrix(res))
   expect_false(any(unlist(sapply(res, is.na))))
 })
