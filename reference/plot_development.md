@@ -27,7 +27,6 @@ Other Plotting Functions:
 [`plot_cell_heatmap()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md),
 [`plot_cloud()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cloud.md),
 [`plot_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.md),
-[`plot_fitness_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.md),
 [`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md),
 [`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md),
 [`plot_population()`](https://YsoSirius.github.io/windfarmGA/reference/plot_population.md),

@@ -30,6 +30,8 @@ string.
   still accept 0/1 chromosomes. New exports:
   [`set_crossover()`](https://YsoSirius.github.io/windfarmGA/reference/set_crossover.md),
   [`swap_mutation()`](https://YsoSirius.github.io/windfarmGA/reference/swap_mutation.md).
+- `plot_fitness_evolution()` is gone (it only called
+  [`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md)).
 
 ### New
 
@@ -100,6 +102,16 @@ string.
 - `resultrect` is the first 50 generations of the old 200-iteration run,
   saved with `xz` (~90 KB). A new 50-gen GA is larger because
   `allCoords` now stores a bigger population.
+- [`plot_cell_heatmap()`](https://YsoSirius.github.io/windfarmGA/reference/plot_cell_heatmap.md)
+  / `ga_result_grid()` no longer assume a missing CRS is lon/lat. Meter
+  coordinates get the result projection (same as
+  [`plot_leaflet()`](https://YsoSirius.github.io/windfarmGA/reference/plot_leaflet.md)).
+  The 4326 round-trip broke the grid on macOS.
+- Roxygen: unused `@inheritParams` on
+  [`trimton()`](https://YsoSirius.github.io/windfarmGA/reference/trimton.md)
+  and
+  [`turbine_influences()`](https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.md)
+  removed (params were already documented).
 
 ## windfarmGA 4.0.0
 
@@ -325,9 +337,7 @@ result_par <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
 PlotWindfarmGA(result = result_par, grid_method = "h", area = area)
 ```
 
-## windfarmGA 1.1
-
-CRAN release: 2017-07-09
+## windfarmGA 1.1.0
 
 ##### Optimization with Hexagonal Grid Cells
 
@@ -340,3 +350,7 @@ result_hex <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
                   reference_height = 50,rotor_height = 100)
 PlotWindfarmGA(result = result_hex, grid_method = "h", area = area)
 ```
+
+## windfarmGA 1.0.0
+
+Initial release

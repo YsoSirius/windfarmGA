@@ -41,6 +41,8 @@
 <li>Public API is snake_case: <code>area</code>, <code>wind</code>, <code>rotor</code>, <code>mutation_rate</code>, <code>selection_mode</code>, <code>crs</code>. <code>plotit</code> is now <code>plot</code>. Unused loop args <code>crossPart1</code> and <code>trimForce</code> are gone. Invalid <code>selection_mode</code> errors (no interactive prompt).</li>
 <li>Defaults that change a run: <code>selection_mode = "VAR"</code>, mutation <code>2/n</code> (was often <code>0.8</code>), <code>n_elite = 3</code>. Session options (inject, immigrants, seasons, local search) also change search behaviour.</li>
 <li>Legacy <code><a href="../reference/crossover.html">crossover()</a></code>, <code><a href="../reference/mutation.html">mutation()</a></code> and <code><a href="../reference/trimton.html">trimton()</a></code> still accept 0/1 chromosomes. New exports: <code><a href="../reference/set_crossover.html">set_crossover()</a></code>, <code><a href="../reference/swap_mutation.html">swap_mutation()</a></code>.</li>
+<li>
+<code>plot_fitness_evolution()</code> is gone (it only called <code><a href="../reference/plot_parkfitness.html">plot_parkfitness()</a></code>).</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-5-0-0">New<a class="anchor" aria-label="anchor" href="#new-5-0-0"></a></h3>
@@ -73,6 +75,9 @@
 <code>with_mocked_bindings()</code> in <code>test_coverage_branches.R</code> wraps the ggplot2-missing checks in <code>code = { … }</code> (testthat requires named bindings). <code><a href="../reference/random_search.html">random_search()</a></code> test uses <code>runs</code>, not the removed <code>n</code>.</li>
 <li>
 <code>resultrect</code> is the first 50 generations of the old 200-iteration run, saved with <code>xz</code> (~90 KB). A new 50-gen GA is larger because <code>allCoords</code> now stores a bigger population.</li>
+<li>
+<code><a href="../reference/plot_cell_heatmap.html">plot_cell_heatmap()</a></code> / <code>ga_result_grid()</code> no longer assume a missing CRS is lon/lat. Meter coordinates get the result projection (same as <code><a href="../reference/plot_leaflet.html">plot_leaflet()</a></code>). The 4326 round-trip broke the grid on macOS.</li>
+<li>Roxygen: unused <code>@inheritParams</code> on <code><a href="../reference/trimton.html">trimton()</a></code> and <code><a href="../reference/turbine_influences.html">turbine_influences()</a></code> removed (params were already documented).</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -275,9 +280,9 @@
 </div>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.1" id="windfarmga-11">windfarmGA 1.1<a class="anchor" aria-label="anchor" href="#windfarmga-11"></a></h2><p class="text-muted">CRAN release: 2017-07-09</p>
+<h2 class="pkg-version" data-toc-text="1.1.0" id="windfarmga-110">windfarmGA 1.1.0<a class="anchor" aria-label="anchor" href="#windfarmga-110"></a></h2>
 <div class="section level5">
-<h5 id="optimization-with-hexagonal-grid-cells-1-1">Optimization with Hexagonal Grid Cells<a class="anchor" aria-label="anchor" href="#optimization-with-hexagonal-grid-cells-1-1"></a></h5>
+<h5 id="optimization-with-hexagonal-grid-cells-1-1-0">Optimization with Hexagonal Grid Cells<a class="anchor" aria-label="anchor" href="#optimization-with-hexagonal-grid-cells-1-1-0"></a></h5>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">result_hex</span> <span class="op">&lt;</span>- genAlgo<span class="er">(</span><span class="ex">area</span> = area, grid_method =<span class="st">"h"</span>, n=12, Rotor=30,</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>                  <span class="va">fcr</span><span class="op">=</span>5,iteration=10, <span class="ex">wind</span> = data.in,crossPart1 = <span class="st">"EQU"</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>                  <span class="va">selection_mode</span><span class="op">=</span><span class="st">"FIX"</span>,mutation_rate=0.8, <span class="ex">proportionality</span> = 1,</span>
@@ -286,6 +291,10 @@
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>                  <span class="ex">reference_height</span> = 50,rotor_height = 100<span class="kw">)</span></span>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="ex">PlotWindfarmGA</span><span class="er">(</span><span class="ex">result</span> = result_hex, grid_method = <span class="st">"h"</span>, area = area<span class="kw">)</span></span></code></pre></div>
 </div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.0" id="windfarmga-100">windfarmGA 1.0.0<a class="anchor" aria-label="anchor" href="#windfarmga-100"></a></h2>
+<p>Initial release</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

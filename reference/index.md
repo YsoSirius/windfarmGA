@@ -78,8 +78,6 @@ Main components of the genetic algorithm
   : When the best layout improved
 - [`plot_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.md)
   : Energy and efficiency over generations
-- [`plot_fitness_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.md)
-  : Fitness and operator rates
 - [`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md)
   : Plot all layouts of one generation
 - [`plot_leaflet()`](https://YsoSirius.github.io/windfarmGA/reference/plot_leaflet.md)

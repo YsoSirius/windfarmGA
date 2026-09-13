@@ -172,7 +172,7 @@
 <div class="section level2">
 <h2 id="realistic-workflow-site-turbine-wind">Realistic workflow (site, turbine, wind)<a class="anchor" aria-label="anchor" href="#realistic-workflow-site-turbine-wind"></a>
 </h2>
-<p>Clone the GitHub repo so <code>experimental/</code> is available (it is not in the CRAN tarball). Browse open reference turbines at the <a href="https://natlabrockies.github.io/turbine-models/" class="external-link">NREL Turbine Archive</a> (IEA 3.4 / 10 / 15 MW and NREL 5 MW are the best documented).</p>
+<p>Clone the GitHub repo so <code>experimental/</code> is available (it is not in the CRAN tarball). Browse open reference turbines at the <a href="https://natlabrockies.github.io/turbine-models/" class="external-link">NREL Turbine Archive</a>.</p>
 <p>ERA5 / Copernicus (env <code>COPERNICUS_CLIMATE_DATA</code>) is useful as a <strong>directional rose</strong> over time (<code>get_era5_wind()</code> → <code>wind_from_era5()</code>), but the grid is too coarse (~31 km) as a spatial wind field for siting. For mean speed per cell use Global Wind Atlas Weibull rasters (<code>weibull = TRUE</code>, <code>weibull_src = list(k, a)</code>). Hub-height correction uses <code>reference_height</code> (100 m for the ERA5 100 m u/v download) and <code>rotor_height</code> from the turbine. A met mast goes through <code>wind_from_breeze()</code> or <code><a href="reference/wind_from_series.html">wind_from_series()</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ysosirius.github.io/windfarmGA/index.html" class="external-link">windfarmGA</a></span><span class="op">)</span></span>
@@ -250,7 +250,7 @@
 <span><span class="fu"><a href="reference/plot_random_search.html">plot_random_search</a></span><span class="op">(</span><span class="va">refined</span>, <span class="va">result</span>, <span class="va">area</span>, best <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p align="center">
 <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png"></p>
-<p>With a north-only rose the best layout often sits in the first few upwind rows. In 2D that looks cramped; wakes are 3D, so a turbine on lower ground can sit under the hub-height cone of one further uphill and is not counted as shadowed. Those front rows are also higher, so the wind multiplier stays up and air density drops less. The Leaflet map and the rayshader view (bottom right) show the same run in 2D and on the DEM.</p>
+<p>The screenshot above shows the optimized layout for a north-only wind rose. The best layout often sits in the first few upwind rows. In 2D, the arrangement looks cramped; however, wakes are in 3D. A turbine on lower ground can sit below the hub-height wake cone of a turbine further uphill and therefore is not counted as shadowed. These front rows are also at higher elevation, so the wind multiplier remains high while air density decreases less. The Leaflet map and the rayshader view (bottom right) show the same run in 2D and on the DEM.</p>
 </div>
 <div class="section level2">
 <h2 id="start-an-optimization">Start an Optimization<a class="anchor" aria-label="anchor" href="#start-an-optimization"></a>
@@ -762,50 +762,13 @@
 <span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, orderitems <span class="op">=</span> <span class="cn">FALSE</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>  <span class="co"># last generation</span></span>
 <span><span class="fu"><a href="reference/plot_evolution.html">plot_evolution</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                        <span class="co"># energy + efficiency</span></span>
 <span><span class="fu"><a href="reference/plot_development.html">plot_development</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                      <span class="co"># when the max improved</span></span></code></pre></div>
-<p><code><a href="reference/plot_fitness_evolution.html">plot_fitness_evolution()</a></code> is the same as <code><a href="reference/plot_parkfitness.html">plot_parkfitness()</a></code>. Package data <code>resulthex</code> / <code>resultrect</code> and <code>sp_polygon</code> work the same way (<code>plot_leaflet(resulthex, sp_polygon, which = 1)</code>).</p>
-<p>A full documentation of the genetic algorithm is given in my <a href="https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf" class="external-link">master thesis</a>.</p>
+<p>Package data <code>resulthex</code> / <code>resultrect</code> and <code>sp_polygon</code> work the same way (<code>plot_leaflet(resulthex, sp_polygon, which = 1)</code>).</p>
+<p>A full documentation of the genetic algorithm is given in my <a href="https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf" class="external-link">master thesis</a>. &gt; <strong>NOTE:</strong> The implementation has changed substantially since then. Many functions and arguments have been renamed or optimized, and the internal structure of the algorithm has been reworked. As a result, the current version differs significantly from the implementation described in the thesis and calculates and converges considerably faster.</p>
 </div>
 <div class="section level1">
 <h1 id="shiny-windfarm-optimization">Shiny Windfarm Optimization<a class="anchor" aria-label="anchor" href="#shiny-windfarm-optimization"></a>
 </h1>
 <p>I also made a <a href="https://windfarmga.shinyapps.io/windga_shiny/" class="external-link">Shiny App</a> for the Genetic Algorithm. Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time.</p>
-</div>
-<div class="section level1">
-<h1 id="full-optimization-example">Full Optimization example:<a class="anchor" aria-label="anchor" href="#full-optimization-example"></a>
-</h1>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ysosirius.github.io/windfarmGA/index.html" class="external-link">windfarmGA</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">area</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span></span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4651704</span>, <span class="fl">4651704</span>, <span class="fl">4654475</span>, <span class="fl">4654475</span>, <span class="fl">4651704</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2692925</span>, <span class="fl">2694746</span>, <span class="fl">2694746</span>, <span class="fl">2692925</span>, <span class="fl">2692925</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>  crs <span class="op">=</span> <span class="fl">3035</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">area</span>, col <span class="op">=</span> <span class="st">"blue"</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">wind_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ws <span class="op">=</span> <span class="fl">12</span>, wd <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">windrosePlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/plot_windrose.html">plot_windrose</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">wind_df</span>, spd <span class="op">=</span> <span class="va">wind_df</span><span class="op">$</span><span class="va">ws</span>,</span>
-<span>                             dir <span class="op">=</span> <span class="va">wind_df</span><span class="op">$</span><span class="va">wd</span>, dirres <span class="op">=</span> <span class="fl">10</span>, spdmax <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
-<span><span class="va">Rotor</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
-<span><span class="va">fcr</span> <span class="op">&lt;-</span> <span class="fl">9</span></span>
-<span><span class="va">Grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/grid_area.html">grid_area</a></span><span class="op">(</span>area <span class="op">=</span> <span class="va">area</span>, size <span class="op">=</span> <span class="op">(</span><span class="va">Rotor</span><span class="op">*</span><span class="va">fcr</span><span class="op">)</span>, prop <span class="op">=</span> <span class="fl">1</span>, plot_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/genetic_algorithm.html">genetic_algorithm</a></span><span class="op">(</span>area <span class="op">=</span> <span class="va">area</span>,</span>
-<span>                            n <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>                            rotor <span class="op">=</span> <span class="va">Rotor</span>, fcr <span class="op">=</span> <span class="va">fcr</span>,</span>
-<span>                            iteration <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>                            wind <span class="op">=</span> <span class="va">wind_df</span>,</span>
-<span>                            reference_height <span class="op">=</span> <span class="fl">50</span>, rotor_height <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/plot_windfarmGA.html">plot_windfarmGA</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_result.html">plot_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_parkfitness.html">plot_parkfitness</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_population.html">plot_population</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_generation.html">plot_generation</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_cell_heatmap.html">plot_cell_heatmap</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 
   </main><aside class="col-md-3"><div class="links">

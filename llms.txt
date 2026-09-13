@@ -177,8 +177,7 @@ a separate `plot_result` panel).
 
 Clone the GitHub repo so `experimental/` is available (it is not in the
 CRAN tarball). Browse open reference turbines at the [NREL Turbine
-Archive](https://natlabrockies.github.io/turbine-models/) (IEA 3.4 / 10
-/ 15 MW and NREL 5 MW are the best documented).
+Archive](https://natlabrockies.github.io/turbine-models/).
 
 ERA5 / Copernicus (env `COPERNICUS_CLIMATE_DATA`) is useful as a
 **directional rose** over time (`get_era5_wind()` → `wind_from_era5()`),
@@ -269,13 +268,14 @@ plot_random_search(refined, result, area, best = 1)
 
 ![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png)
 
-With a north-only rose the best layout often sits in the first few
-upwind rows. In 2D that looks cramped; wakes are 3D, so a turbine on
-lower ground can sit under the hub-height cone of one further uphill and
-is not counted as shadowed. Those front rows are also higher, so the
-wind multiplier stays up and air density drops less. The Leaflet map and
-the rayshader view (bottom right) show the same run in 2D and on the
-DEM.
+The screenshot above shows the optimized layout for a north-only wind
+rose. The best layout often sits in the first few upwind rows. In 2D,
+the arrangement looks cramped; however, wakes are in 3D. A turbine on
+lower ground can sit below the hub-height wake cone of a turbine further
+uphill and therefore is not counted as shadowed. These front rows are
+also at higher elevation, so the wind multiplier remains high while air
+density decreases less. The Leaflet map and the rayshader view (bottom
+right) show the same run in 2D and on the DEM.
 
 ## Start an Optimization
 
@@ -499,14 +499,16 @@ plot_evolution(result)                        # energy + efficiency
 plot_development(result)                      # when the max improved
 ```
 
-[`plot_fitness_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.md)
-is the same as
-[`plot_parkfitness()`](https://YsoSirius.github.io/windfarmGA/reference/plot_parkfitness.md).
 Package data `resulthex` / `resultrect` and `sp_polygon` work the same
 way (`plot_leaflet(resulthex, sp_polygon, which = 1)`).
 
 A full documentation of the genetic algorithm is given in my [master
 thesis](https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf).
+\> **NOTE:** The implementation has changed substantially since then.
+Many functions and arguments have been renamed or optimized, and the
+internal structure of the algorithm has been reworked. As a result, the
+current version differs significantly from the implementation described
+in the thesis and calculates and converges considerably faster.
 
 # Shiny Windfarm Optimization
 
@@ -515,44 +517,6 @@ for the Genetic Algorithm. Unfortunately, as an optimization takes quite
 some time and the app is currently hosted by shinyapps.io under a public
 license, there is only 1 R-worker at hand. So only 1 optimization can be
 run at a time.
-
-# Full Optimization example:
-
-``` r
-
-library(sf)
-library(windfarmGA)
-
-area <- sf::st_as_sf(sf::st_sfc(
-  sf::st_polygon(list(cbind(
-    c(4651704, 4651704, 4654475, 4654475, 4651704),
-    c(2692925, 2694746, 2694746, 2692925, 2692925)))), 
-  crs = 3035
-))
-plot(area, col = "blue", axes = TRUE)
-
-wind_df <- data.frame(ws = 12, wd = 0)
-windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
-                             dir = wind_df$wd, dirres = 10, spdmax = 20)
-Rotor <- 20
-fcr <- 9
-Grid <- grid_area(area = area, size = (Rotor*fcr), prop = 1, plot_grid = TRUE)
-
-result <- genetic_algorithm(area = area,
-                            n = 20,
-                            rotor = Rotor, fcr = fcr,
-                            iteration = 50,
-                            wind = wind_df,
-                            reference_height = 50, rotor_height = 100)
-
-plot_windfarmGA(result, area)
-plot_result(result, area)
-plot_parkfitness(result)
-plot_population(result)
-plot_generation(result, area)
-plot_cell_heatmap(result, area)
-plot_leaflet(result, area, which = 1)
-```
 
 # Package index
 
@@ -634,8 +598,6 @@ Main components of the genetic algorithm
   : When the best layout improved
 - [`plot_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_evolution.md)
   : Energy and efficiency over generations
-- [`plot_fitness_evolution()`](https://YsoSirius.github.io/windfarmGA/reference/plot_fitness_evolution.md)
-  : Fitness and operator rates
 - [`plot_generation()`](https://YsoSirius.github.io/windfarmGA/reference/plot_generation.md)
   : Plot all layouts of one generation
 - [`plot_leaflet()`](https://YsoSirius.github.io/windfarmGA/reference/plot_leaflet.md)
