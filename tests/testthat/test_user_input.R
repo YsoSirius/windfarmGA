@@ -28,7 +28,15 @@ test_that("User Input", {
   )
 
   polygon <- area
-  id <- resultrect[1, "bestPaEn"][[1]][1, "Rect_ID"]
+  ## Same run as random_search_single(): best energy, not generation 1
+  best_id <- function(result) {
+    parks <- do.call("rbind", result[, "bestPaEn"])
+    parks <- as.data.frame(parks[!duplicated(parks[, "Run"]), , drop = FALSE])
+    parks$GARun <- seq_len(nrow(parks))
+    parks <- parks[order(parks[, 4], decreasing = TRUE), ]
+    result[parks$GARun[[1]], "bestPaEn"][[1]][1, "Rect_ID"]
+  }
+  id <- best_id(resultrect)
   new <- random_search_single(resultrect, polygon, turbine = id, runs = 5)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))
@@ -47,7 +55,7 @@ test_that("User Input", {
   )
   expect_true(is.null(plres))
 
-  id_hex <- resulthex[1, "bestPaEn"][[1]][1, "Rect_ID"]
+  id_hex <- best_id(resulthex)
   new <- random_search_single(resulthex, polygon, turbine = id_hex, runs = 5)
   expect_type(new, "list")
   expect_false(anyNA(unlist(new)))

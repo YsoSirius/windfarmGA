@@ -335,7 +335,7 @@ test_that("Test Terrain and Weibull Effects", {
   ))
   resCalcEn <- calculate_energy(
     layout = resStartGA[[1]], reference_height = 50,
-    srtm_crop = srtm_crop, cclRaster = cclRaster,
+    elevation = srtm_crop, ccl_raster = cclRaster,
     rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
     wake_distance = 100000, wind = vdata,
     rotor = 50, area = area,
@@ -373,7 +373,7 @@ test_that("Test Terrain and Weibull Effects", {
   weibullraster <- a_raster * (gamma(1 + (1 / values(k_raster))))
   resCalcEn <- calculate_energy(
     layout = resStartGA[[1]], reference_height = 50,
-    srtm_crop = srtm_crop, cclRaster = cclRaster,
+    elevation = srtm_crop, ccl_raster = cclRaster,
     rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
     wake_distance = 100000, wind = vdata,
     rotor = 50, area = area, terrain = FALSE,
@@ -390,7 +390,7 @@ test_that("Test Terrain and Weibull Effects", {
 
   resCalcEn <- calculate_energy(
     layout = resStartGA[[1]], reference_height = 50,
-    srtm_crop = srtm_crop, cclRaster = cclRaster,
+    elevation = srtm_crop, ccl_raster = cclRaster,
     rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
     wake_distance = 100000, wind = vdata,
     rotor = 50, area = area, terrain = FALSE,
@@ -411,7 +411,7 @@ test_that("Test Terrain and Weibull Effects", {
   weibullrastercrop <- crop(weibullraster, terra::ext(min_y_ppt))
   resCalcEn <- calculate_energy(
     layout = resStartGA[[1]], reference_height = 50,
-    srtm_crop = srtm_crop, cclRaster = cclRaster,
+    elevation = srtm_crop, ccl_raster = cclRaster,
     rotor_height = 50, surface_roughness = 0.14, wake_angle = 20,
     wake_distance = 100000, wind = vdata,
     rotor = 50, area = area, terrain = FALSE,
