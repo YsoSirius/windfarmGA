@@ -17,10 +17,8 @@
 
 A genetic algorithm to optimize the layout of wind farms.
 
-Version 5.0.0 uses a combinatorial genome (`n` unique grid-cell IDs),
-adaptive operator rates, and a memetic neighbourhood search on elites.
-The design, the north-wind gold layout, and the sensitivity results are
-documented in
+Version 5.0.0 uses a combinatorial genome (`n` unique grid-cell IDs), adaptive operator rates, and a memetic neighbourhood search on elites.
+The design, the north-wind gold layout, and the sensitivity results are documented in
 [inst/reports/memetic-layout-ga.md](inst/reports/memetic-layout-ga.md).
 
 
@@ -33,19 +31,15 @@ install.packages("windfarmGA")
 
 # Description
 The genetic algorithm is designed to optimize wind farms of any shape.
-It requires a predefined number of turbines, a uniform rotor radius and 
-an average wind speed per wind direction.
-It can include a terrain effect model, which requires an 
-elevation raster and a surface roughness raster. The elevation 
-data is used to find mountains and valleys and to adjust the 
-wind speeds accordingly by 'wind multipliers' and to determine 
-the air densities at rotor heights. The surface roughness raster with an additional elevation
-roughness value is used to re-evaluate the surface roughness and to individually
-determine the wake-decay constant for each turbine.
+It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction.
+It can include a terrain effect model, which requires an elevation raster and a surface roughness raster. 
+The elevation data is used to find mountains and valleys and to adjust the 
+wind speeds accordingly by 'wind multipliers' and to determine the air densities at rotor heights. 
+The surface roughness raster with an additional elevation roughness value is used to re-evaluate the surface roughness 
+and to individually determine the wake-decay constant for each turbine.
 
 To start an optimization use the function `genetic_algorithm`.
-A complete path — draw a site, pick an open IEA/NREL turbine, turn
-u/v or mast data into a rose, then optimize and plot — is in
+A complete path — draw a site, pick an open IEA/NREL turbine, turn u/v or mast data into a rose, then optimize and plot — is in
 [Realistic workflow](#realistic-workflow-site-turbine-wind). 
 
 <div>
@@ -56,11 +50,9 @@ u/v or mast data into a rose, then optimize and plot — is in
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 98.5%;display: inline-block;"/>
 </div>
 
-Since version 1.1, hexagonal grid cells are possible, with 
-their center points being possible locations for wind turbines. 
-Furthermore, rasters can be included, which contain information on the Weibull
-parameters (shape `k`, scale `a`). Country GeoTIFFs from the
-[Global Wind Atlas](https://globalwindatlas.info/) (~250 m) are a good
+Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. 
+Furthermore, rasters can be included, which contain information on the Weibull parameters (shape `k`, scale `a`). 
+Country GeoTIFFs from the [Global Wind Atlas](https://globalwindatlas.info/) (~250 m) are a good
 source; see `gwa_download_country()` in `experimental/climate_helpers.R`. 
     
 ## Create an input Polygon
@@ -134,11 +126,10 @@ str(HexGrid)
 
 
 ## Terrain Effect Model
-If **terrain** is `TRUE` in `genetic_algorithm`, terrain effects are taken
-into account. A digital elevation model and a CORINE Land Cover raster are
-downloaded automatically. Prefer `terrain = dem` (a SpatRaster) to skip
-the download. Per-cell height, wind multiplier, \(z_0\), \(k\) and air
-density are computed once; `plot_result` / `random_search` reuse the
+If **terrain** is `TRUE` in `genetic_algorithm`, terrain effects are taken into account. 
+A digital elevation model and a CORINE Land Cover raster are downloaded automatically. 
+Prefer `terrain = dem` (a SpatRaster) to skip the download. 
+Per-cell height, wind multiplier, \(z_0\), \(k\) and air density are computed once; `plot_result` / `random_search` reuse the
 stored `terrainModel` instead of downloading again.
 ([Download a CLC raster](https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4)).
 
@@ -164,19 +155,14 @@ The modified \(z_0\) also scales hub-height wind via the log profile
 
 ## Realistic workflow (site, turbine, wind)
 
-Clone the GitHub repo so `experimental/` is available (it is not in
-the CRAN tarball). Browse open reference turbines at the
-[NREL Turbine Archive](https://natlabrockies.github.io/turbine-models/)
-(IEA 3.4 / 10 / 15 MW and NREL 5 MW are the best documented).
+Clone the GitHub repo so `experimental/` is available (it is not in the CRAN tarball). 
+Browse open reference turbines at the [NREL Turbine Archive](https://natlabrockies.github.io/turbine-models/).
 
-ERA5 / Copernicus (env `COPERNICUS_CLIMATE_DATA`) is useful as a
-**directional rose** over time (`get_era5_wind()` → `wind_from_era5()`),
+ERA5 / Copernicus (env `COPERNICUS_CLIMATE_DATA`) is useful as a **directional rose** over time (`get_era5_wind()` → `wind_from_era5()`),
 but the grid is too coarse (~31 km) as a spatial wind field for siting.
-For mean speed per cell use Global Wind Atlas Weibull rasters
-(`weibull = TRUE`, `weibull_src = list(k, a)`). Hub-height correction
-uses `reference_height` (100 m for the ERA5 100 m u/v download) and
-`rotor_height` from the turbine. A met mast goes through
-`wind_from_breeze()` or `wind_from_series()`.
+For mean speed per cell use Global Wind Atlas Weibull rasters (`weibull = TRUE`, `weibull_src = list(k, a)`). 
+Hub-height correction uses `reference_height` (100 m for the ERA5 100 m u/v download) and `rotor_height` from the turbine. 
+A met mast goes through `wind_from_breeze()` or `wind_from_series()`.
 
 ```R
 library(windfarmGA)
@@ -258,13 +244,9 @@ plot_random_search(refined, result, area, best = 1)
   <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png"/>
 </p>
 
-With a north-only rose the best layout often sits in the first few
-upwind rows. In 2D that looks cramped; wakes are 3D, so a turbine on
-lower ground can sit under the hub-height cone of one further uphill
-and is not counted as shadowed. Those front rows are also higher, so
-the wind multiplier stays up and air density drops less. The Leaflet
-map and the rayshader view (bottom right) show the same run in 2D and
-on the DEM.
+The screenshot above shows the optimized layout for a north-only wind rose. The best layout often sits in the first few upwind rows.
+In 2D, the arrangement looks cramped; however, wakes are in 3D. A turbine on lower ground can sit below the hub-height wake cone of a turbine further uphill and therefore is not counted as shadowed. These front rows are also at higher elevation, so the wind multiplier remains high while air density decreases less.
+The Leaflet map and the rayshader view (bottom right) show the same run in 2D and on the DEM.
 
 
 
@@ -310,10 +292,8 @@ plot_windfarmGA(result = result_weibull, area = area)
 
 # Options
 
-There are two layers. Arguments of `genetic_algorithm()` describe the site,
-the turbines and which GA pieces to use. Session options
-`options(windfarmGA.*)` control physics constants and the memetic search
-(inject, immigrants, seasons, neighbour local search). Set them **before**
+There are two layers. Arguments of `genetic_algorithm()` describe the site, the turbines and which GA pieces to use. Session options
+`options(windfarmGA.*)` control physics constants and the memetic search (inject, immigrants, seasons, neighbour local search). Set them **before**
 the run; they apply for the whole R session until you change them again.
 
 ```R
@@ -443,17 +423,12 @@ Same three operators; only the rates change. **Explore** raises inject and mutat
 # Plotting
 
 A result from `genetic_algorithm()` has class `windfarmGA`:
-`print(result)` summarises the run, `plot(result, area)` is
-`plot_windfarmGA()`, and `explore_result(result, area)` opens a
-one-page Shiny viewer with a Leaflet map of the best layout and a
-plotly figure (fitness, rates, population; click a New max marker to
-jump to that generation).
-(Suggests: shiny, leaflet, plotly).
+`print(result)` summarises the run, `plot(result, area)` is `plot_windfarmGA()`, and `explore_result(result, area)` opens a
+one-page Shiny viewer with a Leaflet map of the best layout and a plotly figure (fitness, rates, population; click a New max marker to
+jump to that generation). (Suggests: shiny, leaflet, plotly).
 
-`plot_windfarmGA()` pages through the best layout, fitness and operator
-rates, the population census, and the cell heatmap. In an interactive
-session each page waits for Enter. Plotly hover is used only with
-`ask = FALSE` when the plotly package is installed.
+`plot_windfarmGA()` pages through the best layout, fitness and operator rates, the population census, and the cell heatmap. 
+In an interactive session each page waits for Enter. Plotly hover is used only with `ask = FALSE` when the plotly package is installed.
 
 ```R
 print(result)
@@ -472,48 +447,11 @@ plot_evolution(result)                        # energy + efficiency
 plot_development(result)                      # when the max improved
 ```
 
-`plot_fitness_evolution()` is the same as `plot_parkfitness()`.
-Package data `resulthex` / `resultrect` and `sp_polygon` work the same way
-(`plot_leaflet(resulthex, sp_polygon, which = 1)`).
+Package data `resulthex` / `resultrect` and `sp_polygon` work the same way (`plot_leaflet(resulthex, sp_polygon, which = 1)`).
 
 A full documentation of the genetic algorithm is given in my [master thesis](https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf).
+> **NOTE:** The implementation has changed substantially since then. Many functions and arguments have been renamed or optimized, and the internal structure of the algorithm has been reworked. As a result, the current version differs significantly from the implementation described in the thesis and calculates and converges considerably faster.
 
 # Shiny Windfarm Optimization
 I also made a [Shiny App](https://windfarmga.shinyapps.io/windga_shiny/) for the Genetic Algorithm. 
 Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time. 
-
-# Full Optimization example:
-```R
-library(sf)
-library(windfarmGA)
-
-area <- sf::st_as_sf(sf::st_sfc(
-  sf::st_polygon(list(cbind(
-    c(4651704, 4651704, 4654475, 4654475, 4651704),
-    c(2692925, 2694746, 2694746, 2692925, 2692925)))), 
-  crs = 3035
-))
-plot(area, col = "blue", axes = TRUE)
-
-wind_df <- data.frame(ws = 12, wd = 0)
-windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
-                             dir = wind_df$wd, dirres = 10, spdmax = 20)
-Rotor <- 20
-fcr <- 9
-Grid <- grid_area(area = area, size = (Rotor*fcr), prop = 1, plot_grid = TRUE)
-
-result <- genetic_algorithm(area = area,
-                            n = 20,
-                            rotor = Rotor, fcr = fcr,
-                            iteration = 50,
-                            wind = wind_df,
-                            reference_height = 50, rotor_height = 100)
-
-plot_windfarmGA(result, area)
-plot_result(result, area)
-plot_parkfitness(result)
-plot_population(result)
-plot_generation(result, area)
-plot_cell_heatmap(result, area)
-plot_leaflet(result, area, which = 1)
-```

@@ -16,6 +16,7 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
   seasons, local search) also change search behaviour.
 * Legacy `crossover()`, `mutation()` and `trimton()` still accept 0/1
   chromosomes. New exports: `set_crossover()`, `swap_mutation()`.
+* `plot_fitness_evolution()` is gone (it only called `plot_parkfitness()`).
 
 ## New
 * Results have class `windfarmGA` (`print` / `plot`). `ga_options()`
@@ -71,6 +72,11 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 * `resultrect` is the first 50 generations of the old 200-iteration
   run, saved with `xz` (~90 KB). A new 50-gen GA is larger because
   `allCoords` now stores a bigger population.
+* `plot_cell_heatmap()` / `ga_result_grid()` no longer assume a missing
+  CRS is lon/lat. Meter coordinates get the result projection (same as
+  `plot_leaflet()`). The 4326 round-trip broke the grid on macOS.
+* Roxygen: unused `@inheritParams` on `trimton()` and
+  `turbine_influences()` removed (params were already documented).
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
@@ -235,7 +241,7 @@ result_par <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
 PlotWindfarmGA(result = result_par, grid_method = "h", area = area)
 ```
 
-# windfarmGA 1.1
+# windfarmGA 1.1.0
 
 
 #### Optimization with Hexagonal Grid Cells
@@ -248,3 +254,9 @@ result_hex <- genAlgo(area = area, grid_method ="h", n=12, Rotor=30,
                   reference_height = 50,rotor_height = 100)
 PlotWindfarmGA(result = result_hex, grid_method = "h", area = area)
 ```
+
+
+
+# windfarmGA 1.0.0
+
+Initial release

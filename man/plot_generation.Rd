@@ -51,7 +51,6 @@ Other Plotting Functions:
 \code{\link{plot_cloud}()},
 \code{\link{plot_development}()},
 \code{\link{plot_evolution}()},
-\code{\link{plot_fitness_evolution}()},
 \code{\link{plot_parkfitness}()},
 \code{\link{plot_population}()},
 \code{\link{plot_result}()},

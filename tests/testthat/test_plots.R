@@ -129,7 +129,6 @@ test_that("Test Plotting Functions", {
   ## plot_parkfitness ###############
   respf <- plot_parkfitness(resultrect, interactive = FALSE)
   expect_true(is.list(respf) || inherits(respf, c("ggplot", "plotly", "plotly_hash")))
-  expect_true(is.list(plot_fitness_evolution(resultrect, interactive = FALSE)))
 
   result_neg <- resultrect
   sc <- result_neg[[1, "selcross"]]
@@ -295,10 +294,6 @@ test_that("Test Plotting Functions", {
   ## plot_development ###############
   beor_res <- plot_development(resultrect)
   expect_true(is.null(beor_res))
-
-  ## plot_fitness_evolution ###############
-  fitnes_res <- plot_fitness_evolution(resultrect, interactive = FALSE)
-  expect_true(is.list(fitnes_res) || inherits(fitnes_res, c("ggplot", "plotly", "plotly_hash")))
 
   ## plot_evolution ###############
   evo_res <- plot_evolution(resultrect, ask = FALSE)

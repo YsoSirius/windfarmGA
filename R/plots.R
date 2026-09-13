@@ -659,18 +659,45 @@ ga_plot_theme <- function(legend = "right") {
     )
 }
 
+ga_crs_from_result <- function(result_inputs) {
+  projection <- result_inputs["Projection", ][[1]]
+  tryCatch(as.integer(projection),
+    warning = function(e) projection,
+    error = function(e) projection
+  )
+}
+
+ga_looks_geographic <- function(area) {
+  bb <- tryCatch(sf::st_bbox(area), error = function(e) NULL)
+  if (is.null(bb) || any(!is.finite(as.numeric(bb)))) {
+    return(FALSE)
+  }
+  isTRUE(
+    abs(bb[["xmin"]]) <= 180 && abs(bb[["xmax"]]) <= 180 &&
+      abs(bb[["ymin"]]) <= 90 && abs(bb[["ymax"]]) <= 90
+  )
+}
+
+ga_project_area <- function(area, projection) {
+  area <- isSpatial(area)
+  target <- sf::st_crs(projection)
+  if (is.na(sf::st_crs(area))) {
+    if (ga_looks_geographic(area)) {
+      sf::st_crs(area) <- 4326
+    } else {
+      sf::st_crs(area) <- target
+      return(area)
+    }
+  }
+  if (is.na(target)) {
+    return(area)
+  }
+  sf::st_transform(area, target)
+}
+
 ga_result_grid <- function(result, area) {
   result_inputs <- result[1, "inputData"][[1]]
-  area <- isSpatial(area)
-  Projection <- result_inputs["Projection", ][[1]]
-  Projection <- tryCatch(as.integer(Projection),
-    warning = function(e) Projection,
-    error = function(e) Projection
-  )
-  if (is.na(sf::st_crs(area))) {
-    sf::st_crs(area) <- 4326
-  }
-  area <- sf::st_transform(area, sf::st_crs(Projection))
+  area <- ga_project_area(area, ga_crs_from_result(result_inputs))
   cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
   prop <- as.numeric(result_inputs["Percentage of Polygon", ][[1]])
   if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
@@ -851,27 +878,10 @@ plot_cell_heatmap <- function(result, area, log = TRUE, plot = TRUE) {
   }
   counts <- table(as.integer(parks[, "Rect_ID"]))
 
-  result_inputs <- result[1, "inputData"][[1]]
-  area <- isSpatial(area)
-  Projection <- result_inputs["Projection", ][[1]]
-  Projection <- tryCatch(as.integer(Projection),
-    warning = function(e) Projection,
-    error = function(e) Projection
-  )
-  if (is.na(sf::st_crs(area))) {
-    sf::st_crs(area) <- 4326
-  }
-  area <- sf::st_transform(area, sf::st_crs(Projection))
-
-  cellsize <- as.numeric(result_inputs["Resolution", ][[1]])
-  prop <- as.numeric(result_inputs["Percentage of Polygon", ][[1]])
-  if (toupper(result_inputs["Grid Method", ][[1]]) == "RECTANGULAR") {
-    Grid <- grid_area(area, size = cellsize, prop = prop)
-  } else {
-    Grid <- hexa_area(area, size = cellsize)
-  }
-  grid_xy <- Grid[[1]]
-  grid_poly <- Grid[[2]]
+  site <- ga_result_grid(result, area)
+  area <- site$polygon
+  grid_xy <- site$grid_xy
+  grid_poly <- site$grid_poly
   ncell <- nrow(grid_xy)
   vis <- integer(ncell)
   m <- match(as.integer(names(counts)), grid_xy[, "ID"])
@@ -2222,25 +2232,6 @@ plot_cloud <- function(result, pl = FALSE) {
   )
   invisible(clouddatafull)
 }
-
-#' @title Fitness and operator rates
-#' @name plot_fitness_evolution
-#' @description Same figure as \code{\link{plot_parkfitness}}.
-#' @export
-#'
-#' @inheritParams plot_evolution
-#' @param interactive Use plotly when `ask` is `FALSE` and plotly is installed.
-#'
-#' @family Plotting Functions
-#' @return Returns NULL. Used for plotting
-#' @examples \donttest{
-#' plot_fitness_evolution(resulthex)
-#' }
-plot_fitness_evolution <- function(result, spar = 0.1, interactive = NULL,
-                                   ask = NULL) {
-  plot_parkfitness(result, spar = spar, interactive = interactive, ask = ask)
-}
-
 
 #' @title Plot the result of a randomized output.
 #' @name plot_random_search

@@ -5,7 +5,6 @@
 #'
 #' @export
 #'
-#' @inheritParams calculate_energy
 #' @param t A data.frame of the current individual with X and Y coordinates
 #' @param wnkl Wake opening angle in degrees. Turbines outside this cone
 #'   are ignored.

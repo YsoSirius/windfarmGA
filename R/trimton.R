@@ -7,7 +7,6 @@
 #'
 #' @export
 #'
-#' @inheritParams genetic_algorithm
 #' @param mut A binary matrix with the mutated individuals
 #' @param nturb A numeric value indicating the amount of required turbines
 #' @param allparks A data.frame consisting of all individuals of the current

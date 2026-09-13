@@ -603,7 +603,7 @@ test_that("plot_result weibull/terrain branches and helpers", {
 
 test_that("plot_cell_heatmap, generation, census and leaflet fallbacks", {
   area <- synth_site()
-  area_na <- sf::st_transform(area, 4326)
+  area_na <- area
   sf::st_crs(area_na) <- NA
 
   one <- resultrect[1, , drop = FALSE]
@@ -664,7 +664,7 @@ test_that("plot_cell_heatmap, generation, census and leaflet fallbacks", {
     code = {
       expect_error(plot_population(resultrect), "ggplot2")
       expect_error(plot_windrose(data.frame(ws = 8, wd = 0)), "ggplot2")
-      expect_error(plot_fitness_evolution(resultrect), "ggplot2")
+      expect_error(plot_parkfitness(resultrect), "ggplot2")
     }
   )
 
