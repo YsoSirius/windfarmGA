@@ -86,6 +86,10 @@
 <code>random_search_single(turbine = …)</code> skips the interactive prompt. User-input tests no longer write to a fake <code>stdin</code>.</li>
 <li>
 <code>stopCluster()</code> is wrapped in <code><a href="https://rdrr.io/r/base/try.html" class="external-link">try()</a></code> so a dead worker does not fail the run. Live parallel GA tests skip under <code>covr</code>. Time sequential vs PSOCK locally with <code>source("experimental/bench_parallel.R"); bench_parallel()</code>. Windows starts PSOCK workers sequentially; <code><a href="../reference/fitness.html">fitness()</a></code> loads windfarmGA/terra/sf on the workers. The bench catches dropped connections (often at 6–8 workers on this small site). README notes ~4 workers as the useful default on the demo site.</li>
+<li>
+<code><a href="../reference/calculate_energy.html">calculate_energy()</a></code> uses its public arguments (<code>layout</code>, <code>area</code>, <code>wind</code>, …) instead of internal aliases. Unused <code>maxt0</code> in the GA first-generation fuzzy block is gone.</li>
+<li>
+<code><a href="../reference/windata_format.html">windata_format()</a></code> column matching used a broken <code>sapply(grepl, …)</code> (<code>--run-donttest</code> example). Frames that already have <code>ws</code>/<code>wd</code> skip the matcher (so <code>probab</code> no longer triggers it).</li>
 </ul></div>
 </div>
     <div class="section level2">
