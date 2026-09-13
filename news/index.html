@@ -57,6 +57,8 @@
 <li>Wake search and circle overlap run in C++. Turbines exactly upwind (<code>alpha = 0</code>) are kept (old triangle test dropped them).</li>
 <li>Wind helpers: <code><a href="../reference/wind_from_uv.html">wind_from_uv()</a></code>, <code><a href="../reference/wind_from_series.html">wind_from_series()</a></code>. GitHub-only extras in <code>experimental/</code> (ERA5/GWA, noise, rayshader, mapgl) are not in the CRAN tarball. <code>plot_mapgl_from_result()</code> reuses <code>terrain_tiles/</code> / <code>terrain.mbtiles</code>, draws wake cones colored by <code>AbschGesamt</code> (0% green → max red) and the rayshader OBJ (<code>wind_turbine_v1.obj</code>). Three.js is r149 UMD from localhost. TileJSON Terrarium encoding; <code>maxzoom</code> is the highest tile folder. Basemaps: <code>satellite</code>, <code>topo</code>, Carto. Port 8000 leftover servers are freed (<code>rebuild = TRUE</code> remakes the tiles).</li>
 <li>Plots wait for Enter between pages when interactive. <code><a href="../reference/plot_generation.html">plot_generation()</a></code> shows every layout in a generation. <code><a href="../reference/plot_viewshed.html">plot_viewshed()</a></code> projects lon/lat DEMs first.</li>
+<li>
+<code>genetic_algorithm(on_generation = ...)</code> calls <code>function(generation, iteration, energy, efficiency, fitness)</code> after each generation so a Shiny app can show progress without forking the GA. <code><a href="../reference/wake_cones.html">wake_cones()</a></code> is the public name for the downwind search-cone polygons (<code>plot_leaflet</code>, MapGL). Internal geometry is <code>wake_cone_polys()</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="fixes-5-0-0">Fixes<a class="anchor" aria-label="anchor" href="#fixes-5-0-0"></a></h3>
@@ -78,6 +80,7 @@
 <li>
 <code><a href="../reference/plot_cell_heatmap.html">plot_cell_heatmap()</a></code> / <code>ga_result_grid()</code> no longer assume a missing CRS is lon/lat. Meter coordinates get the result projection (same as <code><a href="../reference/plot_leaflet.html">plot_leaflet()</a></code>). The 4326 round-trip broke the grid on macOS.</li>
 <li>Roxygen: unused <code>@inheritParams</code> on <code><a href="../reference/trimton.html">trimton()</a></code> and <code><a href="../reference/turbine_influences.html">turbine_influences()</a></code> removed (params were already documented).</li>
+<li>Rd help is ASCII-only (<code>≈</code>, <code>×</code>, em-dash broke the CRAN PDF manual). README no longer links to the archived check-results page (404).</li>
 </ul></div>
 </div>
     <div class="section level2">

@@ -1,8 +1,8 @@
 # Map layouts to grid coordinates
 
 Map a population of layouts to grid coordinates. Accepts either an
-integer matrix of unique cell IDs (`n` turbines × individuals) or a
-legacy binary matrix (`n_gridcells` × individuals).
+integer matrix of unique cell IDs (`n` turbines x individuals) or a
+legacy binary matrix (`n_gridcells` x individuals).
 
 ## Usage
 
@@ -14,7 +14,7 @@ get_grids(layouts, grid)
 
 - layouts:
 
-  Binary matrix (legacy) or integer matrix of grid IDs (`n` turbines ×
+  Binary matrix (legacy) or integer matrix of grid IDs (`n` turbines x
   individuals)
 
 - grid:

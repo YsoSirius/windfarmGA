@@ -73,7 +73,8 @@ direction.</p>
 <span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  n_cluster <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  on_generation <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -188,6 +189,12 @@ Wind Atlas <code>combined-Weibull-k</code> / <code>combined-Weibull-A</code>).</
 
 <dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
 <dd><p>Plot the current best layout each generation.</p></dd>
+
+
+<dt id="arg-on-generation">on_generation<a class="anchor" aria-label="anchor" href="#arg-on-generation"></a></dt>
+<dd><p>Optional callback after each generation:
+<code>function(generation, iteration, energy, efficiency, fitness)</code>.
+Used by Shiny for progress. Errors in the callback are ignored.</p></dd>
 
 </dl></div>
     <div class="section level2">

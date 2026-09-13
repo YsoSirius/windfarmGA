@@ -124,6 +124,8 @@ Main components of the genetic algorithm
   : Wind rose from speed and direction series
 - [`read_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/read_power_curve.md)
   : Read a manufacturer or NREL/IEA power-curve table
+- [`wake_cones()`](https://YsoSirius.github.io/windfarmGA/reference/wake_cones.md)
+  : Downwind wake search cones
 - [`isSpatial()`](https://YsoSirius.github.io/windfarmGA/reference/isSpatial.md)
   : Transform to Simple Feature Polygons
 - [`permutations()`](https://YsoSirius.github.io/windfarmGA/reference/permutations.md)

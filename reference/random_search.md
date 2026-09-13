@@ -5,7 +5,7 @@ energy. Use this as a short post-search after
 [`genetic_algorithm()`](https://YsoSirius.github.io/windfarmGA/reference/genetic_algorithm.md).
 Terrain and Weibull follow the GA flags when `terrain` / `weibull` are
 `NULL`. Terrain rasters from the GA are reused when stored in `result`;
-pass a DEM to rebuild. Weibull rasters are not stored — pass
+pass a DEM to rebuild. Weibull rasters are not stored; pass
 `weibull_src` again if needed.
 
 ## Usage
@@ -63,7 +63,7 @@ random_search(
 
 - weibull:
 
-  `NULL` follows the GA flag. Weibull rasters are not stored — pass
+  `NULL` follows the GA flag. Weibull rasters are not stored; pass
   `weibull_src` (or a speed raster as `weibull`) again. Giving
   `weibull_src` is enough; you do not also need `weibull = TRUE`.
 

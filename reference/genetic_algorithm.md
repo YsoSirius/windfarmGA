@@ -33,7 +33,8 @@ genetic_algorithm(
   parallel = FALSE,
   n_cluster = 2,
   verbose = FALSE,
-  plot = FALSE
+  plot = FALSE,
+  on_generation = NULL
 )
 ```
 
@@ -148,6 +149,12 @@ genetic_algorithm(
 - plot:
 
   Plot the current best layout each generation.
+
+- on_generation:
+
+  Optional callback after each generation:
+  `function(generation, iteration, energy, efficiency, fitness)`. Used
+  by Shiny for progress. Errors in the callback are ignored.
 
 ## Value
 

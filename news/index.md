@@ -79,6 +79,13 @@ string.
   shows every layout in a generation.
   [`plot_viewshed()`](https://YsoSirius.github.io/windfarmGA/reference/plot_viewshed.md)
   projects lon/lat DEMs first.
+- `genetic_algorithm(on_generation = ...)` calls
+  `function(generation, iteration, energy, efficiency, fitness)` after
+  each generation so a Shiny app can show progress without forking the
+  GA.
+  [`wake_cones()`](https://YsoSirius.github.io/windfarmGA/reference/wake_cones.md)
+  is the public name for the downwind search-cone polygons
+  (`plot_leaflet`, MapGL). Internal geometry is `wake_cone_polys()`.
 
 ### Fixes
 
@@ -112,6 +119,8 @@ string.
   and
   [`turbine_influences()`](https://YsoSirius.github.io/windfarmGA/reference/turbine_influences.md)
   removed (params were already documented).
+- Rd help is ASCII-only (`≈`, `×`, em-dash broke the CRAN PDF manual).
+  README no longer links to the archived check-results page (404).
 
 ## windfarmGA 4.0.0
 

@@ -53,7 +53,7 @@ random_search_single(
 
 - weibull:
 
-  `NULL` follows the GA flag. Weibull rasters are not stored — pass
+  `NULL` follows the GA flag. Weibull rasters are not stored; pass
   `weibull_src` (or a speed raster as `weibull`) again. Giving
   `weibull_src` is enough; you do not also need `weibull = TRUE`.
 

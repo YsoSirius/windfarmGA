@@ -66,7 +66,7 @@ set_crossover(
 
 ## Value
 
-Integer matrix of unique grid IDs (`n` × children)
+Integer matrix of unique grid IDs (`n` x children)
 
 ## See also
 
