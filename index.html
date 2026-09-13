@@ -49,10 +49,8 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="windfarmga">windfarmGA<a class="anchor" aria-label="anchor" href="#windfarmga"></a>
 </h1></div>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"></p>
-<!-- badges: start -->
-
-<!-- badges: end -->
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png"></p>
+<p><img src="https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg" alt="R build status"><img src="https://www.r-pkg.org/badges/version/windfarmGA" alt="CRAN status"><img src="https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA"><img src="https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue"><img src="https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg" alt="codecov"></p>
 <p>A genetic algorithm to optimize the layout of wind farms.</p>
 <p>Version 5.0.0 uses a combinatorial genome (<code>n</code> unique grid-cell IDs), adaptive operator rates, and a memetic neighbourhood search on elites. The design, the north-wind gold layout, and the sensitivity results are documented in <a href="inst/reports/memetic-layout-ga.html">inst/reports/memetic-layout-ga.md</a>.</p>
 </div>
@@ -69,12 +67,8 @@
 </h1>
 <p>The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction. It can include a terrain effect model, which requires an elevation raster and a surface roughness raster. The elevation data is used to find mountains and valleys and to adjust the wind speeds accordingly by ‘wind multipliers’ and to determine the air densities at rotor heights. The surface roughness raster with an additional elevation roughness value is used to re-evaluate the surface roughness and to individually determine the wake-decay constant for each turbine.</p>
 <p>To start an optimization use the function <code>genetic_algorithm</code>. A complete path — draw a site, pick an open IEA/NREL turbine, turn u/v or mast data into a rose, then optimize and plot — is in <a href="#realistic-workflow-site-turbine-wind">Realistic workflow</a>.</p>
-<div>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;"></p>
-</div>
-<div>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 98.5%;display: inline-block;"></p>
-</div>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"></p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png"></p>
 <p>Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. Furthermore, rasters can be included, which contain information on the Weibull parameters (shape <code>k</code>, scale <code>a</code>). Country GeoTIFFs from the <a href="https://globalwindatlas.info/" class="external-link">Global Wind Atlas</a> (~250 m) are a good source; see <code>gwa_download_country()</code> in <code>experimental/climate_helpers.R</code>.</p>
 <div class="section level2">
 <h2 id="create-an-input-polygon">Create an input Polygon<a class="anchor" aria-label="anchor" href="#create-an-input-polygon"></a>
@@ -132,7 +126,15 @@
 <div class="section level3">
 <h3 id="rectangular-grid-cells">Rectangular Grid Cells<a class="anchor" aria-label="anchor" href="#rectangular-grid-cells"></a>
 </h3>
-<p>Verify that the grid spacing is appropriate. Adapt the following input variables if necessary: - <em>rotor</em>: The rotor radius in meters. - <em>fcr</em>: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter. - <em>prop</em>: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.</p>
+<p>Verify that the grid spacing is appropriate. Adapt the following input variables if necessary:</p>
+<ul>
+<li>
+<em>rotor</em>: The rotor radius in meters.</li>
+<li>
+<em>fcr</em>: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter.</li>
+<li>
+<em>prop</em>: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.</li>
+</ul>
 <p><em>Make sure that the Polygon is projected in meters.</em></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Rotor</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
@@ -148,26 +150,24 @@
 <span><span class="va">fcr</span> <span class="op">&lt;-</span> <span class="fl">9</span></span>
 <span><span class="va">HexGrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hexa_area.html">hexa_area</a></span><span class="op">(</span><span class="va">area</span>, size <span class="op">=</span> <span class="op">(</span><span class="va">Rotor</span> <span class="op">*</span> <span class="va">fcr</span><span class="op">)</span>, plot_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">HexGrid</span><span class="op">)</span></span></code></pre></div>
-<p align="center">
-<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="terrain-effect-model">Terrain Effect Model<a class="anchor" aria-label="anchor" href="#terrain-effect-model"></a>
 </h2>
-<p>If <strong>terrain</strong> is <code>TRUE</code> in <code>genetic_algorithm</code>, terrain effects are taken into account. A digital elevation model and a CORINE Land Cover raster are downloaded automatically. Prefer <code>terrain = dem</code> (a SpatRaster) to skip the download. Per-cell height, wind multiplier, (z_0), (k) and air density are computed once; <code>plot_result</code> / <code>random_search</code> reuse the stored <code>terrainModel</code> instead of downloading again. (<a href="https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4" class="external-link">Download a CLC raster</a>).</p>
+<p>If <strong>terrain</strong> is <code>TRUE</code> in <code>genetic_algorithm</code>, terrain effects are taken into account. A digital elevation model and a CORINE Land Cover raster are downloaded automatically. Prefer <code>terrain = dem</code> (a SpatRaster) to skip the download. Per-cell height, wind multiplier, z_0, k and air density are computed once; <code>plot_result</code> / <code>random_search</code> reuse the stored <code>terrainModel</code> instead of downloading again. (<a href="https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4" class="external-link">Download a CLC raster</a>).</p>
 <p>To use your own land cover raster, provide its path via <strong>ccl</strong>. Surface roughness values are taken from <strong>extdata/clc_legend.csv</strong>. To use custom values, add a numeric <strong>Rauhigkeit_z</strong> column for all land cover classes, save the file with ; as delimiter, and provide its path via <strong>ccl_roughness</strong>.</p>
 <p><code>plot_result(..., terrain = TRUE)</code> shows the full chain:</p>
 <ul>
 <li>Elevation → wind-speed multiplier (DEM / mean DEM)</li>
 <li>Elevation → air density (barometric; labels vs 1.225 kg/m³)</li>
-<li>CORINE Land Cover → land-cover roughness (z_0)</li>
-<li>Elevation roughness (<code><a href="https://rspatial.github.io/terra/reference/terrain.html" class="external-link">terra::terrain</a></code>) × CLC (z_0) → modified (z_0)</li>
-<li>Modified (z_0) + hub height → wake decay (k = 0.5 / (h/z_0))</li>
+<li>CORINE Land Cover → land-cover roughness z_0</li>
+<li>Elevation roughness (<code><a href="https://rspatial.github.io/terra/reference/terrain.html" class="external-link">terra::terrain</a></code>) × CLC z_0 → modified z_0</li>
+<li>Modified z_0 + hub height → wake decay k = 0.5 / (h/z_0)</li>
 </ul>
-<p>The modified (z_0) also scales hub-height wind via the log profile (not a separate <code>plot_result</code> panel).</p>
-<p align="center">
-<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png"></p>
+<p>The modified z_0 also scales hub-height wind via the log profile (not a separate <code>plot_result</code> panel).</p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png"></p>
 </div>
 <div class="section level2">
 <h2 id="realistic-workflow-site-turbine-wind">Realistic workflow (site, turbine, wind)<a class="anchor" aria-label="anchor" href="#realistic-workflow-site-turbine-wind"></a>
@@ -248,8 +248,7 @@
 <span>  weibull_src <span class="op">=</span> <span class="va">gwa</span><span class="op">$</span><span class="va">weibull_src</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_random_search.html">plot_random_search</a></span><span class="op">(</span><span class="va">refined</span>, <span class="va">result</span>, <span class="va">area</span>, best <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p align="center">
-<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png"></p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png"></p>
 <p>The screenshot above shows the optimized layout for a north-only wind rose. The best layout often sits in the first few upwind rows. In 2D, the arrangement looks cramped; however, wakes are in 3D. A turbine on lower ground can sit below the hub-height wake cone of a turbine further uphill and therefore is not counted as shadowed. These front rows are also at higher elevation, so the wind multiplier remains high while air density decreases less. The Leaflet map and the rayshader view (bottom right) show the same run in 2D and on the DEM.</p>
 </div>
 <div class="section level2">
@@ -307,9 +306,9 @@
 </h3>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="13%">
+<col width="11%">
+<col width="75%">
 </colgroup>
 <thead><tr>
 <th>Argument</th>
@@ -371,7 +370,7 @@
 <tr>
 <td><code>surface_roughness</code></td>
 <td><code>0.3</code></td>
-<td>Roughness length (z_0) in metres. Ignored per cell when <code>terrain = TRUE</code>.</td>
+<td>Roughness length z_0 in metres. Ignored per cell when <code>terrain = TRUE</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -381,9 +380,9 @@
 </h3>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="12%">
+<col width="11%">
+<col width="76%">
 </colgroup>
 <thead><tr>
 <th>Argument</th>
@@ -426,9 +425,9 @@
 <p>The loop is <strong>selection → set-crossover → swap-mutation → fitness</strong>.</p>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="8%">
+<col width="3%">
+<col width="88%">
 </colgroup>
 <thead><tr>
 <th>Argument</th>
@@ -470,7 +469,7 @@
 <tr>
 <td><code>n_cluster</code></td>
 <td><code>2</code></td>
-<td>Worker count if <code>parallel</code> is <code>TRUE</code> (capped at cores − 1).</td>
+<td>Worker count if <code>parallel</code> is <code>TRUE</code> (capped at cores − 1). On the demo site ~4 workers is fastest (~3× vs sequential); 6–8 is slower and can drop PSOCK connections on Windows.</td>
 </tr>
 <tr>
 <td><code>verbose</code></td>
@@ -493,12 +492,12 @@
 <div class="section level3">
 <h3 id="physics-wake-and-power">Physics (wake and power)<a class="anchor" aria-label="anchor" href="#physics-wake-and-power"></a>
 </h3>
-<p>Fitness is (E (/100)^w). These options change how (E) and () are computed.</p>
+<p>Fitness is E (/100)^w. These options change how E and are computed.</p>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="12%">
+<col width="2%">
+<col width="84%">
 </colgroup>
 <thead><tr>
 <th>Option</th>
@@ -554,7 +553,7 @@
 <tr>
 <td><code>windfarmGA.fitness_efficiency_weight</code></td>
 <td><code>1</code></td>
-<td>Preference weight (w): fitness is (E (/100)^w). <code>0</code> = energy only; <code>&gt;1</code> punishes wake more. Not auto-tuned.</td>
+<td>Preference weight w: fitness is E (/100)^w. <code>0</code> = energy only; <code>&gt;1</code> punishes wake more. Not auto-tuned.</td>
 </tr>
 <tr>
 <td><code>windfarmGA.max_angle</code></td>
@@ -574,9 +573,9 @@
 </h3>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="35%">
+<col width="9%">
+<col width="55%">
 </colgroup>
 <thead><tr>
 <th>Option</th>
@@ -602,9 +601,9 @@
 </h3>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="16%">
+<col width="3%">
+<col width="80%">
 </colgroup>
 <thead><tr>
 <th>Option</th>
@@ -641,9 +640,9 @@
 </h3>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="20%">
+<col width="4%">
+<col width="74%">
 </colgroup>
 <thead><tr>
 <th>Option</th>
@@ -681,9 +680,9 @@
 <p>Same three operators; only the rates change. <strong>Explore</strong> raises inject and mutation while the record is stalling (VAR selection starts near 55 %). <strong>Refine</strong> damps them toward inject 0.15, mutation <code>2/n</code>, selection ~45 %. <strong>Pulse</strong> briefly raises them again so refine does not freeze.</p>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="12%">
+<col width="2%">
+<col width="84%">
 </colgroup>
 <thead><tr>
 <th>Option</th>
@@ -724,9 +723,9 @@
 </h3>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="25%">
+<col width="10%">
+<col width="64%">
 </colgroup>
 <thead><tr>
 <th>Option</th>
@@ -753,22 +752,26 @@
 <span><span class="fu"><a href="reference/explore_result.html">explore_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/plot_windfarmGA.html">plot_windfarmGA</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/plot_result.html">plot_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span>                 <span class="co"># best layout</span></span>
-<span><span class="fu"><a href="reference/plot_parkfitness.html">plot_parkfitness</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                      <span class="co"># fitness + operator rates</span></span>
-<span><span class="fu"><a href="reference/plot_population.html">plot_population</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                       <span class="co"># individuals, elites, cells</span></span>
-<span><span class="fu"><a href="reference/plot_generation.html">plot_generation</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span>             <span class="co"># last generation (omit generation, or pass an index)</span></span>
-<span><span class="fu"><a href="reference/plot_cell_heatmap.html">plot_cell_heatmap</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span>           <span class="co"># which cells were tried</span></span>
-<span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>     <span class="co"># best on a map</span></span>
+<span><span class="fu"><a href="reference/plot_result.html">plot_result</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span>                                  <span class="co"># best layout</span></span>
+<span><span class="fu"><a href="reference/plot_parkfitness.html">plot_parkfitness</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                                   <span class="co"># fitness + operator rates</span></span>
+<span><span class="fu"><a href="reference/plot_population.html">plot_population</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                                    <span class="co"># individuals, elites, cells</span></span>
+<span><span class="fu"><a href="reference/plot_generation.html">plot_generation</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span>                              <span class="co"># last generation (omit generation, or pass an index)</span></span>
+<span><span class="fu"><a href="reference/plot_cell_heatmap.html">plot_cell_heatmap</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span><span class="op">)</span>                            <span class="co"># which cells were tried</span></span>
+<span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                      <span class="co"># best on a map</span></span>
 <span><span class="fu"><a href="reference/plot_leaflet.html">plot_leaflet</a></span><span class="op">(</span><span class="va">result</span>, <span class="va">area</span>, orderitems <span class="op">=</span> <span class="cn">FALSE</span>, which <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>  <span class="co"># last generation</span></span>
-<span><span class="fu"><a href="reference/plot_evolution.html">plot_evolution</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                        <span class="co"># energy + efficiency</span></span>
-<span><span class="fu"><a href="reference/plot_development.html">plot_development</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                      <span class="co"># when the max improved</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/plot_evolution.html">plot_evolution</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                                     <span class="co"># energy + efficiency</span></span>
+<span><span class="fu"><a href="reference/plot_development.html">plot_development</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>                                   <span class="co"># when the max improved</span></span></code></pre></div>
 <p>Package data <code>resulthex</code> / <code>resultrect</code> and <code>sp_polygon</code> work the same way (<code>plot_leaflet(resulthex, sp_polygon, which = 1)</code>).</p>
-<p>A full documentation of the genetic algorithm is given in my <a href="https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf" class="external-link">master thesis</a>. &gt; <strong>NOTE:</strong> The implementation has changed substantially since then. Many functions and arguments have been renamed or optimized, and the internal structure of the algorithm has been reworked. As a result, the current version differs significantly from the implementation described in the thesis and calculates and converges considerably faster.</p>
+<p>A full documentation of the genetic algorithm is given in my <a href="https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf" class="external-link">master thesis</a>.</p>
+<blockquote>
+<p><strong>NOTE:</strong> The implementation has changed substantially since then. Many functions and arguments have been renamed or optimized, and the internal structure of the algorithm has been reworked. As a result, the current version differs significantly from the implementation described in the thesis and calculates and converges considerably faster.</p>
+</blockquote>
 </div>
 <div class="section level1">
 <h1 id="shiny-windfarm-optimization">Shiny Windfarm Optimization<a class="anchor" aria-label="anchor" href="#shiny-windfarm-optimization"></a>
 </h1>
 <p>I also made a <a href="https://windfarmga.shinyapps.io/windga_shiny/" class="external-link">Shiny App</a> for the Genetic Algorithm. Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time.</p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/shiny_img.png"></p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
@@ -804,16 +807,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/YsoSirius/windfarmGA/actions" class="external-link"><img src="https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://CRAN.R-project.org/package=windfarmGA" class="external-link"><img src="https://www.r-pkg.org/badges/version/windfarmGA" alt="CRAN status"></a></li>
-<li><a href="https://cran.r-project.org/package=windfarmGA" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA"></a></li>
-<li><a href="https://cran.r-project.org/package=windfarmGA" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue"></a></li>
-<li><a href="https://app.codecov.io/gh/YsoSirius/windfarmGA" class="external-link"><img src="https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg" alt="codecov"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>

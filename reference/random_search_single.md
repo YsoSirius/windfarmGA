@@ -16,7 +16,8 @@ random_search_single(
   weibull = NULL,
   weibull_src = NULL,
   ccl = NULL,
-  ccl_roughness = NULL
+  ccl_roughness = NULL,
+  turbine = NULL
 )
 ```
 
@@ -69,6 +70,11 @@ random_search_single(
 - ccl_roughness:
 
   Path to the CLC legend CSV (`Rauhigkeit_z` column).
+
+- turbine:
+
+  Grid cell ID of the turbine to move. If `NULL`, the function asks
+  interactively.
 
 ## Value
 

@@ -52,7 +52,8 @@ optimize the output of the wind farm layout.</p>
 <span>  weibull <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weibull_src <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ccl <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ccl_roughness <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  ccl_roughness <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  turbine <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -106,6 +107,11 @@ Wind Atlas <code>combined-Weibull-k</code> / <code>combined-Weibull-A</code>).</
 
 <dt id="arg-ccl-roughness">ccl_roughness<a class="anchor" aria-label="anchor" href="#arg-ccl-roughness"></a></dt>
 <dd><p>Path to the CLC legend CSV (<code>Rauhigkeit_z</code> column).</p></dd>
+
+
+<dt id="arg-turbine">turbine<a class="anchor" aria-label="anchor" href="#arg-turbine"></a></dt>
+<dd><p>Grid cell ID of the turbine to move. If <code>NULL</code>, the
+function asks interactively.</p></dd>
 
 </dl></div>
     <div class="section level2">

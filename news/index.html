@@ -81,6 +81,11 @@
 <code><a href="../reference/plot_cell_heatmap.html">plot_cell_heatmap()</a></code> / <code>ga_result_grid()</code> no longer assume a missing CRS is lon/lat. Meter coordinates get the result projection (same as <code><a href="../reference/plot_leaflet.html">plot_leaflet()</a></code>). The 4326 round-trip broke the grid on macOS.</li>
 <li>Roxygen: unused <code>@inheritParams</code> on <code><a href="../reference/trimton.html">trimton()</a></code> and <code><a href="../reference/turbine_influences.html">turbine_influences()</a></code> removed (params were already documented).</li>
 <li>Rd help is ASCII-only (<code>≈</code>, <code>×</code>, em-dash broke the CRAN PDF manual). README no longer links to the archived check-results page (404).</li>
+<li>Parallel: <code>n_cluster</code> is capped at 2 under <code>_R_CHECK_LIMIT_CORES_</code> (R errors on <code>makeCluster(detectCores() - 1)</code>). Terrain tests no longer need a local <code>g100_06.tif</code>.</li>
+<li>
+<code>random_search_single(turbine = …)</code> skips the interactive prompt. User-input tests no longer write to a fake <code>stdin</code>.</li>
+<li>
+<code>stopCluster()</code> is wrapped in <code><a href="https://rdrr.io/r/base/try.html" class="external-link">try()</a></code> so a dead worker does not fail the run. Live parallel GA tests skip under <code>covr</code>. Time sequential vs PSOCK locally with <code>source("experimental/bench_parallel.R"); bench_parallel()</code>. Windows starts PSOCK workers sequentially; <code><a href="../reference/fitness.html">fitness()</a></code> loads windfarmGA/terra/sf on the workers. The bench catches dropped connections (often at 6–8 workers on this small site). README notes ~4 workers as the useful default on the demo site.</li>
 </ul></div>
 </div>
     <div class="section level2">

@@ -2,6 +2,10 @@
 
 ![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png)
 
+![R build
+status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)![CRAN
+status](https://www.r-pkg.org/badges/version/windfarmGA)![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)
+
 A genetic algorithm to optimize the layout of wind farms.
 
 Version 5.0.0 uses a combinatorial genome (`n` unique grid-cell IDs),
@@ -113,11 +117,14 @@ windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
 ### Rectangular Grid Cells
 
 Verify that the grid spacing is appropriate. Adapt the following input
-variables if necessary: - *rotor*: The rotor radius in meters. - *fcr*:
-The grid spacing factor, which should at least be 2, so that a single
-grid covers at least the whole rotor diameter. - *prop*: The
-proportionality factor used for grid calculation. It determines the
-minimum percentage that a grid cell must cover of the area.
+variables if necessary:
+
+- *rotor*: The rotor radius in meters.
+- *fcr*: The grid spacing factor, which should at least be 2, so that a
+  single grid covers at least the whole rotor diameter.
+- *prop*: The proportionality factor used for grid calculation. It
+  determines the minimum percentage that a grid cell must cover of the
+  area.
 
 *Make sure that the Polygon is projected in meters.*
 
@@ -146,10 +153,10 @@ str(HexGrid)
 If **terrain** is `TRUE` in `genetic_algorithm`, terrain effects are
 taken into account. A digital elevation model and a CORINE Land Cover
 raster are downloaded automatically. Prefer `terrain = dem` (a
-SpatRaster) to skip the download. Per-cell height, wind multiplier,
-(z_0), (k) and air density are computed once; `plot_result` /
-`random_search` reuse the stored `terrainModel` instead of downloading
-again. ([Download a CLC
+SpatRaster) to skip the download. Per-cell height, wind multiplier, z_0,
+k and air density are computed once; `plot_result` / `random_search`
+reuse the stored `terrainModel` instead of downloading again. ([Download
+a CLC
 raster](https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4)).
 
 To use your own land cover raster, provide its path via **ccl**. Surface
@@ -162,14 +169,14 @@ classes, save the file with ; as delimiter, and provide its path via
 
 - Elevation → wind-speed multiplier (DEM / mean DEM)
 - Elevation → air density (barometric; labels vs 1.225 kg/m³)
-- CORINE Land Cover → land-cover roughness (z_0)
+- CORINE Land Cover → land-cover roughness z_0
 - Elevation roughness
   ([`terra::terrain`](https://rspatial.github.io/terra/reference/terrain.html))
-  × CLC (z_0) → modified (z_0)
-- Modified (z_0) + hub height → wake decay (k = 0.5 / (h/z_0))
+  × CLC z_0 → modified z_0
+- Modified z_0 + hub height → wake decay k = 0.5 / (h/z_0)
 
-The modified (z_0) also scales hub-height wind via the log profile (not
-a separate `plot_result` panel).
+The modified z_0 also scales hub-height wind via the log profile (not a
+separate `plot_result` panel).
 
 ![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png)
 
@@ -358,7 +365,7 @@ Required: `area`, `wind`, `n`, `rotor`, `rotor_height`.
 | `wind` | — | Wind data.frame (`ws`, `wd`, optional `probab`). See `windata_format`. |
 | `reference_height` | `rotor_height` | Height at which `ws` was measured. |
 | `rotor_height` | — | Hub height in metres. |
-| `surface_roughness` | `0.3` | Roughness length (z_0) in metres. Ignored per cell when `terrain = TRUE`. |
+| `surface_roughness` | `0.3` | Roughness length z_0 in metres. Ignored per cell when `terrain = TRUE`. |
 
 ### Terrain and Weibull
 
@@ -382,7 +389,7 @@ The loop is **selection → set-crossover → swap-mutation → fitness**.
 | `elitism` | `TRUE` | Archive the best layout unchanged; elites also spawn children and get local search. |
 | `n_elite` | `3` | Base elite count. Grows in a long refine stall, drops by 1 during a disturbance pulse. |
 | `parallel` | `FALSE` | Parallel fitness (`parallel` + `doParallel`). |
-| `n_cluster` | `2` | Worker count if `parallel` is `TRUE` (capped at cores − 1). |
+| `n_cluster` | `2` | Worker count if `parallel` is `TRUE` (capped at cores − 1). On the demo site ~4 workers is fastest (~3× vs sequential); 6–8 is slower and can drop PSOCK connections on Windows. |
 | `verbose` | `FALSE` | Print a line per generation. |
 | `plot` | `FALSE` | Plot the current best layout each generation. |
 
@@ -393,8 +400,7 @@ Set with `options(windfarmGA.foo = …)`. Defaults are assigned in
 
 ### Physics (wake and power)
 
-Fitness is (E (/100)^w). These options change how (E) and () are
-computed.
+Fitness is E (/100)^w. These options change how E and are computed.
 
 | Option | Default | Meaning |
 |----|----|----|
@@ -407,7 +413,7 @@ computed.
 | `windfarmGA.rated_ws` | `Inf` | Rated wind speed; above this, power stays at rated. |
 | `windfarmGA.cut_out` | `Inf` | Cut-out wind speed. |
 | `windfarmGA.power_curve` | `NULL` | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not Cp \* v^3). On the rated plateau, wakes may not change power. Build a table with [`read_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/read_power_curve.md) or [`plot_power_curve()`](https://YsoSirius.github.io/windfarmGA/reference/plot_power_curve.md). ERA5 u/v: [`wind_from_uv()`](https://YsoSirius.github.io/windfarmGA/reference/wind_from_uv.md). |
-| `windfarmGA.fitness_efficiency_weight` | `1` | Preference weight (w): fitness is (E (/100)^w). `0` = energy only; `>1` punishes wake more. Not auto-tuned. |
+| `windfarmGA.fitness_efficiency_weight` | `1` | Preference weight w: fitness is E (/100)^w. `0` = energy only; `>1` punishes wake more. Not auto-tuned. |
 | `windfarmGA.max_angle` | `20` | Max wake angle (degrees) when assigning downstream turbines. |
 | `windfarmGA.max_distance` | `100000` | Max wake distance (m). |
 
@@ -488,15 +494,15 @@ plot(result, area)
 explore_result(result, area)
 plot_windfarmGA(result, area)
 
-plot_result(result, area)                 # best layout
-plot_parkfitness(result)                      # fitness + operator rates
-plot_population(result)                       # individuals, elites, cells
-plot_generation(result, area)             # last generation (omit generation, or pass an index)
-plot_cell_heatmap(result, area)           # which cells were tried
-plot_leaflet(result, area, which = 1)     # best on a map
+plot_result(result, area)                                  # best layout
+plot_parkfitness(result)                                   # fitness + operator rates
+plot_population(result)                                    # individuals, elites, cells
+plot_generation(result, area)                              # last generation (omit generation, or pass an index)
+plot_cell_heatmap(result, area)                            # which cells were tried
+plot_leaflet(result, area, which = 1)                      # best on a map
 plot_leaflet(result, area, orderitems = FALSE, which = 1)  # last generation
-plot_evolution(result)                        # energy + efficiency
-plot_development(result)                      # when the max improved
+plot_evolution(result)                                     # energy + efficiency
+plot_development(result)                                   # when the max improved
 ```
 
 Package data `resulthex` / `resultrect` and `sp_polygon` work the same
@@ -504,11 +510,13 @@ way (`plot_leaflet(resulthex, sp_polygon, which = 1)`).
 
 A full documentation of the genetic algorithm is given in my [master
 thesis](https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf).
-\> **NOTE:** The implementation has changed substantially since then.
-Many functions and arguments have been renamed or optimized, and the
-internal structure of the algorithm has been reworked. As a result, the
-current version differs significantly from the implementation described
-in the thesis and calculates and converges considerably faster.
+
+> **NOTE:** The implementation has changed substantially since then.
+> Many functions and arguments have been renamed or optimized, and the
+> internal structure of the algorithm has been reworked. As a result,
+> the current version differs significantly from the implementation
+> described in the thesis and calculates and converges considerably
+> faster.
 
 # Shiny Windfarm Optimization
 
@@ -517,6 +525,8 @@ for the Genetic Algorithm. Unfortunately, as an optimization takes quite
 some time and the app is currently hosted by shinyapps.io under a public
 license, there is only 1 R-worker at hand. So only 1 optimization can be
 run at a time.
+
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/shiny_img.png)
 
 # Package index
 

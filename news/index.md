@@ -121,6 +121,21 @@ string.
   removed (params were already documented).
 - Rd help is ASCII-only (`≈`, `×`, em-dash broke the CRAN PDF manual).
   README no longer links to the archived check-results page (404).
+- Parallel: `n_cluster` is capped at 2 under `_R_CHECK_LIMIT_CORES_` (R
+  errors on `makeCluster(detectCores() - 1)`). Terrain tests no longer
+  need a local `g100_06.tif`.
+- `random_search_single(turbine = …)` skips the interactive prompt.
+  User-input tests no longer write to a fake `stdin`.
+- `stopCluster()` is wrapped in
+  [`try()`](https://rdrr.io/r/base/try.html) so a dead worker does not
+  fail the run. Live parallel GA tests skip under `covr`. Time
+  sequential vs PSOCK locally with
+  `source("experimental/bench_parallel.R"); bench_parallel()`. Windows
+  starts PSOCK workers sequentially;
+  [`fitness()`](https://YsoSirius.github.io/windfarmGA/reference/fitness.md)
+  loads windfarmGA/terra/sf on the workers. The bench catches dropped
+  connections (often at 6–8 workers on this small site). README notes ~4
+  workers as the useful default on the demo site.
 
 ## windfarmGA 4.0.0
 
