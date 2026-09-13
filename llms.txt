@@ -706,7 +706,7 @@ Results and Shapefiles included in the package.
 - [`resultrect`](https://YsoSirius.github.io/windfarmGA/reference/resultrect.md)
   :
 
-  A resulting matrix of `genetic_algorithm` with 200 iterations and a
+  A resulting matrix of `genetic_algorithm` with 50 generations and a
   rectangular grid derived from `sp_polygon`
 
 - [`resulthex`](https://YsoSirius.github.io/windfarmGA/reference/resulthex.md)

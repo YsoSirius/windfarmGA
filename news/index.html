@@ -70,7 +70,9 @@
 <li>
 <code>plot_result(terrain = dem)</code> no longer errors on a SpatRaster. Weibull file paths get a CRS before crop. PROJ &lt; 6 branches are gone.</li>
 <li>
-<code>with_mocked_bindings()</code> in <code>test_coverage_branches.R</code> wraps the ggplot2-missing checks in <code>code = { … }</code> (testthat requires named bindings).</li>
+<code>with_mocked_bindings()</code> in <code>test_coverage_branches.R</code> wraps the ggplot2-missing checks in <code>code = { … }</code> (testthat requires named bindings). <code><a href="../reference/random_search.html">random_search()</a></code> test uses <code>runs</code>, not the removed <code>n</code>.</li>
+<li>
+<code>resultrect</code> is the first 50 generations of the old 200-iteration run, saved with <code>xz</code> (~90 KB). A new 50-gen GA is larger because <code>allCoords</code> now stores a bigger population.</li>
 </ul></div>
 </div>
     <div class="section level2">
