@@ -275,13 +275,11 @@ test_that("Test Terrain and Weibull Effects", {
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))
 
-  if (length(list.files(pattern = "g100_06.tif")) != 0) {
-    file.remove("g100_06.tif")
-  }
   plres <- plot_result(resultrect,
     sp_polygon,
     terrain = TRUE,
-    plot_en = 1
+    plot_en = 1,
+    ccl = ccl_sp
   )
   expect_false(anyNA(plres))
   expect_true(all(plres$EfficAllDir <= 100))

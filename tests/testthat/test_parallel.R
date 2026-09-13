@@ -65,8 +65,8 @@ test_that("Test Parallelisation", {
   expect_false(any(unlist(sapply(res, is.na))))
 
   ## Too many workers: cap and warn, do not call makeCluster(100)
-  res <- expect_warning(
-    genetic_algorithm(
+  expect_warning(
+    res <- genetic_algorithm(
       area = area,
       n = 12, iteration = 1,
       wind = wind,

@@ -14,7 +14,8 @@ random_search_single(
   weibull = NULL,
   weibull_src = NULL,
   ccl = NULL,
-  ccl_roughness = NULL
+  ccl_roughness = NULL,
+  turbine = NULL
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ Wind Atlas \code{combined-Weibull-k} / \code{combined-Weibull-A}).}
 \item{ccl}{Path to a Corine Land Cover raster when \code{terrain} is on.}
 
 \item{ccl_roughness}{Path to the CLC legend CSV (\code{Rauhigkeit_z} column).}
+
+\item{turbine}{Grid cell ID of the turbine to move. If \code{NULL}, the
+function asks interactively.}
 }
 \value{
 Returns a list

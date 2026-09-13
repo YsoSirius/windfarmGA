@@ -319,6 +319,8 @@ random_search <- function(result, area, runs = 20, best = 1, plot = FALSE,
 #' @inheritParams random_search
 #' @param max_dist A numeric value multiplied by the rotor radius to perform
 #'   collision checks. Default is 2.2
+#' @param turbine Grid cell ID of the turbine to move. If `NULL`, the
+#'   function asks interactively.
 #'
 #' @family Randomization
 #' @family Plotting Functions
@@ -326,7 +328,8 @@ random_search <- function(result, area, runs = 20, best = 1, plot = FALSE,
 random_search_single <- function(result, area, runs = 20, plot = FALSE,
                                  max_dist = 2.2, terrain = NULL,
                                  weibull = NULL, weibull_src = NULL,
-                                 ccl = NULL, ccl_roughness = NULL) {
+                                 ccl = NULL, ccl_roughness = NULL,
+                                 turbine = NULL) {
   ## Data Config ############################
   # Order the resulting layouts with highest Energy output
   resldat <- do.call("rbind", result[, "bestPaEn"])
@@ -395,17 +398,24 @@ random_search_single <- function(result, area, runs = 20, plot = FALSE,
   ## Turbine Indexing by user input (Must be plotted) ################
   ## Get the starting layout of windfarm[o]
   layout_start <- result[bestGARun, ]$bestPaEn
-  plot(sf::st_geometry(Grid[[2]]), reset = FALSE)
-  points(x = layout_start[, "X"], y = layout_start[, "Y"], pch = 15)
-  calibrate::textxy(
-    X = layout_start[, "X"], Y = layout_start[, "Y"],
-    labs = layout_start[, "Rect_ID"], cex = 1.5, offset = 0.75
-  )
-  turbInx <- ""
-  while (!turbInx %in% layout_start[, "Rect_ID"]) {
-    message("Enter the turbine number that you want to optimize.")
-    message("Please enter the corresponding number:\n")
-    turbInx <- readLines(n = 1, con = getOption("windfarmGA.connection"))
+  layout_ids <- as.character(layout_start[, "Rect_ID"])
+  if (is.null(turbine)) {
+    plot(sf::st_geometry(Grid[[2]]), reset = FALSE)
+    points(x = layout_start[, "X"], y = layout_start[, "Y"], pch = 15)
+    calibrate::textxy(
+      X = layout_start[, "X"], Y = layout_start[, "Y"],
+      labs = layout_start[, "Rect_ID"], cex = 1.5, offset = 0.75
+    )
+    turbInx <- ""
+    while (!as.character(turbInx) %in% layout_ids) {
+      message("Enter the turbine number that you want to optimize.")
+      message("Please enter the corresponding number:\n")
+      turbInx <- readLines(n = 1, con = getOption("windfarmGA.connection"))
+    }
+  } else if (!as.character(turbine) %in% layout_ids) {
+    stop("`turbine` is not a cell ID in the best layout.")
+  } else {
+    turbInx <- as.character(turbine)
   }
   turbInx <- which(layout_start[, "Rect_ID"] == as.numeric(turbInx))
   coordLay <- cbind(

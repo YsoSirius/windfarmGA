@@ -88,6 +88,8 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
 * Parallel: `n_cluster` is capped at 2 under `_R_CHECK_LIMIT_CORES_`
   (R errors on `makeCluster(detectCores() - 1)`). Terrain tests no
   longer need a local `g100_06.tif`.
+* `random_search_single(turbine = …)` skips the interactive prompt.
+  User-input tests no longer write to a fake `stdin`.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0

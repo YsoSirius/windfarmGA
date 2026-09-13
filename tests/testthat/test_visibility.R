@@ -1,5 +1,7 @@
-library(terra)
-library(sf)
+suppressWarnings({
+  library(terra)
+  library(sf)
+})
 
 test_that("Test Viewshed Functions", {
 
