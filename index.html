@@ -49,8 +49,9 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="windfarmga">windfarmGA<a class="anchor" aria-label="anchor" href="#windfarmga"></a>
 </h1></div>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png"></p>
-<p><img src="https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg" alt="R build status"><img src="https://www.r-pkg.org/badges/version/windfarmGA" alt="CRAN status"><img src="https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA"><img src="https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue"><img src="https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg" alt="codecov"></p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"></p>
+<!-- badges: start -->
+
 <p>A genetic algorithm to optimize the layout of wind farms.</p>
 <p>Version 5.0.0 uses a combinatorial genome (<code>n</code> unique grid-cell IDs), adaptive operator rates, and a memetic neighbourhood search on elites. The design, the north-wind gold layout, and the sensitivity results are documented in <a href="inst/reports/memetic-layout-ga.html">inst/reports/memetic-layout-ga.md</a>.</p>
 </div>
@@ -67,8 +68,12 @@
 </h1>
 <p>The genetic algorithm is designed to optimize wind farms of any shape. It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction. It can include a terrain effect model, which requires an elevation raster and a surface roughness raster. The elevation data is used to find mountains and valleys and to adjust the wind speeds accordingly by ‘wind multipliers’ and to determine the air densities at rotor heights. The surface roughness raster with an additional elevation roughness value is used to re-evaluate the surface roughness and to individually determine the wake-decay constant for each turbine.</p>
 <p>To start an optimization use the function <code>genetic_algorithm</code>. A complete path — draw a site, pick an open IEA/NREL turbine, turn u/v or mast data into a rose, then optimize and plot — is in <a href="#realistic-workflow-site-turbine-wind">Realistic workflow</a>.</p>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"></p>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png"></p>
+<div>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png" style="width: 49%;display: inline-block;"></p>
+</div>
+<div>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 98.5%;display: inline-block;"></p>
+</div>
 <p>Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. Furthermore, rasters can be included, which contain information on the Weibull parameters (shape <code>k</code>, scale <code>a</code>). Country GeoTIFFs from the <a href="https://globalwindatlas.info/" class="external-link">Global Wind Atlas</a> (~250 m) are a good source; see <code>gwa_download_country()</code> in <code>experimental/climate_helpers.R</code>.</p>
 <div class="section level2">
 <h2 id="create-an-input-polygon">Create an input Polygon<a class="anchor" aria-label="anchor" href="#create-an-input-polygon"></a>
@@ -150,7 +155,7 @@
 <span><span class="va">fcr</span> <span class="op">&lt;-</span> <span class="fl">9</span></span>
 <span><span class="va">HexGrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hexa_area.html">hexa_area</a></span><span class="op">(</span><span class="va">area</span>, size <span class="op">=</span> <span class="op">(</span><span class="va">Rotor</span> <span class="op">*</span> <span class="va">fcr</span><span class="op">)</span>, plot_grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">HexGrid</span><span class="op">)</span></span></code></pre></div>
-<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png"></p>
+<p><img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="480"></p>
 </div>
 </div>
 <div class="section level2">
@@ -807,7 +812,16 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/YsoSirius/windfarmGA/actions" class="external-link"><img src="https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://CRAN.R-project.org/package=windfarmGA" class="external-link"><img src="https://www.r-pkg.org/badges/version/windfarmGA" alt="CRAN status"></a></li>
+<li><a href="https://cran.r-project.org/package=windfarmGA" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA"></a></li>
+<li><a href="https://cran.r-project.org/package=windfarmGA" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue"></a></li>
+<li><a href="https://app.codecov.io/gh/YsoSirius/windfarmGA" class="external-link"><img src="https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg" alt="codecov"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

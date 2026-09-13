@@ -2,10 +2,6 @@
 
 ![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png)
 
-![R build
-status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)![CRAN
-status](https://www.r-pkg.org/badges/version/windfarmGA)![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)
-
 A genetic algorithm to optimize the layout of wind farms.
 
 Version 5.0.0 uses a combinatorial genome (`n` unique grid-cell IDs),
