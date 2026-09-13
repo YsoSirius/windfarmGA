@@ -1,17 +1,15 @@
 # windfarmGA
 
-<img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png" align="right" width="150"/>
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/windfarmGA.png)
 
 
 
-<!-- badges: start -->
-[![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)](https://github.com/YsoSirius/windfarmGA/actions)
-[![CRAN status](https://www.r-pkg.org/badges/version/windfarmGA)](https://CRAN.R-project.org/package=windfarmGA)
-[![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)](https://cran.r-project.org/package=windfarmGA)
-[![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)](https://cran.r-project.org/package=windfarmGA)
-[![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)](https://app.codecov.io/gh/YsoSirius/windfarmGA)
+![R build status](https://github.com/YsoSirius/windfarmGA/workflows/R-CMD-check/badge.svg)
+![CRAN status](https://www.r-pkg.org/badges/version/windfarmGA)
+![](https://cranlogs.r-pkg.org/badges/grand-total/windfarmGA)
+![](https://cranlogs.r-pkg.org/badges/last-month/windfarmGA?color=blue)
+![codecov](https://codecov.io/gh/YsoSirius/windfarmGA/branch/master/graph/badge.svg)
 
-<!-- badges: end -->
 
 
 A genetic algorithm to optimize the layout of wind farms.
@@ -20,15 +18,19 @@ Version 5.0.0 uses a combinatorial genome (`n` unique grid-cell IDs), adaptive o
 The design, the north-wind gold layout, and the sensitivity results are documented in
 [inst/reports/memetic-layout-ga.md](inst/reports/memetic-layout-ga.md).
 
-
 # Installation
+
 The latest version can be installed from GitHub with:
+
 ```R
 devtools::install_github("YsoSirius/windfarmGA")
 install.packages("windfarmGA")
 ```
 
+
+
 # Description
+
 The genetic algorithm is designed to optimize wind farms of any shape.
 It requires a predefined number of turbines, a uniform rotor radius and an average wind speed per wind direction.
 It can include a terrain effect model, which requires an elevation raster and a surface roughness raster. 
@@ -41,21 +43,20 @@ To start an optimization use the function `genetic_algorithm`.
 A complete path — draw a site, pick an open IEA/NREL turbine, turn u/v or mast data into a rose, then optimize and plot — is in
 [Realistic workflow](#realistic-workflow-site-turbine-wind). 
 
-<div>
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png" style="width: 49%;display: inline-block;"/>
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png"  style="width: 49%;display: inline-block;"/>
-</div>
-<div>
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png" style="width: 98.5%;display: inline-block;"/>
-</div>
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result2.png)![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result1.png)
+
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/result3.png)
 
 Since version 1.1, hexagonal grid cells are possible, with their center points being possible locations for wind turbines. 
 Furthermore, rasters can be included, which contain information on the Weibull parameters (shape `k`, scale `a`). 
 Country GeoTIFFs from the [Global Wind Atlas](https://globalwindatlas.info/) (~250 m) are a good
 source; see `gwa_download_country()` in `experimental/climate_helpers.R`. 
     
+
 ## Create an input Polygon
+
 - Input Polygon by source
+
 ```R
 library(sf)
 dsn <- "Path to the Shapefile"
@@ -65,6 +66,7 @@ plot(area, col = "blue")
 ```
 
 - Or create a random Polygon
+
 ```R
 library(sf)
 area <- sf::st_as_sf(sf::st_sfc(
@@ -77,14 +79,19 @@ plot(area, col = "blue", axes = TRUE)
 ```
 
 - Or draw a site on a map (GitHub clone; needs `leaflet`, `mapedit` >= 0.8, `leafpm`)
+
 ```R
 source("experimental/draw_shape.R")
 area <- draw_shape()   # draw a polygon, then close the viewer
 plot(area, axes = TRUE)
 ```
 
-## Create random Wind data 
+
+
+## Create random Wind data
+
 - Exemplary input Wind data with *uniform* wind speed and *single* wind direction
+
 ```R
 wind_df <- data.frame(ws = c(12, 12), wd = c(0, 0), probab = c(25, 25))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
@@ -92,46 +99,57 @@ windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
 ```
 
 - Exemplary input Wind data with *random* wind speeds and *random* wind directions
+
 ```R
 wind_df <- data.frame(ws = sample(1:25, 10), wd = sample(1:260, 10))
 windrosePlot <- plot_windrose(data = wind_df, spd = wind_df$ws,
                               dir = wind_df$wd)
 ```
 
+
+
 ## Grid Spacing
+
+
+
 ### Rectangular Grid Cells
+
 Verify that the grid spacing is appropriate. Adapt the following input variables if necessary:
+
 - *rotor*: The rotor radius in meters.
 - *fcr*: The grid spacing factor, which should at least be 2, so that a single grid covers at least the whole rotor diameter.
 - *prop*: The proportionality factor used for grid calculation. It determines the minimum percentage that a grid cell must cover of the area.
 
 *Make sure that the Polygon is projected in meters.*
+
 ```R
 Rotor <- 20
 fcr <- 9
 Grid <- grid_area(area, size = (Rotor * fcr), prop = 1, plot_grid = TRUE)
 str(Grid)
 ```
+
+
+
 ### Hexagonal Grid Cells
+
 ```R
 Rotor <- 20
 fcr <- 9
 HexGrid <- hexa_area(area, size = (Rotor * fcr), plot_grid = TRUE)
 str(HexGrid)
 ```
-<p align="center">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png" width="600"/>
-</p>
 
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/grids.png)
 
 ## Terrain Effect Model
+
 If **terrain** is `TRUE` in `genetic_algorithm`, terrain effects are taken into account. 
 A digital elevation model and a CORINE Land Cover raster are downloaded automatically. 
 Prefer `terrain = dem` (a SpatRaster) to skip the download. 
-Per-cell height, wind multiplier, \(z_0\), \(k\) and air density are computed once; `plot_result` / `random_search` reuse the
+Per-cell height, wind multiplier, z_0, k and air density are computed once; `plot_result` / `random_search` reuse the
 stored `terrainModel` instead of downloading again.
 ([Download a CLC raster](https://www.eea.europa.eu/data-and-maps/data/clc-2006-raster-4)).
-
 
 To use your own land cover raster, provide its path via **ccl**.
 Surface roughness values are taken from **extdata/clc_legend.csv**. To use custom values, add a numeric **Rauhigkeit_z** column for all land cover classes, save the file with ; as delimiter, and provide its path via **ccl_roughness**.
@@ -140,17 +158,14 @@ Surface roughness values are taken from **extdata/clc_legend.csv**. To use custo
 
 - Elevation → wind-speed multiplier (DEM / mean DEM)
 - Elevation → air density (barometric; labels vs 1.225 kg/m³)
-- CORINE Land Cover → land-cover roughness \(z_0\)
-- Elevation roughness (`terra::terrain`) × CLC \(z_0\) → modified \(z_0\)
-- Modified \(z_0\) + hub height → wake decay \(k = 0.5 / \log(h/z_0)\)
+- CORINE Land Cover → land-cover roughness z_0
+- Elevation roughness (`terra::terrain`) × CLC z_0 → modified z_0
+- Modified z_0 + hub height → wake decay k = 0.5 / \log(h/z_0)
 
-The modified \(z_0\) also scales hub-height wind via the log profile
+The modified z_0 also scales hub-height wind via the log profile
 (not a separate `plot_result` panel).
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png"/>
-</p>   
-
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/terrain_effect.png)
 
 ## Realistic workflow (site, turbine, wind)
 
@@ -239,23 +254,20 @@ refined <- random_search(
 plot_random_search(refined, result, area, best = 1)
 ```
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png"/>
-</p>
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/realistic_example.png)
 
 The screenshot above shows the optimized layout for a north-only wind rose. The best layout often sits in the first few upwind rows.
 In 2D, the arrangement looks cramped; however, wakes are in 3D. A turbine on lower ground can sit below the hub-height wake cone of a turbine further uphill and therefore is not counted as shadowed. These front rows are also at higher elevation, so the wind multiplier remains high while air density decreases less.
 The Leaflet map and the rayshader view (bottom right) show the same run in 2D and on the DEM.
 
-
-
-
 ## Start an Optimization
+
 An optimization can be initiated with the function **genetic_algorithm**.
 Search knobs that are not function arguments are session options
 (`options(windfarmGA.*)`); see [Options](#options).
 
 - without terrain effects
+
 ```R
 result <- genetic_algorithm(
   area = area, n = 12, rotor = 20, fcr = 9, iteration = 10,
@@ -264,6 +276,7 @@ result <- genetic_algorithm(
 ```
 
 - with terrain effects
+
 ```R
 ccl <- "Source of the CCL raster (TIF)"
 ccl_roughness <- "Source of the Adapted CCL legend (CSV)"
@@ -274,7 +287,6 @@ result <- genetic_algorithm(
   ccl = ccl, ccl_roughness = ccl_roughness
 )
 ```
-
 
 ```R
 ## Spatial mean speed from Global Wind Atlas (shape k, scale A).
@@ -288,6 +300,8 @@ result_weibull <- genetic_algorithm(
 )
 plot_windfarmGA(result = result_weibull, area = area)
 ```
+
+
 
 # Options
 
@@ -309,45 +323,57 @@ Required: `area`, `wind`, `n`, `rotor`, `rotor_height`.
 
 ### Site and turbines
 
-| Argument | Default | Meaning |
-|---|---|---|
-| `area` | — | Area as sf polygon, SpatialPolygons, or coordinate matrix. Must be projected (metres). |
-| `n` | — | Number of turbines (fixed; every individual has exactly `n` unique cell IDs). |
-| `rotor` | — | Rotor radius in metres. |
-| `fcr` | `5` | Grid spacing factor. Cell size is `fcr * rotor`. Use at least `2` so a cell covers the rotor diameter. |
-| `grid_method` | `"rectangular"` | `"h"` / `"hexagon"` for hexagonal cells. |
-| `proportionality` | `1` | Minimum fraction of a grid cell that must overlap the polygon (`prop` in `grid_area`). |
-| `crs` | EPSG:3035 | CRS if the polygon has none (numeric EPSG or PROJ string). |
-| `wind` | — | Wind data.frame (`ws`, `wd`, optional `probab`). See `windata_format`. |
-| `reference_height` | `rotor_height` | Height at which `ws` was measured. |
-| `rotor_height` | — | Hub height in metres. |
-| `surface_roughness` | `0.3` | Roughness length \(z_0\) in metres. Ignored per cell when `terrain = TRUE`. |
+
+| Argument            | Default         | Meaning                                                                                                |
+| ------------------- | --------------- | ------------------------------------------------------------------------------------------------------ |
+| `area`              | —               | Area as sf polygon, SpatialPolygons, or coordinate matrix. Must be projected (metres).                 |
+| `n`                 | —               | Number of turbines (fixed; every individual has exactly `n` unique cell IDs).                          |
+| `rotor`             | —               | Rotor radius in metres.                                                                                |
+| `fcr`               | `5`             | Grid spacing factor. Cell size is `fcr * rotor`. Use at least `2` so a cell covers the rotor diameter. |
+| `grid_method`       | `"rectangular"` | `"h"` / `"hexagon"` for hexagonal cells.                                                               |
+| `proportionality`   | `1`             | Minimum fraction of a grid cell that must overlap the polygon (`prop` in `grid_area`).                 |
+| `crs`               | EPSG:3035       | CRS if the polygon has none (numeric EPSG or PROJ string).                                             |
+| `wind`              | —               | Wind data.frame (`ws`, `wd`, optional `probab`). See `windata_format`.                                 |
+| `reference_height`  | `rotor_height`  | Height at which `ws` was measured.                                                                     |
+| `rotor_height`      | —               | Hub height in metres.                                                                                  |
+| `surface_roughness` | `0.3`           | Roughness length z_0 in metres. Ignored per cell when `terrain = TRUE`.                                |
+
+
+
 
 ### Terrain and Weibull
 
-| Argument | Default | Meaning |
-|---|---|---|
-| `terrain` | `FALSE` | Terrain model: elevation (via `elevatr`) plus Corine Land Cover for roughness and wake decay. |
-| `ccl` | auto / package | Path to a CLC raster (`.tif`) if you do not want the download. |
-| `ccl_roughness` | `inst/extdata` | CSV legend with column `Rauhigkeit_z` (`;` separated). |
-| `weibull` | `FALSE` | If `TRUE`, mean speed at each turbine comes from Weibull rasters; `ws` in `wind` is ignored. |
-| `weibull_src` | `NULL` | `list(k, a)` shape and scale rasters (e.g. GWA `combined-Weibull-k` / `combined-Weibull-A`). |
+
+| Argument        | Default        | Meaning                                                                                       |
+| --------------- | -------------- | --------------------------------------------------------------------------------------------- |
+| `terrain`       | `FALSE`        | Terrain model: elevation (via `elevatr`) plus Corine Land Cover for roughness and wake decay. |
+| `ccl`           | auto / package | Path to a CLC raster (`.tif`) if you do not want the download.                                |
+| `ccl_roughness` | `inst/extdata` | CSV legend with column `Rauhigkeit_z` (`;` separated).                                        |
+| `weibull`       | `FALSE`        | If `TRUE`, mean speed at each turbine comes from Weibull rasters; `ws` in `wind` is ignored.  |
+| `weibull_src`   | `NULL`         | `list(k, a)` shape and scale rasters (e.g. GWA `combined-Weibull-k` / `combined-Weibull-A`).  |
+
+
+
 
 ### GA loop
 
 The loop is **selection → set-crossover → swap-mutation → fitness**.
 
-| Argument | Default | Meaning |
-|---|---|---|
-| `iteration` | `20` | Generation budget. Raise this for real searches (the gold-layout tests used 80–150). |
-| `mutation_rate` | `2/n` | Mutation probability **per turbine** (swap with an unused cell). Adaptive rates still keep this as the mutate target. |
-| `selection_mode` | `"VAR"` | `"VAR"`: parent share follows fitness progress. `"FIX"`: always 50 %. |
-| `elitism` | `TRUE` | Archive the best layout unchanged; elites also spawn children and get local search. |
-| `n_elite` | `3` | Base elite count. Grows in a long refine stall, drops by 1 during a disturbance pulse. |
-| `parallel` | `FALSE` | Parallel fitness (`parallel` + `doParallel`). |
-| `n_cluster` | `2` | Worker count if `parallel` is `TRUE` (capped at cores − 1). |
-| `verbose` | `FALSE` | Print a line per generation. |
-| `plot` | `FALSE` | Plot the current best layout each generation. |
+
+| Argument         | Default | Meaning                                                                                                                                                                          |
+| ---------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `iteration`      | `20`    | Generation budget. Raise this for real searches (the gold-layout tests used 80–150).                                                                                             |
+| `mutation_rate`  | `2/n`   | Mutation probability **per turbine** (swap with an unused cell). Adaptive rates still keep this as the mutate target.                                                            |
+| `selection_mode` | `"VAR"` | `"VAR"`: parent share follows fitness progress. `"FIX"`: always 50 %.                                                                                                            |
+| `elitism`        | `TRUE`  | Archive the best layout unchanged; elites also spawn children and get local search.                                                                                              |
+| `n_elite`        | `3`     | Base elite count. Grows in a long refine stall, drops by 1 during a disturbance pulse.                                                                                           |
+| `parallel`       | `FALSE` | Parallel fitness (`parallel` + `doParallel`).                                                                                                                                    |
+| `n_cluster`      | `2`     | Worker count if `parallel` is `TRUE` (capped at cores − 1). On the demo site ~4 workers is fastest (~3× vs sequential); 6–8 is slower and can drop PSOCK connections on Windows. |
+| `verbose`        | `FALSE` | Print a line per generation.                                                                                                                                                     |
+| `plot`           | `FALSE` | Plot the current best layout each generation.                                                                                                                                    |
+
+
+
 
 ## Session options (`options(windfarmGA.*)`)
 
@@ -355,49 +381,61 @@ Set with `options(windfarmGA.foo = …)`. Defaults are assigned in `.onLoad`.
 
 ### Physics (wake and power)
 
-Fitness is \(E \times (\eta/100)^w\). These options change how \(E\) and \(\eta\) are computed.
+Fitness is E \times (\eta/100)^w. These options change how E and \eta are computed.
 
-| Option | Default | Meaning |
-|---|---|---|
-| `windfarmGA.Cp` | `0.45` | Power coefficient. |
-| `windfarmGA.cT` | `0.88` | Thrust coefficient (wake). |
-| `windfarmGA.k` | `0.075` | Wake decay constant (without terrain). |
-| `windfarmGA.air_rh` | `1.225` | Air density (kg/m³). |
-| `windfarmGA.wind_profile` | `"log"` | Hub-height profile. `"power"` restores the old power law. |
-| `windfarmGA.cut_in` | `0` | Cut-in wind speed (m/s). `0` = no cut-in. |
-| `windfarmGA.rated_ws` | `Inf` | Rated wind speed; above this, power stays at rated. |
-| `windfarmGA.cut_out` | `Inf` | Cut-out wind speed. |
-| `windfarmGA.power_curve` | `NULL` | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not Cp * v^3). On the rated plateau, wakes may not change power. Build a table with `read_power_curve()` or `plot_power_curve()`. ERA5 u/v: `wind_from_uv()`. |
-| `windfarmGA.fitness_efficiency_weight` | `1` | Preference weight \(w\): fitness is \(E \times (\eta/100)^w\). `0` = energy only; `>1` punishes wake more. Not auto-tuned. |
-| `windfarmGA.max_angle` | `20` | Max wake angle (degrees) when assigning downstream turbines. |
-| `windfarmGA.max_distance` | `100000` | Max wake distance (m). |
+
+| Option                                 | Default  | Meaning                                                                                                                                                                                                                                                  |
+| -------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `windfarmGA.Cp`                        | `0.45`   | Power coefficient.                                                                                                                                                                                                                                       |
+| `windfarmGA.cT`                        | `0.88`   | Thrust coefficient (wake).                                                                                                                                                                                                                               |
+| `windfarmGA.k`                         | `0.075`  | Wake decay constant (without terrain).                                                                                                                                                                                                                   |
+| `windfarmGA.air_rh`                    | `1.225`  | Air density (kg/m³).                                                                                                                                                                                                                                     |
+| `windfarmGA.wind_profile`              | `"log"`  | Hub-height profile. `"power"` restores the old power law.                                                                                                                                                                                                |
+| `windfarmGA.cut_in`                    | `0`      | Cut-in wind speed (m/s). `0` = no cut-in.                                                                                                                                                                                                                |
+| `windfarmGA.rated_ws`                  | `Inf`    | Rated wind speed; above this, power stays at rated.                                                                                                                                                                                                      |
+| `windfarmGA.cut_out`                   | `Inf`    | Cut-out wind speed.                                                                                                                                                                                                                                      |
+| `windfarmGA.power_curve`               | `NULL`   | Optional `data.frame(ws, power)` in kW. Park energy is the sum of interpolated turbine kW (not Cp * v^3). On the rated plateau, wakes may not change power. Build a table with `read_power_curve()` or `plot_power_curve()`. ERA5 u/v: `wind_from_uv()`. |
+| `windfarmGA.fitness_efficiency_weight` | `1`      | Preference weight w: fitness is E \times (\eta/100)^w. `0` = energy only; `>1` punishes wake more. Not auto-tuned.                                                                                                                                       |
+| `windfarmGA.max_angle`                 | `20`     | Max wake angle (degrees) when assigning downstream turbines.                                                                                                                                                                                             |
+| `windfarmGA.max_distance`              | `100000` | Max wake distance (m).                                                                                                                                                                                                                                   |
+
+
+
 
 ### Population caps
 
-| Option | Default | Meaning |
-|---|---|---|
-| `windfarmGA.max_population` | `300` | Upper bound on individuals after crossover. |
-| `windfarmGA.max_selection` | `300` | Upper bound on selected parents. |
+
+| Option                      | Default | Meaning                                     |
+| --------------------------- | ------- | ------------------------------------------- |
+| `windfarmGA.max_population` | `300`   | Upper bound on individuals after crossover. |
+| `windfarmGA.max_selection`  | `300`   | Upper bound on selected parents.            |
+
+
+
 
 ### Crossover, mutation, immigrants
 
-| Option | Default | Meaning |
-|---|---|---|
-| `windfarmGA.crossover_inject` | `0.25` | Share of child cells taken from **outside** both parents, so the search is not stuck in the parental union. Starting value; adaptive seasons move it. |
-| `windfarmGA.spatial_crossover` | `0.5` | Probability that crossover splits the park with a half-plane instead of a random set mix. |
-| `windfarmGA.min_swaps` | `1` | Minimum cell swaps per mutated individual. |
-| `windfarmGA.immigrants` | `3` | Random new layouts each generation (rarely visited cells preferred). |
+
+| Option                         | Default | Meaning                                                                                                                                               |
+| ------------------------------ | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `windfarmGA.crossover_inject`  | `0.25`  | Share of child cells taken from **outside** both parents, so the search is not stuck in the parental union. Starting value; adaptive seasons move it. |
+| `windfarmGA.spatial_crossover` | `0.5`   | Probability that crossover splits the park with a half-plane instead of a random set mix.                                                             |
+| `windfarmGA.min_swaps`         | `1`     | Minimum cell swaps per mutated individual.                                                                                                            |
+| `windfarmGA.immigrants`        | `3`     | Random new layouts each generation (rarely visited cells preferred).                                                                                  |
+
 
 On the north-wind test, extra immigrants helped the coarse search but lost to stronger neighbour local search for the last percent.
 
 ### Elitism and neighbour local search
 
-| Option | Default | Meaning |
-|---|---|---|
-| `windfarmGA.elite_children` | `3` | Mutated copies of each elite (inject 0, structure kept). Extra copies if the max has been flat for 10 generations. |
-| `windfarmGA.elite_mix` | `2` | Crossovers of an elite with a weaker layout (inject 0). |
-| `windfarmGA.local_search_elites` | `5` | How many elites get a neighbour slide each generation. `0` turns local search off. |
-| `windfarmGA.local_search_tries` | `6` | Hill-climb tries per elite: move **one** turbine to a free rook/hex neighbour. Only keep if fitness rises. |
+
+| Option                           | Default | Meaning                                                                                                            |
+| -------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| `windfarmGA.elite_children`      | `3`     | Mutated copies of each elite (inject 0, structure kept). Extra copies if the max has been flat for 10 generations. |
+| `windfarmGA.elite_mix`           | `2`     | Crossovers of an elite with a weaker layout (inject 0).                                                            |
+| `windfarmGA.local_search_elites` | `5`     | How many elites get a neighbour slide each generation. `0` turns local search off.                                 |
+| `windfarmGA.local_search_tries`  | `6`     | Hill-climb tries per elite: move **one** turbine to a free rook/hex neighbour. Only keep if fitness rises.         |
+
 
 This is the memetic step. A random swap across the grid rarely fixes “one row too far inland”; a neighbour slide often does.
 
@@ -405,19 +443,27 @@ This is the memetic step. A random swap across the grid rarely fixes “one row 
 
 Same three operators; only the rates change. **Explore** raises inject and mutation while the record is stalling (VAR selection starts near 55 %). **Refine** damps them toward inject 0.15, mutation `2/n`, selection ~45 %. **Pulse** briefly raises them again so refine does not freeze.
 
-| Option | Default | Meaning |
-|---|---|---|
-| `windfarmGA.refine_min_gen` | `18` | Earliest generation that may enter refine. |
-| `windfarmGA.refine_after` | `12` | Stall generations (no new max) plus coverage ≥ 0.35 before refine. |
-| `windfarmGA.refine_hold` | `25` | Generations spent in refine before a pulse. |
-| `windfarmGA.explore_pulse` | `10` | Length of the disturbance pulse. |
-| `windfarmGA.stall_generations` | `40` | Stop early only if this many generations in a row produce **no** new layout, **no** new cell and **no** new best. `0` disables early stop. A flat maximum while new sites are still tried is *not* a stop. |
+
+| Option                         | Default | Meaning                                                                                                                                                                                                    |
+| ------------------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `windfarmGA.refine_min_gen`    | `18`    | Earliest generation that may enter refine.                                                                                                                                                                 |
+| `windfarmGA.refine_after`      | `12`    | Stall generations (no new max) plus coverage ≥ 0.35 before refine.                                                                                                                                         |
+| `windfarmGA.refine_hold`       | `25`    | Generations spent in refine before a pulse.                                                                                                                                                                |
+| `windfarmGA.explore_pulse`     | `10`    | Length of the disturbance pulse.                                                                                                                                                                           |
+| `windfarmGA.stall_generations` | `40`    | Stop early only if this many generations in a row produce **no** new layout, **no** new cell and **no** new best. `0` disables early stop. A flat maximum while new sites are still tried is *not* a stop. |
+
+
+
 
 ### Other
 
-| Option | Default | Meaning |
-|---|---|---|
+
+| Option                  | Default   | Meaning                                                    |
+| ----------------------- | --------- | ---------------------------------------------------------- |
 | `windfarmGA.connection` | `stdin()` | Where interactive prompts read from (tests redirect this). |
+
+
+
 
 # Plotting
 
@@ -435,22 +481,28 @@ plot(result, area)
 explore_result(result, area)
 plot_windfarmGA(result, area)
 
-plot_result(result, area)                 # best layout
-plot_parkfitness(result)                      # fitness + operator rates
-plot_population(result)                       # individuals, elites, cells
-plot_generation(result, area)             # last generation (omit generation, or pass an index)
-plot_cell_heatmap(result, area)           # which cells were tried
-plot_leaflet(result, area, which = 1)     # best on a map
+plot_result(result, area)                                  # best layout
+plot_parkfitness(result)                                   # fitness + operator rates
+plot_population(result)                                    # individuals, elites, cells
+plot_generation(result, area)                              # last generation (omit generation, or pass an index)
+plot_cell_heatmap(result, area)                            # which cells were tried
+plot_leaflet(result, area, which = 1)                      # best on a map
 plot_leaflet(result, area, orderitems = FALSE, which = 1)  # last generation
-plot_evolution(result)                        # energy + efficiency
-plot_development(result)                      # when the max improved
+plot_evolution(result)                                     # energy + efficiency
+plot_development(result)                                   # when the max improved
 ```
 
 Package data `resulthex` / `resultrect` and `sp_polygon` work the same way (`plot_leaflet(resulthex, sp_polygon, which = 1)`).
 
 A full documentation of the genetic algorithm is given in my [master thesis](https://homepage.boku.ac.at/jschmidt/TOOLS/Masterarbeit_Gatscha.pdf).
+
 > **NOTE:** The implementation has changed substantially since then. Many functions and arguments have been renamed or optimized, and the internal structure of the algorithm has been reworked. As a result, the current version differs significantly from the implementation described in the thesis and calculates and converges considerably faster.
 
+
+
 # Shiny Windfarm Optimization
+
 I also made a [Shiny App](https://windfarmga.shinyapps.io/windga_shiny/) for the Genetic Algorithm. 
 Unfortunately, as an optimization takes quite some time and the app is currently hosted by shinyapps.io under a public license, there is only 1 R-worker at hand. So only 1 optimization can be run at a time. 
+
+![](https://raw.githubusercontent.com/YSoSirius/windfarmGA/master/inst/img/shiny_img.png)

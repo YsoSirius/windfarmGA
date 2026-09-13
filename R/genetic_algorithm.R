@@ -221,9 +221,19 @@ genetic_algorithm <- function(area, wind, n, rotor, rotor_height,
       n_cluster <- usable
     }
     type_cluster <- "PSOCK"
-    cl <- parallel::makeCluster(n_cluster, type = type_cluster)
+    cl_args <- list(spec = n_cluster, type = type_cluster)
+    if (.Platform$OS.type == "windows") {
+      cl_args$setup_strategy <- "sequential"
+    }
+    cl <- do.call(parallel::makeCluster, cl_args)
+    on.exit(try(parallel::stopCluster(cl), silent = TRUE), add = TRUE)
+    parallel::clusterEvalQ(cl, {
+      requireNamespace("windfarmGA", quietly = TRUE)
+      requireNamespace("terra", quietly = TRUE)
+      requireNamespace("sf", quietly = TRUE)
+      NULL
+    })
     doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl), add = TRUE)
   }
 
   ## WEIBULL ###############

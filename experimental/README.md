@@ -13,6 +13,7 @@ installing any extra packages they need.
 | `noise.R` | ISO 9613-2 sketch (`noise_map`, `noise_from_result`). Downwind Adiv+Aatm+Agr plus optional upwind extra from the wind rose. Not a legal study, not in fitness. | terra, sf |
 | `rayshader.R` | `plot_farm_3d` / `plot_farm_3d_from_result` — buffered DEM, wind arrow, wake cones, pins colored by `AbschGesamt`. Heavy install. | rayshader, rgl, elevatr |
 | `plot_mapgl.R` | `plot_mapgl_from_result()` — interactive MapLibre 3D map (see below). | mapgl, terra, sf, elevatr, png, jsonlite, httpuv, htmlwidgets; RSQLite for `.mbtiles` |
+| `bench_parallel.R` | Time `genetic_algorithm()` sequential vs PSOCK (`n_cluster`). On the demo site 4 workers is usually best; 8 can drop the Windows connection. | parallel, doParallel, foreach |
 
 
 

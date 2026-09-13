@@ -52,6 +52,9 @@ test_that("Test Parallelisation", {
   )
 
   ## genetic_algorithm ####################
+  ## PSOCK workers + covr tracing: stopCluster often dies in serialize()
+  skip_on_covr()
+
   ## Default amount of Cluster
   res <- genetic_algorithm(
     area = area,

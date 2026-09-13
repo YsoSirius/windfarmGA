@@ -84,7 +84,10 @@ fitness <- function(population, reference_height, rotor_height,
       )
     }
     `%dopar%` <- foreach::`%dopar%`
-    e <- foreach::foreach(k = 1:length(selection)) %dopar% {
+    e <- foreach::foreach(
+      k = 1:length(selection),
+      .packages = c("windfarmGA", "terra", "sf")
+    ) %dopar% {
       windfarmGA::calculate_energy(
         layout = selection[[k]], reference_height = reference_height,
         rotor_height = rotor_height, surface_roughness = surface_roughness,

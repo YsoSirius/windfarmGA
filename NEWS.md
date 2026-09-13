@@ -90,6 +90,13 @@ Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1 string.
   longer need a local `g100_06.tif`.
 * `random_search_single(turbine = …)` skips the interactive prompt.
   User-input tests no longer write to a fake `stdin`.
+* `stopCluster()` is wrapped in `try()` so a dead worker does not fail
+  the run. Live parallel GA tests skip under `covr`. Time sequential vs
+  PSOCK locally with `source("experimental/bench_parallel.R"); bench_parallel()`.
+  Windows starts PSOCK workers sequentially; `fitness()` loads
+  windfarmGA/terra/sf on the workers. The bench catches dropped
+  connections (often at 6–8 workers on this small site). README
+  notes ~4 workers as the useful default on the demo site.
 
 # windfarmGA 4.0.0
 - Depends on R 4.1.0
