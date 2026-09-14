@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/YsoSirius/windfarmGA/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/YsoSirius/windfarmGA/blob/v5.0.0/DESCRIPTION)
 
 Gatscha S (2026). *windfarmGA: Genetic Algorithm for Wind Farm Layout
 Optimization*. R package version 5.0.0,

@@ -2,6 +2,8 @@
 
 ## windfarmGA 5.0.0
 
+CRAN release: 2026-09-14
+
 Breaking release: layouts are `n` unique grid-cell IDs, not a 0/1
 string.
 
